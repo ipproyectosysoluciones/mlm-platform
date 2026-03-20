@@ -7,6 +7,7 @@ import { config } from './config/env';
 import { swaggerSpec } from './config/swagger';
 import routes from './routes';
 import adminRoutes from './routes/admin.routes';
+import crmRoutes from './routes/crm.routes';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 
 const app: Application = express();
@@ -71,6 +72,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
 // API Routes
 app.use('/api', routes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/crm', crmRoutes);
 
 // Error handlers
 app.use(notFoundHandler);
