@@ -1,10 +1,21 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
+import * as Sentry from '@sentry/node';
 import app from './app';
 import { connectDatabase, syncDatabase } from './config/database';
 import { config } from './config/env';
 import { initModels } from './models';
+
+// Initialize Sentry if DSN is provided
+if (process.env.SENTRY_DSN) {
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN,
+    environment: config.nodeEnv,
+    tracesSampleRate: config.nodeEnv === 'production' ? 0.1 : 1.0,
+  });
+  console.log('✅ Sentry initialized');
+}
 
 async function startServer(): Promise<void> {
   try {
