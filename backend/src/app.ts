@@ -7,6 +7,9 @@ import { config } from './config/env';
 import { swaggerSpec } from './config/swagger';
 import routes from './routes';
 import adminRoutes from './routes/admin.routes';
+import crmRoutes from './routes/crm.routes';
+import publicRoutes from './routes/public.routes';
+import landingRoutes from './routes/landing.routes';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 
 const app: Application = express();
@@ -14,30 +17,34 @@ const isTest = process.env.NODE_ENV === 'test';
 const isProduction = process.env.NODE_ENV === 'production';
 
 // CORS configuration with origin validation
-app.use(cors({
-  origin: isProduction 
-    ? (origin, callback) => {
-        // In production, validate origin against allowed list
-        if (!origin || config.cors.allowedOrigins.includes(origin)) {
-          callback(null, true);
-        } else {
-          callback(new Error(`CORS: Origin ${origin} not allowed`));
+app.use(
+  cors({
+    origin: isProduction
+      ? (origin, callback) => {
+          // In production, validate origin against allowed list
+          if (!origin || config.cors.allowedOrigins.includes(origin)) {
+            callback(null, true);
+          } else {
+            callback(new Error(`CORS: Origin ${origin} not allowed`));
+          }
         }
-      }
-    : true, // In development, allow all origins
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-  exposedHeaders: ['X-RateLimit-Limit', 'X-RateLimit-Remaining'],
-  maxAge: 86400, // 24 hours for preflight cache
-}));
+      : true, // In development, allow all origins
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    exposedHeaders: ['X-RateLimit-Limit', 'X-RateLimit-Remaining'],
+    maxAge: 86400, // 24 hours for preflight cache
+  })
+);
 
 // Security headers with Helmet
-app.use(helmet({
-  noSniff: true,
-  xssFilter: true,
-  frameguard: { action: 'deny' },
-}));
+app.use(
+  helmet({
+    noSniff: true,
+    xssFilter: true,
+    frameguard: { action: 'deny' },
+  })
+);
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
@@ -63,14 +70,21 @@ if (!isTest) {
 }
 
 // Swagger UI
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-  customCss: '.swagger-ui .topbar { display: none }',
-  customSiteTitle: 'MLM API Documentation'
-}));
+app.use(
+  '/api-docs',
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec, {
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: 'MLM API Documentation',
+  })
+);
 
 // API Routes
 app.use('/api', routes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/crm', crmRoutes);
+app.use('/api/public', publicRoutes);
+app.use('/api', landingRoutes);
 
 // Error handlers
 app.use(notFoundHandler);

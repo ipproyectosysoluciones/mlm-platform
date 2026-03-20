@@ -11,8 +11,8 @@ import TreeView from '../pages/TreeView';
 const mockDashboardData = {
   stats: {
     totalReferrals: 5,
-    totalEarnings: 100.50,
-    pendingEarnings: 25.00,
+    totalEarnings: 100.5,
+    pendingEarnings: 25.0,
     leftCount: 3,
     rightCount: 2,
   },
@@ -159,7 +159,9 @@ describe('Dashboard Page', () => {
   });
 
   it('renders dashboard', async () => {
-    (dashboardService.getDashboard as ReturnType<typeof vi.fn>).mockResolvedValue(mockDashboardData);
+    (dashboardService.getDashboard as ReturnType<typeof vi.fn>).mockResolvedValue(
+      mockDashboardData
+    );
 
     render(
       <TestWrapper>
@@ -173,7 +175,9 @@ describe('Dashboard Page', () => {
   });
 
   it('displays stats', async () => {
-    (dashboardService.getDashboard as ReturnType<typeof vi.fn>).mockResolvedValue(mockDashboardData);
+    (dashboardService.getDashboard as ReturnType<typeof vi.fn>).mockResolvedValue(
+      mockDashboardData
+    );
 
     render(
       <TestWrapper>
@@ -188,7 +192,9 @@ describe('Dashboard Page', () => {
   });
 
   it('has profile link', async () => {
-    (dashboardService.getDashboard as ReturnType<typeof vi.fn>).mockResolvedValue(mockDashboardData);
+    (dashboardService.getDashboard as ReturnType<typeof vi.fn>).mockResolvedValue(
+      mockDashboardData
+    );
 
     render(
       <TestWrapper>
@@ -202,7 +208,9 @@ describe('Dashboard Page', () => {
   });
 
   it('has tree view link', async () => {
-    (dashboardService.getDashboard as ReturnType<typeof vi.fn>).mockResolvedValue(mockDashboardData);
+    (dashboardService.getDashboard as ReturnType<typeof vi.fn>).mockResolvedValue(
+      mockDashboardData
+    );
 
     render(
       <TestWrapper>
@@ -223,7 +231,9 @@ describe('Profile Page', () => {
   });
 
   it('renders profile page', async () => {
-    (authService.getProfile as ReturnType<typeof vi.fn>).mockResolvedValue({ data: mockProfileData });
+    (authService.getProfile as ReturnType<typeof vi.fn>).mockResolvedValue({
+      data: mockProfileData,
+    });
 
     render(
       <TestWrapper>
@@ -237,7 +247,9 @@ describe('Profile Page', () => {
   });
 
   it('shows referral code', async () => {
-    (authService.getProfile as ReturnType<typeof vi.fn>).mockResolvedValue({ data: mockProfileData });
+    (authService.getProfile as ReturnType<typeof vi.fn>).mockResolvedValue({
+      data: mockProfileData,
+    });
 
     render(
       <TestWrapper>
@@ -251,7 +263,9 @@ describe('Profile Page', () => {
   });
 
   it('shows account settings', async () => {
-    (authService.getProfile as ReturnType<typeof vi.fn>).mockResolvedValue({ data: mockProfileData });
+    (authService.getProfile as ReturnType<typeof vi.fn>).mockResolvedValue({
+      data: mockProfileData,
+    });
 
     render(
       <TestWrapper>

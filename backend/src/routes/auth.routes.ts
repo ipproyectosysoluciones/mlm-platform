@@ -1,5 +1,11 @@
 import { Router, Router as ExpressRouter } from 'express';
-import { register, login, me, registerValidation, loginValidation } from '../controllers/AuthController';
+import {
+  register,
+  login,
+  me,
+  registerValidation,
+  loginValidation,
+} from '../controllers/AuthController';
 import { authenticateToken } from '../middleware/auth.middleware';
 import { validate } from '../middleware/validate.middleware';
 

@@ -50,13 +50,16 @@ cp .env.example .env
 ## 📝 Reglas de Código
 
 ### TypeScript
+
 - Usar `strict` mode
 - Definir tipos explícitos para funciones y variables
 - No usar `any` sin justificación
 - Nombres descriptivos en español/inglés
 
 ### Commits
+
 Usar Conventional Commits:
+
 ```
 feat: nueva funcionalidad
 fix: corrección de bug
@@ -68,6 +71,7 @@ chore: mantenimiento
 ```
 
 ### Testing
+
 - Tests obligatorios para nuevas funcionalidades
 - Coverage mínimo: 80%
 - Nombrar tests: `describe` → `it`

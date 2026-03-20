@@ -1,6 +1,10 @@
 import { Router, Router as ExpressRouter } from 'express';
 import { body } from 'express-validator';
-import { getCommissions, getCommissionStats, createPurchase } from '../controllers/CommissionController';
+import {
+  getCommissions,
+  getCommissionStats,
+  createPurchase,
+} from '../controllers/CommissionController';
 import { authenticateToken } from '../middleware/auth.middleware';
 import { validate } from '../middleware/validate.middleware';
 import { asyncHandler } from '../middleware/asyncHandler';
@@ -140,17 +144,12 @@ router.get('/stats', asyncHandler(getCommissionStats));
 router.post(
   '/',
   validate([
-    body('amount')
-      .isFloat({ min: 0.01 })
-      .withMessage('Amount must be greater than 0'),
+    body('amount').isFloat({ min: 0.01 }).withMessage('Amount must be greater than 0'),
     body('currency')
       .optional()
       .isIn(['USD', 'COP', 'MXN'])
       .withMessage('Currency must be USD, COP, or MXN'),
-    body('description')
-      .optional()
-      .isString()
-      .withMessage('Description must be a string'),
+    body('description').optional().isString().withMessage('Description must be a string'),
   ]),
   asyncHandler(createPurchase)
 );

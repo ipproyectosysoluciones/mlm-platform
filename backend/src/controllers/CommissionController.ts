@@ -19,7 +19,7 @@ interface CommissionResponse {
 /**
  * Get user commissions with pagination
  * Obtiene comisiones del usuario con paginación
- * 
+ *
  * @param req - Query params: page, limit, type, status
  * @param res - Response with paginated commissions
  */
@@ -69,7 +69,7 @@ export async function getCommissions(req: AuthenticatedRequest, res: Response): 
 /**
  * Get commission statistics
  * Obtiene estadísticas de comisiones
- * 
+ *
  * @param req - Authenticated request
  * @param res - Response with stats by type and status
  */
@@ -97,7 +97,7 @@ export async function getCommissionStats(req: AuthenticatedRequest, res: Respons
 /**
  * Create a purchase and distribute commissions
  * Crea una compra y distribuye comisiones
- * 
+ *
  * @param req - Body: amount, currency, description
  * @param res - Response with purchase data
  */

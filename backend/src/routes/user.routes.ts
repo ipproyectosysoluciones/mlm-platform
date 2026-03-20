@@ -1,8 +1,15 @@
 import { Router, Router as ExpressRouter } from 'express';
-import { 
-  getMe, getTree, getQR, getQRUrl,
-  updateProfile, changePassword, deleteAccount,
-  updateProfileValidation, changePasswordValidation, deleteAccountValidation
+import {
+  getMe,
+  getTree,
+  getQR,
+  getQRUrl,
+  updateProfile,
+  changePassword,
+  deleteAccount,
+  updateProfileValidation,
+  changePasswordValidation,
+  deleteAccountValidation,
 } from '../controllers/UserController';
 import { authenticateToken } from '../middleware/auth.middleware';
 import { validate } from '../middleware/validate.middleware';
@@ -53,7 +60,12 @@ router.get('/me', authenticateToken, asyncHandler(getMe));
  *       401:
  *         description: No autenticado / Not authenticated
  */
-router.patch('/me', authenticateToken, validate(updateProfileValidation), asyncHandler(updateProfile));
+router.patch(
+  '/me',
+  authenticateToken,
+  validate(updateProfileValidation),
+  asyncHandler(updateProfile)
+);
 
 /**
  * @swagger
@@ -86,7 +98,12 @@ router.patch('/me', authenticateToken, validate(updateProfileValidation), asyncH
  *       400:
  *         description: Contraseña incorrecta / Incorrect password
  */
-router.post('/me/change-password', authenticateToken, validate(changePasswordValidation), asyncHandler(changePassword));
+router.post(
+  '/me/change-password',
+  authenticateToken,
+  validate(changePasswordValidation),
+  asyncHandler(changePassword)
+);
 
 /**
  * @swagger
@@ -114,7 +131,12 @@ router.post('/me/change-password', authenticateToken, validate(changePasswordVal
  *       400:
  *         description: Admin no puede eliminarse / Admin cannot delete themselves
  */
-router.post('/me/delete', authenticateToken, validate(deleteAccountValidation), asyncHandler(deleteAccount));
+router.post(
+  '/me/delete',
+  authenticateToken,
+  validate(deleteAccountValidation),
+  asyncHandler(deleteAccount)
+);
 
 /**
  * @swagger
@@ -134,10 +156,14 @@ router.post('/me/delete', authenticateToken, validate(deleteAccountValidation), 
  *       200:
  *         description: Estructura del árbol / Tree structure
  */
-router.get('/me/tree', authenticateToken, asyncHandler(async (req: AuthenticatedRequest, res) => {
-  req.params.id = req.user!.id;
-  return getTree(req, res);
-}));
+router.get(
+  '/me/tree',
+  authenticateToken,
+  asyncHandler(async (req: AuthenticatedRequest, res) => {
+    req.params.id = req.user!.id;
+    return getTree(req, res);
+  })
+);
 
 /**
  * @swagger
@@ -156,10 +182,14 @@ router.get('/me/tree', authenticateToken, asyncHandler(async (req: Authenticated
  *               type: string
  *               format: binary
  */
-router.get('/me/qr', authenticateToken, asyncHandler(async (req: AuthenticatedRequest, res) => {
-  req.params.id = req.user!.id;
-  return getQR(req, res);
-}));
+router.get(
+  '/me/qr',
+  authenticateToken,
+  asyncHandler(async (req: AuthenticatedRequest, res) => {
+    req.params.id = req.user!.id;
+    return getQR(req, res);
+  })
+);
 
 /**
  * @swagger
@@ -186,10 +216,14 @@ router.get('/me/qr', authenticateToken, asyncHandler(async (req: AuthenticatedRe
  *                 referralCode:
  *                   type: string
  */
-router.get('/me/qr-url', authenticateToken, asyncHandler(async (req: AuthenticatedRequest, res) => {
-  req.params.id = req.user!.id;
-  return getQRUrl(req, res);
-}));
+router.get(
+  '/me/qr-url',
+  authenticateToken,
+  asyncHandler(async (req: AuthenticatedRequest, res) => {
+    req.params.id = req.user!.id;
+    return getQRUrl(req, res);
+  })
+);
 
 /**
  * @swagger

@@ -1,7 +1,7 @@
 /**
  * CommissionService - Calcula y gestiona comisiones MLM
  * CommissionService - Calculates and manages MLM commissions
- * 
+ *
  * Tasas de comisión configuradas en COMMISSION_RATES.
  * Commission rates configured in COMMISSION_RATES.
  */
@@ -13,7 +13,7 @@ export class CommissionService {
   /**
    * Calcula comisiones por una compra
    * Calculates commissions for a purchase
-   * 
+   *
    * Crea comisión directa para el patrocinador y hasta 4 niveles de comisiones.
    * Creates direct commission for sponsor and up to 4 levels of commissions.
    */
@@ -87,7 +87,7 @@ export class CommissionService {
       }
     );
 
-    return (results as Array<User & { depth: number }>);
+    return results as Array<User & { depth: number }>;
   }
 
   /**
@@ -113,9 +113,7 @@ export class CommissionService {
 
     return Commission.findAndCountAll({
       where,
-      include: [
-        { model: User, as: 'fromUser', attributes: ['id', 'email', 'referralCode'] },
-      ],
+      include: [{ model: User, as: 'fromUser', attributes: ['id', 'email', 'referralCode'] }],
       limit,
       offset,
       order: [['created_at', 'DESC']],

@@ -58,45 +58,41 @@ export function extractTokenFromHeader(authHeader?: string): string | null {
 // AUTHENTICATION MIDDLEWARE
 // ============================================
 
-export function authenticate(
-  req: AuthenticatedRequest,
-  res: Response,
-  next: NextFunction
-): void {
+export function authenticate(req: AuthenticatedRequest, res: Response, next: NextFunction): void {
   try {
     const token = extractTokenFromHeader(req.headers.authorization);
-    
+
     if (!token) {
       res.status(401).json({
         success: false,
-        error: 'Token requerido'
+        error: 'Token requerido',
       });
       return;
     }
-    
+
     const decoded = verifyToken(token);
-    
+
     if (!decoded) {
       res.status(401).json({
         success: false,
-        error: 'Token inválido o expirado'
+        error: 'Token inválido o expirado',
       });
       return;
     }
-    
+
     req.user = {
       id: decoded.userId,
       email: decoded.email,
       role: decoded.role,
-      referralCode: decoded.referralCode
+      referralCode: decoded.referralCode,
     };
     req.userId = decoded.userId;
-    
+
     next();
   } catch {
     res.status(500).json({
       success: false,
-      error: 'Error de autenticación'
+      error: 'Error de autenticación',
     });
   }
 }
@@ -104,25 +100,21 @@ export function authenticate(
 // Backward compatibility
 export const authenticateToken = authenticate;
 
-export function optionalAuth(
-  req: AuthenticatedRequest,
-  res: Response,
-  next: NextFunction
-): void {
+export function optionalAuth(req: AuthenticatedRequest, res: Response, next: NextFunction): void {
   const token = extractTokenFromHeader(req.headers.authorization);
   if (!token) return next();
-  
+
   const decoded = verifyToken(token);
   if (decoded) {
     req.user = {
       id: decoded.userId,
       email: decoded.email,
       role: decoded.role,
-      referralCode: decoded.referralCode
+      referralCode: decoded.referralCode,
     };
     req.userId = decoded.userId;
   }
-  
+
   next();
 }
 
@@ -131,46 +123,34 @@ export function optionalAuth(
 // ============================================
 
 export function requireRole(...allowedRoles: UserRole[]) {
-  return (
-    req: AuthenticatedRequest,
-    res: Response,
-    next: NextFunction
-  ): void => {
+  return (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
     if (!req.user) {
       res.status(401).json({
         success: false,
-        error: 'No autenticado'
+        error: 'No autenticado',
       });
       return;
     }
-    
+
     if (!allowedRoles.includes(req.user.role)) {
       res.status(403).json({
         success: false,
         error: 'Acceso denegado',
         requiredRoles: allowedRoles,
-        currentRole: req.user.role
+        currentRole: req.user.role,
       });
       return;
     }
-    
+
     next();
   };
 }
 
-export function requireAdmin(
-  req: AuthenticatedRequest,
-  res: Response,
-  next: NextFunction
-): void {
+export function requireAdmin(req: AuthenticatedRequest, res: Response, next: NextFunction): void {
   return requireRole('admin')(req, res, next);
 }
 
-export function requireUser(
-  req: AuthenticatedRequest,
-  res: Response,
-  next: NextFunction
-): void {
+export function requireUser(req: AuthenticatedRequest, res: Response, next: NextFunction): void {
   return requireRole('user')(req, res, next);
 }
 
@@ -178,38 +158,32 @@ export function requireUser(
 // RESOURCE ACCESS CONTROL
 // ============================================
 
-export function restrictToOwnResource(
-  resourceField: 'userId' | 'sponsorId' = 'userId'
-) {
-  return (
-    req: AuthenticatedRequest,
-    res: Response,
-    next: NextFunction
-  ): void => {
+export function restrictToOwnResource(resourceField: 'userId' | 'sponsorId' = 'userId') {
+  return (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
     if (!req.user) {
       res.status(401).json({
         success: false,
-        error: 'No autenticado'
+        error: 'No autenticado',
       });
       return;
     }
-    
+
     // Admins can access any resource
     if (req.user.role === 'admin') {
       return next();
     }
-    
+
     const resourceOwnerId = req.params[resourceField];
     const currentUserId = req.user.id;
-    
+
     if (resourceOwnerId && resourceOwnerId !== currentUserId) {
       res.status(403).json({
         success: false,
-        error: 'Solo puedes acceder a tu propia información'
+        error: 'Solo puedes acceder a tu propia información',
       });
       return;
     }
-    
+
     next();
   };
 }
@@ -244,23 +218,19 @@ export interface AuditLogEntry {
 export async function logAccess(entry: Omit<AuditLogEntry, 'timestamp'>): Promise<void> {
   const fullEntry: AuditLogEntry = {
     ...entry,
-    timestamp: new Date()
+    timestamp: new Date(),
   };
-  
+
   if (process.env.NODE_ENV !== 'production') {
     console.log('[AUDIT]', JSON.stringify(fullEntry));
   }
 }
 
 export function auditAdminAccess(action: string) {
-  return async (
-    req: AuthenticatedRequest,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  return async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
     const originalSend = res.send.bind(res);
-    
-    res.send = function(body) {
+
+    res.send = function (body) {
       logAccess({
         userId: req.user?.id || 'unknown',
         userRole: req.user?.role || 'user',
@@ -269,12 +239,12 @@ export function auditAdminAccess(action: string) {
         resourceId: req.params.id || req.params.userId,
         method: req.method,
         ipAddress: req.ip,
-        success: res.statusCode < 400
+        success: res.statusCode < 400,
       });
-      
+
       return originalSend(body);
     };
-    
+
     next();
   };
 }
@@ -286,34 +256,30 @@ export function auditAdminAccess(action: string) {
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
 
 export function rateLimit(maxRequests: number = 100, windowMs: number = 60000) {
-  return (
-    req: AuthenticatedRequest,
-    res: Response,
-    next: NextFunction
-  ): void => {
+  return (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
     const key = req.user?.id || req.ip || 'unknown';
     const now = Date.now();
-    
+
     let record = rateLimitStore.get(key);
-    
+
     if (!record || now > record.resetTime) {
       record = { count: 0, resetTime: now + windowMs };
       rateLimitStore.set(key, record);
     }
-    
+
     record.count++;
-    
+
     if (record.count > maxRequests) {
       res.status(429).json({
         success: false,
-        error: 'Demasiadas solicitudes'
+        error: 'Demasiadas solicitudes',
       });
       return;
     }
-    
+
     res.setHeader('X-RateLimit-Limit', maxRequests.toString());
     res.setHeader('X-RateLimit-Remaining', (maxRequests - record.count).toString());
-    
+
     next();
   };
 }

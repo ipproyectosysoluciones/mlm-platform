@@ -49,9 +49,6 @@ Purchase.init(
   {
     sequelize,
     tableName: 'purchases',
-    indexes: [
-      { fields: ['user_id'] },
-      { fields: ['status'] },
-    ],
+    indexes: [{ fields: ['user_id'] }, { fields: ['status'] }],
   }
 );

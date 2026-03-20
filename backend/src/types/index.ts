@@ -91,11 +91,11 @@ export interface TreeNode {
 }
 
 export const COMMISSION_RATES = {
-  direct: 0.10,   // 10%
-  level_1: 0.05,  // 5%
-  level_2: 0.03,  // 3%
-  level_3: 0.02,  // 2%
-  level_4: 0.01,  // 1%
+  direct: 0.1, // 10%
+  level_1: 0.05, // 5%
+  level_2: 0.03, // 3%
+  level_3: 0.02, // 2%
+  level_4: 0.01, // 1%
 } as const;
 
 export const LEVEL_NAMES: Record<number, string> = {

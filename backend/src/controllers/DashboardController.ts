@@ -13,7 +13,7 @@ const qrService = new QRService();
 /**
  * Get user dashboard with stats, referrals, and commissions
  * Obtiene dashboard de usuario con estadísticas, referidos y comisiones
- * 
+ *
  * @param req - Authenticated request
  * @param res - Response with dashboard data
  */

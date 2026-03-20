@@ -4,33 +4,26 @@ const EXCHANGE_RATES: Record<string, Record<string, number>> = {
   MXN: { USD: 0.059, COP: 235, MXN: 1 },
 };
 
-export function convertCurrency(
-  amount: number,
-  from: string,
-  to: string
-): number {
+export function convertCurrency(amount: number, from: string, to: string): number {
   if (from === to) return amount;
-  
+
   const rate = EXCHANGE_RATES[from]?.[to];
   if (!rate) {
     throw new Error(`Exchange rate not found: ${from} to ${to}`);
   }
-  
+
   return amount * rate;
 }
 
-export function formatCurrency(
-  amount: number,
-  currency: string
-): string {
+export function formatCurrency(amount: number, currency: string): string {
   const symbols: Record<string, string> = {
     USD: '$',
     COP: '$',
     MXN: '$',
   };
-  
+
   const decimals = currency === 'COP' ? 0 : 2;
   const symbol = symbols[currency] || '';
-  
+
   return `${symbol}${amount.toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ',')} ${currency}`;
 }

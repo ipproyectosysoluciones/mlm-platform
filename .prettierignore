@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+build/
+out/
+.cache/
+
+# Lock files
+package-lock.json
+pnpm-lock.yaml
+
+# Coverage
+coverage/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Generated files
+*.min.js
+*.min.css
+*.map
+
+# Backend compiled
+backend/dist/
+
+# Frontend generated
+frontend/dist/
+
+# Environment
+.env
+.env.*
+
+# Test outputs
+test-results/
+playwright-report/
+blob-report/

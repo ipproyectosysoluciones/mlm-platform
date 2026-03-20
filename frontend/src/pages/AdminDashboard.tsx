@@ -1,14 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  Users, 
-  TrendingUp, 
-  ArrowLeft,
-  RefreshCw,
-  UserCheck,
-  UserX,
-  Crown
-} from 'lucide-react';
+import { Users, TrendingUp, ArrowLeft, RefreshCw, UserCheck, UserX, Crown } from 'lucide-react';
 import { adminService } from '../services/api';
 
 interface UserData {
@@ -38,7 +30,7 @@ export default function AdminDashboard() {
     try {
       const [statsRes, usersRes] = await Promise.all([
         adminService.getStats(),
-        adminService.getUsers()
+        adminService.getUsers(),
       ]);
       setStats(statsRes.data);
       setUsers(usersRes.data.users);
@@ -68,7 +60,7 @@ export default function AdminDashboard() {
     }
   }
 
-  const filteredUsers = users.filter(user => {
+  const filteredUsers = users.filter((user) => {
     if (filter !== 'all' && user.status !== filter) return false;
     if (search && !user.email.toLowerCase().includes(search.toLowerCase())) return false;
     return true;
@@ -148,10 +140,7 @@ export default function AdminDashboard() {
                 <option value="active">Active</option>
                 <option value="inactive">Inactive</option>
               </select>
-              <button
-                onClick={loadData}
-                className="p-2 hover:bg-gray-100 rounded-lg"
-              >
+              <button onClick={loadData} className="p-2 hover:bg-gray-100 rounded-lg">
                 <RefreshCw className="w-5 h-5" />
               </button>
             </div>
@@ -164,7 +153,9 @@ export default function AdminDashboard() {
                   <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Email</th>
                   <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Role</th>
                   <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Status</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Position</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">
+                    Position
+                  </th>
                   <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Level</th>
                   <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Actions</th>
                 </tr>
@@ -174,20 +165,24 @@ export default function AdminDashboard() {
                   <tr key={user.id} className="hover:bg-gray-50">
                     <td className="px-4 py-3 text-sm">{user.email}</td>
                     <td className="px-4 py-3">
-                      <span className={`px-2 py-1 text-xs rounded-full ${
-                        user.role === 'admin' 
-                          ? 'bg-yellow-100 text-yellow-800' 
-                          : 'bg-gray-100 text-gray-800'
-                      }`}>
+                      <span
+                        className={`px-2 py-1 text-xs rounded-full ${
+                          user.role === 'admin'
+                            ? 'bg-yellow-100 text-yellow-800'
+                            : 'bg-gray-100 text-gray-800'
+                        }`}
+                      >
                         {user.role}
                       </span>
                     </td>
                     <td className="px-4 py-3">
-                      <span className={`px-2 py-1 text-xs rounded-full ${
-                        user.status === 'active' 
-                          ? 'bg-green-100 text-green-800' 
-                          : 'bg-red-100 text-red-800'
-                      }`}>
+                      <span
+                        className={`px-2 py-1 text-xs rounded-full ${
+                          user.status === 'active'
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-red-100 text-red-800'
+                        }`}
+                      >
                         {user.status}
                       </span>
                     </td>
@@ -228,9 +223,7 @@ export default function AdminDashboard() {
           </div>
 
           {filteredUsers.length === 0 && (
-            <div className="p-8 text-center text-gray-500">
-              No users found
-            </div>
+            <div className="p-8 text-center text-gray-500">No users found</div>
           )}
         </div>
       </div>
@@ -238,10 +231,15 @@ export default function AdminDashboard() {
   );
 }
 
-function StatCard({ icon, label, value, color }: { 
-  icon: React.ReactNode; 
-  label: string; 
-  value: string | number; 
+function StatCard({
+  icon,
+  label,
+  value,
+  color,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string | number;
   color: 'blue' | 'green' | 'red' | 'purple';
 }) {
   const colors = {
@@ -254,9 +252,7 @@ function StatCard({ icon, label, value, color }: {
   return (
     <div className="bg-white rounded-lg shadow p-4">
       <div className="flex items-center gap-3">
-        <div className={`p-3 rounded-lg ${colors[color]}`}>
-          {icon}
-        </div>
+        <div className={`p-3 rounded-lg ${colors[color]}`}>{icon}</div>
         <div>
           <p className="text-sm text-gray-500">{label}</p>
           <p className="text-xl font-bold">{value}</p>

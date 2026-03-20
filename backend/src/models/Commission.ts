@@ -65,10 +65,6 @@ Commission.init(
     tableName: 'commissions',
     timestamps: true,
     underscored: true,
-    indexes: [
-      { fields: ['user_id'] },
-      { fields: ['type'] },
-      { fields: ['status'] },
-    ],
+    indexes: [{ fields: ['user_id'] }, { fields: ['type'] }, { fields: ['status'] }],
   }
 );

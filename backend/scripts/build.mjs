@@ -31,6 +31,10 @@ const buildOptions = {
   format: 'cjs',
   sourcemap: !isProduction,
   minify: isProduction,
+  minifyWhitespace: isProduction,
+  minifyIdentifiers: isProduction,
+  minifySyntax: isProduction,
+  treeShaking: true,
   metafile: true,
   logLevel: 'info',
 };

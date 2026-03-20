@@ -6,6 +6,8 @@ import Dashboard from './pages/Dashboard';
 import TreeView from './pages/TreeView';
 import Profile from './pages/Profile';
 import AdminDashboard from './pages/AdminDashboard';
+import PublicProfile from './pages/PublicProfile';
+import LandingPages from './pages/LandingPages';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth();
@@ -94,6 +96,15 @@ function App() {
             element={
               <ProtectedRoute>
                 <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/ref/:code" element={<PublicProfile />} />
+          <Route
+            path="/landing-pages"
+            element={
+              <ProtectedRoute>
+                <LandingPages />
               </ProtectedRoute>
             }
           />

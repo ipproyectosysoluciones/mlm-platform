@@ -1,15 +1,12 @@
 import { Router, Router as ExpressRouter } from 'express';
-import {
-  authenticate,
-  requireRole
-} from '../middleware/auth.middleware';
+import { authenticate, requireRole } from '../middleware/auth.middleware';
 import {
   getGlobalStats,
   getAllUsers,
   getUserById,
   updateUserStatus,
   getCommissionsReport,
-  promoteToAdmin
+  promoteToAdmin,
 } from '../controllers/AdminController';
 import { asyncHandler } from '../middleware/asyncHandler';
 

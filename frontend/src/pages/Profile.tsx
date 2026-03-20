@@ -55,9 +55,14 @@ export default function Profile() {
       confirmButtonText: 'Change Password',
       confirmButtonColor: '#6366f1',
       preConfirm: () => {
-        const currentPassword = (Swal.getPopup()?.querySelector('#currentPassword') as HTMLInputElement)?.value;
-        const newPassword = (Swal.getPopup()?.querySelector('#newPassword') as HTMLInputElement)?.value;
-        const confirmPassword = (Swal.getPopup()?.querySelector('#confirmPassword') as HTMLInputElement)?.value;
+        const currentPassword = (
+          Swal.getPopup()?.querySelector('#currentPassword') as HTMLInputElement
+        )?.value;
+        const newPassword = (Swal.getPopup()?.querySelector('#newPassword') as HTMLInputElement)
+          ?.value;
+        const confirmPassword = (
+          Swal.getPopup()?.querySelector('#confirmPassword') as HTMLInputElement
+        )?.value;
 
         if (!currentPassword || !newPassword || !confirmPassword) {
           Swal.showValidationMessage('All fields are required');
@@ -245,7 +250,9 @@ export default function Profile() {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-gray-900">{user?.email}</h1>
-              <p className="text-gray-500">Member since {profile?.createdAt ? formatDate(profile.createdAt) : 'N/A'}</p>
+              <p className="text-gray-500">
+                Member since {profile?.createdAt ? formatDate(profile.createdAt) : 'N/A'}
+              </p>
             </div>
           </div>
 

@@ -51,8 +51,9 @@ const router: ExpressRouter = Router();
  *       401:
  *         description: No autenticado / Not authenticated
  */
-router.get('/', 
-  authenticateToken, 
+router.get(
+  '/',
+  authenticateToken,
   cacheMiddleware({
     key: (req: any) => CACHE_KEYS.dashboard(req.user!.id),
     ttl: CACHE_TTL.short,

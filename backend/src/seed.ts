@@ -25,7 +25,14 @@ async function seed(): Promise<void> {
       role: 'admin',
       currency: 'USD',
     });
-    console.log('✅ Created admin:', admin.email, '- Code:', admin.referralCode, '- Role:', admin.role);
+    console.log(
+      '✅ Created admin:',
+      admin.email,
+      '- Code:',
+      admin.referralCode,
+      '- Role:',
+      admin.role
+    );
 
     const user1 = await User.create({
       id: '00000000-0000-0000-0000-000000000002',
