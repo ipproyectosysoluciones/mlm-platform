@@ -69,6 +69,7 @@ Lead.init(
     userId: {
       type: DataTypes.UUID,
       allowNull: false,
+      field: 'user_id',
       references: { model: 'users', key: 'id' },
     },
     contactName: {
@@ -119,20 +120,24 @@ Lead.init(
     referredBy: {
       type: DataTypes.UUID,
       allowNull: true,
+      field: 'referred_by',
       references: { model: 'users', key: 'id' },
     },
     assignedTo: {
       type: DataTypes.UUID,
       allowNull: true,
+      field: 'assigned_to',
       references: { model: 'users', key: 'id' },
     },
     lastContactAt: {
       type: DataTypes.DATE,
       allowNull: true,
+      field: 'last_contact_at',
     },
     nextFollowUpAt: {
       type: DataTypes.DATE,
       allowNull: true,
+      field: 'next_follow_up_at',
     },
     metadata: {
       type: DataTypes.JSON,
@@ -151,11 +156,11 @@ Lead.init(
     sequelize,
     tableName: 'leads',
     indexes: [
-      { fields: ['userId'] },
+      { fields: ['user_id'] },
       { fields: ['status'] },
       { fields: ['source'] },
-      { fields: ['contactEmail'] },
-      { fields: ['nextFollowUpAt'] },
+      { fields: ['contact_email'] },
+      { fields: ['next_follow_up_at'] },
     ],
   }
 );

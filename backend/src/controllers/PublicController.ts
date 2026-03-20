@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { User } from '../models';
-import { treeServiceInstance } from '../services/UserService';
+import { userService, treeServiceInstance } from '../services/UserService';
 import type { ApiResponse } from '../types';
 import { LEVEL_NAMES } from '../types';
 import type { Request } from 'express';
@@ -28,9 +28,7 @@ export async function getPublicProfile(req: Request, res: Response): Promise<voi
       'referralCode',
       'level',
       'position',
-      'firstName',
-      'lastName',
-      'phone',
+      'status',
       'createdAt',
       'updatedAt',
     ],
@@ -42,7 +40,7 @@ export async function getPublicProfile(req: Request, res: Response): Promise<voi
   }
 
   const legCounts = await treeServiceInstance.getLegCounts(user.id);
-  const directReferrals = await treeServiceInstance.getDirectReferrals(user.id);
+  const directReferrals = await userService.getDirectReferrals(user.id);
 
   const response: ApiResponse<{
     referralCode: string;
@@ -60,14 +58,13 @@ export async function getPublicProfile(req: Request, res: Response): Promise<voi
     success: true,
     data: {
       referralCode: user.referralCode,
-      fullName:
-        [user.firstName, user.lastName].filter(Boolean).join(' ') || user.email.split('@')[0],
+      fullName: user.email.split('@')[0],
       email: user.email,
-      phone: user.phone,
+      phone: null,
       level: user.level,
       levelName: LEVEL_NAMES[user.level as keyof typeof LEVEL_NAMES] || 'Starter',
       joinDate: user.createdAt,
-      totalDownline: legCounts.left + legCounts.right,
+      totalDownline: legCounts.leftCount + legCounts.rightCount,
       directReferrals: directReferrals.length,
       description: null,
       avatarUrl: null,
@@ -87,7 +84,7 @@ export async function getPublicProfile(req: Request, res: Response): Promise<voi
 export async function getSitemapUsers(req: Request, res: Response): Promise<void> {
   const users = await User.findAll({
     attributes: ['referralCode', 'updatedAt'],
-    where: { isActive: true },
+    where: { status: 'active' },
     limit: 1000,
     order: [['updatedAt', 'DESC']],
   });

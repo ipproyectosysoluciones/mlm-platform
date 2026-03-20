@@ -21,7 +21,6 @@ export async function createLandingPage(req: AuthenticatedRequest, res: Response
   const response: ApiResponse<typeof page> = {
     success: true,
     data: page,
-    message: 'Landing page created successfully',
   };
 
   res.status(201).json(response);
@@ -100,7 +99,6 @@ export async function updateLandingPage(req: AuthenticatedRequest, res: Response
   const response: ApiResponse<typeof page> = {
     success: true,
     data: page,
-    message: 'Landing page updated successfully',
   };
 
   res.json(response);
@@ -127,7 +125,6 @@ export async function deleteLandingPage(req: AuthenticatedRequest, res: Response
   const response: ApiResponse<null> = {
     success: true,
     data: null,
-    message: 'Landing page deleted successfully',
   };
 
   res.json(response);
@@ -168,7 +165,6 @@ export async function trackConversion(req: Request, res: Response): Promise<void
   const response: ApiResponse<null> = {
     success: true,
     data: null,
-    message: 'Conversion tracked',
   };
 
   res.json(response);

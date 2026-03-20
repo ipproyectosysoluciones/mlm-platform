@@ -1,4 +1,4 @@
-import { DataTypes, Model } from 'sequelize';
+import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../config/database';
 
 interface LandingPageAttributes {
@@ -18,6 +18,11 @@ interface LandingPageAttributes {
   updatedAt: Date;
 }
 
+type LandingPageCreationAttributes = Optional<
+  LandingPageAttributes,
+  'id' | 'createdAt' | 'updatedAt'
+>;
+
 export type LandingPageTemplate = 'hero' | 'video' | 'testimonial' | 'minimal' | 'gradient';
 
 export interface LandingPageContent {
@@ -36,7 +41,10 @@ export interface LandingPageContent {
   backgroundImage?: string;
 }
 
-class LandingPage extends Model<LandingPageAttributes> implements LandingPageAttributes {
+class LandingPage
+  extends Model<LandingPageAttributes, LandingPageCreationAttributes>
+  implements LandingPageAttributes
+{
   declare id: string;
   declare userId: string;
   declare slug: string;
@@ -63,6 +71,7 @@ LandingPage.init(
     userId: {
       type: DataTypes.UUID,
       allowNull: false,
+      field: 'user_id',
       references: {
         model: 'users',
         key: 'id',
@@ -142,10 +151,10 @@ LandingPage.init(
         fields: ['slug'],
       },
       {
-        fields: ['userId'],
+        fields: ['user_id'],
       },
       {
-        fields: ['isActive'],
+        fields: ['is_active'],
       },
     ],
   }

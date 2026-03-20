@@ -49,11 +49,13 @@ Communication.init(
     leadId: {
       type: DataTypes.UUID,
       allowNull: false,
+      field: 'lead_id',
       references: { model: 'leads', key: 'id' },
     },
     userId: {
       type: DataTypes.UUID,
       allowNull: false,
+      field: 'user_id',
       references: { model: 'users', key: 'id' },
     },
     type: {
@@ -89,10 +91,10 @@ Communication.init(
     sequelize,
     tableName: 'lead_communications',
     indexes: [
-      { fields: ['leadId'] },
-      { fields: ['userId'] },
+      { fields: ['lead_id'] },
+      { fields: ['user_id'] },
       { fields: ['type'] },
-      { fields: ['createdAt'] },
+      { fields: ['created_at'] },
     ],
   }
 );

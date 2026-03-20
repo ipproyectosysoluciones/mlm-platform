@@ -60,7 +60,7 @@ export class CRMService {
     if (filters.status) where.status = filters.status;
     if (filters.source) where.source = filters.source;
     if (filters.search) {
-      where[Op.or] = [
+      (where as Record<string, unknown>)[Op.or as unknown as string] = [
         { contactName: { [Op.like]: `%${filters.search}%` } },
         { contactEmail: { [Op.like]: `%${filters.search}%` } },
         { company: { [Op.like]: `%${filters.search}%` } },
