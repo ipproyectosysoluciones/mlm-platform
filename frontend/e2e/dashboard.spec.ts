@@ -4,7 +4,10 @@ import { baseURL, login } from './helpers';
 test.describe('Dashboard', () => {
   test.beforeEach(async ({ page }) => {
     await login(page);
+    // Wait for dashboard to load
+    await page.waitForURL(/\/dashboard/);
     await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(2000);
   });
 
   test('should display dashboard with stats', async ({ page }) => {
@@ -14,10 +17,12 @@ test.describe('Dashboard', () => {
   });
 
   test('should display binary tree section', async ({ page }) => {
-    await expect(page.getByText(/Binary Tree/i)).toBeVisible({ timeout: 15000 });
-    await expect(page.getByText(/Left Leg/i)).toBeVisible();
-    await expect(page.getByText(/Right Leg/i)).toBeVisible();
-    await expect(page.getByText(/View Full Tree/i)).toBeVisible();
+    // Wait for Binary Tree section to load
+    await expect(page.getByText(/^Binary Tree$/i)).toBeVisible({ timeout: 15000 });
+    // Use exact match to avoid matching "left leg" from referrals
+    await expect(page.getByText('Left Leg', { exact: true })).toBeVisible();
+    await expect(page.getByText('Right Leg', { exact: true })).toBeVisible();
+    await expect(page.getByText('View Full Tree', { exact: true })).toBeVisible();
   });
 
   test('should display referral link', async ({ page }) => {

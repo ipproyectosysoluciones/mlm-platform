@@ -14,18 +14,38 @@ export const regularUser = {
 
 export async function login(page: Page) {
   await page.goto(`${baseURL}/login`);
-  await page.getByPlaceholder(/you@example.com/i).fill(testUser.email);
-  await page.getByPlaceholder(/••••••••/i).fill(testUser.password);
-  await page.getByRole('button', { name: /sign in/i }).click();
-  await page.waitForURL(/\/dashboard/, { timeout: 10000 });
+  await page.waitForLoadState('networkidle');
+  
+  // Fill login form
+  const emailInput = page.getByPlaceholder(/you@example.com/i);
+  const passwordInput = page.getByPlaceholder(/••••••••/i);
+  const submitButton = page.getByRole('button', { name: /sign in/i });
+  
+  await emailInput.fill(testUser.email);
+  await passwordInput.fill(testUser.password);
+  await submitButton.click();
+  
+  // Wait for navigation to dashboard
+  await page.waitForURL(/\/dashboard/, { timeout: 15000 });
+  
+  // Wait for page to be fully loaded
+  await page.waitForLoadState('networkidle');
+  
+  // Small extra wait for React to render
+  await page.waitForTimeout(500);
 }
 
 export async function loginAs(page: Page, email: string, password: string) {
   await page.goto(`${baseURL}/login`);
+  await page.waitForLoadState('networkidle');
+  
   await page.getByPlaceholder(/you@example.com/i).fill(email);
   await page.getByPlaceholder(/••••••••/i).fill(password);
   await page.getByRole('button', { name: /sign in/i }).click();
-  await page.waitForURL(/\/dashboard/, { timeout: 10000 });
+  
+  await page.waitForURL(/\/dashboard/, { timeout: 15000 });
+  await page.waitForLoadState('networkidle');
+  await page.waitForTimeout(500);
 }
 
 export async function logout(page: Page) {

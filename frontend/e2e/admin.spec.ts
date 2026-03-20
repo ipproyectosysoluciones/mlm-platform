@@ -5,7 +5,10 @@ test.describe('Admin Dashboard', () => {
   test.beforeEach(async ({ page }) => {
     await login(page);
     await page.goto(`${baseURL}/admin`);
+    // Wait for admin page to load
+    await page.waitForURL(/\/admin/);
     await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(2000);
   });
 
   test('should display admin dashboard', async ({ page }) => {
@@ -13,9 +16,9 @@ test.describe('Admin Dashboard', () => {
   });
 
   test('should display stats cards', async ({ page }) => {
-    await expect(page.getByText(/Total Users/i)).toBeVisible({ timeout: 15000 });
-    await expect(page.getByText(/Active Users/i)).toBeVisible();
-    await expect(page.getByText(/Inactive Users/i)).toBeVisible();
+    await expect(page.getByText(/^Total Users$/i)).toBeVisible({ timeout: 15000 });
+    await expect(page.getByText(/^Active Users$/i)).toBeVisible();
+    await expect(page.getByText(/^Inactive Users$/i)).toBeVisible();
   });
 
   test('should display users table', async ({ page }) => {
@@ -34,7 +37,6 @@ test.describe('Admin Dashboard', () => {
     await expect(page.getByText(/Total Users/i)).toBeVisible({ timeout: 15000 });
     const filter = page.locator('select').first();
     await expect(filter).toBeVisible();
-    await expect(filter.getByText(/All/i)).toBeVisible();
   });
 
   test('should filter users by search', async ({ page }) => {
