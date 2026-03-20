@@ -66,36 +66,36 @@ npm test
 
 ### Autenticación
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| POST | `/api/auth/register` | Registrar nuevo usuario |
-| POST | `/api/auth/login` | Iniciar sesión |
-| GET | `/api/auth/me` | Obtener usuario actual |
+| Método | Endpoint             | Descripción             |
+| ------ | -------------------- | ----------------------- |
+| POST   | `/api/auth/register` | Registrar nuevo usuario |
+| POST   | `/api/auth/login`    | Iniciar sesión          |
+| GET    | `/api/auth/me`       | Obtener usuario actual  |
 
 ### Usuarios
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| GET | `/api/users/me` | Perfil del usuario actual |
-| GET | `/api/users/me/tree` | Árbol binario del usuario |
-| GET | `/api/users/me/qr` | Descargar QR como PNG |
-| GET | `/api/users/me/qr-url` | Obtener URL del QR |
-| GET | `/api/users/:id/tree` | Árbol de un usuario |
-| GET | `/api/users/:id/qr` | QR de un usuario |
+| Método | Endpoint               | Descripción               |
+| ------ | ---------------------- | ------------------------- |
+| GET    | `/api/users/me`        | Perfil del usuario actual |
+| GET    | `/api/users/me/tree`   | Árbol binario del usuario |
+| GET    | `/api/users/me/qr`     | Descargar QR como PNG     |
+| GET    | `/api/users/me/qr-url` | Obtener URL del QR        |
+| GET    | `/api/users/:id/tree`  | Árbol de un usuario       |
+| GET    | `/api/users/:id/qr`    | QR de un usuario          |
 
 ### Dashboard
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| GET | `/api/dashboard` | Estadísticas completas |
+| Método | Endpoint         | Descripción            |
+| ------ | ---------------- | ---------------------- |
+| GET    | `/api/dashboard` | Estadísticas completas |
 
 ### Comisiones
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| GET | `/api/commissions` | Historial de comisiones |
-| GET | `/api/commissions/stats` | Estadísticas de comisiones |
-| POST | `/api/commissions` | Crear compra (para testing) |
+| Método | Endpoint                 | Descripción                 |
+| ------ | ------------------------ | --------------------------- |
+| GET    | `/api/commissions`       | Historial de comisiones     |
+| GET    | `/api/commissions/stats` | Estadísticas de comisiones  |
+| POST   | `/api/commissions`       | Crear compra (para testing) |
 
 ## Ejemplos de Uso
 
@@ -151,13 +151,13 @@ backend/
 
 ## Comisiones
 
-| Tipo | Descripción | Porcentaje |
-|------|-------------|------------|
-| Direct | Referido directo | 10% |
-| Level 1 | Primer nivel | 5% |
-| Level 2 | Segundo nivel | 3% |
-| Level 3 | Tercer nivel | 2% |
-| Level 4 | Cuarto nivel | 1% |
+| Tipo    | Descripción      | Porcentaje |
+| ------- | ---------------- | ---------- |
+| Direct  | Referido directo | 10%        |
+| Level 1 | Primer nivel     | 5%         |
+| Level 2 | Segundo nivel    | 3%         |
+| Level 3 | Tercer nivel     | 2%         |
+| Level 4 | Cuarto nivel     | 1%         |
 
 ## Licencia
 

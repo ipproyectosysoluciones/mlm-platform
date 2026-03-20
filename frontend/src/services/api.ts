@@ -53,10 +53,7 @@ export const authService = {
    * @returns {Promise<AuthResponse>} Auth response with token and user / Respuesta con token y usuario
    */
   login: async (data: LoginRequest): Promise<AuthResponse> => {
-    const response = await api.post<{ success: boolean; data: AuthResponse }>(
-      '/auth/login',
-      data
-    );
+    const response = await api.post<{ success: boolean; data: AuthResponse }>('/auth/login', data);
     return response.data.data!;
   },
 
@@ -114,9 +111,7 @@ export const dashboardService = {
    * @returns {Promise<DashboardData>} Dashboard data / Datos del dashboard
    */
   getDashboard: async (): Promise<DashboardData> => {
-    const response = await api.get<{ success: boolean; data: DashboardData }>(
-      '/dashboard'
-    );
+    const response = await api.get<{ success: boolean; data: DashboardData }>('/dashboard');
     return response.data.data!;
   },
 };
@@ -149,9 +144,7 @@ export const treeService = {
    */
   getMyTree: async (maxDepth?: number): Promise<TreeNode> => {
     const params = maxDepth ? `?maxDepth=${maxDepth}` : '';
-    const response = await api.get<{ success: boolean; data: TreeNode }>(
-      `/users/me/tree${params}`
-    );
+    const response = await api.get<{ success: boolean; data: TreeNode }>(`/users/me/tree${params}`);
     return response.data.data!;
   },
 };
@@ -210,7 +203,12 @@ export const adminService = {
    * Get all users with pagination
    * Obtener todos los usuarios con paginación
    */
-  getUsers: async (params?: { page?: number; limit?: number; status?: string; search?: string }) => {
+  getUsers: async (params?: {
+    page?: number;
+    limit?: number;
+    status?: string;
+    search?: string;
+  }) => {
     const response = await api.get('/admin/users', { params });
     return response.data;
   },
@@ -246,7 +244,11 @@ export const adminService = {
    * Get commissions report
    * Obtener reporte de comisiones
    */
-  getCommissionsReport: async (params?: { startDate?: string; endDate?: string; type?: string }) => {
+  getCommissionsReport: async (params?: {
+    startDate?: string;
+    endDate?: string;
+    type?: string;
+  }) => {
     const response = await api.get('/admin/reports/commissions', { params });
     return response.data;
   },

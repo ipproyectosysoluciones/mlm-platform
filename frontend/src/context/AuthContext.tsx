@@ -24,11 +24,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsLoading(false);
       return;
     }
-    
+
     setToken(storedToken);
-    
-    authService.getProfile()
-      .then(response => {
+
+    authService
+      .getProfile()
+      .then((response) => {
         setUser(response.data);
       })
       .catch(() => {

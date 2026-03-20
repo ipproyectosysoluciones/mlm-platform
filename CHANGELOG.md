@@ -7,6 +7,7 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 ## [1.0.0] - 2026-03-20
 
 ### Added
+
 - Sistema de autenticación JWT completo (registro, login, logout)
 - Sistema de afiliaciones binarias con closure table
 - Comisiones automáticas por niveles (direct + 4 niveles)
@@ -22,6 +23,7 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 - Configuración de seguridad con Helmet
 
 ### Backend
+
 - Express + TypeScript
 - Sequelize ORM con MySQL
 - Middleware de autenticación y roles
@@ -29,6 +31,7 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 - JSDocs bilingüe (ES/EN)
 
 ### Frontend
+
 - React 19 + Vite
 - Tailwind CSS
 - Autenticación con contexto
@@ -37,6 +40,7 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 - PWA-ready
 
 ### Database
+
 - Modelos: User, UserClosure, Commission, Purchase
 - Índices optimizados
 - Closure table para árbol genealógico
@@ -44,5 +48,6 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 ## [0.1.0] - 2026-03-01
 
 ### Added
+
 - Proyecto inicializado
 - Estructura base backend/frontend

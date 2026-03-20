@@ -33,9 +33,6 @@ UserClosure.init(
     tableName: 'user_closure',
     timestamps: true,
     underscored: true,
-    indexes: [
-      { fields: ['descendant_id'] },
-      { fields: ['depth'] },
-    ],
+    indexes: [{ fields: ['descendant_id'] }, { fields: ['depth'] }],
   }
 );

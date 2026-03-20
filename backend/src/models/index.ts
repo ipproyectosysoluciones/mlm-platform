@@ -3,7 +3,12 @@ import { User } from './User';
 import { UserClosure } from './UserClosure';
 import { Commission } from './Commission';
 import { Purchase } from './Purchase';
+import { Lead } from './Lead';
+import { Task } from './Task';
+import { Communication } from './Communication';
+import { LandingPage } from './LandingPage';
 
+// User relationships
 User.hasMany(User, { as: 'children', foreignKey: 'sponsorId', sourceKey: 'id' });
 User.belongsTo(User, { as: 'sponsor', foreignKey: 'sponsorId', targetKey: 'id' });
 
@@ -18,7 +23,24 @@ Commission.belongsTo(User, { as: 'fromUser', foreignKey: 'fromUserId', targetKey
 User.hasMany(Purchase, { foreignKey: 'userId', sourceKey: 'id' });
 Purchase.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
 
-export { User, UserClosure, Commission, Purchase };
+// CRM Relationships
+User.hasMany(Lead, { foreignKey: 'userId', sourceKey: 'id' });
+Lead.belongsTo(User, { as: 'owner', foreignKey: 'userId', targetKey: 'id' });
+Lead.belongsTo(User, { as: 'assignedUser', foreignKey: 'assignedTo', targetKey: 'id' });
+Lead.belongsTo(User, { as: 'referredByUser', foreignKey: 'referredBy', targetKey: 'id' });
+
+Lead.hasMany(Task, { foreignKey: 'leadId', as: 'tasks' });
+Task.belongsTo(Lead, { foreignKey: 'leadId', as: 'lead' });
+Task.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+
+Lead.hasMany(Communication, { foreignKey: 'leadId', as: 'communications' });
+Communication.belongsTo(Lead, { foreignKey: 'leadId', as: 'lead' });
+Communication.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+
+User.hasMany(LandingPage, { foreignKey: 'userId', sourceKey: 'id' });
+LandingPage.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
+
+export { User, UserClosure, Commission, Purchase, Lead, Task, Communication, LandingPage };
 
 export function initModels(): void {
   console.log('✅ Models initialized');

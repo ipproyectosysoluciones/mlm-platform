@@ -11,7 +11,7 @@ const treeService = new TreeService();
 /**
  * Get global platform statistics
  * Obtiene estadísticas globales de la plataforma
- * 
+ *
  * @param req - Authenticated admin request
  * @param res - Response with stats: users, commissions, purchases
  */
@@ -25,7 +25,7 @@ export async function getGlobalStats(req: AuthenticatedRequest, res: Response): 
       rightCount,
       totalCommissions,
       totalPurchases,
-      recentUsers
+      recentUsers,
     ] = await Promise.all([
       User.count(),
       User.count({ where: { status: 'active' } }),
@@ -37,8 +37,8 @@ export async function getGlobalStats(req: AuthenticatedRequest, res: Response): 
       User.findAll({
         limit: 10,
         order: [['created_at', 'DESC']],
-        attributes: ['id', 'email', 'level', 'status', 'created_at']
-      })
+        attributes: ['id', 'email', 'level', 'status', 'created_at'],
+      }),
     ]);
 
     const response: ApiResponse<{
@@ -70,21 +70,21 @@ export async function getGlobalStats(req: AuthenticatedRequest, res: Response): 
         rightPercentage: totalUsers > 0 ? Math.round((rightCount / totalUsers) * 100) : 0,
         totalCommissions: Number(totalCommissions) || 0,
         totalPurchases: Number(totalPurchases) || 0,
-        recentUsers: recentUsers.map(u => ({
+        recentUsers: recentUsers.map((u) => ({
           id: u.id,
           email: u.email,
           level: u.level,
           status: u.status,
-          createdAt: u.createdAt
-        }))
-      }
+          createdAt: u.createdAt,
+        })),
+      },
     };
 
     res.json(response);
   } catch (error) {
     res.status(500).json({
       success: false,
-      error: 'Error fetching global stats'
+      error: 'Error fetching global stats',
     });
   }
 }
@@ -92,7 +92,7 @@ export async function getGlobalStats(req: AuthenticatedRequest, res: Response): 
 /**
  * Get all users with pagination and filters
  * Obtiene todos los usuarios con paginación y filtros
- * 
+ *
  * @param req - Query params: page, limit, status, search
  * @param res - Response with paginated users
  */
@@ -116,13 +116,22 @@ export async function getAllUsers(req: AuthenticatedRequest, res: Response): Pro
       limit,
       offset: (page - 1) * limit,
       order: [['created_at', 'DESC']],
-      attributes: ['id', 'email', 'level', 'status', 'role', 'position', 'referralCode', 'created_at']
+      attributes: [
+        'id',
+        'email',
+        'level',
+        'status',
+        'role',
+        'position',
+        'referralCode',
+        'created_at',
+      ],
     });
 
     res.json({
       success: true,
       data: {
-        users: users.map(u => ({
+        users: users.map((u) => ({
           id: u.id,
           email: u.email,
           level: u.level,
@@ -130,20 +139,20 @@ export async function getAllUsers(req: AuthenticatedRequest, res: Response): Pro
           role: u.role,
           position: u.position,
           referralCode: u.referralCode,
-          createdAt: u.createdAt
+          createdAt: u.createdAt,
         })),
         pagination: {
           page,
           limit,
           total: count,
-          totalPages: Math.ceil(count / limit)
-        }
-      }
+          totalPages: Math.ceil(count / limit),
+        },
+      },
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      error: 'Error fetching users'
+      error: 'Error fetching users',
     });
   }
 }
@@ -151,7 +160,7 @@ export async function getAllUsers(req: AuthenticatedRequest, res: Response): Pro
 /**
  * Get user details by ID
  * Obtiene detalles de usuario por ID
- * 
+ *
  * @param req - Path params: userId
  * @param res - Response with user details and stats
  */
@@ -159,13 +168,24 @@ export async function getUserById(req: AuthenticatedRequest, res: Response): Pro
   try {
     const { userId } = req.params;
     const user = await User.findByPk(userId, {
-      attributes: ['id', 'email', 'level', 'status', 'role', 'position', 'referralCode', 'sponsorId', 'currency', 'created_at']
+      attributes: [
+        'id',
+        'email',
+        'level',
+        'status',
+        'role',
+        'position',
+        'referralCode',
+        'sponsorId',
+        'currency',
+        'created_at',
+      ],
     });
 
     if (!user) {
       res.status(404).json({
         success: false,
-        error: 'User not found'
+        error: 'User not found',
       });
       return;
     }
@@ -173,7 +193,7 @@ export async function getUserById(req: AuthenticatedRequest, res: Response): Pro
     const [referrals, legCounts, commissions] = await Promise.all([
       User.count({ where: { sponsorId: user.id } }),
       treeService.getLegCounts(user.id),
-      Commission.sum('amount', { where: { userId: user.id } })
+      Commission.sum('amount', { where: { userId: user.id } }),
     ]);
 
     res.json({
@@ -189,20 +209,20 @@ export async function getUserById(req: AuthenticatedRequest, res: Response): Pro
           referralCode: user.referralCode,
           sponsorId: user.sponsorId,
           currency: user.currency,
-          createdAt: user.createdAt
+          createdAt: user.createdAt,
         },
         stats: {
           directReferrals: referrals,
           leftCount: legCounts.leftCount,
           rightCount: legCounts.rightCount,
-          totalEarnings: Number(commissions) || 0
-        }
-      }
+          totalEarnings: Number(commissions) || 0,
+        },
+      },
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      error: 'Error fetching user'
+      error: 'Error fetching user',
     });
   }
 }
@@ -210,7 +230,7 @@ export async function getUserById(req: AuthenticatedRequest, res: Response): Pro
 /**
  * Update user status (active/inactive)
  * Actualiza estado del usuario
- * 
+ *
  * @param req - Path: userId, Body: status
  * @param res - Success response
  */
@@ -222,7 +242,7 @@ export async function updateUserStatus(req: AuthenticatedRequest, res: Response)
     if (!['active', 'inactive'].includes(status)) {
       res.status(400).json({
         success: false,
-        error: 'Invalid status'
+        error: 'Invalid status',
       });
       return;
     }
@@ -231,7 +251,7 @@ export async function updateUserStatus(req: AuthenticatedRequest, res: Response)
     if (!user) {
       res.status(404).json({
         success: false,
-        error: 'User not found'
+        error: 'User not found',
       });
       return;
     }
@@ -241,12 +261,12 @@ export async function updateUserStatus(req: AuthenticatedRequest, res: Response)
     res.json({
       success: true,
       message: `User status updated to ${status}`,
-      data: { id: user.id, status: user.status }
+      data: { id: user.id, status: user.status },
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      error: 'Error updating user'
+      error: 'Error updating user',
     });
   }
 }
@@ -254,11 +274,14 @@ export async function updateUserStatus(req: AuthenticatedRequest, res: Response)
 /**
  * Get commissions report
  * Obtiene reporte de comisiones
- * 
+ *
  * @param req - Query: startDate, endDate, type
  * @param res - Response with commissions breakdown
  */
-export async function getCommissionsReport(req: AuthenticatedRequest, res: Response): Promise<void> {
+export async function getCommissionsReport(
+  req: AuthenticatedRequest,
+  res: Response
+): Promise<void> {
   try {
     const { startDate, endDate, type } = req.query;
 
@@ -276,41 +299,41 @@ export async function getCommissionsReport(req: AuthenticatedRequest, res: Respo
       where,
       include: [
         { model: User, as: 'user', attributes: ['email', 'referralCode'] },
-        { model: User, as: 'fromUser', attributes: ['email', 'referralCode'] }
+        { model: User, as: 'fromUser', attributes: ['email', 'referralCode'] },
       ],
       order: [['created_at', 'DESC']],
-      limit: 100
+      limit: 100,
     });
 
     const byType = await Commission.findAll({
       where,
       attributes: ['type', [User.sequelize!.fn('SUM', User.sequelize!.col('amount')), 'total']],
       group: ['type'],
-      raw: true
+      raw: true,
     });
 
     res.json({
       success: true,
       data: {
-        commissions: commissions.map(c => ({
+        commissions: commissions.map((c) => ({
           id: c.id,
           type: c.type,
           amount: Number(c.amount),
           status: c.status,
           userEmail: (c as any).user?.email,
           fromUserEmail: (c as any).fromUser?.email,
-          createdAt: c.createdAt
+          createdAt: c.createdAt,
         })),
         byType: byType.map((b: any) => ({
           type: b.type,
-          total: Number(b.total)
-        }))
-      }
+          total: Number(b.total),
+        })),
+      },
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      error: 'Error generating commissions report'
+      error: 'Error generating commissions report',
     });
   }
 }
@@ -318,7 +341,7 @@ export async function getCommissionsReport(req: AuthenticatedRequest, res: Respo
 /**
  * Promote user to admin
  * Promueve usuario a admin
- * 
+ *
  * @param req - Path: userId
  * @param res - Success response
  */
@@ -330,7 +353,7 @@ export async function promoteToAdmin(req: AuthenticatedRequest, res: Response): 
     if (currentUser.id === userId) {
       res.status(400).json({
         success: false,
-        error: 'Cannot change your own role'
+        error: 'Cannot change your own role',
       });
       return;
     }
@@ -339,7 +362,7 @@ export async function promoteToAdmin(req: AuthenticatedRequest, res: Response): 
     if (!user) {
       res.status(404).json({
         success: false,
-        error: 'User not found'
+        error: 'User not found',
       });
       return;
     }
@@ -349,12 +372,12 @@ export async function promoteToAdmin(req: AuthenticatedRequest, res: Response): 
     res.json({
       success: true,
       message: 'User promoted to admin',
-      data: { id: user.id, role: user.role }
+      data: { id: user.id, role: user.role },
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      error: 'Error promoting user'
+      error: 'Error promoting user',
     });
   }
 }

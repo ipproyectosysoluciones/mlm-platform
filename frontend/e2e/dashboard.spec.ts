@@ -37,7 +37,10 @@ test.describe('Dashboard', () => {
   });
 
   test('should navigate to profile', async ({ page }) => {
-    await page.getByText(/Profile/i).first().click();
+    await page
+      .getByText(/Profile/i)
+      .first()
+      .click();
     await expect(page).toHaveURL(/\/profile/);
   });
 
