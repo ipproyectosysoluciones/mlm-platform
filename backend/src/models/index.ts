@@ -6,6 +6,7 @@ import { Purchase } from './Purchase';
 import { Lead } from './Lead';
 import { Task } from './Task';
 import { Communication } from './Communication';
+import { LandingPage } from './LandingPage';
 
 // User relationships
 User.hasMany(User, { as: 'children', foreignKey: 'sponsorId', sourceKey: 'id' });
@@ -36,7 +37,10 @@ Lead.hasMany(Communication, { foreignKey: 'leadId', as: 'communications' });
 Communication.belongsTo(Lead, { foreignKey: 'leadId', as: 'lead' });
 Communication.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 
-export { User, UserClosure, Commission, Purchase, Lead, Task, Communication };
+User.hasMany(LandingPage, { foreignKey: 'userId', sourceKey: 'id' });
+LandingPage.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
+
+export { User, UserClosure, Commission, Purchase, Lead, Task, Communication, LandingPage };
 
 export function initModels(): void {
   console.log('✅ Models initialized');

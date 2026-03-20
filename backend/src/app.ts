@@ -8,6 +8,8 @@ import { swaggerSpec } from './config/swagger';
 import routes from './routes';
 import adminRoutes from './routes/admin.routes';
 import crmRoutes from './routes/crm.routes';
+import publicRoutes from './routes/public.routes';
+import landingRoutes from './routes/landing.routes';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 
 const app: Application = express();
@@ -81,6 +83,8 @@ app.use(
 app.use('/api', routes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/crm', crmRoutes);
+app.use('/api/public', publicRoutes);
+app.use('/api', landingRoutes);
 
 // Error handlers
 app.use(notFoundHandler);
