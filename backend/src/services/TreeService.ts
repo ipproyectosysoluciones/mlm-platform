@@ -1,10 +1,10 @@
 /**
  * TreeService - Maneja operaciones del árbol genealógico/MLM
  * TreeService - Handles genealogical/MLM tree operations
- * 
+ *
  * Utiliza el patrón Closure Table para representar la jerarquía del árbol binario.
  * Uses the Closure Table pattern to represent the binary tree hierarchy.
- * 
+ *
  * @example
  * const tree = await treeService.getUserTree(userId, 3);
  * const upline = await treeService.getUpline(userId);
@@ -17,10 +17,10 @@ export class TreeService {
   /**
    * Busca la posición disponible para un nuevo usuario bajo un patrocinador
    * Finds the available position for a new user under a sponsor
-   * 
+   *
    * Balancea el árbol colocando usuarios donde hay menos.
    * Balances the tree by placing users where there are fewer.
-   * 
+   *
    * @param sponsorId - ID del usuario patrocinador / Sponsor user ID
    * @returns 'left' o 'right' / 'left' or 'right'
    */
@@ -38,12 +38,12 @@ export class TreeService {
   /**
    * Inserta un usuario en la tabla de cierre con sus ancestros
    * Inserts a user into the closure table with their ancestors
-   * 
+   *
    * Crea un registro donde el usuario es su propio ancestro (depth=0)
    * y copia todos los ancestros del patrocinador.
    * Creates a record where the user is their own ancestor (depth=0)
    * and copies all sponsor ancestors.
-   * 
+   *
    * @param userId - ID del nuevo usuario / New user ID
    * @param sponsorId - ID del patrocinador o null / Sponsor ID or null
    */
@@ -73,9 +73,9 @@ export class TreeService {
         );
 
         const ancestors = results as Array<{ ancestor_id: string; depth: number }>;
-        
+
         if (ancestors.length > 0) {
-          const closureRecords = ancestors.map(a => ({
+          const closureRecords = ancestors.map((a) => ({
             ancestorId: a.ancestor_id,
             descendantId: userId,
             depth: a.depth,
@@ -95,10 +95,10 @@ export class TreeService {
   /**
    * Obtiene el árbol de un usuario hasta cierta profundidad
    * Gets the tree of a user up to a certain depth
-   * 
+   *
    * Incluye conteos de hijos izquierda/derecha para cada nodo.
    * Includes left/right child counts for each node.
-   * 
+   *
    * @param userId - ID del usuario raíz / Root user ID
    * @param maxDepth - Profundidad máxima (opcional) / Maximum depth (optional)
    * @returns TreeNode con hijos o null si no existe / TreeNode with children or null if not found
@@ -138,7 +138,7 @@ export class TreeService {
   /**
    * Obtiene hijos recursivamente hasta maxDepth
    * Gets children recursively up to maxDepth
-   * 
+   *
    * @param userId - ID del padre / Parent ID
    * @param maxDepth - Profundidad restante / Remaining depth
    */
@@ -185,10 +185,10 @@ export class TreeService {
   /**
    * Obtiene la línea ascendente (patrocinadores) de un usuario
    * Gets the upline (sponsors) of a user
-   * 
+   *
    * Ordenado por profundidad ascendente (patrocinador directo primero).
    * Ordered by ascending depth (direct sponsor first).
-   * 
+   *
    * @param userId - ID del usuario / User ID
    * @returns Array de usuarios ancestros / Array of ancestor users
    */
@@ -213,10 +213,10 @@ export class TreeService {
   /**
    * Obtiene conteos y volúmenes de las piernas izquierda/derecha
    * Gets counts and volumes of left/right legs
-   * 
+   *
    * El volumen se calcula como count * 100 (valor fijo por usuario).
    * Volume is calculated as count * 100 (fixed value per user).
-   * 
+   *
    * @param userId - ID del usuario / User ID
    */
   async getLegCounts(userId: string): Promise<{
@@ -236,10 +236,7 @@ export class TreeService {
     };
   }
 
-  private async getDescendantCount(
-    userId: string,
-    position: 'left' | 'right'
-  ): Promise<number> {
+  private async getDescendantCount(userId: string, position: 'left' | 'right'): Promise<number> {
     const result = await sequelize.query(
       `SELECT COUNT(*) as count
        FROM user_closure uc

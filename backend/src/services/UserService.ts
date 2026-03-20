@@ -12,7 +12,7 @@ export class UserService {
   /**
    * Crea un nuevo usuario con código de referido único
    * Creates a new user with unique referral code
-   * 
+   *
    * Asigna automáticamente la posición izquierda/derecha usando TreeService.
    * Automatically assigns left/right position using TreeService.
    */
@@ -23,7 +23,7 @@ export class UserService {
     currency?: 'USD' | 'COP' | 'MXN';
   }): Promise<User> {
     const referralCode = await generateUniqueReferralCode();
-    
+
     let sponsorId: string | null = null;
     let position: 'left' | 'right' | null = null;
 
@@ -70,9 +70,7 @@ export class UserService {
 
   async findById(id: string): Promise<User | null> {
     return User.findByPk(id, {
-      include: [
-        { model: User, as: 'sponsor', attributes: ['id', 'referralCode', 'email'] },
-      ],
+      include: [{ model: User, as: 'sponsor', attributes: ['id', 'referralCode', 'email'] }],
     });
   }
 
@@ -105,14 +103,17 @@ export class UserService {
     });
   }
 
-  async updateUser(id: string, data: { firstName?: string; lastName?: string; phone?: string }): Promise<User | null> {
+  async updateUser(
+    id: string,
+    data: { firstName?: string; lastName?: string; phone?: string }
+  ): Promise<User | null> {
     const user = await User.findByPk(id);
     if (!user) return null;
-    
+
     if (data.firstName !== undefined) (user as any).firstName = data.firstName;
     if (data.lastName !== undefined) (user as any).lastName = data.lastName;
     if (data.phone !== undefined) (user as any).phone = data.phone;
-    
+
     await user.save();
     return user;
   }
@@ -120,7 +121,7 @@ export class UserService {
   async updatePassword(id: string, passwordHash: string): Promise<User | null> {
     const user = await User.findByPk(id);
     if (!user) return null;
-    
+
     (user as any).passwordHash = passwordHash;
     await user.save();
     return user;
@@ -129,7 +130,7 @@ export class UserService {
   async deleteUser(id: string): Promise<boolean> {
     const user = await User.findByPk(id);
     if (!user) return false;
-    
+
     await user.destroy();
     return true;
   }

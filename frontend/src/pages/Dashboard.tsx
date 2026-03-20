@@ -1,7 +1,7 @@
 /**
  * Dashboard - Panel principal del usuario MLM
  * Dashboard - Main MLM user panel
- * 
+ *
  * Muestra estadísticas, enlace de referido, QR code y actividad reciente.
  * Shows stats, referral link, QR code, and recent activity.
  */
@@ -37,7 +37,7 @@ export default function Dashboard() {
   useEffect(() => {
     if (loadRef.current) return;
     loadRef.current = true;
-    
+
     const loadDashboard = async () => {
       try {
         const dashboardData = await dashboardService.getDashboard();
@@ -137,15 +137,11 @@ export default function Dashboard() {
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-blue-50 rounded-lg p-4 text-center">
                 <p className="text-sm text-gray-500">Left Leg</p>
-                <p className="text-2xl font-bold text-blue-600">
-                  {data.stats.leftCount}
-                </p>
+                <p className="text-2xl font-bold text-blue-600">{data.stats.leftCount}</p>
               </div>
               <div className="bg-purple-50 rounded-lg p-4 text-center">
                 <p className="text-sm text-gray-500">Right Leg</p>
-                <p className="text-2xl font-bold text-purple-600">
-                  {data.stats.rightCount}
-                </p>
+                <p className="text-2xl font-bold text-purple-600">{data.stats.rightCount}</p>
               </div>
             </div>
             <Link
@@ -170,11 +166,7 @@ export default function Dashboard() {
                 onClick={copyLink}
                 className="p-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
               >
-                {copied ? (
-                  <Check className="w-5 h-5" />
-                ) : (
-                  <Copy className="w-5 h-5" />
-                )}
+                {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
               </button>
             </div>
             <button
@@ -208,9 +200,7 @@ export default function Dashboard() {
                         {commission.fromUser?.email || 'System'}
                       </p>
                     </div>
-                    <p className="font-semibold text-green-600">
-                      +${commission.amount.toFixed(2)}
-                    </p>
+                    <p className="font-semibold text-green-600">+${commission.amount.toFixed(2)}</p>
                   </div>
                 ))}
               </div>
@@ -234,9 +224,7 @@ export default function Dashboard() {
                       </div>
                       <div>
                         <p className="font-medium">{referral.email}</p>
-                        <p className="text-sm text-gray-500 capitalize">
-                          {referral.position} leg
-                        </p>
+                        <p className="text-sm text-gray-500 capitalize">{referral.position} leg</p>
                       </div>
                     </div>
                     <p className="text-sm text-gray-500">

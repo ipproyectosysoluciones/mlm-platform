@@ -50,15 +50,15 @@ docker compose up -d
 
 ### Variables de Entorno
 
-| Variable | Descripción | Default |
-|----------|-------------|---------|
-| `DB_HOST` | Host de MySQL | localhost |
-| `DB_PORT` | Puerto de MySQL | 3306 |
-| `DB_NAME` | Nombre de la base de datos | mlm_db |
-| `DB_USER` | Usuario de MySQL | root |
-| `DB_PASSWORD` | Contraseña de MySQL | - |
-| `JWT_SECRET` | Secreto para JWT | - |
-| `REDIS_ENABLED` | Habilitar Redis | false |
+| Variable          | Descripción                     | Default   |
+| ----------------- | ------------------------------- | --------- |
+| `DB_HOST`         | Host de MySQL                   | localhost |
+| `DB_PORT`         | Puerto de MySQL                 | 3306      |
+| `DB_NAME`         | Nombre de la base de datos      | mlm_db    |
+| `DB_USER`         | Usuario de MySQL                | root      |
+| `DB_PASSWORD`     | Contraseña de MySQL             | -         |
+| `JWT_SECRET`      | Secreto para JWT                | -         |
+| `REDIS_ENABLED`   | Habilitar Redis                 | false     |
 | `ALLOWED_ORIGINS` | Origins permitidos (producción) | localhost |
 
 ## 🚀 Ejecución / Running
@@ -113,16 +113,16 @@ Swagger UI disponible en: `http://localhost:3000/api-docs`
 
 ### Endpoints Principales
 
-| Método | Endpoint | Descripción |
-|--------|----------|------------|
-| POST | `/api/auth/register` | Registrar usuario |
-| POST | `/api/auth/login` | Iniciar sesión |
-| GET | `/api/auth/me` | Usuario actual |
-| GET | `/api/dashboard` | Dashboard del usuario |
-| GET | `/api/users/me/tree` | Árbol binario |
-| GET | `/api/commissions` | Lista de comisiones |
-| GET | `/api/admin/stats` | Estadísticas globales (admin) |
-| GET | `/api/admin/users` | Lista de usuarios (admin) |
+| Método | Endpoint             | Descripción                   |
+| ------ | -------------------- | ----------------------------- |
+| POST   | `/api/auth/register` | Registrar usuario             |
+| POST   | `/api/auth/login`    | Iniciar sesión                |
+| GET    | `/api/auth/me`       | Usuario actual                |
+| GET    | `/api/dashboard`     | Dashboard del usuario         |
+| GET    | `/api/users/me/tree` | Árbol binario                 |
+| GET    | `/api/commissions`   | Lista de comisiones           |
+| GET    | `/api/admin/stats`   | Estadísticas globales (admin) |
+| GET    | `/api/admin/users`   | Lista de usuarios (admin)     |
 
 ## 👥 Credenciales de Prueba
 
@@ -170,6 +170,7 @@ MLM/
 ## 📦 Stack Tecnológico
 
 **Backend:**
+
 - Node.js + Express
 - TypeScript
 - Sequelize ORM
@@ -178,6 +179,7 @@ MLM/
 - JWT
 
 **Frontend:**
+
 - React 19
 - Vite
 - TypeScript
@@ -186,6 +188,7 @@ MLM/
 - Axios
 
 **Testing:**
+
 - Vitest (unit)
 - Playwright (E2E)
 - Jest (backend)
@@ -200,6 +203,7 @@ MAJOR.MINOR.PATCH
 ```
 
 Tags:
+
 ```bash
 git tag -a v1.0.0 -m "Release 1.0.0"
 git push origin --tags

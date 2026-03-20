@@ -18,9 +18,15 @@ interface CommunicationAttributes {
   updatedAt: Date;
 }
 
-interface CommunicationCreationAttributes extends Optional<CommunicationAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface CommunicationCreationAttributes extends Optional<
+  CommunicationAttributes,
+  'id' | 'createdAt' | 'updatedAt'
+> {}
 
-export class Communication extends Model<CommunicationAttributes, CommunicationCreationAttributes> implements CommunicationAttributes {
+export class Communication
+  extends Model<CommunicationAttributes, CommunicationCreationAttributes>
+  implements CommunicationAttributes
+{
   public id!: string;
   public leadId!: string;
   public userId!: string;

@@ -5,7 +5,7 @@ let redis: Redis | null = null;
 
 export function getRedis(): Redis | null {
   if (redis) return redis;
-  
+
   // Skip Redis if not configured
   if (process.env.REDIS_ENABLED !== 'true') {
     console.log('⚠️ Redis disabled (set REDIS_ENABLED=true to enable)');
@@ -61,7 +61,7 @@ export async function deleteCache(key: string): Promise<void> {
 export function clearCachePattern(pattern: string): Promise<void> {
   const client = getRedis();
   if (!client) return Promise.resolve();
-  
+
   return new Promise((resolve) => {
     const stream = client.scanStream({
       match: pattern,
@@ -87,8 +87,8 @@ export const CACHE_KEYS = {
 };
 
 export const CACHE_TTL = {
-  short: 60,      // 1 minute
-  medium: 300,     // 5 minutes
-  long: 3600,      // 1 hour
+  short: 60, // 1 minute
+  medium: 300, // 5 minutes
+  long: 3600, // 1 hour
   session: 604800, // 7 days
 };

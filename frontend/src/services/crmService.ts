@@ -1,6 +1,13 @@
 import api from './api';
 
-export type LeadStatus = 'new' | 'contacted' | 'qualified' | 'proposal' | 'negotiation' | 'won' | 'lost';
+export type LeadStatus =
+  | 'new'
+  | 'contacted'
+  | 'qualified'
+  | 'proposal'
+  | 'negotiation'
+  | 'won'
+  | 'lost';
 export type LeadSource = 'website' | 'referral' | 'social' | 'landing_page' | 'manual' | 'other';
 
 export interface Lead {
@@ -76,7 +83,10 @@ class CRMService {
     return data.data;
   }
 
-  async createTask(leadId: string, task: { type: string; title: string; description?: string; dueDate?: string }) {
+  async createTask(
+    leadId: string,
+    task: { type: string; title: string; description?: string; dueDate?: string }
+  ) {
     const { data } = await api.post(`/crm/${leadId}/tasks`, task);
     return data.data;
   }
@@ -86,7 +96,10 @@ class CRMService {
     return data.data;
   }
 
-  async addCommunication(leadId: string, comm: { type: string; direction: string; content: string; subject?: string }) {
+  async addCommunication(
+    leadId: string,
+    comm: { type: string; direction: string; content: string; subject?: string }
+  ) {
     const { data } = await api.post(`/crm/${leadId}/communications`, comm);
     return data.data;
   }

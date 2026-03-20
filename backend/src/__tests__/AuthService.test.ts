@@ -3,7 +3,13 @@ jest.mock('jsonwebtoken');
 jest.mock('../models');
 jest.mock('../config/env');
 
-import { hashPassword, verifyPassword, generateToken, verifyToken, extractTokenFromHeader } from '../services/AuthService';
+import {
+  hashPassword,
+  verifyPassword,
+  generateToken,
+  verifyToken,
+  extractTokenFromHeader,
+} from '../services/AuthService';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 

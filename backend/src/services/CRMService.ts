@@ -69,9 +69,7 @@ export class CRMService {
 
     const { rows, count } = await Lead.findAndCountAll({
       where,
-      include: [
-        { model: User, as: 'assignedUser', attributes: ['id', 'email'] },
-      ],
+      include: [{ model: User, as: 'assignedUser', attributes: ['id', 'email'] }],
       order: [['createdAt', 'DESC']],
       limit,
       offset,
@@ -111,9 +109,21 @@ export class CRMService {
     const lead = await Lead.findOne({ where: { id, userId } });
     if (!lead) return null;
 
-    const allowedFields = ['contactName', 'contactEmail', 'contactPhone', 'company', 'status', 'source', 'value', 'currency', 'notes', 'nextFollowUpAt', 'assignedTo'];
+    const allowedFields = [
+      'contactName',
+      'contactEmail',
+      'contactPhone',
+      'company',
+      'status',
+      'source',
+      'value',
+      'currency',
+      'notes',
+      'nextFollowUpAt',
+      'assignedTo',
+    ];
     const updates: Record<string, unknown> = {};
-    
+
     for (const key of allowedFields) {
       if (data[key as keyof Lead] !== undefined) {
         updates[key] = data[key as keyof Lead];
@@ -135,10 +145,21 @@ export class CRMService {
     const total = leads.length;
 
     const byStatus: Record<string, number> = {
-      new: 0, contacted: 0, qualified: 0, proposal: 0, negotiation: 0, won: 0, lost: 0
+      new: 0,
+      contacted: 0,
+      qualified: 0,
+      proposal: 0,
+      negotiation: 0,
+      won: 0,
+      lost: 0,
     };
     const bySource: Record<string, number> = {
-      website: 0, referral: 0, social: 0, landing_page: 0, manual: 0, other: 0
+      website: 0,
+      referral: 0,
+      social: 0,
+      landing_page: 0,
+      manual: 0,
+      other: 0,
     };
     let totalValue = 0;
     let wonCount = 0;
@@ -182,7 +203,7 @@ export class CRMService {
   async completeTask(id: string, userId: string): Promise<Task | null> {
     const task = await Task.findOne({ where: { id, userId } });
     if (!task) return null;
-    
+
     await task.update({ status: 'completed', completedAt: new Date() });
     return task;
   }

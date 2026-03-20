@@ -12,12 +12,16 @@ export function generateSitemapXML(urls: SitemapUrl[]): string {
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
   const footer = '</urlset>';
 
-  const urlElements = urls.map(url => `
+  const urlElements = urls
+    .map(
+      (url) => `
   <url>
     <loc>${url.loc}</loc>
     <lastmod>${url.lastmod}</lastmod>
     <priority>${url.priority}</priority>
-  </url>`).join('');
+  </url>`
+    )
+    .join('');
 
   return header + urlElements + footer;
 }
@@ -74,11 +78,7 @@ export function SitemapXML() {
 
   if (isLoading) return <p>Generating sitemap...</p>;
 
-  return (
-    <pre className="text-xs bg-gray-100 p-4 rounded overflow-auto max-h-96">
-      {sitemap}
-    </pre>
-  );
+  return <pre className="text-xs bg-gray-100 p-4 rounded overflow-auto max-h-96">{sitemap}</pre>;
 }
 
 export default SitemapXML;

@@ -2,7 +2,14 @@ import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../config/database';
 import { v4 as uuidv4 } from 'uuid';
 
-export type LeadStatus = 'new' | 'contacted' | 'qualified' | 'proposal' | 'negotiation' | 'won' | 'lost';
+export type LeadStatus =
+  | 'new'
+  | 'contacted'
+  | 'qualified'
+  | 'proposal'
+  | 'negotiation'
+  | 'won'
+  | 'lost';
 export type LeadSource = 'website' | 'referral' | 'social' | 'landing_page' | 'manual' | 'other';
 
 interface LeadAttributes {
@@ -26,7 +33,10 @@ interface LeadAttributes {
   updatedAt: Date;
 }
 
-interface LeadCreationAttributes extends Optional<LeadAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface LeadCreationAttributes extends Optional<
+  LeadAttributes,
+  'id' | 'createdAt' | 'updatedAt'
+> {}
 
 export class Lead extends Model<LeadAttributes, LeadCreationAttributes> implements LeadAttributes {
   public id!: string;
@@ -79,7 +89,15 @@ Lead.init(
       allowNull: true,
     },
     status: {
-      type: DataTypes.ENUM('new', 'contacted', 'qualified', 'proposal', 'negotiation', 'won', 'lost'),
+      type: DataTypes.ENUM(
+        'new',
+        'contacted',
+        'qualified',
+        'proposal',
+        'negotiation',
+        'won',
+        'lost'
+      ),
       defaultValue: 'new',
     },
     source: {

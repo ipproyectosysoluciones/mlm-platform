@@ -37,10 +37,7 @@ export async function hashPassword(password: string): Promise<string> {
  * @example
  * const isValid = await verifyPassword('myPassword123', '$2b$10$hash...');
  */
-export async function verifyPassword(
-  password: string,
-  hash: string
-): Promise<boolean> {
+export async function verifyPassword(password: string, hash: string): Promise<boolean> {
   return bcrypt.compare(password, hash);
 }
 
@@ -58,7 +55,7 @@ export function generateToken(user: UserAttributes): string {
     email: user.email,
     role: (user as any).role || 'user',
   };
-  
+
   return jwt.sign(payload, config.jwt.secret, {
     expiresIn: '7d',
   } as SignOptions);

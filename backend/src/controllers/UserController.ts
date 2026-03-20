@@ -44,7 +44,7 @@ export const deleteAccountValidation = [
 /**
  * Get user profile
  * Obtiene perfil de usuario
- * 
+ *
  * @param req - Authenticated request with user ID
  * @param res - Response with user profile data
  */
@@ -86,7 +86,7 @@ export async function getMe(req: AuthenticatedRequest, res: Response): Promise<v
 /**
  * Get user binary tree
  * Obtiene árbol binario de usuario
- * 
+ *
  * @param req - Authenticated request with optional user ID and depth
  * @param res - Response with tree structure and stats
  */
@@ -119,7 +119,7 @@ export async function getTree(req: AuthenticatedRequest, res: Response): Promise
 /**
  * Get user QR code as PNG image
  * Obtiene código QR como imagen PNG
- * 
+ *
  * @param req - Authenticated request with optional user ID
  * @param res - PNG image response
  */
@@ -138,17 +138,14 @@ export async function getQR(req: AuthenticatedRequest, res: Response): Promise<v
   const qrBuffer = await qrService.generateQRBuffer(user.referralCode);
 
   res.setHeader('Content-Type', 'image/png');
-  res.setHeader(
-    'Content-Disposition',
-    `attachment; filename="qr-${user.referralCode}.png"`
-  );
+  res.setHeader('Content-Disposition', `attachment; filename="qr-${user.referralCode}.png"`);
   res.send(qrBuffer);
 }
 
 /**
  * Get user QR code as data URL
  * Obtiene código QR como data URL
- * 
+ *
  * @param req - Authenticated request with optional user ID
  * @param res - Response with QR data URL and referral link
  */
@@ -186,7 +183,7 @@ export async function getQRUrl(req: AuthenticatedRequest, res: Response): Promis
 /**
  * Update user profile
  * Actualiza perfil de usuario
- * 
+ *
  * @param req - Authenticated request with profile data
  * @param res - Response with updated user
  */
@@ -206,7 +203,7 @@ export async function updateProfile(req: AuthenticatedRequest, res: Response): P
 /**
  * Change user password
  * Cambia contraseña de usuario
- * 
+ *
  * @param req - Authenticated request with current and new password
  * @param res - Success response
  * @throws {AppError} 400 - If current password is incorrect
@@ -235,7 +232,7 @@ export async function changePassword(req: AuthenticatedRequest, res: Response): 
 /**
  * Delete user account
  * Elimina cuenta de usuario
- * 
+ *
  * @param req - Authenticated request with password confirmation
  * @param res - Success response
  * @throws {AppError} 400 - If password is incorrect

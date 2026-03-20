@@ -7,6 +7,7 @@
 ```
 
 This will:
+
 - Start MySQL 8.0 container
 - Create `mlm_db` database
 - Create `.env` file with credentials
@@ -16,9 +17,11 @@ This will:
 
 1. Ensure MySQL is running
 2. Create database:
+
 ```sql
 CREATE DATABASE mlm_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
+
 3. Update `.env` with your MySQL credentials
 
 ## Option 3: Using sudo
@@ -29,13 +32,13 @@ sudo mysql -e "CREATE DATABASE IF NOT EXISTS mlm_db CHARACTER SET utf8mb4 COLLAT
 
 ## Environment Variables
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| DB_HOST | MySQL host | localhost |
-| DB_PORT | MySQL port | 3306 |
-| DB_NAME | Database name | mlm_db |
-| DB_USER | Database user | root |
-| DB_PASSWORD | Database password | (empty) |
+| Variable    | Description       | Default   |
+| ----------- | ----------------- | --------- |
+| DB_HOST     | MySQL host        | localhost |
+| DB_PORT     | MySQL port        | 3306      |
+| DB_NAME     | Database name     | mlm_db    |
+| DB_USER     | Database user     | root      |
+| DB_PASSWORD | Database password | (empty)   |
 
 ## Syncing the Database
 

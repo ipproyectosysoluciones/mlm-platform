@@ -49,7 +49,10 @@ test.describe('Admin Dashboard', () => {
   });
 
   test('should have refresh button', async ({ page }) => {
-    const refreshButton = page.locator('button').filter({ has: page.locator('svg') }).first();
+    const refreshButton = page
+      .locator('button')
+      .filter({ has: page.locator('svg') })
+      .first();
     await expect(refreshButton).toBeVisible();
   });
 

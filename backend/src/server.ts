@@ -21,7 +21,7 @@ async function startServer(): Promise<void> {
   try {
     await connectDatabase();
     initModels();
-    
+
     const forceSync = config.nodeEnv === 'development' && process.argv.includes('--force-sync');
     if (forceSync) {
       await syncDatabase(true);

@@ -1,9 +1,18 @@
 import { Router } from 'express';
 import {
-  getLeads, getLeadById, createLead, updateLead, deleteLead,
-  getCRMStats, createTask, completeTask,
-  addCommunication, getLeadCommunications, getUpcomingTasks,
-  createLeadValidation, updateLeadValidation
+  getLeads,
+  getLeadById,
+  createLead,
+  updateLead,
+  deleteLead,
+  getCRMStats,
+  createTask,
+  completeTask,
+  addCommunication,
+  getLeadCommunications,
+  getUpcomingTasks,
+  createLeadValidation,
+  updateLeadValidation,
 } from '../controllers/CRMController';
 import { authenticateToken } from '../middleware/auth.middleware';
 import { validate } from '../middleware/validate.middleware';

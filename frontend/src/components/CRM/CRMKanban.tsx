@@ -1,15 +1,11 @@
 import { useState, useEffect } from 'react';
-import { 
-  DragDropContext, 
-  Droppable, 
-  Draggable
-} from '@hello-pangea/dnd';
-import type { 
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import type {
   DropResult,
   DroppableProvided,
   DroppableStateSnapshot,
   DraggableProvided,
-  DraggableStateSnapshot
+  DraggableStateSnapshot,
 } from '@hello-pangea/dnd';
 import { Phone, Mail, Calendar, DollarSign, Plus, Eye, Edit } from 'lucide-react';
 import { crmService } from '../../services/crmService';
@@ -25,7 +21,15 @@ const STATUS_CONFIG: Record<LeadStatus, { label: string; color: string }> = {
   lost: { label: 'Perdido', color: 'bg-red-50 border-red-300' },
 };
 
-const STATUS_ORDER: LeadStatus[] = ['new', 'contacted', 'qualified', 'proposal', 'negotiation', 'won', 'lost'];
+const STATUS_ORDER: LeadStatus[] = [
+  'new',
+  'contacted',
+  'qualified',
+  'proposal',
+  'negotiation',
+  'won',
+  'lost',
+];
 
 interface LeadCardProps {
   lead: Lead;
@@ -47,11 +51,9 @@ function LeadCard({ lead, onView, onEdit }: LeadCardProps) {
           </button>
         </div>
       </div>
-      
-      {lead.company && (
-        <p className="text-xs text-gray-500 mb-2">{lead.company}</p>
-      )}
-      
+
+      {lead.company && <p className="text-xs text-gray-500 mb-2">{lead.company}</p>}
+
       <div className="space-y-1">
         <div className="flex items-center gap-1 text-xs text-gray-500">
           <Mail className="w-3 h-3" />
@@ -70,7 +72,7 @@ function LeadCard({ lead, onView, onEdit }: LeadCardProps) {
           </div>
         )}
       </div>
-      
+
       {lead.nextFollowUpAt && (
         <div className="mt-2 pt-2 border-t flex items-center gap-1 text-xs text-orange-600">
           <Calendar className="w-3 h-3" />
@@ -97,7 +99,7 @@ export default function CRMKanban() {
     try {
       const [leadsData, statsData] = await Promise.all([
         crmService.getLeads({ limit: 100 }),
-        crmService.getStats()
+        crmService.getStats(),
       ]);
       setLeads(leadsData.leads);
       setStats(statsData);
@@ -109,20 +111,18 @@ export default function CRMKanban() {
   };
 
   const getLeadsByStatus = (status: LeadStatus) => {
-    return leads.filter(lead => lead.status === status);
+    return leads.filter((lead) => lead.status === status);
   };
 
   const handleDragEnd = async (result: DropResult) => {
     if (!result.destination) return;
-    
+
     const leadId = result.draggableId;
     const newStatus = result.destination.droppableId as LeadStatus;
-    
+
     try {
       await crmService.updateLeadStatus(leadId, newStatus);
-      setLeads(leads.map(lead => 
-        lead.id === leadId ? { ...lead, status: newStatus } : lead
-      ));
+      setLeads(leads.map((lead) => (lead.id === leadId ? { ...lead, status: newStatus } : lead)));
     } catch (error) {
       console.error('Failed to update lead status:', error);
     }
@@ -181,7 +181,7 @@ export default function CRMKanban() {
           {STATUS_ORDER.map((status) => {
             const statusLeads = getLeadsByStatus(status);
             const config = STATUS_CONFIG[status];
-            
+
             return (
               <div key={status} className="flex-shrink-0 w-72">
                 <div className={`rounded-t-lg p-3 border-t border-l border-r ${config.color}`}>
@@ -192,7 +192,7 @@ export default function CRMKanban() {
                     </span>
                   </div>
                 </div>
-                
+
                 <Droppable droppableId={status}>
                   {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
                     <div
@@ -238,9 +238,7 @@ export default function CRMKanban() {
               <div className="flex justify-between items-start mb-4">
                 <div>
                   <h2 className="text-xl font-bold text-gray-900">{selectedLead.contactName}</h2>
-                  {selectedLead.company && (
-                    <p className="text-gray-500">{selectedLead.company}</p>
-                  )}
+                  {selectedLead.company && <p className="text-gray-500">{selectedLead.company}</p>}
                 </div>
                 <button
                   onClick={() => setSelectedLead(null)}

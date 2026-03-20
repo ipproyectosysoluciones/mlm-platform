@@ -24,14 +24,14 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
       `,
       contact: {
         name: 'MLM Support',
-        email: 'support@mlm-platform.com'
-      }
+        email: 'support@mlm-platform.com',
+      },
     },
     servers: [
       {
         url: 'http://localhost:3000/api',
-        description: 'Servidor de Desarrollo / Development Server'
-      }
+        description: 'Servidor de Desarrollo / Development Server',
+      },
     ],
     components: {
       securitySchemes: {
@@ -39,8 +39,8 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
           type: 'http',
           scheme: 'bearer',
           bearerFormat: 'JWT',
-          description: 'JWT token obtained from /auth/login or /auth/register'
-        }
+          description: 'JWT token obtained from /auth/login or /auth/register',
+        },
       },
       schemas: {
         ApiResponse: {
@@ -48,19 +48,19 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
           properties: {
             success: { type: 'boolean' },
             data: { type: 'object', description: 'Response data / Datos de respuesta' },
-            error: { 
+            error: {
               oneOf: [
                 { type: 'string' },
-                { 
+                {
                   type: 'object',
                   properties: {
                     code: { type: 'string' },
-                    message: { type: 'string' }
-                  }
-                }
-              ]
-            }
-          }
+                    message: { type: 'string' },
+                  },
+                },
+              ],
+            },
+          },
         },
         User: {
           type: 'object',
@@ -71,15 +71,15 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
             level: { type: 'integer', minimum: 1 },
             currency: { type: 'string', enum: ['USD', 'COP', 'MXN'] },
             role: { type: 'string', enum: ['user', 'admin'] },
-            status: { type: 'string', enum: ['active', 'inactive'] }
-          }
+            status: { type: 'string', enum: ['active', 'inactive'] },
+          },
         },
         AuthToken: {
           type: 'object',
           properties: {
             user: { $ref: '#/components/schemas/User' },
-            token: { type: 'string' }
-          }
+            token: { type: 'string' },
+          },
         },
         TreeNode: {
           type: 'object',
@@ -87,30 +87,30 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
             id: { type: 'string' },
             referralCode: { type: 'string' },
             level: { type: 'integer' },
-            children: { 
+            children: {
               type: 'array',
-              items: { $ref: '#/components/schemas/TreeNode' }
-            }
-          }
+              items: { $ref: '#/components/schemas/TreeNode' },
+            },
+          },
         },
         Error: {
           type: 'object',
           properties: {
             success: { type: 'boolean', example: false },
-            error: { type: 'string' }
-          }
-        }
-      }
+            error: { type: 'string' },
+          },
+        },
+      },
     },
     tags: [
       { name: 'auth', description: 'Autenticación / Authentication' },
       { name: 'users', description: 'Gestión de usuarios / User Management' },
       { name: 'dashboard', description: 'Dashboard y estadísticas / Dashboard & Stats' },
       { name: 'admin', description: 'Operaciones de administrador / Admin Operations' },
-      { name: 'commissions', description: 'Comisiones / Commissions' }
-    ]
+      { name: 'commissions', description: 'Comisiones / Commissions' },
+    ],
   },
-  apis: ['./src/routes/*.ts', './src/controllers/*.ts']
+  apis: ['./src/routes/*.ts', './src/controllers/*.ts'],
 };
 
 export const swaggerSpec = swaggerJsdoc(options);

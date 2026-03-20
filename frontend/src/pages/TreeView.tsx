@@ -1,7 +1,7 @@
 /**
  * TreeView - Visualización del árbol binario MLM
  * TreeView - MLM binary tree visualization
- * 
+ *
  * Renderiza recursivamente el árbol con controles de profundidad.
  * Recursively renders the tree with depth controls.
  */
@@ -109,9 +109,7 @@ function TreeNodeComponent({
     <div className="flex flex-col items-center">
       <div
         className={`px-4 py-3 rounded-lg border-2 ${
-          node.position === 'left'
-            ? 'border-blue-500 bg-blue-50'
-            : 'border-purple-500 bg-purple-50'
+          node.position === 'left' ? 'border-blue-500 bg-blue-50' : 'border-purple-500 bg-purple-50'
         } min-w-[150px] text-center`}
       >
         <div className="flex items-center justify-center gap-2 mb-1">
@@ -121,9 +119,7 @@ function TreeNodeComponent({
         <p className="text-xs text-gray-500">Level {node.level}</p>
         <p className="text-xs text-gray-500 capitalize">{node.position} leg</p>
         <div className="flex justify-center gap-2 mt-2 text-xs">
-          <span className="bg-blue-200 px-2 py-0.5 rounded">
-            L: {node.stats?.leftCount ?? 0}
-          </span>
+          <span className="bg-blue-200 px-2 py-0.5 rounded">L: {node.stats?.leftCount ?? 0}</span>
           <span className="bg-purple-200 px-2 py-0.5 rounded">
             R: {node.stats?.rightCount ?? 0}
           </span>
@@ -133,20 +129,13 @@ function TreeNodeComponent({
       {hasChildren && !isMaxDepth && (
         <div className="flex gap-8 mt-4">
           {node.children.map((child) => (
-            <TreeNodeComponent
-              key={child.id}
-              node={child}
-              level={level + 1}
-              maxDepth={maxDepth}
-            />
+            <TreeNodeComponent key={child.id} node={child} level={level + 1} maxDepth={maxDepth} />
           ))}
         </div>
       )}
 
       {hasChildren && isMaxDepth && (
-        <div className="mt-2 text-sm text-gray-500">
-          +{node.children.length} more members
-        </div>
+        <div className="mt-2 text-sm text-gray-500">+{node.children.length} more members</div>
       )}
 
       {!hasChildren && level < maxDepth - 1 && (

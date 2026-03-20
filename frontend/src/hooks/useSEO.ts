@@ -12,7 +12,8 @@ interface SEOProps {
 
 const DEFAULT_SEO: SEOProps = {
   title: 'MLM Platform - Afiliaciones Binarias',
-  description: 'Plataforma MLM con sistema de afiliaciones binarias, comisiones automáticas y árbol genealógico.',
+  description:
+    'Plataforma MLM con sistema de afiliaciones binarias, comisiones automáticas y árbol genealógico.',
   image: '/og-image.png',
   type: 'website',
   siteName: 'MLM Platform',
@@ -43,9 +44,7 @@ export function useSEO(props: SEOProps = {}) {
     metaTags.forEach(({ name, property, content }) => {
       if (!content) return;
 
-      const selector = property
-        ? `meta[property="${property}"]`
-        : `meta[name="${name}"]`;
+      const selector = property ? `meta[property="${property}"]` : `meta[name="${name}"]`;
 
       let element = document.querySelector(selector);
       if (element) {
@@ -72,11 +71,7 @@ export function useSEO(props: SEOProps = {}) {
   }, [seo.title, seo.description, seo.image, url, seo.type, seo.siteName]);
 }
 
-export function useProfileSEO(user: {
-  referralCode: string;
-  level?: number;
-  levelName?: string;
-}) {
+export function useProfileSEO(user: { referralCode: string; level?: number; levelName?: string }) {
   useSEO({
     title: `${user.referralCode} - MLM Affiliate`,
     description: `Únete al equipo de ${user.referralCode}. Nivel ${user.level || 1} - ${user.levelName || 'Starter'}. Afiliaciones binarias con comisiones automáticas.`,

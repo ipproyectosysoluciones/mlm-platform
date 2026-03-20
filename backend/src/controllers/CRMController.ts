@@ -10,7 +10,9 @@ export const createLeadValidation = [
   body('contactEmail').isEmail().withMessage('Valid email is required'),
   body('contactPhone').optional().isString(),
   body('company').optional().isString(),
-  body('source').optional().isIn(['website', 'referral', 'social', 'landing_page', 'manual', 'other']),
+  body('source')
+    .optional()
+    .isIn(['website', 'referral', 'social', 'landing_page', 'manual', 'other']),
   body('value').optional().isFloat({ min: 0 }),
   body('currency').optional().isIn(['USD', 'COP', 'MXN']),
   body('notes').optional().isString(),
@@ -21,7 +23,9 @@ export const updateLeadValidation = [
   body('contactEmail').optional().isEmail(),
   body('contactPhone').optional().isString(),
   body('company').optional().isString(),
-  body('status').optional().isIn(['new', 'contacted', 'qualified', 'proposal', 'negotiation', 'won', 'lost']),
+  body('status')
+    .optional()
+    .isIn(['new', 'contacted', 'qualified', 'proposal', 'negotiation', 'won', 'lost']),
   body('value').optional().isFloat({ min: 0 }),
   body('notes').optional().isString(),
 ];

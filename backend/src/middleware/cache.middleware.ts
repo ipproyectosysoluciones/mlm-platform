@@ -12,20 +12,18 @@ export interface CacheOptions {
 export function cacheMiddleware(options: CacheOptions) {
   return async (req: Request, res: Response, next: NextFunction) => {
     if (options.enabled === false) return next();
-    
-    const cacheKey = typeof options.key === 'function' 
-      ? options.key(req) 
-      : options.key;
-    
+
+    const cacheKey = typeof options.key === 'function' ? options.key(req) : options.key;
+
     try {
       const cached = await getCache(cacheKey);
       if (cached) {
         res.setHeader('X-Cache', 'HIT');
         return res.json(JSON.parse(cached));
       }
-      
+
       res.setHeader('X-Cache', 'MISS');
-      
+
       const originalJson = res.json.bind(res);
       res.json = (data: unknown) => {
         if (res.statusCode === 200) {
@@ -33,7 +31,7 @@ export function cacheMiddleware(options: CacheOptions) {
         }
         return originalJson(data);
       };
-      
+
       next();
     } catch {
       next();
