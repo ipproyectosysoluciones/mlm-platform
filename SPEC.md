@@ -655,15 +655,33 @@ User A purchases $100:
 
 ## Testing
 
-### Integration Tests (TIER 1)
+### Integration Tests (TIER 1 & 2)
 
-| Module      | Tests  | Status             |
-| ----------- | ------ | ------------------ |
-| Auth        | 15     | ✅ PASS            |
-| Tree        | 10     | ✅ PASS            |
-| Commissions | 15     | ✅ PASS            |
-| RBAC        | 20     | ✅ PASS            |
-| **Total**   | **60** | **✅ ALL PASSING** |
+| Module          | Tests   | Status      |
+| --------------- | ------- | ----------- |
+| Auth            | 15      | ✅ PASS     |
+| Tree            | 10      | ✅ PASS     |
+| Commissions     | 15      | ✅ PASS     |
+| RBAC            | 20      | ✅ PASS     |
+| CRM             | 17      | ✅ PASS     |
+| Pagination      | 6       | ✅ PASS     |
+| Validation      | 24      | ✅ PASS     |
+| **Integration** | **107** | **✅ PASS** |
+
+### E2E Tests (Playwright)
+
+| Module    | Tests  | Status      |
+| --------- | ------ | ----------- |
+| Auth      | 6      | ✅ PASS     |
+| Admin     | 10     | ✅ PASS     |
+| Dashboard | 8      | ✅ PASS     |
+| **E2E**   | **24** | **✅ PASS** |
+
+### Total Coverage
+
+| Category  | Tests   | Status             |
+| --------- | ------- | ------------------ |
+| **TOTAL** | **131** | **✅ ALL PASSING** |
 
 ### Run Tests
 
@@ -673,6 +691,9 @@ pnpm test
 
 # Integration tests
 pnpm test:integration
+
+# E2E tests (requires servers running)
+cd frontend && npx playwright test
 
 # All tests
 pnpm test:all
@@ -701,3 +722,7 @@ pnpm test:all
 
 - **v1.0.0** - Initial release with core MLM features
 - **v1.1.0** - Added integration test suite (60 tests)
+- **v1.2.0** - Added TIER 2 tests (CRM, Pagination, Validation) + E2E tests
+  - Total: 131 tests (107 integration + 24 E2E)
+  - Added bilingual documentation structure (ES/EN)
+  - Created comprehensive PRD
