@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, User, Mail, Gift, Calendar, LogOut } from 'lucide-react';
+import { ArrowLeft, User, Mail, Gift, Calendar, LogOut, FileText } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { authService } from '../services/api';
 import Swal from 'sweetalert2';
@@ -225,13 +225,22 @@ export default function Profile() {
     <div className="min-h-screen bg-gray-100">
       <nav className="bg-white shadow-sm">
         <div className="max-w-3xl mx-auto px-4 py-4 flex justify-between items-center">
-          <Link
-            to="/dashboard"
-            className="flex items-center gap-2 text-gray-600 hover:text-indigo-600 transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            Back to Dashboard
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link
+              to="/dashboard"
+              className="flex items-center gap-2 text-gray-600 hover:text-indigo-600 transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              Back to Dashboard
+            </Link>
+            <Link
+              to="/landing-pages"
+              className="flex items-center gap-2 text-gray-600 hover:text-indigo-600 transition-colors"
+            >
+              <FileText className="w-5 h-5" />
+              Landing Pages
+            </Link>
+          </div>
           <button
             onClick={logout}
             className="flex items-center gap-2 text-gray-600 hover:text-red-600 transition-colors"

@@ -3,18 +3,17 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Copy package files
-COPY package.json pnpm-lock.yaml ./
+# Copy all backend files
+COPY backend/package.json backend/pnpm-lock.yaml backend/tsconfig.json ./
+COPY backend/scripts ./scripts
+COPY backend/src ./src
 
 # Install pnpm and dependencies
 RUN corepack enable && corepack prepare pnpm@latest --activate
-RUN pnpm install --frozen-lockfile
-
-# Copy source code
-COPY . .
+RUN pnpm install --frozen-lockfile --ignore-scripts
 
 # Build with esbuild
-RUN pnpm build
+RUN node scripts/build.mjs
 
 # Production stage
 FROM node:20-alpine AS production
@@ -29,11 +28,11 @@ RUN addgroup -g 1001 -S nodejs && \
     adduser -S nodejs -u 1001
 
 # Copy package files
-COPY package.json pnpm-lock.yaml ./
+COPY backend/package.json backend/pnpm-lock.yaml ./
 
 # Install production dependencies only
 RUN corepack enable && corepack prepare pnpm@latest --activate
-RUN pnpm install --prod --frozen-lockfile
+RUN pnpm install --prod --frozen-lockfile --ignore-scripts
 
 # Copy built files from builder
 COPY --from=builder /app/dist ./dist

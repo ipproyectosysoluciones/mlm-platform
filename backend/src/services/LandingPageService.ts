@@ -50,6 +50,7 @@ export class LandingPageService {
       throw new Error('Slug already exists');
     }
 
+    const now = new Date();
     return LandingPage.create({
       userId: input.userId,
       slug,
@@ -62,6 +63,8 @@ export class LandingPageService {
       isActive: true,
       views: 0,
       conversions: 0,
+      createdAt: now,
+      updatedAt: now,
     });
   }
 
@@ -76,7 +79,7 @@ export class LandingPageService {
         {
           model: User,
           as: 'user',
-          attributes: ['id', 'referralCode', 'firstName', 'lastName', 'email'],
+          attributes: ['id', 'referralCode', 'email'],
         },
       ],
     });

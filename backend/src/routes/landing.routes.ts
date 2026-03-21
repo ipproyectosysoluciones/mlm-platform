@@ -13,14 +13,16 @@ import { authenticate } from '../middleware/auth.middleware';
 
 const router = Router();
 
-router.get('/landing/:slug', getPublicLandingPage);
-router.post('/landing/:slug/convert', trackConversion);
-
+// Protected routes
 router.post('/landing', authenticate, createLandingPage);
 router.get('/landing', authenticate, getMyLandingPages);
 router.get('/landing/stats', authenticate, getLandingPageStats);
 router.get('/landing/:id', authenticate, getLandingPageById);
 router.put('/landing/:id', authenticate, updateLandingPage);
 router.delete('/landing/:id', authenticate, deleteLandingPage);
+
+// Public routes
+router.get('/landing/:slug', getPublicLandingPage);
+router.post('/landing/:slug/convert', trackConversion);
 
 export default router;
