@@ -131,32 +131,44 @@ Admin: admin@mlm.com / admin123
 Usuario: user1@mlm.com / user123
 ```
 
-## 📁 Estructura del Proyecto
+## 📁 Estructura del Proyecto / Project Structure
 
 ```
 MLM/
+├── docs/                     # Documentación general / General documentation
+│   ├── README.md            # Documentación principal / Main documentation
+│   ├── ARCHITECTURE.md      # Arquitectura del sistema / System architecture
+│   └── TESTING.md           # Guía de testing / Testing guide
 ├── backend/
+│   ├── docs/                # Documentación backend / Backend documentation
+│   │   ├── README.md        # Guía del backend / Backend guide
+│   │   ├── API.md           # Referencia de API / API reference
+│   │   └── MODELS.md        # Modelos de DB / Database models
 │   ├── src/
-│   │   ├── config/         # Configuración
-│   │   ├── controllers/     # Controladores
+│   │   ├── config/          # Configuración / Configuration
+│   │   ├── controllers/      # Controladores / Controllers
 │   │   ├── middleware/      # Middleware
 │   │   ├── models/          # Modelos Sequelize
-│   │   ├── routes/          # Rutas
-│   │   ├── services/       # Lógica de negocio
-│   │   └── __tests__/      # Tests unitarios
-│   ├── scripts/             # Scripts útiles
-│   └── docker-compose.yml   # Docker services
+│   │   ├── routes/          # Rutas / Routes
+│   │   ├── services/        # Lógica de negocio / Business logic
+│   │   └── __tests__/       # Tests / Tests
+│   └── docker-compose.yml
 ├── frontend/
+│   ├── docs/                # Documentación frontend / Frontend documentation
+│   │   └── README.md        # Guía del frontend / Frontend guide
 │   ├── src/
 │   │   ├── components/      # Componentes React
-│   │   ├── pages/           # Páginas
+│   │   ├── pages/           # Páginas / Pages
 │   │   ├── services/        # Servicios API
 │   │   ├── context/         # Contextos React
 │   │   └── test/            # Tests
-│   ├── e2e/                 # Tests E2E
-│   └── playwright.config.ts
-├── SPEC.md                   # Especificaciones
-└── README.md
+│   └── e2e/                 # Tests E2E (Playwright)
+├── SPEC.md                   # Especificaciones técnicas / Technical specs
+├── CHANGELOG.md             # Historial de cambios / Change history
+├── BRANCHING.md             # Estrategia de ramas / Branching strategy
+└── CONTRIBUTING.md           # Guía de contribuciones / Contributing guide
+```
+
 ```
 
 ## 🔒 Seguridad / Security
@@ -198,16 +210,18 @@ MLM/
 Este proyecto usa [Semantic Versioning](https://semver.org/):
 
 ```
+
 MAJOR.MINOR.PATCH
 1.0.0
-```
+
+````
 
 Tags:
 
 ```bash
 git tag -a v1.0.0 -m "Release 1.0.0"
 git push origin --tags
-```
+````
 
 ## 📄 Licencia / License
 
