@@ -1,27 +1,50 @@
 import { Sequelize } from 'sequelize';
 import { config } from './env';
 
-export const sequelize = new Sequelize({
-  database: config.db.name,
-  username: config.db.user,
-  password: config.db.password,
-  host: config.db.host,
-  port: config.db.port,
-  dialect: 'mysql',
-  logging: config.nodeEnv === 'development' ? console.log : false,
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000,
-  },
-  define: {
-    timestamps: true,
-    underscored: true,
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
-  },
-});
+// Allow test override
+let _sequelize: Sequelize | null = null;
+
+export function createSequelize(): Sequelize {
+  if (_sequelize) return _sequelize;
+
+  // MySQL for all environments (including tests with separate test DB)
+  const dbName = process.env.TEST_DB_NAME || config.db.name;
+  const dbUser = process.env.TEST_DB_USER || config.db.user;
+  const dbPass = process.env.TEST_DB_PASSWORD || config.db.password;
+  const dbHost = process.env.TEST_DB_HOST || config.db.host;
+  const dbPort = parseInt(process.env.TEST_DB_PORT || String(config.db.port));
+
+  _sequelize = new Sequelize({
+    database: dbName,
+    username: dbUser,
+    password: dbPass,
+    host: dbHost,
+    port: dbPort,
+    dialect: 'mysql',
+    logging: config.nodeEnv === 'development' ? console.log : false,
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 30000,
+      idle: 10000,
+    },
+    define: {
+      timestamps: true,
+      underscored: true,
+      createdAt: 'created_at',
+      updatedAt: 'updated_at',
+    },
+  });
+
+  return _sequelize;
+}
+
+export const sequelize = createSequelize();
+
+// For testing - reset the instance
+export function resetSequelize(): void {
+  _sequelize = null;
+}
 
 export async function connectDatabase(): Promise<void> {
   try {

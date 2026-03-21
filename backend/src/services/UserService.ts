@@ -5,6 +5,7 @@
 import { User } from '../models';
 import { generateUniqueReferralCode, generateUUID } from '../utils/codeGenerator';
 import { TreeService } from './TreeService';
+import { AppError } from '../middleware/error.middleware';
 
 const treeService = new TreeService();
 
@@ -33,7 +34,7 @@ export class UserService {
       });
 
       if (!sponsor) {
-        throw new Error('Sponsor code not found');
+        throw new AppError(400, 'INVALID_REFERRAL_CODE', 'Sponsor code not found');
       }
 
       sponsorId = sponsor.id;

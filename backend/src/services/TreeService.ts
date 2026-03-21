@@ -72,7 +72,7 @@ export class TreeService {
           }
         );
 
-        const ancestors = results as Array<{ ancestor_id: string; depth: number }>;
+        const ancestors = (results || []) as Array<{ ancestor_id: string; depth: number }>;
 
         if (ancestors.length > 0) {
           const closureRecords = ancestors.map((a) => ({
