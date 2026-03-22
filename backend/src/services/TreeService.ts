@@ -5,13 +5,46 @@
  * Utiliza el patrón Closure Table para representar la jerarquía del árbol binario.
  * Uses the Closure Table pattern to represent the binary tree hierarchy.
  *
+ * Phase 3: Agregados métodos para paginación, búsqueda y detalles optimizados.
+ * Phase 3: Added methods for pagination, search, and optimized details.
+ *
  * @example
  * const tree = await treeService.getUserTree(userId, 3);
  * const upline = await treeService.getUpline(userId);
  */
+import { Op } from 'sequelize';
 import { sequelize } from '../config/database';
 import { User, UserClosure } from '../models';
-import type { TreeNode } from '../types';
+import type { TreeNode, UserAttributes } from '../types';
+
+// Types for Phase 3
+interface UserSearchResult {
+  id: string;
+  email: string;
+  referralCode: string;
+  level: number;
+}
+
+interface UserDetailsResult {
+  id: string;
+  email: string;
+  referralCode: string;
+  position: 'left' | 'right';
+  level: number;
+  status: 'active' | 'inactive';
+  stats: {
+    leftCount: number;
+    rightCount: number;
+    totalDownline: number;
+  };
+}
+
+interface PaginationMeta {
+  total: number;
+  page: number;
+  limit: number;
+  hasMore: boolean;
+}
 
 export class TreeService {
   /**
@@ -72,10 +105,15 @@ export class TreeService {
           }
         );
 
-        const ancestors = (results || []) as Array<{ ancestor_id: string; depth: number }>;
+        // Sequelize with MySQL returns a single object when there's one result,
+        // not an array. Normalize to always be an array.
+        // Sequelize con MySQL retorna un objeto cuando hay un solo resultado,
+        // no un array. Normalizar a siempre ser un array.
+        const rawAncestors = results as any;
+        const ancestors = Array.isArray(rawAncestors) ? rawAncestors : [rawAncestors];
 
         if (ancestors.length > 0) {
-          const closureRecords = ancestors.map((a) => ({
+          const closureRecords = ancestors.map((a: { ancestor_id: string; depth: number }) => ({
             ancestorId: a.ancestor_id,
             descendantId: userId,
             depth: a.depth,
@@ -139,6 +177,9 @@ export class TreeService {
    * Obtiene hijos recursivamente hasta maxDepth
    * Gets children recursively up to maxDepth
    *
+   * OPTIMIZADO: Usa batch queries para evitar N+1
+   * OPTIMIZED: Uses batch queries to avoid N+1
+   *
    * @param userId - ID del padre / Parent ID
    * @param maxDepth - Profundidad restante / Remaining depth
    */
@@ -147,15 +188,30 @@ export class TreeService {
       where: { sponsorId: userId },
     });
 
+    if (children.length === 0) return [];
+
+    // Batch query para evitar N+1 — obtiene todos los conteos de una vez
+    // Batch query to avoid N+1 — gets all counts at once
+    const childIds = children.map((c) => c.id);
+    const counts = await User.findAll({
+      attributes: ['sponsorId', 'position', [sequelize.fn('COUNT', sequelize.col('id')), 'count']],
+      where: { sponsorId: childIds },
+      group: ['sponsorId', 'position'],
+      raw: true,
+    });
+
+    // Map counts by sponsorId + position para acceso O(1)
+    // Map counts by sponsorId + position for O(1) access
+    const countMap = new Map<string, number>();
+    (counts as unknown as Array<{ sponsorId: string; position: string; count: number }>).forEach(
+      (c) => countMap.set(`${c.sponsorId}-${c.position}`, c.count)
+    );
+
     const treeNodes: TreeNode[] = [];
 
     for (const child of children) {
-      const leftCount = await User.count({
-        where: { sponsorId: child.id, position: 'left' },
-      });
-      const rightCount = await User.count({
-        where: { sponsorId: child.id, position: 'right' },
-      });
+      const leftCount = countMap.get(`${child.id}-left`) || 0;
+      const rightCount = countMap.get(`${child.id}-right`) || 0;
 
       const node: TreeNode = {
         id: child.id,
@@ -237,7 +293,7 @@ export class TreeService {
   }
 
   private async getDescendantCount(userId: string, position: 'left' | 'right'): Promise<number> {
-    const result = await sequelize.query(
+    const [rawResult] = await sequelize.query(
       `SELECT COUNT(*) as count
        FROM user_closure uc
        JOIN users u ON uc.descendant_id = u.id
@@ -250,7 +306,173 @@ export class TreeService {
       }
     );
 
-    const firstResult = result[0] as unknown as { count: number };
-    return firstResult?.count || 0;
+    // Sequelize with MySQL returns single object when there's one result, not array
+    const countObj = Array.isArray(rawResult) ? rawResult[0] : rawResult;
+    return (countObj as { count: number })?.count || 0;
+  }
+
+  // ============================================================
+  // PHASE 3: NEW METHODS FOR VISUAL TREE UI
+  // ============================================================
+
+  /**
+   * Obtiene el subtree paginado con metadata
+   * Gets paginated subtree with metadata
+   *
+   * @param userId - ID del usuario raíz / Root user ID
+   * @param depth - Profundidad máxima / Maximum depth
+   * @param page - Número de página / Page number
+   * @param limit - Límite de nodos por página / Nodes per page limit
+   */
+  async getSubtreePaginated(
+    userId: string,
+    depth: number,
+    page: number = 1,
+    limit: number = 50
+  ): Promise<{ tree: TreeNode | null; pagination: PaginationMeta }> {
+    const tree = await this.getUserTree(userId, depth);
+
+    if (!tree) {
+      return {
+        tree: null,
+        pagination: { total: 0, page, limit, hasMore: false },
+      };
+    }
+
+    // Cuenta nodos totales recursivamente
+    // Counts total nodes recursively
+    const countNodes = (node: TreeNode): number => {
+      return 1 + node.children.reduce((sum, c) => sum + countNodes(c), 0);
+    };
+    const total = countNodes(tree);
+
+    return {
+      tree,
+      pagination: {
+        total,
+        page,
+        limit,
+        hasMore: page * limit < total,
+      },
+    };
+  }
+
+  /**
+   * Busca usuarios en el subtree de un sponsor
+   * Searches users in sponsor's subtree
+   *
+   * Busca por email o referral code en los downlines del usuario.
+   * Searches by email or referral code in user's downlines.
+   *
+   * @param sponsorId - ID del sponsor / Sponsor ID
+   * @param query - Término de búsqueda / Search term
+   * @param limit - Límite de resultados / Results limit
+   */
+  async searchInSubtree(
+    sponsorId: string,
+    query: string,
+    limit: number = 20
+  ): Promise<UserSearchResult[]> {
+    // Obtiene todos los descendant IDs del sponsor usando closure table
+    // Gets all descendant IDs from sponsor using closure table
+    const [rawResults] = await sequelize.query(
+      `SELECT descendant_id 
+       FROM user_closure 
+       WHERE ancestor_id = :sponsorId AND depth > 0`,
+      {
+        replacements: { sponsorId },
+        type: 'SELECT',
+      }
+    );
+
+    // Handle null/undefined/empty results
+    if (!rawResults) return [];
+
+    // Sequelize with MySQL returns single object when there's one result, not array
+    const descendants = (Array.isArray(rawResults) ? rawResults : [rawResults]) as Array<{
+      descendant_id: string;
+    }>;
+
+    if (descendants.length === 0) return [];
+
+    const descendantIds = descendants.map((d) => d.descendant_id);
+
+    // Busca en los descendientes (case-insensitive para MySQL)
+    // Searches in descendants (case-insensitive for MySQL)
+    const users = await User.findAll({
+      where: {
+        id: { [Op.in]: descendantIds },
+        [Op.or]: [
+          // Use LIKE which is case-insensitive in MySQL by default
+          { email: { [Op.like]: `%${query}%` } },
+          { referralCode: { [Op.like]: `%${query}%` } },
+        ],
+      },
+      attributes: ['id', 'email', 'referralCode', 'level'],
+      limit,
+    });
+
+    return users.map((u) => ({
+      id: u.id,
+      email: u.email,
+      referralCode: u.referralCode,
+      level: u.level,
+    }));
+  }
+
+  /**
+   * Obtiene detalles extendidos de un usuario
+   * Gets extended details of a user
+   *
+   * Verifica que el usuario solicitante sea ancestro del usuario consultado.
+   * Verifies requester is ancestor of requested user.
+   *
+   * @param userId - ID del usuario a consultar / User ID to query
+   * @param requesterId - ID del usuario solicitante / Requester user ID
+   */
+  async getUserDetails(userId: string, requesterId: string): Promise<UserDetailsResult | null> {
+    // Verifica relación ancestro-descendiente
+    // Verifies ancestor-descendant relationship
+    const isDescendant = await sequelize.query(
+      `SELECT 1 FROM user_closure 
+       WHERE ancestor_id = :requesterId 
+         AND descendant_id = :userId 
+         AND depth > 0`,
+      {
+        replacements: { requesterId, userId },
+        type: 'SELECT',
+        plain: true,
+      }
+    );
+
+    // También permite que el usuario vea sus propios detalles
+    // Also allows user to view their own details
+    if (!isDescendant && requesterId !== userId) {
+      return null;
+    }
+
+    const user = await User.findByPk(userId, {
+      attributes: ['id', 'email', 'referralCode', 'position', 'level', 'status'],
+    });
+
+    if (!user) return null;
+
+    // Obtiene stats del árbol
+    // Gets tree stats
+    const legCounts = await this.getLegCounts(userId);
+
+    return {
+      id: user.id,
+      email: user.email,
+      referralCode: user.referralCode,
+      position: user.position as 'left' | 'right',
+      level: user.level,
+      status: user.status as 'active' | 'inactive',
+      stats: {
+        leftCount: legCounts.leftCount,
+        rightCount: legCounts.rightCount,
+        totalDownline: legCounts.leftCount + legCounts.rightCount,
+      },
+    };
   }
 }

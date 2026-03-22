@@ -7,6 +7,8 @@ import {
   updateProfile,
   changePassword,
   deleteAccount,
+  searchUsers,
+  getUserDetails,
   updateProfileValidation,
   changePasswordValidation,
   deleteAccountValidation,
@@ -143,6 +145,7 @@ router.post(
  * /users/me/tree:
  *   get:
  *     summary: Obtener árbol binario del usuario / Get user's binary tree
+ *     description: Retorna la estructura del árbol binario del usuario con stats y opcionalmente paginación.
  *     tags: [users]
  *     security:
  *       - bearerAuth: []
@@ -151,10 +154,47 @@ router.post(
  *         name: depth
  *         schema:
  *           type: integer
+ *           minimum: 1
+ *           maximum: 10
+ *           default: 3
  *         description: Profundidad máxima del árbol / Maximum tree depth
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 1
+ *         description: Número de página (Phase 3) / Page number (Phase 3)
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 100
+ *           default: 50
+ *         description: Límite de nodos por página (Phase 3) / Nodes per page limit (Phase 3)
  *     responses:
  *       200:
  *         description: Estructura del árbol / Tree structure
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/components/schemas/ApiResponse'
+ *                 - type: object
+ *                   properties:
+ *                     data:
+ *                       type: object
+ *                       properties:
+ *                         tree:
+ *                           $ref: '#/components/schemas/TreeNode'
+ *                         stats:
+ *                           $ref: '#/components/schemas/TreeResponse/properties/stats'
+ *                         pagination:
+ *                           $ref: '#/components/schemas/PaginationMeta'
+ *                           description: Incluido si se usan page/limit / Included if page/limit are used
+ *       401:
+ *         description: No autenticado / Not authenticated
  */
 router.get(
   '/me/tree',
@@ -230,6 +270,7 @@ router.get(
  * /users/{id}/tree:
  *   get:
  *     summary: Obtener árbol de otro usuario / Get other user's tree
+ *     description: Retorna el árbol binario de otro usuario (debe ser ancestro del solicitante).
  *     tags: [users]
  *     security:
  *       - bearerAuth: []
@@ -239,9 +280,27 @@ router.get(
  *         required: true
  *         schema:
  *           type: string
+ *           format: uuid
+ *         description: ID del usuario / User ID
+ *       - in: query
+ *         name: depth
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 10
+ *           default: 3
+ *         description: Profundidad máxima / Maximum depth
  *     responses:
  *       200:
  *         description: Estructura del árbol / Tree structure
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/TreeResponse'
+ *       401:
+ *         description: No autenticado / Not authenticated
+ *       404:
+ *         description: Usuario no encontrado / User not found
  */
 router.get('/:id/tree', authenticateToken, asyncHandler(getTree));
 
@@ -250,6 +309,7 @@ router.get('/:id/tree', authenticateToken, asyncHandler(getTree));
  * /users/{id}/qr:
  *   get:
  *     summary: Obtener QR de otro usuario / Get other user's QR
+ *     description: Genera código QR con el referral code del usuario.
  *     tags: [users]
  *     security:
  *       - bearerAuth: []
@@ -259,9 +319,18 @@ router.get('/:id/tree', authenticateToken, asyncHandler(getTree));
  *         required: true
  *         schema:
  *           type: string
+ *           format: uuid
+ *         description: ID del usuario / User ID
  *     responses:
  *       200:
  *         description: Imagen PNG del código QR
+ *         content:
+ *           image/png:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *       404:
+ *         description: Usuario no encontrado / User not found
  */
 router.get('/:id/qr', authenticateToken, asyncHandler(getQR));
 
@@ -270,6 +339,7 @@ router.get('/:id/qr', authenticateToken, asyncHandler(getQR));
  * /users/{id}/qr-url:
  *   get:
  *     summary: Obtener URL del QR de otro usuario / Get other user's QR URL
+ *     description: Retorna la URL del código QR y el link de referido.
  *     tags: [users]
  *     security:
  *       - bearerAuth: []
@@ -279,10 +349,86 @@ router.get('/:id/qr', authenticateToken, asyncHandler(getQR));
  *         required: true
  *         schema:
  *           type: string
+ *           format: uuid
+ *         description: ID del usuario / User ID
  *     responses:
  *       200:
- *         description: URL del QR y link de referido
+ *         description: URL del QR y link de referido / QR URL and referral link
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 dataUrl:
+ *                   type: string
+ *                   description: QR como data URL
+ *                 referralLink:
+ *                   type: string
+ *                   description: Link de referido / Referral link
+ *                 referralCode:
+ *                   type: string
+ *       404:
+ *         description: Usuario no encontrado / User not found
  */
 router.get('/:id/qr-url', authenticateToken, asyncHandler(getQRUrl));
+
+// ============================================================
+// PHASE 3: NEW ROUTES FOR VISUAL TREE UI
+// ============================================================
+
+/**
+ * @swagger
+ * /users/search:
+ *   get:
+ *     summary: Buscar usuarios en mi red / Search users in my network
+ *     description: Busca por email o referral code en los downlines del usuario autenticado
+ *     tags: [users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: q
+ *         required: true
+ *         schema:
+ *           type: string
+ *           minLength: 2
+ *         description: Término de búsqueda (min 2 caracteres) / Search term
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 20
+ *         description: Límite de resultados / Results limit
+ *     responses:
+ *       200:
+ *         description: Array de usuarios coincidentes / Array of matching users
+ *       400:
+ *         description: Query muy corta / Query too short
+ */
+router.get('/search', authenticateToken, asyncHandler(searchUsers));
+
+/**
+ * @swagger
+ * /users/{id}/details:
+ *   get:
+ *     summary: Obtener detalles de un usuario / Get user details
+ *     description: Devuelve información extendida del usuario incluyendo stats del árbol
+ *     tags: [users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del usuario / User ID
+ *     responses:
+ *       200:
+ *         description: Detalles del usuario / User details
+ *       404:
+ *         description: Usuario no encontrado o no está en tu red / User not found or not in your network
+ */
+router.get('/:id/details', authenticateToken, asyncHandler(getUserDetails));
 
 export default router;
