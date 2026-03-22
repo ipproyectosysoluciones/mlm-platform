@@ -7,9 +7,11 @@
 
 import { User } from '../models';
 import bcrypt from 'bcryptjs';
+import { treeServiceInstance } from '../services/UserService';
 
 /**
  * Create a test user with valid credentials
+ * Populates the closure table if sponsorId is provided
  */
 export async function createTestUser(
   overrides: {
@@ -25,7 +27,7 @@ export async function createTestUser(
   const passwordHash = await bcrypt.hash(password, 12);
   const unique = Math.random().toString(36).substring(7);
 
-  return User.create({
+  const user = await User.create({
     email: overrides.email || `test_${Date.now()}_${unique}@mlm.test`,
     passwordHash,
     referralCode: overrides.referralCode || `REF${unique.toUpperCase()}`,
@@ -36,6 +38,16 @@ export async function createTestUser(
     role: overrides.role || 'user',
     currency: 'USD',
   } as any);
+
+  // Populate closure table if user has a sponsor
+  if (overrides.sponsorId) {
+    await treeServiceInstance.insertWithClosure(user.id, overrides.sponsorId);
+  } else {
+    // For root users, create self-reference in closure table
+    await treeServiceInstance.insertWithClosure(user.id, null);
+  }
+
+  return user;
 }
 
 /**
