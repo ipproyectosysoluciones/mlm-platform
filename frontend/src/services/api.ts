@@ -12,7 +12,8 @@ import type {
   AuthResponse,
   DashboardData,
   TreeNode,
-  Commission,
+  User,
+  UserDetails,
 } from '../types';
 
 /** @constant {string} API_URL - Backend base URL / URL base del backend */
@@ -117,75 +118,6 @@ export const dashboardService = {
 };
 
 /**
- * @namespace treeService
- * @description Binary tree API methods / Métodos de API del árbol binario
- */
-export const treeService = {
-  /**
-   * Get tree for specific user
-   * Obtener árbol de usuario específico
-   * @param {string} userId - User ID / ID de usuario
-   * @param {number} [maxDepth] - Maximum depth to retrieve / Profundidad máxima a recuperar
-   * @returns {Promise<TreeNode>} Tree node data / Datos del nodo del árbol
-   */
-  getTree: async (userId: string, maxDepth?: number): Promise<TreeNode> => {
-    const params = maxDepth ? `?maxDepth=${maxDepth}` : '';
-    const response = await api.get<{ success: boolean; data: TreeNode }>(
-      `/users/${userId}/tree${params}`
-    );
-    return response.data.data!;
-  },
-
-  /**
-   * Get current user's tree
-   * Obtener árbol del usuario actual
-   * @param {number} [maxDepth] - Maximum depth to retrieve / Profundidad máxima a recuperar
-   * @returns {Promise<TreeNode>} Tree node data / Datos del nodo del árbol
-   */
-  getMyTree: async (maxDepth?: number): Promise<TreeNode> => {
-    const params = maxDepth ? `?maxDepth=${maxDepth}` : '';
-    const response = await api.get<{ success: boolean; data: TreeNode }>(`/users/me/tree${params}`);
-    return response.data.data!;
-  },
-};
-
-/**
- * @namespace commissionService
- * @description Commission API methods / Métodos de API de comisiones
- */
-export const commissionService = {
-  /**
-   * Get user commissions with pagination
-   * Obtener comisiones del usuario con paginación
-   * @param {Object} [params] - Query parameters / Parámetros de consulta
-   * @param {number} [params.page] - Page number / Número de página
-   * @param {number} [params.limit] - Items per page / Items por página
-   * @param {string} [params.type] - Commission type filter / Filtro de tipo de comisión
-   * @param {string} [params.status] - Status filter / Filtro de estado
-   * @returns {Promise<{rows: Commission[], count: number}>} Paginated commissions
-   */
-  getCommissions: async (params?: {
-    page?: number;
-    limit?: number;
-    type?: string;
-    status?: string;
-  }): Promise<{ rows: Commission[]; count: number }> => {
-    const response = await api.get('/commissions', { params });
-    return response.data.data!;
-  },
-
-  /**
-   * Get commission statistics
-   * Obtener estadísticas de comisiones
-   * @returns {Promise} API response with stats / Respuesta con estadísticas
-   */
-  getStats: async () => {
-    const response = await api.get('/commissions/stats');
-    return response.data.data!;
-  },
-};
-
-/**
  * @namespace adminService
  * @description Admin API methods / Métodos de API de administración
  */
@@ -251,6 +183,93 @@ export const adminService = {
   }) => {
     const response = await api.get('/admin/reports/commissions', { params });
     return response.data;
+  },
+};
+
+/**
+ * @namespace treeService
+ * @description Binary tree API methods / Métodos de API del árbol binario
+ */
+export const treeService = {
+  /**
+   * Get tree for specific user
+   * Obtener árbol de usuario específico
+   * @param {string} userId - User ID / ID de usuario
+   * @param {number} [maxDepth] - Maximum depth to retrieve / Profundidad máxima a recuperar
+   * @param {number} [page] - Page number for pagination / Número de página
+   * @param {number} [limit] - Items per page / Items por página
+   * @returns {Promise<TreeNode>} Tree node data / Datos del nodo del árbol
+   */
+  getTree: async (
+    userId: string,
+    maxDepth?: number,
+    page?: number,
+    limit?: number
+  ): Promise<TreeNode> => {
+    const params = new URLSearchParams();
+    if (maxDepth) params.append('depth', maxDepth.toString());
+    if (page) params.append('page', page.toString());
+    if (limit) params.append('limit', limit.toString());
+    const queryString = params.toString();
+    const response = await api.get<{ success: boolean; data: TreeNode }>(
+      `/users/${userId}/tree${queryString ? `?${queryString}` : ''}`
+    );
+    return response.data.data!;
+  },
+
+  /**
+   * Get current user's tree
+   * Obtener árbol del usuario actual
+   * @param {number} [maxDepth] - Maximum depth to retrieve / Profundidad máxima a recuperar
+   * @param {number} [page] - Page number for pagination / Número de página
+   * @param {number} [limit] - Items per page / Items por página
+   * @returns {Promise<TreeNode>} Tree node data / Datos del nodo del árbol
+   */
+  getMyTree: async (maxDepth?: number, page?: number, limit?: number): Promise<TreeNode> => {
+    const params = new URLSearchParams();
+    if (maxDepth) params.append('depth', maxDepth.toString());
+    if (page) params.append('page', page.toString());
+    if (limit) params.append('limit', limit.toString());
+    const queryString = params.toString();
+    const response = await api.get<{ success: boolean; data: TreeNode }>(
+      `/users/me/tree${queryString ? `?${queryString}` : ''}`
+    );
+    return response.data.data!;
+  },
+};
+
+/**
+ * @namespace userService
+ * @description User API methods (Phase 3) / Métodos de API de usuario
+ */
+export const userService = {
+  /**
+   * Search users in current user's network
+   * Busca usuarios en la red del usuario actual
+   * @param {string} query - Search term (email or referral code) / Término de búsqueda
+   * @param {number} [limit] - Results limit / Límite de resultados
+   * @returns {Promise<User[]>} Array of matching users / Array de usuarios coincidentes
+   */
+  searchUsers: async (query: string, limit?: number): Promise<User[]> => {
+    const params = new URLSearchParams({ q: query });
+    if (limit) params.append('limit', limit.toString());
+    const response = await api.get<{ success: boolean; data: User[] }>(
+      `/users/search?${params.toString()}`
+    );
+    return response.data.data || [];
+  },
+
+  /**
+   * Get detailed information about a user
+   * Obtiene información detallada de un usuario
+   * @param {string} userId - User ID / ID de usuario
+   * @returns {Promise<UserDetails>} User details / Detalles del usuario
+   */
+  getUserDetails: async (userId: string): Promise<UserDetails> => {
+    const response = await api.get<{ success: boolean; data: UserDetails }>(
+      `/users/${userId}/details`
+    );
+    return response.data.data!;
   },
 };
 

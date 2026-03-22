@@ -80,3 +80,22 @@ export interface ApiResponse<T> {
   data?: T;
   message?: string;
 }
+
+/**
+ * UserDetails - Información extendida de usuario (Phase 3)
+ * UserDetails - Extended user information (Phase 3)
+ */
+export interface UserDetails {
+  id: string;
+  email: string;
+  referralCode: string;
+  position: 'left' | 'right';
+  level: number;
+  status: 'active' | 'inactive';
+  createdAt: string;
+  stats: {
+    leftCount: number;
+    rightCount: number;
+    totalDownline: number;
+  };
+}
