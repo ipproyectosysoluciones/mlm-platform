@@ -50,3 +50,4 @@ temp/
 # Credentials
 credentials.json
 secrets/
+frontend/test-screenshots/
