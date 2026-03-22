@@ -472,12 +472,12 @@ Authorization: Bearer <jwt_token>
 
 ## Phased Rollout / Implementación por Fases
 
-### Phase 1: MVP (Current)
+### Phase 1: MVP ✅ (COMPLETED)
 
 **Scope / Alcance**:
 
 - ✅ User registration with sponsor codes
-- ✅ Binary tree with left/right placement
+- ✅ Binary tree with left/right placement (API)
 - ✅ Commission calculation (5 levels)
 - ✅ Dashboard with statistics
 - ✅ Admin panel (user management)
@@ -488,27 +488,87 @@ Authorization: Bearer <jwt_token>
 - ✅ E2E test suite (24 tests)
 
 **Timeline**: Q1 2026  
-**Status**: **IN PROGRESS - 90% Complete**
+**Status**: **COMPLETE ✅**
 
 ---
 
-### Phase 2: v1.1 - Payments & Notifications
+### Phase 2: v1.1 - Email & SMS Notifications
+
+**Scope / Alcance**:
+
+- [ ] Email notifications (new commissions, downline activity, welcome, password reset)
+- [ ] Email templates (5 responsive HTML templates)
+- [ ] SMS 2FA via Twilio
+- [ ] User notification preferences API
+- [ ] Weekly digest cron job
+
+**Dependencies**: SendGrid account, Twilio account  
+**Timeline**: Q2 2026
+
+---
+
+### Phase 3: v1.2 - Visual Tree UI ✅ COMPLETE
+
+**Scope / Alcance**:
+
+- [x] Interactive binary tree visualization component (React Flow)
+- [x] Tree node rendering with user info (avatar, name, status)
+- [x] Zoom in/out controls
+- [x] Pan/scroll navigation
+- [x] Search member by name/email
+- [x] Click node to view user details
+- [x] Tree depth controls (levels to display)
+- [x] Mobile responsive tree view
+
+**Dependencies**: D3.js or React Flow library (React Flow selected)  
+**Timeline**: Q2 2026 ✅ Completed March 2026
+
+**Implementation Details**:
+
+- React Flow for interactive tree visualization
+- Zustand for state management
+- Mobile-first responsive design
+- 13 E2E tests passing
+- 144 backend integration tests passing
+
+---
+
+### Phase 4: v1.3 - E-commerce 🛒
+
+**Scope / Alcance**:
+
+- [ ] Product catalog management
+- [ ] Product CRUD (admin)
+- [ ] Product categories
+- [ ] Shopping cart
+- [ ] Order management
+- [ ] Order status tracking
+- [ ] Product images and pricing
+- [ ] Inventory management
+
+**Dependencies**: Image storage (S3/Cloudinary)  
+**Timeline**: Q3 2026
+
+---
+
+### Phase 5: v2.0 - Payments & E-Wallet 💰
 
 **Scope / Alcance**:
 
 - [ ] Stripe Connect integration for commission payouts
 - [ ] PayPal integration for deposits
-- [ ] Email notifications (new commissions, downline activity)
-- [ ] SMS 2FA
+- [ ] E-wallet system
+- [ ] Withdrawal requests
+- [ ] Payment history
+- [ ] Multi-currency support (COP, MXN, USD)
 - [ ] Audit logs
-- [ ] Multi-currency support (COP, MXN, USD default)
 
-**Dependencies**: Stripe developer account, Twilio account  
-**Timeline**: Q2 2026
+**Dependencies**: Stripe account, PayPal account  
+**Timeline**: Q3-Q4 2026
 
 ---
 
-### Phase 3: v2.0 - Mobile & Scale
+### Phase 6: v2.1 - Mobile & Scale
 
 **Scope / Alcance**:
 
@@ -516,26 +576,25 @@ Authorization: Bearer <jwt_token>
 - [ ] Push notifications (Firebase)
 - [ ] Multi-language (Spanish, English, Portuguese)
 - [ ] Gamification (achievements, leaderboards)
-- [ ] WhatsApp/Telegram bot for basic queries
 - [ ] Advanced analytics dashboard
-- [ ] White-label capabilities
-- [ ] API rate limiting per plan tier
 
 **Dependencies**: Mobile developer, localization team  
-**Timeline**: Q3-Q4 2026
+**Timeline**: Q4 2026
 
 ---
 
-### Phase 4: Enterprise
+### Phase 7: Enterprise
 
 **Scope / Alcance**:
 
-- [ ] Custom domain support
+- [ ] White-label capabilities
+- [ ] Custom commission structures (Unilevel, Matrix)
 - [ ] SSO (SAML, OAuth)
 - [ ] Advanced permissions (teams, departments)
-- [ ] Custom commission structures
 - [ ] API webhooks
+- [ ] Custom domain support
 - [ ] Dedicated support tier
+- [ ] WhatsApp/Telegram bot
 
 **Dependencies**: Enterprise sales pipeline  
 **Timeline**: 2027+

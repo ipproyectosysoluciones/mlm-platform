@@ -90,10 +90,50 @@ export async function getMe(req: AuthenticatedRequest, res: Response): Promise<v
  * @param req - Authenticated request with optional user ID and depth
  * @param res - Response with tree structure and stats
  */
+/**
+ * Get user binary tree
+ * Obtiene árbol binario de usuario
+ *
+ * PHASE 3: Soporta paginación con query params ?depth=&page=&limit=
+ * PHASE 3: Supports pagination with query params ?depth=&page=&limit=
+ *
+ * @param req - Authenticated request with optional user ID and pagination params
+ * @param res - Response with tree structure, stats, and pagination metadata
+ */
 export async function getTree(req: AuthenticatedRequest, res: Response): Promise<void> {
   const userId = req.params.id || req.user!.id;
   const depth = req.query.depth ? parseInt(req.query.depth as string, 10) : undefined;
+  const page = req.query.page ? parseInt(req.query.page as string, 10) : 1;
+  const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : 50;
 
+  // Si se pide paginación, usa getSubtreePaginated
+  // If pagination is requested, use getSubtreePaginated
+  if (req.query.page || req.query.limit) {
+    const result = await treeServiceInstance.getSubtreePaginated(userId, depth || 3, page, limit);
+
+    if (!result.tree) {
+      res.status(404).json({
+        success: false,
+        error: { code: 'NOT_FOUND', message: 'User not found' },
+      });
+      return;
+    }
+
+    const stats = await treeServiceInstance.getLegCounts(userId);
+
+    res.json({
+      success: true,
+      data: {
+        tree: result.tree,
+        pagination: result.pagination,
+        stats,
+      },
+    });
+    return;
+  }
+
+  // Comportamiento original para compatibilidad
+  // Original behavior for backwards compatibility
   const tree = await treeServiceInstance.getUserTree(userId, depth);
   if (!tree) {
     res.status(404).json({
@@ -105,15 +145,10 @@ export async function getTree(req: AuthenticatedRequest, res: Response): Promise
 
   const stats = await treeServiceInstance.getLegCounts(userId);
 
-  const response: ApiResponse<{
-    tree: typeof tree;
-    stats: typeof stats;
-  }> = {
+  res.json({
     success: true,
     data: { tree, stats },
-  };
-
-  res.json(response);
+  });
 }
 
 /**
@@ -259,4 +294,127 @@ export async function deleteAccount(req: AuthenticatedRequest, res: Response): P
 
   await userService.deleteUser(userId);
   res.json({ success: true, message: 'Account deleted successfully' });
+}
+
+// ============================================================
+// PHASE 3: NEW ENDPOINTS FOR VISUAL TREE UI
+// ============================================================
+
+/**
+ * Search users in subtree / Busca usuarios en el subtree
+ *
+ * PHASE 3: Endpoint para buscar usuarios en los downlines del árbol.
+ * PHASE 3: Endpoint to search users in the tree downlines.
+ *
+ * Utiliza la closure table para eficiencia en la búsqueda de descendientes.
+ * Uses the closure table for efficient descendant search.
+ *
+ * Búsqueda case-insensitive por email o código de referido.
+ * Case-insensitive search by email or referral code.
+ *
+ * @param req - Authenticated request with query params:
+ *               - q: Search term (min 2 chars) / Término de búsqueda (min 2 chars)
+ *               - limit: Max results (default 20) / Máximo resultados (default 20)
+ * @param res - Array of matching users with id, email, referralCode, level
+ *
+ * @example GET /api/users/search?q=john&limit=10
+ * @example GET /api/users/search?q=REFCODE
+ */
+/**
+ * Search users in subtree
+ * Busca usuarios en el subárbol del usuario autenticado
+ *
+ * Phase 3: Visual Tree UI - Endpoint para búsqueda de usuarios en el árbol
+ * Phase 3: Visual Tree UI - Endpoint for searching users in the authenticated user's tree
+ *
+ * @route GET /api/users/search
+ * @access Authenticated
+ * @param req.query.q - Search query (min 2 characters)
+ * @param req.query.limit - Max results (default 20)
+ * @returns UserSearchResult[] - Array of matching users
+ *
+ * @example GET /api/users/search?q=john&limit=10
+ */
+export async function searchUsers(req: AuthenticatedRequest, res: Response): Promise<void> {
+  const { q } = req.query;
+  const userId = req.user!.id;
+
+  if (!q || typeof q !== 'string' || q.length < 2) {
+    res.status(400).json({
+      success: false,
+      error: { code: 'INVALID_QUERY', message: 'Query must be at least 2 characters' },
+    });
+    return;
+  }
+
+  const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : 20;
+  const results = await treeServiceInstance.searchInSubtree(userId, q, limit);
+
+  res.json({
+    success: true,
+    data: results,
+  });
+}
+
+/**
+ * Get user details / Obtiene detalles de usuario
+ *
+ * PHASE 3: Endpoint para ver detalles extendidos de un usuario en el árbol.
+ * PHASE 3: Endpoint to view extended details of a user in the tree.
+ *
+ * Verifica que el usuario solicitante sea ancestro del usuario consultado.
+ * Verifies the requester is an ancestor of the requested user.
+ *
+ * Incluye estadísticas de pierna izquierda/derecha y total downline.
+ * Includes left/right leg statistics and total downline.
+ *
+ * @param req - Authenticated request with:
+ *              - params.id: User ID to view / ID del usuario a ver
+ * @param res - Extended user details:
+ *              - id, email, referralCode, position, level, status
+ *              - stats: { leftCount, rightCount, totalDownline }
+ *
+ * @example GET /api/users/{userId}/details
+ * @example GET /api/users/self/details (for own details)
+ */
+/**
+ * Get user details by ID
+ * Obtiene detalles de usuario por ID
+ *
+ * Phase 3: Visual Tree UI - Endpoint para ver detalles de usuario seleccionado
+ * Phase 3: Visual Tree UI - Endpoint for viewing selected user details
+ *
+ * @route GET /api/users/:id/details
+ * @access Authenticated (must be in user's network)
+ * @param req.params.id - User ID to get details for
+ * @returns UserDetails - Extended user details including tree stats
+ *
+ * @example GET /api/users/123e4567-e89b-12d3-a456-426614174000/details
+ */
+export async function getUserDetails(req: AuthenticatedRequest, res: Response): Promise<void> {
+  const { id } = req.params;
+  const requesterId = req.user!.id;
+
+  if (!id) {
+    res.status(400).json({
+      success: false,
+      error: { code: 'INVALID_PARAMS', message: 'User ID is required' },
+    });
+    return;
+  }
+
+  const details = await treeServiceInstance.getUserDetails(id, requesterId);
+
+  if (!details) {
+    res.status(404).json({
+      success: false,
+      error: { code: 'NOT_FOUND', message: 'User not found or not in your network' },
+    });
+    return;
+  }
+
+  res.json({
+    success: true,
+    data: details,
+  });
 }
