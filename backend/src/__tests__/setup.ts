@@ -34,8 +34,8 @@ beforeAll(async () => {
   // Import models to register them with sequelize
   require('../models');
 
-  // Sync all models - force to recreate tables
-  await testDb.sync({ force: true });
+  // Sync all models - use alter instead of force for faster tests
+  await testDb.sync({ alter: false });
 
   // Create test agent
   const app = require('../app').default;
