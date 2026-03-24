@@ -1,0 +1,78 @@
+{
+  "recommendations": [
+    // ===========================================
+    // TypeScript & JavaScript
+    // ===========================================
+    "ms-vscode.vscode-typescript-next",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+
+    // ===========================================
+    // React
+    // ===========================================
+    "dsznajder.es7-react-js-snippets",
+    "msjsdiag.code-for-react-jsdoc",
+
+    // ===========================================
+    // Node.js & Backend
+    // ===========================================
+    "ms-vscode.vscode-node-debug2",
+    ".vertx.vscode-vertx",
+    "eg2.vscode-npm-script",
+
+    // ===========================================
+    // Database
+    // ===========================================
+    "mtxr.sqltools",
+    "mtxr.sqltools-driver-mysql",
+
+    // ===========================================
+    // Docker
+    // ===========================================
+    "ms-azuretools.vscode-docker",
+
+    // ===========================================
+    // Git
+    // ===========================================
+    "eamodio.gitlens",
+    "mhutchie.git-graph",
+    "github.vscode-pull-request-github",
+
+    // ===========================================
+    // Testing
+    // ===========================================
+    "ms-vscode.test-adapter-converter",
+    "hbenl.vscode-test-explorer",
+
+    // ===========================================
+    // Formatting & Linting
+    // ===========================================
+    "stylelint.vscode-stylelint",
+    "bradlc.vscode-tailwindcss",
+    "streetsidesoftware.code-spell-checker",
+
+    // ===========================================
+    // Utilities
+    // ===========================================
+    "christian-kohler.path-intellisense",
+    "zignd.html-css-class-completion",
+    "humao.rest-client",
+    "ms-vscode.hexeditor",
+
+    // ===========================================
+    // Documentation
+    // ===========================================
+    "bierner.markdown-mermaid",
+    "yzhang.markdown-all-in-one",
+
+    // ===========================================
+    // i18n
+    // ===========================================
+    "lokalise.i18n-ally",
+
+    // ===========================================
+    // API Documentation
+    // ===========================================
+    "42Crunch.vscode-openapi"
+  ]
+}
