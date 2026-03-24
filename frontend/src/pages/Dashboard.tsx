@@ -26,9 +26,6 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
   LineChart,
   Line,
   Legend,
@@ -36,8 +33,6 @@ import {
 import { dashboardService } from '../services/api';
 import type { DashboardData } from '../types';
 import QRDisplay from '../components/QRDisplay';
-
-const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
 
 export default function Dashboard() {
   const { t } = useTranslation();
@@ -171,7 +166,7 @@ export default function Dashboard() {
                     border: 'none',
                     boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
                   }}
-                  formatter={(value: number) => [`$${value.toFixed(2)}`, t('dashboard.amount')]}
+                  formatter={(value) => [`$${Number(value).toFixed(2)}`, t('dashboard.amount')]}
                 />
                 <Legend />
                 <Line

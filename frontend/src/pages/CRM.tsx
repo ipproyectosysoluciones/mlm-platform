@@ -102,7 +102,7 @@ export default function CRM() {
   } | null>(null);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [leadTasks, setLeadTasks] = useState<Task[]>([]);
-  const [, setLeadCommunications] = useState<Communication[]>([]);
+  const [leadCommunications, setLeadCommunications] = useState<Communication[]>([]);
   const [showLeadForm, setShowLeadForm] = useState(false);
   const [leadFormData, setLeadFormData] = useState<LeadFormData>(initialFormData);
   const [editingLead, setEditingLead] = useState<Lead | null>(null);
@@ -641,7 +641,55 @@ export default function CRM() {
                   )}
                 </div>
 
-                <div className="flex gap-2">
+                {/* Quick Notes Section */}
+                <div className="mt-6 pt-6 border-t border-slate-200">
+                  <h3 className="font-medium text-slate-900 mb-3">{t('crm.quickNotes')}</h3>
+                  <div className="space-y-2 mb-3">
+                    {leadCommunications
+                      .filter((c) => c.type === 'note')
+                      .slice(0, 3)
+                      .map((note) => (
+                        <div
+                          key={note.id}
+                          className="text-sm bg-yellow-50 p-2 rounded-lg border border-yellow-100"
+                        >
+                          <p className="text-slate-700">{note.content}</p>
+                          <p className="text-xs text-slate-400 mt-1">
+                            {new Date(note.createdAt).toLocaleString()}
+                          </p>
+                        </div>
+                      ))}
+                  </div>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      id={`quick-note-${selectedLead.id}`}
+                      placeholder={t('crm.addQuickNote')}
+                      className="flex-1 px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+                      onKeyDown={async (e) => {
+                        if (e.key === 'Enter') {
+                          const input = e.target as HTMLInputElement;
+                          if (!input.value.trim()) return;
+                          try {
+                            await crmService.addCommunication(selectedLead.id, {
+                              type: 'note',
+                              direction: 'outbound',
+                              content: input.value.trim(),
+                            });
+                            const commsRes = await crmService.getCommunications(selectedLead.id);
+                            if (commsRes.success) setLeadCommunications(commsRes.data || []);
+                            input.value = '';
+                          } catch (error) {
+                            console.error('Failed to add note:', error);
+                          }
+                        }
+                      }}
+                    />
+                  </div>
+                  <p className="text-xs text-slate-400 mt-1">{t('crm.quickNoteHint')}</p>
+                </div>
+
+                <div className="flex gap-2 mt-6">
                   <button
                     onClick={() => {
                       setEditingLead(selectedLead);
