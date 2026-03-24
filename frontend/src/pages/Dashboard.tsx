@@ -124,8 +124,12 @@ export default function Dashboard() {
             <BarChart3 className="w-5 h-5 text-blue-500" />
             {t('dashboard.recentReferrals')}
           </h2>
-          <div className="h-64">
-            {!isLoading && data?.referralsChart && data.referralsChart.length > 0 ? (
+          <div className="h-64 min-h-[256px]">
+            {isLoading ? (
+              <div className="h-full flex items-center justify-center text-slate-400">
+                {t('common.loading')}
+              </div>
+            ) : data?.referralsChart && data.referralsChart.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={data.referralsChart}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
@@ -146,11 +150,11 @@ export default function Dashboard() {
                   />
                 </BarChart>
               </ResponsiveContainer>
-            ) : !isLoading ? (
+            ) : (
               <div className="h-full flex items-center justify-center text-slate-400">
                 {t('dashboard.noReferrals')}
               </div>
-            ) : null}
+            )}
           </div>
         </div>
 
@@ -160,8 +164,12 @@ export default function Dashboard() {
             <DollarSign className="w-5 h-5 text-emerald-500" />
             {t('dashboard.commissions')}
           </h2>
-          <div className="h-64">
-            {!isLoading && data?.commissionsChart && data.commissionsChart.length > 0 ? (
+          <div className="h-64 min-h-[256px]">
+            {isLoading ? (
+              <div className="h-full flex items-center justify-center text-slate-400">
+                {t('common.loading')}
+              </div>
+            ) : data?.commissionsChart && data.commissionsChart.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={data.commissionsChart}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
@@ -186,11 +194,11 @@ export default function Dashboard() {
                   />
                 </LineChart>
               </ResponsiveContainer>
-            ) : !isLoading ? (
+            ) : (
               <div className="h-full flex items-center justify-center text-slate-400">
                 {t('dashboard.noCommissions')}
               </div>
-            ) : null}
+            )}
           </div>
         </div>
       </div>
