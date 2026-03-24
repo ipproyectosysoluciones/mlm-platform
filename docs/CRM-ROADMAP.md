@@ -43,7 +43,7 @@
 - [x] **Filtros avanzados** - Por fecha, fuente, estado, valor
 - [x] **Importación masiva** - CSV upload de leads
 - [x] **Exportación** - CSV (compatible con Excel)
-- [ ] **Notas rápidas** - Quick notes sin crear tarea completa
+- [x] **Notas rápidas** - Quick notes sin crear tarea completa
 - [ ] **Plantillas de email** - Templates predefinidos para comunicación
 
 ### Fase 2: Analítica y Reportes
