@@ -268,6 +268,11 @@
     "sourceLandingPage": "Landing Page",
     "sourceManual": "Manual",
     "sourceOther": "Other",
+    "emailTemplates": "Email Templates",
+    "showTemplates": "Show templates",
+    "hideTemplates": "Hide templates",
+    "selectTemplate": "Select template...",
+    "sendEmail": "Send Email",
     "status": {
       "new": "New",
       "contacted": "Contacted",

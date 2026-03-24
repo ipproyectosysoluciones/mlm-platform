@@ -60,6 +60,55 @@ const SOURCE_ICONS: Record<string, React.ReactNode> = {
 
 // Status names now use i18n - t('crm.status.xxx')
 
+// Email templates / Plantillas de email
+const EMAIL_TEMPLATES = [
+  {
+    id: 'welcome',
+    name: { es: 'Bienvenida', en: 'Welcome' },
+    subject: { es: '¡Bienvenido a nuestra plataforma!', en: 'Welcome to our platform!' },
+    content: {
+      es: 'Hola {{name}},\n\n¡Gracias por tu interés en nuestra plataforma! Nos encantaría mostrarte cómo funciona y cómo puedes empezar a ganar comisiones.\n\n¿Tienes alguna pregunta?\n\nSaludos,\n{{myName}}',
+      en: 'Hi {{name}},\n\nThank you for your interest in our platform! We would love to show you how it works and how you can start earning commissions.\n\nDo you have any questions?\n\nBest regards,\n{{myName}}',
+    },
+  },
+  {
+    id: 'followup',
+    name: { es: 'Seguimiento', en: 'Follow-up' },
+    subject: { es: '¿Cómo va tu experiencia?', en: 'How is your experience going?' },
+    content: {
+      es: 'Hola {{name}},\n\nSolo quería hacer seguimiento para ver cómo va tu experiencia con nuestra plataforma.\n\n¿Hay algo en lo que pueda ayudarte?\n\nSaludos,\n{{myName}}',
+      en: 'Hi {{name}},\n\nJust wanted to follow up on how your experience with our platform is going.\n\nIs there anything I can help you with?\n\nBest regards,\n{{myName}}',
+    },
+  },
+  {
+    id: 'presentation',
+    name: { es: 'Presentación de producto', en: 'Product Presentation' },
+    subject: { es: 'Conoce más sobre nuestro producto', en: 'Learn more about our product' },
+    content: {
+      es: 'Hola {{name}},\n\nTe envío información sobre nuestro producto/servicio que creo que puede interesarte.\n\n[Descripción del producto]\n\n¿Te gustaría agendar una llamada para explicar más detalles?\n\nSaludos,\n{{myName}}',
+      en: "Hi {{name}},\n\nI'm sending you information about our product/service that I think might interest you.\n\n[Product description]\n\nWould you like to schedule a call to explain more details?\n\nBest regards,\n{{myName}}",
+    },
+  },
+  {
+    id: 'closing',
+    name: { es: 'Cierre de venta', en: 'Closing Sale' },
+    subject: { es: 'Último paso para unirte', en: 'Last step to join' },
+    content: {
+      es: 'Hola {{name}},\n\n¡Nos alegra que hayas decidido unirte a nuestra comunidad!\n\nPara completar tu registro, solo necesitas [acción requerida].\n\nSi tienes cualquier duda, estoy aquí para ayudarte.\n\nSaludos,\n{{myName}}',
+      en: "Hi {{name}},\n\nWe are glad you decided to join our community!\n\nTo complete your registration, you just need to [required action].\n\nIf you have any questions, I'm here to help.\n\nBest regards,\n{{myName}}",
+    },
+  },
+  {
+    id: 'support',
+    name: { es: 'Soporte técnico', en: 'Technical Support' },
+    subject: { es: 'Estoy aquí para ayudarte', en: "I'm here to help you" },
+    content: {
+      es: 'Hola {{name}},\n\nRecibí tu mensaje sobre [tema]. Estoy aquí para ayudarte.\n\n[Solución o siguiente paso]\n\n¿Necesitas algo más?\n\nSaludos,\n{{myName}}',
+      en: "Hi {{name}},\n\nI received your message about [topic]. I'm here to help you.\n\n[Solution or next step]\n\nDo you need anything else?\n\nBest regards,\n{{myName}}",
+    },
+  },
+];
+
 type Tab = 'leads' | 'kanban' | 'tasks' | 'stats';
 
 interface LeadFormData {
@@ -109,6 +158,8 @@ export default function CRM() {
   const [stats, setStats] = useState<CRMStats | null>(null);
   const [allTasks, setAllTasks] = useState<Task[]>([]);
   const [tasksLoading, setTasksLoading] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState('');
+  const [showEmailTemplates, setShowEmailTemplates] = useState(false);
 
   useEffect(() => {
     loadLeads();
@@ -687,6 +738,58 @@ export default function CRM() {
                     />
                   </div>
                   <p className="text-xs text-slate-400 mt-1">{t('crm.quickNoteHint')}</p>
+                </div>
+
+                {/* Email Templates Section */}
+                <div className="mt-6 pt-6 border-t border-slate-200">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="font-medium text-slate-900">{t('crm.emailTemplates')}</h3>
+                    <button
+                      onClick={() => setShowEmailTemplates(!showEmailTemplates)}
+                      className="text-sm text-blue-600 hover:text-blue-700"
+                    >
+                      {showEmailTemplates ? t('crm.hideTemplates') : t('crm.showTemplates')}
+                    </button>
+                  </div>
+
+                  {showEmailTemplates && (
+                    <div className="space-y-2">
+                      <select
+                        value={selectedTemplate}
+                        onChange={(e) => setSelectedTemplate(e.target.value)}
+                        className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg"
+                      >
+                        <option value="">{t('crm.selectTemplate')}</option>
+                        {EMAIL_TEMPLATES.map((template) => (
+                          <option key={template.id} value={template.id}>
+                            {template.name[i18n.language as 'es' | 'en'] || template.name.es}
+                          </option>
+                        ))}
+                      </select>
+
+                      {selectedTemplate && (
+                        <button
+                          onClick={() => {
+                            const template = EMAIL_TEMPLATES.find((t) => t.id === selectedTemplate);
+                            if (template) {
+                              const content =
+                                template.content[i18n.language as 'es' | 'en'] ||
+                                template.content.es;
+                              const filledContent = content
+                                .replace(/{{name}}/g, selectedLead.contactName)
+                                .replace(/{{myName}}/g, 'Tu Nombre');
+                              // Open email client or copy to clipboard
+                              const mailto = `mailto:${selectedLead.contactEmail}?subject=${encodeURIComponent(template.subject[i18n.language as 'es' | 'en'] || template.subject.es)}&body=${encodeURIComponent(filledContent)}`;
+                              window.open(mailto, '_blank');
+                            }
+                          }}
+                          className="w-full px-3 py-2 text-sm bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                        >
+                          {t('crm.sendEmail')}
+                        </button>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex gap-2 mt-6">
