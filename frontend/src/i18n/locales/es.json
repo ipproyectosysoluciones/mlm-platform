@@ -297,7 +297,9 @@
       "conversionRate": "Conversión",
       "avgValue": "Valor Promedio",
       "created": "Creados",
-      "noData": "No hay datos disponibles"
+      "noData": "No hay datos disponibles",
+      "funnel": "Funnel de Conversión",
+      "trend": "Tendencia"
     },
     "period": {
       "week": "Semana",

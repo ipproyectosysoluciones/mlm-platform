@@ -327,9 +327,70 @@ export default function Dashboard() {
               </div>
             </div>
 
+            {/* Funnel Chart */}
+            {analyticsData.byStatus && Object.keys(analyticsData.byStatus).length > 0 && (
+              <div className="mt-6">
+                <h3 className="text-sm font-medium text-slate-700 mb-4">
+                  {t('crm.analytics.funnel') || 'Funnel de Conversión'}
+                </h3>
+                <div className="flex items-center justify-between gap-2">
+                  {[
+                    { key: 'new', label: t('crm.status.new') || 'Nuevo', color: 'bg-blue-500' },
+                    {
+                      key: 'contacted',
+                      label: t('crm.status.contacted') || 'Contactado',
+                      color: 'bg-cyan-500',
+                    },
+                    {
+                      key: 'qualified',
+                      label: t('crm.status.qualified') || 'Calificado',
+                      color: 'bg-indigo-500',
+                    },
+                    {
+                      key: 'proposal',
+                      label: t('crm.status.proposal') || 'Propuesta',
+                      color: 'bg-violet-500',
+                    },
+                    {
+                      key: 'negotiation',
+                      label: t('crm.status.negotiation') || 'Negociación',
+                      color: 'bg-purple-500',
+                    },
+                    { key: 'won', label: t('crm.status.won') || 'Ganado', color: 'bg-emerald-500' },
+                  ].map((stage) => {
+                    const count = analyticsData.byStatus[stage.key] || 0;
+                    const maxCount = Math.max(
+                      ...Object.values(analyticsData.byStatus).map((v: any) => Number(v) || 0)
+                    );
+                    const percentage = maxCount > 0 ? (count / maxCount) * 100 : 0;
+
+                    return (
+                      <div key={stage.key} className="flex-1 flex flex-col items-center">
+                        <div className="relative w-full">
+                          <div
+                            className={`${stage.color} rounded-t-lg transition-all duration-300`}
+                            style={{ height: `${Math.max(percentage, 10)}px` }}
+                          />
+                          <div className="absolute -bottom-6 left-0 right-0 text-center">
+                            <span className="text-xs font-medium text-slate-700">{count}</span>
+                          </div>
+                        </div>
+                        <span className="text-xs text-slate-500 mt-8 text-center truncate w-full">
+                          {stage.label}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
             {/* Trend chart */}
             {analyticsData.trend && analyticsData.trend.length > 0 && (
-              <div className="h-64">
+              <div className="h-64 mt-8">
+                <h3 className="text-sm font-medium text-slate-700 mb-4">
+                  {t('crm.analytics.trend') || 'Tendencia'}
+                </h3>
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={analyticsData.trend}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
