@@ -327,6 +327,15 @@ export const crmService = {
   },
 
   /**
+   * Import leads from CSV
+   * Importar leads desde CSV
+   */
+  importLeads: async (csv: string) => {
+    const response = await api.post('/crm/import', { csv });
+    return response.data;
+  },
+
+  /**
    * Update lead
    * Actualizar lead
    */

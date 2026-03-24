@@ -32,6 +32,7 @@ import {
   Trash2,
   Save,
   ArrowLeft,
+  Upload,
 } from 'lucide-react';
 import { crmService } from '../services/api';
 import CRMKanban from '../components/CRM/CRMKanban';
@@ -91,6 +92,13 @@ export default function CRM() {
   const [valueMin, setValueMin] = useState('');
   const [valueMax, setValueMax] = useState('');
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [importing, setImporting] = useState(false);
+  const [importResult, setImportResult] = useState<{
+    imported: number;
+    errors: string[];
+    total: number;
+  } | null>(null);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [leadTasks, setLeadTasks] = useState<Task[]>([]);
   const [, setLeadCommunications] = useState<Communication[]>([]);
@@ -290,6 +298,13 @@ export default function CRM() {
         >
           <Plus className="w-5 h-5" />
           {t('crm.newLead')}
+        </button>
+        <button
+          onClick={() => setShowImportModal(true)}
+          className="flex items-center gap-2 px-4 py-2.5 bg-slate-100 text-slate-700 rounded-xl hover:bg-slate-200 transition-colors font-medium"
+        >
+          <Upload className="w-5 h-5" />
+          {t('crm.importCSV')}
         </button>
       </div>
 
@@ -875,6 +890,106 @@ export default function CRM() {
                 <Save className="w-4 h-4" />
                 {editingLead ? t('crm.saveChanges') : t('crm.createLead')}
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Import CSV Modal */}
+      {showImportModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md">
+            <div className="p-6 border-b border-slate-200">
+              <h2 className="text-lg font-semibold text-slate-900">{t('crm.importCSV')}</h2>
+            </div>
+
+            <div className="p-6">
+              {importResult ? (
+                <div>
+                  <div className="mb-4 p-4 bg-emerald-50 rounded-xl">
+                    <p className="font-medium text-emerald-700">
+                      {t('crm.imported')}: {importResult.imported} / {importResult.total}
+                    </p>
+                  </div>
+                  {importResult.errors.length > 0 && (
+                    <div className="mb-4">
+                      <p className="font-medium text-slate-700 mb-2">{t('crm.errors')}:</p>
+                      <div className="max-h-40 overflow-y-auto bg-slate-50 rounded-lg p-2 text-sm">
+                        {importResult.errors.map((err, i) => (
+                          <p key={i} className="text-red-600">
+                            {err}
+                          </p>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  <button
+                    onClick={() => {
+                      setShowImportModal(false);
+                      setImportResult(null);
+                      loadLeads();
+                    }}
+                    className="w-full px-4 py-2.5 bg-emerald-500 text-white rounded-xl hover:bg-emerald-600"
+                  >
+                    {t('crm.close')}
+                  </button>
+                </div>
+              ) : (
+                <div>
+                  <p className="text-slate-600 mb-4">{t('crm.importInstructions')}</p>
+                  <div className="border-2 border-dashed border-slate-300 rounded-xl p-6 text-center mb-4">
+                    <input
+                      type="file"
+                      accept=".csv"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+
+                        const reader = new FileReader();
+                        reader.onload = async (event) => {
+                          const csv = event.target?.result as string;
+                          setImporting(true);
+                          try {
+                            const result = await crmService.importLeads(csv);
+                            setImportResult(result.data);
+                          } catch (error) {
+                            console.error('Import failed:', error);
+                            setImportResult({ imported: 0, errors: ['Import failed'], total: 0 });
+                          } finally {
+                            setImporting(false);
+                          }
+                        };
+                        reader.readAsText(file);
+                      }}
+                      className="hidden"
+                      id="csv-upload"
+                    />
+                    {importing ? (
+                      <div className="flex items-center justify-center py-4">
+                        <div className="animate-spin w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full" />
+                        <span className="ml-2 text-slate-600">{t('crm.importing')}</span>
+                      </div>
+                    ) : (
+                      <label htmlFor="csv-upload" className="cursor-pointer">
+                        <Upload className="w-12 h-12 text-slate-400 mx-auto mb-2" />
+                        <p className="text-slate-600">{t('crm.selectFile')}</p>
+                        <p className="text-sm text-slate-400">CSV</p>
+                      </label>
+                    )}
+                  </div>
+                  <div className="flex justify-end gap-3">
+                    <button
+                      onClick={() => {
+                        setShowImportModal(false);
+                        setImportResult(null);
+                      }}
+                      className="px-4 py-2.5 border border-slate-200 rounded-xl hover:bg-slate-50"
+                    >
+                      {t('crm.cancel')}
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

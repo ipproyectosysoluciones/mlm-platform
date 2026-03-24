@@ -107,6 +107,24 @@ export async function createLead(req: AuthenticatedRequest, res: Response) {
 }
 
 /**
+ * Import leads from CSV
+ * Importar leads desde archivo CSV
+ *
+ * @param req - Body: csv (CSV content as string)
+ * @param res - Response with import results
+ */
+export async function importLeads(req: AuthenticatedRequest, res: Response) {
+  const { csv } = req.body;
+
+  if (!csv || typeof csv !== 'string') {
+    throw new AppError(400, 'VALIDATION_ERROR', 'CSV content is required');
+  }
+
+  const result = await crmService.importLeadsFromCSV(req.user!.id, csv);
+  res.status(200).json({ success: true, data: result });
+}
+
+/**
  * Update a lead
  * Actualiza un lead
  *

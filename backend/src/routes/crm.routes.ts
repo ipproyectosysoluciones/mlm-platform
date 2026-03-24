@@ -17,6 +17,7 @@ import {
   getCRMStats,
   createTask,
   completeTask,
+  importLeads,
   addCommunication,
   getLeadCommunications,
   getUpcomingTasks,
@@ -253,6 +254,33 @@ router.get('/:id', asyncHandler(getLeadById));
  *         description: Datos inválidos / Invalid data
  */
 router.post('/', validate(createLeadValidation), asyncHandler(createLead));
+
+/**
+ * @swagger
+ * /crm/import:
+ *   post:
+ *     summary: Importar leads desde CSV / Import leads from CSV
+ *     description: Importa múltiples leads desde contenido CSV
+ *     tags: [crm]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               csv:
+ *                 type: string
+ *                 description: Contenido del archivo CSV / CSV file content
+ *     responses:
+ *       200:
+ *         description: Resultados de importación / Import results
+ *       400:
+ *         description: CSV inválido / Invalid CSV
+ */
+router.post('/import', asyncHandler(importLeads));
 
 /**
  * @swagger

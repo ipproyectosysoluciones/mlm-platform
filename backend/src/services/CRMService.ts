@@ -126,6 +126,95 @@ export class CRMService {
   }
 
   /**
+   * Import leads from CSV
+   * Importar leads desde CSV
+   */
+  async importLeadsFromCSV(
+    userId: string,
+    csvContent: string
+  ): Promise<{ imported: number; errors: string[]; total: number }> {
+    const { parse } = await import('csv-parse');
+
+    return new Promise((resolve, reject) => {
+      const errors: string[] = [];
+      let imported = 0;
+      let total = 0;
+
+      const parser = parse(csvContent, {
+        columns: true,
+        skip_empty_lines: true,
+        trim: true,
+        relax_column_count: true,
+      });
+
+      parser.on('readable', async function () {
+        let record;
+        while ((record = parser.read()) !== null) {
+          total++;
+          try {
+            if (!record.contactName || !record.contactEmail) {
+              errors.push(`Row ${total}: Missing name or email`);
+              continue;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(record.contactEmail)) {
+              errors.push(`Row ${total}: Invalid email: ${record.contactEmail}`);
+              continue;
+            }
+
+            const validSources = [
+              'website',
+              'referral',
+              'social',
+              'landing_page',
+              'manual',
+              'other',
+              'import',
+            ];
+            const source =
+              record.source && validSources.includes(record.source.toLowerCase())
+                ? record.source.toLowerCase()
+                : 'import';
+
+            const value = record.value ? parseFloat(record.value) : 0;
+            if (isNaN(value) || value < 0) {
+              errors.push(`Row ${total}: Invalid value: ${record.value}`);
+              continue;
+            }
+
+            await Lead.create({
+              userId,
+              contactName: record.contactName.trim(),
+              contactEmail: record.contactEmail.trim().toLowerCase(),
+              contactPhone: record.contactPhone?.trim() || null,
+              company: record.company?.trim() || null,
+              status: 'new',
+              source: source as LeadSource,
+              value: value,
+              currency: record.currency?.trim() || 'USD',
+              notes: record.notes?.trim() || null,
+              metadata: { importedAt: new Date().toISOString() },
+            });
+
+            imported++;
+          } catch (err) {
+            errors.push(`Row ${total}: Error - ${err instanceof Error ? err.message : 'Unknown'}`);
+          }
+        }
+      });
+
+      parser.on('error', function (err) {
+        reject(err);
+      });
+
+      parser.on('end', function () {
+        resolve({ imported, errors, total });
+      });
+    });
+  }
+
+  /**
    * Get leads with pagination and filters
    * Obtener leads con paginación y filtros
    * @param {string} userId - User ID / ID del usuario

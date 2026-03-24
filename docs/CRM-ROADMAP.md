@@ -39,8 +39,8 @@
 
 ### Fase 1: CRM Avanzado ⏳
 
-- [ ] **Pipeline/Kanban** - Vista de leads como tablero Kanban arrastrando entre estados
-- [ ] **Filtros avanzados** - Por fecha, fuente, estado, usuario asignado
+- [x] **Pipeline/Kanban** - Vista de leads como tablero Kanban arrastrando entre estados
+- [x] **Filtros avanzados** - Por fecha, fuente, estado, valor
 - [ ] **Importación masiva** - CSV upload de leads
 - [ ] **Exportación** - Excel/PDF de reportes
 - [ ] **Notas rápidas** - Quick notes sin crear tarea completa
