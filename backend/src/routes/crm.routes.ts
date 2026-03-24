@@ -18,6 +18,7 @@ import {
   createTask,
   completeTask,
   importLeads,
+  exportLeads,
   addCommunication,
   getLeadCommunications,
   getUpcomingTasks,
@@ -281,6 +282,34 @@ router.post('/', validate(createLeadValidation), asyncHandler(createLead));
  *         description: CSV inválido / Invalid CSV
  */
 router.post('/import', asyncHandler(importLeads));
+
+/**
+ * @swagger
+ * /crm/export:
+ *   get:
+ *     summary: Exportar leads a CSV / Export leads to CSV
+ *     description: Descarga todos los leads en formato CSV
+ *     tags: [crm]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: source
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Archivo CSV / CSV file
+ */
+router.get('/export', asyncHandler(exportLeads));
 
 /**
  * @swagger

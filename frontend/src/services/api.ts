@@ -336,6 +336,15 @@ export const crmService = {
   },
 
   /**
+   * Export leads to CSV
+   * Exportar leads a CSV
+   */
+  exportLeads: async (params?: { status?: string; source?: string; search?: string }) => {
+    const response = await api.get('/crm/export', { params, responseType: 'blob' });
+    return response.data;
+  },
+
+  /**
    * Update lead
    * Actualizar lead
    */

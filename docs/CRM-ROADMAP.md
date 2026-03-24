@@ -41,7 +41,7 @@
 
 - [x] **Pipeline/Kanban** - Vista de leads como tablero Kanban arrastrando entre estados
 - [x] **Filtros avanzados** - Por fecha, fuente, estado, valor
-- [ ] **Importación masiva** - CSV upload de leads
+- [x] **Importación masiva** - CSV upload de leads
 - [ ] **Exportación** - Excel/PDF de reportes
 - [ ] **Notas rápidas** - Quick notes sin crear tarea completa
 - [ ] **Plantillas de email** - Templates predefinidos para comunicación

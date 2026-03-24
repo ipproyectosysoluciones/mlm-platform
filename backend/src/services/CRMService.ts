@@ -215,6 +215,46 @@ export class CRMService {
   }
 
   /**
+   * Export leads to CSV
+   * Exportar leads a CSV
+   */
+  async exportLeadsToCSV(userId: string, filters: LeadFilters): Promise<string> {
+    const { leads } = await this.getLeads(userId, { ...filters, limit: 10000 });
+
+    const headers = [
+      'contactName',
+      'contactEmail',
+      'contactPhone',
+      'company',
+      'status',
+      'source',
+      'value',
+      'currency',
+      'notes',
+      'createdAt',
+    ];
+    const rows = leads.map((lead) => [
+      lead.contactName,
+      lead.contactEmail,
+      lead.contactPhone || '',
+      lead.company || '',
+      lead.status,
+      lead.source,
+      lead.value.toString(),
+      lead.currency,
+      lead.notes || '',
+      new Date(lead.createdAt).toISOString(),
+    ]);
+
+    const csvContent = [
+      headers.join(','),
+      ...rows.map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(',')),
+    ].join('\n');
+
+    return csvContent;
+  }
+
+  /**
    * Get leads with pagination and filters
    * Obtener leads con paginación y filtros
    * @param {string} userId - User ID / ID del usuario

@@ -125,6 +125,31 @@ export async function importLeads(req: AuthenticatedRequest, res: Response) {
 }
 
 /**
+ * Export leads to CSV
+ * Exportar leads a CSV
+ */
+export async function exportLeads(req: AuthenticatedRequest, res: Response) {
+  const filters = {
+    status: req.query.status as any,
+    source: req.query.source as any,
+    search: req.query.search as string,
+    createdAtFrom: req.query.createdAtFrom as string,
+    createdAtTo: req.query.createdAtTo as string,
+    valueMin: req.query.valueMin ? parseFloat(req.query.valueMin as string) : undefined,
+    valueMax: req.query.valueMax ? parseFloat(req.query.valueMax as string) : undefined,
+  };
+
+  const csv = await crmService.exportLeadsToCSV(req.user!.id, filters);
+
+  res.setHeader('Content-Type', 'text/csv');
+  res.setHeader(
+    'Content-Disposition',
+    `attachment; filename=leads-export-${new Date().toISOString().split('T')[0]}.csv`
+  );
+  res.send(csv);
+}
+
+/**
  * Update a lead
  * Actualiza un lead
  *

@@ -33,6 +33,7 @@ import {
   Save,
   ArrowLeft,
   Upload,
+  Download,
 } from 'lucide-react';
 import { crmService } from '../services/api';
 import CRMKanban from '../components/CRM/CRMKanban';
@@ -298,6 +299,31 @@ export default function CRM() {
         >
           <Plus className="w-5 h-5" />
           {t('crm.newLead')}
+        </button>
+        <button
+          onClick={async () => {
+            try {
+              const blob = await crmService.exportLeads({
+                status: statusFilter || undefined,
+                source: sourceFilter || undefined,
+                search: searchQuery || undefined,
+              });
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = `leads-${new Date().toISOString().split('T')[0]}.csv`;
+              document.body.appendChild(a);
+              a.click();
+              window.URL.revokeObjectURL(url);
+              document.body.removeChild(a);
+            } catch (error) {
+              console.error('Export failed:', error);
+            }
+          }}
+          className="flex items-center gap-2 px-4 py-2.5 bg-emerald-50 text-emerald-700 rounded-xl hover:bg-emerald-100 transition-colors font-medium"
+        >
+          <Download className="w-5 h-5" />
+          {t('crm.exportCSV')}
         </button>
         <button
           onClick={() => setShowImportModal(true)}

@@ -212,6 +212,7 @@
     "valueMax": "Max value",
     "clearFilters": "Clear filters",
     "importCSV": "Import CSV",
+    "exportCSV": "Export",
     "importInstructions": "Upload a CSV file with your leads. Required columns: contactName, contactEmail",
     "selectFile": "Select file",
     "importing": "Importing...",
