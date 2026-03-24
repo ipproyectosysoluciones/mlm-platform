@@ -51,6 +51,20 @@ export default function Dashboard() {
     return () => clearTimeout(timer);
   }, []);
 
+  // Suppress Recharts -1 dimensions warning
+  useEffect(() => {
+    const originalWarn = console.warn;
+    console.warn = (...args: unknown[]) => {
+      if (args[0] && typeof args[0] === 'string' && args[0].includes('width(-1) and height(-1)')) {
+        return;
+      }
+      originalWarn.apply(console, args);
+    };
+    return () => {
+      console.warn = originalWarn;
+    };
+  }, []);
+
   useEffect(() => {
     if (loadRef.current) return;
     loadRef.current = true;
