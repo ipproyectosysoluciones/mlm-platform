@@ -91,6 +91,22 @@ export interface AnalyticsReport {
 }
 
 /**
+ * Alert types
+ */
+export interface CRMAlert {
+  type: 'inactive_lead' | 'overdue_task' | 'pending_followup';
+  severity: 'high' | 'medium' | 'low';
+  title: string;
+  description: string;
+  leadId?: string;
+  leadName?: string;
+  taskId?: string;
+  taskTitle?: string;
+  daysOverdue?: number;
+  createdAt: string;
+}
+
+/**
  * CRM Service - Lead, task, and communication management
  * Servicio de CRM - Gestión de leads, tareas y comunicaciones
  */
@@ -803,6 +819,117 @@ export class CRMService {
       bySource,
       trend,
     };
+  }
+
+  // ============================================================
+  // ALERTS / ALERTAS
+  // ============================================================
+
+  /**
+   * Get CRM alerts for a user
+   * Obtener alertas de CRM para un usuario
+   * @param {string} userId - User ID / ID del usuario
+   * @param {number} daysInactive - Days to consider a lead inactive / Días para considerar un lead inactivo
+   * @returns {Promise<CRMAlert[]>} List of alerts / Lista de alertas
+   */
+  async getCRMAlerts(userId: string, daysInactive = 7): Promise<CRMAlert[]> {
+    const alerts: CRMAlert[] = [];
+    const now = new Date();
+    const inactiveDate = new Date();
+    inactiveDate.setDate(inactiveDate.getDate() - daysInactive);
+    const overdueDate = new Date();
+    overdueDate.setDate(overdueDate.getDate() - 1); // Yesterday
+
+    // 1. Find leads with no contact in X days (inactive)
+    const inactiveLeads = await Lead.findAll({
+      where: {
+        userId,
+        status: { [Op.notIn]: ['won', 'lost'] },
+        [Op.or]: [
+          { lastContactAt: { [Op.lt]: inactiveDate } },
+          { lastContactAt: null, createdAt: { [Op.lt]: inactiveDate } },
+        ],
+      },
+    });
+
+    for (const lead of inactiveLeads) {
+      const lastContact = lead.lastContactAt
+        ? new Date(lead.lastContactAt)
+        : new Date(lead.createdAt);
+      const daysSince = Math.floor((now.getTime() - lastContact.getTime()) / (1000 * 60 * 60 * 24));
+
+      alerts.push({
+        type: 'inactive_lead',
+        severity:
+          daysSince > daysInactive * 2 ? 'high' : daysSince > daysInactive ? 'medium' : 'low',
+        title: `Lead sin contacto: ${lead.contactName}`,
+        description: `Sin contacto desde hace ${daysSince} días`,
+        leadId: lead.id,
+        leadName: lead.contactName,
+        daysOverdue: daysSince,
+        createdAt: lead.createdAt.toISOString(),
+      });
+    }
+
+    // 2. Find overdue tasks
+    const overdueTasks = await Task.findAll({
+      where: {
+        userId,
+        status: 'pending',
+        dueDate: { [Op.lt]: overdueDate },
+      },
+      include: [{ model: Lead, as: 'lead', attributes: ['id', 'contactName'] }],
+    });
+
+    for (const task of overdueTasks) {
+      const dueDate = task.dueDate ? new Date(task.dueDate) : new Date(task.createdAt);
+      const daysOverdue = Math.floor((now.getTime() - dueDate.getTime()) / (1000 * 60 * 60 * 24));
+
+      alerts.push({
+        type: 'overdue_task',
+        severity: daysOverdue > 7 ? 'high' : daysOverdue > 3 ? 'medium' : 'low',
+        title: `Tarea vencida: ${task.title}`,
+        description: `Vencida hace ${daysOverdue} días`,
+        leadId: task.leadId,
+        leadName: (task as any).lead?.contactName,
+        taskId: task.id,
+        taskTitle: task.title,
+        daysOverdue,
+        createdAt: task.createdAt.toISOString(),
+      });
+    }
+
+    // 3. Find leads with pending follow-ups
+    const pendingFollowups = await Lead.findAll({
+      where: {
+        userId,
+        status: { [Op.notIn]: ['won', 'lost'] },
+        nextFollowUpAt: { [Op.lte]: now },
+      },
+    });
+
+    for (const lead of pendingFollowups) {
+      const daysOverdue = lead.nextFollowUpAt
+        ? Math.floor(
+            (now.getTime() - new Date(lead.nextFollowUpAt).getTime()) / (1000 * 60 * 60 * 24)
+          )
+        : 0;
+
+      alerts.push({
+        type: 'pending_followup',
+        severity: daysOverdue > 7 ? 'high' : daysOverdue > 3 ? 'medium' : 'low',
+        title: `Seguimiento pendiente: ${lead.contactName}`,
+        description: `Seguimiento programado desde hace ${daysOverdue} días`,
+        leadId: lead.id,
+        leadName: lead.contactName,
+        daysOverdue,
+        createdAt: lead.createdAt.toISOString(),
+      });
+    }
+
+    // Sort by severity (high first)
+    const severityOrder = { high: 0, medium: 1, low: 2 };
+    return alerts.sort((a, b) => severityOrder[a.severity] - severityOrder[b.severity]);
   }
 }
 

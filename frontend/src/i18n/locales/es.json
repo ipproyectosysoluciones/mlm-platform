@@ -306,6 +306,14 @@
       "month": "Mes",
       "quarter": "Trimestre",
       "year": "Año"
+    },
+    "alerts": {
+      "title": "Alertas",
+      "high": "Alta",
+      "medium": "Media",
+      "low": "Baja",
+      "viewAll": "Ver todas las alertas",
+      "noAlerts": "¡Todo al día! No hay alertas pendientes."
     }
   }
 }

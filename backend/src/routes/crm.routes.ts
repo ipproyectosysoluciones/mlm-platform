@@ -24,6 +24,7 @@ import {
   getLeadTasks,
   getUpcomingTasks,
   getAnalyticsReport,
+  getCRMAlerts,
   createLeadValidation,
   updateLeadValidation,
   createTaskValidation,
@@ -98,6 +99,28 @@ router.get('/stats', asyncHandler(getCRMStats));
  *         description: Reporte de analítica / Analytics report
  */
 router.get('/analytics/report', asyncHandler(getAnalyticsReport));
+
+/**
+ * @swagger
+ * /crm/alerts:
+ *   get:
+ *     summary: Obtener alertas de CRM / Get CRM alerts
+ *     description: Retorna alertas de leads inactivos, tareas vencidas y seguimientos pendientes.
+ *     tags: [crm]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: daysInactive
+ *         schema:
+ *           type: integer
+ *           default: 7
+ *         description: Días para considerar un lead inactivo / Days to consider lead inactive
+ *     responses:
+ *       200:
+ *         description: Lista de alertas / Alerts list
+ */
+router.get('/alerts', asyncHandler(getCRMAlerts));
 
 /**
  * @swagger

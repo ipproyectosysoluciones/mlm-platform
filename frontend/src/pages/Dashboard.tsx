@@ -18,6 +18,10 @@ import {
   Loader2,
   BarChart3,
   Target,
+  AlertTriangle,
+  Phone,
+  Clock,
+  User,
 } from 'lucide-react';
 import {
   BarChart,
@@ -47,6 +51,8 @@ export default function Dashboard() {
   );
   const [analyticsData, setAnalyticsData] = useState<any>(null);
   const [analyticsLoading, setAnalyticsLoading] = useState(false);
+  const [alertsData, setAlertsData] = useState<any[]>([]);
+  const [alertsLoading, setAlertsLoading] = useState(false);
   const loadRef = useRef(false);
 
   useEffect(() => {
@@ -105,6 +111,24 @@ export default function Dashboard() {
     };
     loadAnalytics();
   }, [analyticsPeriod]);
+
+  // Load CRM alerts
+  useEffect(() => {
+    const loadAlerts = async () => {
+      setAlertsLoading(true);
+      try {
+        const response = await crmService.getAlerts({ daysInactive: 7 });
+        if (response.success) {
+          setAlertsData(response.data);
+        }
+      } catch (error) {
+        console.error('Failed to load alerts:', error);
+      } finally {
+        setAlertsLoading(false);
+      }
+    };
+    loadAlerts();
+  }, []);
 
   const copyLink = () => {
     if (data?.referralLink) {
@@ -429,6 +453,92 @@ export default function Dashboard() {
           <div className="text-center py-12 text-slate-400">
             <Target className="w-12 h-12 mx-auto mb-3" />
             <p>{t('crm.analytics.noData') || 'No analytics data available'}</p>
+          </div>
+        )}
+      </div>
+
+      {/* CRM Alerts Section */}
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+        <div className="flex items-center gap-2 mb-6">
+          <AlertTriangle className="w-5 h-5 text-amber-500" />
+          <h2 className="text-lg font-semibold text-slate-900">
+            {t('crm.alerts.title') || 'Alertas'}
+          </h2>
+          {alertsData.length > 0 && (
+            <span className="bg-amber-100 text-amber-700 text-xs font-medium px-2 py-1 rounded-full">
+              {alertsData.length}
+            </span>
+          )}
+        </div>
+
+        {alertsLoading ? (
+          <div className="h-32 flex items-center justify-center">
+            <Loader2 className="w-8 h-8 text-amber-500 animate-spin" />
+          </div>
+        ) : alertsData.length > 0 ? (
+          <div className="space-y-3">
+            {alertsData.slice(0, 10).map((alert, index) => (
+              <div
+                key={index}
+                className={`flex items-start gap-3 p-4 rounded-xl border ${
+                  alert.severity === 'high'
+                    ? 'bg-red-50 border-red-200'
+                    : alert.severity === 'medium'
+                      ? 'bg-amber-50 border-amber-200'
+                      : 'bg-slate-50 border-slate-200'
+                }`}
+              >
+                <div
+                  className={`p-2 rounded-lg ${
+                    alert.severity === 'high'
+                      ? 'bg-red-100 text-red-600'
+                      : alert.severity === 'medium'
+                        ? 'bg-amber-100 text-amber-600'
+                        : 'bg-slate-100 text-slate-600'
+                  }`}
+                >
+                  {alert.type === 'inactive_lead' ? (
+                    <User className="w-4 h-4" />
+                  ) : alert.type === 'overdue_task' ? (
+                    <Clock className="w-4 h-4" />
+                  ) : (
+                    <Phone className="w-4 h-4" />
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-slate-900 text-sm">{alert.title}</p>
+                  <p className="text-sm text-slate-500">{alert.description}</p>
+                </div>
+                <span
+                  className={`text-xs font-medium px-2 py-1 rounded-full ${
+                    alert.severity === 'high'
+                      ? 'bg-red-100 text-red-700'
+                      : alert.severity === 'medium'
+                        ? 'bg-amber-100 text-amber-700'
+                        : 'bg-slate-100 text-slate-700'
+                  }`}
+                >
+                  {alert.severity === 'high'
+                    ? t('crm.alerts.high') || 'Alta'
+                    : alert.severity === 'medium'
+                      ? t('crm.alerts.medium') || 'Media'
+                      : t('crm.alerts.low') || 'Baja'}
+                </span>
+              </div>
+            ))}
+            {alertsData.length > 10 && (
+              <Link
+                to="/crm"
+                className="block text-center text-sm text-blue-600 hover:text-blue-700 font-medium py-2"
+              >
+                {t('crm.alerts.viewAll') || `Ver todas las alertas (${alertsData.length})`}
+              </Link>
+            )}
+          </div>
+        ) : (
+          <div className="text-center py-8 text-slate-400">
+            <Check className="w-12 h-12 mx-auto mb-3 text-emerald-400" />
+            <p>{t('crm.alerts.noAlerts') || '¡Todo al día! No hay alertas pendientes.'}</p>
           </div>
         )}
       </div>

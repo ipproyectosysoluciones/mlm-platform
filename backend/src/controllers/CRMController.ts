@@ -290,3 +290,16 @@ export async function getAnalyticsReport(req: AuthenticatedRequest, res: Respons
   });
   res.json({ success: true, data: report });
 }
+
+/**
+ * Get CRM alerts
+ * Obtiene alertas de CRM (leads inactivos, tareas vencidas)
+ *
+ * @param req - Query params: daysInactive (default 7)
+ * @param res - Response with alerts
+ */
+export async function getCRMAlerts(req: AuthenticatedRequest, res: Response) {
+  const daysInactive = req.query.daysInactive ? parseInt(req.query.daysInactive as string) : 7;
+  const alerts = await crmService.getCRMAlerts(req.user!.id, daysInactive);
+  res.json({ success: true, data: alerts });
+}

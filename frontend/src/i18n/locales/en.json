@@ -306,6 +306,14 @@
       "month": "Month",
       "quarter": "Quarter",
       "year": "Year"
+    },
+    "alerts": {
+      "title": "Alerts",
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low",
+      "viewAll": "View all alerts",
+      "noAlerts": "All caught up! No pending alerts."
     }
   }
 }

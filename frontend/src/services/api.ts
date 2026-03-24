@@ -475,6 +475,15 @@ export const crmService = {
     const response = await api.get('/crm/analytics/report', { params });
     return response.data;
   },
+
+  /**
+   * Get CRM alerts
+   * Obtener alertas de CRM
+   */
+  getAlerts: async (params?: { daysInactive?: number }) => {
+    const response = await api.get('/crm/alerts', { params });
+    return response.data;
+  },
 };
 
 export default api;
