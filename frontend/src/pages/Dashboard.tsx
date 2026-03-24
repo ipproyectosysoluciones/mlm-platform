@@ -44,8 +44,11 @@ export default function Dashboard() {
   const loadRef = useRef(false);
 
   useEffect(() => {
-    // Set mounted state after first render to prevent Recharts warnings
-    setIsMounted(true);
+    // Set mounted state after first render + delay to ensure DOM dimensions are ready
+    const timer = setTimeout(() => {
+      setIsMounted(true);
+    }, 100);
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
