@@ -92,6 +92,8 @@ export default function CRM() {
   const [leadFormData, setLeadFormData] = useState<LeadFormData>(initialFormData);
   const [editingLead, setEditingLead] = useState<Lead | null>(null);
   const [stats, setStats] = useState<CRMStats | null>(null);
+  const [allTasks, setAllTasks] = useState<Task[]>([]);
+  const [tasksLoading, setTasksLoading] = useState(false);
 
   useEffect(() => {
     loadLeads();
@@ -101,7 +103,24 @@ export default function CRM() {
     if (activeTab === 'stats') {
       loadStats();
     }
+    if (activeTab === 'tasks') {
+      loadAllTasks();
+    }
   }, [activeTab]);
+
+  const loadAllTasks = async () => {
+    setTasksLoading(true);
+    try {
+      const response = await crmService.getUpcomingTasks();
+      if (response.success) {
+        setAllTasks(response.data || []);
+      }
+    } catch (error) {
+      console.error('Failed to load tasks:', error);
+    } finally {
+      setTasksLoading(false);
+    }
+  };
 
   const loadLeads = async () => {
     setLeadsLoading(true);
@@ -508,10 +527,64 @@ export default function CRM() {
 
         {/* Tasks Tab */}
         {activeTab === 'tasks' && (
-          <div className="text-center py-12">
-            <Clock className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-slate-900 mb-2">{t('crm.allTasksTitle')}</h3>
-            <p className="text-slate-500">{t('crm.allTasksDescription')}</p>
+          <div>
+            {tasksLoading ? (
+              <div className="flex justify-center py-12">
+                <div className="animate-spin w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full" />
+              </div>
+            ) : allTasks.length === 0 ? (
+              <div className="text-center py-12 bg-slate-50 rounded-xl">
+                <Clock className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-slate-900 mb-2">
+                  {t('crm.allTasksTitle')}
+                </h3>
+                <p className="text-slate-500">{t('crm.allTasksDescription')}</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {allTasks.map((task) => (
+                  <div
+                    key={task.id}
+                    className="flex items-center gap-4 p-4 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={task.status === 'completed'}
+                      onChange={async () => {
+                        try {
+                          await crmService.updateTask(task.id, {
+                            status: task.status === 'completed' ? 'pending' : 'completed',
+                          });
+                          loadAllTasks();
+                        } catch (error) {
+                          console.error('Failed to update task:', error);
+                        }
+                      }}
+                      className="w-5 h-5 rounded text-emerald-500 focus:ring-emerald-500"
+                    />
+                    <div className="flex-1">
+                      <h4
+                        className={`font-medium ${
+                          task.status === 'completed'
+                            ? 'text-slate-400 line-through'
+                            : 'text-slate-900'
+                        }`}
+                      >
+                        {task.title}
+                      </h4>
+                      {task.description && (
+                        <p className="text-sm text-slate-500 mt-1">{task.description}</p>
+                      )}
+                    </div>
+                    {task.dueDate && (
+                      <div className="text-sm text-slate-500">
+                        {new Date(task.dueDate).toLocaleDateString()}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 

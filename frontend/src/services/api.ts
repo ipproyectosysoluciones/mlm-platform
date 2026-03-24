@@ -404,6 +404,15 @@ export const crmService = {
   },
 
   /**
+   * Get upcoming tasks
+   * Obtener tareas próximas
+   */
+  getUpcomingTasks: async () => {
+    const response = await api.get('/crm/tasks');
+    return response.data;
+  },
+
+  /**
    * Add communication to lead
    * Agregar comunicación a lead
    */
