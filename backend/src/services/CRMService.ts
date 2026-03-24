@@ -569,6 +569,20 @@ export class CRMService {
   }
 
   /**
+   * Get tasks for a specific lead
+   * Obtener tareas de un lead específico
+   * @param {string} leadId - Lead ID / ID del lead
+   * @param {string} userId - User ID for authorization / ID del usuario
+   * @returns {Promise<Task[]>} List of tasks / Lista de tareas
+   */
+  async getLeadTasks(leadId: string, userId: string): Promise<Task[]> {
+    return Task.findAll({
+      where: { leadId, userId },
+      order: [['createdAt', 'DESC']],
+    });
+  }
+
+  /**
    * Get upcoming tasks for a user
    * Obtener tareas próximas para un usuario
    * @param {string} userId - User ID / ID del usuario

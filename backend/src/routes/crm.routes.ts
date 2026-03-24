@@ -21,6 +21,7 @@ import {
   exportLeads,
   addCommunication,
   getLeadCommunications,
+  getLeadTasks,
   getUpcomingTasks,
   createLeadValidation,
   updateLeadValidation,
@@ -462,6 +463,28 @@ router.patch('/tasks/:taskId/complete', asyncHandler(completeTask));
  *         description: Lista de comunicaciones / Communications list
  */
 router.get('/:leadId/communications', asyncHandler(getLeadCommunications));
+
+/**
+ * @swagger
+ * /crm/{leadId}/tasks:
+ *   get:
+ *     summary: Obtener tareas del lead / Get lead tasks
+ *     description: Retorna las tareas asociadas a un lead.
+ *     tags: [crm]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: leadId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del lead / Lead ID
+ *     responses:
+ *       200:
+ *         description: Lista de tareas / Tasks list
+ */
+router.get('/:leadId/tasks', asyncHandler(getLeadTasks));
 
 /**
  * @swagger

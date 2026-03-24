@@ -248,6 +248,18 @@ export async function getLeadCommunications(req: AuthenticatedRequest, res: Resp
 }
 
 /**
+ * Get tasks for a lead
+ * Obtiene las tareas de un lead
+ *
+ * @param req - Path params: leadId
+ * @param res - Response with tasks list
+ */
+export async function getLeadTasks(req: AuthenticatedRequest, res: Response) {
+  const tasks = await crmService.getLeadTasks(req.params.leadId, req.user!.id);
+  res.json({ success: true, data: tasks });
+}
+
+/**
  * Get upcoming tasks
  * Obtiene tareas próximas
  *
