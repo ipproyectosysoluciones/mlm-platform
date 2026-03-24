@@ -40,7 +40,13 @@ export default function Dashboard() {
   const [copied, setCopied] = useState(false);
   const [showQR, setShowQR] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
   const loadRef = useRef(false);
+
+  useEffect(() => {
+    // Set mounted state after first render to prevent Recharts warnings
+    setIsMounted(true);
+  }, []);
 
   useEffect(() => {
     if (loadRef.current) return;
@@ -125,7 +131,7 @@ export default function Dashboard() {
             {t('dashboard.recentReferrals')}
           </h2>
           <div className="h-64 min-h-[256px]">
-            {isLoading ? (
+            {isLoading || !isMounted ? (
               <div className="h-full flex items-center justify-center text-slate-400">
                 {t('common.loading')}
               </div>
@@ -165,7 +171,7 @@ export default function Dashboard() {
             {t('dashboard.commissions')}
           </h2>
           <div className="h-64 min-h-[256px]">
-            {isLoading ? (
+            {isLoading || !isMounted ? (
               <div className="h-full flex items-center justify-center text-slate-400">
                 {t('common.loading')}
               </div>
