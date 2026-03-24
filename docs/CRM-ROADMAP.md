@@ -48,8 +48,8 @@
 
 ### Fase 2: Analítica y Reportes
 
-- [ ] **Dashboard configurable** - El usuario elige qué métricas ver
-- [ ] **Gráficos interactivos** - Chart.js o Recharts para visualización
+- [x] **Dashboard configurable** - El usuario elige qué métricas ver
+- [x] **Gráficos interactivos** - Chart.js o Recharts para visualización
 - [ ] **Reportes por período** - Esta semana, mes, trimestre
 - [ ] **Alertas de rotación** - Notificar leads sin actividad > X días
 - [ ] **Predicción de conversión** - ML básico para scoring de leads
