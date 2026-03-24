@@ -112,8 +112,19 @@ router.get('/tasks', asyncHandler(getUpcomingTasks));
  *         name: status
  *         schema:
  *           type: string
- *           enum: [new, contacted, qualified, converted, lost]
+ *           enum: [new, contacted, qualified, proposal, negotiation, won, lost]
  *         description: Filtrar por estado / Filter by status
+ *       - in: query
+ *         name: source
+ *         schema:
+ *           type: string
+ *           enum: [website, referral, social, landing_page, manual, other]
+ *         description: Filtrar por fuente / Filter by source
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Buscar por nombre, email o empresa / Search by name, email or company
  *       - in: query
  *         name: page
  *         schema:

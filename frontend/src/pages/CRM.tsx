@@ -85,6 +85,7 @@ export default function CRM() {
   const [leadsLoading, setLeadsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [sourceFilter, setSourceFilter] = useState('');
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [leadTasks, setLeadTasks] = useState<Task[]>([]);
   const [, setLeadCommunications] = useState<Communication[]>([]);
@@ -97,7 +98,7 @@ export default function CRM() {
 
   useEffect(() => {
     loadLeads();
-  }, []);
+  }, [statusFilter, sourceFilter, searchQuery]);
 
   useEffect(() => {
     if (activeTab === 'stats') {
@@ -125,7 +126,14 @@ export default function CRM() {
   const loadLeads = async () => {
     setLeadsLoading(true);
     try {
-      const response = await crmService.getLeads({ limit: 50 });
+      const params: { status?: string; source?: string; search?: string; limit: number } = {
+        limit: 50,
+      };
+      if (statusFilter) params.status = statusFilter;
+      if (sourceFilter) params.source = sourceFilter;
+      if (searchQuery) params.search = searchQuery;
+
+      const response = await crmService.getLeads(params);
       if (response.success) {
         setLeads(response.data.leads || []);
       }
@@ -233,16 +241,8 @@ export default function CRM() {
     }
   };
 
-  const filteredLeads = leads.filter((lead) => {
-    const matchesSearch =
-      !searchQuery ||
-      lead.contactName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      lead.contactEmail.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (lead.company && lead.company.toLowerCase().includes(searchQuery.toLowerCase()));
-
-    const matchesStatus = !statusFilter || lead.status === statusFilter;
-    return matchesSearch && matchesStatus;
-  });
+  // Los filtros ya se aplican en el servidor
+  const filteredLeads = leads;
 
   const statuses = [...new Set(leads.map((l) => l.status))];
 
@@ -326,6 +326,19 @@ export default function CRM() {
                       {t(`crm.status.${status}`, { defaultValue: status })}
                     </option>
                   ))}
+                </select>
+                <select
+                  value={sourceFilter}
+                  onChange={(e) => setSourceFilter(e.target.value)}
+                  className="px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                >
+                  <option value="">{t('crm.allSources')}</option>
+                  <option value="website">{t('crm.sourceWebsite')}</option>
+                  <option value="referral">{t('crm.sourceReferral')}</option>
+                  <option value="social">{t('crm.sourceSocial')}</option>
+                  <option value="landing_page">{t('crm.sourceLandingPage')}</option>
+                  <option value="manual">{t('crm.sourceManual')}</option>
+                  <option value="other">{t('crm.sourceOther')}</option>
                 </select>
               </div>
 
