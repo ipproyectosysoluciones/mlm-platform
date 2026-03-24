@@ -125,26 +125,32 @@ export default function Dashboard() {
             {t('dashboard.recentReferrals')}
           </h2>
           <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={data.referralsChart || []}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                <XAxis dataKey="month" stroke="#64748b" fontSize={12} />
-                <YAxis stroke="#64748b" fontSize={12} />
-                <Tooltip
-                  contentStyle={{
-                    borderRadius: '8px',
-                    border: 'none',
-                    boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
-                  }}
-                />
-                <Bar
-                  dataKey="count"
-                  fill="#3b82f6"
-                  radius={[4, 4, 0, 0]}
-                  name={t('dashboard.referrals')}
-                />
-              </BarChart>
-            </ResponsiveContainer>
+            {data.referralsChart && data.referralsChart.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={data.referralsChart}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                  <XAxis dataKey="month" stroke="#64748b" fontSize={12} />
+                  <YAxis stroke="#64748b" fontSize={12} />
+                  <Tooltip
+                    contentStyle={{
+                      borderRadius: '8px',
+                      border: 'none',
+                      boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+                    }}
+                  />
+                  <Bar
+                    dataKey="count"
+                    fill="#3b82f6"
+                    radius={[4, 4, 0, 0]}
+                    name={t('dashboard.referrals')}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full flex items-center justify-center text-slate-400">
+                {t('dashboard.noReferrals')}
+              </div>
+            )}
           </div>
         </div>
 
@@ -155,30 +161,36 @@ export default function Dashboard() {
             {t('dashboard.commissions')}
           </h2>
           <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={data.commissionsChart || []}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                <XAxis dataKey="month" stroke="#64748b" fontSize={12} />
-                <YAxis stroke="#64748b" fontSize={12} />
-                <Tooltip
-                  contentStyle={{
-                    borderRadius: '8px',
-                    border: 'none',
-                    boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
-                  }}
-                  formatter={(value) => [`$${Number(value).toFixed(2)}`, t('dashboard.amount')]}
-                />
-                <Legend />
-                <Line
-                  type="monotone"
-                  dataKey="amount"
-                  stroke="#10b981"
-                  strokeWidth={2}
-                  dot={{ fill: '#10b981' }}
-                  name={t('dashboard.earnings')}
-                />
-              </LineChart>
-            </ResponsiveContainer>
+            {data.commissionsChart && data.commissionsChart.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={data.commissionsChart}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                  <XAxis dataKey="month" stroke="#64748b" fontSize={12} />
+                  <YAxis stroke="#64748b" fontSize={12} />
+                  <Tooltip
+                    contentStyle={{
+                      borderRadius: '8px',
+                      border: 'none',
+                      boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+                    }}
+                    formatter={(value) => [`$${Number(value).toFixed(2)}`, t('dashboard.amount')]}
+                  />
+                  <Legend />
+                  <Line
+                    type="monotone"
+                    dataKey="amount"
+                    stroke="#10b981"
+                    strokeWidth={2}
+                    dot={{ fill: '#10b981' }}
+                    name={t('dashboard.earnings')}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full flex items-center justify-center text-slate-400">
+                {t('dashboard.noCommissions')}
+              </div>
+            )}
           </div>
         </div>
       </div>

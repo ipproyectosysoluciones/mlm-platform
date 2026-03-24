@@ -73,7 +73,9 @@
     "noCommissions": "Aún no tenés comisiones",
     "noCommissionsHint": "Invitá referidos para ganar comisiones",
     "noReferrals": "Aún no tenés referidos",
-    "noReferralsHint": "Compartí tu link para invitar personas"
+    "noReferralsHint": "Compartí tu link para invitar personas",
+    "amount": "Monto",
+    "earnings": "Ganancias"
   },
   "nav": {
     "dashboard": "Dashboard",

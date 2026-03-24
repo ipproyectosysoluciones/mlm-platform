@@ -73,7 +73,9 @@
     "noCommissions": "No commissions yet",
     "noCommissionsHint": "Invite referrals to earn commissions",
     "noReferrals": "No referrals yet",
-    "noReferralsHint": "Share your link to invite people"
+    "noReferralsHint": "Share your link to invite people",
+    "amount": "Amount",
+    "earnings": "Earnings"
   },
   "nav": {
     "dashboard": "Dashboard",
