@@ -1,9 +1,24 @@
 /**
- * CommissionService - Calcula y gestiona comisiones MLM
- * CommissionService - Calculates and manages MLM commissions
+ * @fileoverview CommissionService - MLM commission calculation and management
+ * @description Calculates and manages commissions for binary MLM structure including
+ *              direct commissions and up to 4 levels of upline commissions.
+ *              Calcula y gestiona comisiones para estructura MLM binaria incluyendo
+ *              comisiones directas y hasta 4 niveles de comisiones de upline.
+ * @module services/CommissionService
+ * @author MLM Development Team
  *
- * Tasas de comisión configuradas en COMMISSION_RATES.
- * Commission rates configured in COMMISSION_RATES.
+ * @example
+ * // English: Calculate commissions for a purchase
+ * const commissions = await commissionService.calculateCommissions(purchaseId);
+ *
+ * // English: Get user's commission history
+ * const { rows, count } = await commissionService.getUserCommissions(userId, { page: 1, limit: 20 });
+ *
+ * // Español: Calcular comisiones por una compra
+ * const commissions = await commissionService.calculateCommissions(purchaseId);
+ *
+ * // Español: Obtener historial de comisiones del usuario
+ * const { rows, count } = await commissionService.getUserCommissions(userId, { page: 1, limit: 20 });
  */
 import { sequelize } from '../config/database';
 import { User, Commission, Purchase } from '../models';

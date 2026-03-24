@@ -84,8 +84,10 @@ Headers: `Authorization: Bearer <token>`
 
 Headers: `Authorization: Bearer <token>`
 
+Query params: `depth` (1-10), `page`, `limit`
+
 ```json
-// Response (200)
+// Response (200) - Without pagination
 {
   "success": true,
   "data": {
@@ -96,6 +98,21 @@ Headers: `Authorization: Bearer <token>`
     }
   }
 }
+
+// Response (200) - With pagination
+{
+  "success": true,
+  "data": {
+    "tree": { ... },
+    "stats": { ... },
+    "pagination": {
+      "page": 1,
+      "limit": 50,
+      "total": 15,
+      "hasMore": false
+    }
+  }
+}
 ```
 
 ### Get User Tree / Árbol de Usuario
@@ -103,6 +120,79 @@ Headers: `Authorization: Bearer <token>`
 **GET** `/api/users/:id/tree`
 
 Headers: `Authorization: Bearer <token>`
+
+Query params: `depth` (1-10), `page`, `limit`
+
+### Search Users / Buscar Usuarios
+
+**GET** `/api/users/search`
+
+Headers: `Authorization: Bearer <token>`
+
+Query params: `q` (search term, min 2 chars), `limit` (default 10)
+
+```json
+// Response (200)
+{
+  "success": true,
+  "data": [
+    {
+      "id": "uuid",
+      "email": "user@example.com",
+      "referralCode": "REF123ABC",
+      "level": 2,
+      "position": "left"
+    }
+  ]
+}
+
+// Response (400) - Query too short
+{
+  "success": false,
+  "error": { "code": "VALIDATION_ERROR", "message": "..." }
+}
+```
+
+### Get User Details / Detalles de Usuario
+
+**GET** `/api/users/:id/details`
+
+Headers: `Authorization: Bearer <token>`
+
+Returns extended user details with downline statistics. User must be in requester's tree hierarchy.
+
+```json
+// Response (200)
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "email": "user@example.com",
+    "referralCode": "REF123ABC",
+    "position": "left",
+    "level": 2,
+    "status": "active",
+    "createdAt": "2024-01-15T10:30:00Z",
+    "stats": {
+      "leftCount": 5,
+      "rightCount": 3,
+      "totalDownline": 8
+    }
+  }
+}
+
+// Response (403) - User not in requester's subtree
+{
+  "success": false,
+  "error": { "code": "FORBIDDEN", "message": "Access denied" }
+}
+
+// Response (404) - User not found
+{
+  "success": false,
+  "error": { "code": "NOT_FOUND", "message": "User not found" }
+}
+```
 
 ### Get QR Code URL / Obtener URL de QR
 

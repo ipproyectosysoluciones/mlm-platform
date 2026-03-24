@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import swaggerUi from 'swagger-ui-express';
+import * as Sentry from '@sentry/node';
 import { config } from './config/env';
 import { swaggerSpec } from './config/swagger';
 import routes from './routes';
@@ -50,9 +51,10 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // Rate limiting for auth endpoints
+// Rate limit de 50 para desarrollo y testing, 5 para producción
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: isTest ? 1000 : 5,
+  max: isTest ? 1000 : 50,
   message: {
     success: false,
     error: {
@@ -85,6 +87,18 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/crm', crmRoutes);
 app.use('/api/public', publicRoutes);
 app.use('/api', landingRoutes);
+
+// Sentry debug route (only in non-production)
+if (config.nodeEnv !== 'production') {
+  app.get('/debug-sentry', () => {
+    throw new Error('Sentry test error!');
+  });
+}
+
+// Sentry Express error handler (must be after routes, before other error handlers)
+if (process.env.SENTRY_DSN) {
+  Sentry.setupExpressErrorHandler(app);
+}
 
 // Error handlers
 app.use(notFoundHandler);

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { ArrowLeft, User, Mail, Gift, Calendar, LogOut, FileText } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { authService } from '../services/api';
@@ -15,6 +16,7 @@ interface ProfileData extends UserType {
 }
 
 export default function Profile() {
+  const { t } = useTranslation();
   const { user, logout } = useAuth();
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -35,7 +37,7 @@ export default function Profile() {
   }
 
   function formatDate(date: Date): string {
-    return new Date(date).toLocaleDateString('en-US', {
+    return new Date(date).toLocaleDateString('es-ES', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
@@ -44,16 +46,16 @@ export default function Profile() {
 
   async function handleChangePassword() {
     const { value: formValues } = await Swal.fire({
-      title: 'Change Password',
+      title: t('profile.changePassword'),
       html: `
-        <input type="password" id="currentPassword" class="swal2-input" placeholder="Current Password">
-        <input type="password" id="newPassword" class="swal2-input" placeholder="New Password (min 8 chars)">
-        <input type="password" id="confirmPassword" class="swal2-input" placeholder="Confirm New Password">
+        <input type="password" id="currentPassword" class="swal2-input" placeholder="${t('profile.currentPassword')}">
+        <input type="password" id="newPassword" class="swal2-input" placeholder="${t('profile.newPassword')} (min 8)">
+        <input type="password" id="confirmPassword" class="swal2-input" placeholder="${t('profile.confirmNewPassword')}">
       `,
       focusConfirm: false,
       showCancelButton: true,
-      confirmButtonText: 'Change Password',
-      confirmButtonColor: '#6366f1',
+      confirmButtonText: t('profile.changePassword'),
+      confirmButtonColor: '#10b981',
       preConfirm: () => {
         const currentPassword = (
           Swal.getPopup()?.querySelector('#currentPassword') as HTMLInputElement
@@ -65,22 +67,17 @@ export default function Profile() {
         )?.value;
 
         if (!currentPassword || !newPassword || !confirmPassword) {
-          Swal.showValidationMessage('All fields are required');
+          Swal.showValidationMessage(t('common.error'));
           return false;
         }
 
         if (newPassword.length < 8) {
-          Swal.showValidationMessage('Password must be at least 8 characters');
-          return false;
-        }
-
-        if (!/\d/.test(newPassword)) {
-          Swal.showValidationMessage('Password must contain at least one number');
+          Swal.showValidationMessage(t('auth.passwordMinLength'));
           return false;
         }
 
         if (newPassword !== confirmPassword) {
-          Swal.showValidationMessage('Passwords do not match');
+          Swal.showValidationMessage(t('auth.passwordsNotMatch'));
           return false;
         }
 
@@ -93,16 +90,16 @@ export default function Profile() {
         await authService.changePassword(formValues.currentPassword, formValues.newPassword);
         Swal.fire({
           icon: 'success',
-          title: 'Success',
-          text: 'Password changed successfully',
-          confirmButtonColor: '#6366f1',
+          title: 'OK',
+          text: t('common.success') || 'Success',
+          confirmButtonColor: '#10b981',
         });
       } catch (error: any) {
         Swal.fire({
           icon: 'error',
-          title: 'Error',
-          text: error.response?.data?.error?.message || 'Failed to change password',
-          confirmButtonColor: '#6366f1',
+          title: t('common.error'),
+          text: error.response?.data?.error?.message || t('common.error'),
+          confirmButtonColor: '#10b981',
         });
       }
     }
@@ -110,16 +107,16 @@ export default function Profile() {
 
   async function handleUpdateProfile() {
     const { value: formValues } = await Swal.fire({
-      title: 'Update Profile',
+      title: t('profile.updateProfile'),
       html: `
-        <input type="text" id="firstName" class="swal2-input" placeholder="First Name" value="${profile?.firstName || ''}">
-        <input type="text" id="lastName" class="swal2-input" placeholder="Last Name" value="${profile?.lastName || ''}">
-        <input type="text" id="phone" class="swal2-input" placeholder="Phone" value="${profile?.phone || ''}">
+        <input type="text" id="firstName" class="swal2-input" placeholder="${t('profile.firstName')}" value="${profile?.firstName || ''}">
+        <input type="text" id="lastName" class="swal2-input" placeholder="${t('profile.lastName')}" value="${profile?.lastName || ''}">
+        <input type="text" id="phone" class="swal2-input" placeholder="${t('profile.phone')}" value="${profile?.phone || ''}">
       `,
       focusConfirm: false,
       showCancelButton: true,
-      confirmButtonText: 'Update',
-      confirmButtonColor: '#6366f1',
+      confirmButtonText: t('common.save'),
+      confirmButtonColor: '#10b981',
       preConfirm: () => {
         const firstName = (Swal.getPopup()?.querySelector('#firstName') as HTMLInputElement)?.value;
         const lastName = (Swal.getPopup()?.querySelector('#lastName') as HTMLInputElement)?.value;
@@ -134,17 +131,17 @@ export default function Profile() {
         await authService.updateProfile(formValues);
         Swal.fire({
           icon: 'success',
-          title: 'Success',
-          text: 'Profile updated successfully',
-          confirmButtonColor: '#6366f1',
+          title: 'OK',
+          text: t('common.success') || 'Success',
+          confirmButtonColor: '#10b981',
         });
         loadProfile();
       } catch (error: any) {
         Swal.fire({
           icon: 'error',
-          title: 'Error',
-          text: error.response?.data?.error?.message || 'Failed to update profile',
-          confirmButtonColor: '#6366f1',
+          title: t('common.error'),
+          text: error.response?.data?.error?.message || t('common.error'),
+          confirmButtonColor: '#10b981',
         });
       }
     }
@@ -154,25 +151,25 @@ export default function Profile() {
     if (profile?.role === 'admin') {
       Swal.fire({
         icon: 'warning',
-        title: 'Not Allowed',
-        text: 'Admin accounts cannot be deleted',
-        confirmButtonColor: '#6366f1',
+        title: 'OK',
+        text: t('profile.adminCannotDelete'),
+        confirmButtonColor: '#10b981',
       });
       return;
     }
 
     const { value: password } = await Swal.fire({
-      title: 'Delete Account',
-      text: 'This action cannot be undone. Enter your password to confirm.',
+      title: t('profile.deleteAccount'),
+      text: t('profile.deleteConfirmText'),
       input: 'password',
-      inputPlaceholder: 'Enter your password',
+      inputPlaceholder: t('profile.passwordRequired'),
       showCancelButton: true,
-      confirmButtonText: 'Delete Account',
+      confirmButtonText: t('profile.deleteButton'),
       confirmButtonColor: '#dc2626',
-      cancelButtonText: 'Cancel',
+      cancelButtonText: t('profile.cancelButton'),
       preConfirm: (value) => {
         if (!value) {
-          Swal.showValidationMessage('Password is required');
+          Swal.showValidationMessage(t('profile.passwordRequired'));
         }
         return value;
       },
@@ -180,14 +177,14 @@ export default function Profile() {
 
     if (password) {
       const result = await Swal.fire({
-        title: 'Are you sure?',
-        text: 'Your account will be permanently deleted.',
+        title: t('profile.deleteConfirmTitle'),
+        text: t('profile.deleteConfirmText'),
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#dc2626',
-        cancelButtonColor: '#6366f1',
-        confirmButtonText: 'Yes, delete it!',
-        cancelButtonText: 'Cancel',
+        cancelButtonColor: '#10b981',
+        confirmButtonText: t('profile.deleteButton'),
+        cancelButtonText: t('profile.cancelButton'),
       });
 
       if (result.isConfirmed) {
@@ -195,18 +192,18 @@ export default function Profile() {
           await authService.deleteAccount(password);
           Swal.fire({
             icon: 'success',
-            title: 'Account Deleted',
-            text: 'Your account has been deleted.',
-            confirmButtonColor: '#6366f1',
+            title: 'OK',
+            text: t('common.success') || 'Success',
+            confirmButtonColor: '#10b981',
           }).then(() => {
             logout();
           });
         } catch (error: any) {
           Swal.fire({
             icon: 'error',
-            title: 'Error',
-            text: error.response?.data?.error?.message || 'Failed to delete account',
-            confirmButtonColor: '#6366f1',
+            title: t('common.error'),
+            text: error.response?.data?.error?.message || t('common.error'),
+            confirmButtonColor: '#10b981',
           });
         }
       }
@@ -215,123 +212,126 @@ export default function Profile() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full" />
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="animate-spin w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-3xl mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <Link
-              to="/dashboard"
-              className="flex items-center gap-2 text-gray-600 hover:text-indigo-600 transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5" />
-              Back to Dashboard
-            </Link>
-            <Link
-              to="/landing-pages"
-              className="flex items-center gap-2 text-gray-600 hover:text-indigo-600 transition-colors"
-            >
-              <FileText className="w-5 h-5" />
-              Landing Pages
-            </Link>
-          </div>
-          <button
-            onClick={logout}
-            className="flex items-center gap-2 text-gray-600 hover:text-red-600 transition-colors"
-          >
-            <LogOut className="w-4 h-4" />
-            Logout
-          </button>
+    <div className="max-w-2xl mx-auto space-y-6">
+      {/* Header */}
+      <div className="flex items-center gap-4">
+        <Link to="/dashboard" className="p-2 hover:bg-slate-100 rounded-lg transition-colors">
+          <ArrowLeft className="w-5 h-5 text-slate-600" />
+        </Link>
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900">{t('profile.title')}</h1>
+          <p className="text-slate-500 text-sm">{t('profile.subtitle')}</p>
         </div>
-      </nav>
+      </div>
 
-      <main className="max-w-3xl mx-auto px-4 py-8">
-        <div className="bg-white rounded-xl shadow p-6">
-          <div className="flex items-center gap-4 mb-6 pb-6 border-b">
-            <div className="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center">
-              <User className="w-10 h-10 text-indigo-600" />
-            </div>
+      {/* Profile Card */}
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+        <div className="flex items-center gap-4 mb-6 pb-6 border-b border-slate-100">
+          <div className="w-16 h-16 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-full flex items-center justify-center">
+            <User className="w-8 h-8 text-white" />
+          </div>
+          <div>
+            <h2 className="text-xl font-bold text-slate-900">{user?.email}</h2>
+            <p className="text-slate-500 text-sm">
+              {t('profile.memberSince')}{' '}
+              {profile?.createdAt ? formatDate(profile.createdAt) : 'N/A'}
+            </p>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <div className="flex items-center gap-3">
+            <Mail className="w-5 h-5 text-slate-400" />
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">{user?.email}</h1>
-              <p className="text-gray-500">
-                Member since {profile?.createdAt ? formatDate(profile.createdAt) : 'N/A'}
+              <p className="text-sm text-slate-500">{t('profile.email')}</p>
+              <p className="font-medium text-slate-900">{profile?.email}</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <Gift className="w-5 h-5 text-slate-400" />
+            <div>
+              <p className="text-sm text-slate-500">{t('profile.referralCode')}</p>
+              <p className="font-mono bg-slate-100 px-3 py-1.5 rounded-lg inline-block font-medium">
+                {profile?.referralCode}
               </p>
             </div>
           </div>
 
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <Mail className="w-5 h-5 text-gray-400" />
-              <div>
-                <p className="text-sm text-gray-500">Email</p>
-                <p className="font-medium">{profile?.email}</p>
-              </div>
+          <div className="flex items-center gap-3">
+            <Calendar className="w-5 h-5 text-slate-400" />
+            <div>
+              <p className="text-sm text-slate-500">{t('profile.level')}</p>
+              <p className="font-medium text-slate-900">{profile?.level || 1}</p>
             </div>
+          </div>
 
+          {profile?.sponsor && (
             <div className="flex items-center gap-3">
-              <Gift className="w-5 h-5 text-gray-400" />
+              <User className="w-5 h-5 text-slate-400" />
               <div>
-                <p className="text-sm text-gray-500">Referral Code</p>
-                <p className="font-medium font-mono bg-gray-100 px-2 py-1 rounded inline-block">
-                  {profile?.referralCode}
+                <p className="text-sm text-slate-500">{t('profile.sponsor')}</p>
+                <p className="font-mono bg-slate-100 px-3 py-1.5 rounded-lg inline-block font-medium">
+                  {profile.sponsor.referralCode}
                 </p>
               </div>
             </div>
+          )}
+        </div>
 
-            <div className="flex items-center gap-3">
-              <Calendar className="w-5 h-5 text-gray-400" />
-              <div>
-                <p className="text-sm text-gray-500">Level</p>
-                <p className="font-medium">{profile?.level || 1}</p>
+        <div className="mt-8 pt-6 border-t border-slate-100">
+          <h3 className="text-lg font-semibold text-slate-900 mb-4">
+            {t('profile.accountSettings')}
+          </h3>
+          <div className="space-y-3">
+            <button
+              onClick={handleChangePassword}
+              className="w-full text-left px-4 py-3 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors flex items-center gap-3"
+            >
+              <div className="w-8 h-8 bg-slate-200 rounded-lg flex items-center justify-center">
+                <LogOut className="w-4 h-4 text-slate-600" />
               </div>
-            </div>
-
-            {profile?.sponsor && (
-              <div className="flex items-center gap-3">
-                <User className="w-5 h-5 text-gray-400" />
-                <div>
-                  <p className="text-sm text-gray-500">Sponsor</p>
-                  <p className="font-medium font-mono bg-gray-100 px-2 py-1 rounded inline-block">
-                    {profile.sponsor.referralCode}
-                  </p>
+              <span className="font-medium text-slate-700">{t('profile.changePassword')}</span>
+            </button>
+            <button
+              onClick={handleUpdateProfile}
+              className="w-full text-left px-4 py-3 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors flex items-center gap-3"
+            >
+              <div className="w-8 h-8 bg-slate-200 rounded-lg flex items-center justify-center">
+                <User className="w-4 h-4 text-slate-600" />
+              </div>
+              <span className="font-medium text-slate-700">{t('profile.updateProfile')}</span>
+            </button>
+            <Link
+              to="/landing-pages"
+              className="w-full text-left px-4 py-3 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors flex items-center gap-3"
+            >
+              <div className="w-8 h-8 bg-slate-200 rounded-lg flex items-center justify-center">
+                <FileText className="w-4 h-4 text-slate-600" />
+              </div>
+              <span className="font-medium text-slate-700">{t('profile.landingPages')}</span>
+            </Link>
+            {profile?.role !== 'admin' && (
+              <button
+                onClick={handleDeleteAccount}
+                className="w-full text-left px-4 py-3 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 transition-colors flex items-center gap-3"
+              >
+                <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
+                  <LogOut className="w-4 h-4" />
                 </div>
-              </div>
+                <span className="font-medium">{t('profile.deleteAccount')}</span>
+              </button>
             )}
           </div>
-
-          <div className="mt-8 pt-6 border-t">
-            <h2 className="text-lg font-semibold mb-4">Account Settings</h2>
-            <div className="space-y-3">
-              <button
-                onClick={handleChangePassword}
-                className="w-full text-left px-4 py-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-              >
-                Change Password
-              </button>
-              <button
-                onClick={handleUpdateProfile}
-                className="w-full text-left px-4 py-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-              >
-                Update Profile
-              </button>
-              {profile?.role !== 'admin' && (
-                <button
-                  onClick={handleDeleteAccount}
-                  className="w-full text-left px-4 py-3 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors"
-                >
-                  Delete Account
-                </button>
-              )}
-            </div>
-          </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

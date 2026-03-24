@@ -11,7 +11,7 @@ frontend/docs/
 ├── README.md          # Este archivo / This file
 ├── COMPONENTS.md      # Documentación de componentes / Component docs
 ├── PAGES.md           # Páginas y rutas / Pages and routes
-└── API_CLIENT.md      # Cliente API / API client
+└── API_CLIENT.md      # Cliente API / API client (ACTUALIZADO)
 ```
 
 ---

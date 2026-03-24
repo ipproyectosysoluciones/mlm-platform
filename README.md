@@ -59,7 +59,43 @@ docker compose up -d
 | `DB_PASSWORD`     | Contraseña de MySQL             | -         |
 | `JWT_SECRET`      | Secreto para JWT                | -         |
 | `REDIS_ENABLED`   | Habilitar Redis                 | false     |
+| `REDIS_HOST`      | Host de Redis                   | localhost |
+| `REDIS_PORT`      | Puerto de Redis                 | 6379      |
+| `REDIS_PASSWORD`  | Contraseña de Redis (opcional)  | -         |
 | `ALLOWED_ORIGINS` | Origins permitidos (producción) | localhost |
+
+### Redis Configuration / Configuración de Redis
+
+Redis es **opcional** pero recomendado para producción. Habilita cacheo de datos y mejora el rendimiento.
+
+```bash
+# Habilitar Redis en .env
+REDIS_ENABLED=true
+REDIS_HOST=localhost
+REDIS_PORT=6379
+# REDIS_PASSWORD=tu_password # Si tienes password configurado
+```
+
+#### Cache TTL Values / Valores de TTL de Cache
+
+| TTL       | Duration  | Use Case / Caso de Uso                  |
+| --------- | --------- | --------------------------------------- |
+| `short`   | 1 minute  | Datos frecuentemente actualizados       |
+| `medium`  | 5 minutes | Dashboard stats, árbol de usuarios      |
+| `long`    | 1 hour    | Estadísticas globales, reportes         |
+| `session` | 7 days    | Sesiones de usuario, datos persistentes |
+
+#### Cache Keys / Claves de Cache
+
+```typescript
+import { CACHE_KEYS, CACHE_TTL } from './config/redis';
+
+// Ejemplos de uso
+const userKey = CACHE_KEYS.user('user-id-123'); // 'user:user-id-123'
+const treeKey = CACHE_KEYS.tree('user-id-123'); // 'tree:user-id-123'
+const dashKey = CACHE_KEYS.dashboard('user-id-123'); // 'dashboard:user-id-123'
+const statsKey = CACHE_KEYS.stats(); // 'stats:global'
+```
 
 ## 🚀 Ejecución / Running
 

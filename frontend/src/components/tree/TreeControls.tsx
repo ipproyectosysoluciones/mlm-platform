@@ -11,6 +11,7 @@
  * @module components/tree/TreeControls
  */
 import { ZoomIn, ZoomOut, Maximize2, Layers } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface TreeControlsProps {
   /** Nivel de zoom actual */
@@ -25,8 +26,6 @@ interface TreeControlsProps {
   onFitView: () => void;
   /** Callback de cambio de profundidad */
   onDepthChange: (depth: number) => void;
-  /** Idioma */
-  language?: 'en' | 'es';
 }
 
 export default function TreeControls({
@@ -36,8 +35,8 @@ export default function TreeControls({
   onZoomOut,
   onFitView,
   onDepthChange,
-  language = 'en',
 }: TreeControlsProps) {
+  const { t } = useTranslation();
   const depthOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
   const zoomPercentage = Math.round(zoomLevel * 100);
@@ -56,8 +55,8 @@ export default function TreeControls({
               : 'text-gray-600 hover:bg-gray-100'
           }
         `}
-        title={language === 'es' ? 'Alejar' : 'Zoom Out'}
-        aria-label={language === 'es' ? 'Alejar zoom' : 'Zoom out'}
+        title={t('tree.controls.zoomOut')}
+        aria-label={t('tree.controls.zoomOut')}
       >
         <ZoomOut className="w-5 h-5" />
       </button>
@@ -75,8 +74,8 @@ export default function TreeControls({
           p-2 rounded-md transition-colors
           ${zoomLevel >= 2 ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 hover:bg-gray-100'}
         `}
-        title={language === 'es' ? 'Acercar' : 'Zoom In'}
-        aria-label={language === 'es' ? 'Acercar zoom' : 'Zoom in'}
+        title={t('tree.controls.zoomIn')}
+        aria-label={t('tree.controls.zoomIn')}
       >
         <ZoomIn className="w-5 h-5" />
       </button>
@@ -88,8 +87,8 @@ export default function TreeControls({
       <button
         onClick={onFitView}
         className="p-2 rounded-md text-gray-600 hover:bg-gray-100 transition-colors"
-        title={language === 'es' ? 'Ajustar vista' : 'Fit View'}
-        aria-label={language === 'es' ? 'Ajustar vista al contenedor' : 'Fit view to container'}
+        title={t('tree.controls.fitView')}
+        aria-label={t('tree.controls.fitView')}
       >
         <Maximize2 className="w-5 h-5" />
       </button>
@@ -109,19 +108,12 @@ export default function TreeControls({
             focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
             cursor-pointer
           "
-          title={language === 'es' ? 'Niveles del árbol' : 'Tree depth levels'}
-          aria-label={language === 'es' ? 'Seleccionar profundidad del árbol' : 'Select tree depth'}
+          title={t('tree.controls.depth')}
+          aria-label={t('tree.controls.depth')}
         >
           {depthOptions.map((d) => (
             <option key={d} value={d}>
-              {d}{' '}
-              {d === 1
-                ? language === 'es'
-                  ? 'nivel'
-                  : 'level'
-                : language === 'es'
-                  ? 'niveles'
-                  : 'levels'}
+              {d} {t(d === 1 ? 'tree.controls.level' : 'tree.controls.level')}
             </option>
           ))}
         </select>

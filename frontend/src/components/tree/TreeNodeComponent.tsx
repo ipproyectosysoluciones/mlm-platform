@@ -29,6 +29,7 @@ function TreeNodeComponent({ data, selected }: TreeNodeComponentProps) {
   const node = data.label;
   const isLeft = node.position === 'left';
   const isSelected = selected;
+  const hasChildren = node.children && node.children.length > 0;
 
   // Generate avatar initial from email
   const initial = node.email?.[0]?.toUpperCase() || 'U';
@@ -42,10 +43,7 @@ function TreeNodeComponent({ data, selected }: TreeNodeComponentProps) {
   const statsBgRight = isLeft ? 'bg-blue-100' : 'bg-purple-100';
 
   return (
-    <>
-      {/* Input handle (from parent) */}
-      <Handle type="target" position={Position.Top} className="!bg-gray-400 !w-2 !h-2 !border-0" />
-
+    <div className="relative">
       {/* Node content */}
       <div
         className={`
@@ -92,28 +90,36 @@ function TreeNodeComponent({ data, selected }: TreeNodeComponentProps) {
         </div>
       </div>
 
-      {/* Output handles (to children) */}
-      {data.label.children && data.label.children.length > 0 && (
+      {/* Input handle (from parent) - positioned absolute */}
+      <Handle
+        type="target"
+        position={Position.Top}
+        className="!bg-gray-400 !w-3 !h-3 !border-2 !border-white !-top-1.5"
+        style={{ transform: 'translateX(-50%)' }}
+      />
+
+      {/* Output handles (to children) - only show if has children */}
+      {hasChildren && (
         <>
           <Handle
             type="source"
             position={Position.Bottom}
             id="left"
-            className="!bg-blue-500 !w-2 !h-2 !border-0"
-            style={{ left: '30%' }}
+            className="!bg-blue-500 !w-3 !h-3 !border-2 !border-white !-bottom-1.5"
+            style={{ left: '30%', transform: 'translateX(-50%)' }}
           />
-          {data.label.children.length > 1 && (
+          {node.children.length > 1 && (
             <Handle
               type="source"
               position={Position.Bottom}
               id="right"
-              className="!bg-purple-500 !w-2 !h-2 !border-0"
-              style={{ left: '70%' }}
+              className="!bg-purple-500 !w-3 !h-3 !border-2 !border-white !-bottom-1.5"
+              style={{ left: '70%', transform: 'translateX(-50%)' }}
             />
           )}
         </>
       )}
-    </>
+    </div>
   );
 }
 

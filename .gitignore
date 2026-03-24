@@ -6,10 +6,12 @@ node_modules/
 dist/
 build/
 
-# Environment
+# Environment (CRITICAL - NEVER commit)
 .env
 .env.local
 .env.*.local
+.env.production
+.env.production.local
 
 # Logs
 logs/
@@ -37,6 +39,7 @@ coverage/
 test-results/
 playwright-report/
 playwright/.cache/
+frontend/test-screenshots/
 
 # Temporary files
 tmp/
@@ -50,4 +53,17 @@ temp/
 # Credentials
 credentials.json
 secrets/
-frontend/test-screenshots/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# SDD artifacts (if using openspec mode)
+sdd/*/apply-progress/
+openspec/
+
+# Sentry
+.sentryclirc
+
+# Misc
+*.tgz
+*.tar.gz

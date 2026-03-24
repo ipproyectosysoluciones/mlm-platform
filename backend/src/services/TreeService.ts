@@ -1,15 +1,23 @@
 /**
- * TreeService - Maneja operaciones del árbol genealógico/MLM
- * TreeService - Handles genealogical/MLM tree operations
- *
- * Utiliza el patrón Closure Table para representar la jerarquía del árbol binario.
- * Uses the Closure Table pattern to represent the binary tree hierarchy.
- *
- * Phase 3: Agregados métodos para paginación, búsqueda y detalles optimizados.
- * Phase 3: Added methods for pagination, search, and optimized details.
+ * @fileoverview TreeService - Binary tree operations using Closure Table pattern
+ * @description Manages the MLM binary tree hierarchy including user placement,
+ *              tree traversal, upline/downline queries, and subtree operations.
+ *              Gestiona la jerarquía del árbol binario MLM incluyendo colocación
+ *              de usuarios, recorrido del árbol, consultas de upline/downline y operaciones de subárbol.
+ * @module services/TreeService
+ * @author MLM Development Team
  *
  * @example
+ * // English: Get user tree up to 3 levels deep
  * const tree = await treeService.getUserTree(userId, 3);
+ *
+ * // English: Get user's sponsor chain
+ * const upline = await treeService.getUpline(userId);
+ *
+ * // Español: Obtener árbol de usuario hasta 3 niveles de profundidad
+ * const tree = await treeService.getUserTree(userId, 3);
+ *
+ * // Español: Obtener cadena de patrocinadores del usuario
  * const upline = await treeService.getUpline(userId);
  */
 import { Op } from 'sequelize';

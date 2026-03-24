@@ -24,8 +24,6 @@ interface DetailsPanelProps {
   onClose: () => void;
   /** Callback para ver subtree */
   onViewSubtree?: (userId: string) => void;
-  /** Idioma */
-  language?: 'en' | 'es';
 }
 
 export default function DetailsPanel({
@@ -33,10 +31,9 @@ export default function DetailsPanel({
   isLoading = false,
   onClose,
   onViewSubtree,
-  language = 'en',
 }: DetailsPanelProps) {
-  // Translation hook not currently used but available for i18n
-  useTranslation();
+  // Translation hook for i18n
+  const { t } = useTranslation();
 
   // Close on Escape key
   useEffect(() => {
@@ -75,12 +72,12 @@ export default function DetailsPanel({
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
           <h2 id="details-title" className="text-lg font-semibold text-gray-900">
-            {language === 'es' ? 'Detalles del Usuario' : 'User Details'}
+            {t('tree.details.title')}
           </h2>
           <button
             onClick={onClose}
             className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-            aria-label={language === 'es' ? 'Cerrar panel' : 'Close panel'}
+            aria-label={t('tree.details.close')}
           >
             <X className="w-5 h-5" />
           </button>
@@ -92,9 +89,7 @@ export default function DetailsPanel({
             // Loading state
             <div className="flex flex-col items-center justify-center h-48">
               <Loader2 className="w-8 h-8 text-indigo-600 animate-spin mb-3" />
-              <p className="text-sm text-gray-500">
-                {language === 'es' ? 'Cargando...' : 'Loading...'}
-              </p>
+              <p className="text-sm text-gray-500">{t('tree.loading') || 'Loading...'}</p>
             </div>
           ) : user ? (
             // User details
@@ -118,13 +113,7 @@ export default function DetailsPanel({
                       ${isLeft ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'}
                     `}
                   >
-                    {isLeft
-                      ? language === 'es'
-                        ? 'Izquierda'
-                        : 'Left'
-                      : language === 'es'
-                        ? 'Derecha'
-                        : 'Right'}
+                    {t(isLeft ? 'position.left' : 'position.right')}
                   </span>
                 </div>
               </div>
@@ -133,32 +122,26 @@ export default function DetailsPanel({
               <div className="space-y-4">
                 <InfoRow
                   icon={<Mail className="w-4 h-4" />}
-                  label={language === 'es' ? 'Email' : 'Email'}
+                  label={t('tree.details.email')}
                   value={user.email}
                 />
                 <InfoRow
                   icon={<User className="w-4 h-4" />}
-                  label={language === 'es' ? 'Nivel' : 'Level'}
+                  label={t('tree.details.level')}
                   value={`${user.level}`}
                 />
                 <InfoRow
                   icon={<MapPin className="w-4 h-4" />}
-                  label={language === 'es' ? 'Posición' : 'Position'}
+                  label={t('tree.details.position')}
                   value={
                     <span className={isLeft ? 'text-blue-600' : 'text-purple-600'}>
-                      {isLeft
-                        ? language === 'es'
-                          ? 'Pierna Izquierda'
-                          : 'Left Leg'
-                        : language === 'es'
-                          ? 'Pierna Derecha'
-                          : 'Right Leg'}
+                      {t(isLeft ? 'tree.details.leftLeg' : 'tree.details.rightLeg')}
                     </span>
                   }
                 />
                 <InfoRow
                   icon={<User className="w-4 h-4" />}
-                  label={language === 'es' ? 'Estado' : 'Status'}
+                  label={t('tree.details.status')}
                   value={
                     <span
                       className={`
@@ -170,19 +153,13 @@ export default function DetailsPanel({
                         }
                       `}
                     >
-                      {user.status === 'active'
-                        ? language === 'es'
-                          ? 'Activo'
-                          : 'Active'
-                        : language === 'es'
-                          ? 'Inactivo'
-                          : 'Inactive'}
+                      {t(`status.${user.status}`)}
                     </span>
                   }
                 />
                 <InfoRow
                   icon={<Calendar className="w-4 h-4" />}
-                  label={language === 'es' ? 'Código de referido' : 'Referral Code'}
+                  label={t('tree.details.joined')}
                   value={user.referralCode}
                 />
               </div>
@@ -190,21 +167,17 @@ export default function DetailsPanel({
               {/* Stats section */}
               <div className="border-t border-gray-200 pt-4">
                 <h3 className="text-sm font-medium text-gray-700 mb-3">
-                  {language === 'es' ? 'Estadísticas del Árbol' : 'Tree Statistics'}
+                  {t('tree.details.totalDownline')}
                 </h3>
                 <div className="grid grid-cols-3 gap-3">
+                  <StatCard label={t('position.left')} value={user.stats.leftCount} color="blue" />
                   <StatCard
-                    label={language === 'es' ? 'Izq.' : 'Left'}
-                    value={user.stats.leftCount}
-                    color="blue"
-                  />
-                  <StatCard
-                    label={language === 'es' ? 'Der.' : 'Right'}
+                    label={t('position.right')}
                     value={user.stats.rightCount}
                     color="purple"
                   />
                   <StatCard
-                    label={language === 'es' ? 'Total' : 'Total'}
+                    label={t('tree.details.totalDownline')}
                     value={user.stats.totalDownline}
                     color="gray"
                   />
@@ -217,9 +190,7 @@ export default function DetailsPanel({
             // Empty state
             <div className="flex flex-col items-center justify-center h-48 text-gray-500">
               <User className="w-12 h-12 mb-3 text-gray-300" />
-              <p className="text-sm">
-                {language === 'es' ? 'Seleccioná un usuario' : 'Select a user'}
-              </p>
+              <p className="text-sm">{t('tree.details.selectUser')}</p>
             </div>
           )}
         </div>
@@ -236,7 +207,7 @@ export default function DetailsPanel({
                 font-medium
               "
             >
-              <span>{language === 'es' ? 'Ver Subárbol' : 'View Subtree'}</span>
+              <span>{t('tree.details.viewSubtree')}</span>
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>

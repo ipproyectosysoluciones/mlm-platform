@@ -1,9 +1,33 @@
+/**
+ * @fileoverview CRMService - Customer Relationship Management operations
+ * @description Manages leads, tasks, communications, and CRM statistics for the MLM platform.
+ *              Gestiona leads, tareas, comunicaciones y estadísticas de CRM para la plataforma MLM.
+ * @module services/CRMService
+ * @author MLM Development Team
+ *
+ * @example
+ * // English: Create a new lead
+ * const lead = await crmService.createLead({ userId, contactName, contactEmail });
+ *
+ * // English: Get CRM stats
+ * const stats = await crmService.getCRMStats(userId);
+ *
+ * // Español: Crear un nuevo lead
+ * const lead = await crmService.createLead({ userId, contactName, contactEmail });
+ *
+ * // Español: Obtener estadísticas de CRM
+ * const stats = await crmService.getCRMStats(userId);
+ */
 import { Op, WhereOptions } from 'sequelize';
 import { Lead, LeadStatus, LeadSource } from '../models/Lead';
 import Task from '../models/Task';
 import Communication from '../models/Communication';
 import { User } from '../models';
 
+/**
+ * Lead filter options for queries
+ * Opciones de filtro de leads para consultas
+ */
 export interface LeadFilters {
   status?: LeadStatus;
   source?: LeadSource;
@@ -12,6 +36,10 @@ export interface LeadFilters {
   limit?: number;
 }
 
+/**
+ * Lead statistics aggregation
+ * Agregación de estadísticas de leads
+ */
 export interface LeadStats {
   total: number;
   byStatus: Record<LeadStatus, number>;
@@ -20,8 +48,48 @@ export interface LeadStats {
   conversionRate: number;
 }
 
+/**
+ * CRM Service - Lead, task, and communication management
+ * Servicio de CRM - Gestión de leads, tareas y comunicaciones
+ */
 export class CRMService {
-  // Leads
+  // ============================================================
+  // LEADS / LEADS
+  // ============================================================
+
+  /**
+   * Create a new lead
+   * Crear un nuevo lead
+   * @param {Object} data - Lead creation data / Datos de creación del lead
+   * @param {string} data.userId - Owning user ID / ID del usuario propietario
+   * @param {string} data.contactName - Contact name / Nombre del contacto
+   * @param {string} data.contactEmail - Contact email / Email del contacto
+   * @param {string} [data.contactPhone] - Contact phone / Teléfono del contacto
+   * @param {string} [data.company] - Company name / Nombre de empresa
+   * @param {string} [data.source] - Lead source / Fuente del lead
+   * @param {number} [data.value] - Estimated value / Valor estimado
+   * @param {string} [data.currency] - Currency code / Código de moneda
+   * @param {string} [data.notes] - Additional notes / Notas adicionales
+   * @returns {Promise<Lead>} Created lead instance / Instancia del lead creado
+   * @example
+   * // English: Create a new lead
+   * const lead = await crmService.createLead({
+   *   userId: 'user-123',
+   *   contactName: 'John Doe',
+   *   contactEmail: 'john@example.com',
+   *   source: 'website',
+   *   value: 5000
+   * });
+   *
+   * // Español: Crear un nuevo lead
+   * const lead = await crmService.createLead({
+   *   userId: 'usuario-123',
+   *   contactName: 'Juan Pérez',
+   *   contactEmail: 'juan@ejemplo.com',
+   *   source: 'website',
+   *   value: 5000
+   * });
+   */
   async createLead(data: {
     userId: string;
     contactName: string;
@@ -50,6 +118,19 @@ export class CRMService {
     });
   }
 
+  /**
+   * Get leads with pagination and filters
+   * Obtener leads con paginación y filtros
+   * @param {string} userId - User ID / ID del usuario
+   * @param {LeadFilters} filters - Filter options / Opciones de filtro
+   * @returns {Promise<{leads: Lead[], pagination: Object}>} Paginated leads / Leads paginados
+   * @example
+   * // English: Get filtered leads
+   * const { leads, pagination } = await crmService.getLeads(userId, { status: 'new', limit: 20 });
+   *
+   * // Español: Obtener leads filtrados
+   * const { leads, pagination } = await crmService.getLeads(userId, { status: 'new', limit: 20 });
+   */
   async getLeads(userId: string, filters: LeadFilters) {
     const page = filters.page || 1;
     const limit = filters.limit || 20;
@@ -86,6 +167,13 @@ export class CRMService {
     };
   }
 
+  /**
+   * Get lead by ID with related data
+   * Obtener lead por ID con datos relacionados
+   * @param {string} id - Lead ID / ID del lead
+   * @param {string} userId - User ID for authorization / ID del usuario para autorización
+   * @returns {Promise<Lead | null>} Lead with tasks and communications / Lead con tareas y comunicaciones
+   */
   async getLeadById(id: string, userId: string): Promise<Lead | null> {
     return Lead.findOne({
       where: { id, userId },
@@ -97,6 +185,14 @@ export class CRMService {
     });
   }
 
+  /**
+   * Update lead status
+   * Actualizar estado del lead
+   * @param {string} id - Lead ID / ID del lead
+   * @param {string} userId - User ID for authorization / ID del usuario
+   * @param {LeadStatus} status - New status / Nuevo estado
+   * @returns {Promise<Lead | null>} Updated lead / Lead actualizado
+   */
   async updateLeadStatus(id: string, userId: string, status: LeadStatus): Promise<Lead | null> {
     const lead = await Lead.findOne({ where: { id, userId } });
     if (!lead) return null;
@@ -105,6 +201,14 @@ export class CRMService {
     return lead;
   }
 
+  /**
+   * Update lead with allowed fields only
+   * Actualizar lead solo con campos permitidos
+   * @param {string} id - Lead ID / ID del lead
+   * @param {string} userId - User ID for authorization / ID del usuario
+   * @param {Partial<Lead>} data - Data to update / Datos a actualizar
+   * @returns {Promise<Lead | null>} Updated lead / Lead actualizado
+   */
   async updateLead(id: string, userId: string, data: Partial<Lead>): Promise<Lead | null> {
     const lead = await Lead.findOne({ where: { id, userId } });
     if (!lead) return null;
@@ -134,12 +238,36 @@ export class CRMService {
     return lead;
   }
 
+  /**
+   * Delete a lead
+   * Eliminar un lead
+   * @param {string} id - Lead ID / ID del lead
+   * @param {string} userId - User ID for authorization / ID del usuario
+   * @returns {Promise<boolean>} True if deleted / True si fue eliminado
+   */
   async deleteLead(id: string, userId: string): Promise<boolean> {
     const deleted = await Lead.destroy({ where: { id, userId } });
     return deleted > 0;
   }
 
-  // Stats
+  // ============================================================
+  // STATS / ESTADÍSTICAS
+  // ============================================================
+
+  /**
+   * Get CRM statistics for a user
+   * Obtener estadísticas de CRM para un usuario
+   * @param {string} userId - User ID / ID del usuario
+   * @returns {Promise<LeadStats>} Statistics including totals and breakdowns / Estadísticas con totales y desgloses
+   * @example
+   * // English: Get CRM stats
+   * const stats = await crmService.getCRMStats(userId);
+   * console.log(`Conversion rate: ${stats.conversionRate.toFixed(2)}%`);
+   *
+   * // Español: Obtener estadísticas de CRM
+   * const stats = await crmService.getCRMStats(userId);
+   * console.log(`Tasa de conversión: ${stats.conversionRate.toFixed(2)}%`);
+   */
   async getCRMStats(userId: string): Promise<LeadStats> {
     const leads = await Lead.findAll({ where: { userId } });
     const total = leads.length;
@@ -180,7 +308,16 @@ export class CRMService {
     };
   }
 
-  // Tasks
+  // ============================================================
+  // TASKS / TAREAS
+  // ============================================================
+
+  /**
+   * Create a task for a lead
+   * Crear una tarea para un lead
+   * @param {Object} data - Task creation data / Datos de creación de tarea
+   * @returns {Promise<Task>} Created task / Tarea creada
+   */
   async createTask(data: {
     leadId: string;
     userId: string;
@@ -200,6 +337,13 @@ export class CRMService {
     });
   }
 
+  /**
+   * Mark a task as completed
+   * Marcar una tarea como completada
+   * @param {string} id - Task ID / ID de la tarea
+   * @param {string} userId - User ID for authorization / ID del usuario
+   * @returns {Promise<Task | null>} Completed task / Tarea completada
+   */
   async completeTask(id: string, userId: string): Promise<Task | null> {
     const task = await Task.findOne({ where: { id, userId } });
     if (!task) return null;
@@ -208,7 +352,16 @@ export class CRMService {
     return task;
   }
 
-  // Communications
+  // ============================================================
+  // COMMUNICATIONS / COMUNICACIONES
+  // ============================================================
+
+  /**
+   * Add a communication record for a lead
+   * Agregar un registro de comunicación para un lead
+   * @param {Object} data - Communication data / Datos de comunicación
+   * @returns {Promise<Communication>} Created communication / Comunicación creada
+   */
   async addCommunication(data: {
     leadId: string;
     userId: string;
@@ -232,6 +385,13 @@ export class CRMService {
     return comm;
   }
 
+  /**
+   * Get all communications for a lead
+   * Obtener todas las comunicaciones de un lead
+   * @param {string} leadId - Lead ID / ID del lead
+   * @param {string} userId - User ID for authorization / ID del usuario
+   * @returns {Promise<Communication[]>} List of communications / Lista de comunicaciones
+   */
   async getLeadCommunications(leadId: string, userId: string): Promise<Communication[]> {
     return Communication.findAll({
       where: { leadId, userId },
@@ -239,7 +399,19 @@ export class CRMService {
     });
   }
 
-  // Get upcoming tasks
+  /**
+   * Get upcoming tasks for a user
+   * Obtener tareas próximas para un usuario
+   * @param {string} userId - User ID / ID del usuario
+   * @param {number} [limit=10] - Maximum number of tasks / Número máximo de tareas
+   * @returns {Promise<Task[]>} List of upcoming tasks / Lista de tareas próximas
+   * @example
+   * // English: Get today's tasks
+   * const tasks = await crmService.getUpcomingTasks(userId, 5);
+   *
+   * // Español: Obtener tareas de hoy
+   * const tasks = await crmService.getUpcomingTasks(userId, 5);
+   */
   async getUpcomingTasks(userId: string, limit = 10): Promise<Task[]> {
     return Task.findAll({
       where: {

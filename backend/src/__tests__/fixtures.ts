@@ -6,6 +6,7 @@
  */
 
 import { User } from '../models';
+import { sequelize } from '../config/database';
 import bcrypt from 'bcryptjs';
 import { treeServiceInstance } from '../services/UserService';
 
@@ -122,4 +123,19 @@ export function getAuthToken(user: User): string {
 export function getAuthHeaders(user: User): Record<string, string> {
   const token = getAuthToken(user);
   return { Authorization: `Bearer ${token}` };
+}
+
+/**
+ * Cleanup test users - deletes all test users created during tests
+ */
+export async function cleanupTestUsers(): Promise<void> {
+  await sequelize.query(`
+    DELETE FROM user_closure 
+    WHERE descendant_id IN (
+      SELECT id FROM users WHERE email LIKE '%@mlm.test'
+    )
+  `);
+  await sequelize.query(`
+    DELETE FROM users WHERE email LIKE '%@mlm.test'
+  `);
 }

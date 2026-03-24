@@ -2,8 +2,106 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import { connectDatabase, syncDatabase } from './config/database';
-import { initModels, User } from './models';
+import { initModels, User, UserClosure } from './models';
 import { hashPassword } from './services/AuthService';
+
+/**
+ * Helper to create user with closure entries
+ */
+async function createUser(
+  id: string,
+  email: string,
+  password: string,
+  referralCode: string,
+  sponsorId: string | null,
+  position: 'left' | 'right',
+  level: number
+): Promise<User> {
+  const passwordHash = await hashPassword(password);
+
+  const user = await User.create({
+    id,
+    email,
+    passwordHash,
+    referralCode,
+    sponsorId,
+    position,
+    level,
+    status: 'active',
+    role: 'user',
+    currency: 'USD',
+  });
+
+  // Self-reference closure
+  await UserClosure.create({
+    ancestorId: user.id,
+    descendantId: user.id,
+    depth: 0,
+  });
+
+  // Ancestor closures (all ancestors up the tree)
+  if (sponsorId) {
+    // Get all ancestors of the sponsor
+    const sponsorClosures = await UserClosure.findAll({
+      where: { descendantId: sponsorId },
+    });
+
+    // Create closure entries for each ancestor
+    for (const closure of sponsorClosures) {
+      await UserClosure.create({
+        ancestorId: closure.ancestorId,
+        descendantId: user.id,
+        depth: closure.depth + 1,
+      });
+    }
+  }
+
+  console.log(`✅ Created ${email} (level ${level}, ${position})`);
+  return user;
+}
+
+/**
+ * Populate closure table for existing users (for backwards compatibility)
+ */
+async function populateClosures(): Promise<void> {
+  const users = await User.findAll();
+
+  for (const user of users) {
+    // Self-reference
+    const exists = await UserClosure.findOne({
+      where: { ancestorId: user.id, descendantId: user.id },
+    });
+
+    if (!exists) {
+      await UserClosure.create({
+        ancestorId: user.id,
+        descendantId: user.id,
+        depth: 0,
+      });
+    }
+
+    // If has sponsor, add closure entries for all sponsor's ancestors
+    if (user.sponsorId) {
+      const sponsorClosures = await UserClosure.findAll({
+        where: { descendantId: user.sponsorId },
+      });
+
+      for (const closure of sponsorClosures) {
+        const closureExists = await UserClosure.findOne({
+          where: { ancestorId: closure.ancestorId, descendantId: user.id },
+        });
+
+        if (!closureExists) {
+          await UserClosure.create({
+            ancestorId: closure.ancestorId,
+            descendantId: user.id,
+            depth: closure.depth + 1,
+          });
+        }
+      }
+    }
+  }
+}
 
 async function seed(): Promise<void> {
   try {
@@ -11,10 +109,8 @@ async function seed(): Promise<void> {
     initModels();
     await syncDatabase(true);
 
+    // Create admin
     const adminPassword = await hashPassword('admin123');
-    const user1Password = await hashPassword('user123');
-    const user2Password = await hashPassword('user123');
-
     const admin = await User.create({
       id: '00000000-0000-0000-0000-000000000001',
       email: 'admin@mlm.com',
@@ -25,47 +121,143 @@ async function seed(): Promise<void> {
       role: 'admin',
       currency: 'USD',
     });
-    console.log(
-      '✅ Created admin:',
-      admin.email,
-      '- Code:',
-      admin.referralCode,
-      '- Role:',
-      admin.role
+
+    // Admin closure (self)
+    await UserClosure.create({
+      ancestorId: admin.id,
+      descendantId: admin.id,
+      depth: 0,
+    });
+
+    console.log('✅ Created admin:', admin.email, '- Code:', admin.referralCode);
+
+    // Level 1 - Direct referrals of admin
+    const user1 = await createUser(
+      '00000000-0000-0000-0000-000000000002',
+      'user1@mlm.com',
+      'user123',
+      'MLM-001-002',
+      admin.id,
+      'left',
+      1
     );
 
-    const user1 = await User.create({
-      id: '00000000-0000-0000-0000-000000000002',
-      email: 'user1@mlm.com',
-      passwordHash: user1Password,
-      referralCode: 'MLM-USER1-002',
-      sponsorId: admin.id,
-      position: 'left',
-      level: 1,
-      status: 'active',
-      role: 'user',
-      currency: 'USD',
-    });
-    console.log('✅ Created user1:', user1.email, '- Code:', user1.referralCode);
+    const user2 = await createUser(
+      '00000000-0000-0000-0000-000000000003',
+      'user2@mlm.com',
+      'user123',
+      'MLM-002-003',
+      admin.id,
+      'right',
+      1
+    );
 
-    const user2 = await User.create({
-      id: '00000000-0000-0000-0000-000000000003',
-      email: 'user2@mlm.com',
-      passwordHash: user2Password,
-      referralCode: 'MLM-USER2-003',
-      sponsorId: admin.id,
-      position: 'right',
-      level: 1,
-      status: 'active',
-      role: 'user',
-      currency: 'USD',
-    });
-    console.log('✅ Created user2:', user2.email, '- Code:', user2.referralCode);
+    // Level 2 - Referrals of user1 (left side)
+    const user3 = await createUser(
+      '00000000-0000-0000-0000-000000000004',
+      'user3@mlm.com',
+      'user123',
+      'MLM-003-004',
+      user1.id,
+      'left',
+      2
+    );
+
+    const user4 = await createUser(
+      '00000000-0000-0000-0000-000000000005',
+      'user4@mlm.com',
+      'user123',
+      'MLM-004-005',
+      user1.id,
+      'right',
+      2
+    );
+
+    // Level 2 - Referrals of user2 (right side)
+    const user5 = await createUser(
+      '00000000-0000-0000-0000-000000000006',
+      'user5@mlm.com',
+      'user123',
+      'MLM-005-006',
+      user2.id,
+      'left',
+      2
+    );
+
+    const user6 = await createUser(
+      '00000000-0000-0000-0000-000000000007',
+      'user6@mlm.com',
+      'user123',
+      'MLM-006-007',
+      user2.id,
+      'right',
+      2
+    );
+
+    // Level 3 - More referrals for a fuller tree
+    await createUser(
+      '00000000-0000-0000-0000-000000000008',
+      'user7@mlm.com',
+      'user123',
+      'MLM-007-008',
+      user3.id,
+      'left',
+      3
+    );
+
+    await createUser(
+      '00000000-0000-0000-0000-000000000009',
+      'user8@mlm.com',
+      'user123',
+      'MLM-008-009',
+      user4.id,
+      'left',
+      3
+    );
+
+    await createUser(
+      '00000000-0000-0000-0000-000000000010',
+      'user9@mlm.com',
+      'user123',
+      'MLM-009-010',
+      user5.id,
+      'right',
+      3
+    );
+
+    await createUser(
+      '00000000-0000-0000-0000-000000000011',
+      'user10@mlm.com',
+      'user123',
+      'MLM-010-011',
+      user6.id,
+      'right',
+      3
+    );
+
+    console.log('\n✅ Closure table populated with multi-level referrals');
+    console.log('\n📋 Tree Structure:');
+    console.log('   Admin (root)');
+    console.log('   ├── Level 1 - Left: user1');
+    console.log('   │   ├── Level 2 - Left: user3');
+    console.log('   │   │   └── Level 3 - Left: user7');
+    console.log('   │   └── Level 2 - Right: user4');
+    console.log('   │       └── Level 3 - Left: user8');
+    console.log('   └── Level 1 - Right: user2');
+    console.log('       ├── Level 2 - Left: user5');
+    console.log('       │   └── Level 3 - Right: user9');
+    console.log('       └── Level 2 - Right: user6');
+    console.log('           └── Level 3 - Right: user10');
 
     console.log('\n📋 Test Credentials:');
-    console.log('   Admin: admin@mlm.com / admin123');
-    console.log('   User1: user1@mlm.com / user123');
-    console.log('   User2: user2@mlm.com / user123');
+    console.log('   Admin: admin@mlm.com / admin123 (root - 10 referrals)');
+    console.log('   All users: user123');
+    console.log('');
+    console.log('   To test different tree levels, login as any user:');
+    console.log('   - user1@mlm.com → 2 referrals');
+    console.log('   - user2@mlm.com → 2 referrals');
+    console.log('   - user3@mlm.com → 1 referral');
+    console.log('   - etc.');
 
     process.exit(0);
   } catch (error) {

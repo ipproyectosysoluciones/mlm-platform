@@ -1,3 +1,10 @@
+/**
+ * @fileoverview UserController - User profile, tree, and QR code endpoints
+ * @description Handles user profile operations, binary tree visualization, and QR code generation.
+ *              Gestiona operaciones de perfil de usuario, visualización de árbol binario y generación de códigos QR.
+ * @module controllers/UserController
+ * @author MLM Development Team
+ */
 import { Response } from 'express';
 import { body } from 'express-validator';
 import { userService, treeServiceInstance } from '../services/UserService';

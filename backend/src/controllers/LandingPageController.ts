@@ -1,9 +1,27 @@
+/**
+ * @fileoverview LandingPageController - Landing page management endpoints
+ * @description Handles CRUD operations for marketing landing pages including creation,
+ *              editing, analytics tracking, and public viewing.
+ *              Gestiona operaciones CRUD para landing pages de marketing incluyendo creación,
+ *              edición, seguimiento analítico y visualización pública.
+ * @module controllers/LandingPageController
+ * @author MLM Development Team
+ */
 import { Response } from 'express';
 import { landingPageService } from '../services/LandingPageService';
 import type { ApiResponse } from '../types';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware';
 import type { Request } from 'express';
 
+/**
+ * Create a new landing page
+ * Crear una nueva landing page
+ *
+ * @route POST /api/landing-pages
+ * @access Authenticated
+ * @param {AuthenticatedRequest} req - Request with landing page data
+ * @param {Response} res - Response with created page
+ */
 export async function createLandingPage(req: AuthenticatedRequest, res: Response): Promise<void> {
   const userId = req.user!.id;
 
@@ -26,6 +44,15 @@ export async function createLandingPage(req: AuthenticatedRequest, res: Response
   res.status(201).json(response);
 }
 
+/**
+ * Get all landing pages for the authenticated user
+ * Obtiene todas las landing pages del usuario autenticado
+ *
+ * @route GET /api/landing
+ * @access Authenticated
+ * @param {AuthenticatedRequest} req - Request with query params: limit, offset
+ * @param {Response} res - Response with array of landing pages
+ */
 export async function getMyLandingPages(req: AuthenticatedRequest, res: Response): Promise<void> {
   const userId = req.user!.id;
   const limit = parseInt(req.query.limit as string) || 20;
@@ -41,6 +68,15 @@ export async function getMyLandingPages(req: AuthenticatedRequest, res: Response
   res.json(response);
 }
 
+/**
+ * Get statistics for user's landing pages
+ * Obtiene estadísticas de las landing pages del usuario
+ *
+ * @route GET /api/landing/stats
+ * @access Authenticated
+ * @param {AuthenticatedRequest} req - Authenticated request
+ * @param {Response} res - Response with stats: totalPages, activePages, totalViews, totalConversions, conversionRate
+ */
 export async function getLandingPageStats(req: AuthenticatedRequest, res: Response): Promise<void> {
   const userId = req.user!.id;
 
@@ -54,6 +90,16 @@ export async function getLandingPageStats(req: AuthenticatedRequest, res: Respon
   res.json(response);
 }
 
+/**
+ * Get landing page by ID
+ * Obtiene una landing page por ID
+ *
+ * @route GET /api/landing/:id
+ * @access Authenticated (owner or admin)
+ * @param {AuthenticatedRequest} req - Request with landing page ID in params
+ * @param {Response} res - Response with landing page details
+ * @returns {403} If not authorized, {404} if not found
+ */
 export async function getLandingPageById(req: AuthenticatedRequest, res: Response): Promise<void> {
   const { id } = req.params;
   const userId = req.user!.id;
@@ -78,6 +124,16 @@ export async function getLandingPageById(req: AuthenticatedRequest, res: Respons
   res.json(response);
 }
 
+/**
+ * Update a landing page
+ * Actualiza una landing page
+ *
+ * @route PUT /api/landing/:id
+ * @access Authenticated (owner or admin)
+ * @param {AuthenticatedRequest} req - Request with landing page ID in params and update data in body
+ * @param {Response} res - Response with updated landing page
+ * @returns {403} If not authorized, {404} if not found
+ */
 export async function updateLandingPage(req: AuthenticatedRequest, res: Response): Promise<void> {
   const { id } = req.params;
   const userId = req.user!.id;
@@ -104,6 +160,16 @@ export async function updateLandingPage(req: AuthenticatedRequest, res: Response
   res.json(response);
 }
 
+/**
+ * Delete a landing page
+ * Elimina una landing page
+ *
+ * @route DELETE /api/landing/:id
+ * @access Authenticated (owner or admin)
+ * @param {AuthenticatedRequest} req - Request with landing page ID in params
+ * @param {Response} res - Success response
+ * @returns {403} If not authorized, {404} if not found
+ */
 export async function deleteLandingPage(req: AuthenticatedRequest, res: Response): Promise<void> {
   const { id } = req.params;
   const userId = req.user!.id;
@@ -130,6 +196,16 @@ export async function deleteLandingPage(req: AuthenticatedRequest, res: Response
   res.json(response);
 }
 
+/**
+ * Get public landing page by slug
+ * Obtiene landing page pública por slug
+ *
+ * @route GET /api/landing/:slug
+ * @access Public
+ * @param {Request} req - Request with slug in params
+ * @param {Response} res - Response with landing page data (increments views)
+ * @returns {404} If not found
+ */
 export async function getPublicLandingPage(req: Request, res: Response): Promise<void> {
   const { slug } = req.params;
 
@@ -150,6 +226,16 @@ export async function getPublicLandingPage(req: Request, res: Response): Promise
   res.json(response);
 }
 
+/**
+ * Track conversion for a landing page
+ * Registra conversión para una landing page
+ *
+ * @route POST /api/landing/:slug/convert
+ * @access Public
+ * @param {Request} req - Request with slug in params
+ * @param {Response} res - Success response (increments conversions)
+ * @returns {404} If not found
+ */
 export async function trackConversion(req: Request, res: Response): Promise<void> {
   const { slug } = req.params;
 

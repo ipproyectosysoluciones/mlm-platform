@@ -1,3 +1,10 @@
+/**
+ * @fileoverview CRMController - Customer Relationship Management endpoints
+ * @description Handles CRM operations including lead management, tasks, and communications tracking.
+ *              Gestiona operaciones de CRM incluyendo gestión de leads, tareas y seguimiento de comunicaciones.
+ * @module controllers/CRMController
+ * @author MLM Development Team
+ */
 import { Response } from 'express';
 import { body, query } from 'express-validator';
 import { crmService } from '../services/CRMService';
@@ -5,6 +12,10 @@ import { AppError } from '../middleware/error.middleware';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware';
 import type { LeadStatus, LeadSource } from '../models/Lead';
 
+/**
+ * Validation rules for creating a new lead
+ * Reglas de validación para crear un nuevo lead
+ */
 export const createLeadValidation = [
   body('contactName').notEmpty().withMessage('Contact name is required'),
   body('contactEmail').isEmail().withMessage('Valid email is required'),
@@ -30,6 +41,13 @@ export const updateLeadValidation = [
   body('notes').optional().isString(),
 ];
 
+/**
+ * Get all leads with pagination and filters
+ * Obtiene todos los leads con paginación y filtros
+ *
+ * @param req - Query params: status, source, search, page, limit
+ * @param res - Response with paginated leads
+ */
 export async function getLeads(req: AuthenticatedRequest, res: Response) {
   const userId = req.user!.id;
   const leads = await crmService.getLeads(userId, {
@@ -42,12 +60,27 @@ export async function getLeads(req: AuthenticatedRequest, res: Response) {
   res.json({ success: true, data: leads });
 }
 
+/**
+ * Get lead by ID
+ * Obtiene un lead por ID
+ *
+ * @param req - Path params: id
+ * @param res - Response with lead details
+ * @throws {AppError} 404 - If lead not found
+ */
 export async function getLeadById(req: AuthenticatedRequest, res: Response) {
   const lead = await crmService.getLeadById(req.params.id, req.user!.id);
   if (!lead) throw new AppError(404, 'NOT_FOUND', 'Lead not found');
   res.json({ success: true, data: lead });
 }
 
+/**
+ * Create a new lead
+ * Crea un nuevo lead
+ *
+ * @param req - Body: contactName, contactEmail, contactPhone, company, source, value, currency, notes
+ * @param res - Response with created lead
+ */
 export async function createLead(req: AuthenticatedRequest, res: Response) {
   const lead = await crmService.createLead({
     userId: req.user!.id,
@@ -56,23 +89,53 @@ export async function createLead(req: AuthenticatedRequest, res: Response) {
   res.status(201).json({ success: true, data: lead });
 }
 
+/**
+ * Update a lead
+ * Actualiza un lead
+ *
+ * @param req - Path params: id, Body: fields to update
+ * @param res - Response with updated lead
+ * @throws {AppError} 404 - If lead not found
+ */
 export async function updateLead(req: AuthenticatedRequest, res: Response) {
   const lead = await crmService.updateLead(req.params.id, req.user!.id, req.body);
   if (!lead) throw new AppError(404, 'NOT_FOUND', 'Lead not found');
   res.json({ success: true, data: lead });
 }
 
+/**
+ * Delete a lead
+ * Elimina un lead
+ *
+ * @param req - Path params: id
+ * @param res - Success response
+ * @throws {AppError} 404 - If lead not found
+ */
 export async function deleteLead(req: AuthenticatedRequest, res: Response) {
   const deleted = await crmService.deleteLead(req.params.id, req.user!.id);
   if (!deleted) throw new AppError(404, 'NOT_FOUND', 'Lead not found');
   res.json({ success: true, message: 'Lead deleted' });
 }
 
+/**
+ * Get CRM statistics
+ * Obtiene estadísticas de CRM
+ *
+ * @param req - Authenticated request
+ * @param res - Response with CRM stats (total, byStatus, bySource, conversionRate)
+ */
 export async function getCRMStats(req: AuthenticatedRequest, res: Response) {
   const stats = await crmService.getCRMStats(req.user!.id);
   res.json({ success: true, data: stats });
 }
 
+/**
+ * Create a task for a lead
+ * Crea una tarea para un lead
+ *
+ * @param req - Path params: leadId, Body: type, title, description, dueDate
+ * @param res - Response with created task
+ */
 export async function createTask(req: AuthenticatedRequest, res: Response) {
   const task = await crmService.createTask({
     leadId: req.params.leadId,
@@ -82,12 +145,27 @@ export async function createTask(req: AuthenticatedRequest, res: Response) {
   res.status(201).json({ success: true, data: task });
 }
 
+/**
+ * Mark a task as completed
+ * Marca una tarea como completada
+ *
+ * @param req - Path params: taskId
+ * @param res - Response with completed task
+ * @throws {AppError} 404 - If task not found
+ */
 export async function completeTask(req: AuthenticatedRequest, res: Response) {
   const task = await crmService.completeTask(req.params.taskId, req.user!.id);
   if (!task) throw new AppError(404, 'NOT_FOUND', 'Task not found');
   res.json({ success: true, data: task });
 }
 
+/**
+ * Add a communication record
+ * Agrega un registro de comunicación
+ *
+ * @param req - Path params: leadId, Body: type, direction, subject, content, metadata
+ * @param res - Response with created communication
+ */
 export async function addCommunication(req: AuthenticatedRequest, res: Response) {
   const comm = await crmService.addCommunication({
     leadId: req.params.leadId,
@@ -97,11 +175,25 @@ export async function addCommunication(req: AuthenticatedRequest, res: Response)
   res.status(201).json({ success: true, data: comm });
 }
 
+/**
+ * Get all communications for a lead
+ * Obtiene todas las comunicaciones de un lead
+ *
+ * @param req - Path params: leadId
+ * @param res - Response with communications list
+ */
 export async function getLeadCommunications(req: AuthenticatedRequest, res: Response) {
   const comms = await crmService.getLeadCommunications(req.params.leadId, req.user!.id);
   res.json({ success: true, data: comms });
 }
 
+/**
+ * Get upcoming tasks
+ * Obtiene tareas próximas
+ *
+ * @param req - Authenticated request
+ * @param res - Response with upcoming tasks (limit default 10)
+ */
 export async function getUpcomingTasks(req: AuthenticatedRequest, res: Response) {
   const tasks = await crmService.getUpcomingTasks(req.user!.id);
   res.json({ success: true, data: tasks });

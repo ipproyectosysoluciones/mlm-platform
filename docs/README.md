@@ -109,8 +109,27 @@ pnpm test:e2e           # E2E tests (Playwright)
 | `docs/API.md`          | API endpoints guide / Guía de endpoints                        |
 | `docs/TESTING.md`      | Testing documentation / Documentación de tests                 |
 | `docs/CONTRIBUTING.md` | Contribution guidelines / Guía de contribuciones               |
+| `docs/CRM-ROADMAP.md`  | CRM feature roadmap / Roadmap de funcionalidades CRM           |
 | `CHANGELOG.md`         | Version history / Historial de versiones                       |
 | `BRANCHING.md`         | Git branching strategy / Estrategia de ramas Git               |
+
+### Frontend Documentation (frontend/docs/)
+
+| File            | Description / Descripción                     |
+| --------------- | --------------------------------------------- |
+| `README.md`     | Project overview / Descripción del proyecto   |
+| `COMPONENTS.md` | Component documentation / Docs de componentes |
+| `PAGES.md`      | Pages and routes / Páginas y rutas            |
+| `API_CLIENT.md` | API client documentation / Docs de API client |
+
+### SDD Documents (sdd/)
+
+| Directory                | Description / Descripción                        |
+| ------------------------ | ------------------------------------------------ |
+| `sdd-i18n-bilingual/`    | i18n bilingual system / Sistema de i18n          |
+| `sdd-horizontal-navbar/` | Horizontal navbar layout / Layout navbar         |
+| `phase-3-visual-tree/`   | Visual tree UI / UI de árbol visual              |
+| `phase-2-notifications/` | Notifications system / Sistema de notificaciones |
 
 ---
 

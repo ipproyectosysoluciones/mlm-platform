@@ -204,14 +204,35 @@ test.describe('Auth Flow', () => {
    */
   test('should login with valid credentials', async ({ page }) => {
     await page.goto(`${baseURL}/login`);
-    await page.getByPlaceholder(/you@example.com/i).fill(testUser.email);
-    await page.getByPlaceholder(/••••••••/i).fill(testUser.password);
-    await page.getByRole('button', { name: /sign in/i }).click();
+    await page.locator('input[type="email"]').fill(testUser.email);
+    await page.locator('input[type="password"]').fill(testUser.password);
+    await page.getByRole('button', { name: /iniciar sesión|sign in/i }).click();
 
     await expect(page).toHaveURL(/\/dashboard/);
-    await expect(page.getByText(/mlm dashboard/i)).toBeVisible();
+    await expect(page.getByText(/bienvenido|welcome/i)).toBeVisible();
   });
 });
+```
+
+### Bilingual Selectors / Selectores Bilingües
+
+Since the UI supports both Spanish (ES) and English (EN), use flexible selectors:
+
+```typescript
+// ❌ Don't use hardcoded language
+await page.getByRole('button', { name: 'Sign In' });
+await page.getByText('Welcome');
+
+// ✅ Use flexible patterns (ES first, then EN)
+await page.getByRole('button', { name: /iniciar sesión|sign in/i });
+await page.getByText(/bienvenido|welcome/i);
+
+// ✅ For placeholders, use case-insensitive patterns
+await page.getByPlaceholder(/email/i);
+await page.getByPlaceholder(/contraseña|password/i);
+
+// ✅ For logout button
+await page.getByRole('button', { name: /cerrar sesión|logout/i });
 ```
 
 ### Helper Functions / Funciones Auxiliares
@@ -219,18 +240,43 @@ test.describe('Auth Flow', () => {
 ```typescript
 // e2e/helpers.ts
 
+import { Page } from '@playwright/test';
+
 export const baseURL = 'http://localhost:5173';
 
 export async function login(page: Page) {
   await page.goto(`${baseURL}/login`);
-  await page.getByPlaceholder(/you@example.com/i).fill(testUser.email);
-  await page.getByPlaceholder(/••••••••/i).fill(testUser.password);
-  await page.getByRole('button', { name: /sign in/i }).click();
+  await page.waitForLoadState('networkidle');
+
+  // Flexible selectors for bilingual UI
+  const emailInput = page.getByPlaceholder(/email/i);
+  const passwordInput = page.getByPlaceholder(/contraseña|password/i);
+  const submitButton = page.getByRole('button', { name: /iniciar sesión|sign in/i });
+
+  await emailInput.fill(testUser.email);
+  await passwordInput.fill(testUser.password);
+  await submitButton.click();
   await page.waitForURL(/\/dashboard/, { timeout: 15000 });
 }
 
 export async function logout(page: Page) {
-  await page.getByRole('button', { name: /logout/i }).click();
+  // Click user menu first
+  const userMenuButton = page
+    .locator('button')
+    .filter({
+      has: page.locator('[class*="rounded-full"]'),
+    })
+    .first();
+
+  await userMenuButton.click();
+  await page.waitForTimeout(300);
+
+  // Try ES first, fallback to EN
+  const logoutButton = page
+    .getByRole('button', { name: /cerrar sesión|logout/i })
+    .or(page.getByText(/cerrar sesión|logout/i));
+
+  await logoutButton.click();
   await page.waitForURL(/\/login/, { timeout: 5000 });
 }
 ```

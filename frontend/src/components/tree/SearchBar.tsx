@@ -12,19 +12,19 @@
  */
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Search, X, Loader2, User } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { userService } from '../../services/api';
 import type { User as UserType } from '../../types';
 
 interface SearchBarProps {
   /** Callback cuando se selecciona un usuario */
   onSelect: (userId: string) => void;
-  /** Idioma actual */
-  language?: 'en' | 'es';
   /** Placeholder personalizado */
   placeholder?: string;
 }
 
-export default function SearchBar({ onSelect, language = 'en', placeholder }: SearchBarProps) {
+export default function SearchBar({ onSelect, placeholder }: SearchBarProps) {
+  const { t } = useTranslation();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<UserType[]>([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -128,8 +128,7 @@ export default function SearchBar({ onSelect, language = 'en', placeholder }: Se
     inputRef.current?.focus();
   };
 
-  const defaultPlaceholder =
-    language === 'es' ? 'Buscar por email o código...' : 'Search by email or code...';
+  const defaultPlaceholder = t('tree.search.placeholder');
 
   return (
     <div ref={containerRef} className="relative w-full max-w-md">
@@ -172,7 +171,7 @@ export default function SearchBar({ onSelect, language = 'en', placeholder }: Se
             type="button"
             onClick={handleClear}
             className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
-            aria-label={language === 'es' ? 'Limpiar búsqueda' : 'Clear search'}
+            aria-label={t('tree.search.clear')}
           >
             <X className="w-5 h-5" />
           </button>
@@ -211,7 +210,7 @@ export default function SearchBar({ onSelect, language = 'en', placeholder }: Se
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-gray-900 truncate">{user.email}</p>
                     <p className="text-xs text-gray-500">
-                      {language === 'es' ? 'Nivel' : 'Level'} {user.level} • {user.referralCode}
+                      {t('tree.details.level')} {user.level} • {user.referralCode}
                     </p>
                   </div>
                   <User className="w-4 h-4 text-gray-400" />
@@ -221,9 +220,7 @@ export default function SearchBar({ onSelect, language = 'en', placeholder }: Se
           ) : query.length >= 2 && !isLoading ? (
             <div className="px-4 py-8 text-center text-gray-500">
               <Search className="w-8 h-8 mx-auto mb-2 text-gray-300" />
-              <p className="text-sm">
-                {language === 'es' ? 'No se encontraron usuarios' : 'No users found'}
-              </p>
+              <p className="text-sm">{t('tree.search.noResults')}</p>
             </div>
           ) : null}
         </div>
@@ -232,7 +229,7 @@ export default function SearchBar({ onSelect, language = 'en', placeholder }: Se
       {/* Helper text */}
       {query.length > 0 && query.length < 2 && (
         <p className="absolute -bottom-6 left-0 text-xs text-gray-400">
-          {language === 'es' ? 'Ingresá al menos 2 caracteres' : 'Enter at least 2 characters'}
+          {t('tree.search.minChars')}
         </p>
       )}
     </div>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Users, TrendingUp, ArrowLeft, RefreshCw, UserCheck, UserX, Crown } from 'lucide-react';
 import { adminService } from '../services/api';
 
@@ -15,6 +16,7 @@ interface UserData {
 }
 
 export default function AdminDashboard() {
+  const { t } = useTranslation();
   const [stats, setStats] = useState<any>(null);
   const [users, setUsers] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -68,79 +70,79 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <RefreshCw className="w-8 h-8 animate-spin text-indigo-600" />
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <RefreshCw className="w-10 h-10 animate-spin text-emerald-500" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <Crown className="w-6 h-6 text-yellow-600" />
-            <h1 className="text-xl font-bold text-indigo-600">Admin Dashboard</h1>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center gap-4">
+        <Link to="/dashboard" className="p-2 hover:bg-slate-100 rounded-lg transition-colors">
+          <ArrowLeft className="w-5 h-5 text-slate-600" />
+        </Link>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
+            <Crown className="w-5 h-5 text-amber-600" />
           </div>
-          <Link
-            to="/dashboard"
-            className="flex items-center gap-2 text-gray-600 hover:text-indigo-600"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to User Dashboard
-          </Link>
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900">{t('admin.title')}</h1>
+            <p className="text-slate-500 text-sm">{t('admin.subtitle')}</p>
+          </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <StatCard
             icon={<Users className="w-6 h-6" />}
-            label="Total Users"
+            label={t('admin.totalUsers')}
             value={stats?.totalUsers || 0}
             color="blue"
           />
           <StatCard
             icon={<UserCheck className="w-6 h-6" />}
-            label="Active Users"
+            label={t('admin.activeUsers')}
             value={stats?.activeUsers || 0}
             color="green"
           />
           <StatCard
             icon={<UserX className="w-6 h-6" />}
-            label="Inactive Users"
+            label={t('admin.inactiveUsers')}
             value={stats?.inactiveUsers || 0}
             color="red"
           />
           <StatCard
             icon={<TrendingUp className="w-6 h-6" />}
-            label="Left/Right Ratio"
+            label={t('admin.ratio')}
             value={`${stats?.leftPercentage || 0}% / ${stats?.rightPercentage || 0}%`}
             color="purple"
           />
         </div>
 
-        <div className="bg-white rounded-lg shadow">
-          <div className="p-4 border-b flex flex-col md:flex-row justify-between items-center gap-4">
-            <h2 className="text-lg font-semibold">Users</h2>
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200">
+          <div className="p-4 border-b border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4">
+            <h2 className="text-lg font-semibold text-slate-900">{t('admin.users')}</h2>
             <div className="flex gap-4 items-center">
               <input
                 type="text"
-                placeholder="Search by email..."
+                placeholder={t('admin.searchByEmail')}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="px-3 py-2 border rounded-lg text-sm"
+                className="px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
               />
               <select
                 value={filter}
                 onChange={(e) => setFilter(e.target.value as any)}
-                className="px-3 py-2 border rounded-lg text-sm"
+                className="px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
               >
-                <option value="all">All</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
+                <option value="all">{t('admin.all')}</option>
+                <option value="active">{t('admin.active')}</option>
+                <option value="inactive">{t('admin.inactive')}</option>
               </select>
-              <button onClick={loadData} className="p-2 hover:bg-gray-100 rounded-lg">
+              <button onClick={loadData} className="p-2 hover:bg-slate-100 rounded-lg">
                 <RefreshCw className="w-5 h-5" />
               </button>
             </div>
@@ -148,28 +150,36 @@ export default function AdminDashboard() {
 
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-slate-50">
                 <tr>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Email</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Role</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Status</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">
-                    Position
+                  <th className="px-4 py-3 text-left text-sm font-medium text-slate-500">Email</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-slate-500">
+                    {t('admin.role')}
                   </th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Level</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">Actions</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-slate-500">
+                    {t('status.active')}
+                  </th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-slate-500">
+                    {t('tree.details.position')}
+                  </th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-slate-500">
+                    {t('profile.level')}
+                  </th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-slate-500">
+                    {t('common.confirm')}
+                  </th>
                 </tr>
               </thead>
-              <tbody className="divide-y">
+              <tbody className="divide-y divide-slate-100">
                 {filteredUsers.map((user) => (
-                  <tr key={user.id} className="hover:bg-gray-50">
+                  <tr key={user.id} className="hover:bg-slate-50">
                     <td className="px-4 py-3 text-sm">{user.email}</td>
                     <td className="px-4 py-3">
                       <span
                         className={`px-2 py-1 text-xs rounded-full ${
                           user.role === 'admin'
                             ? 'bg-yellow-100 text-yellow-800'
-                            : 'bg-gray-100 text-gray-800'
+                            : 'bg-slate-100 text-slate-800'
                         }`}
                       >
                         {user.role}
@@ -183,7 +193,7 @@ export default function AdminDashboard() {
                             : 'bg-red-100 text-red-800'
                         }`}
                       >
-                        {user.status}
+                        {user.status === 'active' ? t('status.active') : t('status.inactive')}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-sm capitalize">{user.position || '-'}</td>
@@ -197,7 +207,9 @@ export default function AdminDashboard() {
                               ? 'hover:bg-red-100 text-red-600'
                               : 'hover:bg-green-100 text-green-600'
                           }`}
-                          title={user.status === 'active' ? 'Deactivate' : 'Activate'}
+                          title={
+                            user.status === 'active' ? t('admin.deactivate') : t('admin.activate')
+                          }
                         >
                           {user.status === 'active' ? (
                             <UserX className="w-4 h-4" />
@@ -209,7 +221,7 @@ export default function AdminDashboard() {
                           <button
                             onClick={() => promoteToAdmin(user)}
                             className="p-2 hover:bg-yellow-100 text-yellow-600 rounded-lg"
-                            title="Promote to Admin"
+                            title={t('admin.promote')}
                           >
                             <Crown className="w-4 h-4" />
                           </button>
@@ -223,7 +235,7 @@ export default function AdminDashboard() {
           </div>
 
           {filteredUsers.length === 0 && (
-            <div className="p-8 text-center text-gray-500">No users found</div>
+            <div className="p-8 text-center text-slate-500">{t('admin.noUsersFound')}</div>
           )}
         </div>
       </div>
@@ -250,11 +262,11 @@ function StatCard({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow p-4">
+    <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
       <div className="flex items-center gap-3">
         <div className={`p-3 rounded-lg ${colors[color]}`}>{icon}</div>
         <div>
-          <p className="text-sm text-gray-500">{label}</p>
+          <p className="text-sm text-slate-500">{label}</p>
           <p className="text-xl font-bold">{value}</p>
         </div>
       </div>

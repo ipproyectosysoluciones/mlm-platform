@@ -1,3 +1,12 @@
+/**
+ * @fileoverview AdminController - Administrative operations and platform statistics
+ * @description Handles admin-only operations including global statistics, user management,
+ *              and platform-wide commission/purchase tracking.
+ *              Gestiona operaciones solo de administrador incluyendo estadísticas globales,
+ *              gestión de usuarios y seguimiento de comisiones/compras de toda la plataforma.
+ * @module controllers/AdminController
+ * @author MLM Development Team
+ */
 import { Response } from 'express';
 import { User, Commission, Purchase } from '../models';
 import { UserService } from '../services/UserService';
@@ -12,6 +21,8 @@ const treeService = new TreeService();
  * Get global platform statistics
  * Obtiene estadísticas globales de la plataforma
  *
+ * @route GET /api/admin/stats
+ * @access Admin only
  * @param req - Authenticated admin request
  * @param res - Response with stats: users, commissions, purchases
  */

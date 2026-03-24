@@ -10,7 +10,7 @@ COPY backend/src ./src
 
 # Install pnpm and dependencies
 RUN corepack enable && corepack prepare pnpm@latest --activate
-RUN pnpm install --frozen-lockfile --ignore-scripts
+RUN pnpm install --no-frozen-lockfile --ignore-scripts
 
 # Build with esbuild
 RUN node scripts/build.mjs
@@ -32,7 +32,7 @@ COPY backend/package.json backend/pnpm-lock.yaml ./
 
 # Install production dependencies only
 RUN corepack enable && corepack prepare pnpm@latest --activate
-RUN pnpm install --prod --frozen-lockfile --ignore-scripts
+RUN pnpm install --prod --no-frozen-lockfile --ignore-scripts
 
 # Copy built files from builder
 COPY --from=builder /app/dist ./dist

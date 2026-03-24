@@ -1,3 +1,12 @@
+/**
+ * @fileoverview PublicController - Public endpoints for referral and registration
+ * @description Handles public endpoints for viewing user profiles via referral code
+ *              and registration with sponsor verification.
+ *              Gestiona endpoints públicos para ver perfiles de usuarios vía código de referido
+ *              y registro con verificación de patrocinador.
+ * @module controllers/PublicController
+ * @author MLM Development Team
+ */
 import { Response } from 'express';
 import { User } from '../models';
 import { userService, treeServiceInstance } from '../services/UserService';
@@ -9,6 +18,8 @@ import type { Request } from 'express';
  * Get public user profile by referral code
  * Obtiene perfil público de usuario por código de referido
  *
+ * @route GET /api/public/profile/:code
+ * @access Public
  * @param req - Request with referral code
  * @param res - Response with public profile data
  */

@@ -1,3 +1,10 @@
+/**
+ * @fileoverview CommissionController - Commission history and statistics endpoints
+ * @description Handles commission history retrieval, statistics, and purchase recording for users.
+ *              Gestiona la recuperación del historial de comisiones, estadísticas y registro de compras para usuarios.
+ * @module controllers/CommissionController
+ * @author MLM Development Team
+ */
 import { Response } from 'express';
 import { CommissionService } from '../services/CommissionService';
 import { Purchase } from '../models';
@@ -6,6 +13,10 @@ import type { AuthenticatedRequest } from '../middleware/auth.middleware';
 
 const commissionService = new CommissionService();
 
+/**
+ * Commission response structure for API responses
+ * Estructura de respuesta de comisión para respuestas de API
+ */
 interface CommissionResponse {
   id: string;
   type: string;
