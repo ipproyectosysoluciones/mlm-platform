@@ -131,7 +131,7 @@ curl http://localhost:3000/api/dashboard \
 
 ## Estructura del Proyecto
 
-```
+```tree
 backend/
 ├── src/
 │   ├── config/          # Configuración (DB, env)

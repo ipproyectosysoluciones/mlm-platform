@@ -162,14 +162,14 @@ Swagger UI disponible en: `http://localhost:3000/api-docs`
 
 ## 👥 Credenciales de Prueba
 
-```
+```text
 Admin: admin@mlm.com / admin123
 Usuario: user1@mlm.com / user123
 ```
 
 ## 📁 Estructura del Proyecto / Project Structure
 
-```
+```tree
 MLM/
 ├── docs/                     # Documentación general / General documentation
 │   ├── README.md            # Documentación principal / Main documentation
@@ -205,7 +205,7 @@ MLM/
 └── CONTRIBUTING.md           # Guía de contribuciones / Contributing guide
 ```
 
-```
+```text
 
 ## 🔒 Seguridad / Security
 
@@ -250,7 +250,7 @@ Este proyecto usa [Semantic Versioning](https://semver.org/):
 MAJOR.MINOR.PATCH
 1.0.0
 
-````
+````text
 
 Tags:
 

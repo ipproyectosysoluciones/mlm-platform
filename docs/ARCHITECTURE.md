@@ -6,7 +6,7 @@
 
 La plataforma MLM está construida con una arquitectura de API RESTful, separando claramente el backend (Node.js + Express + TypeScript + Sequelize + MySQL) del frontend (React + Vite + TypeScript + Tailwind CSS).
 
-```
+```map
 ┌─────────────────────────────────────────────────────────────┐
 │                        CLIENTE / CLIENT                       │
 │                                                              │
@@ -46,7 +46,7 @@ La plataforma MLM está construida con una arquitectura de API RESTful, separand
 
 ### Estructura de Capas / Layer Structure
 
-```
+```tree
 backend/src/
 ├── config/              # Configuración / Configuration
 │   ├── database.ts      # Conexión DB / DB Connection
@@ -85,7 +85,7 @@ The MLM platform is built with a RESTful API architecture, clearly separating th
 
 ### Layer Structure
 
-```
+```tree
 backend/src/
 ├── config/              # Configuration
 │   ├── database.ts       # DB Connection
@@ -179,7 +179,7 @@ Phase 3 implements an interactive binary tree visualization using React Flow (@x
 
 ### Tree Visualization Architecture
 
-```
+```map
 ┌─────────────────────────────────────────────────────────────┐
 │                    FRONTEND (React)                         │
 │  ┌─────────────────────────────────────────────────────┐    │
@@ -218,7 +218,7 @@ Phase 3 implements an interactive binary tree visualization using React Flow (@x
 
 ### Database Schema / Esquema de Base de Datos
 
-```
+```map
 ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
 │    User     │────▶│   Purchase  │◀────│  Commission │
 └─────────────┘     └─────────────┘     └─────────────┘
@@ -283,7 +283,7 @@ Implementación de sistema de internacionalización bilingüe (ES/EN) con detecc
 
 ### Translation Files / Archivos de Traducción
 
-```
+```tree
 frontend/src/i18n/
 ├── index.ts           # Configuration + helpers
 └── locales/
@@ -316,7 +316,7 @@ getCurrentLanguage(): 'en' | 'es'
 
 ### i18n Architecture Diagram
 
-```
+```map
 ┌─────────────────────────────────────────────────────────────┐
 │                    FRONTEND (React)                         │
 │  ┌─────────────────────────────────────────────────────┐  │
@@ -362,7 +362,7 @@ Reemplazo del sidebar lateral por un navbar horizontal moderno con menú hamburg
 
 ### Layout Structure / Estructura del Layout
 
-```
+```map
 ┌─────────────────────────────────────────────────────────────────────┐
 │ [Logo]   [Dashboard] [Árbol] [CRM] [Landing Pages]  [ES|EN] [👤] │
 ├─────────────────────────────────────────────────────────────────────┤
@@ -375,7 +375,7 @@ Reemplazo del sidebar lateral por un navbar horizontal moderno con menú hamburg
 
 ### Component Structure / Estructura de Componentes
 
-```
+```map
 frontend/src/components/layout/
 └── AppLayout.tsx           # Main layout component (NEW)
     │
@@ -440,7 +440,7 @@ frontend/src/components/layout/
 
 ## Testing Architecture / Arquitectura de Testing
 
-```
+```map
 ┌─────────────────────────────────────────────────────┐
 │                    TESTING LAYERS                    │
 ├─────────────────────────────────────────────────────┤

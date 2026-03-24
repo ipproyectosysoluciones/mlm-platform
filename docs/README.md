@@ -17,7 +17,7 @@ Bienvenido a la documentación de la plataforma MLM (Marketing Multinivel). Esta
 
 ### Estructura del Proyecto
 
-```
+```tree
 MLM/
 ├── backend/          # API REST (Node.js, Express, TypeScript)
 ├── frontend/         # Aplicación React
@@ -50,7 +50,7 @@ Welcome to the MLM (Multi-Level Marketing) platform documentation. This platform
 
 ### Project Structure
 
-```
+```tree
 MLM/
 ├── backend/          # REST API (Node.js, Express, TypeScript)
 ├── frontend/         # React Application

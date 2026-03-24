@@ -14,7 +14,7 @@ This guide documents the centralized Axios API client for backend communication.
 
 ## 1. Overview / Descripción General
 
-```
+```text
 frontend/src/services/api.ts
 ```
 
@@ -66,7 +66,7 @@ api.interceptors.request.use((config) => {
 
 ## 3. Service Structure / Estructura de Servicios
 
-```
+```tree
 api
 ├── authService      # Authentication endpoints
 ├── dashboardService  # Dashboard endpoints

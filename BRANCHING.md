@@ -2,7 +2,7 @@
 
 ## Estructura de Branches
 
-```
+```tree
 main                    # Producción estable
 ├── develop            # Desarrollo integración
 │   ├── feature/user-preferences
@@ -14,6 +14,7 @@ main                    # Producción estable
 ## Flujos de Trabajo
 
 ### Feature Development
+
 ```bash
 # 1. Crear feature desde develop
 git checkout develop
@@ -34,6 +35,7 @@ git push origin --delete feature/nueva-funcionalidad
 ```
 
 ### Release to Production
+
 ```bash
 # 1. Merge develop a main
 git checkout main
@@ -47,6 +49,7 @@ git push origin main --tags
 ```
 
 ### Hotfix
+
 ```bash
 # 1. Crear hotfix desde main
 git checkout main
@@ -62,29 +65,30 @@ git tag -a v1.2.1 -m "Hotfix: descripción"
 
 ## Naming Conventions
 
-| Type       | Prefix          | Ejemplo                          |
-| ---------- | --------------- | -------------------------------- |
-| Feature    | `feature/`       | `feature/user-preferences`       |
-| Bug Fix    | `bugfix/`        | `bugfix/login-error`             |
-| Hotfix     | `hotfix/`        | `hotfix/security-patch`          |
-| Release    | `release/`       | `release/v1.2.0`                 |
-| Docs       | `docs/`          | `docs/api-documentation`         |
-| Refactor   | `refactor/`      | `refactor/auth-module`           |
+| Type     | Prefix      | Ejemplo                    |
+| -------- | ----------- | -------------------------- |
+| Feature  | `feature/`  | `feature/user-preferences` |
+| Bug Fix  | `bugfix/`   | `bugfix/login-error`       |
+| Hotfix   | `hotfix/`   | `hotfix/security-patch`    |
+| Release  | `release/`  | `release/v1.2.0`           |
+| Docs     | `docs/`     | `docs/api-documentation`   |
+| Refactor | `refactor/` | `refactor/auth-module`     |
 
 ## Branches Actuales
 
-| Branch                      | Descripción                     | Estado   |
-| --------------------------- | ------------------------------- | -------- |
-| `main`                        | Producción                      | ✅ Stable |
-| `develop`                     | Integración de features         | 🔄 Active |
-| `feature/user-preferences`   | Preferencias de usuario         | 🆕 Ready |
-| `feature/notifications`      | Sistema de notificaciones       | 🆕 Ready |
-| `feature/analytics`          | Dashboard de analytics          | 🆕 Ready |
+| Branch                     | Descripción               | Estado    |
+| -------------------------- | ------------------------- | --------- |
+| `main`                     | Producción                | ✅ Stable |
+| `develop`                  | Integración de features   | 🔄 Active |
+| `feature/user-preferences` | Preferencias de usuario   | 🆕 Ready  |
+| `feature/notifications`    | Sistema de notificaciones | 🆕 Ready  |
+| `feature/analytics`        | Dashboard de analytics    | 🆕 Ready  |
 
 ## Commits Messages
 
 Usar Conventional Commits:
-```
+
+```text
 feat: nueva funcionalidad
 fix: corrección de bug
 docs: documentación
