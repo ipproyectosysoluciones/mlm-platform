@@ -46,13 +46,13 @@
 - [x] **Notas rápidas** - Quick notes sin crear tarea completa
 - [x] **Plantillas de email** - Templates predefinidos para comunicación
 
-### Fase 2: Analítica y Reportes ⏳
+### Fase 2: Analítica y Reportes ✅ COMPLETADO
 
 - [x] **Dashboard configurable** - El usuario elige qué métricas ver
 - [x] **Gráficos interactivos** - Chart.js o Recharts para visualización
-- [ ] **Reportes por período** - Esta semana, mes, trimestre
-- [ ] **Alertas de rotación** - Notificar leads sin actividad > X días
-- [ ] **Predicción de conversión** - ML básico para scoring de leads
+- [x] **Reportes por período** - Esta semana, mes, trimestre y rango personalizado
+- [x] **Alertas de rotación** - Notificar leads sin actividad > X días, tareas vencidas y seguimientos pendientes
+- [x] **Predicción de conversión** - Funnel de conversión con métricas de scoring básico (tasa de conversión, tiempo medio de conversión)
 
 ### Fase 3: Integración Comercial
 
