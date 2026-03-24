@@ -289,6 +289,21 @@
       "kanban": "Kanban",
       "tasks": "Tareas",
       "stats": "Estadísticas"
+    },
+    "analytics": {
+      "title": "Analítica de CRM",
+      "totalLeads": "Total Leads",
+      "won": "Ganados",
+      "conversionRate": "Conversión",
+      "avgValue": "Valor Promedio",
+      "created": "Creados",
+      "noData": "No hay datos disponibles"
+    },
+    "period": {
+      "week": "Semana",
+      "month": "Mes",
+      "quarter": "Trimestre",
+      "year": "Año"
     }
   }
 }

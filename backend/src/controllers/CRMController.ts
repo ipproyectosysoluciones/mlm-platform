@@ -270,3 +270,23 @@ export async function getUpcomingTasks(req: AuthenticatedRequest, res: Response)
   const tasks = await crmService.getUpcomingTasks(req.user!.id);
   res.json({ success: true, data: tasks });
 }
+
+/**
+ * Get analytics report by period
+ * Obtiene reporte de analítica por período
+ *
+ * @param req - Query params: period (week, month, quarter, year, custom)
+ * @param res - Response with period analytics
+ */
+export async function getAnalyticsReport(req: AuthenticatedRequest, res: Response) {
+  const period = (req.query.period as string) || 'month';
+  const dateFrom = req.query.dateFrom as string;
+  const dateTo = req.query.dateTo as string;
+
+  const report = await crmService.getAnalyticsReport(req.user!.id, {
+    period,
+    dateFrom,
+    dateTo,
+  });
+  res.json({ success: true, data: report });
+}

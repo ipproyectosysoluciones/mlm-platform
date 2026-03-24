@@ -23,6 +23,7 @@ import {
   getLeadCommunications,
   getLeadTasks,
   getUpcomingTasks,
+  getAnalyticsReport,
   createLeadValidation,
   updateLeadValidation,
   createTaskValidation,
@@ -63,6 +64,40 @@ router.use(authenticateToken);
  *                   description: Tareas pendientes / Pending tasks
  */
 router.get('/stats', asyncHandler(getCRMStats));
+
+/**
+ * @swagger
+ * /crm/analytics/report:
+ *   get:
+ *     summary: Obtener reporte de analítica por período / Get analytics report by period
+ *     description: Retorna métricas de leads filtradas por período (semana, mes, trimestre, año).
+ *     tags: [crm]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: period
+ *         schema:
+ *           type: string
+ *           enum: [week, month, quarter, year]
+ *         description: Período de análisis / Analysis period
+ *       - in: query
+ *         name: dateFrom
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Fecha desde (para período custom) / Date from (for custom period)
+ *       - in: query
+ *         name: dateTo
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Fecha hasta (para período custom) / Date to (for custom period)
+ *     responses:
+ *       200:
+ *         description: Reporte de analítica / Analytics report
+ */
+router.get('/analytics/report', asyncHandler(getAnalyticsReport));
 
 /**
  * @swagger

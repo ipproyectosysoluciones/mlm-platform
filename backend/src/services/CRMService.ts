@@ -56,6 +56,41 @@ export interface LeadStats {
 }
 
 /**
+ * Period types for analytics
+ */
+export type PeriodType = 'week' | 'month' | 'quarter' | 'year' | 'custom';
+
+/**
+ * Analytics report data structure
+ */
+export interface AnalyticsReport {
+  period: {
+    type: PeriodType;
+    dateFrom: string;
+    dateTo: string;
+  };
+  leads: {
+    total: number;
+    created: number;
+    won: number;
+    lost: number;
+    active: number;
+  };
+  value: {
+    total: number;
+    average: number;
+    won: number;
+  };
+  conversion: {
+    rate: number;
+    avgTimeToWin: number;
+  };
+  byStatus: Record<string, number>;
+  bySource: Record<string, number>;
+  trend: Array<{ date: string; created: number; won: number }>;
+}
+
+/**
  * CRM Service - Lead, task, and communication management
  * Servicio de CRM - Gestión de leads, tareas y comunicaciones
  */
@@ -606,6 +641,168 @@ export class CRMService {
       order: [['dueDate', 'ASC']],
       limit,
     });
+  }
+
+  // ============================================================
+  // ANALYTICS / ANALÍTICA
+  // ============================================================
+
+  /**
+   * Get analytics report by period
+   * Obtener reporte de analítica por período
+   * @param {string} userId - User ID / ID del usuario
+   * @param {Object} options - Report options / Opciones del reporte
+   * @returns {Promise<AnalyticsReport>} Analytics report / Reporte de analítica
+   */
+  async getAnalyticsReport(
+    userId: string,
+    options: { period?: PeriodType; dateFrom?: string; dateTo?: string }
+  ): Promise<AnalyticsReport> {
+    const { period = 'month', dateFrom, dateTo } = options;
+
+    // Calculate date range based on period
+    let startDate: Date;
+    let endDate: Date = new Date();
+
+    if (dateFrom && dateTo) {
+      startDate = new Date(dateFrom);
+      endDate = new Date(dateTo);
+    } else {
+      switch (period) {
+        case 'week':
+          startDate = new Date();
+          startDate.setDate(startDate.getDate() - 7);
+          break;
+        case 'month':
+          startDate = new Date();
+          startDate.setMonth(startDate.getMonth() - 1);
+          break;
+        case 'quarter':
+          startDate = new Date();
+          startDate.setMonth(startDate.getMonth() - 3);
+          break;
+        case 'year':
+          startDate = new Date();
+          startDate.setFullYear(startDate.getFullYear() - 1);
+          break;
+        default:
+          startDate = new Date();
+          startDate.setMonth(startDate.getMonth() - 1);
+      }
+    }
+
+    // Get all leads for user
+    const allLeads = await Lead.findAll({ where: { userId } });
+
+    // Filter by date range
+    const periodLeads = allLeads.filter((lead) => {
+      const created = new Date(lead.createdAt);
+      return created >= startDate && created <= endDate;
+    });
+
+    // Calculate metrics
+    const total = periodLeads.length;
+    const won = periodLeads.filter((l) => l.status === 'won').length;
+    const lost = periodLeads.filter((l) => l.status === 'lost').length;
+    const active = periodLeads.filter((l) => !['won', 'lost'].includes(l.status)).length;
+
+    // Value calculations
+    const totalValue = periodLeads.reduce((sum, l) => sum + Number(l.value), 0);
+    const wonValue = periodLeads
+      .filter((l) => l.status === 'won')
+      .reduce((sum, l) => sum + Number(l.value), 0);
+    const avgValue = total > 0 ? totalValue / total : 0;
+
+    // By status
+    const byStatus: Record<string, number> = {};
+    for (const lead of periodLeads) {
+      byStatus[lead.status] = (byStatus[lead.status] || 0) + 1;
+    }
+
+    // By source
+    const bySource: Record<string, number> = {};
+    for (const lead of periodLeads) {
+      bySource[lead.source] = (bySource[lead.source] || 0) + 1;
+    }
+
+    // Conversion rate
+    const closed = won + lost;
+    const conversionRate = closed > 0 ? (won / closed) * 100 : 0;
+
+    // Average time to win (in days)
+    let avgTimeToWin = 0;
+    const wonLeads = periodLeads.filter((l) => l.status === 'won');
+    if (wonLeads.length > 0) {
+      const totalDays = wonLeads.reduce((sum, l) => {
+        const created = new Date(l.createdAt).getTime();
+        const updated = new Date(l.updatedAt).getTime();
+        return sum + (updated - created) / (1000 * 60 * 60 * 24);
+      }, 0);
+      avgTimeToWin = totalDays / wonLeads.length;
+    }
+
+    // Trend data (group by day/week depending on period)
+    const trendMap = new Map<string, { created: number; won: number }>();
+
+    // Determine grouping based on period
+    const groupBy = period === 'week' ? 'day' : period === 'year' ? 'month' : 'week';
+
+    for (const lead of periodLeads) {
+      const date = new Date(lead.createdAt);
+      let key: string;
+
+      if (groupBy === 'day') {
+        key = date.toISOString().split('T')[0];
+      } else if (groupBy === 'month') {
+        key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+      } else {
+        // Weekly - get week number
+        const weekNum = Math.ceil(
+          (date.getTime() - startDate.getTime()) / (7 * 24 * 60 * 60 * 1000)
+        );
+        key = `${startDate.getFullYear()}-W${String(weekNum).padStart(2, '0')}`;
+      }
+
+      const existing = trendMap.get(key) || { created: 0, won: 0 };
+      existing.created += 1;
+      if (lead.status === 'won') existing.won += 1;
+      trendMap.set(key, existing);
+    }
+
+    const trend = Array.from(trendMap.entries())
+      .map(([date, data]) => ({
+        date,
+        created: data.created,
+        won: data.won,
+      }))
+      .sort((a, b) => a.date.localeCompare(b.date));
+
+    return {
+      period: {
+        type: period,
+        dateFrom: startDate.toISOString().split('T')[0],
+        dateTo: endDate.toISOString().split('T')[0],
+      },
+      leads: {
+        total,
+        created: total,
+        won,
+        lost,
+        active,
+      },
+      value: {
+        total: totalValue,
+        average: avgValue,
+        won: wonValue,
+      },
+      conversion: {
+        rate: conversionRate,
+        avgTimeToWin,
+      },
+      byStatus,
+      bySource,
+      trend,
+    };
   }
 }
 

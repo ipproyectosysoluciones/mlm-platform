@@ -462,6 +462,19 @@ export const crmService = {
     const response = await api.get(`/crm/${leadId}/communications`);
     return response.data;
   },
+
+  /**
+   * Get analytics report by period
+   * Obtener reporte de analítica por período
+   */
+  getAnalyticsReport: async (params?: {
+    period?: 'week' | 'month' | 'quarter' | 'year';
+    dateFrom?: string;
+    dateTo?: string;
+  }) => {
+    const response = await api.get('/crm/analytics/report', { params });
+    return response.data;
+  },
 };
 
 export default api;

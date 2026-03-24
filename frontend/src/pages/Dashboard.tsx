@@ -17,6 +17,7 @@ import {
   QrCode,
   Loader2,
   BarChart3,
+  Target,
 } from 'lucide-react';
 import {
   BarChart,
@@ -30,7 +31,7 @@ import {
   Line,
   Legend,
 } from 'recharts';
-import { dashboardService } from '../services/api';
+import { dashboardService, crmService } from '../services/api';
 import type { DashboardData } from '../types';
 import QRDisplay from '../components/QRDisplay';
 
@@ -41,6 +42,11 @@ export default function Dashboard() {
   const [showQR, setShowQR] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isMounted, setIsMounted] = useState(false);
+  const [analyticsPeriod, setAnalyticsPeriod] = useState<'week' | 'month' | 'quarter' | 'year'>(
+    'month'
+  );
+  const [analyticsData, setAnalyticsData] = useState<any>(null);
+  const [analyticsLoading, setAnalyticsLoading] = useState(false);
   const loadRef = useRef(false);
 
   useEffect(() => {
@@ -81,6 +87,24 @@ export default function Dashboard() {
     };
     loadDashboard();
   }, []);
+
+  // Load CRM analytics
+  useEffect(() => {
+    const loadAnalytics = async () => {
+      setAnalyticsLoading(true);
+      try {
+        const response = await crmService.getAnalyticsReport({ period: analyticsPeriod });
+        if (response.success) {
+          setAnalyticsData(response.data);
+        }
+      } catch (error) {
+        console.error('Failed to load analytics:', error);
+      } finally {
+        setAnalyticsLoading(false);
+      }
+    };
+    loadAnalytics();
+  }, [analyticsPeriod]);
 
   const copyLink = () => {
     if (data?.referralLink) {
@@ -224,6 +248,128 @@ export default function Dashboard() {
             )}
           </div>
         </div>
+      </div>
+
+      {/* CRM Analytics Section */}
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+          <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+            <Target className="w-5 h-5 text-purple-500" />
+            {t('crm.analytics.title') || 'CRM Analytics'}
+          </h2>
+          <div className="flex gap-2">
+            {(['week', 'month', 'quarter', 'year'] as const).map((period) => (
+              <button
+                key={period}
+                onClick={() => setAnalyticsPeriod(period)}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  analyticsPeriod === period
+                    ? 'bg-purple-500 text-white'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                }`}
+              >
+                {period === 'week'
+                  ? t('crm.period.week') || 'Week'
+                  : period === 'month'
+                    ? t('crm.period.month') || 'Month'
+                    : period === 'quarter'
+                      ? t('crm.period.quarter') || 'Quarter'
+                      : t('crm.period.year') || 'Year'}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {analyticsLoading ? (
+          <div className="h-32 flex items-center justify-center">
+            <Loader2 className="w-8 h-8 text-purple-500 animate-spin" />
+          </div>
+        ) : analyticsData ? (
+          <>
+            {/* Period info */}
+            <p className="text-sm text-slate-500 mb-6">
+              {analyticsData.period.dateFrom} - {analyticsData.period.dateTo}
+            </p>
+
+            {/* Stats cards */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+              <div className="bg-purple-50 rounded-xl p-4 border border-purple-100">
+                <p className="text-sm text-purple-600 font-medium">
+                  {t('crm.analytics.totalLeads') || 'Total Leads'}
+                </p>
+                <p className="text-2xl font-bold text-purple-700 mt-1">
+                  {analyticsData.leads.total}
+                </p>
+              </div>
+              <div className="bg-emerald-50 rounded-xl p-4 border border-emerald-100">
+                <p className="text-sm text-emerald-600 font-medium">
+                  {t('crm.analytics.won') || 'Won'}
+                </p>
+                <p className="text-2xl font-bold text-emerald-700 mt-1">
+                  {analyticsData.leads.won}
+                </p>
+              </div>
+              <div className="bg-blue-50 rounded-xl p-4 border border-blue-100">
+                <p className="text-sm text-blue-600 font-medium">
+                  {t('crm.analytics.conversionRate') || 'Conversion'}
+                </p>
+                <p className="text-2xl font-bold text-blue-700 mt-1">
+                  {analyticsData.conversion.rate.toFixed(1)}%
+                </p>
+              </div>
+              <div className="bg-amber-50 rounded-xl p-4 border border-amber-100">
+                <p className="text-sm text-amber-600 font-medium">
+                  {t('crm.analytics.avgValue') || 'Avg Value'}
+                </p>
+                <p className="text-2xl font-bold text-amber-700 mt-1">
+                  ${analyticsData.value.average.toFixed(0)}
+                </p>
+              </div>
+            </div>
+
+            {/* Trend chart */}
+            {analyticsData.trend && analyticsData.trend.length > 0 && (
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={analyticsData.trend}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                    <XAxis dataKey="date" stroke="#64748b" fontSize={12} />
+                    <YAxis stroke="#64748b" fontSize={12} />
+                    <Tooltip
+                      contentStyle={{
+                        borderRadius: '8px',
+                        border: 'none',
+                        boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+                      }}
+                    />
+                    <Legend />
+                    <Line
+                      type="monotone"
+                      dataKey="created"
+                      stroke="#8b5cf6"
+                      strokeWidth={2}
+                      dot={{ fill: '#8b5cf6' }}
+                      name={t('crm.analytics.created') || 'Created'}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="won"
+                      stroke="#10b981"
+                      strokeWidth={2}
+                      dot={{ fill: '#10b981' }}
+                      name={t('crm.analytics.won') || 'Won'}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="text-center py-12 text-slate-400">
+            <Target className="w-12 h-12 mx-auto mb-3" />
+            <p>{t('crm.analytics.noData') || 'No analytics data available'}</p>
+          </div>
+        )}
       </div>
 
       {/* Tree & Referral section */}

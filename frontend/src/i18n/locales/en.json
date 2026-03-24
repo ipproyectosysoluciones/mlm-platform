@@ -289,6 +289,21 @@
       "kanban": "Kanban",
       "tasks": "Tasks",
       "stats": "Stats"
+    },
+    "analytics": {
+      "title": "CRM Analytics",
+      "totalLeads": "Total Leads",
+      "won": "Won",
+      "conversionRate": "Conversion",
+      "avgValue": "Avg Value",
+      "created": "Created",
+      "noData": "No data available"
+    },
+    "period": {
+      "week": "Week",
+      "month": "Month",
+      "quarter": "Quarter",
+      "year": "Year"
     }
   }
 }
