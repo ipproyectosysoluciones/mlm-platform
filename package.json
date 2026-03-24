@@ -27,5 +27,10 @@
   "workspaces": [
     "frontend",
     "backend"
-  ]
+  ],
+  "pnpm": {
+    "overrides": {
+      "serialize-javascript": ">=7.0.3"
+    }
+  }
 }
