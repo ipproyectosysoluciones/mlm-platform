@@ -260,6 +260,7 @@
     },
     "tabs": {
       "leads": "Leads",
+      "kanban": "Kanban",
       "tasks": "Tareas",
       "stats": "Estadísticas"
     }

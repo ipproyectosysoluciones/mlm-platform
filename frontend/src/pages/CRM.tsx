@@ -34,6 +34,7 @@ import {
   ArrowLeft,
 } from 'lucide-react';
 import { crmService } from '../services/api';
+import CRMKanban from '../components/CRM/CRMKanban';
 import type { Lead, Task, Communication, CRMStats } from '../types';
 
 const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
@@ -57,7 +58,7 @@ const SOURCE_ICONS: Record<string, React.ReactNode> = {
 
 // Status names now use i18n - t('crm.status.xxx')
 
-type Tab = 'leads' | 'tasks' | 'stats';
+type Tab = 'leads' | 'kanban' | 'tasks' | 'stats';
 
 interface LeadFormData {
   contactName: string;
@@ -259,7 +260,7 @@ export default function CRM() {
       <div className="bg-white border-b border-slate-200 rounded-t-xl">
         <div className="px-4">
           <div className="flex gap-8">
-            {(['leads', 'tasks', 'stats'] as Tab[]).map((tab) => (
+            {(['leads', 'kanban', 'tasks', 'stats'] as Tab[]).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -501,6 +502,9 @@ export default function CRM() {
             )}
           </div>
         )}
+
+        {/* Kanban Tab */}
+        {activeTab === 'kanban' && <CRMKanban />}
 
         {/* Tasks Tab */}
         {activeTab === 'tasks' && (
