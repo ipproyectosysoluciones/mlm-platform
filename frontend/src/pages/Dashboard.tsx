@@ -16,10 +16,28 @@ import {
   TreeDeciduous,
   QrCode,
   Loader2,
+  BarChart3,
 } from 'lucide-react';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  LineChart,
+  Line,
+  Legend,
+} from 'recharts';
 import { dashboardService } from '../services/api';
 import type { DashboardData } from '../types';
 import QRDisplay from '../components/QRDisplay';
+
+const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
 
 export default function Dashboard() {
   const { t } = useTranslation();
@@ -101,6 +119,73 @@ export default function Dashboard() {
           value={`$${data.stats.pendingEarnings.toFixed(2)}`}
           color="bg-amber-500"
         />
+      </div>
+
+      {/* Charts Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Recent Referrals Chart */}
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+          <h2 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+            <BarChart3 className="w-5 h-5 text-blue-500" />
+            {t('dashboard.recentReferrals')}
+          </h2>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={data.referralsChart || []}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                <XAxis dataKey="month" stroke="#64748b" fontSize={12} />
+                <YAxis stroke="#64748b" fontSize={12} />
+                <Tooltip
+                  contentStyle={{
+                    borderRadius: '8px',
+                    border: 'none',
+                    boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+                  }}
+                />
+                <Bar
+                  dataKey="count"
+                  fill="#3b82f6"
+                  radius={[4, 4, 0, 0]}
+                  name={t('dashboard.referrals')}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Commissions Chart */}
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+          <h2 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+            <DollarSign className="w-5 h-5 text-emerald-500" />
+            {t('dashboard.commissions')}
+          </h2>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={data.commissionsChart || []}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                <XAxis dataKey="month" stroke="#64748b" fontSize={12} />
+                <YAxis stroke="#64748b" fontSize={12} />
+                <Tooltip
+                  contentStyle={{
+                    borderRadius: '8px',
+                    border: 'none',
+                    boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+                  }}
+                  formatter={(value: number) => [`$${value.toFixed(2)}`, t('dashboard.amount')]}
+                />
+                <Legend />
+                <Line
+                  type="monotone"
+                  dataKey="amount"
+                  stroke="#10b981"
+                  strokeWidth={2}
+                  dot={{ fill: '#10b981' }}
+                  name={t('dashboard.earnings')}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
       </div>
 
       {/* Tree & Referral section */}

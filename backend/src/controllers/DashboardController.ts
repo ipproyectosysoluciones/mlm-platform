@@ -6,10 +6,11 @@
  * @author MLM Development Team
  */
 import { Response } from 'express';
+import { Op } from 'sequelize';
 import { userService, treeServiceInstance } from '../services/UserService';
 import { CommissionService } from '../services/CommissionService';
 import { QRService } from '../services/QRService';
-import { User } from '../models';
+import { User, Commission } from '../models';
 import type { ApiResponse } from '../types';
 import { LEVEL_NAMES } from '../types';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware';
@@ -54,6 +55,52 @@ export async function getDashboard(req: AuthenticatedRequest, res: Response): Pr
     attributes: ['id', 'email', 'position', 'created_at'],
   });
 
+  // Get referrals by month for chart
+  const sixMonthsAgo = new Date();
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+
+  const referralsByMonth = await User.findAll({
+    where: {
+      sponsorId: fullUser.id,
+      createdAt: { [Op.gte]: sixMonthsAgo },
+    },
+    attributes: ['created_at'],
+  });
+
+  const referralsChart = Array.from({ length: 6 }, (_, i) => {
+    const d = new Date();
+    d.setMonth(d.getMonth() - (5 - i));
+    const month = d.toLocaleString('default', { month: 'short' });
+    const count = referralsByMonth.filter((r) => {
+      const created = new Date(r.createdAt);
+      return created.getMonth() === d.getMonth() && created.getFullYear() === d.getFullYear();
+    }).length;
+    return { month, count };
+  });
+
+  // Get commissions by month for chart
+  const commissionsByMonth = await Commission.findAll({
+    where: {
+      userId: fullUser.id,
+      status: 'completed',
+      createdAt: { [Op.gte]: sixMonthsAgo },
+    },
+    attributes: ['amount', 'createdAt'],
+  });
+
+  const commissionsChart = Array.from({ length: 6 }, (_, i) => {
+    const d = new Date();
+    d.setMonth(d.getMonth() - (5 - i));
+    const month = d.toLocaleString('default', { month: 'short' });
+    const amount = commissionsByMonth
+      .filter((c) => {
+        const created = new Date(c.createdAt);
+        return created.getMonth() === d.getMonth() && created.getFullYear() === d.getFullYear();
+      })
+      .reduce((sum, c) => sum + Number(c.amount), 0);
+    return { month, amount };
+  });
+
   const response: ApiResponse<{
     user: {
       id: string;
@@ -83,6 +130,8 @@ export async function getDashboard(req: AuthenticatedRequest, res: Response): Pr
       position: string;
       createdAt: Date;
     }>;
+    referralsChart: Array<{ month: string; count: number }>;
+    commissionsChart: Array<{ month: string; amount: number }>;
   }> = {
     success: true,
     data: {
@@ -114,6 +163,8 @@ export async function getDashboard(req: AuthenticatedRequest, res: Response): Pr
         position: r.position || 'left',
         createdAt: r.createdAt,
       })),
+      referralsChart,
+      commissionsChart,
     },
   };
 

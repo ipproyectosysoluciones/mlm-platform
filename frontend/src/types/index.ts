@@ -41,6 +41,8 @@ export interface DashboardData {
   referralLink: string;
   recentCommissions: Commission[];
   recentReferrals: Referral[];
+  referralsChart?: { month: string; count: number }[];
+  commissionsChart?: { month: string; amount: number }[];
 }
 
 export interface Commission {
