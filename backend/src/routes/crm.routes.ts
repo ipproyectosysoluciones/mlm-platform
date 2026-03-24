@@ -126,6 +126,40 @@ router.get('/tasks', asyncHandler(getUpcomingTasks));
  *           type: string
  *         description: Buscar por nombre, email o empresa / Search by name, email or company
  *       - in: query
+ *         name: createdAtFrom
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Fecha desde de creación / Creation date from
+ *       - in: query
+ *         name: createdAtTo
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Fecha hasta de creación / Creation date to
+ *       - in: query
+ *         name: valueMin
+ *         schema:
+ *           type: number
+ *         description: Valor mínimo del lead / Minimum lead value
+ *       - in: query
+ *         name: valueMax
+ *         schema:
+ *           type: number
+ *         description: Valor máximo del lead / Maximum lead value
+ *       - in: query
+ *         name: nextFollowUpFrom
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Fecha desde de próximo seguimiento / Next follow-up from
+ *       - in: query
+ *         name: nextFollowUpTo
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Fecha hasta de próximo seguimiento / Next follow-up to
+ *       - in: query
  *         name: page
  *         schema:
  *           type: integer

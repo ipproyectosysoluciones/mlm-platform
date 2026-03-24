@@ -65,6 +65,12 @@ export async function getLeads(req: AuthenticatedRequest, res: Response) {
     status: req.query.status as any,
     source: req.query.source as any,
     search: req.query.search as string,
+    createdAtFrom: req.query.createdAtFrom as string,
+    createdAtTo: req.query.createdAtTo as string,
+    valueMin: req.query.valueMin ? parseFloat(req.query.valueMin as string) : undefined,
+    valueMax: req.query.valueMax ? parseFloat(req.query.valueMax as string) : undefined,
+    nextFollowUpFrom: req.query.nextFollowUpFrom as string,
+    nextFollowUpTo: req.query.nextFollowUpTo as string,
     page: parseInt(req.query.page as string) || 1,
     limit: parseInt(req.query.limit as string) || 20,
   });

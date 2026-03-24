@@ -86,6 +86,11 @@ export default function CRM() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [sourceFilter, setSourceFilter] = useState('');
+  const [dateFrom, setDateFrom] = useState('');
+  const [dateTo, setDateTo] = useState('');
+  const [valueMin, setValueMin] = useState('');
+  const [valueMax, setValueMax] = useState('');
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [leadTasks, setLeadTasks] = useState<Task[]>([]);
   const [, setLeadCommunications] = useState<Communication[]>([]);
@@ -98,7 +103,7 @@ export default function CRM() {
 
   useEffect(() => {
     loadLeads();
-  }, [statusFilter, sourceFilter, searchQuery]);
+  }, [statusFilter, sourceFilter, searchQuery, dateFrom, dateTo, valueMin, valueMax]);
 
   useEffect(() => {
     if (activeTab === 'stats') {
@@ -126,12 +131,25 @@ export default function CRM() {
   const loadLeads = async () => {
     setLeadsLoading(true);
     try {
-      const params: { status?: string; source?: string; search?: string; limit: number } = {
+      const params: {
+        status?: string;
+        source?: string;
+        search?: string;
+        createdAtFrom?: string;
+        createdAtTo?: string;
+        valueMin?: number;
+        valueMax?: number;
+        limit: number;
+      } = {
         limit: 50,
       };
       if (statusFilter) params.status = statusFilter;
       if (sourceFilter) params.source = sourceFilter;
       if (searchQuery) params.search = searchQuery;
+      if (dateFrom) params.createdAtFrom = dateFrom;
+      if (dateTo) params.createdAtTo = dateTo;
+      if (valueMin) params.valueMin = parseFloat(valueMin);
+      if (valueMax) params.valueMax = parseFloat(valueMax);
 
       const response = await crmService.getLeads(params);
       if (response.success) {
@@ -340,7 +358,85 @@ export default function CRM() {
                   <option value="manual">{t('crm.sourceManual')}</option>
                   <option value="other">{t('crm.sourceOther')}</option>
                 </select>
+                <button
+                  onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
+                  className={`px-4 py-2.5 border rounded-xl transition-colors ${
+                    showAdvancedFilters
+                      ? 'bg-emerald-500 text-white border-emerald-500'
+                      : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                  }`}
+                >
+                  <Filter className="w-5 h-5 inline mr-1" />
+                  {t('crm.advancedFilters')}
+                </button>
               </div>
+
+              {/* Filtros Avanzados */}
+              {showAdvancedFilters && (
+                <div className="mt-4 p-4 bg-slate-50 rounded-xl space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-slate-600 mb-1">
+                        {t('crm.dateFrom')}
+                      </label>
+                      <input
+                        type="date"
+                        value={dateFrom}
+                        onChange={(e) => setDateFrom(e.target.value)}
+                        className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-slate-600 mb-1">
+                        {t('crm.dateTo')}
+                      </label>
+                      <input
+                        type="date"
+                        value={dateTo}
+                        onChange={(e) => setDateTo(e.target.value)}
+                        className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-slate-600 mb-1">
+                        {t('crm.valueMin')}
+                      </label>
+                      <input
+                        type="number"
+                        placeholder="0"
+                        value={valueMin}
+                        onChange={(e) => setValueMin(e.target.value)}
+                        className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-slate-600 mb-1">
+                        {t('crm.valueMax')}
+                      </label>
+                      <input
+                        type="number"
+                        placeholder="1000"
+                        value={valueMax}
+                        onChange={(e) => setValueMax(e.target.value)}
+                        className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex justify-end">
+                    <button
+                      onClick={() => {
+                        setDateFrom('');
+                        setDateTo('');
+                        setValueMin('');
+                        setValueMax('');
+                      }}
+                      className="text-sm text-slate-500 hover:text-slate-700"
+                    >
+                      {t('crm.clearFilters')}
+                    </button>
+                  </div>
+                </div>
+              )}
 
               {/* Leads Grid */}
               {leadsLoading ? (

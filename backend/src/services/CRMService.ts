@@ -34,6 +34,13 @@ export interface LeadFilters {
   search?: string;
   page?: number;
   limit?: number;
+  // Filtros avanzados
+  createdAtFrom?: string;
+  createdAtTo?: string;
+  valueMin?: number;
+  valueMax?: number;
+  nextFollowUpFrom?: string;
+  nextFollowUpTo?: string;
 }
 
 /**
@@ -146,6 +153,39 @@ export class CRMService {
         { contactEmail: { [Op.like]: `%${filters.search}%` } },
         { company: { [Op.like]: `%${filters.search}%` } },
       ];
+    }
+
+    // Filtro por rango de fecha de creación
+    if (filters.createdAtFrom) {
+      where.createdAt = { ...where.createdAt, [Op.gte]: new Date(filters.createdAtFrom) };
+    }
+    if (filters.createdAtTo) {
+      where.createdAt = {
+        ...where.createdAt,
+        [Op.lte]: new Date(filters.createdAtTo + 'T23:59:59'),
+      };
+    }
+
+    // Filtro por rango de valor
+    if (filters.valueMin !== undefined) {
+      where.value = { ...where.value, [Op.gte]: filters.valueMin };
+    }
+    if (filters.valueMax !== undefined) {
+      where.value = { ...where.value, [Op.lte]: filters.valueMax };
+    }
+
+    // Filtro por rango de próximo seguimiento
+    if (filters.nextFollowUpFrom) {
+      where.nextFollowUpAt = {
+        ...where.nextFollowUpAt,
+        [Op.gte]: new Date(filters.nextFollowUpFrom),
+      };
+    }
+    if (filters.nextFollowUpTo) {
+      where.nextFollowUpAt = {
+        ...where.nextFollowUpAt,
+        [Op.lte]: new Date(filters.nextFollowUpTo + 'T23:59:59'),
+      };
     }
 
     const { rows, count } = await Lead.findAndCountAll({

@@ -290,6 +290,12 @@ export const crmService = {
     status?: string;
     source?: string;
     search?: string;
+    createdAtFrom?: string;
+    createdAtTo?: string;
+    valueMin?: number;
+    valueMax?: number;
+    nextFollowUpFrom?: string;
+    nextFollowUpTo?: string;
   }) => {
     const response = await api.get('/crm', { params });
     return response.data;
