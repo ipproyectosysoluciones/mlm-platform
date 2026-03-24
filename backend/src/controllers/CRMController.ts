@@ -42,6 +42,17 @@ export const updateLeadValidation = [
 ];
 
 /**
+ * Validation rules for creating a task
+ * Reglas de validación para crear una tarea
+ */
+export const createTaskValidation = [
+  body('title').notEmpty().withMessage('Task title is required'),
+  body('type').optional().isIn(['call', 'email', 'meeting', 'follow_up', 'note', 'other']),
+  body('description').optional().isString(),
+  body('dueDate').optional().isISO8601().withMessage('Valid date is required'),
+];
+
+/**
  * Get all leads with pagination and filters
  * Obtiene todos los leads con paginación y filtros
  *

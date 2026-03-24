@@ -22,6 +22,7 @@ import {
   getUpcomingTasks,
   createLeadValidation,
   updateLeadValidation,
+  createTaskValidation,
 } from '../controllers/CRMController';
 import { authenticateToken } from '../middleware/auth.middleware';
 import { validate } from '../middleware/validate.middleware';
@@ -313,7 +314,7 @@ router.delete('/:id', asyncHandler(deleteLead));
  *       201:
  *         description: Tarea creada / Task created
  */
-router.post('/:leadId/tasks', asyncHandler(createTask));
+router.post('/:leadId/tasks', validate(createTaskValidation), asyncHandler(createTask));
 
 /**
  * @swagger
