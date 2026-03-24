@@ -484,6 +484,22 @@ export const crmService = {
     const response = await api.get('/crm/alerts', { params });
     return response.data;
   },
+
+  /**
+   * Export analytics report to CSV
+   * Exportar reporte de analítica a CSV
+   */
+  exportAnalyticsReport: async (params?: {
+    period?: 'week' | 'month' | 'quarter' | 'year';
+    dateFrom?: string;
+    dateTo?: string;
+  }) => {
+    const response = await api.get('/crm/analytics/export', {
+      params,
+      responseType: 'blob',
+    });
+    return response.data;
+  },
 };
 
 export default api;

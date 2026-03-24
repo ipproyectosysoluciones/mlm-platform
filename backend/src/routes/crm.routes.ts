@@ -25,6 +25,7 @@ import {
   getUpcomingTasks,
   getAnalyticsReport,
   getCRMAlerts,
+  exportAnalyticsReport,
   createLeadValidation,
   updateLeadValidation,
   createTaskValidation,
@@ -121,6 +122,37 @@ router.get('/analytics/report', asyncHandler(getAnalyticsReport));
  *         description: Lista de alertas / Alerts list
  */
 router.get('/alerts', asyncHandler(getCRMAlerts));
+
+/**
+ * @swagger
+ * /crm/analytics/export:
+ *   get:
+ *     summary: Exportar reporte de analítica / Export analytics report
+ *     description: Descarga el reporte de analítica en formato CSV
+ *     tags: [crm]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: period
+ *         schema:
+ *           type: string
+ *           enum: [week, month, quarter, year]
+ *       - in: query
+ *         name: dateFrom
+ *         schema:
+ *           type: string
+ *           format: date
+ *       - in: query
+ *         name: dateTo
+ *         schema:
+ *           type: string
+ *           format: date
+ *     responses:
+ *       200:
+ *         description: Archivo CSV / CSV file
+ */
+router.get('/analytics/export', asyncHandler(exportAnalyticsReport));
 
 /**
  * @swagger

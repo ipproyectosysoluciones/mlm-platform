@@ -931,6 +931,57 @@ export class CRMService {
     const severityOrder = { high: 0, medium: 1, low: 2 };
     return alerts.sort((a, b) => severityOrder[a.severity] - severityOrder[b.severity]);
   }
+
+  // ============================================================
+  // EXPORT / EXPORTAR
+  // ============================================================
+
+  /**
+   * Export analytics report to CSV
+   * Exportar reporte de analítica a CSV
+   * @param {string} userId - User ID / ID del usuario
+   * @param {Object} options - Report options / Opciones del reporte
+   * @returns {Promise<string>} CSV content / Contenido CSV
+   */
+  async exportAnalyticsReport(
+    userId: string,
+    options: { period?: PeriodType; dateFrom?: string; dateTo?: string }
+  ): Promise<string> {
+    // Get analytics data
+    const report = await this.getAnalyticsReport(userId, options);
+
+    // Build CSV
+    const headers = ['Metric', 'Value'];
+    const rows = [
+      ['Period', `${report.period.dateFrom} to ${report.period.dateTo}`],
+      ['Total Leads', report.leads.total.toString()],
+      ['Leads Created', report.leads.created.toString()],
+      ['Leads Won', report.leads.won.toString()],
+      ['Leads Lost', report.leads.lost.toString()],
+      ['Active Leads', report.leads.active.toString()],
+      ['Total Value', report.value.total.toString()],
+      ['Average Value', report.value.average.toFixed(2)],
+      ['Won Value', report.value.won.toString()],
+      ['Conversion Rate', report.conversion.rate.toFixed(2) + '%'],
+      ['Avg Days to Win', report.conversion.avgTimeToWin.toFixed(1)],
+      ['', ''],
+      ['Status Breakdown', ''],
+      ...Object.entries(report.byStatus).map(([status, count]) => [status, count.toString()]),
+      ['', ''],
+      ['Source Breakdown', ''],
+      ...Object.entries(report.bySource).map(([source, count]) => [source, count.toString()]),
+      ['', ''],
+      ['Trend (Date, Created, Won)', ''],
+      ...report.trend.map((t) => [t.date, t.created.toString(), t.won.toString()]),
+    ];
+
+    const csvContent = [
+      headers.join(','),
+      ...rows.map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(',')),
+    ].join('\n');
+
+    return csvContent;
+  }
 }
 
 export const crmService = new CRMService();

@@ -303,3 +303,29 @@ export async function getCRMAlerts(req: AuthenticatedRequest, res: Response) {
   const alerts = await crmService.getCRMAlerts(req.user!.id, daysInactive);
   res.json({ success: true, data: alerts });
 }
+
+/**
+ * Export analytics report
+ * Exporta reporte de analítica a CSV
+ *
+ * @param req - Query params: period, dateFrom, dateTo
+ * @param res - CSV file download
+ */
+export async function exportAnalyticsReport(req: AuthenticatedRequest, res: Response) {
+  const period = (req.query.period as string) || 'month';
+  const dateFrom = req.query.dateFrom as string;
+  const dateTo = req.query.dateTo as string;
+
+  const csv = await crmService.exportAnalyticsReport(req.user!.id, {
+    period,
+    dateFrom,
+    dateTo,
+  });
+
+  res.setHeader('Content-Type', 'text/csv');
+  res.setHeader(
+    'Content-Disposition',
+    `attachment; filename=crm-analytics-${new Date().toISOString().split('T')[0]}.csv`
+  );
+  res.send(csv);
+}

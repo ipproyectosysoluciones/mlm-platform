@@ -437,6 +437,160 @@ Headers: `Authorization: Bearer <token>`
 }
 ```
 
+### Get CRM Analytics Report
+
+**GET** `/api/crm/analytics/report`
+
+Headers: `Authorization: Bearer <token>`
+
+Query params: `period` (week|month|quarter|year), `dateFrom` (YYYY-MM-DD), `dateTo` (YYYY-MM-DD)
+
+````json
+// Response (200)
+{
+  "success": true,
+  "data": {
+    "period": {
+      "type": "month",
+      "dateFrom": "2026-02-24",
+      "dateTo": "2026-03-24"
+    },
+    "leads": {
+      "total": 25,
+      "created": 25,
+      "won": 8,
+      "lost": 3,
+      "active": 14
+    },
+    "value": {
+      "total": 125000.00,
+      "average": 5000.00,
+      "won": 40000.00
+    },
+    "conversion": {
+      "rate": 32.0,
+      "avgTimeToWin": 12.5
+    },
+    "byStatus": {
+      "new": 5,
+      "contacted": 7,
+      "qualified": 4,
+      "proposal": 3,
+      "negotiation": 2,
+      "won": 8,
+      "lost": 3
+    },
+    "bySource": {
+      "website": 10,
+      "referral": 8,
+      "social": 4,
+      "landing_page": 2,
+      "manual": 1
+    },
+    "trend": [
+      { "date": "2026-03-01", "created": 3, "won": 1 },
+      { "date": "2026-03-02", "created": 2, "won": 0 },
+      { "date": "2026-03-03", "created": 4, "won": 2 }
+      // ... more daily/weekly data points
+    ]
+  }
+}
+
+### Get CRM Alerts
+**GET** `/api/crm/alerts`
+
+Headers: `Authorization: Bearer <token>`
+
+Query params: `daysInactive` (default: 7)
+
+```json
+// Response (200)
+{
+  "success": true,
+  "data": [
+    {
+      "type": "inactive_lead",
+      "severity": "high",
+      "title": "Lead sin contacto: Juan Pérez",
+      "description": "Sin contacto desde hace 15 días",
+      "leadId": "lead-uuid-1",
+      "leadName": "Juan Pérez",
+      "daysOverdue": 15,
+      "createdAt": "2026-03-09T10:30:00Z"
+    },
+    {
+      "type": "overdue_task",
+      "severity": "medium",
+      "title": "Tarea vencida: Llamada de seguimiento",
+      "description": "Vencida hace 4 días",
+      "leadId": "lead-uuid-2",
+      "leadName": "María González",
+      "taskId": "task-uuid-1",
+      "taskTitle": "Llamada de seguimiento",
+      "daysOverdue": 4,
+      "createdAt": "2026-03-20T14:20:00Z"
+    },
+    {
+      "type": "pending_followup",
+      "severity": "low",
+      "title": "Seguimiento pendiente: Carlos López",
+      "description": "Seguimiento programado desde hace 2 días",
+      "leadId": "lead-uuid-3",
+      "leadName": "Carlos López",
+      "daysOverdue": 2,
+      "createdAt": "2026-03-22T09:15:00Z"
+    }
+  ]
+}
+
+### Export Analytics Report
+**GET** `/api/crm/analytics/export`
+
+Headers: `Authorization: Bearer <token>`
+
+Query params: `period` (week|month|quarter|year), `dateFrom` (YYYY-MM-DD), `dateTo` (YYYY-MM-DD)
+
+Response: CSV file with analytics data
+
+Example CSV content:
+````
+
+Metric,Value
+Period,2026-02-24 to 2026-03-24
+Total Leads,25
+Leads Created,25
+Leads Won,8
+Leads Lost,3
+Active Leads,14
+Total Value,125000.00
+Average Value,5000.00
+Won Value,40000.00
+Conversion Rate,32.00%
+Avg Days to Win,12.5
+
+Status Breakdown,
+new,5
+contacted,7
+qualified,4
+proposal,3
+negotiation,2
+won,8
+lost,3
+
+Source Breakdown,
+website,10
+referral,8
+social,4
+landing_page,2
+manual,1
+
+Trend (Date, Created, Won),
+2026-03-01,3,1
+2026-03-02,2,0
+2026-03-03,4,2
+
+````
+
 ---
 
 ## Error Responses / Respuestas de Error
@@ -450,7 +604,7 @@ Headers: `Authorization: Bearer <token>`
     "details": {}
   }
 }
-```
+````
 
 ### Error Codes / Códigos de Error
 
