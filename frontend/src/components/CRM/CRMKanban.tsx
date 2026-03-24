@@ -144,9 +144,9 @@ export default function CRMKanban() {
       setShowTaskForm(false);
       setTaskFormData({ title: '', type: 'follow_up', description: '' });
       // Refresh lead details
-      const leadRes = await crmService.getLead(selectedLead.id);
-      if (leadRes.data) {
-        setSelectedLead(leadRes.data);
+      const leadRes = await crmService.getLeadById(selectedLead.id);
+      if (leadRes) {
+        setSelectedLead(leadRes);
       }
     } catch (error) {
       console.error('Failed to create task:', error);
