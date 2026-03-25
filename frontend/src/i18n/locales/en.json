@@ -302,7 +302,17 @@
     "sortByPrice": "Sort by Price",
     "sortByName": "Sort by Name",
     "lowestPrice": "Lowest Price",
-    "highestPrice": "Highest Price"
+    "highestPrice": "Highest Price",
+    "clearFilters": "Clear Filters",
+    "emptyFilteredHint": "Try a different filter or view all products"
+  },
+  "common": {
+    "previous": "Previous",
+    "next": "Next",
+    "of": "of",
+    "cancel": "Cancel",
+    "copy": "Copy",
+    "page": "Page"
   },
   "checkout": {
     "title": "Checkout",
@@ -328,7 +338,11 @@
     "success": "Payment Successful",
     "error": "Payment Failed",
     "tryAgain": "Try Again",
-    "backToProducts": "Back to Products"
+    "backToProducts": "Back to Products",
+    "productUnavailable": "This product is currently unavailable",
+    "productNotFound": "The product you are looking for could not be found",
+    "commissionBreakdown": "Commission Breakdown",
+    "totalCommission": "Total Commission"
   },
   "orders": {
     "title": "My Orders",
@@ -353,6 +367,16 @@
     },
     "loading": "Loading orders...",
     "error": "Failed to load orders",
-    "retry": "Retry"
+    "retry": "Retry",
+    "successMessage": "Your order has been processed successfully!",
+    "continueShopping": "Continue Shopping",
+    "goToDashboard": "Go to Dashboard"
+  },
+  "commission": {
+    "sponsor": "Your Sponsor",
+    "level1": "Level 1 Referrals",
+    "level2": "Level 2 Referrals",
+    "level3": "Level 3 Referrals",
+    "level4": "Level 4 Referrals"
   }
 }

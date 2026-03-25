@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Login from './pages/Login';
@@ -10,6 +11,25 @@ import PublicProfile from './pages/PublicProfile';
 import LandingPages from './pages/LandingPages';
 import CRM from './pages/CRM';
 import AppLayout from './components/layout/AppLayout';
+
+// Lazy loaded pages for streaming subscriptions e-commerce
+const ProductCatalog = lazy(() => import('./pages/ProductCatalog'));
+const Checkout = lazy(() => import('./pages/Checkout'));
+const OrderSuccess = lazy(() => import('./pages/OrderSuccess'));
+
+/**
+ * Loading fallback component for lazy loaded routes
+ */
+function PageLoader() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-slate-100">
+      <div className="flex flex-col items-center gap-4">
+        <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+        <p className="text-slate-600">Cargando...</p>
+      </div>
+    </div>
+  );
+}
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth();
@@ -118,6 +138,36 @@ function App() {
             element={
               <ProtectedRoute>
                 <LandingPages />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Streaming Subscriptions E-Commerce Routes */}
+          <Route
+            path="/products"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <ProductCatalog />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/checkout/:productId"
+            element={
+              <ProtectedRoute>
+                <Suspense fallback={<PageLoader />}>
+                  <Checkout />
+                </Suspense>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/orders/:orderId/success"
+            element={
+              <ProtectedRoute>
+                <Suspense fallback={<PageLoader />}>
+                  <OrderSuccess />
+                </Suspense>
               </ProtectedRoute>
             }
           />

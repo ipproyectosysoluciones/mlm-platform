@@ -302,7 +302,17 @@
     "sortByPrice": "Ordenar por Precio",
     "sortByName": "Ordenar por Nombre",
     "lowestPrice": "Menor Precio",
-    "highestPrice": "Mayor Precio"
+    "highestPrice": "Mayor Precio",
+    "clearFilters": "Limpiar Filtros",
+    "emptyFilteredHint": "Probá con un filtro diferente o ver todos los productos"
+  },
+  "common": {
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "of": "de",
+    "cancel": "Cancelar",
+    "copy": "Copiar",
+    "page": "Página"
   },
   "checkout": {
     "title": "Checkout",
@@ -328,7 +338,11 @@
     "success": "Pago Exitoso",
     "error": "Pago Fallido",
     "tryAgain": "Intentar de Nuevo",
-    "backToProducts": "Volver a Productos"
+    "backToProducts": "Volver a Productos",
+    "productUnavailable": "Este producto actualmente no está disponible",
+    "productNotFound": "No se pudo encontrar el producto que buscas",
+    "commissionBreakdown": "Desglose de Comisiones",
+    "totalCommission": "Comisión Total"
   },
   "orders": {
     "title": "Mis Órdenes",
@@ -353,6 +367,16 @@
     },
     "loading": "Cargando órdenes...",
     "error": "Error al cargar las órdenes",
-    "retry": "Reintentar"
+    "retry": "Reintentar",
+    "successMessage": "Tu orden ha sido procesada exitosamente!",
+    "continueShopping": "Seguir Comprando",
+    "goToDashboard": "Ir al Dashboard"
+  },
+  "commission": {
+    "sponsor": "Tu Patrocinador",
+    "level1": "Referidos Nivel 1",
+    "level2": "Referidos Nivel 2",
+    "level3": "Referidos Nivel 3",
+    "level4": "Referidos Nivel 4"
   }
 }
