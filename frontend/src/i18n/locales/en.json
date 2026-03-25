@@ -104,7 +104,8 @@
     "close": "Close",
     "confirm": "Confirm",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "retry": "Retry"
   },
   "auth": {
     "welcome": "Welcome Back",
@@ -290,6 +291,10 @@
     "loading": "Loading products...",
     "empty": "No products available",
     "emptyFiltered": "No products match your filters",
+    "unavailable": "Unavailable",
+    "access": "Full access to all content",
+    "hdQuality": "HD streaming quality",
+    "cancelAnytime": "Cancel anytime",
     "error": "Failed to load products",
     "retry": "Retry",
     "filter": "Filter",

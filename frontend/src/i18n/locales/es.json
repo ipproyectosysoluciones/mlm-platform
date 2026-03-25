@@ -104,7 +104,8 @@
     "close": "Cerrar",
     "confirm": "Confirmar",
     "yes": "Sí",
-    "no": "No"
+    "no": "No",
+    "retry": "Reintentar"
   },
   "auth": {
     "welcome": "Bienvenido",
@@ -290,6 +291,10 @@
     "loading": "Cargando productos...",
     "empty": "No hay productos disponibles",
     "emptyFiltered": "No hay productos que coincidan con tus filtros",
+    "unavailable": "No disponible",
+    "access": "Acceso completo a todo el contenido",
+    "hdQuality": "Calidad de streaming HD",
+    "cancelAnytime": "Cancelar en cualquier momento",
     "error": "Error al cargar productos",
     "retry": "Reintentar",
     "filter": "Filtrar",
