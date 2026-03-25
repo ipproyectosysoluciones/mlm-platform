@@ -123,6 +123,357 @@
       ]
     },
     {
+      "name": "CRM",
+      "item": [
+        {
+          "name": "Get Leads",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/crm",
+              "host": ["{{baseUrl}}"],
+              "path": ["crm"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Lead By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/crm/{{leadId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["crm", "{{leadId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Lead",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"contactName\": \"John Doe\",\n  \"contactEmail\": \"john@example.com\",\n  \"contactPhone\": \"+1234567890\",\n  \"company\": \"Acme Inc\",\n  \"source\": \"website\",\n  \"value\": 1000,\n  \"currency\": \"USD\",\n  \"notes\": \"Lead from website form\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/crm",
+              "host": ["{{baseUrl}}"],
+              "path": ["crm"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Lead",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"contactName\": \"John Doe Updated\",\n  \"contactEmail\": \"john.doe@example.com\",\n  \"status\": \"qualified\",\n  \"value\": 1500\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/crm/{{leadId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["crm", "{{leadId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Lead",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/crm/{{leadId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["crm", "{{leadId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Import Leads CSV",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"csv\": \"contactName,contactEmail,contactEmail\\nJane Smith,jane@example.com,+1987654321\\nBob Johnson,bob@test.com,,+\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/crm/import",
+              "host": ["{{baseUrl}}"],
+              "path": ["crm", "import"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Export Leads CSV",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/crm/export",
+              "host": ["{{baseUrl}}"],
+              "path": ["crm", "export"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Lead Tasks",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/crm/{{leadId}}/tasks",
+              "host": ["{{baseUrl}}"],
+              "path": ["crm", "{{leadId}}", "tasks"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Task",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Follow up call\",\n  \"description\": \"Call to discuss proposal\",\n  \"dueDate\": \"2026-04-01T10:00:00Z\",\n  \"type\": \"call\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/crm/{{leadId}}/tasks",
+              "host": ["{{baseUrl}}"],
+              "path": ["crm", "{{leadId}}", "tasks"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Complete Task",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/crm/tasks/{{taskId}}/complete",
+              "host": ["{{baseUrl}}"],
+              "path": ["crm", "tasks", "{{taskId}}", "complete"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Communication",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"call\",\n  \"direction\": \"outbound\",\n  \"subject\": \"Follow up on proposal\",\n  \"content\": \"Called to check status of proposal sent yesterday\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/crm/{{leadId}}/communications",
+              "host": ["{{baseUrl}}"],
+              "path": ["crm", "{{leadId}}", "communications"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Lead Communications",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/crm/{{leadId}}/communications",
+              "host": ["{{baseUrl}}"],
+              "path": ["crm", "{{leadId}}", "communications"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get CRM Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/crm/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["crm", "stats"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Upcoming Tasks",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/crm/tasks",
+              "host": ["{{baseUrl}}"],
+              "path": ["crm", "tasks"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Analytics Report",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/crm/analytics/report?period=month",
+              "host": ["{{baseUrl}}"],
+              "path": ["crm", "analytics", "report"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get CRM Alerts",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/crm/alerts?daysInactive=7",
+              "host": ["{{baseUrl}}"],
+              "path": ["crm", "alerts"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Export Analytics Report",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/crm/analytics/export?period=month",
+              "host": ["{{baseUrl}}"],
+              "path": ["crm", "analytics", "export"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "Users",
       "item": [
         {
