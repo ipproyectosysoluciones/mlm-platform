@@ -1,0 +1,72 @@
+import { DataTypes, Model, Optional } from 'sequelize';
+import { sequelize } from '../config/database';
+import type { ProductAttributes, ProductCreationAttributes } from '../types';
+
+type ProductCreation = Optional<ProductAttributes, 'id' | 'createdAt' | 'updatedAt'>;
+
+export class Product extends Model<ProductAttributes, ProductCreation> {
+  declare id: string;
+  declare name: string;
+  declare description: string | null;
+  declare type: 'subscription' | 'one-time' | 'streaming';
+  declare price: number;
+  declare currency: string;
+  declare interval: 'monthly' | 'yearly' | null;
+  declare features: string[] | null;
+  declare status: 'active' | 'inactive';
+  declare readonly createdAt: Date;
+  declare readonly updatedAt: Date;
+}
+
+Product.init(
+  {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+    },
+    name: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+      validate: {
+        len: [1, 255],
+      },
+    },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    type: {
+      type: DataTypes.ENUM('subscription', 'one-time', 'streaming'),
+      allowNull: false,
+    },
+    price: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+    },
+    currency: {
+      type: DataTypes.STRING(3),
+      allowNull: false,
+      defaultValue: 'USD',
+    },
+    interval: {
+      type: DataTypes.ENUM('monthly', 'yearly'),
+      allowNull: true,
+    },
+    features: {
+      type: DataTypes.JSONB,
+      allowNull: true,
+    },
+    status: {
+      type: DataTypes.ENUM('active', 'inactive'),
+      defaultValue: 'active',
+    },
+  },
+  {
+    sequelize,
+    tableName: 'products',
+    timestamps: true,
+    underscored: true,
+    indexes: [{ fields: ['type'] }, { fields: ['status'] }],
+  }
+);

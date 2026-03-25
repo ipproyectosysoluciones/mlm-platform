@@ -47,6 +47,7 @@ export interface CommissionAttributes {
 export interface PurchaseAttributes {
   id: string;
   userId: string;
+  productId: string | null;
   amount: number;
   currency: string;
   description: string | null;
@@ -104,3 +105,61 @@ export const LEVEL_NAMES: Record<number, string> = {
   3: 'Silver',
   4: 'Gold',
 };
+
+// Product types for streaming subscriptions e-commerce
+export interface ProductAttributes {
+  id: string;
+  name: string;
+  description: string | null;
+  type: 'subscription' | 'one-time' | 'streaming';
+  price: number;
+  currency: string;
+  interval: 'monthly' | 'yearly' | null;
+  features: string[] | null;
+  status: 'active' | 'inactive';
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface ProductCreationAttributes {
+  name: string;
+  description?: string | null;
+  type: 'subscription' | 'one-time' | 'streaming';
+  price: number;
+  currency?: string;
+  interval?: 'monthly' | 'yearly' | null;
+  features?: string[] | null;
+  status?: 'active' | 'inactive';
+}
+
+// Order types for streaming subscriptions e-commerce
+export interface OrderAttributes {
+  id: string;
+  userId: string;
+  productId: string | null;
+  purchaseId: string | null;
+  amount: number;
+  currency: string;
+  status: 'pending' | 'completed' | 'cancelled' | 'refunded';
+  paymentMethod: string | null;
+  transactionId: string | null;
+  streamUrl: string | null;
+  streamToken: string | null;
+  expiresAt: Date | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface OrderCreationAttributes {
+  userId: string;
+  productId?: string | null;
+  purchaseId?: string | null;
+  amount: number;
+  currency?: string;
+  status?: 'pending' | 'completed' | 'cancelled' | 'refunded';
+  paymentMethod?: string | null;
+  transactionId?: string | null;
+  streamUrl?: string | null;
+  streamToken?: string | null;
+  expiresAt?: Date | null;
+}
