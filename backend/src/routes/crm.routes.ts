@@ -17,11 +17,18 @@ import {
   getCRMStats,
   createTask,
   completeTask,
+  importLeads,
+  exportLeads,
   addCommunication,
   getLeadCommunications,
+  getLeadTasks,
   getUpcomingTasks,
+  getAnalyticsReport,
+  getCRMAlerts,
+  exportAnalyticsReport,
   createLeadValidation,
   updateLeadValidation,
+  createTaskValidation,
 } from '../controllers/CRMController';
 import { authenticateToken } from '../middleware/auth.middleware';
 import { validate } from '../middleware/validate.middleware';
@@ -59,6 +66,93 @@ router.use(authenticateToken);
  *                   description: Tareas pendientes / Pending tasks
  */
 router.get('/stats', asyncHandler(getCRMStats));
+
+/**
+ * @swagger
+ * /crm/analytics/report:
+ *   get:
+ *     summary: Obtener reporte de analítica por período / Get analytics report by period
+ *     description: Retorna métricas de leads filtradas por período (semana, mes, trimestre, año).
+ *     tags: [crm]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: period
+ *         schema:
+ *           type: string
+ *           enum: [week, month, quarter, year]
+ *         description: Período de análisis / Analysis period
+ *       - in: query
+ *         name: dateFrom
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Fecha desde (para período custom) / Date from (for custom period)
+ *       - in: query
+ *         name: dateTo
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Fecha hasta (para período custom) / Date to (for custom period)
+ *     responses:
+ *       200:
+ *         description: Reporte de analítica / Analytics report
+ */
+router.get('/analytics/report', asyncHandler(getAnalyticsReport));
+
+/**
+ * @swagger
+ * /crm/alerts:
+ *   get:
+ *     summary: Obtener alertas de CRM / Get CRM alerts
+ *     description: Retorna alertas de leads inactivos, tareas vencidas y seguimientos pendientes.
+ *     tags: [crm]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: daysInactive
+ *         schema:
+ *           type: integer
+ *           default: 7
+ *         description: Días para considerar un lead inactivo / Days to consider lead inactive
+ *     responses:
+ *       200:
+ *         description: Lista de alertas / Alerts list
+ */
+router.get('/alerts', asyncHandler(getCRMAlerts));
+
+/**
+ * @swagger
+ * /crm/analytics/export:
+ *   get:
+ *     summary: Exportar reporte de analítica / Export analytics report
+ *     description: Descarga el reporte de analítica en formato CSV
+ *     tags: [crm]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: period
+ *         schema:
+ *           type: string
+ *           enum: [week, month, quarter, year]
+ *       - in: query
+ *         name: dateFrom
+ *         schema:
+ *           type: string
+ *           format: date
+ *       - in: query
+ *         name: dateTo
+ *         schema:
+ *           type: string
+ *           format: date
+ *     responses:
+ *       200:
+ *         description: Archivo CSV / CSV file
+ */
+router.get('/analytics/export', asyncHandler(exportAnalyticsReport));
 
 /**
  * @swagger
@@ -111,8 +205,53 @@ router.get('/tasks', asyncHandler(getUpcomingTasks));
  *         name: status
  *         schema:
  *           type: string
- *           enum: [new, contacted, qualified, converted, lost]
+ *           enum: [new, contacted, qualified, proposal, negotiation, won, lost]
  *         description: Filtrar por estado / Filter by status
+ *       - in: query
+ *         name: source
+ *         schema:
+ *           type: string
+ *           enum: [website, referral, social, landing_page, manual, other]
+ *         description: Filtrar por fuente / Filter by source
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Buscar por nombre, email o empresa / Search by name, email or company
+ *       - in: query
+ *         name: createdAtFrom
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Fecha desde de creación / Creation date from
+ *       - in: query
+ *         name: createdAtTo
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Fecha hasta de creación / Creation date to
+ *       - in: query
+ *         name: valueMin
+ *         schema:
+ *           type: number
+ *         description: Valor mínimo del lead / Minimum lead value
+ *       - in: query
+ *         name: valueMax
+ *         schema:
+ *           type: number
+ *         description: Valor máximo del lead / Maximum lead value
+ *       - in: query
+ *         name: nextFollowUpFrom
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Fecha desde de próximo seguimiento / Next follow-up from
+ *       - in: query
+ *         name: nextFollowUpTo
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Fecha hasta de próximo seguimiento / Next follow-up to
  *       - in: query
  *         name: page
  *         schema:
@@ -207,6 +346,61 @@ router.get('/:id', asyncHandler(getLeadById));
  *         description: Datos inválidos / Invalid data
  */
 router.post('/', validate(createLeadValidation), asyncHandler(createLead));
+
+/**
+ * @swagger
+ * /crm/import:
+ *   post:
+ *     summary: Importar leads desde CSV / Import leads from CSV
+ *     description: Importa múltiples leads desde contenido CSV
+ *     tags: [crm]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               csv:
+ *                 type: string
+ *                 description: Contenido del archivo CSV / CSV file content
+ *     responses:
+ *       200:
+ *         description: Resultados de importación / Import results
+ *       400:
+ *         description: CSV inválido / Invalid CSV
+ */
+router.post('/import', asyncHandler(importLeads));
+
+/**
+ * @swagger
+ * /crm/export:
+ *   get:
+ *     summary: Exportar leads a CSV / Export leads to CSV
+ *     description: Descarga todos los leads en formato CSV
+ *     tags: [crm]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: source
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Archivo CSV / CSV file
+ */
+router.get('/export', asyncHandler(exportLeads));
 
 /**
  * @swagger
@@ -313,7 +507,7 @@ router.delete('/:id', asyncHandler(deleteLead));
  *       201:
  *         description: Tarea creada / Task created
  */
-router.post('/:leadId/tasks', asyncHandler(createTask));
+router.post('/:leadId/tasks', validate(createTaskValidation), asyncHandler(createTask));
 
 /**
  * @swagger
@@ -359,6 +553,28 @@ router.patch('/tasks/:taskId/complete', asyncHandler(completeTask));
  *         description: Lista de comunicaciones / Communications list
  */
 router.get('/:leadId/communications', asyncHandler(getLeadCommunications));
+
+/**
+ * @swagger
+ * /crm/{leadId}/tasks:
+ *   get:
+ *     summary: Obtener tareas del lead / Get lead tasks
+ *     description: Retorna las tareas asociadas a un lead.
+ *     tags: [crm]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: leadId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del lead / Lead ID
+ *     responses:
+ *       200:
+ *         description: Lista de tareas / Tasks list
+ */
+router.get('/:leadId/tasks', asyncHandler(getLeadTasks));
 
 /**
  * @swagger

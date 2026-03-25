@@ -7,10 +7,14 @@ Plataforma MLM (Multi-Level Marketing) con sistema de afiliaciones binarias, com
 - **Sistema de Afiliaciones Binarias** - Red de usuarios con izquierda/derecha
 - **Comisiones Automáticas** - Directas y por niveles (hasta 4 niveles)
 - **Código QR de Referido** - Generación automática para cada usuario
-- **Dashboard en Tiempo Real** - Estadísticas y rendimiento
+- **Dashboard con Gráficos** - Estadísticas, referidos y comisiones por mes
+- **CRM Integrado** - Leads, tareas, pipeline Kanban, importar/exportar CSV
+- **Árbol Genealógico** - Visualización interactiva con React Flow
+- **Landing Pages** - Creador de páginas de captura
 - **Panel de Administración** - Gestión completa de usuarios y comisiones
-- **API REST Documentada** - OpenAPI/Swagger integrado
+- **API REST Documentada** - OpenAPI/Swagger bilingüe (ES/EN)
 - **Tests Automatizados** - Unit, Integration y E2E con Playwright
+- **i18n** - Interfaz bilingüe (Español/Inglés)
 
 ## 📋 Requisitos / Requirements
 
@@ -162,14 +166,14 @@ Swagger UI disponible en: `http://localhost:3000/api-docs`
 
 ## 👥 Credenciales de Prueba
 
-```
+```text
 Admin: admin@mlm.com / admin123
 Usuario: user1@mlm.com / user123
 ```
 
 ## 📁 Estructura del Proyecto / Project Structure
 
-```
+```tree
 MLM/
 ├── docs/                     # Documentación general / General documentation
 │   ├── README.md            # Documentación principal / Main documentation
@@ -205,7 +209,7 @@ MLM/
 └── CONTRIBUTING.md           # Guía de contribuciones / Contributing guide
 ```
 
-```
+```text
 
 ## 🔒 Seguridad / Security
 
@@ -250,7 +254,7 @@ Este proyecto usa [Semantic Versioning](https://semver.org/):
 MAJOR.MINOR.PATCH
 1.0.0
 
-````
+````text
 
 Tags:
 

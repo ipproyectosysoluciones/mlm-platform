@@ -14,7 +14,7 @@ This guide documents the MLM application pages and their route configuration.
 
 ## 1. Page Structure / Estructura de Páginas
 
-```
+```tree
 frontend/src/pages/
 ├── Login.tsx              # User login
 ├── Register.tsx           # User registration

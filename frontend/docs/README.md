@@ -6,7 +6,7 @@ Esta carpeta contiene la documentación específica del frontend de la plataform
 
 ### Estructura / Structure
 
-```
+```tree
 frontend/docs/
 ├── README.md          # Este archivo / This file
 ├── COMPONENTS.md      # Documentación de componentes / Component docs
@@ -22,7 +22,7 @@ This folder contains specific documentation for the MLM platform frontend.
 
 ### Structure
 
-```
+```tree
 frontend/docs/
 ├── README.md          # This file
 ├── COMPONENTS.md      # Component documentation
@@ -66,7 +66,7 @@ npm run preview
 
 ## Project Structure / Estructura del Proyecto
 
-```
+```tree
 frontend/src/
 ├── components/         # React components
 │   ├── common/        # Shared components
@@ -106,7 +106,7 @@ npx playwright test --debug
 
 ### Test Structure / Estructura de Tests
 
-```
+```tree
 frontend/e2e/
 ├── auth.spec.ts       # Authentication flows
 ├── admin.spec.ts      # Admin panel flows

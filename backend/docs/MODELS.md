@@ -81,7 +81,7 @@ The `user_closure` table stores all ancestor-descendant relationships for the bi
 
 ### Example Data / Datos de Ejemplo
 
-```
+```table
 ancestor_id | descendant_id | depth
 ------------|---------------|-------
 user_a      | user_a        | 0      (self-reference)

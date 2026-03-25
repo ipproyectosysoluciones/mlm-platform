@@ -288,7 +288,14 @@ export const crmService = {
     page?: number;
     limit?: number;
     status?: string;
+    source?: string;
     search?: string;
+    createdAtFrom?: string;
+    createdAtTo?: string;
+    valueMin?: number;
+    valueMax?: number;
+    nextFollowUpFrom?: string;
+    nextFollowUpTo?: string;
   }) => {
     const response = await api.get('/crm', { params });
     return response.data;
@@ -316,6 +323,24 @@ export const crmService = {
     notes?: string;
   }) => {
     const response = await api.post('/crm', data);
+    return response.data;
+  },
+
+  /**
+   * Import leads from CSV
+   * Importar leads desde CSV
+   */
+  importLeads: async (csv: string) => {
+    const response = await api.post('/crm/import', { csv });
+    return response.data;
+  },
+
+  /**
+   * Export leads to CSV
+   * Exportar leads a CSV
+   */
+  exportLeads: async (params?: { status?: string; source?: string; search?: string }) => {
+    const response = await api.get('/crm/export', { params, responseType: 'blob' });
     return response.data;
   },
 
@@ -404,6 +429,15 @@ export const crmService = {
   },
 
   /**
+   * Get upcoming tasks
+   * Obtener tareas próximas
+   */
+  getUpcomingTasks: async () => {
+    const response = await api.get('/crm/tasks');
+    return response.data;
+  },
+
+  /**
    * Add communication to lead
    * Agregar comunicación a lead
    */
@@ -426,6 +460,44 @@ export const crmService = {
    */
   getCommunications: async (leadId: string) => {
     const response = await api.get(`/crm/${leadId}/communications`);
+    return response.data;
+  },
+
+  /**
+   * Get analytics report by period
+   * Obtener reporte de analítica por período
+   */
+  getAnalyticsReport: async (params?: {
+    period?: 'week' | 'month' | 'quarter' | 'year';
+    dateFrom?: string;
+    dateTo?: string;
+  }) => {
+    const response = await api.get('/crm/analytics/report', { params });
+    return response.data;
+  },
+
+  /**
+   * Get CRM alerts
+   * Obtener alertas de CRM
+   */
+  getAlerts: async (params?: { daysInactive?: number }) => {
+    const response = await api.get('/crm/alerts', { params });
+    return response.data;
+  },
+
+  /**
+   * Export analytics report to CSV
+   * Exportar reporte de analítica a CSV
+   */
+  exportAnalyticsReport: async (params?: {
+    period?: 'week' | 'month' | 'quarter' | 'year';
+    dateFrom?: string;
+    dateTo?: string;
+  }) => {
+    const response = await api.get('/crm/analytics/export', {
+      params,
+      responseType: 'blob',
+    });
     return response.data;
   },
 };

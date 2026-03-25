@@ -68,11 +68,14 @@
     "showQR": "Mostrar Código QR",
     "hideQR": "Ocultar QR",
     "recentCommissions": "Comisiones Recientes",
-    "recentReferrals": "Referidos Recientes",
+    "recentReferrals": "Referidos por Mes",
+    "commissions": "Ganancias por Mes",
     "noCommissions": "Aún no tenés comisiones",
     "noCommissionsHint": "Invitá referidos para ganar comisiones",
     "noReferrals": "Aún no tenés referidos",
-    "noReferralsHint": "Compartí tu link para invitar personas"
+    "noReferralsHint": "Compartí tu link para invitar personas",
+    "amount": "Monto",
+    "earnings": "Ganancias"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -204,6 +207,24 @@
     "search": "Buscar leads...",
     "searchPlaceholder": "Buscar leads...",
     "allStatuses": "Todos los estados",
+    "allSources": "Todas las fuentes",
+    "advancedFilters": "Filtros",
+    "dateFrom": "Fecha desde",
+    "dateTo": "Fecha hasta",
+    "valueMin": "Valor mínimo",
+    "valueMax": "Valor máximo",
+    "clearFilters": "Limpiar filtros",
+    "importCSV": "Importar CSV",
+    "exportCSV": "Exportar",
+    "quickNotes": "Notas rápidas",
+    "addQuickNote": "Escribe una nota y presiona Enter...",
+    "quickNoteHint": "Presiona Enter para guardar",
+    "importInstructions": "Sube un archivo CSV con tus leads. Columnas requeridas: contactName, contactEmail",
+    "selectFile": "Seleccionar archivo",
+    "importing": "Importando...",
+    "imported": "Importados",
+    "errors": "Errores",
+    "close": "Cerrar",
     "noLeads": "No hay leads",
     "noResults": "No se encontraron resultados",
     "addFirst": "Comienza agregando tu primer lead",
@@ -249,6 +270,11 @@
     "sourceLandingPage": "Landing Page",
     "sourceManual": "Manual",
     "sourceOther": "Otro",
+    "emailTemplates": "Plantillas de Email",
+    "showTemplates": "Ver plantillas",
+    "hideTemplates": "Ocultar plantillas",
+    "selectTemplate": "Seleccionar plantilla...",
+    "sendEmail": "Enviar Email",
     "status": {
       "new": "Nuevo",
       "contacted": "Contactado",
@@ -260,8 +286,34 @@
     },
     "tabs": {
       "leads": "Leads",
+      "kanban": "Kanban",
       "tasks": "Tareas",
       "stats": "Estadísticas"
+    },
+    "analytics": {
+      "title": "Analítica de CRM",
+      "totalLeads": "Total Leads",
+      "won": "Ganados",
+      "conversionRate": "Conversión",
+      "avgValue": "Valor Promedio",
+      "created": "Creados",
+      "noData": "No hay datos disponibles",
+      "funnel": "Funnel de Conversión",
+      "trend": "Tendencia"
+    },
+    "period": {
+      "week": "Semana",
+      "month": "Mes",
+      "quarter": "Trimestre",
+      "year": "Año"
+    },
+    "alerts": {
+      "title": "Alertas",
+      "high": "Alta",
+      "medium": "Media",
+      "low": "Baja",
+      "viewAll": "Ver todas las alertas",
+      "noAlerts": "¡Todo al día! No hay alertas pendientes."
     }
   }
 }

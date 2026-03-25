@@ -14,7 +14,7 @@ This guide documents the React components used in the MLM platform.
 
 ## 1. Component Structure / Estructura de Componentes
 
-```
+```tree
 frontend/src/components/
 ├── layout/
 │   └── AppLayout.tsx       # Main layout with horizontal navbar
@@ -103,7 +103,7 @@ function ProtectedPage() {
 
 **Visual Structure:**
 
-```
+```text
 ┌─────────────────────────────┐
 │ [Avatar] user@email.com    │
 │ ━━━━━━━━━━━━━━━━━━━━━━━━━━ │

@@ -192,7 +192,7 @@ The following are explicitly **NOT** part of this PRD:
 
 ## Architecture Overview / Visión General de Arquitectura
 
-```
+```map
 ┌─────────────────────────────────────────────────────────────┐
 │                     MLM SAAS PLATFORM                         │
 ├─────────────────────────────────────────────────────────────┤
@@ -270,7 +270,7 @@ The following are explicitly **NOT** part of this PRD:
 
 ### Core Tables / Tablas Principales
 
-```
+```map
 ┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐
 │      USER        │────▶│    PURCHASE      │◀────│   COMMISSION     │
 ├──────────────────┤     ├──────────────────┤     ├──────────────────┤
@@ -328,7 +328,7 @@ The following are explicitly **NOT** part of this PRD:
 
 ### Base URL
 
-```
+```text
 Production: https://api.mlm-platform.com/api
 Staging: https://staging-api.mlm-platform.com/api
 Development: http://localhost:3000/api
@@ -338,7 +338,7 @@ Development: http://localhost:3000/api
 
 All protected endpoints require:
 
-```
+```text
 Authorization: Bearer <jwt_token>
 ```
 
@@ -614,7 +614,7 @@ Authorization: Bearer <jwt_token>
 
 ## Critical Test Paths / Caminos Críticos de Test
 
-```
+```text
 1. Registration → Login → Dashboard → Tree View
 2. Registration with Sponsor → Commission Earned → Commission History
 3. Admin Login → User Status Change → User Login Blocked

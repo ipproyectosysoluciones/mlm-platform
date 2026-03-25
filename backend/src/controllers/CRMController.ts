@@ -42,6 +42,17 @@ export const updateLeadValidation = [
 ];
 
 /**
+ * Validation rules for creating a task
+ * Reglas de validación para crear una tarea
+ */
+export const createTaskValidation = [
+  body('title').notEmpty().withMessage('Task title is required'),
+  body('type').optional().isIn(['call', 'email', 'meeting', 'follow_up', 'note', 'other']),
+  body('description').optional().isString(),
+  body('dueDate').optional().isISO8601().withMessage('Valid date is required'),
+];
+
+/**
  * Get all leads with pagination and filters
  * Obtiene todos los leads con paginación y filtros
  *
@@ -54,6 +65,12 @@ export async function getLeads(req: AuthenticatedRequest, res: Response) {
     status: req.query.status as any,
     source: req.query.source as any,
     search: req.query.search as string,
+    createdAtFrom: req.query.createdAtFrom as string,
+    createdAtTo: req.query.createdAtTo as string,
+    valueMin: req.query.valueMin ? parseFloat(req.query.valueMin as string) : undefined,
+    valueMax: req.query.valueMax ? parseFloat(req.query.valueMax as string) : undefined,
+    nextFollowUpFrom: req.query.nextFollowUpFrom as string,
+    nextFollowUpTo: req.query.nextFollowUpTo as string,
     page: parseInt(req.query.page as string) || 1,
     limit: parseInt(req.query.limit as string) || 20,
   });
@@ -87,6 +104,49 @@ export async function createLead(req: AuthenticatedRequest, res: Response) {
     ...req.body,
   });
   res.status(201).json({ success: true, data: lead });
+}
+
+/**
+ * Import leads from CSV
+ * Importar leads desde archivo CSV
+ *
+ * @param req - Body: csv (CSV content as string)
+ * @param res - Response with import results
+ */
+export async function importLeads(req: AuthenticatedRequest, res: Response) {
+  const { csv } = req.body;
+
+  if (!csv || typeof csv !== 'string') {
+    throw new AppError(400, 'VALIDATION_ERROR', 'CSV content is required');
+  }
+
+  const result = await crmService.importLeadsFromCSV(req.user!.id, csv);
+  res.status(200).json({ success: true, data: result });
+}
+
+/**
+ * Export leads to CSV
+ * Exportar leads a CSV
+ */
+export async function exportLeads(req: AuthenticatedRequest, res: Response) {
+  const filters = {
+    status: req.query.status as any,
+    source: req.query.source as any,
+    search: req.query.search as string,
+    createdAtFrom: req.query.createdAtFrom as string,
+    createdAtTo: req.query.createdAtTo as string,
+    valueMin: req.query.valueMin ? parseFloat(req.query.valueMin as string) : undefined,
+    valueMax: req.query.valueMax ? parseFloat(req.query.valueMax as string) : undefined,
+  };
+
+  const csv = await crmService.exportLeadsToCSV(req.user!.id, filters);
+
+  res.setHeader('Content-Type', 'text/csv');
+  res.setHeader(
+    'Content-Disposition',
+    `attachment; filename=leads-export-${new Date().toISOString().split('T')[0]}.csv`
+  );
+  res.send(csv);
 }
 
 /**
@@ -188,6 +248,18 @@ export async function getLeadCommunications(req: AuthenticatedRequest, res: Resp
 }
 
 /**
+ * Get tasks for a lead
+ * Obtiene las tareas de un lead
+ *
+ * @param req - Path params: leadId
+ * @param res - Response with tasks list
+ */
+export async function getLeadTasks(req: AuthenticatedRequest, res: Response) {
+  const tasks = await crmService.getLeadTasks(req.params.leadId, req.user!.id);
+  res.json({ success: true, data: tasks });
+}
+
+/**
  * Get upcoming tasks
  * Obtiene tareas próximas
  *
@@ -197,4 +269,63 @@ export async function getLeadCommunications(req: AuthenticatedRequest, res: Resp
 export async function getUpcomingTasks(req: AuthenticatedRequest, res: Response) {
   const tasks = await crmService.getUpcomingTasks(req.user!.id);
   res.json({ success: true, data: tasks });
+}
+
+/**
+ * Get analytics report by period
+ * Obtiene reporte de analítica por período
+ *
+ * @param req - Query params: period (week, month, quarter, year, custom)
+ * @param res - Response with period analytics
+ */
+export async function getAnalyticsReport(req: AuthenticatedRequest, res: Response) {
+  const period = (req.query.period as string) || 'month';
+  const dateFrom = req.query.dateFrom as string;
+  const dateTo = req.query.dateTo as string;
+
+  const report = await crmService.getAnalyticsReport(req.user!.id, {
+    period,
+    dateFrom,
+    dateTo,
+  });
+  res.json({ success: true, data: report });
+}
+
+/**
+ * Get CRM alerts
+ * Obtiene alertas de CRM (leads inactivos, tareas vencidas)
+ *
+ * @param req - Query params: daysInactive (default 7)
+ * @param res - Response with alerts
+ */
+export async function getCRMAlerts(req: AuthenticatedRequest, res: Response) {
+  const daysInactive = req.query.daysInactive ? parseInt(req.query.daysInactive as string) : 7;
+  const alerts = await crmService.getCRMAlerts(req.user!.id, daysInactive);
+  res.json({ success: true, data: alerts });
+}
+
+/**
+ * Export analytics report
+ * Exporta reporte de analítica a CSV
+ *
+ * @param req - Query params: period, dateFrom, dateTo
+ * @param res - CSV file download
+ */
+export async function exportAnalyticsReport(req: AuthenticatedRequest, res: Response) {
+  const period = (req.query.period as string) || 'month';
+  const dateFrom = req.query.dateFrom as string;
+  const dateTo = req.query.dateTo as string;
+
+  const csv = await crmService.exportAnalyticsReport(req.user!.id, {
+    period,
+    dateFrom,
+    dateTo,
+  });
+
+  res.setHeader('Content-Type', 'text/csv');
+  res.setHeader(
+    'Content-Disposition',
+    `attachment; filename=crm-analytics-${new Date().toISOString().split('T')[0]}.csv`
+  );
+  res.send(csv);
 }

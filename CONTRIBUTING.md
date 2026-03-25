@@ -28,23 +28,31 @@ cp .env.example .env
 
 1. **Fork** el repositorio
 2. **Clone** tu fork:
+
    ```bash
    git clone https://github.com/tu-usuario/MLM.git
    ```
+
 3. **Crea una rama** para tu funcionalidad:
+
    ```bash
    git checkout -b feature/nueva-funcionalidad
    ```
+
 4. **Haz tus cambios** siguiendo las directrices de código
 5. **Agrega tests** para nuevas funcionalidades
 6. **Commit** tus cambios:
+
    ```bash
    git commit -m "feat: agregar nueva funcionalidad"
    ```
+
 7. **Push** a tu fork:
+
    ```bash
    git push origin feature/nueva-funcionalidad
    ```
+
 8. Abre un **Pull Request**
 
 ## 📝 Reglas de Código
@@ -60,7 +68,7 @@ cp .env.example .env
 
 Usar Conventional Commits:
 
-```
+```text
 feat: nueva funcionalidad
 fix: corrección de bug
 docs: cambios en documentación

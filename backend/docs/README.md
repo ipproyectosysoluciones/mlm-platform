@@ -6,7 +6,7 @@ Esta carpeta contiene la documentación específica del backend de la plataforma
 
 ### Estructura / Structure
 
-```
+```tree
 backend/docs/
 ├── README.md          # Este archivo / This file
 ├── API.md             # Referencia de endpoints / Endpoint reference
@@ -22,7 +22,7 @@ This folder contains specific documentation for the MLM platform backend.
 
 ### Structure
 
-```
+```tree
 backend/docs/
 ├── README.md          # This file
 ├── API.md             # Endpoint reference
