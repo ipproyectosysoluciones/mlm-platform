@@ -138,3 +138,81 @@ export interface CRMStats {
   inProgress: number;
   conversionRate: number;
 }
+
+// Product Types - Streaming Subscriptions E-Commerce
+export type StreamingPlatform =
+  | 'netflix'
+  | 'disney_plus'
+  | 'spotify'
+  | 'hbo_max'
+  | 'amazon_prime'
+  | 'youtube_premium'
+  | 'apple_tv_plus';
+
+export interface Product {
+  id: string;
+  name: string;
+  platform: StreamingPlatform;
+  description?: string;
+  price: number;
+  currency: string;
+  durationDays: number;
+  imageUrl?: string;
+  isActive: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface ProductListParams {
+  page?: number;
+  limit?: number;
+  platform?: StreamingPlatform;
+  isActive?: boolean;
+}
+
+export interface ProductListResponse {
+  products: Product[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+// Order Types - Streaming Subscriptions E-Commerce
+export type OrderStatus = 'pending' | 'completed' | 'failed' | 'cancelled';
+export type PaymentMethod = 'credit_card' | 'debit_card' | 'simulated';
+
+export interface Order {
+  id: string;
+  orderNumber: string;
+  userId: string;
+  productId: string;
+  product?: Product;
+  purchaseId?: string;
+  status: OrderStatus;
+  paymentMethod: PaymentMethod;
+  amount: number;
+  currency: string;
+  commissionTotal?: number;
+  createdAt: Date;
+  updatedAt?: Date;
+}
+
+export interface CreateOrderRequest {
+  productId: string;
+  paymentMethod: PaymentMethod;
+}
+
+export interface OrderListParams {
+  page?: number;
+  limit?: number;
+  status?: OrderStatus;
+}
+
+export interface OrderListResponse {
+  orders: Order[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
