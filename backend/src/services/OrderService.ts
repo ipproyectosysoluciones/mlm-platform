@@ -146,13 +146,15 @@ export class OrderService {
       );
 
       // Calculate commissions (inside transaction)
-      // Skip in test environment to avoid hangs due to complex upline queries
+      // Always skip commission calculation during tests to prevent timeouts
+      // In production, this calculates upline commissions
       if (process.env.NODE_ENV !== 'test') {
         try {
           await commissionService.calculateCommissions(purchase.id);
         } catch (commissionError) {
           // Log but don't fail the order
           console.error('Commission calculation failed:', commissionError);
+          // Don't throw - order should still be created even if commission calc fails
         }
       }
 
@@ -214,7 +216,7 @@ export class OrderService {
       ],
       limit,
       offset,
-      order: [['createdAt', 'DESC']],
+      order: [['created_at', 'DESC']],
     });
   }
 
@@ -240,7 +242,7 @@ export class OrderService {
           as: 'product',
           attributes: ['id', 'name', 'price', 'type', 'description'],
         },
-        { model: Purchase, as: 'purchase', attributes: ['id', 'amount', 'status', 'createdAt'] },
+        { model: Purchase, as: 'purchase', attributes: ['id', 'amount', 'status', 'created_at'] },
         { model: User, as: 'user', attributes: ['id', 'email', 'referralCode'] },
       ],
     });
