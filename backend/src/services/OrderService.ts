@@ -149,7 +149,9 @@ export class OrderService {
       // Skip commission calculation if SKIP_COMMISSION_CALCULATION is set to 'true'
       // This is used in integration tests to prevent timeouts due to complex upline queries
       // In production and unit tests (unless overridden), commissions are calculated
-      if (process.env.SKIP_COMMISSION_CALCULATION !== 'true') {
+      if (process.env.SKIP_COMMISSION_CALCULATION === 'true') {
+        // Skip commission calculation to prevent timeouts in integration tests
+      } else {
         try {
           await commissionService.calculateCommissions(purchase.id);
         } catch (commissionError) {
