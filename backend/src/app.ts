@@ -66,9 +66,31 @@ const authLimiter = rateLimit({
   legacyHeaders: false,
 });
 
+// Rate limiting for order creation (5 orders per minute per user)
+// Rate limit para creación de pedidos (5 pedidos por minuto por usuario)
+const orderLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 5, // 5 orders per minute per user
+  message: {
+    success: false,
+    error: {
+      code: 'RATE_LIMIT',
+      message: 'Too many orders created. Please try again later. Maximum 5 orders per minute.',
+    },
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: (req) => {
+    // Use user ID if authenticated, otherwise use IP
+    const user = (req as any).user;
+    return user?.id || req.ip || 'anonymous';
+  },
+});
+
 if (!isTest) {
   app.use('/api/auth/login', authLimiter);
   app.use('/api/auth/register', authLimiter);
+  app.use('/api/orders', orderLimiter);
 }
 
 // Swagger UI
@@ -99,6 +121,27 @@ if (config.nodeEnv !== 'production') {
 if (process.env.SENTRY_DSN) {
   Sentry.setupExpressErrorHandler(app);
 }
+
+// Debug: Show all routes
+app.get('/debug/routes', (req, res) => {
+  const routes: string[] = [];
+  app._router?.stack?.forEach((middleware: any) => {
+    if (middleware.route) {
+      routes.push(
+        `${Object.keys(middleware.route.methods).join(', ').toUpperCase()} ${middleware.route.path}`
+      );
+    } else if (middleware.name === 'router') {
+      middleware.handle?.stack?.forEach((handler: any) => {
+        if (handler.route) {
+          routes.push(
+            `${Object.keys(handler.route.methods).join(', ').toUpperCase()} ${handler.route.path}`
+          );
+        }
+      });
+    }
+  });
+  res.json({ routes });
+});
 
 // Error handlers
 app.use(notFoundHandler);

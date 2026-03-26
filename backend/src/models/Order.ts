@@ -1,3 +1,23 @@
+/**
+ * @fileoverview Order - Order model for streaming subscription purchases
+ * @description Sequelize model for orders with associations to User, Product, and Purchase.
+ *             Modelo Sequelize para pedidos con asociaciones a Usuario, Producto y Compra.
+ * @module models/Order
+ * @author MLM Development Team
+ *
+ * @example
+ * // English: Get user's orders with products
+ * const orders = await Order.findAll({
+ *   where: { userId: 'user-uuid' },
+ *   include: ['product', 'purchase']
+ * });
+ *
+ * // Español: Obtener pedidos del usuario con productos
+ * const orders = await Order.findAll({
+ *   where: { userId: 'uuid-usuario' },
+ *   include: ['product', 'purchase']
+ * });
+ */
 import { DataTypes, Model, Optional, ForeignKey } from 'sequelize';
 import { sequelize } from '../config/database';
 import { User } from './User';
@@ -7,6 +27,10 @@ import type { OrderAttributes, OrderCreationAttributes } from '../types';
 
 type OrderCreation = Optional<OrderAttributes, 'id' | 'createdAt' | 'updatedAt'>;
 
+/**
+ * Order Model - Represents orders for streaming subscription purchases
+ * Modelo de Pedido - Representa pedidos de compra de suscripciones de streaming
+ */
 export class Order extends Model<OrderAttributes, OrderCreation> {
   declare id: string;
   declare userId: ForeignKey<User['id']>;

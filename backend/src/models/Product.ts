@@ -1,9 +1,27 @@
+/**
+ * @fileoverview Product - Product model for streaming subscriptions
+ * @description Sequelize model for products (Netflix, Disney+, Spotify, etc.).
+ *             Modelo Sequelize para productos de streaming.
+ * @module models/Product
+ * @author MLM Development Team
+ *
+ * @example
+ * // English: Get all active streaming products
+ * const products = await Product.findAll({ where: { status: 'active' } });
+ *
+ * // Español: Obtener todos los productos de streaming activos
+ * const products = await Product.findAll({ where: { status: 'active' } });
+ */
 import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../config/database';
 import type { ProductAttributes, ProductCreationAttributes } from '../types';
 
 type ProductCreation = Optional<ProductAttributes, 'id' | 'createdAt' | 'updatedAt'>;
 
+/**
+ * Product Model - Represents streaming subscription products
+ * Modelo de Producto - Representa productos de suscripción de streaming
+ */
 export class Product extends Model<ProductAttributes, ProductCreation> {
   declare id: string;
   declare name: string;
@@ -54,7 +72,7 @@ Product.init(
       allowNull: true,
     },
     features: {
-      type: DataTypes.JSONB,
+      type: DataTypes.JSON,
       allowNull: true,
     },
     status: {
