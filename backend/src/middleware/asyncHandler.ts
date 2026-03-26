@@ -4,6 +4,10 @@ type AsyncRequestHandler = (req: Request, res: Response, next: NextFunction) => 
 
 export function asyncHandler(fn: AsyncRequestHandler): RequestHandler {
   return (req: Request, res: Response, next: NextFunction) => {
-    Promise.resolve(fn(req, res, next)).catch(next);
+    console.log('[DEBUG] asyncHandler called');
+    Promise.resolve(fn(req, res, next)).catch((e) => {
+      console.log('[DEBUG] asyncHandler error:', e);
+      next(e);
+    });
   };
 }

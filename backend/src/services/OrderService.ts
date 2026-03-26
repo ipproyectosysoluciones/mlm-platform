@@ -22,35 +22,41 @@ import type { OrderAttributes } from '../types';
 // Express-validator validation chains (reusable in controllers)
 export const orderValidationRules = {
   create: [
-    body('items').isArray({ min: 1 }).withMessage('At least one item is required'),
-    body('items.*.productId').isUUID().withMessage('Invalid product ID format'),
-    body('items.*.quantity')
-      .isInt({ min: 1 })
-      .withMessage('Quantity must be at least 1')
-      .default({ value: 1 }),
-    body('paymentMethod').notEmpty().withMessage('Payment method is required').isString(),
+    body('productId').isUUID().withMessage('Invalid product ID format'),
+    body('paymentMethod')
+      .optional()
+      .isIn(['manual', 'simulated'])
+      .withMessage('Payment method must be manual or simulated'),
+    body('notes').optional().isString().trim().isLength({ max: 500 }),
   ],
   updateStatus: [
-    body('status')
-      .isIn(['pending', 'completed', 'cancelled', 'refunded'])
-      .withMessage('Invalid status'),
-    body('transactionId').optional().isString(),
+    body('status').isIn(['pending', 'completed', 'failed']).withMessage('Invalid status'),
   ],
 };
 
-export type OrderItemInput = {
+export type CreateOrderData = {
   productId: string;
-  quantity?: number;
+  paymentMethod?: 'manual' | 'simulated';
+  notes?: string;
 };
-
-interface CreateOrderData {
-  items: OrderItemInput[];
-  paymentMethod: string;
-}
 
 const commissionService = new CommissionService();
 
 export class OrderService {
+  /**
+   * Generate a unique order number in format ORD-YYYYMMDD-NNN
+   */
+  private generateOrderNumber(): string {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const datePart = `${year}${month}${day}`;
+    // Generate random 3-digit number (001-999)
+    const randomPart = String(Math.floor(Math.random() * 900) + 1).padStart(3, '0');
+    return `ORD-${datePart}-${randomPart}`;
+  }
+
   /**
    * Create a new order with transaction handling and commission calculation
    * Crear nuevo pedido con manejo de transacciones y cálculo de comisiones
@@ -79,11 +85,11 @@ export class OrderService {
    */
   async createOrder(userId: string, data: CreateOrderData): Promise<Order> {
     // Validate input exists
-    if (!data.items || data.items.length === 0) {
-      throw new AppError(400, 'VALIDATION_ERROR', 'At least one item is required');
+    if (!data.productId) {
+      throw new AppError(400, 'VALIDATION_ERROR', 'Product ID is required');
     }
-    if (!data.paymentMethod) {
-      throw new AppError(400, 'VALIDATION_ERROR', 'Payment method is required');
+    if (data.paymentMethod && !['manual', 'simulated'].includes(data.paymentMethod)) {
+      throw new AppError(400, 'VALIDATION_ERROR', 'Payment method must be manual or simulated');
     }
 
     // Validate user exists
@@ -92,26 +98,17 @@ export class OrderService {
       throw new AppError(400, 'USER_NOT_FOUND', 'User not found');
     }
 
-    // Validate products and calculate total
-    let totalAmount = 0;
-    const validatedItems: Array<{ product: Product; quantity: number }> = [];
-
-    for (const item of data.items) {
-      if (!item.productId) {
-        throw new AppError(400, 'VALIDATION_ERROR', 'Product ID is required');
-      }
-      const product = await Product.findByPk(item.productId);
-      if (!product) {
-        throw new AppError(400, 'PRODUCT_NOT_FOUND', `Product ${item.productId} not found`);
-      }
-      if (product.status !== 'active') {
-        throw new AppError(400, 'PRODUCT_INACTIVE', `Product ${product.name} is not available`);
-      }
-
-      const quantity = item.quantity || 1;
-      totalAmount += Number(product.price) * quantity;
-      validatedItems.push({ product, quantity });
+    // Validate product
+    const product = await Product.findByPk(data.productId);
+    if (!product) {
+      throw new AppError(400, 'PRODUCT_NOT_FOUND', 'Product not found');
     }
+    if (product.isActive !== true) {
+      throw new AppError(400, 'PRODUCT_INACTIVE', 'Product is not available for purchase');
+    }
+
+    const totalAmount = Number(product.price);
+    const orderNumber = this.generateOrderNumber();
 
     // Start transaction
     const transaction = await sequelize.transaction();
@@ -121,11 +118,11 @@ export class OrderService {
       const purchase = await Purchase.create(
         {
           userId,
-          productId: validatedItems[0].product.id, // Primary product
+          productId: product.id,
           amount: totalAmount,
-          currency: 'USD',
-          description: validatedItems.map((i) => i.product.name).join(', '),
-          status: 'completed', // Payment successful
+          currency: product.currency,
+          description: product.name,
+          status: 'completed',
         },
         { transaction }
       );
@@ -133,14 +130,15 @@ export class OrderService {
       // Create Order record
       const order = await Order.create(
         {
+          orderNumber,
           userId,
-          productId: validatedItems[0].product.id,
+          productId: product.id,
           purchaseId: purchase.id,
-          amount: totalAmount,
-          currency: 'USD',
+          totalAmount,
+          currency: product.currency,
           status: 'completed',
-          paymentMethod: data.paymentMethod,
-          transactionId: `TXN-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          paymentMethod: data.paymentMethod || 'simulated',
+          notes: data.notes || null,
         },
         { transaction }
       );
@@ -171,7 +169,11 @@ export class OrderService {
       // Reload order with associations
       return (await Order.findByPk(order.id, {
         include: [
-          { model: Product, as: 'product', attributes: ['id', 'name', 'price', 'type'] },
+          {
+            model: Product,
+            as: 'product',
+            attributes: ['id', 'name', 'platform', 'price', 'durationDays'],
+          },
           { model: Purchase, as: 'purchase', attributes: ['id', 'amount', 'status'] },
         ],
       }))!;
@@ -218,7 +220,11 @@ export class OrderService {
     return Order.findAndCountAll({
       where,
       include: [
-        { model: Product, as: 'product', attributes: ['id', 'name', 'price', 'type'] },
+        {
+          model: Product,
+          as: 'product',
+          attributes: ['id', 'name', 'platform', 'price', 'durationDays', 'isActive'],
+        },
         { model: Purchase, as: 'purchase', attributes: ['id', 'amount', 'status'] },
       ],
       limit,
@@ -247,7 +253,15 @@ export class OrderService {
         {
           model: Product,
           as: 'product',
-          attributes: ['id', 'name', 'price', 'type', 'description'],
+          attributes: [
+            'id',
+            'name',
+            'platform',
+            'price',
+            'durationDays',
+            'isActive',
+            'description',
+          ],
         },
         { model: Purchase, as: 'purchase', attributes: ['id', 'amount', 'status', 'created_at'] },
         { model: User, as: 'user', attributes: ['id', 'email', 'referralCode'] },
@@ -303,18 +317,10 @@ export class OrderService {
    * // Español: Actualizar estado del pedido
    * const order = await orderService.updateStatus('uuid-pedido', 'completado', 'TXN-123');
    */
-  async updateStatus(
-    id: string,
-    status: 'pending' | 'completed' | 'cancelled' | 'refunded',
-    transactionId?: string
-  ): Promise<Order> {
+  async updateStatus(id: string, status: 'pending' | 'completed' | 'failed'): Promise<Order> {
     const order = await this.findById(id);
 
     order.status = status;
-    if (transactionId) {
-      order.transactionId = transactionId;
-    }
-
     await order.save();
     return order;
   }
@@ -339,7 +345,7 @@ export class OrderService {
       throw new AppError(400, 'INVALID_STATUS', 'Cannot cancel a completed order');
     }
 
-    order.status = 'cancelled';
+    order.status = 'failed';
     await order.save();
 
     return order;

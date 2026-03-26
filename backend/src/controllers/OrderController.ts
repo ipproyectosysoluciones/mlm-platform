@@ -51,22 +51,18 @@ import { AppError } from '../middleware/error.middleware';
  *           schema:
  *             type: object
  *             required:
- *               - items
- *               - paymentMethod
+ *               - productId
  *             properties:
- *               items:
- *                 type: array
- *                 items:
- *                   type: object
- *                   properties:
- *                     productId:
- *                       type: string
- *                       format: uuid
- *                     quantity:
- *                       type: integer
- *                       default: 1
+ *               productId:
+ *                 type: string
+ *                 format: uuid
  *               paymentMethod:
  *                 type: string
+ *                 enum: [manual, simulated]
+ *                 default: simulated
+ *               notes:
+ *                 type: string
+ *                 maxLength: 500
  *     responses:
  *       201:
  *         description: Pedido creado / Order created
@@ -78,6 +74,7 @@ import { AppError } from '../middleware/error.middleware';
  *         description: Producto no encontrado / Product not found
  */
 export async function createOrder(req: AuthenticatedRequest, res: Response): Promise<void> {
+  console.log('[DEBUG] createOrder called, req.user:', req.user?.id);
   try {
     // Check authentication
     if (!req.user) {
@@ -92,31 +89,33 @@ export async function createOrder(req: AuthenticatedRequest, res: Response): Pro
     }
 
     const userId = req.user.id;
-    const { items, paymentMethod } = req.body;
+    const { productId, paymentMethod, notes } = req.body;
 
     // Validate request body
-    if (!items || !Array.isArray(items) || items.length === 0) {
+    if (!productId) {
       res.status(400).json({
         success: false,
         error: {
           code: 'VALIDATION_ERROR',
-          message: 'At least one item is required',
+          message: 'Product ID is required',
           details: {
-            items: ['Items must be a non-empty array'],
+            productId: ['Product ID is required'],
           },
         },
       });
       return;
     }
 
-    if (!paymentMethod) {
+    // Validate UUID format
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(productId)) {
       res.status(400).json({
         success: false,
         error: {
           code: 'VALIDATION_ERROR',
-          message: 'Payment method is required',
+          message: 'Invalid product ID format',
           details: {
-            paymentMethod: ['Payment method is required'],
+            productId: ['Product ID must be a valid UUID'],
           },
         },
       });
@@ -125,25 +124,24 @@ export async function createOrder(req: AuthenticatedRequest, res: Response): Pro
 
     // Create the order
     const order = await orderService.createOrder(userId, {
-      items,
+      productId,
       paymentMethod,
+      notes,
     });
 
     const response: ApiResponse<OrderAttributes> = {
       success: true,
       data: {
         id: order.id,
+        orderNumber: order.orderNumber,
         userId: order.userId,
         productId: order.productId,
         purchaseId: order.purchaseId,
-        amount: Number(order.amount),
+        totalAmount: Number(order.totalAmount),
         currency: order.currency,
         status: order.status,
         paymentMethod: order.paymentMethod,
-        transactionId: order.transactionId,
-        streamUrl: order.streamUrl,
-        streamToken: order.streamToken,
-        expiresAt: order.expiresAt,
+        notes: order.notes,
         createdAt: order.createdAt,
         updatedAt: order.updatedAt,
       },
@@ -209,7 +207,7 @@ export async function createOrder(req: AuthenticatedRequest, res: Response): Pro
  *         name: status
  *         schema:
  *           type: string
- *           enum: [pending, completed, cancelled, refunded]
+ *           enum: [pending, completed, failed]
  *         description: Filtrar por estado / Filter by status
  *     responses:
  *       200:
@@ -246,17 +244,15 @@ export async function getOrders(req: AuthenticatedRequest, res: Response): Promi
       success: true,
       data: result.rows.map((order) => ({
         id: order.id,
+        orderNumber: order.orderNumber,
         userId: order.userId,
         productId: order.productId,
         purchaseId: order.purchaseId,
-        amount: Number(order.amount),
+        totalAmount: Number(order.totalAmount),
         currency: order.currency,
         status: order.status,
         paymentMethod: order.paymentMethod,
-        transactionId: order.transactionId,
-        streamUrl: order.streamUrl,
-        streamToken: order.streamToken,
-        expiresAt: order.expiresAt,
+        notes: order.notes,
         createdAt: order.createdAt,
         updatedAt: order.updatedAt,
       })),
@@ -357,17 +353,15 @@ export async function getOrderById(req: AuthenticatedRequest, res: Response): Pr
       success: true,
       data: {
         id: order.id,
+        orderNumber: order.orderNumber,
         userId: order.userId,
         productId: order.productId,
         purchaseId: order.purchaseId,
-        amount: Number(order.amount),
+        totalAmount: Number(order.totalAmount),
         currency: order.currency,
         status: order.status,
         paymentMethod: order.paymentMethod,
-        transactionId: order.transactionId,
-        streamUrl: order.streamUrl,
-        streamToken: order.streamToken,
-        expiresAt: order.expiresAt,
+        notes: order.notes,
         createdAt: order.createdAt,
         updatedAt: order.updatedAt,
         // Include product details if available
@@ -375,8 +369,9 @@ export async function getOrderById(req: AuthenticatedRequest, res: Response): Pr
           product: {
             id: order.product.id,
             name: order.product.name,
+            platform: order.product.platform,
             price: Number(order.product.price),
-            type: order.product.type,
+            durationDays: order.product.durationDays,
             description: order.product.description,
           },
         }),

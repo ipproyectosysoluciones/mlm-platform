@@ -107,13 +107,12 @@ describe('OrderService', () => {
   const mockActiveProduct = {
     id: 'product-1',
     name: 'Netflix Premium',
-    type: 'streaming',
+    platform: 'netflix',
     price: 15.99,
-    status: 'active',
+    isActive: true,
     description: '4 screens, Ultra HD',
     currency: 'USD',
-    interval: 'monthly' as const,
-    features: ['4K', 'HDR'],
+    durationDays: 30,
     createdAt: new Date(),
     updatedAt: new Date(),
   };
@@ -121,13 +120,12 @@ describe('OrderService', () => {
   const mockInactiveProduct = {
     id: 'product-2',
     name: 'Old Product',
-    type: 'subscription',
+    platform: 'other',
     price: 5.99,
-    status: 'inactive',
+    isActive: false,
     description: 'Legacy product',
     currency: 'USD',
-    interval: 'monthly' as const,
-    features: null,
+    durationDays: 30,
     createdAt: new Date(),
     updatedAt: new Date(),
   };
@@ -149,11 +147,11 @@ describe('OrderService', () => {
     userId: 'user-123',
     productId: 'product-1',
     purchaseId: 'purchase-1',
-    amount: 15.99,
+    totalAmount: 15.99,
     currency: 'USD',
     status: 'completed',
     paymentMethod: 'simulated',
-    transactionId: 'TXN-123',
+    notes: null,
     createdAt: new Date(),
     updatedAt: new Date(),
   };
@@ -188,8 +186,7 @@ describe('OrderService', () => {
      */
     it('should throw error when items array is empty', async () => {
       const data: CreateOrderData = {
-        userId: 'user-123',
-        items: [],
+        productId: 'product-1',
         paymentMethod: 'simulated',
       };
 
@@ -211,8 +208,7 @@ describe('OrderService', () => {
 
     it('should throw error when payment method is missing', async () => {
       const data: CreateOrderData = {
-        userId: 'user-123',
-        items: [{ productId: 'product-1' }],
+        productId: 'product-1',
       };
 
       await expect(orderService.createOrder('user-123', data)).rejects.toThrow(
@@ -224,8 +220,7 @@ describe('OrderService', () => {
       (User.findByPk as jest.Mock).mockResolvedValue(null);
 
       const data: CreateOrderData = {
-        userId: 'nonexistent-user',
-        items: [{ productId: 'product-1' }],
+        productId: 'product-1',
         paymentMethod: 'simulated',
       };
 
@@ -238,8 +233,7 @@ describe('OrderService', () => {
       (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
 
       const data: CreateOrderData = {
-        userId: 'user-123',
-        items: [{ quantity: 1 }] as any,
+        productId: 'product-1',
         paymentMethod: 'simulated',
       };
 
@@ -257,8 +251,7 @@ describe('OrderService', () => {
       (Product.findByPk as jest.Mock).mockResolvedValue(null);
 
       const data: CreateOrderData = {
-        userId: 'user-123',
-        items: [{ productId: 'nonexistent-product' }],
+        productId: 'product-1',
         paymentMethod: 'simulated',
       };
 
@@ -276,13 +269,11 @@ describe('OrderService', () => {
       (Product.findByPk as jest.Mock).mockResolvedValue(mockInactiveProduct);
 
       const data: CreateOrderData = {
-        userId: 'user-123',
-        items: [{ productId: 'product-2' }],
-        paymentMethod: 'simulated',
+        productId: 'product-2',
       };
 
       await expect(orderService.createOrder('user-123', data)).rejects.toThrow(
-        'Product Old Product is not available'
+        'Product is not available for purchase'
       );
     });
 
@@ -291,8 +282,7 @@ describe('OrderService', () => {
       (Product.findByPk as jest.Mock).mockResolvedValue(mockInactiveProduct);
 
       const data: CreateOrderData = {
-        userId: 'user-123',
-        items: [{ productId: 'product-2' }],
+        productId: 'product-2',
         paymentMethod: 'simulated',
       };
 
@@ -336,8 +326,7 @@ describe('OrderService', () => {
       });
 
       const data: CreateOrderData = {
-        userId: 'user-123',
-        items: [{ productId: 'product-1', quantity: 1 }],
+        productId: 'product-1',
         paymentMethod: 'simulated',
       };
 
@@ -361,7 +350,7 @@ describe('OrderService', () => {
         expect.objectContaining({
           userId: 'user-123',
           productId: 'product-1',
-          amount: 15.99,
+          totalAmount: 15.99,
           currency: 'USD',
           status: 'completed',
           paymentMethod: 'simulated',
@@ -404,8 +393,7 @@ describe('OrderService', () => {
       });
 
       const data: CreateOrderData = {
-        userId: 'user-123',
-        items: [{ productId: 'product-1', quantity: 3 }],
+        productId: 'product-1',
         paymentMethod: 'simulated',
       };
 
@@ -451,8 +439,7 @@ describe('OrderService', () => {
       mockCalculateCommissions.mockRejectedValue(new Error('Commission calculation failed'));
 
       const data: CreateOrderData = {
-        userId: 'user-123',
-        items: [{ productId: 'product-1', quantity: 1 }],
+        productId: 'product-1',
         paymentMethod: 'simulated',
       };
 
@@ -487,9 +474,11 @@ describe('OrderService', () => {
       // Make commission calculation fail
       mockCalculateCommissions.mockRejectedValue(new Error('Database error'));
 
+      // Mock product lookup (already done before)
+      (Product.findByPk as jest.Mock).mockResolvedValue(mockActiveProduct);
+
       const data: CreateOrderData = {
-        userId: 'user-123',
-        items: [{ productId: 'product-1', quantity: 1 }],
+        productId: 'product-1',
         paymentMethod: 'simulated',
       };
 
@@ -540,8 +529,7 @@ describe('OrderService', () => {
       });
 
       const data: CreateOrderData = {
-        userId: 'user-123',
-        items: [{ productId: 'product-1', quantity: 1 }],
+        productId: 'product-1',
         paymentMethod: 'simulated',
       };
 
@@ -676,16 +664,16 @@ describe('OrderService', () => {
   });
 
   describe('cancelOrder', () => {
-    it('should cancel pending order', async () => {
+    it('should cancel pending order (change status to failed)', async () => {
       const pendingOrder = { ...mockOrder, status: 'pending' };
       (Order.findByPk as jest.Mock).mockResolvedValue({
         ...pendingOrder,
-        save: jest.fn().mockResolvedValue({ ...pendingOrder, status: 'cancelled' }),
+        save: jest.fn().mockResolvedValue({ ...pendingOrder, status: 'failed' }),
       });
 
       const result = await orderService.cancelOrder('order-1');
 
-      expect(result.status).toBe('cancelled');
+      expect(result.status).toBe('failed');
     });
 
     it('should throw error when trying to cancel completed order', async () => {

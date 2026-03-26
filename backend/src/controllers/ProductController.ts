@@ -65,12 +65,31 @@ export async function getProducts(req: AuthenticatedRequest, res: Response): Pro
     const page = parseInt(req.query.page as string) || 1;
     const limit = Math.min(parseInt(req.query.limit as string) || 20, 100);
     const platform = req.query.platform as string | undefined;
+    let validatedPlatform: ProductAttributes['platform'] | undefined;
+    if (platform) {
+      const allowedPlatforms = [
+        'netflix',
+        'disney_plus',
+        'spotify',
+        'hbo_max',
+        'amazon_prime',
+        'youtube_premium',
+        'apple_tv',
+        'other',
+      ];
+      if (allowedPlatforms.includes(platform)) {
+        validatedPlatform = platform as ProductAttributes['platform'];
+      } else {
+        // invalid platform, treat as undefined
+        validatedPlatform = undefined;
+      }
+    }
 
     const result = await productService.getProductList({
       page,
       limit,
-      platform,
-      status: 'active', // Only return active products
+      platform: validatedPlatform,
+      isActive: true, // Only return active products
     });
 
     const response: ApiResponse<ProductAttributes[]> = {
@@ -78,13 +97,12 @@ export async function getProducts(req: AuthenticatedRequest, res: Response): Pro
       data: result.rows.map((p) => ({
         id: p.id,
         name: p.name,
+        platform: p.platform,
         description: p.description,
-        type: p.type,
         price: Number(p.price),
         currency: p.currency,
-        interval: p.interval,
-        features: p.features,
-        status: p.status,
+        durationDays: p.durationDays,
+        isActive: p.isActive,
         createdAt: p.createdAt,
         updatedAt: p.updatedAt,
       })),
@@ -172,13 +190,12 @@ export async function getProductById(req: AuthenticatedRequest, res: Response): 
       data: {
         id: product.id,
         name: product.name,
+        platform: product.platform,
         description: product.description,
-        type: product.type,
         price: Number(product.price),
         currency: product.currency,
-        interval: product.interval,
-        features: product.features,
-        status: product.status,
+        durationDays: product.durationDays,
+        isActive: product.isActive,
         createdAt: product.createdAt,
         updatedAt: product.updatedAt,
       },

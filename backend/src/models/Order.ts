@@ -33,17 +33,15 @@ type OrderCreation = Optional<OrderAttributes, 'id' | 'createdAt' | 'updatedAt'>
  */
 export class Order extends Model<OrderAttributes, OrderCreation> {
   declare id: string;
+  declare orderNumber: string;
   declare userId: ForeignKey<User['id']>;
-  declare productId: string | null;
-  declare purchaseId: string | null;
-  declare amount: number;
+  declare productId: string; // FK to products table
+  declare purchaseId: string | null; // FK to purchases table (nullable)
+  declare totalAmount: number;
   declare currency: string;
-  declare status: 'pending' | 'completed' | 'cancelled' | 'refunded';
-  declare paymentMethod: string | null;
-  declare transactionId: string | null;
-  declare streamUrl: string | null;
-  declare streamToken: string | null;
-  declare expiresAt: Date | null;
+  declare status: 'pending' | 'completed' | 'failed';
+  declare paymentMethod: 'manual' | 'simulated';
+  declare notes: string | null;
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
 
@@ -65,9 +63,15 @@ Order.init(
       allowNull: false,
       field: 'user_id',
     },
+    orderNumber: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
+      unique: true,
+      field: 'order_number',
+    },
     productId: {
       type: DataTypes.UUID,
-      allowNull: true,
+      allowNull: false,
       field: 'product_id',
     },
     purchaseId: {
@@ -75,9 +79,10 @@ Order.init(
       allowNull: true,
       field: 'purchase_id',
     },
-    amount: {
+    totalAmount: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
+      field: 'total_amount',
     },
     currency: {
       type: DataTypes.STRING(3),
@@ -85,33 +90,18 @@ Order.init(
       defaultValue: 'USD',
     },
     status: {
-      type: DataTypes.ENUM('pending', 'completed', 'cancelled', 'refunded'),
+      type: DataTypes.ENUM('pending', 'completed', 'failed'),
       defaultValue: 'pending',
     },
     paymentMethod: {
-      type: DataTypes.STRING(50),
-      allowNull: true,
+      type: DataTypes.ENUM('manual', 'simulated'),
+      allowNull: false,
+      defaultValue: 'simulated',
       field: 'payment_method',
     },
-    transactionId: {
-      type: DataTypes.STRING(255),
+    notes: {
+      type: DataTypes.TEXT,
       allowNull: true,
-      field: 'transaction_id',
-    },
-    streamUrl: {
-      type: DataTypes.STRING(500),
-      allowNull: true,
-      field: 'stream_url',
-    },
-    streamToken: {
-      type: DataTypes.STRING(255),
-      allowNull: true,
-      field: 'stream_token',
-    },
-    expiresAt: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      field: 'expires_at',
     },
   },
   {
@@ -120,6 +110,7 @@ Order.init(
     timestamps: true,
     underscored: true,
     indexes: [
+      { fields: ['order_number'], unique: true },
       { fields: ['user_id'] },
       { fields: ['product_id'] },
       { fields: ['purchase_id'] },

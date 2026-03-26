@@ -75,44 +75,41 @@ import { Product } from '../models';
 describe('ProductService', () => {
   let productService: ProductService;
 
-  // Mock products for testing
+  // Mock products for testing (matches actual Product model)
   const mockProducts = [
     {
       id: 'product-1',
       name: 'Netflix Premium',
-      type: 'streaming',
+      platform: 'netflix',
       price: 15.99,
-      status: 'active',
+      isActive: true,
       description: '4 screens, Ultra HD',
       currency: 'USD',
-      interval: 'monthly' as const,
-      features: ['4K', 'HDR'],
+      durationDays: 30,
       createdAt: new Date(),
       updatedAt: new Date(),
     },
     {
       id: 'product-2',
       name: 'Spotify Premium',
-      type: 'streaming',
+      platform: 'spotify',
       price: 9.99,
-      status: 'active',
+      isActive: true,
       description: 'Ad-free music',
       currency: 'USD',
-      interval: 'monthly' as const,
-      features: ['Offline', 'High Quality'],
+      durationDays: 30,
       createdAt: new Date(),
       updatedAt: new Date(),
     },
     {
       id: 'product-3',
       name: 'Old Product',
-      type: 'subscription',
+      platform: 'other',
       price: 5.99,
-      status: 'inactive',
+      isActive: false,
       description: 'Legacy product',
       currency: 'USD',
-      interval: 'monthly' as const,
-      features: null,
+      durationDays: 30,
       createdAt: new Date(),
       updatedAt: new Date(),
     },
@@ -180,32 +177,33 @@ describe('ProductService', () => {
      * Test: 9.1 - Platform filter (type)
      * Verifies filtering by product type/platform
      */
-    it('should filter products by type (platform)', async () => {
+    it('should filter products by platform', async () => {
       const mockResult = { rows: [mockProducts[0]], count: 1 };
       (Product.findAndCountAll as jest.Mock).mockResolvedValue(mockResult);
 
-      await productService.getProductList({ platform: 'streaming' });
+      await productService.getProductList({ platform: 'netflix' });
 
       expect(Product.findAndCountAll).toHaveBeenCalledWith(
         expect.objectContaining({
           where: expect.objectContaining({
-            type: 'streaming',
-            status: 'active',
+            platform: 'netflix',
+            isActive: true,
           }),
         })
       );
     });
 
-    it('should filter products by subscription type', async () => {
+    it('should filter products by different platform', async () => {
       const mockResult = { rows: [mockProducts[2]], count: 1 };
       (Product.findAndCountAll as jest.Mock).mockResolvedValue(mockResult);
 
-      await productService.getProductList({ platform: 'subscription' });
+      await productService.getProductList({ platform: 'other' });
 
       expect(Product.findAndCountAll).toHaveBeenCalledWith(
         expect.objectContaining({
           where: expect.objectContaining({
-            type: 'subscription',
+            platform: 'other',
+            isActive: true,
           }),
         })
       );
@@ -224,7 +222,7 @@ describe('ProductService', () => {
       expect(Product.findAndCountAll).toHaveBeenCalledWith(
         expect.objectContaining({
           where: expect.objectContaining({
-            status: 'active',
+            isActive: true,
           }),
         })
       );
@@ -234,12 +232,12 @@ describe('ProductService', () => {
       const mockResult = { rows: [mockProducts[2]], count: 1 };
       (Product.findAndCountAll as jest.Mock).mockResolvedValue(mockResult);
 
-      await productService.getProductList({ status: 'inactive' });
+      await productService.getProductList({ isActive: false });
 
       expect(Product.findAndCountAll).toHaveBeenCalledWith(
         expect.objectContaining({
           where: expect.objectContaining({
-            status: 'inactive',
+            isActive: false,
           }),
         })
       );
@@ -269,7 +267,7 @@ describe('ProductService', () => {
 
       expect(Product.findAndCountAll).toHaveBeenCalledWith(
         expect.objectContaining({
-          order: [['createdAt', 'DESC']],
+          order: [['created_at', 'DESC']],
         })
       );
     });
@@ -361,7 +359,7 @@ describe('ProductService', () => {
       expect(Product.findAll).toHaveBeenCalledWith(
         expect.objectContaining({
           where: expect.objectContaining({
-            status: 'active',
+            isActive: true,
           }),
         })
       );

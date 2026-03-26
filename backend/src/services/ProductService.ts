@@ -20,8 +20,16 @@ import type { ProductAttributes } from '../types';
 export interface ProductListOptions {
   page?: number;
   limit?: number;
-  platform?: string; // 'subscription', 'streaming', 'one-time'
-  status?: 'active' | 'inactive';
+  platform?:
+    | 'netflix'
+    | 'disney_plus'
+    | 'spotify'
+    | 'hbo_max'
+    | 'amazon_prime'
+    | 'youtube_premium'
+    | 'apple_tv'
+    | 'other';
+  isActive?: boolean; // true for active, false for inactive, undefined for both
   minPrice?: number;
   maxPrice?: number;
 }
@@ -65,13 +73,17 @@ export class ProductService {
 
     const where: Record<string, unknown> = {};
 
-    // Filter by platform/type
+    // Filter by platform
     if (options.platform) {
-      where.type = options.platform;
+      where.platform = options.platform;
     }
 
-    // Filter by status (default to active)
-    where.status = options.status || 'active';
+    // Filter by isActive (default to active)
+    if (options.isActive !== undefined) {
+      where.isActive = options.isActive;
+    } else {
+      where.isActive = true;
+    }
 
     // Filter by price range
     if (options.minPrice !== undefined) {
@@ -140,7 +152,7 @@ export class ProductService {
   async validateProduct(id: string): Promise<ProductAttributes> {
     const product = await this.findById(id);
 
-    if (product.status !== 'active') {
+    if (product.isActive !== true) {
       throw new AppError(400, 'PRODUCT_INACTIVE', 'Product is not available for purchase');
     }
 
@@ -164,7 +176,7 @@ export class ProductService {
     return Product.findAll({
       where: {
         id: { [Op.in]: ids },
-        status: 'active',
+        isActive: true,
       },
     });
   }

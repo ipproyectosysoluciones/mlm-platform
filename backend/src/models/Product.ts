@@ -26,12 +26,19 @@ export class Product extends Model<ProductAttributes, ProductCreation> {
   declare id: string;
   declare name: string;
   declare description: string | null;
-  declare type: 'subscription' | 'one-time' | 'streaming';
+  declare platform:
+    | 'netflix'
+    | 'disney_plus'
+    | 'spotify'
+    | 'hbo_max'
+    | 'amazon_prime'
+    | 'youtube_premium'
+    | 'apple_tv'
+    | 'other';
   declare price: number;
   declare currency: string;
-  declare interval: 'monthly' | 'yearly' | null;
-  declare features: string[] | null;
-  declare status: 'active' | 'inactive';
+  declare durationDays: number;
+  declare isActive: boolean;
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
 }
@@ -54,8 +61,17 @@ Product.init(
       type: DataTypes.TEXT,
       allowNull: true,
     },
-    type: {
-      type: DataTypes.ENUM('subscription', 'one-time', 'streaming'),
+    platform: {
+      type: DataTypes.ENUM(
+        'netflix',
+        'disney_plus',
+        'spotify',
+        'hbo_max',
+        'amazon_prime',
+        'youtube_premium',
+        'apple_tv',
+        'other'
+      ),
       allowNull: false,
     },
     price: {
@@ -67,17 +83,16 @@ Product.init(
       allowNull: false,
       defaultValue: 'USD',
     },
-    interval: {
-      type: DataTypes.ENUM('monthly', 'yearly'),
-      allowNull: true,
+    durationDays: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      field: 'duration_days',
     },
-    features: {
-      type: DataTypes.JSON,
-      allowNull: true,
-    },
-    status: {
-      type: DataTypes.ENUM('active', 'inactive'),
-      defaultValue: 'active',
+    isActive: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
+      field: 'is_active',
     },
   },
   {
@@ -85,6 +100,6 @@ Product.init(
     tableName: 'products',
     timestamps: true,
     underscored: true,
-    indexes: [{ fields: ['type'] }, { fields: ['status'] }],
+    indexes: [{ fields: ['platform'] }, { fields: ['is_active'] }],
   }
 );

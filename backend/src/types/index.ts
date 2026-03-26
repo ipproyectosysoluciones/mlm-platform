@@ -153,56 +153,57 @@ export const LEVEL_NAMES: Record<number, string> = {
 export interface ProductAttributes {
   id: string;
   name: string;
+  platform:
+    | 'netflix'
+    | 'disney_plus'
+    | 'spotify'
+    | 'hbo_max'
+    | 'amazon_prime'
+    | 'youtube_premium'
+    | 'apple_tv'
+    | 'other';
   description: string | null;
-  type: 'subscription' | 'one-time' | 'streaming';
-  price: number;
-  currency: string;
-  interval: 'monthly' | 'yearly' | null;
-  features: string[] | null;
-  status: 'active' | 'inactive';
+  price: number; // DECIMAL(10,2)
+  currency: string; // Default: 'USD'
+  durationDays: number; // Subscription duration in days
+  isActive: boolean; // Whether product is available for purchase
   createdAt?: Date;
   updatedAt?: Date;
 }
 
 export interface ProductCreationAttributes {
   name: string;
+  platform: ProductAttributes['platform'];
   description?: string | null;
-  type: 'subscription' | 'one-time' | 'streaming';
   price: number;
   currency?: string;
-  interval?: 'monthly' | 'yearly' | null;
-  features?: string[] | null;
-  status?: 'active' | 'inactive';
+  durationDays: number;
+  isActive?: boolean;
 }
 
 // Order types for streaming subscriptions e-commerce
 export interface OrderAttributes {
   id: string;
+  orderNumber: string; // Human-readable order number (e.g., "ORD-20260325-001")
   userId: string;
-  productId: string | null;
-  purchaseId: string | null;
-  amount: number;
-  currency: string;
-  status: 'pending' | 'completed' | 'cancelled' | 'refunded';
-  paymentMethod: string | null;
-  transactionId: string | null;
-  streamUrl: string | null;
-  streamToken: string | null;
-  expiresAt: Date | null;
+  productId: string; // FK to products table
+  purchaseId: string | null; // FK to purchases table (nullable)
+  totalAmount: number; // Order total (matches product price)
+  currency: string; // Default: 'USD'
+  status: 'pending' | 'completed' | 'failed';
+  paymentMethod: 'manual' | 'simulated'; // MVP: only simulated
+  notes: string | null; // Optional internal notes
   createdAt?: Date;
   updatedAt?: Date;
 }
 
 export interface OrderCreationAttributes {
   userId: string;
-  productId?: string | null;
+  productId: string;
   purchaseId?: string | null;
-  amount: number;
+  totalAmount: number;
   currency?: string;
-  status?: 'pending' | 'completed' | 'cancelled' | 'refunded';
-  paymentMethod?: string | null;
-  transactionId?: string | null;
-  streamUrl?: string | null;
-  streamToken?: string | null;
-  expiresAt?: Date | null;
+  status?: 'pending' | 'completed' | 'failed';
+  paymentMethod?: 'manual' | 'simulated';
+  notes?: string | null;
 }
