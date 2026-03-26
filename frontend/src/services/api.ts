@@ -14,6 +14,14 @@ import type {
   TreeNode,
   User,
   UserDetails,
+  Product,
+  ProductListParams,
+  ProductListResponse,
+  Order,
+  OrderListParams,
+  OrderListResponse,
+  CreateOrderRequest,
+  StreamingPlatform,
 } from '../types';
 
 /** @constant {string} API_URL - Backend base URL / URL base del backend */
@@ -499,6 +507,107 @@ export const crmService = {
       responseType: 'blob',
     });
     return response.data;
+  },
+};
+
+/**
+ * @namespace productService
+ * @description Product API methods - Streaming subscriptions catalog / Métodos de API de productos
+ */
+export const productService = {
+  /**
+   * Get list of products with optional filtering and pagination
+   * Obtener lista de productos con filtrado y paginación opcionales
+   * @param {ProductListParams} params - Query parameters / Parámetros de consulta
+   * @returns {Promise<ProductListResponse>} Product list response / Respuesta de lista de productos
+   */
+  getProducts: async (params?: ProductListParams): Promise<ProductListResponse> => {
+    const response = await api.get<{ success: boolean; data: ProductListResponse }>('/products', {
+      params,
+    });
+    return response.data.data!;
+  },
+
+  /**
+   * Get single product by ID
+   * Obtener producto por ID
+   * @param {string} productId - Product ID / ID del producto
+   * @returns {Promise<Product>} Product data / Datos del producto
+   */
+  getProduct: async (productId: string): Promise<Product> => {
+    const response = await api.get<{ success: boolean; data: Product }>(`/products/${productId}`);
+    return response.data.data!;
+  },
+
+  /**
+   * Get products filtered by platform
+   * Obtener productos filtrados por plataforma
+   * @param {StreamingPlatform} platform - Platform to filter by / Plataforma a filtrar
+   * @param {number} [limit] - Results limit / Límite de resultados
+   * @returns {Promise<Product[]>} Array of products / Array de productos
+   */
+  getProductsByPlatform: async (
+    platform: StreamingPlatform,
+    limit?: number
+  ): Promise<Product[]> => {
+    const params: ProductListParams = { platform };
+    if (limit) params.limit = limit;
+    const response = await api.get<{ success: boolean; data: Product[] }>('/products', {
+      params,
+    });
+    return response.data.data || [];
+  },
+};
+
+/**
+ * @namespace orderService
+ * @description Order API methods - Purchase orders / Métodos de API de órdenes
+ */
+export const orderService = {
+  /**
+   * Create a new order (purchase)
+   * Crear una nueva orden (compra)
+   * @param {CreateOrderRequest} data - Order data / Datos de la orden
+   * @returns {Promise<Order>} Created order / Orden creada
+   */
+  createOrder: async (data: CreateOrderRequest): Promise<Order> => {
+    const response = await api.post<{ success: boolean; data: Order }>('/orders', data);
+    return response.data.data!;
+  },
+
+  /**
+   * Get current user's orders
+   * Obtener órdenes del usuario actual
+   * @param {OrderListParams} params - Query parameters / Parámetros de consulta
+   * @returns {Promise<OrderListResponse>} Order list response / Respuesta de lista de órdenes
+   */
+  getOrders: async (params?: OrderListParams): Promise<OrderListResponse> => {
+    const response = await api.get<{ success: boolean; data: OrderListResponse }>('/orders', {
+      params,
+    });
+    return response.data.data!;
+  },
+
+  /**
+   * Get single order by ID
+   * Obtener orden por ID
+   * @param {string} orderId - Order ID / ID de la orden
+   * @returns {Promise<Order>} Order data / Datos de la orden
+   */
+  getOrder: async (orderId: string): Promise<Order> => {
+    const response = await api.get<{ success: boolean; data: Order }>(`/orders/${orderId}`);
+    return response.data.data!;
+  },
+
+  /**
+   * Get order details with product info
+   * Obtener detalles de la orden con info del producto
+   * @param {string} orderId - Order ID / ID de la orden
+   * @returns {Promise<Order>} Order with product data / Orden con datos del producto
+   */
+  getOrderWithProduct: async (orderId: string): Promise<Order> => {
+    const response = await api.get<{ success: boolean; data: Order }>(`/orders/${orderId}`);
+    return response.data.data!;
   },
 };
 

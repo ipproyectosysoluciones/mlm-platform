@@ -5,6 +5,12 @@
  * @module __tests__/setup
  */
 
+// Set test environment BEFORE importing anything else
+process.env.NODE_ENV = 'test';
+process.env.TEST_DB_NAME = 'mlm_test';
+process.env.TEST_DB_HOST = '127.0.0.1';
+process.env.DB_HOST = '127.0.0.1';
+
 import { Sequelize } from 'sequelize';
 import supertest from 'supertest';
 import { resetSequelize } from '../config/database';
@@ -20,13 +26,10 @@ export let testAgent: any;
 let sequelizeInstance: any = null;
 
 beforeAll(async () => {
-  // Set test environment
-  process.env.NODE_ENV = 'test';
-
   // Reset any existing sequelize instance
   resetSequelize();
 
-  // Import sequelize
+  // Import sequelize - it will use the environment variables set above
   const { sequelize } = require('../config/database');
   testDb = sequelize;
   sequelizeInstance = sequelize;
@@ -34,8 +37,14 @@ beforeAll(async () => {
   // Import models to register them with sequelize
   require('../models');
 
-  // Sync all models - use alter instead of force for faster tests
-  await testDb.sync({ alter: false });
+  // Sync all models - force to recreate tables
+  try {
+    await testDb.sync({ force: true });
+    console.log('Test database synced successfully');
+  } catch (error) {
+    console.error('Error syncing test database:', error);
+    throw error;
+  }
 
   // Create test agent
   const app = require('../app').default;
@@ -60,6 +69,8 @@ beforeEach(async () => {
     'user_closure',
     'users',
     'landing_pages',
+    'orders',
+    'products',
   ];
 
   try {

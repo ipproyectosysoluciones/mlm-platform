@@ -1,6 +1,7 @@
 import { DataTypes, Model, Optional, ForeignKey } from 'sequelize';
 import { sequelize } from '../config/database';
 import { User } from './User';
+import { Product } from './Product';
 import type { PurchaseAttributes } from '../types';
 
 type PurchaseCreation = Optional<PurchaseAttributes, 'id' | 'createdAt' | 'updatedAt'>;
@@ -8,12 +9,16 @@ type PurchaseCreation = Optional<PurchaseAttributes, 'id' | 'createdAt' | 'updat
 export class Purchase extends Model<PurchaseAttributes, PurchaseCreation> {
   declare id: string;
   declare userId: ForeignKey<User['id']>;
+  declare productId: string | null;
   declare amount: number;
   declare currency: string;
   declare description: string | null;
   declare status: 'pending' | 'completed' | 'refunded';
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
+
+  // Optional associations
+  declare product?: Product | null;
 }
 
 Purchase.init(
@@ -27,6 +32,11 @@ Purchase.init(
       type: DataTypes.UUID,
       allowNull: false,
       field: 'user_id',
+    },
+    productId: {
+      type: DataTypes.UUID,
+      allowNull: true,
+      field: 'product_id',
     },
     amount: {
       type: DataTypes.DECIMAL(10, 2),
@@ -49,6 +59,8 @@ Purchase.init(
   {
     sequelize,
     tableName: 'purchases',
-    indexes: [{ fields: ['user_id'] }, { fields: ['status'] }],
+    timestamps: true,
+    underscored: true,
+    indexes: [{ fields: ['user_id'] }, { fields: ['status'] }, { fields: ['product_id'] }],
   }
 );
