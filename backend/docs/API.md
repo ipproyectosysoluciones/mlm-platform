@@ -593,6 +593,218 @@ Trend (Date, Created, Won),
 
 ---
 
+## Products / Productos
+
+### List Products / Listar Productos
+
+**GET** `/api/products`
+
+No authentication required / No requiere autenticación
+
+Query params: `page`, `limit`, `platform` (subscription|streaming|one-time)
+
+```json
+// Response (200)
+{
+  "success": true,
+  "data": [
+    {
+      "id": "uuid",
+      "name": "Premium Streaming",
+      "description": "Premium streaming subscription",
+      "type": "subscription",
+      "price": 29.99,
+      "currency": "USD",
+      "interval": "monthly",
+      "features": ["HD Streaming", "Multiple Devices", "Offline Viewing"],
+      "status": "active"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 20,
+    "total": 10,
+    "hasMore": false
+  }
+}
+```
+
+### Get Product / Obtener Producto
+
+**GET** `/api/products/:id`
+
+No authentication required / No requiere autenticación
+
+```json
+// Response (200)
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "name": "Premium Streaming",
+    "description": "Premium streaming subscription",
+    "type": "subscription",
+    "price": 29.99,
+    "currency": "USD",
+    "interval": "monthly",
+    "features": ["HD Streaming", "Multiple Devices", "Offline Viewing"],
+    "status": "active",
+    "createdAt": "2024-01-15T10:30:00Z",
+    "updatedAt": "2024-01-15T10:30:00Z"
+  }
+}
+
+// Response (404)
+{
+  "success": false,
+  "error": { "code": "NOT_FOUND", "message": "Product not found" }
+}
+```
+
+---
+
+## Orders / Pedidos
+
+### Create Order / Crear Pedido
+
+**POST** `/api/orders`
+
+Headers: `Authorization: Bearer <token>`
+
+```json
+// Request
+{
+  "items": [
+    {
+      "productId": "uuid-of-product",
+      "quantity": 1
+    }
+  ],
+  "paymentMethod": "stripe"
+}
+
+// Response (201)
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "userId": "uuid",
+    "productId": "uuid-of-product",
+    "amount": 29.99,
+    "currency": "USD",
+    "status": "pending",
+    "paymentMethod": "stripe",
+    "transactionId": "txn_123456",
+    "streamUrl": "https://stream.example.com/abc123",
+    "streamToken": "token_xyz",
+    "expiresAt": "2024-02-15T10:30:00Z",
+    "createdAt": "2024-01-15T10:30:00Z"
+  }
+}
+
+// Response (400) - Validation error
+{
+  "success": false,
+  "error": { "code": "VALIDATION_ERROR", "message": "At least one item is required" }
+}
+
+// Response (401)
+{
+  "success": false,
+  "error": { "code": "UNAUTHORIZED", "message": "Authentication required" }
+}
+
+// Response (404) - Product not found
+{
+  "success": false,
+  "error": { "code": "NOT_FOUND", "message": "Product not found" }
+}
+```
+
+### List Orders / Listar Pedidos
+
+**GET** `/api/orders`
+
+Headers: `Authorization: Bearer <token>`
+
+Query params: `page`, `limit`, `status` (pending|completed|cancelled|refunded)
+
+```json
+// Response (200)
+{
+  "success": true,
+  "data": [
+    {
+      "id": "uuid",
+      "userId": "uuid",
+      "productId": "uuid-of-product",
+      "amount": 29.99,
+      "currency": "USD",
+      "status": "completed",
+      "paymentMethod": "stripe",
+      "transactionId": "txn_123456",
+      "streamUrl": "https://stream.example.com/abc123",
+      "expiresAt": "2024-02-15T10:30:00Z",
+      "createdAt": "2024-01-15T10:30:00Z"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 20,
+    "total": 5,
+    "hasMore": false
+  }
+}
+```
+
+### Get Order / Obtener Pedido
+
+**GET** `/api/orders/:id`
+
+Headers: `Authorization: Bearer <token>`
+
+```json
+// Response (200)
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "userId": "uuid",
+    "productId": "uuid-of-product",
+    "amount": 29.99,
+    "currency": "USD",
+    "status": "completed",
+    "paymentMethod": "stripe",
+    "transactionId": "txn_123456",
+    "streamUrl": "https://stream.example.com/abc123",
+    "streamToken": "token_xyz",
+    "expiresAt": "2024-02-15T10:30:00Z",
+    "createdAt": "2024-01-15T10:30:00Z",
+    "updatedAt": "2024-01-15T12:00:00Z"
+  }
+}
+
+// Response (401)
+{
+  "success": false,
+  "error": { "code": "UNAUTHORIZED", "message": "Authentication required" }
+}
+
+// Response (403) - Not the owner
+{
+  "success": false,
+  "error": { "code": "FORBIDDEN", "message": "Access denied" }
+}
+
+// Response (404)
+{
+  "success": false,
+  "error": { "code": "NOT_FOUND", "message": "Order not found" }
+}
+```
+
+---
+
 ## Error Responses / Respuestas de Error
 
 ```json
