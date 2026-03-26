@@ -279,7 +279,7 @@ export async function getUpcomingTasks(req: AuthenticatedRequest, res: Response)
  * @param res - Response with period analytics
  */
 export async function getAnalyticsReport(req: AuthenticatedRequest, res: Response) {
-  const period = (req.query.period as string) || 'month';
+  const period = (req.query.period as 'week' | 'month' | 'quarter' | 'year' | 'custom') || 'month';
   const dateFrom = req.query.dateFrom as string;
   const dateTo = req.query.dateTo as string;
 
@@ -312,7 +312,7 @@ export async function getCRMAlerts(req: AuthenticatedRequest, res: Response) {
  * @param res - CSV file download
  */
 export async function exportAnalyticsReport(req: AuthenticatedRequest, res: Response) {
-  const period = (req.query.period as string) || 'month';
+  const period = (req.query.period as 'week' | 'month' | 'quarter' | 'year' | 'custom') || 'month';
   const dateFrom = req.query.dateFrom as string;
   const dateTo = req.query.dateTo as string;
 
