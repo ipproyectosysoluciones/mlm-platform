@@ -146,15 +146,20 @@ export class OrderService {
       );
 
       // Calculate commissions (inside transaction)
-      // Always skip commission calculation during tests to prevent timeouts
-      // In production, this calculates upline commissions
-      if (process.env.NODE_ENV !== 'test') {
+      // Skip commission calculation if SKIP_COMMISSION_CALCULATION is set to 'true'
+      // This is used in integration tests to prevent timeouts due to complex upline queries
+      // In production and unit tests (unless overridden), commissions are calculated
+      if (process.env.SKIP_COMMISSION_CALCULATION !== 'true') {
         try {
           await commissionService.calculateCommissions(purchase.id);
         } catch (commissionError) {
-          // Log but don't fail the order
+          // Log and throw AppError so that transaction is rolled back and error is propagated
           console.error('Commission calculation failed:', commissionError);
-          // Don't throw - order should still be created even if commission calc fails
+          throw new AppError(
+            500,
+            'COMMISSION_ERROR',
+            'Failed to calculate commissions. Order has been cancelled.'
+          );
         }
       }
 
