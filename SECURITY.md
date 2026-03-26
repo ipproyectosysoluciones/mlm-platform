@@ -14,7 +14,7 @@ currently being supported with security updates.
 
 Use this section to tell people how to report a vulnerability.
 
-Please report security vulnerabilities by opening a private issue or emailing security@mlm-platform.com directly.
+Please report security vulnerabilities by opening a private issue or emailing <security@mlm-platform.com> directly.
 
 We will acknowledge receipt of your vulnerability report within 48 hours and provide a detailed response within 5 business days regarding how we are addressing the issue.
 

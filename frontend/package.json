@@ -15,6 +15,7 @@
     "test:ui": "vitest --config vitest.config.ts --ui",
     "test:run": "vitest --config vitest.config.ts run"
   },
+  "packageManager": "pnpm@10.33.0",
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",
     "@sentry/react": "^10.45.0",
