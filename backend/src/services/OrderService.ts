@@ -44,7 +44,6 @@ export type OrderItemInput = {
 };
 
 interface CreateOrderData {
-  userId: string;
   items: OrderItemInput[];
   paymentMethod: string;
 }
