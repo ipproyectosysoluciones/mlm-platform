@@ -117,11 +117,21 @@ export class TreeService {
         // not an array. Normalize to always be an array.
         // Sequelize con MySQL retorna un objeto cuando hay un solo resultado,
         // no un array. Normalizar a siempre ser un array.
-        const rawAncestors = results as any;
-        const ancestors = Array.isArray(rawAncestors) ? rawAncestors : [rawAncestors];
+        const rawAncestors = results as unknown;
+
+        // Handle the case where results might be empty, a single object, or an array
+        let ancestors: Array<{ ancestor_id: string; depth: number }> = [];
+        if (rawAncestors) {
+          if (Array.isArray(rawAncestors)) {
+            ancestors = rawAncestors as Array<{ ancestor_id: string; depth: number }>;
+          } else {
+            // Single object result
+            ancestors = [rawAncestors as { ancestor_id: string; depth: number }];
+          }
+        }
 
         if (ancestors.length > 0) {
-          const closureRecords = ancestors.map((a: { ancestor_id: string; depth: number }) => ({
+          const closureRecords = ancestors.map((a) => ({
             ancestorId: a.ancestor_id,
             descendantId: userId,
             depth: a.depth,

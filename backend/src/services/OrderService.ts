@@ -167,10 +167,13 @@ export class OrderService {
         ],
       }))!;
     } catch (error) {
-      // Only rollback if transaction is not committed
-      // Check if the transaction is still active (not committed or already rolled back)
-      if (transaction.finished === 'pending') {
+      // Rollback transaction if not already committed
+      // Note: In modern Sequelize, we cannot check transaction state reliably
+      // So we attempt rollback - it will be a no-op if already committed
+      try {
         await transaction.rollback();
+      } catch {
+        // Ignore rollback errors - transaction may already be committed
       }
       throw error;
     }
