@@ -146,13 +146,22 @@ export class OrderService {
       );
 
       // Calculate commissions (inside transaction)
-      // Skip in test environment to avoid hangs due to complex upline queries
-      if (process.env.NODE_ENV !== 'test') {
+      // Skip commission calculation if SKIP_COMMISSION_CALCULATION is set to 'true'
+      // This is used in integration tests to prevent timeouts due to complex upline queries
+      // In production and unit tests (unless overridden), commissions are calculated
+      if (process.env.SKIP_COMMISSION_CALCULATION === 'true') {
+        // Skip commission calculation to prevent timeouts in integration tests
+      } else {
         try {
           await commissionService.calculateCommissions(purchase.id);
         } catch (commissionError) {
-          // Log but don't fail the order
+          // Log and throw AppError so that transaction is rolled back and error is propagated
           console.error('Commission calculation failed:', commissionError);
+          throw new AppError(
+            500,
+            'COMMISSION_ERROR',
+            'Failed to calculate commissions. Order has been cancelled.'
+          );
         }
       }
 
@@ -214,7 +223,7 @@ export class OrderService {
       ],
       limit,
       offset,
-      order: [['createdAt', 'DESC']],
+      order: [['created_at', 'DESC']],
     });
   }
 
@@ -240,7 +249,7 @@ export class OrderService {
           as: 'product',
           attributes: ['id', 'name', 'price', 'type', 'description'],
         },
-        { model: Purchase, as: 'purchase', attributes: ['id', 'amount', 'status', 'createdAt'] },
+        { model: Purchase, as: 'purchase', attributes: ['id', 'amount', 'status', 'created_at'] },
         { model: User, as: 'user', attributes: ['id', 'email', 'referralCode'] },
       ],
     });
