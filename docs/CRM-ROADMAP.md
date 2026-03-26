@@ -37,22 +37,22 @@
 
 ## 📋 Roadmap de Funcionalidades
 
-### Fase 1: CRM Avanzado ⏳
+### Fase 1: CRM Avanzado ✅ COMPLETADO
 
-- [ ] **Pipeline/Kanban** - Vista de leads como tablero Kanban arrastrando entre estados
-- [ ] **Filtros avanzados** - Por fecha, fuente, estado, usuario asignado
-- [ ] **Importación masiva** - CSV upload de leads
-- [ ] **Exportación** - Excel/PDF de reportes
-- [ ] **Notas rápidas** - Quick notes sin crear tarea completa
-- [ ] **Plantillas de email** - Templates predefinidos para comunicación
+- [x] **Pipeline/Kanban** - Vista de leads como tablero Kanban arrastrando entre estados
+- [x] **Filtros avanzados** - Por fecha, fuente, estado, valor
+- [x] **Importación masiva** - CSV upload de leads
+- [x] **Exportación** - CSV (compatible con Excel)
+- [x] **Notas rápidas** - Quick notes sin crear tarea completa
+- [x] **Plantillas de email** - Templates predefinidos para comunicación
 
-### Fase 2: Analítica y Reportes
+### Fase 2: Analítica y Reportes ✅ COMPLETADO
 
-- [ ] **Dashboard configurable** - El usuario elige qué métricas ver
-- [ ] **Gráficos interactivos** - Chart.js o Recharts para visualización
-- [ ] **Reportes por período** - Esta semana, mes, trimestre
-- [ ] **Alertas de rotación** - Notificar leads sin actividad > X días
-- [ ] **Predicción de conversión** - ML básico para scoring de leads
+- [x] **Dashboard configurable** - El usuario elige qué métricas ver
+- [x] **Gráficos interactivos** - Chart.js o Recharts para visualización
+- [x] **Reportes por período** - Esta semana, mes, trimestre y rango personalizado
+- [x] **Alertas de rotación** - Notificar leads sin actividad > X días, tareas vencidas y seguimientos pendientes
+- [x] **Predicción de conversión** - Funnel de conversión con métricas de scoring básico (tasa de conversión, tiempo medio de conversión)
 
 ### Fase 3: Integración Comercial
 
@@ -90,19 +90,21 @@
 
 ## 🎯 Priorización Sugerida
 
-### Alta Prioridad (MVP)
+### Alta Prioridad (MVP) ✅ COMPLETADO
 
 1. Kanban para leads
 2. Filtros avanzados
 3. Dashboard analítico con gráficos
 4. PWA/Mobile responsive mejorado
+5. Importación masiva de leads
+6. Plantillas de email
 
 ### Media Prioridad (v1.1)
 
-5. Importación masiva de leads
-6. Notificaciones push
-7. Ranks visuales para distribuidores
-8. Wallet básico
+7. Notificaciones push
+8. Ranks visuales para distribuidores
+9. Wallet básico
+10. Reportes por período
 
 ### Baja Prioridad (Futuro)
 

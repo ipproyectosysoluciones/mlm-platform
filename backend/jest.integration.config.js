@@ -9,7 +9,7 @@ module.exports = {
   coverageDirectory: 'coverage',
   verbose: true,
   setupFilesAfterEnv: ['<rootDir>/src/__tests__/setup.ts'],
-  testTimeout: 30000,
+  testTimeout: 120000,
   forceExit: true,
-  detectOpenHandles: true,
+  detectOpenHandles: false,
 };

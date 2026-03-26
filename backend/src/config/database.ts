@@ -21,7 +21,7 @@ export function createSequelize(): Sequelize {
     host: dbHost,
     port: dbPort,
     dialect: 'mysql',
-    logging: config.nodeEnv === 'development' ? console.log : false,
+    logging: false,
     pool: {
       max: 5,
       min: 0,

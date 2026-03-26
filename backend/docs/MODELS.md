@@ -81,7 +81,7 @@ The `user_closure` table stores all ancestor-descendant relationships for the bi
 
 ### Example Data / Datos de Ejemplo
 
-```
+```table
 ancestor_id | descendant_id | depth
 ------------|---------------|-------
 user_a      | user_a        | 0      (self-reference)
@@ -267,3 +267,77 @@ user_b      | user_c        | 1      (user_b's child)
 | `status`          | ENUM         | 'draft', 'published', 'archived' |
 | `views`           | INT          | View count                       |
 | `conversions`     | INT          | Conversion count                 |
+
+---
+
+## Product Model / Modelo de Producto
+
+```typescript
+// src/models/Product.ts
+
+/**
+ * Product model / Modelo de Producto
+ * Streaming subscription products for e-commerce
+ * Productos de suscripción streaming para e-commerce
+ */
+```
+
+### Fields / Campos
+
+| Field         | Type          | Description / Descripción                            |
+| ------------- | ------------- | ---------------------------------------------------- |
+| `id`          | VARCHAR(36)   | UUID primary key / UUID clave primaria               |
+| `name`        | VARCHAR(255)  | Product name / Nombre del producto                   |
+| `description` | TEXT          | Product description / Descripción del producto       |
+| `type`        | ENUM          | 'subscription', 'one-time', 'streaming'              |
+| `price`       | DECIMAL(10,2) | Product price / Precio del producto                  |
+| `currency`    | VARCHAR(3)    | Currency code (USD, COP, MXN) / Código de moneda     |
+| `interval`    | ENUM          | 'monthly', 'yearly', or null / Mensual, anual o null |
+| `features`    | JSON          | Array of features / Array de características         |
+| `status`      | ENUM          | 'active', 'inactive'                                 |
+| `createdAt`   | TIMESTAMP     | Creation date / Fecha de creación                    |
+| `updatedAt`   | TIMESTAMP     | Last update / Última actualización                   |
+
+### Relationships / Relaciones
+
+- `belongsTo`: No direct foreign key
+- `hasMany`: Orders
+
+---
+
+## Order Model / Modelo de Pedido
+
+```typescript
+// src/models/Order.ts
+
+/**
+ * Order model / Modelo de Pedido
+ * Customer orders for streaming subscriptions
+ * Pedidos de clientes para suscripciones streaming
+ */
+```
+
+### Fields / Campos
+
+| Field           | Type          | Description / Descripción                           |
+| --------------- | ------------- | --------------------------------------------------- |
+| `id`            | VARCHAR(36)   | UUID primary key / UUID clave primaria              |
+| `userId`        | VARCHAR(36)   | Customer user ID / ID del usuario cliente           |
+| `productId`     | VARCHAR(36)   | Linked product ID / ID del producto vinculado       |
+| `purchaseId`    | VARCHAR(36)   | Related purchase ID / ID de compra relacionada      |
+| `amount`        | DECIMAL(10,2) | Order amount / Monto del pedido                     |
+| `currency`      | VARCHAR(3)    | Currency code / Código de moneda                    |
+| `status`        | ENUM          | 'pending', 'completed', 'cancelled', 'refunded'     |
+| `paymentMethod` | VARCHAR(50)   | Payment method used / Método de pago usado          |
+| `transactionId` | VARCHAR(100)  | External transaction ID / ID de transacción externo |
+| `streamUrl`     | TEXT          | Streaming URL / URL de streaming                    |
+| `streamToken`   | VARCHAR(255)  | Streaming access token / Token de acceso streaming  |
+| `expiresAt`     | TIMESTAMP     | Subscription expiration / Expiración de suscripción |
+| `createdAt`     | TIMESTAMP     | Creation date / Fecha de creación                   |
+| `updatedAt`     | TIMESTAMP     | Last update / Última actualización                  |
+
+### Relationships / Relaciones
+
+- `belongsTo`: User (userId)
+- `belongsTo`: Product (productId)
+- `belongsTo`: Purchase (purchaseId)

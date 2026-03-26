@@ -4,6 +4,28 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
+## [1.1.0] - 2026-03-24
+
+### Added
+
+- **CRM Avanzado**
+  - Pipeline Kanban con drag & drop de leads entre estados
+  - Filtros avanzados (status, source, search, fecha, valor)
+  - Importación masiva de leads desde CSV
+  - Exportación de leads a CSV (compatible con Excel)
+  - Crear tareas desde el modal de lead
+
+- **Dashboard con Gráficos**
+  - Gráfico de barras: referidos por mes (últimos 6 meses)
+  - Gráfico de líneas: comisiones por mes (últimos 6 meses)
+  - Datos agregados directamente desde el backend
+
+- **Mejoras varias**
+  - Traducciones bilingües ES/EN para todas las features
+  - Validación de tareas en backend
+  - Fix de seguridad: serialize-javascript actualizado
+  - Fix de tests: detectOpenHandles deshabilitado
+
 ## [1.0.0] - 2026-03-20
 
 ### Added

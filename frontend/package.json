@@ -15,6 +15,7 @@
     "test:ui": "vitest --config vitest.config.ts --ui",
     "test:run": "vitest --config vitest.config.ts run"
   },
+  "packageManager": "pnpm@10.33.0",
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",
     "@sentry/react": "^10.45.0",
@@ -22,6 +23,7 @@
     "@types/react-router-dom": "^5.3.3",
     "@xyflow/react": "^12.10.1",
     "axios": "^1.13.6",
+    "clsx": "^2.1.1",
     "i18next": "^25.10.3",
     "lucide-react": "^0.577.0",
     "qrcode": "^1.5.4",
@@ -29,7 +31,9 @@
     "react-dom": "^19.2.4",
     "react-i18next": "^16.6.0",
     "react-router-dom": "^7.13.1",
+    "recharts": "^3.8.0",
     "sweetalert2": "^11.26.24",
+    "tailwind-merge": "^2.6.0",
     "zustand": "^5.0.12"
   },
   "devDependencies": {
@@ -50,6 +54,7 @@
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
     "jsdom": "^29.0.1",
+    "playwright": "^1.58.2",
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "tailwindcss": "^4.2.2",

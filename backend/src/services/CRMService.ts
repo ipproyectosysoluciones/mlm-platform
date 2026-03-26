@@ -34,6 +34,13 @@ export interface LeadFilters {
   search?: string;
   page?: number;
   limit?: number;
+  // Filtros avanzados
+  createdAtFrom?: string;
+  createdAtTo?: string;
+  valueMin?: number;
+  valueMax?: number;
+  nextFollowUpFrom?: string;
+  nextFollowUpTo?: string;
 }
 
 /**
@@ -46,6 +53,57 @@ export interface LeadStats {
   bySource: Record<LeadSource, number>;
   totalValue: number;
   conversionRate: number;
+}
+
+/**
+ * Period types for analytics
+ */
+export type PeriodType = 'week' | 'month' | 'quarter' | 'year' | 'custom';
+
+/**
+ * Analytics report data structure
+ */
+export interface AnalyticsReport {
+  period: {
+    type: PeriodType;
+    dateFrom: string;
+    dateTo: string;
+  };
+  leads: {
+    total: number;
+    created: number;
+    won: number;
+    lost: number;
+    active: number;
+  };
+  value: {
+    total: number;
+    average: number;
+    won: number;
+  };
+  conversion: {
+    rate: number;
+    avgTimeToWin: number;
+  };
+  byStatus: Record<string, number>;
+  bySource: Record<string, number>;
+  trend: Array<{ date: string; created: number; won: number }>;
+}
+
+/**
+ * Alert types
+ */
+export interface CRMAlert {
+  type: 'inactive_lead' | 'overdue_task' | 'pending_followup';
+  severity: 'high' | 'medium' | 'low';
+  title: string;
+  description: string;
+  leadId?: string;
+  leadName?: string;
+  taskId?: string;
+  taskTitle?: string;
+  daysOverdue?: number;
+  createdAt: string;
 }
 
 /**
@@ -119,6 +177,135 @@ export class CRMService {
   }
 
   /**
+   * Import leads from CSV
+   * Importar leads desde CSV
+   */
+  async importLeadsFromCSV(
+    userId: string,
+    csvContent: string
+  ): Promise<{ imported: number; errors: string[]; total: number }> {
+    const { parse } = await import('csv-parse');
+
+    return new Promise((resolve, reject) => {
+      const errors: string[] = [];
+      let imported = 0;
+      let total = 0;
+
+      const parser = parse(csvContent, {
+        columns: true,
+        skip_empty_lines: true,
+        trim: true,
+        relax_column_count: true,
+      });
+
+      parser.on('readable', async function () {
+        let record;
+        while ((record = parser.read()) !== null) {
+          total++;
+          try {
+            if (!record.contactName || !record.contactEmail) {
+              errors.push(`Row ${total}: Missing name or email`);
+              continue;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(record.contactEmail)) {
+              errors.push(`Row ${total}: Invalid email: ${record.contactEmail}`);
+              continue;
+            }
+
+            const validSources = [
+              'website',
+              'referral',
+              'social',
+              'landing_page',
+              'manual',
+              'other',
+              'import',
+            ];
+            const source =
+              record.source && validSources.includes(record.source.toLowerCase())
+                ? record.source.toLowerCase()
+                : 'import';
+
+            const value = record.value ? parseFloat(record.value) : 0;
+            if (isNaN(value) || value < 0) {
+              errors.push(`Row ${total}: Invalid value: ${record.value}`);
+              continue;
+            }
+
+            await Lead.create({
+              userId,
+              contactName: record.contactName.trim(),
+              contactEmail: record.contactEmail.trim().toLowerCase(),
+              contactPhone: record.contactPhone?.trim() || null,
+              company: record.company?.trim() || null,
+              status: 'new',
+              source: source as LeadSource,
+              value: value,
+              currency: record.currency?.trim() || 'USD',
+              notes: record.notes?.trim() || null,
+              metadata: { importedAt: new Date().toISOString() },
+            });
+
+            imported++;
+          } catch (err) {
+            errors.push(`Row ${total}: Error - ${err instanceof Error ? err.message : 'Unknown'}`);
+          }
+        }
+      });
+
+      parser.on('error', function (err) {
+        reject(err);
+      });
+
+      parser.on('end', function () {
+        resolve({ imported, errors, total });
+      });
+    });
+  }
+
+  /**
+   * Export leads to CSV
+   * Exportar leads a CSV
+   */
+  async exportLeadsToCSV(userId: string, filters: LeadFilters): Promise<string> {
+    const { leads } = await this.getLeads(userId, { ...filters, limit: 10000 });
+
+    const headers = [
+      'contactName',
+      'contactEmail',
+      'contactPhone',
+      'company',
+      'status',
+      'source',
+      'value',
+      'currency',
+      'notes',
+      'createdAt',
+    ];
+    const rows = leads.map((lead) => [
+      lead.contactName,
+      lead.contactEmail,
+      lead.contactPhone || '',
+      lead.company || '',
+      lead.status,
+      lead.source,
+      lead.value.toString(),
+      lead.currency,
+      lead.notes || '',
+      new Date(lead.createdAt).toISOString(),
+    ]);
+
+    const csvContent = [
+      headers.join(','),
+      ...rows.map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(',')),
+    ].join('\n');
+
+    return csvContent;
+  }
+
+  /**
    * Get leads with pagination and filters
    * Obtener leads con paginación y filtros
    * @param {string} userId - User ID / ID del usuario
@@ -146,6 +333,39 @@ export class CRMService {
         { contactEmail: { [Op.like]: `%${filters.search}%` } },
         { company: { [Op.like]: `%${filters.search}%` } },
       ];
+    }
+
+    // Filtro por rango de fecha de creación
+    if (filters.createdAtFrom) {
+      where.createdAt = { ...where.createdAt, [Op.gte]: new Date(filters.createdAtFrom) };
+    }
+    if (filters.createdAtTo) {
+      where.createdAt = {
+        ...where.createdAt,
+        [Op.lte]: new Date(filters.createdAtTo + 'T23:59:59'),
+      };
+    }
+
+    // Filtro por rango de valor
+    if (filters.valueMin !== undefined) {
+      where.value = { ...where.value, [Op.gte]: filters.valueMin };
+    }
+    if (filters.valueMax !== undefined) {
+      where.value = { ...where.value, [Op.lte]: filters.valueMax };
+    }
+
+    // Filtro por rango de próximo seguimiento
+    if (filters.nextFollowUpFrom) {
+      where.nextFollowUpAt = {
+        ...where.nextFollowUpAt,
+        [Op.gte]: new Date(filters.nextFollowUpFrom),
+      };
+    }
+    if (filters.nextFollowUpTo) {
+      where.nextFollowUpAt = {
+        ...where.nextFollowUpAt,
+        [Op.lte]: new Date(filters.nextFollowUpTo + 'T23:59:59'),
+      };
     }
 
     const { rows, count } = await Lead.findAndCountAll({
@@ -400,6 +620,20 @@ export class CRMService {
   }
 
   /**
+   * Get tasks for a specific lead
+   * Obtener tareas de un lead específico
+   * @param {string} leadId - Lead ID / ID del lead
+   * @param {string} userId - User ID for authorization / ID del usuario
+   * @returns {Promise<Task[]>} List of tasks / Lista de tareas
+   */
+  async getLeadTasks(leadId: string, userId: string): Promise<Task[]> {
+    return Task.findAll({
+      where: { leadId, userId },
+      order: [['createdAt', 'DESC']],
+    });
+  }
+
+  /**
    * Get upcoming tasks for a user
    * Obtener tareas próximas para un usuario
    * @param {string} userId - User ID / ID del usuario
@@ -423,6 +657,330 @@ export class CRMService {
       order: [['dueDate', 'ASC']],
       limit,
     });
+  }
+
+  // ============================================================
+  // ANALYTICS / ANALÍTICA
+  // ============================================================
+
+  /**
+   * Get analytics report by period
+   * Obtener reporte de analítica por período
+   * @param {string} userId - User ID / ID del usuario
+   * @param {Object} options - Report options / Opciones del reporte
+   * @returns {Promise<AnalyticsReport>} Analytics report / Reporte de analítica
+   */
+  async getAnalyticsReport(
+    userId: string,
+    options: { period?: PeriodType; dateFrom?: string; dateTo?: string }
+  ): Promise<AnalyticsReport> {
+    const { period = 'month', dateFrom, dateTo } = options;
+
+    // Calculate date range based on period
+    let startDate: Date;
+    let endDate: Date = new Date();
+
+    if (dateFrom && dateTo) {
+      startDate = new Date(dateFrom);
+      endDate = new Date(dateTo);
+    } else {
+      switch (period) {
+        case 'week':
+          startDate = new Date();
+          startDate.setDate(startDate.getDate() - 7);
+          break;
+        case 'month':
+          startDate = new Date();
+          startDate.setMonth(startDate.getMonth() - 1);
+          break;
+        case 'quarter':
+          startDate = new Date();
+          startDate.setMonth(startDate.getMonth() - 3);
+          break;
+        case 'year':
+          startDate = new Date();
+          startDate.setFullYear(startDate.getFullYear() - 1);
+          break;
+        default:
+          startDate = new Date();
+          startDate.setMonth(startDate.getMonth() - 1);
+      }
+    }
+
+    // Get all leads for user
+    const allLeads = await Lead.findAll({ where: { userId } });
+
+    // Filter by date range
+    const periodLeads = allLeads.filter((lead) => {
+      const created = new Date(lead.createdAt);
+      return created >= startDate && created <= endDate;
+    });
+
+    // Calculate metrics
+    const total = periodLeads.length;
+    const won = periodLeads.filter((l) => l.status === 'won').length;
+    const lost = periodLeads.filter((l) => l.status === 'lost').length;
+    const active = periodLeads.filter((l) => !['won', 'lost'].includes(l.status)).length;
+
+    // Value calculations
+    const totalValue = periodLeads.reduce((sum, l) => sum + Number(l.value), 0);
+    const wonValue = periodLeads
+      .filter((l) => l.status === 'won')
+      .reduce((sum, l) => sum + Number(l.value), 0);
+    const avgValue = total > 0 ? totalValue / total : 0;
+
+    // By status
+    const byStatus: Record<string, number> = {};
+    for (const lead of periodLeads) {
+      byStatus[lead.status] = (byStatus[lead.status] || 0) + 1;
+    }
+
+    // By source
+    const bySource: Record<string, number> = {};
+    for (const lead of periodLeads) {
+      bySource[lead.source] = (bySource[lead.source] || 0) + 1;
+    }
+
+    // Conversion rate
+    const closed = won + lost;
+    const conversionRate = closed > 0 ? (won / closed) * 100 : 0;
+
+    // Average time to win (in days)
+    let avgTimeToWin = 0;
+    const wonLeads = periodLeads.filter((l) => l.status === 'won');
+    if (wonLeads.length > 0) {
+      const totalDays = wonLeads.reduce((sum, l) => {
+        const created = new Date(l.createdAt).getTime();
+        const updated = new Date(l.updatedAt).getTime();
+        return sum + (updated - created) / (1000 * 60 * 60 * 24);
+      }, 0);
+      avgTimeToWin = totalDays / wonLeads.length;
+    }
+
+    // Trend data (group by day/week depending on period)
+    const trendMap = new Map<string, { created: number; won: number }>();
+
+    // Determine grouping based on period
+    const groupBy = period === 'week' ? 'day' : period === 'year' ? 'month' : 'week';
+
+    for (const lead of periodLeads) {
+      const date = new Date(lead.createdAt);
+      let key: string;
+
+      if (groupBy === 'day') {
+        key = date.toISOString().split('T')[0];
+      } else if (groupBy === 'month') {
+        key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+      } else {
+        // Weekly - get week number
+        const weekNum = Math.ceil(
+          (date.getTime() - startDate.getTime()) / (7 * 24 * 60 * 60 * 1000)
+        );
+        key = `${startDate.getFullYear()}-W${String(weekNum).padStart(2, '0')}`;
+      }
+
+      const existing = trendMap.get(key) || { created: 0, won: 0 };
+      existing.created += 1;
+      if (lead.status === 'won') existing.won += 1;
+      trendMap.set(key, existing);
+    }
+
+    const trend = Array.from(trendMap.entries())
+      .map(([date, data]) => ({
+        date,
+        created: data.created,
+        won: data.won,
+      }))
+      .sort((a, b) => a.date.localeCompare(b.date));
+
+    return {
+      period: {
+        type: period,
+        dateFrom: startDate.toISOString().split('T')[0],
+        dateTo: endDate.toISOString().split('T')[0],
+      },
+      leads: {
+        total,
+        created: total,
+        won,
+        lost,
+        active,
+      },
+      value: {
+        total: totalValue,
+        average: avgValue,
+        won: wonValue,
+      },
+      conversion: {
+        rate: conversionRate,
+        avgTimeToWin,
+      },
+      byStatus,
+      bySource,
+      trend,
+    };
+  }
+
+  // ============================================================
+  // ALERTS / ALERTAS
+  // ============================================================
+
+  /**
+   * Get CRM alerts for a user
+   * Obtener alertas de CRM para un usuario
+   * @param {string} userId - User ID / ID del usuario
+   * @param {number} daysInactive - Days to consider a lead inactive / Días para considerar un lead inactivo
+   * @returns {Promise<CRMAlert[]>} List of alerts / Lista de alertas
+   */
+  async getCRMAlerts(userId: string, daysInactive = 7): Promise<CRMAlert[]> {
+    const alerts: CRMAlert[] = [];
+    const now = new Date();
+    const inactiveDate = new Date();
+    inactiveDate.setDate(inactiveDate.getDate() - daysInactive);
+    const overdueDate = new Date();
+    overdueDate.setDate(overdueDate.getDate() - 1); // Yesterday
+
+    // 1. Find leads with no contact in X days (inactive)
+    const inactiveLeads = await Lead.findAll({
+      where: {
+        userId,
+        status: { [Op.notIn]: ['won', 'lost'] },
+        [Op.or]: [
+          { lastContactAt: { [Op.lt]: inactiveDate } },
+          { lastContactAt: null, createdAt: { [Op.lt]: inactiveDate } },
+        ],
+      },
+    });
+
+    for (const lead of inactiveLeads) {
+      const lastContact = lead.lastContactAt
+        ? new Date(lead.lastContactAt)
+        : new Date(lead.createdAt);
+      const daysSince = Math.floor((now.getTime() - lastContact.getTime()) / (1000 * 60 * 60 * 24));
+
+      alerts.push({
+        type: 'inactive_lead',
+        severity:
+          daysSince > daysInactive * 2 ? 'high' : daysSince > daysInactive ? 'medium' : 'low',
+        title: `Lead sin contacto: ${lead.contactName}`,
+        description: `Sin contacto desde hace ${daysSince} días`,
+        leadId: lead.id,
+        leadName: lead.contactName,
+        daysOverdue: daysSince,
+        createdAt: lead.createdAt.toISOString(),
+      });
+    }
+
+    // 2. Find overdue tasks
+    const overdueTasks = await Task.findAll({
+      where: {
+        userId,
+        status: 'pending',
+        dueDate: { [Op.lt]: overdueDate },
+      },
+      include: [{ model: Lead, as: 'lead', attributes: ['id', 'contactName'] }],
+    });
+
+    for (const task of overdueTasks) {
+      const dueDate = task.dueDate ? new Date(task.dueDate) : new Date(task.createdAt);
+      const daysOverdue = Math.floor((now.getTime() - dueDate.getTime()) / (1000 * 60 * 60 * 24));
+
+      alerts.push({
+        type: 'overdue_task',
+        severity: daysOverdue > 7 ? 'high' : daysOverdue > 3 ? 'medium' : 'low',
+        title: `Tarea vencida: ${task.title}`,
+        description: `Vencida hace ${daysOverdue} días`,
+        leadId: task.leadId,
+        leadName: (task as any).lead?.contactName,
+        taskId: task.id,
+        taskTitle: task.title,
+        daysOverdue,
+        createdAt: task.createdAt.toISOString(),
+      });
+    }
+
+    // 3. Find leads with pending follow-ups
+    const pendingFollowups = await Lead.findAll({
+      where: {
+        userId,
+        status: { [Op.notIn]: ['won', 'lost'] },
+        nextFollowUpAt: { [Op.lte]: now },
+      },
+    });
+
+    for (const lead of pendingFollowups) {
+      const daysOverdue = lead.nextFollowUpAt
+        ? Math.floor(
+            (now.getTime() - new Date(lead.nextFollowUpAt).getTime()) / (1000 * 60 * 60 * 24)
+          )
+        : 0;
+
+      alerts.push({
+        type: 'pending_followup',
+        severity: daysOverdue > 7 ? 'high' : daysOverdue > 3 ? 'medium' : 'low',
+        title: `Seguimiento pendiente: ${lead.contactName}`,
+        description: `Seguimiento programado desde hace ${daysOverdue} días`,
+        leadId: lead.id,
+        leadName: lead.contactName,
+        daysOverdue,
+        createdAt: lead.createdAt.toISOString(),
+      });
+    }
+
+    // Sort by severity (high first)
+    const severityOrder = { high: 0, medium: 1, low: 2 };
+    return alerts.sort((a, b) => severityOrder[a.severity] - severityOrder[b.severity]);
+  }
+
+  // ============================================================
+  // EXPORT / EXPORTAR
+  // ============================================================
+
+  /**
+   * Export analytics report to CSV
+   * Exportar reporte de analítica a CSV
+   * @param {string} userId - User ID / ID del usuario
+   * @param {Object} options - Report options / Opciones del reporte
+   * @returns {Promise<string>} CSV content / Contenido CSV
+   */
+  async exportAnalyticsReport(
+    userId: string,
+    options: { period?: PeriodType; dateFrom?: string; dateTo?: string }
+  ): Promise<string> {
+    // Get analytics data
+    const report = await this.getAnalyticsReport(userId, options);
+
+    // Build CSV
+    const headers = ['Metric', 'Value'];
+    const rows = [
+      ['Period', `${report.period.dateFrom} to ${report.period.dateTo}`],
+      ['Total Leads', report.leads.total.toString()],
+      ['Leads Created', report.leads.created.toString()],
+      ['Leads Won', report.leads.won.toString()],
+      ['Leads Lost', report.leads.lost.toString()],
+      ['Active Leads', report.leads.active.toString()],
+      ['Total Value', report.value.total.toString()],
+      ['Average Value', report.value.average.toFixed(2)],
+      ['Won Value', report.value.won.toString()],
+      ['Conversion Rate', report.conversion.rate.toFixed(2) + '%'],
+      ['Avg Days to Win', report.conversion.avgTimeToWin.toFixed(1)],
+      ['', ''],
+      ['Status Breakdown', ''],
+      ...Object.entries(report.byStatus).map(([status, count]) => [status, count.toString()]),
+      ['', ''],
+      ['Source Breakdown', ''],
+      ...Object.entries(report.bySource).map(([source, count]) => [source, count.toString()]),
+      ['', ''],
+      ['Trend (Date, Created, Won)', ''],
+      ...report.trend.map((t) => [t.date, t.created.toString(), t.won.toString()]),
+    ];
+
+    const csvContent = [
+      headers.join(','),
+      ...rows.map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(',')),
+    ].join('\n');
+
+    return csvContent;
   }
 }
 

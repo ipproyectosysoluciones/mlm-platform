@@ -10,6 +10,9 @@ Backend API para sistema de membresía binaria MLM.
 - **ORM**: Sequelize 6
 - **Base de datos**: MySQL 8
 - **Auth**: JWT
+- **Validación**: express-validator
+- **CSV**: csv-parse
+- **Tests**: Jest + Supertest
 
 ## Requisitos Previos
 
@@ -131,7 +134,7 @@ curl http://localhost:3000/api/dashboard \
 
 ## Estructura del Proyecto
 
-```
+```tree
 backend/
 ├── src/
 │   ├── config/          # Configuración (DB, env)

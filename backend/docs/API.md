@@ -437,6 +437,372 @@ Headers: `Authorization: Bearer <token>`
 }
 ```
 
+### Get CRM Analytics Report
+
+**GET** `/api/crm/analytics/report`
+
+Headers: `Authorization: Bearer <token>`
+
+Query params: `period` (week|month|quarter|year), `dateFrom` (YYYY-MM-DD), `dateTo` (YYYY-MM-DD)
+
+````json
+// Response (200)
+{
+  "success": true,
+  "data": {
+    "period": {
+      "type": "month",
+      "dateFrom": "2026-02-24",
+      "dateTo": "2026-03-24"
+    },
+    "leads": {
+      "total": 25,
+      "created": 25,
+      "won": 8,
+      "lost": 3,
+      "active": 14
+    },
+    "value": {
+      "total": 125000.00,
+      "average": 5000.00,
+      "won": 40000.00
+    },
+    "conversion": {
+      "rate": 32.0,
+      "avgTimeToWin": 12.5
+    },
+    "byStatus": {
+      "new": 5,
+      "contacted": 7,
+      "qualified": 4,
+      "proposal": 3,
+      "negotiation": 2,
+      "won": 8,
+      "lost": 3
+    },
+    "bySource": {
+      "website": 10,
+      "referral": 8,
+      "social": 4,
+      "landing_page": 2,
+      "manual": 1
+    },
+    "trend": [
+      { "date": "2026-03-01", "created": 3, "won": 1 },
+      { "date": "2026-03-02", "created": 2, "won": 0 },
+      { "date": "2026-03-03", "created": 4, "won": 2 }
+      // ... more daily/weekly data points
+    ]
+  }
+}
+
+### Get CRM Alerts
+**GET** `/api/crm/alerts`
+
+Headers: `Authorization: Bearer <token>`
+
+Query params: `daysInactive` (default: 7)
+
+```json
+// Response (200)
+{
+  "success": true,
+  "data": [
+    {
+      "type": "inactive_lead",
+      "severity": "high",
+      "title": "Lead sin contacto: Juan Pérez",
+      "description": "Sin contacto desde hace 15 días",
+      "leadId": "lead-uuid-1",
+      "leadName": "Juan Pérez",
+      "daysOverdue": 15,
+      "createdAt": "2026-03-09T10:30:00Z"
+    },
+    {
+      "type": "overdue_task",
+      "severity": "medium",
+      "title": "Tarea vencida: Llamada de seguimiento",
+      "description": "Vencida hace 4 días",
+      "leadId": "lead-uuid-2",
+      "leadName": "María González",
+      "taskId": "task-uuid-1",
+      "taskTitle": "Llamada de seguimiento",
+      "daysOverdue": 4,
+      "createdAt": "2026-03-20T14:20:00Z"
+    },
+    {
+      "type": "pending_followup",
+      "severity": "low",
+      "title": "Seguimiento pendiente: Carlos López",
+      "description": "Seguimiento programado desde hace 2 días",
+      "leadId": "lead-uuid-3",
+      "leadName": "Carlos López",
+      "daysOverdue": 2,
+      "createdAt": "2026-03-22T09:15:00Z"
+    }
+  ]
+}
+
+### Export Analytics Report
+**GET** `/api/crm/analytics/export`
+
+Headers: `Authorization: Bearer <token>`
+
+Query params: `period` (week|month|quarter|year), `dateFrom` (YYYY-MM-DD), `dateTo` (YYYY-MM-DD)
+
+Response: CSV file with analytics data
+
+Example CSV content:
+````
+
+Metric,Value
+Period,2026-02-24 to 2026-03-24
+Total Leads,25
+Leads Created,25
+Leads Won,8
+Leads Lost,3
+Active Leads,14
+Total Value,125000.00
+Average Value,5000.00
+Won Value,40000.00
+Conversion Rate,32.00%
+Avg Days to Win,12.5
+
+Status Breakdown,
+new,5
+contacted,7
+qualified,4
+proposal,3
+negotiation,2
+won,8
+lost,3
+
+Source Breakdown,
+website,10
+referral,8
+social,4
+landing_page,2
+manual,1
+
+Trend (Date, Created, Won),
+2026-03-01,3,1
+2026-03-02,2,0
+2026-03-03,4,2
+
+````
+
+---
+
+## Products / Productos
+
+### List Products / Listar Productos
+
+**GET** `/api/products`
+
+No authentication required / No requiere autenticación
+
+Query params: `page`, `limit`, `platform` (subscription|streaming|one-time)
+
+```json
+// Response (200)
+{
+  "success": true,
+  "data": [
+    {
+      "id": "uuid",
+      "name": "Premium Streaming",
+      "description": "Premium streaming subscription",
+      "type": "subscription",
+      "price": 29.99,
+      "currency": "USD",
+      "interval": "monthly",
+      "features": ["HD Streaming", "Multiple Devices", "Offline Viewing"],
+      "status": "active"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 20,
+    "total": 10,
+    "hasMore": false
+  }
+}
+```
+
+### Get Product / Obtener Producto
+
+**GET** `/api/products/:id`
+
+No authentication required / No requiere autenticación
+
+```json
+// Response (200)
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "name": "Premium Streaming",
+    "description": "Premium streaming subscription",
+    "type": "subscription",
+    "price": 29.99,
+    "currency": "USD",
+    "interval": "monthly",
+    "features": ["HD Streaming", "Multiple Devices", "Offline Viewing"],
+    "status": "active",
+    "createdAt": "2024-01-15T10:30:00Z",
+    "updatedAt": "2024-01-15T10:30:00Z"
+  }
+}
+
+// Response (404)
+{
+  "success": false,
+  "error": { "code": "NOT_FOUND", "message": "Product not found" }
+}
+```
+
+---
+
+## Orders / Pedidos
+
+### Create Order / Crear Pedido
+
+**POST** `/api/orders`
+
+Headers: `Authorization: Bearer <token>`
+
+```json
+// Request
+{
+  "items": [
+    {
+      "productId": "uuid-of-product",
+      "quantity": 1
+    }
+  ],
+  "paymentMethod": "stripe"
+}
+
+// Response (201)
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "userId": "uuid",
+    "productId": "uuid-of-product",
+    "amount": 29.99,
+    "currency": "USD",
+    "status": "pending",
+    "paymentMethod": "stripe",
+    "transactionId": "txn_123456",
+    "streamUrl": "https://stream.example.com/abc123",
+    "streamToken": "token_xyz",
+    "expiresAt": "2024-02-15T10:30:00Z",
+    "createdAt": "2024-01-15T10:30:00Z"
+  }
+}
+
+// Response (400) - Validation error
+{
+  "success": false,
+  "error": { "code": "VALIDATION_ERROR", "message": "At least one item is required" }
+}
+
+// Response (401)
+{
+  "success": false,
+  "error": { "code": "UNAUTHORIZED", "message": "Authentication required" }
+}
+
+// Response (404) - Product not found
+{
+  "success": false,
+  "error": { "code": "NOT_FOUND", "message": "Product not found" }
+}
+```
+
+### List Orders / Listar Pedidos
+
+**GET** `/api/orders`
+
+Headers: `Authorization: Bearer <token>`
+
+Query params: `page`, `limit`, `status` (pending|completed|cancelled|refunded)
+
+```json
+// Response (200)
+{
+  "success": true,
+  "data": [
+    {
+      "id": "uuid",
+      "userId": "uuid",
+      "productId": "uuid-of-product",
+      "amount": 29.99,
+      "currency": "USD",
+      "status": "completed",
+      "paymentMethod": "stripe",
+      "transactionId": "txn_123456",
+      "streamUrl": "https://stream.example.com/abc123",
+      "expiresAt": "2024-02-15T10:30:00Z",
+      "createdAt": "2024-01-15T10:30:00Z"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 20,
+    "total": 5,
+    "hasMore": false
+  }
+}
+```
+
+### Get Order / Obtener Pedido
+
+**GET** `/api/orders/:id`
+
+Headers: `Authorization: Bearer <token>`
+
+```json
+// Response (200)
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "userId": "uuid",
+    "productId": "uuid-of-product",
+    "amount": 29.99,
+    "currency": "USD",
+    "status": "completed",
+    "paymentMethod": "stripe",
+    "transactionId": "txn_123456",
+    "streamUrl": "https://stream.example.com/abc123",
+    "streamToken": "token_xyz",
+    "expiresAt": "2024-02-15T10:30:00Z",
+    "createdAt": "2024-01-15T10:30:00Z",
+    "updatedAt": "2024-01-15T12:00:00Z"
+  }
+}
+
+// Response (401)
+{
+  "success": false,
+  "error": { "code": "UNAUTHORIZED", "message": "Authentication required" }
+}
+
+// Response (403) - Not the owner
+{
+  "success": false,
+  "error": { "code": "FORBIDDEN", "message": "Access denied" }
+}
+
+// Response (404)
+{
+  "success": false,
+  "error": { "code": "NOT_FOUND", "message": "Order not found" }
+}
+```
+
 ---
 
 ## Error Responses / Respuestas de Error
@@ -450,7 +816,7 @@ Headers: `Authorization: Bearer <token>`
     "details": {}
   }
 }
-```
+````
 
 ### Error Codes / Códigos de Error
 

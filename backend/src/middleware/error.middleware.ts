@@ -14,10 +14,12 @@ export class AppError extends Error {
 }
 
 export function errorHandler(err: Error, req: Request, res: Response, _next: NextFunction): void {
-  console.error('Error:', err);
+  let statusCode = 500;
+  let response: ApiResponse<null>;
 
   if (err instanceof AppError) {
-    const response: ApiResponse<null> = {
+    statusCode = err.statusCode;
+    response = {
       success: false,
       error: {
         code: err.code,
@@ -25,12 +27,9 @@ export function errorHandler(err: Error, req: Request, res: Response, _next: Nex
         details: err.details,
       },
     };
-    res.status(err.statusCode).json(response);
-    return;
-  }
-
-  if (err.name === 'SequelizeValidationError') {
-    const response: ApiResponse<null> = {
+  } else if (err.name === 'SequelizeValidationError') {
+    statusCode = 400;
+    response = {
       success: false,
       error: {
         code: 'VALIDATION_ERROR',
@@ -38,30 +37,34 @@ export function errorHandler(err: Error, req: Request, res: Response, _next: Nex
         details: { general: [err.message] },
       },
     };
-    res.status(400).json(response);
-    return;
-  }
-
-  if (err.name === 'SequelizeUniqueConstraintError') {
-    const response: ApiResponse<null> = {
+  } else if (err.name === 'SequelizeUniqueConstraintError') {
+    statusCode = 409;
+    response = {
       success: false,
       error: {
         code: 'DUPLICATE_ERROR',
         message: 'Resource already exists',
       },
     };
-    res.status(409).json(response);
-    return;
+  } else {
+    statusCode = 500;
+    response = {
+      success: false,
+      error: {
+        code: 'SERVER_ERROR',
+        message: 'Internal server error',
+      },
+    };
   }
 
-  const response: ApiResponse<null> = {
-    success: false,
-    error: {
-      code: 'SERVER_ERROR',
-      message: 'Internal server error',
-    },
-  };
-  res.status(500).json(response);
+  // Log based on status code
+  if (statusCode >= 500) {
+    console.error('Server Error:', err);
+  } else {
+    console.warn('Client Error:', err.message);
+  }
+
+  res.status(statusCode).json(response);
 }
 
 export function notFoundHandler(req: Request, res: Response): void {

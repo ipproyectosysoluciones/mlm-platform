@@ -1,3 +1,30 @@
+/**
+ * @fileoverview AuthController - Authentication controller for MLM binary affiliations
+ * @description Controlador de autenticación para afiliaciones binarias MLM
+ *              Handles user registration, login, and profile management
+ *              Gestiona registro de usuarios, inicio de sesión y gestión de perfil
+ * @module controllers/AuthController
+ * @author MLM Development Team
+ * @version 3.0.0
+ *
+ * @example
+ * // English: Import auth controller functions
+ * import { register, login, me } from '../controllers/AuthController';
+ *
+ * // Español: Importar funciones del controlador de auth
+ * import { register, login, me } from '../controllers/AuthController';
+ *
+ * @example
+ * // English: Add auth routes
+ * router.post('/auth/register', registerValidation, register);
+ * router.post('/auth/login', loginValidation, login);
+ * router.get('/auth/me', authenticateToken, me);
+ *
+ * // Español: Añadir rutas de auth
+ * router.post('/auth/register', registerValidation, register);
+ * router.post('/auth/login', loginValidation, login);
+ * router.get('/auth/me', authenticateToken, me);
+ */
 import { Response, RequestHandler } from 'express';
 import { body } from 'express-validator';
 import { userService } from '../services/UserService';

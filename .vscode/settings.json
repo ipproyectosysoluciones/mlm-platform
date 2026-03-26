@@ -1,0 +1,212 @@
+{
+  // ===========================================
+  // Editor Configuration
+  // ===========================================
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.wordWrap": "on",
+  "editor.minimap.enabled": false,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": true,
+  "editor.linkedEditing": true,
+  "editor.cursorBlinking": "smooth",
+  "editor.smoothScrolling": true,
+
+  // ===========================================
+  // Files Configuration
+  // ===========================================
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1000,
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/build": true,
+    "**/.turbo": true,
+    "**/.next": true
+  },
+
+  // ===========================================
+  // TypeScript Configuration
+  // ===========================================
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "typescript.preferences.includeInlayParameterNameHints": "all",
+  "typescript.preferences.includeInlayParameterNameHintsWhenArgumentMatchesName": true,
+  "typescript.preferences.includeInlayFunctionParameterTypeHints": true,
+  "typescript.preferences.includeInlayVariableTypeHints": true,
+  "typescript.preferences.includeInlayPropertyDeclarationTypeHints": true,
+  "typescript.preferences.includeInlayEnumMemberValueHints": true,
+
+  // ===========================================
+  // ESLint Configuration
+  // ===========================================
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "eslint.format.enable": true,
+  "eslint.lintTask.enable": true,
+  "eslint.run": "onSave",
+
+  // ===========================================
+  // Prettier Configuration
+  // ===========================================
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // ===========================================
+  // Tailwind CSS
+  // ===========================================
+  "tailwindCSS.experimental.classRegex": [
+    ["clsx\\(([^)]*)\\)", "(?:\"|\')([^\"\']*)(?:\"|\')"],
+    ["cn\\(([^)]*)\\)", "(?:\"|\')([^\"\']*)(?:\"|\')"]
+  ],
+  "tailwindCSS.includeLanguages": {
+    "typescript": "typescript",
+    "typescriptreact": "typescript"
+  },
+
+  // ===========================================
+  // Path Intellisense
+  // ===========================================
+  "path-intellisense.mappings": {
+    "@": "${workspaceRoot}/src",
+    "@components": "${workspaceRoot}/src/components",
+    "@pages": "${workspaceRoot}/src/pages",
+    "@services": "${workspaceRoot}/src/services",
+    "@hooks": "${workspaceRoot}/src/hooks",
+    "@utils": "${workspaceRoot}/src/utils",
+    "@types": "${workspaceRoot}/src/types"
+  },
+
+  // ===========================================
+  // Git Configuration
+  // ===========================================
+  "git.enableSmartCommit": true,
+  "git.confirmSync": false,
+  "git.autofetch": true,
+  "git.pruneOnFetch": true,
+  "git.postCommitCommand": "none",
+  "gitlens.currentLine.enabled": true,
+  "gitlens.codeLens.enabled": true,
+
+  // ===========================================
+  // Terminal Configuration
+  // ===========================================
+  "terminal.integrated.defaultProfile.linux": "bash",
+  "terminal.integrated.fontSize": 13,
+  "terminal.integrated.fontFamily": "JetBrains Mono, Fira Code, monospace",
+
+  // ===========================================
+  // Testing Configuration
+  // ===========================================
+  "testing.automaticallyOpenPeekView": "never",
+  "testing.followRunningTest": true,
+
+  // ===========================================
+  // i18n Ally Configuration
+  // ===========================================
+  "i18n-ally.enabledLanguages": ["en", "es"],
+  "i18n-ally.localesPaths": [
+    "frontend/src/i18n/locales",
+    "src/i18n/locales"
+  ],
+  "i18n-ally.encoding": "utf-8",
+  "i18n-ally.indent": 2,
+
+  // ===========================================
+  // REST Client Configuration
+  // ===========================================
+  "rest-client.environmentVariables": {
+    "$local": {
+      "host": "localhost:3000",
+      "baseUrl": "http://localhost:3000/api"
+    },
+    "$production": {
+      "host": "api.your-domain.com",
+      "baseUrl": "https://api.your-domain.com/api"
+    }
+  },
+
+  // ===========================================
+  // Files to Always Exclude
+  // ===========================================
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/build": true,
+    "**/package-lock.json": true,
+    "**/pnpm-lock.yaml": true,
+    "**/*.min.js": true,
+    "**/*.min.css": true
+  },
+
+  // ===========================================
+  // Workbench Configuration
+  // ===========================================
+  "workbench.colorTheme": "Default Dark+",
+  "workbench.iconTheme": "vscode-icons",
+  "workbench.startupEditor": "none",
+  "workbench.tree.indent": 16,
+
+  // ===========================================
+  // Emmet Configuration
+  // ===========================================
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact",
+    "typescript": "typescriptreact"
+  },
+
+  // ===========================================
+  // Docker Configuration
+  // ===========================================
+  "docker.containers.defaultContextPath": ".",
+
+  // ===========================================
+  // Spell Checker (cSpell)
+  // ===========================================
+  "cSpell.words": [
+    "downline",
+    "flexbox",
+    "Gamificación",
+    "hasheada",
+    "hasheadas",
+    "i18n",
+    "languagedetector",
+    "Metabase",
+    "Multinivel",
+    "networkidle",
+    "opencode",
+    "preconfigurada",
+    "prootpassword",
+    "rootpassword",
+    "sequelize",
+    "supabase",
+    "unicode",
+    "VARCHAR",
+    "xyflow",
+    "zustand"
+  ]
+}

@@ -6,7 +6,7 @@ Esta carpeta contiene la documentación específica del backend de la plataforma
 
 ### Estructura / Structure
 
-```
+```tree
 backend/docs/
 ├── README.md          # Este archivo / This file
 ├── API.md             # Referencia de endpoints / Endpoint reference
@@ -22,7 +22,7 @@ This folder contains specific documentation for the MLM platform backend.
 
 ### Structure
 
-```
+```tree
 backend/docs/
 ├── README.md          # This file
 ├── API.md             # Endpoint reference
@@ -66,18 +66,57 @@ npm run seed
 
 ## Environment Variables / Variables de Entorno
 
-| Variable          | Descripción        | Default     |
-| ----------------- | ------------------ | ----------- |
-| `NODE_ENV`        | Environment        | development |
-| `PORT`            | Server port        | 3000        |
-| `DB_HOST`         | MySQL host         | localhost   |
-| `DB_PORT`         | MySQL port         | 3306        |
-| `DB_NAME`         | Database name      | mlm_db      |
-| `DB_USER`         | Database user      | root        |
-| `DB_PASSWORD`     | Database password  | -           |
-| `JWT_SECRET`      | JWT signing secret | -           |
-| `JWT_EXPIRES_IN`  | Token expiry       | 7d          |
-| `ALLOWED_ORIGINS` | CORS origins       | localhost   |
+### Database / Base de Datos
+
+| Variable      | Descripción / Description      | Default   |
+| ------------- | ------------------------------ | --------- |
+| `DB_HOST`     | MySQL host / Host MySQL        | localhost |
+| `DB_PORT`     | MySQL port / Puerto MySQL      | 3306      |
+| `DB_NAME`     | Database name / Nombre DB      | mlm_db    |
+| `DB_USER`     | Database user / Usuario DB     | root      |
+| `DB_PASSWORD` | Database password / Contraseña | -         |
+
+### Server / Servidor
+
+| Variable          | Descripción / Description     | Default     |
+| ----------------- | ----------------------------- | ----------- |
+| `NODE_ENV`        | Environment / Entorno         | development |
+| `PORT`            | Server port / Puerto servidor | 3000        |
+| `ALLOWED_ORIGINS` | CORS origins / Orígenes CORS  | localhost   |
+
+### Authentication / Autenticación
+
+| Variable         | Descripción / Description        | Default |
+| ---------------- | -------------------------------- | ------- |
+| `JWT_SECRET`     | JWT signing secret / Secreto JWT | -       |
+| `JWT_EXPIRES_IN` | Token expiry / Expiración token  | 7d      |
+
+### Redis (Opcional / Optional)
+
+| Variable         | Descripción / Description         | Default   |
+| ---------------- | --------------------------------- | --------- |
+| `REDIS_ENABLED`  | Enable Redis / Habilitar Redis    | false     |
+| `REDIS_HOST`     | Redis host / Host Redis           | localhost |
+| `REDIS_PORT`     | Redis port / Puerto Redis         | 6379      |
+| `REDIS_PASSWORD` | Redis password / Contraseña Redis | -         |
+
+### Brevo Email (Opcional / Optional)
+
+| Variable             | Descripción / Description          | Default              |
+| -------------------- | ---------------------------------- | -------------------- |
+| `BREVO_SMTP_HOST`    | SMTP host / Host SMTP              | smtp-relay.brevo.com |
+| `BREVO_SMTP_PORT`    | SMTP port / Puerto SMTP            | 587                  |
+| `BREVO_SMTP_USER`    | SMTP user / Usuario SMTP           | -                    |
+| `BREVO_SMTP_PASS`    | SMTP password / Contraseña SMTP    | -                    |
+| `BREVO_SENDER_EMAIL` | Sender email / Email del remitente | -                    |
+| `BREVO_SENDER_NAME`  | Sender name / Nombre del remitente | MLM Platform         |
+
+### Brevo SMS (Opcional / Optional)
+
+| Variable           | Descripción / Description        | Default     |
+| ------------------ | -------------------------------- | ----------- |
+| `BREVO_API_KEY`    | API key / Clave API              | -           |
+| `BREVO_SMS_SENDER` | SMS sender ID / ID remitente SMS | MLMPlatform |
 
 ---
 

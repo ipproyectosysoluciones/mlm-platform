@@ -9,15 +9,19 @@ Bienvenido a la documentación de la plataforma MLM (Marketing Multinivel). Esta
 - **Sistema de Afiliaciones Binarias** - Red de usuarios con posición izquierda/derecha
 - **Comisiones Automáticas** - Directas y por niveles (hasta 4 niveles)
 - **Código QR de Referido** - Generación automática para cada usuario
-- **Dashboard en Tiempo Real** - Estadísticas y rendimiento
+- **Dashboard en Tiempo Real** - Estadísticas, gráficos y rendimiento
 - **Panel de Administración** - Gestión completa de usuarios y comisiones
-- **CRM Integrado** - Gestión de leads y tareas
-- **API REST Documentada** - OpenAPI/Swagger integrado
+- **CRM Integrado** - Gestión de leads, tareas y pipeline Kanban
+- **Importación/Exportación CSV** - Carga masiva de leads
+- **Visualización del Árbol** - Árbol genealógico interactivo con React Flow
+- **Landing Pages** - Creador de páginas de captura
+- **API REST Documentada** - OpenAPI/Swagger bilingüe
 - **Tests Automatizados** - Unit, Integration y E2E
+- **i18n** - Interfaz bilingüe (Español/Inglés)
 
 ### Estructura del Proyecto
 
-```
+```tree
 MLM/
 ├── backend/          # API REST (Node.js, Express, TypeScript)
 ├── frontend/         # Aplicación React
@@ -42,15 +46,19 @@ Welcome to the MLM (Multi-Level Marketing) platform documentation. This platform
 - **Binary Affiliation System** - User network with left/right positions
 - **Automatic Commissions** - Direct and multi-level (up to 4 levels)
 - **Referral QR Code** - Automatic generation for each user
-- **Real-Time Dashboard** - Statistics and performance
+- **Real-Time Dashboard** - Statistics, charts and performance
 - **Admin Panel** - Complete user and commission management
-- **Integrated CRM** - Lead and task management
-- **Documented REST API** - OpenAPI/Swagger integrated
+- **Integrated CRM** - Lead management, tasks and Kanban pipeline
+- **CSV Import/Export** - Bulk lead loading
+- **Tree Visualization** - Interactive genealogy tree with React Flow
+- **Landing Pages** - Capture page builder
+- **Documented REST API** - Bilingual OpenAPI/Swagger
 - **Automated Tests** - Unit, Integration and E2E
+- **i18n** - Bilingual interface (Spanish/English)
 
 ### Project Structure
 
-```
+```tree
 MLM/
 ├── backend/          # REST API (Node.js, Express, TypeScript)
 ├── frontend/         # React Application

@@ -19,13 +19,20 @@
       "prettier --write"
     ]
   },
+  "packageManager": "pnpm@10.33.0",
   "devDependencies": {
     "husky": "^9.1.7",
     "lint-staged": "^15.4.3",
+    "picomatch": "4.0.4",
     "prettier": "^3.5.3"
   },
   "workspaces": [
     "frontend",
     "backend"
-  ]
+  ],
+  "pnpm": {
+    "overrides": {
+      "serialize-javascript": ">=7.0.3"
+    }
+  }
 }

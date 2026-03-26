@@ -6,6 +6,8 @@ import swaggerJsdoc from 'swagger-jsdoc';
  *
  * Phase 3: Agregados schemas para Visual Tree UI (UserDetails, UserSearchResult, Pagination)
  * Phase 3: Added schemas for Visual Tree UI (UserDetails, UserSearchResult, Pagination)
+ * Phase 4: Agregados Products y Orders para e-commerce y streaming subscriptions
+ * Phase 4: Added Products and Orders for e-commerce and streaming subscriptions
  */
 const options: swaggerJsdoc.Options = {
   definition: {
@@ -35,6 +37,7 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
 - **Phase 1** (v1.0.0): MVP - Auth, Tree, Commissions, CRM, RBAC
 - **Phase 2** (pendiente): Email & SMS Notifications
 - **Phase 3** (v3.0.0): Visual Tree UI - React Flow, búsqueda, panel de detalles
+- **Phase 4** (v4.0.0): Products & Orders - E-commerce, streaming subscriptions
       `,
       contact: {
         name: 'MLM Support',
@@ -709,6 +712,257 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
             count: { type: 'integer' },
           },
         },
+
+        // ============================================================
+        // PRODUCTS (E-commerce / Streaming)
+        // ============================================================
+        Product: {
+          type: 'object',
+          description: 'Producto / Product - Streaming subscription or e-commerce product',
+          properties: {
+            id: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID único del producto / Unique product ID',
+            },
+            name: {
+              type: 'string',
+              description: 'Nombre del producto / Product name',
+            },
+            description: {
+              type: 'string',
+              nullable: true,
+              description: 'Descripción del producto / Product description',
+            },
+            type: {
+              type: 'string',
+              enum: ['subscription', 'one-time', 'streaming'],
+              description: 'Tipo de producto / Product type',
+            },
+            price: {
+              type: 'number',
+              format: 'float',
+              description: 'Precio del producto / Product price',
+            },
+            currency: {
+              type: 'string',
+              enum: ['USD', 'COP', 'MXN'],
+              default: 'USD',
+              description: 'Moneda / Currency',
+            },
+            interval: {
+              type: 'string',
+              enum: ['monthly', 'yearly', null],
+              nullable: true,
+              description: 'Intervalo de facturación / Billing interval',
+            },
+            features: {
+              type: 'array',
+              items: { type: 'string' },
+              nullable: true,
+              description: 'Características incluidas / Included features',
+            },
+            status: {
+              type: 'string',
+              enum: ['active', 'inactive'],
+              default: 'active',
+              description: 'Estado del producto / Product status',
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Fecha de creación / Creation date',
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Última actualización / Last update',
+            },
+          },
+        },
+
+        ProductQuery: {
+          type: 'object',
+          description: 'Parámetros de consulta de productos / Product query parameters',
+          properties: {
+            page: {
+              type: 'integer',
+              minimum: 1,
+              default: 1,
+              description: 'Número de página / Page number',
+            },
+            limit: {
+              type: 'integer',
+              minimum: 1,
+              maximum: 100,
+              default: 20,
+              description: 'Elementos por página / Items per page',
+            },
+            platform: {
+              type: 'string',
+              enum: ['subscription', 'streaming', 'one-time'],
+              description: 'Filtrar por tipo de producto / Filter by product type',
+            },
+          },
+        },
+
+        // ============================================================
+        // ORDERS (E-commerce / Streaming)
+        // ============================================================
+        Order: {
+          type: 'object',
+          description: 'Pedido / Order - Order for products or subscriptions',
+          properties: {
+            id: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID único del pedido / Unique order ID',
+            },
+            userId: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID del usuario / User ID',
+            },
+            productId: {
+              type: 'string',
+              format: 'uuid',
+              nullable: true,
+              description: 'ID del producto / Product ID',
+            },
+            purchaseId: {
+              type: 'string',
+              format: 'uuid',
+              nullable: true,
+              description: 'ID de la compra asociada / Associated purchase ID',
+            },
+            amount: {
+              type: 'number',
+              format: 'float',
+              description: 'Monto total del pedido / Total order amount',
+            },
+            currency: {
+              type: 'string',
+              enum: ['USD', 'COP', 'MXN'],
+              description: 'Moneda / Currency',
+            },
+            status: {
+              type: 'string',
+              enum: ['pending', 'completed', 'cancelled', 'refunded'],
+              description: 'Estado del pedido / Order status',
+            },
+            paymentMethod: {
+              type: 'string',
+              nullable: true,
+              description: 'Método de pago / Payment method',
+            },
+            transactionId: {
+              type: 'string',
+              nullable: true,
+              description: 'ID de transacción / Transaction ID',
+            },
+            streamUrl: {
+              type: 'string',
+              nullable: true,
+              description: 'URL de streaming (si aplica) / Streaming URL (if applicable)',
+            },
+            streamToken: {
+              type: 'string',
+              nullable: true,
+              description: 'Token de streaming (si aplica) / Streaming token (if applicable)',
+            },
+            expiresAt: {
+              type: 'string',
+              format: 'date-time',
+              nullable: true,
+              description: 'Fecha de expiración / Expiration date',
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Fecha de creación / Creation date',
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Última actualización / Last update',
+            },
+          },
+        },
+
+        OrderItem: {
+          type: 'object',
+          description: 'Item de pedido / Order item',
+          properties: {
+            productId: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID del producto / Product ID',
+            },
+            quantity: {
+              type: 'integer',
+              minimum: 1,
+              default: 1,
+              description: 'Cantidad / Quantity',
+            },
+          },
+        },
+
+        CreateOrderRequest: {
+          type: 'object',
+          required: ['items', 'paymentMethod'],
+          description: 'Solicitud para crear pedido / Order creation request',
+          properties: {
+            items: {
+              type: 'array',
+              minItems: 1,
+              description: 'Lista de items / Items list',
+              items: { $ref: '#/components/schemas/OrderItem' },
+            },
+            paymentMethod: {
+              type: 'string',
+              description: 'Método de pago / Payment method',
+            },
+          },
+        },
+
+        OrderQuery: {
+          type: 'object',
+          description: 'Parámetros de consulta de pedidos / Order query parameters',
+          properties: {
+            page: {
+              type: 'integer',
+              minimum: 1,
+              default: 1,
+              description: 'Número de página / Page number',
+            },
+            limit: {
+              type: 'integer',
+              minimum: 1,
+              maximum: 100,
+              default: 20,
+              description: 'Elementos por página / Items per page',
+            },
+            status: {
+              type: 'string',
+              enum: ['pending', 'completed', 'cancelled', 'refunded'],
+              description: 'Filtrar por estado / Filter by status',
+            },
+          },
+        },
+
+        PaginatedOrders: {
+          type: 'object',
+          description: 'Pedidos paginados / Paginated orders',
+          properties: {
+            rows: {
+              type: 'array',
+              items: { $ref: '#/components/schemas/Order' },
+            },
+            count: { type: 'integer', description: 'Total de pedidos / Total orders' },
+            page: { type: 'integer', description: 'Página actual / Current page' },
+            totalPages: { type: 'integer', description: 'Total de páginas / Total pages' },
+          },
+        },
       },
     },
 
@@ -730,6 +984,14 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
       {
         name: 'crm',
         description: 'CRM - Leads, tasks, communications / Leads, tareas, comunicaciones',
+      },
+      {
+        name: 'products',
+        description: 'Productos / Products - Streaming subscriptions, e-commerce products',
+      },
+      {
+        name: 'orders',
+        description: 'Pedidos / Orders - Order management and history',
       },
     ],
   },
