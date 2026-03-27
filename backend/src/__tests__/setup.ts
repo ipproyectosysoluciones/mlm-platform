@@ -9,6 +9,9 @@
 process.env.NODE_ENV = 'test';
 process.env.TEST_DB_NAME = 'mlm_test';
 process.env.TEST_DB_HOST = '127.0.0.1';
+process.env.TEST_DB_PORT = '3307';
+process.env.TEST_DB_USER = 'root';
+process.env.TEST_DB_PASSWORD = 'testpass';
 process.env.DB_HOST = '127.0.0.1';
 
 import { Sequelize } from 'sequelize';

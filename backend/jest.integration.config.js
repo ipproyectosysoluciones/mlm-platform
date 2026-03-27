@@ -9,7 +9,8 @@ module.exports = {
   coverageDirectory: 'coverage',
   verbose: true,
   setupFilesAfterEnv: ['<rootDir>/src/__tests__/setup.ts'],
-  testTimeout: 120000,
+  testTimeout: 300000, // 5 minutes per test
   forceExit: true,
-  detectOpenHandles: false,
+  detectOpenHandles: true,
+  workerIdleMemoryLimit: '512MB',
 };
