@@ -162,6 +162,27 @@ backend/
 | Level 3 | Tercer nivel     | 2%         |
 | Level 4 | Cuarto nivel     | 1%         |
 
+## Swagger API Docs
+
+La documentación interactiva de la API está disponible en:
+
+```
+http://localhost:3000/api-docs
+```
+
+Incluye todos los endpoints con ejemplos de Request/Response.
+
+## Tests
+
+| Comando                      | Descripción                           |
+| ---------------------------- | ------------------------------------- |
+| `pnpm test`                  | Tests unitarios                       |
+| `pnpm test:unit`             | Solo tests unitarios                  |
+| `pnpm test:integration`      | Tests de integración (requiere MySQL) |
+| `pnpm test:integration:auth` | Tests de integración específicos      |
+
+Los tests de integración requieren una base de datos MySQL corriendo en el puerto 3307 (ver `.env`).
+
 ## Licencia
 
 ISC
