@@ -88,6 +88,9 @@ export class OrderService {
     if (!data.productId) {
       throw new AppError(400, 'VALIDATION_ERROR', 'Product ID is required');
     }
+    if (!data.paymentMethod) {
+      throw new AppError(400, 'VALIDATION_ERROR', 'Payment method is required');
+    }
     if (data.paymentMethod && !['manual', 'simulated'].includes(data.paymentMethod)) {
       throw new AppError(400, 'VALIDATION_ERROR', 'Payment method must be manual or simulated');
     }

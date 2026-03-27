@@ -184,25 +184,24 @@ describe('OrderService', () => {
      * Test: 9.3 - OrderService.createOrder() validation
      * Verifies input validation
      */
-    it('should throw error when items array is empty', async () => {
-      const data: CreateOrderData = {
-        productId: 'product-1',
-        paymentMethod: 'simulated',
-      };
-
-      await expect(orderService.createOrder('user-123', data)).rejects.toThrow(
-        'At least one item is required'
-      );
-    });
-
-    it('should throw error when items is undefined', async () => {
+    it('should throw error when productId is missing', async () => {
       const data = {
-        userId: 'user-123',
         paymentMethod: 'simulated',
       } as unknown as CreateOrderData;
 
       await expect(orderService.createOrder('user-123', data)).rejects.toThrow(
-        'At least one item is required'
+        'Product ID is required'
+      );
+    });
+
+    it('should throw error when productId is empty string', async () => {
+      const data = {
+        productId: '',
+        paymentMethod: 'simulated',
+      } as unknown as CreateOrderData;
+
+      await expect(orderService.createOrder('user-123', data)).rejects.toThrow(
+        'Product ID is required'
       );
     });
 
@@ -229,13 +228,16 @@ describe('OrderService', () => {
       );
     });
 
-    it('should throw error when product ID is missing in item', async () => {
+    /**
+     * Test: 9.3 - OrderService.createOrder() validation
+     * Verifies product ID must be provided
+     */
+    it('should throw error when productId is missing', async () => {
       (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
 
-      const data: CreateOrderData = {
-        productId: 'product-1',
+      const data = {
         paymentMethod: 'simulated',
-      };
+      } as unknown as CreateOrderData;
 
       await expect(orderService.createOrder('user-123', data)).rejects.toThrow(
         'Product ID is required'
@@ -255,9 +257,7 @@ describe('OrderService', () => {
         paymentMethod: 'simulated',
       };
 
-      await expect(orderService.createOrder('user-123', data)).rejects.toThrow(
-        'Product nonexistent-product not found'
-      );
+      await expect(orderService.createOrder('user-123', data)).rejects.toThrow('Product not found');
     });
 
     /**
@@ -270,6 +270,7 @@ describe('OrderService', () => {
 
       const data: CreateOrderData = {
         productId: 'product-2',
+        paymentMethod: 'simulated',
       };
 
       await expect(orderService.createOrder('user-123', data)).rejects.toThrow(
@@ -369,7 +370,12 @@ describe('OrderService', () => {
       expect(result.status).toBe('completed');
     });
 
-    it('should calculate correct total amount with quantity', async () => {
+    /**
+     * Test: 9.3 - OrderService.createOrder() total amount calculation
+     * Verifies total amount matches product price (one-click purchase, no quantity)
+     * Note: Quantity is not supported in one-click purchase design
+     */
+    it('should calculate correct total amount from product price', async () => {
       (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
       (Product.findByPk as jest.Mock).mockResolvedValue(mockActiveProduct);
 
@@ -399,10 +405,10 @@ describe('OrderService', () => {
 
       await orderService.createOrder('user-123', data);
 
-      // Verify total amount = 15.99 * 3 = 47.97
+      // Verify total amount = product price (15.99) - one-click, no quantity
       expect(Purchase.create).toHaveBeenCalledWith(
         expect.objectContaining({
-          amount: 47.97,
+          amount: 15.99,
         }),
         expect.any(Object)
       );
