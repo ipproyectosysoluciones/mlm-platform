@@ -1,3 +1,25 @@
+/**
+ * @fileoverview User Model - User entity for MLM platform
+ * @description Sequelize model representing platform users with binary tree structure
+ * @module models/User
+ * @author MLM Development Team
+ * @version 1.0.0
+ * @example
+ * // ES: Crear usuario
+ * const user = await User.create({
+ *   email: 'user@example.com',
+ *   passwordHash: 'hashed_password',
+ *   referralCode: 'REF123'
+ * });
+ *
+ * // EN: Create user
+ * const user = await User.create({
+ *   email: 'user@example.com',
+ *   passwordHash: 'hashed_password',
+ *   referralCode: 'REF123'
+ * });
+ */
+
 import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../config/database';
 import type { UserAttributes, UserCreationAttributes } from '../types';

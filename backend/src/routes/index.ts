@@ -15,6 +15,29 @@ router.use('/dashboard', dashboardRoutes);
 router.use('/products', productRoutes);
 router.use('/orders', orderRoutes);
 
+/**
+ * @swagger
+ * /health:
+ *   get:
+ *     summary: Health check / Verificar estado del servidor
+ *     description: Retorna el estado del servidor. Returns server status and timestamp.
+ *     tags: [health]
+ *     responses:
+ *       200:
+ *         description: Servidor funcionando correctamente / Server is running
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: ok
+ *                 timestamp:
+ *                   type: string
+ *                   example: 2026-03-27T12:00:00.000Z
+ */
+
 router.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });

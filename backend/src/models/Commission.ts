@@ -1,3 +1,21 @@
+/**
+ * @fileoverview Commission Model - Commission records for MLM affiliates
+ * @description Sequelize model representing commission earned by users from referrals
+ * @module models/Commission
+ * @author MLM Development Team
+ * @version 1.0.0
+ * @example
+ * // ES: Ver comisiones de usuario
+ * const commissions = await Commission.findAll({
+ *   where: { userId: 'user-uuid' }
+ * });
+ *
+ * // EN: Get user commissions
+ * const commissions = await Commission.findAll({
+ *   where: { userId: 'user-uuid' }
+ * });
+ */
+
 import { DataTypes, Model, Optional, ForeignKey } from 'sequelize';
 import { sequelize } from '../config/database';
 import { User } from './User';
