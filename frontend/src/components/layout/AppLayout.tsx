@@ -19,8 +19,8 @@ import {
   X,
   ChevronDown,
   Globe,
+  Wallet,
 } from 'lucide-react';
-import { changeLanguage, supportedLanguages, getCurrentLanguage } from '../../i18n';
 
 // Navigation items
 const NAV_ITEMS = [
@@ -28,6 +28,7 @@ const NAV_ITEMS = [
   { path: '/tree', labelKey: 'nav.tree', icon: TreeDeciduous },
   { path: '/crm', labelKey: 'nav.crm', icon: Users },
   { path: '/landing-pages', labelKey: 'nav.landingPages', icon: FileText },
+  { path: '/wallet', labelKey: 'nav.wallet', icon: Wallet },
   { path: '/profile', labelKey: 'nav.profile', icon: User },
 ];
 

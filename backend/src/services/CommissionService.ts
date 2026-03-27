@@ -23,6 +23,7 @@
 import { sequelize } from '../config/database';
 import { User, Commission, Purchase } from '../models';
 import { COMMISSION_RATES } from '../types';
+import { walletService } from './WalletService';
 
 export class CommissionService {
   /**
@@ -164,5 +165,67 @@ export class CommissionService {
     }
 
     return { totalEarned, pending, byType };
+  }
+
+  /**
+   * Approve a commission and credit it to the user's wallet
+   * Aprobar una comisión y acreditarla a la wallet del usuario
+   *
+   * @param commissionId - Commission ID to approve / ID de comisión a aprobar
+   * @returns Updated commission / Comisión actualizada
+   *
+   * @example
+   * // English: Approve and credit a commission
+   * const commission = await commissionService.approveCommission(commissionId);
+   *
+   * // Español: Aprobar y acreditar una comisión
+   * const commission = await commissionService.approveCommission(commissionId);
+   */
+  async approveCommission(commissionId: string): Promise<Commission> {
+    const commission = await Commission.findByPk(commissionId);
+    if (!commission) {
+      throw new Error('Commission not found');
+    }
+
+    if (commission.status !== 'pending') {
+      throw new Error('Only pending commissions can be approved');
+    }
+
+    // Update commission status
+    commission.status = 'approved';
+    await commission.save();
+
+    // Credit to wallet
+    await walletService.creditCommission(
+      commission.userId,
+      Number(commission.amount),
+      commission.currency,
+      commission.id,
+      `${commission.type} commission from referral`
+    );
+
+    return commission;
+  }
+
+  /**
+   * Approve multiple commissions and credit to wallets
+   * Aprobar múltiples comisiones y acreditar a wallets
+   *
+   * @param commissionIds - Array of commission IDs / Array de IDs de comisiones
+   * @returns Array of approved commissions / Array de comisiones aprobadas
+   */
+  async bulkApproveCommissions(commissionIds: string[]): Promise<Commission[]> {
+    const approved: Commission[] = [];
+
+    for (const id of commissionIds) {
+      try {
+        const commission = await this.approveCommission(id);
+        approved.push(commission);
+      } catch (error) {
+        console.error(`Error approving commission ${id}:`, error);
+      }
+    }
+
+    return approved;
   }
 }

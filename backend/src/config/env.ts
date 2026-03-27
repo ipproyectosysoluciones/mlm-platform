@@ -116,4 +116,14 @@ export const config = {
     /** SMS sender ID / ID del remitente SMS */
     smsSender: process.env.BREVO_SMS_SENDER || 'MLM',
   },
+
+  /** Wallet digital configuration / Configuración de wallet digital */
+  wallet: {
+    /** Minimum withdrawal amount in USD / Monto mínimo de retiro en USD */
+    minWithdrawal: parseFloat(process.env.WALLET_MIN_WITHDRAWAL || '20'),
+    /** Withdrawal fee percentage / Porcentaje de fee de retiro */
+    feePercentage: parseFloat(process.env.WALLET_FEE_PERCENTAGE || '5'),
+    /** Daily payout job cron schedule (default: midnight UTC) / Cron del job de pagos diarios */
+    cronTime: process.env.WALLET_CRON_TIME || '0 0 * * *',
+  },
 };

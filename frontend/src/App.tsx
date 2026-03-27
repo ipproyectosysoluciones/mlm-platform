@@ -16,6 +16,7 @@ import AppLayout from './components/layout/AppLayout';
 const ProductCatalog = lazy(() => import('./pages/ProductCatalog'));
 const Checkout = lazy(() => import('./pages/Checkout'));
 const OrderSuccess = lazy(() => import('./pages/OrderSuccess'));
+const WalletPage = lazy(() => import('./pages/WalletPage'));
 
 /**
  * Loading fallback component for lazy loaded routes
@@ -167,6 +168,18 @@ function App() {
               <ProtectedRoute>
                 <Suspense fallback={<PageLoader />}>
                   <OrderSuccess />
+                </Suspense>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Wallet Digital Route */}
+          <Route
+            path="/wallet"
+            element={
+              <ProtectedRoute>
+                <Suspense fallback={<PageLoader />}>
+                  <WalletPage />
                 </Suspense>
               </ProtectedRoute>
             }

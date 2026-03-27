@@ -5,6 +5,7 @@ import commissionRoutes from './commission.routes';
 import dashboardRoutes from './dashboard.routes';
 import productRoutes from './product.routes';
 import orderRoutes from './order.routes';
+import walletRoutes from './wallet.routes';
 
 const router: ExpressRouter = Router();
 
@@ -14,6 +15,7 @@ router.use('/commissions', commissionRoutes);
 router.use('/dashboard', dashboardRoutes);
 router.use('/products', productRoutes);
 router.use('/orders', orderRoutes);
+router.use('/wallet', walletRoutes);
 
 /**
  * @swagger
