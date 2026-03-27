@@ -207,3 +207,188 @@ export interface OrderCreationAttributes {
   paymentMethod?: 'manual' | 'simulated';
   notes?: string | null;
 }
+
+// ============================================
+// Wallet Types - Digital Wallet System
+// ============================================
+
+/**
+ * Wallet transaction types
+ * Tipos de transacción de wallet
+ */
+export const WALLET_TRANSACTION_TYPE = {
+  COMMISSION_EARNED: 'commission_earned',
+  WITHDRAWAL: 'withdrawal',
+  FEE: 'fee',
+  ADJUSTMENT: 'adjustment',
+} as const;
+
+export type WalletTransactionType =
+  (typeof WALLET_TRANSACTION_TYPE)[keyof typeof WALLET_TRANSACTION_TYPE];
+
+/**
+ * Withdrawal request status
+ * Estado de solicitud de retiro
+ */
+export const WITHDRAWAL_STATUS = {
+  PENDING: 'pending',
+  APPROVED: 'approved',
+  REJECTED: 'rejected',
+  PAID: 'paid',
+  FAILED: 'failed',
+  CANCELLED: 'cancelled',
+} as const;
+
+export type WithdrawalStatus = (typeof WITHDRAWAL_STATUS)[keyof typeof WITHDRAWAL_STATUS];
+
+/**
+ * Wallet attributes
+ * Atributos de wallet
+ */
+export interface WalletAttributes {
+  id: string;
+  userId: string;
+  balance: number; // DECIMAL(10,2)
+  currency: string; // Always USD
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+/**
+ * Wallet creation attributes
+ * Atributos para crear wallet
+ */
+export interface WalletCreationAttributes {
+  userId: string;
+  balance?: number;
+  currency?: string;
+}
+
+/**
+ * Wallet transaction attributes
+ * Atributos de transacción de wallet
+ */
+export interface WalletTransactionAttributes {
+  id: string;
+  walletId: string;
+  type: WalletTransactionType;
+  amount: number; // Positive for credit, negative for debit
+  currency: string;
+  referenceId: string | null; // commission_id or withdrawal_request_id
+  description: string;
+  exchangeRate: number | null; // Rate used if original currency != USD
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+/**
+ * Wallet transaction creation attributes
+ * Atributos para crear transacción
+ */
+export interface WalletTransactionCreationAttributes {
+  walletId: string;
+  type: WalletTransactionType;
+  amount: number;
+  currency?: string;
+  referenceId?: string | null;
+  description?: string;
+  exchangeRate?: number | null;
+}
+
+/**
+ * Withdrawal request attributes
+ * Atributos de solicitud de retiro
+ */
+export interface WithdrawalRequestAttributes {
+  id: string;
+  userId: string;
+  requestedAmount: number;
+  feeAmount: number;
+  netAmount: number;
+  status: WithdrawalStatus;
+  rejectionReason: string | null;
+  approvalComment: string | null;
+  processedAt: Date | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+/**
+ * Withdrawal request creation attributes
+ * Atributos para crear solicitud de retiro
+ */
+export interface WithdrawalRequestCreationAttributes {
+  userId: string;
+  requestedAmount: number;
+  feeAmount: number;
+  netAmount: number;
+  status?: WithdrawalStatus;
+  rejectionReason?: string | null;
+  approvalComment?: string | null;
+  processedAt?: Date | null;
+}
+
+// ============================================
+// API Response Types - Wallet
+// ============================================
+
+/**
+ * Get wallet balance response
+ * Respuesta de obtener balance de wallet
+ */
+export interface GetWalletResponse {
+  success: boolean;
+  data: {
+    id: string;
+    userId: string;
+    balance: number;
+    currency: string;
+    lastUpdated: string;
+  };
+  error?: string;
+}
+
+/**
+ * Get wallet transactions response
+ * Respuesta de obtener transacciones de wallet
+ */
+export interface GetTransactionsResponse {
+  success: boolean;
+  data: WalletTransactionAttributes[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+  error?: string;
+}
+
+/**
+ * Create withdrawal request body
+ * Body para crear solicitud de retiro
+ */
+export interface CreateWithdrawalRequest {
+  amount: number; // Must be >= 20 (configurable)
+}
+
+/**
+ * Create withdrawal response
+ * Respuesta de crear solicitud de retiro
+ */
+export interface CreateWithdrawalResponse {
+  success: boolean;
+  data: WithdrawalRequestAttributes;
+  message: string;
+  error?: string;
+}
+
+/**
+ * Get withdrawal status response
+ * Respuesta de obtener estado de retiro
+ */
+export interface GetWithdrawalStatusResponse {
+  success: boolean;
+  data: WithdrawalRequestAttributes;
+  error?: string;
+}

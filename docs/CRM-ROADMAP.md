@@ -83,13 +83,16 @@
 - [x] **Ranks/Niveles** - Progresión con badges visuales (parcial)
 - [ ] **Rewards** - Reconocimiento por logros (pendiente)
 
-### Fase 5: Financiero ⏳ PENDIENTE
+### Fase 5: Financiero ✅ COMPLETADO
 
-- [ ] **Wallet digital** - Balance de comisiones
-- [ ] **Retiros/Payouts** - Solicitud de retiro de fondos
-- [ ] **Historial financiero** - Extracto completo de movimientos
-- [ ] **Múltiples pasarelas** - PayPal, Stripe, transferencia bancaria
-- [ ] **Multi-moneda** - Soporte para varias monedas
+- [x] **Wallet digital** - Balance de comisiones con actualización en tiempo real
+- [x] **Retiros/Payouts** - Solicitud de retiro con fee (5%, $20 min)
+- [x] **Historial financiero** - Extracto completo de movimientos con filtros
+- [x] **Conversión de moneda** - API Frankfurter para tasas actualizadas
+- [x] **Pagos automáticos** - Job diario para procesar retiros aprobados
+- [x] **Migración histórica** - Script idempotente para comisiones existentes
+- [ ] **Múltiples pasarelas** - PayPal, Stripe, transferencia bancaria (pendiente)
+- [ ] **Multi-moneda completo** - Soporte para varias monedas (pendiente)
 
 ### Fase 6: Seguridad y Cumplimiento ✅ PARCIAL
 

@@ -9,6 +9,9 @@ import { Communication } from './Communication';
 import { LandingPage } from './LandingPage';
 import { Product } from './Product';
 import { Order } from './Order';
+import { Wallet } from './Wallet';
+import { WalletTransaction } from './WalletTransaction';
+import { WithdrawalRequest } from './WithdrawalRequest';
 
 // User relationships
 User.hasMany(User, { as: 'children', foreignKey: 'sponsorId', sourceKey: 'id' });
@@ -56,6 +59,16 @@ Order.belongsTo(Purchase, { as: 'purchase', foreignKey: 'purchaseId', targetKey:
 Product.hasMany(Purchase, { foreignKey: 'productId', sourceKey: 'id' });
 Purchase.belongsTo(Product, { as: 'product', foreignKey: 'productId', targetKey: 'id' });
 
+// Wallet relationships
+User.hasOne(Wallet, { foreignKey: 'userId', sourceKey: 'id' });
+Wallet.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
+
+Wallet.hasMany(WalletTransaction, { foreignKey: 'walletId', sourceKey: 'id' });
+WalletTransaction.belongsTo(Wallet, { as: 'wallet', foreignKey: 'walletId', targetKey: 'id' });
+
+User.hasMany(WithdrawalRequest, { foreignKey: 'userId', sourceKey: 'id' });
+WithdrawalRequest.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
+
 export {
   User,
   UserClosure,
@@ -67,6 +80,9 @@ export {
   LandingPage,
   Product,
   Order,
+  Wallet,
+  WalletTransaction,
+  WithdrawalRequest,
 };
 
 export function initModels(): void {
