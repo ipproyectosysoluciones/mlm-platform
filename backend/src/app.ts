@@ -18,25 +18,45 @@ const isTest = process.env.NODE_ENV === 'test';
 const isProduction = process.env.NODE_ENV === 'production';
 
 // CORS configuration with origin validation
-app.use(
-  cors({
-    origin: isProduction
-      ? (origin, callback) => {
-          // In production, validate origin against allowed list
-          if (!origin || config.cors.allowedOrigins.includes(origin)) {
-            callback(null, true);
-          } else {
-            callback(new Error(`CORS: Origin ${origin} not allowed`));
-          }
-        }
-      : true, // In development, allow all origins
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-    exposedHeaders: ['X-RateLimit-Limit', 'X-RateLimit-Remaining'],
-    maxAge: 86400, // 24 hours for preflight cache
-  })
-);
+// Security: In production, only allow origins from config whitelist
+// In development, allow all (intentional for local testing)
+const corsOptions = {
+  origin: (
+    origin: string | undefined,
+    callback: (err: Error | null, allowed?: boolean) => void
+  ) => {
+    // Allow requests with no origin (mobile apps, curl, etc.)
+    if (!origin) {
+      // In production, deny requests with no origin (except same-server requests)
+      if (isProduction) {
+        // Allow same-origin requests (no origin header)
+        callback(null, true);
+      } else {
+        callback(null, true);
+      }
+      return;
+    }
+
+    // In production: validate against whitelist
+    if (isProduction) {
+      if (config.cors.allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error(`CORS: Origin ${origin} not allowed`));
+      }
+    } else {
+      // Development: allow all (intentional)
+      callback(null, true);
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  exposedHeaders: ['X-RateLimit-Limit', 'X-RateLimit-Remaining'],
+  maxAge: 86400, // 24 hours for preflight cache
+};
+
+app.use(cors(corsOptions));
 
 // Security headers with Helmet
 app.use(

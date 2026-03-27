@@ -6,11 +6,19 @@ on:
   pull_request:
     branches: [main]
 
+# Least privilege permissions for CI workflow
+permissions:
+  contents: read
+  actions: read
+  pull-requests: write
+
 jobs:
   # Backend CI
   backend:
     name: Backend Tests
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     
     services:
       mysql:
@@ -85,6 +93,8 @@ jobs:
   frontend:
     name: Frontend Tests
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     
     services:
       mysql:
