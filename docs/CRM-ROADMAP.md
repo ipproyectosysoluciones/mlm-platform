@@ -33,6 +33,19 @@
    - Detección automática de idioma
    - Persistencia de preferencia
 
+6. **E-commerce Streaming Subscriptions** ✅ NUEVO
+   - Catálogo de productos (Netflix, Spotify, HBO, Disney+, Amazon Prime)
+   - One-click purchase
+   - Órdenes automáticas → generar comisión
+   - Suscripciones recurrentes
+   - Integración con sistema de comisiones existente
+
+7. **Infraestructura y Seguridad** ✅ NUEVO
+   - CodeQL Security Scanning
+   - Dependabot para actualizaciones automáticas
+   - Repositorio público con branch protection
+   - Rulesets configurados
+
 ---
 
 ## 📋 Roadmap de Funcionalidades
@@ -52,25 +65,25 @@
 - [x] **Gráficos interactivos** - Chart.js o Recharts para visualización
 - [x] **Reportes por período** - Esta semana, mes, trimestre y rango personalizado
 - [x] **Alertas de rotación** - Notificar leads sin actividad > X días, tareas vencidas y seguimientos pendientes
-- [x] **Predicción de conversión** - Funnel de conversión con métricas de scoring básico (tasa de conversión, tiempo medio de conversión)
+- [x] **Predicción de conversión** - Funnel de conversión con métricas de scoring básico
 
-### Fase 3: Integración Comercial
+### Fase 3: E-commerce y Comercial ✅ COMPLETADO
 
-- [ ] **E-commerce básico** - Catálogo de productos
-- [ ] **Carrito de compras** - Con checkout integrado
-- [ ] **Órdenes automáticas** - Registrar venta → generar comisión
-- [ ] **Suscripciones** - Planes recurrentes
-- [ ] **Links de afiliado** - Tracking de conversiones
+- [x] **E-commerce básico** - Catálogo de productos streaming
+- [x] **One-click purchase** - Compra en un clic
+- [x] **Órdenes automáticas** - Registrar venta → generar comisión
+- [x] **Suscripciones** - Planes recurrentes (mensual)
+- [x] **Links de afiliado** - Tracking de conversiones
 
-### Fase 4: Red de Distribuidores
+### Fase 4: Red de Distribuidores ✅ PARCIAL
 
-- [ ] **Back office móvil** - PWA optimizado para móvil
-- [ ] **Notificaciones push** - Alertas en tiempo real
-- [ ] **Comunicación team** - Chat interno o mensajería
-- [ ] **Ranks/Niveles** - Progresión con badges visuales
-- [ ] **Rewards** - Reconocimiento por logros
+- [x] **PWA básico** - Service Worker configurado
+- [ ] **Notificaciones push** - Alertas en tiempo real (pendiente)
+- [ ] **Comunicación team** - Chat interno o mensajería (pendiente)
+- [x] **Ranks/Niveles** - Progresión con badges visuales (parcial)
+- [ ] **Rewards** - Reconocimiento por logros (pendiente)
 
-### Fase 5: Financiero
+### Fase 5: Financiero ⏳ PENDIENTE
 
 - [ ] **Wallet digital** - Balance de comisiones
 - [ ] **Retiros/Payouts** - Solicitud de retiro de fondos
@@ -78,13 +91,17 @@
 - [ ] **Múltiples pasarelas** - PayPal, Stripe, transferencia bancaria
 - [ ] **Multi-moneda** - Soporte para varias monedas
 
-### Fase 6: Seguridad y Cumplimiento
+### Fase 6: Seguridad y Cumplimiento ✅ PARCIAL
 
-- [ ] **KYC básico** - Verificación de identidad
-- [ ] **Logs de auditoría** - Registro de cambios importantes
-- [ ] **2FA** - Autenticación de dos factores
-- [ ] **GDPR compliance** - Consentimiento de datos
-- [ ] **Términos y condiciones** - Aceptación obligatoria
+- [x] **CodeQL** - Escaneo de seguridad automático
+- [x] **Dependabot** - Actualizaciones de dependencias
+- [x] **Branch Protection** - Protección de ramas principales
+- [x] **Rulesets** - Reglas de desarrollo
+- [ ] **KYC básico** - Verificación de identidad (pendiente)
+- [ ] **Logs de auditoría** - Registro de cambios importantes (pendiente)
+- [ ] **2FA** - Autenticación de dos factores (pendiente)
+- [ ] **GDPR compliance** - Consentimiento de datos (pendiente)
+- [ ] **Términos y condiciones** - Aceptación obligatoria (pendiente)
 
 ---
 
@@ -98,6 +115,8 @@
 4. PWA/Mobile responsive mejorado
 5. Importación masiva de leads
 6. Plantillas de email
+7. **E-commerce streaming** ⭐ NUEVO - Catálogo y compras
+8. **Seguridad CI/CD** ⭐ NUEVO - CodeQL, Dependabot, Branch Protection
 
 ### Media Prioridad (v1.1)
 
@@ -105,13 +124,15 @@
 8. Ranks visuales para distribuidores
 9. Wallet básico
 10. Reportes por período
+11. 2FA autenticación
 
 ### Baja Prioridad (Futuro)
 
-9. E-commerce completo
-10. ML para predicción de conversión
-11. Multi-moneda
-12. KYC completo
+12. E-commerce completo
+13. ML para predicción de conversión
+14. Multi-moneda
+15. KYC completo
+16. Chat interno
 
 ---
 
