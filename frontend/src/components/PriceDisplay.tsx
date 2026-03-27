@@ -4,7 +4,6 @@
  * @module components/PriceDisplay
  */
 
-import { useTranslation } from 'react-i18next';
 import { cn } from '../utils/cn';
 
 /**
@@ -29,21 +28,6 @@ const currencySymbols: Record<string, string> = {
   COP: '$',
   ARS: '$',
 };
-
-/**
- * Format price with proper decimal places
- */
-function formatPrice(amount: number, currency: string): string {
-  const symbol = currencySymbols[currency] || currency;
-
-  // Format with commas for thousands
-  const formattedNumber = amount.toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-
-  return `${symbol}${formattedNumber}`;
-}
 
 /**
  * PriceDisplay component - Displays formatted price

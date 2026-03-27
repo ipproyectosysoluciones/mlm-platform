@@ -71,7 +71,7 @@ export default function Checkout() {
   /**
    * Handle payment submission
    */
-  const handlePayment = async (paymentMethod: PaymentMethod) => {
+  const handlePayment = async (_paymentMethod: PaymentMethod) => {
     if (!product) return;
 
     setShowConfirmModal(true);
@@ -144,10 +144,8 @@ export default function Checkout() {
           <EmptyState
             title={error || t('products.error')}
             description={t('checkout.productNotFound')}
-            action={{
-              label: t('checkout.backToProducts'),
-              onClick: handleBackToProducts,
-            }}
+            actionLabel={t('checkout.backToProducts')}
+            onAction={handleBackToProducts}
           />
         </div>
       </div>

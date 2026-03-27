@@ -7,7 +7,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Loader2, AlertCircle, RefreshCw } from 'lucide-react';
+
 import { ProductCard } from '../components/ProductCard';
 import { EmptyState } from '../components/EmptyState';
 import { ErrorToast } from '../components/ErrorToast';
@@ -134,13 +134,6 @@ export default function ProductCatalog() {
   };
 
   /**
-   * Handle retry on error
-   */
-  const handleRetry = () => {
-    loadProducts(pagination.page, selectedPlatform);
-  };
-
-  /**
    * Handle page change
    */
   const handlePageChange = (newPage: number) => {
@@ -177,7 +170,14 @@ export default function ProductCatalog() {
         </div>
 
         {/* Error State */}
-        {error && <ErrorToast message={error} onRetry={handleRetry} className="mb-6" />}
+        {error && (
+          <ErrorToast
+            message={error}
+            isVisible={!!error}
+            onClose={() => setError(null)}
+            className="mb-6"
+          />
+        )}
 
         {/* Loading State */}
         {isLoading && (
@@ -193,10 +193,8 @@ export default function ProductCatalog() {
           <EmptyState
             title={selectedPlatform === 'all' ? t('products.empty') : t('products.emptyFiltered')}
             description={selectedPlatform !== 'all' ? t('products.emptyFilteredHint') : ''}
-            action={{
-              label: t('products.clearFilters'),
-              onClick: () => handlePlatformChange('all'),
-            }}
+            actionLabel={t('products.clearFilters')}
+            onAction={() => handlePlatformChange('all')}
           />
         )}
 

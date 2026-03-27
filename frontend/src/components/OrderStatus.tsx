@@ -6,14 +6,14 @@
 
 import { useTranslation } from 'react-i18next';
 import { Clock, CheckCircle, XCircle, Ban } from 'lucide-react';
-import type { OrderStatus } from '../types';
+import type { OrderStatus as OrderStatusType } from '../types';
 import { cn } from '../utils/cn';
 
 /**
  * OrderStatus props
  */
-interface OrderStatusProps {
-  status: OrderStatus;
+export interface OrderStatusProps {
+  status: OrderStatusType;
   size?: 'sm' | 'md' | 'lg';
   showLabel?: boolean;
   className?: string;
@@ -23,7 +23,7 @@ interface OrderStatusProps {
  * Status configuration mapping
  */
 const statusConfig: Record<
-  OrderStatus,
+  OrderStatusType,
   {
     icon: React.ComponentType<{ className?: string }>;
     labelKey: string;

@@ -5,7 +5,7 @@
  */
 
 import { useTranslation } from 'react-i18next';
-import { Netflix, Spotify, Tv, Film, Play, Youtube, Apple } from 'lucide-react';
+import { Tv, Film, Play, Youtube, Apple, MonitorPlay, Music } from 'lucide-react';
 import type { StreamingPlatform } from '../types';
 import { cn } from '../utils/cn';
 
@@ -21,11 +21,12 @@ interface PlatformBadgeProps {
 
 /**
  * Platform icon mapping
+ * Using available lucide-react icons as alternatives
  */
 const platformIcons: Record<StreamingPlatform, React.ComponentType<{ className?: string }>> = {
-  netflix: Netflix,
+  netflix: MonitorPlay, // Using MonitorPlay as Netflix alternative
   disney_plus: Tv,
-  spotify: Spotify,
+  spotify: Music, // Using Music as Spotify alternative
   hbo_max: Film,
   amazon_prime: Play,
   youtube_premium: Youtube,

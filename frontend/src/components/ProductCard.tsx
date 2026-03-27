@@ -56,8 +56,6 @@ export function ProductCard({
   const imageUrl = product.imageUrl || defaultImages[product.platform];
   const durationLabel = t('products.days', { count: product.durationDays });
   const perMonth = product.durationDays <= 30 ? t('products.perMonth') : t('products.perYear');
-  const monthlyPrice =
-    product.durationDays > 30 ? (product.price / 12).toFixed(2) : product.price.toFixed(2);
 
   const handleBuyNow = () => {
     if (!isLoading && onBuyNow) {

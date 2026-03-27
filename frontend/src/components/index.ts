@@ -16,6 +16,7 @@ export { ProductModal, default as ProductModalDefault } from './ProductModal';
 export { OrderSummary, default as OrderSummaryDefault } from './OrderSummary';
 export { CheckoutForm, default as CheckoutFormDefault } from './CheckoutForm';
 export { OrderStatus, default as OrderStatusDefault } from './OrderStatus';
+export type { OrderStatusProps } from './OrderStatus';
 
 // UI Components
 export { EmptyState, default as EmptyStateDefault } from './EmptyState';

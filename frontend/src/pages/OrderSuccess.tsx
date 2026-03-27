@@ -5,13 +5,12 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
   Loader2,
   Check,
   ShoppingBag,
-  ArrowRight,
   Home,
   FileText,
   Copy,

@@ -40,7 +40,6 @@ import { dashboardService, crmService } from '../services/api';
 import type { DashboardData } from '../types';
 import QRDisplay from '../components/QRDisplay';
 import { useWalletBalance } from '../stores/walletStore';
-import { Link } from 'react-router-dom';
 
 export default function Dashboard() {
   const { t } = useTranslation();
