@@ -23,7 +23,6 @@ import type {
   CreateOrderRequest,
   StreamingPlatform,
   WalletBalance,
-  WalletTransaction,
   WithdrawalRequest,
   TransactionListParams,
   TransactionListResponse,

@@ -24,7 +24,6 @@ export async function getBalance(req: AuthenticatedRequest, res: Response): Prom
     const wallet = await walletService.getWallet(userId);
 
     if (!wallet) {
-      // Create wallet if it doesn't exist
       const newWallet = await walletService.createWallet(userId);
 
       const response: ApiResponse<{
@@ -43,7 +42,9 @@ export async function getBalance(req: AuthenticatedRequest, res: Response): Prom
           lastUpdated: newWallet.updatedAt.toISOString(),
         },
       };
-      return res.json(response);
+
+      res.json(response);
+      return;
     }
 
     const response: ApiResponse<{

@@ -40,6 +40,8 @@ export interface CommissionAttributes {
   amount: number;
   currency: string;
   status: 'pending' | 'approved' | 'paid';
+  description?: string | null;
+  migratedToWallet?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }

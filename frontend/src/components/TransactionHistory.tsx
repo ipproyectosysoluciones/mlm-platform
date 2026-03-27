@@ -86,7 +86,6 @@ export function TransactionHistory({ className, limit = 10 }: TransactionHistory
     isLoading,
     error,
     hasMore,
-    transactionPage,
     transactionType,
     fetchTransactions,
     setTransactionType,
@@ -149,7 +148,11 @@ export function TransactionHistory({ className, limit = 10 }: TransactionHistory
           <Filter className="h-4 w-4 text-slate-400" />
           <select
             value={transactionType || ''}
-            onChange={(e) => setTransactionType(e.target.value || null)}
+            onChange={(e) =>
+              setTransactionType(
+                (e.target.value || null) as 'commission' | 'withdrawal' | 'refund' | null
+              )
+            }
             className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 focus:border-emerald-500 focus:outline-none"
           >
             {typeOptions.map((option) => (

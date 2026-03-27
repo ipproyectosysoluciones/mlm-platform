@@ -111,7 +111,7 @@ async function migrateHistoricalCommissions(): Promise<MigrationResult> {
         // Create wallet transaction
         await WalletTransaction.create({
           walletId: wallet.id,
-          type: 'COMMISSION',
+          type: WALLET_TRANSACTION_TYPE.COMMISSION_EARNED,
           amount: amountInUSD,
           balanceAfter: newBalance,
           referenceId: commission.id.toString(),
@@ -212,7 +212,7 @@ async function rollbackMigration(): Promise<void> {
         const transaction = await WalletTransaction.findOne({
           where: {
             referenceId: commission.id.toString(),
-            type: 'COMMISSION',
+            type: WALLET_TRANSACTION_TYPE.COMMISSION_EARNED,
           },
         });
 

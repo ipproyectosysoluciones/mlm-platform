@@ -6,7 +6,12 @@
  * @author MLM Development Team
  */
 import { create } from 'zustand';
-import type { WalletBalance, WalletTransaction, WithdrawalRequest } from '../types';
+import type {
+  WalletBalance,
+  WalletTransaction,
+  WithdrawalRequest,
+  WalletTransactionType,
+} from '../types';
 import { walletService } from '../services/api';
 
 interface WalletState {
@@ -30,7 +35,7 @@ interface WalletState {
   hasMoreTransactions: boolean;
 
   // Filters
-  transactionType: string | null;
+  transactionType: WalletTransactionType | null;
   startDate: string | null;
   endDate: string | null;
 
@@ -42,7 +47,7 @@ interface WalletState {
   fetchWithdrawalStatus: (id: string) => Promise<WithdrawalRequest>;
 
   // Setters
-  setTransactionType: (type: string | null) => void;
+  setTransactionType: (type: WalletTransactionType | null) => void;
   setDateRange: (start: string | null, end: string | null) => void;
   clearError: () => void;
   reset: () => void;
@@ -246,6 +251,8 @@ export const useWalletTransactions = () =>
     page: state.transactionPage,
     hasMore: state.hasMoreTransactions,
     fetchTransactions: state.fetchTransactions,
+    transactionType: state.transactionType,
+    setTransactionType: state.setTransactionType,
   }));
 
 export const useWalletWithdrawals = () =>

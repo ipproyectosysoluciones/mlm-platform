@@ -5,7 +5,6 @@
  * @module components/WalletSkeleton
  * @author MLM Development Team
  */
-import React from 'react';
 
 interface WalletSkeletonProps {
   /** Type of skeleton to display */

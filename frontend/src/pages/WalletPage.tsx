@@ -28,21 +28,6 @@ export default function WalletPage() {
     fetchTransactions(true);
   }, []);
 
-  /**
-   * Handle withdrawal form success
-   */
-  const handleWithdrawalSuccess = () => {
-    setShowWithdrawalModal(true);
-  };
-
-  /**
-   * Handle withdrawal amount change from form
-   * The form will handle the actual submission
-   */
-  const handleWithdrawalAmount = (amount: number) => {
-    setWithdrawalAmount(amount);
-  };
-
   if (isLoading && !balance) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
