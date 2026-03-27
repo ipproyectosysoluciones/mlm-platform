@@ -50,6 +50,29 @@ app.use(
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
+// Global API rate limiter - 200 requests per minute for all API routes
+// Rate limit global: 200 solicitudes por minuto para todas las rutas API
+const globalLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: isTest ? 1000 : 200, // 200 req/min production, 1000 for tests
+  message: {
+    success: false,
+    error: {
+      code: 'RATE_LIMIT',
+      message: 'Too many requests. Please try again later.',
+    },
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  skip: (req) => {
+    // Skip rate limiting for health checks
+    return req.path === '/health' || req.path === '/api/health';
+  },
+});
+
+// Apply global rate limiter to all API routes
+app.use('/api', globalLimiter);
+
 // Rate limiting for auth endpoints
 // Rate limit de 50 para desarrollo y testing, 5 para producción
 const authLimiter = rateLimit({
