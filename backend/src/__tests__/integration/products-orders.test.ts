@@ -21,12 +21,11 @@ describe('Products and Orders Integration Tests', () => {
     testProduct = await Product.create({
       name: 'Netflix Premium',
       description: 'Premium streaming subscription',
-      type: 'streaming',
+      platform: 'netflix',
       price: 15.99,
       currency: 'USD',
-      interval: 'monthly',
-      features: ['4K', 'HDR', 'Multiple screens'],
-      status: 'active',
+      durationDays: 30,
+      isActive: true,
     });
 
     // Create test user
@@ -55,7 +54,7 @@ describe('Products and Orders Integration Tests', () => {
       const foundProduct = res.body.data.find((p: any) => p.id === testProduct.id);
       expect(foundProduct).toBeDefined();
       expect(foundProduct.name).toBe('Netflix Premium');
-      expect(foundProduct.status).toBe('active');
+      expect(foundProduct.isActive).toBe(true);
     });
 
     it('should only return active products', async () => {
@@ -63,10 +62,11 @@ describe('Products and Orders Integration Tests', () => {
       await Product.create({
         name: 'Inactive Product',
         description: 'This product is inactive',
-        type: 'streaming',
+        platform: 'spotify',
         price: 9.99,
         currency: 'USD',
-        status: 'inactive',
+        durationDays: 30,
+        isActive: false,
       });
 
       const res = await testAgent.get('/api/products');
@@ -87,10 +87,11 @@ describe('Products and Orders Integration Tests', () => {
         await Product.create({
           name: `Product ${i}`,
           description: `Test product ${i}`,
-          type: 'streaming',
+          platform: 'netflix',
           price: 10 + i,
           currency: 'USD',
-          status: 'active',
+          durationDays: 30,
+          isActive: true,
         });
       }
 
@@ -234,10 +235,11 @@ describe('Products and Orders Integration Tests', () => {
       await Order.create({
         userId: testUser.id,
         productId: testProduct.id,
-        amount: testProduct.price,
+        totalAmount: testProduct.price,
         currency: 'USD',
         status: 'completed',
         paymentMethod: 'simulated',
+        orderNumber: `ORD-TEST-${Date.now()}`,
       });
 
       // Create another user with their own order
@@ -245,10 +247,11 @@ describe('Products and Orders Integration Tests', () => {
       await Order.create({
         userId: otherUser.id,
         productId: testProduct.id,
-        amount: testProduct.price,
+        totalAmount: testProduct.price,
         currency: 'USD',
         status: 'completed',
         paymentMethod: 'simulated',
+        orderNumber: `ORD-TEST-${Date.now()}`,
       });
 
       const res = await testAgent.get('/api/orders').set(headers);
@@ -281,14 +284,15 @@ describe('Products and Orders Integration Tests', () => {
     it('should return order for owner', async () => {
       const headers = getAuthHeaders(testUser);
 
-      // Create an order
+      // Create an order for the test user
       const order = await Order.create({
         userId: testUser.id,
         productId: testProduct.id,
-        amount: testProduct.price,
+        totalAmount: testProduct.price,
         currency: 'USD',
         status: 'completed',
         paymentMethod: 'simulated',
+        orderNumber: `ORD-TEST-${Date.now()}`,
       });
 
       const res = await testAgent.get(`/api/orders/${order.id}`).set(headers);
@@ -306,10 +310,11 @@ describe('Products and Orders Integration Tests', () => {
       const order = await Order.create({
         userId: testUser.id,
         productId: testProduct.id,
-        amount: testProduct.price,
+        totalAmount: testProduct.price,
         currency: 'USD',
         status: 'completed',
         paymentMethod: 'simulated',
+        orderNumber: `ORD-TEST-${Date.now()}`,
       });
 
       // Create another user and try to access the order
@@ -343,10 +348,11 @@ describe('Products and Orders Integration Tests', () => {
       const order = await Order.create({
         userId: testUser.id,
         productId: testProduct.id,
-        amount: testProduct.price,
+        totalAmount: testProduct.price,
         currency: 'USD',
         status: 'completed',
         paymentMethod: 'simulated',
+        orderNumber: `ORD-TEST-${Date.now()}`,
       });
 
       const res = await testAgent.get(`/api/orders/${order.id}`);

@@ -5,7 +5,7 @@
  * @module __tests__/fixtures
  */
 
-import { User } from '../models';
+import { User, UserClosure } from '../models';
 import { sequelize } from '../config/database';
 import bcrypt from 'bcryptjs';
 import { treeServiceInstance } from '../services/UserService';
@@ -40,9 +40,39 @@ export async function createTestUser(
     currency: 'USD',
   } as any);
 
-  // Skip closure table population to avoid hangs in tests
-  // The tree structure is not needed for order tests
-  // This avoids complex queries on user_closure that may timeout
+  // Populate closure table if sponsorId is provided
+  // This is required for tree-related tests to work
+  if (overrides.sponsorId) {
+    const sponsor = await User.findByPk(overrides.sponsorId);
+    if (sponsor) {
+      // Insert ancestor path from sponsor to user
+      // First get sponsor's ancestors
+      const sponsorAncestors = await sequelize.query(
+        `SELECT ancestor_id, depth FROM user_closure WHERE descendant_id = :sponsorId`,
+        {
+          replacements: { sponsorId: overrides.sponsorId },
+          type: 'SELECT' as any,
+        }
+      );
+
+      // Add sponsor as direct ancestor (depth + 1)
+      await UserClosure.create({
+        ancestorId: overrides.sponsorId,
+        descendantId: user.id,
+        depth: 1,
+      });
+
+      // Add all sponsor's ancestors with incremented depth
+      const ancestors = sponsorAncestors as unknown as { ancestor_id: string; depth: number }[];
+      for (const anc of ancestors) {
+        await UserClosure.create({
+          ancestorId: anc.ancestor_id,
+          descendantId: user.id,
+          depth: anc.depth + 1,
+        });
+      }
+    }
+  }
 
   return user;
 }
