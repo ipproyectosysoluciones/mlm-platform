@@ -6,6 +6,7 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { changeLanguage, getCurrentLanguage, supportedLanguages } from '../../i18n';
 import { useAuth } from '../../context/AuthContext';
 import {
   LayoutDashboard,
