@@ -33,6 +33,11 @@
   "pnpm": {
     "overrides": {
       "serialize-javascript": ">=7.0.3"
-    }
+    },
+    "ignoredBuiltDependencies": [
+      "@scarf/scarf",
+      "esbuild",
+      "sqlite3"
+    ]
   }
 }
