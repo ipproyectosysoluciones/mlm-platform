@@ -2,14 +2,19 @@
  * @fileoverview Email Service - Brevo SMTP Relay implementation
  * @description Service for sending transactional emails via Brevo SMTP relay
  * @module services/EmailService
+ * @author MLM Development Team
+ *
+ * @example
+ * // English: Import and use EmailService
+ * const emailService = new EmailService();
+ * await emailService.sendWelcome({ email: 'user@example.com', firstName: 'John', referralCode: 'REF123', referralLink: 'https://...' });
+ *
+ * // Español: Importar y usar EmailService
+ * const emailService = new EmailService();
+ * await emailService.sendWelcome({ email: 'usuario@ejemplo.com', firstName: 'Juan', referralCode: 'REF123', referralLink: 'https://...' });
  */
 import nodemailer from 'nodemailer';
 import { config } from '../config/env';
-import { welcomeTemplate } from '../templates/email/welcome';
-import { commissionTemplate } from '../templates/email/commission';
-import { downlineTemplate } from '../templates/email/downline';
-import { passwordResetTemplate } from '../templates/email/passwordReset';
-import { weeklyDigestTemplate } from '../templates/email/weeklyDigest';
 
 /**
  * EmailService - Brevo SMTP email delivery
@@ -19,14 +24,14 @@ export class EmailService {
   private transporter;
 
   constructor() {
-    // Brevo SMTP Relay works exactly like a standard SMTP server
+    // Brevo SMTP Relay configuration
     this.transporter = nodemailer.createTransport({
-      host: config.brevoSmtpHost,
-      port: Number(config.brevoSmtpPort),
+      host: config.brevo.smtpHost,
+      port: config.brevo.smtpPort,
       secure: false, // 587 uses STARTTLS
       auth: {
-        user: config.brevoSmtpUser,
-        pass: config.brevoSmtpPass,
+        user: config.brevo.smtpUser,
+        pass: config.brevo.smtpPass,
       },
     });
   }
@@ -34,7 +39,7 @@ export class EmailService {
   /**
    * Send an email
    * Envía un email
-   * @param to - Recipient email
+   * @param to - Recipient email address
    * @param subject - Email subject
    * @param html - HTML content
    * @returns Promise<boolean> - True if sent successfully
@@ -42,7 +47,7 @@ export class EmailService {
   async send(to: string, subject: string, html: string): Promise<boolean> {
     try {
       await this.transporter.sendMail({
-        from: `"${config.brevoSenderName}" <${config.brevoSenderEmail}>`,
+        from: `"${config.brevo.senderName}" <${config.brevo.senderEmail}>`,
         to,
         subject,
         html,
@@ -66,11 +71,26 @@ export class EmailService {
     referralCode: string;
     referralLink: string;
   }): Promise<boolean> {
-    const html = welcomeTemplate({
-      firstName: data.firstName,
-      referralCode: data.referralCode,
-      referralLink: data.referralLink,
-    });
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Bienvenido a MLM Platform</title>
+      </head>
+      <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h1 style="color: #2563eb;">¡Bienvenido a MLM Platform, ${data.firstName}!</h1>
+        <p>Gracias por registrarte en nuestra plataforma.</p>
+        <div style="background: #f3f4f6; padding: 16px; border-radius: 8px; margin: 20px 0;">
+          <p style="margin: 0;"><strong>Tu código de referido:</strong></p>
+          <p style="font-size: 24px; font-weight: bold; color: #2563eb; margin: 10px 0;">${data.referralCode}</p>
+        </div>
+        <p>Comparte este código con tus amigos y ganarás comisiones por cada registro.</p>
+        <a href="${data.referralLink}" style="display: inline-block; background: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin-top: 16px;">Ver mi dashboard</a>
+      </body>
+      </html>
+    `;
     return this.send(data.email, 'Bienvenido a MLM Platform', html);
   }
 
@@ -85,25 +105,25 @@ export class EmailService {
     firstName: string;
     amount: number;
     currency: string;
-    type: string;
-    percentage: number;
-    purchaseId: string;
-    pendingBalance: number;
   }): Promise<boolean> {
-    const html = commissionTemplate({
-      firstName: data.firstName,
-      amount: data.amount,
-      currency: data.currency,
-      type: data.type,
-      percentage: data.percentage,
-      purchaseId: data.purchaseId,
-      pendingBalance: data.pendingBalance,
-    });
-    return this.send(
-      data.email,
-      `💰 Nueva comisión ganada: $${data.amount} ${data.currency}`,
-      html
-    );
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <title>Nueva Comisión Ganada</title>
+      </head>
+      <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h1 style="color: #059669;">¡Felicidades, ${data.firstName}!</h1>
+        <p>Has ganado una nueva comisión.</p>
+        <div style="background: #d1fae5; padding: 16px; border-radius: 8px; margin: 20px 0; text-align: center;">
+          <p style="font-size: 32px; font-weight: bold; color: #059669; margin: 0;">$${data.amount} ${data.currency}</p>
+        </div>
+        <p>Revisa tu dashboard para más detalles.</p>
+      </body>
+      </html>
+    `;
+    return this.send(data.email, 'Nueva comisión ganada - MLM Platform', html);
   }
 
   /**
@@ -116,18 +136,24 @@ export class EmailService {
     email: string;
     firstName: string;
     newUserEmail: string;
-    registrationDate: string;
     position: string;
-    totalReferrals: number;
   }): Promise<boolean> {
-    const html = downlineTemplate({
-      firstName: data.firstName,
-      newUserEmail: data.newUserEmail,
-      registrationDate: data.registrationDate,
-      position: data.position,
-      totalReferrals: data.totalReferrals,
-    });
-    return this.send(data.email, `👥 Nuevo downline registrado: ${data.newUserEmail}`, html);
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head><meta charset="utf-8"><title>Nuevo Downline</title></head>
+      <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h1 style="color: #2563eb;">¡Nuevo miembro en tu red, ${data.firstName}!</h1>
+        <p>Un nuevo usuario se ha registrado bajo tu patrocinio.</p>
+        <ul>
+          <li><strong>Email:</strong> ${data.newUserEmail}</li>
+          <li><strong>Posición:</strong> ${data.position}</li>
+        </ul>
+        <p>¡Sigue creciendo tu red de distribuidores!</p>
+      </body>
+      </html>
+    `;
+    return this.send(data.email, `Nuevo downline registrado: ${data.newUserEmail}`, html);
   }
 
   /**
@@ -136,15 +162,20 @@ export class EmailService {
    * @param data - Password reset email data
    * @returns Promise<boolean> - True if sent successfully
    */
-  async sendPasswordReset(data: {
-    email: string;
-    resetToken: string;
-    resetLink: string;
-  }): Promise<boolean> {
-    const html = passwordResetTemplate({
-      resetLink: data.resetLink,
-    });
-    return this.send(data.email, 'Restablecimiento de contraseña', html);
+  async sendPasswordReset(data: { email: string; resetLink: string }): Promise<boolean> {
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head><meta charset="utf-8"><title>Restablecer Contraseña</title></head>
+      <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h1>Restablecer tu contraseña</h1>
+        <p>Haz clic en el botón para crear una nueva contraseña:</p>
+        <a href="${data.resetLink}" style="display: inline-block; background: #dc2626; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px;">Restablecer contraseña</a>
+        <p style="margin-top: 20px; color: #6b7280; font-size: 12px;">Este enlace expira en 1 hora.</p>
+      </body>
+      </html>
+    `;
+    return this.send(data.email, 'Restablecimiento de contraseña - MLM Platform', html);
   }
 
   /**
@@ -156,28 +187,32 @@ export class EmailService {
   async sendWeeklyDigest(data: {
     email: string;
     firstName: string;
-    weekStart: string;
-    weekEnd: string;
     newReferrals: number;
     commissionsEarned: number;
-    pendingCommissions: number;
-    totalDownline: number;
   }): Promise<boolean> {
-    const html = weeklyDigestTemplate({
-      firstName: data.firstName,
-      weekStart: data.weekStart,
-      weekEnd: data.weekEnd,
-      newReferrals: data.newReferrals,
-      commissionsEarned: data.commissionsEarned,
-      pendingCommissions: data.pendingCommissions,
-      totalDownline: data.totalDownline,
-    });
-    return this.send(
-      data.email,
-      `📊 Tu resumen semanal: ${data.weekStart} al ${data.weekEnd}`,
-      html
-    );
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head><meta charset="utf-8"><title>Resumen Semanal</title></head>
+      <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h1>Resumen Semanal, ${data.firstName}!</h1>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0;">
+          <div style="background: #eff6ff; padding: 16px; border-radius: 8px; text-align: center;">
+            <p style="margin: 0; color: #6b7280;">Nuevos Referidos</p>
+            <p style="font-size: 32px; font-weight: bold; color: #2563eb; margin: 10px 0;">${data.newReferrals}</p>
+          </div>
+          <div style="background: #d1fae5; padding: 16px; border-radius: 8px; text-align: center;">
+            <p style="margin: 0; color: #6b7280;">Ganancias</p>
+            <p style="font-size: 32px; font-weight: bold; color: #059669; margin: 10px 0;">$${data.commissionsEarned}</p>
+          </div>
+        </div>
+        <p>¡Sigue el progreso de tu red esta semana!</p>
+      </body>
+      </html>
+    `;
+    return this.send(data.email, '📊 Tu resumen semanal de MLM Platform', html);
   }
 }
 
+// Export singleton instance
 export const emailService = new EmailService();

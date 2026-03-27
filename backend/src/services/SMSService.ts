@@ -18,7 +18,7 @@ export class SMSService {
    * @returns Promise<{ success: boolean; error?: string }>
    */
   async sendVerificationCode(phone: string): Promise<{ success: boolean; error?: string }> {
-    if (!config.brevoApiKey) {
+    if (!config.brevo.apiKey) {
       return { success: false, error: 'Brevo API key not configured' };
     }
 
@@ -40,14 +40,14 @@ export class SMSService {
         'https://api.brevo.com/v3/sms/send',
         {
           recipient: phone, // E.164 format required
-          sender: config.brevoSmsSender, // Can be alphanumeric (max 11 chars) or numeric
+          sender: config.brevo.smsSender, // Can be alphanumeric (max 11 chars) or numeric
           content: message,
         },
         {
           headers: {
             accept: 'application/json',
             'content-type': 'application/json',
-            'api-key': config.brevoApiKey,
+            'api-key': config.brevo.apiKey,
           },
         }
       );
