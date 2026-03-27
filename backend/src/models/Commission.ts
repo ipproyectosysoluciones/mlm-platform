@@ -32,6 +32,8 @@ export class Commission extends Model<CommissionAttributes, CommissionCreation> 
   declare amount: number;
   declare currency: string;
   declare status: 'pending' | 'approved' | 'paid';
+  declare description?: string;
+  declare migratedToWallet?: boolean;
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
   declare fromUser?: User | null;
@@ -76,6 +78,15 @@ Commission.init(
     status: {
       type: DataTypes.ENUM('pending', 'approved', 'paid'),
       defaultValue: 'pending',
+    },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    migratedToWallet: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
     },
   },
   {
