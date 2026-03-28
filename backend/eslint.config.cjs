@@ -25,6 +25,6 @@ module.exports = tseslint.config(
     },
   },
   {
-    ignores: ['dist/', 'node_modules/', 'scripts/', '*.config.js', '*.config.ts'],
+    ignores: ['dist/', 'node_modules/', 'scripts/', '*.config.js', '*.config.cjs', '*.config.ts'],
   }
 );

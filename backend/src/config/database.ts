@@ -4,10 +4,13 @@ import { config } from './env';
 // Allow test override
 let _sequelize: Sequelize | null = null;
 
+// Support both MySQL and PostgreSQL
+// Set DB_DIALECT=postgres to use PostgreSQL, otherwise defaults to MySQL
+const dbDialect = (process.env.DB_DIALECT || 'mysql') as 'mysql' | 'postgres';
+
 export function createSequelize(): Sequelize {
   if (_sequelize) return _sequelize;
 
-  // MySQL for all environments (including tests with separate test DB)
   const dbName = process.env.TEST_DB_NAME || config.db.name;
   const dbUser = process.env.TEST_DB_USER || config.db.user;
   const dbPass = process.env.TEST_DB_PASSWORD || config.db.password;
@@ -20,7 +23,7 @@ export function createSequelize(): Sequelize {
     password: dbPass,
     host: dbHost,
     port: dbPort,
-    dialect: 'mysql',
+    dialect: dbDialect,
     logging: false,
     pool: {
       max: 5,

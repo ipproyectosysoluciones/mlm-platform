@@ -7,11 +7,13 @@
 
 // Set test environment BEFORE importing anything else
 process.env.NODE_ENV = 'test';
+// Use PostgreSQL for tests (set DB_DIALECT=postgres)
+process.env.DB_DIALECT = 'postgres';
 process.env.TEST_DB_NAME = 'mlm_test';
 process.env.TEST_DB_HOST = '127.0.0.1';
-process.env.TEST_DB_PORT = '3307';
-process.env.TEST_DB_USER = 'root';
-process.env.TEST_DB_PASSWORD = 'testpass';
+process.env.TEST_DB_PORT = '5435'; // PostgreSQL test port
+process.env.TEST_DB_USER = 'mlm_test';
+process.env.TEST_DB_PASSWORD = 'mlm_test';
 process.env.DB_HOST = '127.0.0.1';
 
 import { Sequelize } from 'sequelize';
@@ -93,19 +95,37 @@ beforeEach(async () => {
     'landing_pages',
     'orders',
     'products',
+    'wallets',
+    'wallet_transactions',
+    'withdrawal_requests',
   ];
 
-  try {
-    await sequelizeInstance?.query('SET FOREIGN_KEY_CHECKS = 0');
+  // Get dialect from sequelize
+  const dialect = sequelizeInstance?.getDialect();
 
+  if (dialect === 'postgres') {
+    // PostgreSQL: Use TRUNCATE CASCADE
     for (const table of tables) {
       try {
-        await sequelizeInstance?.query(`DELETE FROM \`${table}\``);
+        await sequelizeInstance?.query(`TRUNCATE TABLE "${table}" CASCADE`);
       } catch {
         // Ignore errors
       }
     }
-  } finally {
-    await sequelizeInstance?.query('SET FOREIGN_KEY_CHECKS = 1');
+  } else {
+    // MySQL: Use DELETE with FK checks
+    try {
+      await sequelizeInstance?.query('SET FOREIGN_KEY_CHECKS = 0');
+
+      for (const table of tables) {
+        try {
+          await sequelizeInstance?.query(`DELETE FROM \`${table}\``);
+        } catch {
+          // Ignore errors
+        }
+      }
+    } finally {
+      await sequelizeInstance?.query('SET FOREIGN_KEY_CHECKS = 1');
+    }
   }
 });
