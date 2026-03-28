@@ -1,84 +1,77 @@
-# Handlebars Security Monitoring
+# Security Monitoring
 
-## Status: UNDER MONITORING
+## Status: ACTIVE - Weekly Audit Configured
 
 **Last Updated**: 2026-03-27
 
-## Vulnerabilities Summary
+## Current Vulnerabilities
 
-| Severity | Count | Status     |
-| -------- | ----- | ---------- |
-| Critical | 1     | Unresolved |
-| High     | 4     | Unresolved |
-| Medium   | 2     | Unresolved |
+| Package                  | Critical | High | Medium | Total  | Status                       |
+| ------------------------ | -------- | ---- | ------ | ------ | ---------------------------- |
+| **picomatch**            | 0        | 4    | 4      | 8      | Under monitoring (devDep)    |
+| **brace-expansion**      | 0        | 0    | 5      | 5      | Under monitoring (devDep)    |
+| **serialize-javascript** | 0        | 2    | 1      | 3      | Under monitoring (devDep)    |
+| **handlebars**           | 1        | 4    | 2      | 7      | ✅ REMOVED from dependencies |
+| **TOTAL**                | 1        | 10   | 12     | **17** | -                            |
 
-## Affected Package
+## Actions Completed
 
-- **handlebars**: 4.7.9 (latest 4.x)
-- **GHSA advisories**: 7 total
+### 2026-03-27
 
-## Root Cause
+- [x] Update express to v5.2.1 (resolves path-to-regexp)
+- [x] Remove handlebars dependency (eliminates 7 vulnerabilities)
+- [x] Update lint-staged to v16.4.0
+- [x] Add weekly security audit GitHub Action
 
-`handlebars@4.7.9` is the latest 4.x version. No patch has been released yet (as of 2026-03-27).
+## Resolved Vulnerabilities
 
-## Risk Assessment
+| Package        | Version | Status                       |
+| -------------- | ------- | ---------------------------- |
+| path-to-regexp | 8.4.0   | ✅ Resolved via express v5   |
+| handlebars     | Removed | ✅ Removed from dependencies |
 
-### Why This Is Concerning
+## Remaining Vulnerabilities
 
-1. **RCE Vulnerability**: CVE-2026-33937 (Critical, CVSS 9.8)
-   - Remote Code Execution via AST injection
-   - Affects all Handlebars.compile() calls
+### picomatch (8 vulns)
 
-2. **XSS via Prototype Pollution**: Multiple CVEs
-   - Prototype pollution leading to XSS
-   - Partial template injection
+- **Type**: Method Injection (Prototype Pollution), ReDoS
+- **Severity**: 4 High, 4 Medium
+- **Root cause**: Transitive dependency of lint-staged
+- **Risk**: Dev-only dependency (git hooks), low production risk
+- **Fix**: Waiting for lint-staged to update picomatch
 
-### Why It's Acceptable (Temporarily)
+### brace-expansion (5 vulns)
 
-1. **Express 5 upgrade**: path-to-regexp vulnerabilities RESOLVED
-2. **Mitigations in place**:
-   - Input sanitization
-   - No user-controlled template compilation
-   - Sandboxed template rendering
+- **Type**: Memory exhaustion via zero-step sequences
+- **Severity**: 5 Medium
+- **Root cause**: Transitive dependency
+- **Risk**: Dev-only dependency, low production risk
+- **Fix**: Waiting for dependency chain update
 
-3. **Handlebars usage in this project**:
-   - Only for server-rendered templates (if any)
-   - Not exposed to user input directly
+### serialize-javascript (3 vulns)
 
-## Monitoring Checklist
+- **Type**: ReDoS, RCE
+- **Severity**: 2 High, 1 Medium
+- **Root cause**: Transitive dependency of qrcode
+- **Risk**: Low (serialization is controlled)
+- **Fix**: Monitor for updates
 
-- [ ] Check for handlebars 5.x release weekly
-- [ ] Monitor [npm handlebars advisories](https://www.npmjs.com/package/handlebars)
-- [ ] Check [GitHub Security Advisories](https://github.com/advisories?query=ecosystem%3Anpm+advisory-db%3Ahandlebars)
-- [ ] Review Dependabot alerts on push to main/development
+## Monitoring Configuration
 
-## Recommended Actions
+### GitHub Action: security-audit.yml
 
-### Immediate (if budget allows)
+- **Schedule**: Every Monday at 8:00 AM UTC
+- **Tools**: npm audit, Trivy
+- **Output**: GitHub Security tab + weekly report
 
-Consider migrating to a safer template engine:
+## Weekly Checklist
 
-- **Pug** (formerly Jade) - Active maintenance
-- **EJS** - Simpler, fewer attack vectors
-- **Nunjucks** - Good security track record
+- [ ] Check npm audit output
+- [ ] Review Dependabot alerts
+- [ ] Update SECURITY_WEEKLY.md
+- [ ] Check for new vulnerability disclosures
 
-### Short-term (1-2 months)
+## Resources
 
-1. Monitor for handlebars security patches
-2. Implement strict CSP headers
-3. Add runtime template validation
-
-### Long-term (3-6 months)
-
-1. Evaluate template engine migration
-2. Document template security requirements
-3. Add security tests for template rendering
-
-## Related Files
-
-- `backend/package.json` - Contains handlebars dependency
-- `backend/src/templates/` - Template files (if any)
-
-## Contact
-
-Security team: security@mlm-platform.io
+- [Dependabot Alerts](https://github.com/ipproyectosysoluciones/mlm-platform/security/dependabot)
+- [GitHub Security Advisories](https://github.com/advisories?query=ecosystem%3Anpm)
