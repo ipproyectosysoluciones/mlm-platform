@@ -29,6 +29,8 @@ import { Response, RequestHandler } from 'express';
 import { body } from 'express-validator';
 import { userService } from '../services/UserService';
 import { hashPassword, verifyPassword, generateToken } from '../services/AuthService';
+import { emailService } from '../services/EmailService';
+import { config } from '../config/env';
 import type { ApiResponse, UserAttributes } from '../types';
 import { AppError } from '../middleware/error.middleware';
 import { LEVEL_NAMES } from '../types';
@@ -85,6 +87,37 @@ export const register: RequestHandler = asyncHandler(
     });
 
     const token = generateToken(user);
+
+    // Send welcome email / Enviar email de bienvenida
+    const referralLink = `${config.app.frontendUrl || 'https://mlm-platform.com'}/register?ref=${user.referralCode}`;
+    const firstName = user.email.split('@')[0];
+
+    // Fire and forget - don't block registration response
+    // Enviar y olvidar - no bloquear la respuesta de registro
+    emailService
+      .sendWelcome({
+        email: user.email,
+        firstName,
+        referralCode: user.referralCode,
+        referralLink,
+      })
+      .catch((err) => console.error('Welcome email failed:', err));
+
+    // If user has sponsor, notify sponsor about new downline
+    // Si el usuario tiene patrocinador, notificar al patrocinador sobre nuevo downline
+    if (user.sponsorId) {
+      const sponsor = await userService.findById(user.sponsorId);
+      if (sponsor && (sponsor as any).emailNotifications) {
+        emailService
+          .sendDownline({
+            email: sponsor.email,
+            firstName: sponsor.email.split('@')[0],
+            newUserEmail: user.email,
+            position: user.position || 'unknown',
+          })
+          .catch((err) => console.error('Downline email failed:', err));
+      }
+    }
 
     const response: ApiResponse<{
       user: Partial<UserAttributes>;

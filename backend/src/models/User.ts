@@ -37,6 +37,12 @@ export class User extends Model<UserAttributes, UserCreation> {
   declare status: 'active' | 'inactive';
   declare role: 'admin' | 'user';
   declare currency: 'USD' | 'COP' | 'MXN';
+  // Notification preferences
+  declare emailNotifications: boolean;
+  declare smsNotifications: boolean;
+  declare twoFactorEnabled: boolean;
+  declare twoFactorPhone: string | null;
+  declare weeklyDigest: boolean;
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
 }
@@ -92,6 +98,32 @@ User.init(
     role: {
       type: DataTypes.ENUM('admin', 'user'),
       defaultValue: 'user',
+    },
+    // Notification preferences / Preferencias de notificación
+    emailNotifications: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+      field: 'email_notifications',
+    },
+    smsNotifications: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+      field: 'sms_notifications',
+    },
+    twoFactorEnabled: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+      field: 'two_factor_enabled',
+    },
+    twoFactorPhone: {
+      type: DataTypes.STRING(20),
+      allowNull: true,
+      field: 'two_factor_phone',
+    },
+    weeklyDigest: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+      field: 'weekly_digest',
     },
   },
   {

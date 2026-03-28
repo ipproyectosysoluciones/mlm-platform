@@ -18,14 +18,11 @@
  *
  * // Español: Detener el scheduler
  * schedulerService.stop();
- *
- * @note Requires node-cron package: npm install node-cron
  */
+import cron from 'node-cron';
 import { walletService } from './WalletService';
+import { notificationService } from './NotificationService';
 import { config } from '../config/env';
-
-// TODO: Install node-cron package: npm install node-cron
-// import cron from 'node-cron';
 
 export class SchedulerService {
   private job: unknown | null = null;
@@ -43,21 +40,23 @@ export class SchedulerService {
       return;
     }
 
-    // TODO: Uncomment when node-cron is installed:
-    // this.job = cron.schedule(config.wallet.cronTime, async () => {
-    //   console.log('📋 Running daily payout job...');
-    //   try {
-    //     const processed = await walletService.processDailyPayouts();
-    //     console.log(`✅ Processed ${processed.length} withdrawal requests`);
-    //   } catch (error) {
-    //     console.error('❌ Error processing daily payouts:', error);
-    //   }
-    // });
+    // Daily payout job at midnight UTC
+    this.job = cron.schedule(config.wallet.cronTime, async () => {
+      console.log('📋 Running daily payout job...');
+      try {
+        const processed = await walletService.processDailyPayouts();
+        console.log(`✅ Processed ${processed.length} withdrawal requests`);
+      } catch (error) {
+        console.error('❌ Error processing daily payouts:', error);
+      }
+    });
 
-    // Temporary implementation without node-cron
-    console.log('📋 Daily payout scheduler initialized');
-    console.log(`   Cron expression: ${config.wallet.cronTime}`);
-    console.log('   Note: Install node-cron to enable automatic processing');
+    // Start weekly digest notification job
+    notificationService.startWeeklyDigest();
+
+    console.log('📋 Scheduler initialized');
+    console.log(`   Daily payout: ${config.wallet.cronTime}`);
+    console.log(`   Weekly digest: Every Sunday at 9:00 AM UTC`);
 
     this.isRunning = true;
   }
@@ -68,12 +67,13 @@ export class SchedulerService {
    */
   stop(): void {
     if (this.job) {
-      // TODO: Uncomment when node-cron is installed:
-      // (this.job as cron.ScheduledTask).stop();
+      (this.job as cron.ScheduledTask).stop();
       this.job = null;
     }
+    // Stop weekly digest job
+    notificationService.stopWeeklyDigest();
     this.isRunning = false;
-    console.log('🛑 Daily payout scheduler stopped');
+    console.log('🛑 Scheduler stopped');
   }
 
   /**

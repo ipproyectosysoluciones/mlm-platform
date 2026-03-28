@@ -15,6 +15,32 @@ Plataforma MLM (Multi-Level Marketing) con sistema de afiliaciones binarias, com
 - **API REST Documentada** - OpenAPI/Swagger bilingüe (ES/EN)
 - **Tests Automatizados** - Unit, Integration y E2E con Playwright
 - **i18n** - Interfaz bilingüe (Español/Inglés)
+- **Wallet Digital** - Billetera digital con retiros y transacciones
+
+## 📊 Estado de Implementación / Implementation Status
+
+### ✅ Cambios Completados
+
+| Cambio                            | Descripción                           | Estado       | Fecha      |
+| --------------------------------- | ------------------------------------- | ------------ | ---------- |
+| streaming-subscriptions-ecommerce | Sistema de suscripciones y e-commerce | ✅ Archivado | 2026-03-27 |
+| wallet-digital                    | Billetera digital con retiros         | ✅ Archivado | 2026-03-27 |
+| sdd-i18n-bilingual                | Sistema de internacionalización ES/EN | ✅ Archivado | 2026-03-27 |
+| phase-3-visual-tree               | Visual Tree UI con React Flow         | ✅ Archivado | 2026-03-27 |
+| sdd-horizontal-navbar             | Layout de navbar horizontal           | ✅ Archivado | 2026-03-27 |
+| phase-2-notifications             | Notificaciones Email & SMS con 2FA    | ✅ Archivado | 2026-03-27 |
+
+### 🚧 Cambios en Progreso
+
+| Cambio    | Descripción | Progreso |
+| --------- | ----------- | -------- |
+| (ninguno) | -           | -        |
+
+### 📁 Ubicación de Artefactos
+
+- **Cambios activos**: `sdd/`
+- **Cambios archivados**: `sdd/_archived/`
+- **Specs (OpenSpec)**: `openspec/changes/`
 
 ## 📋 Requisitos / Requirements
 

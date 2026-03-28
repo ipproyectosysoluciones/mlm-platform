@@ -9,6 +9,12 @@ export interface UserAttributes {
   status: 'active' | 'inactive';
   role: 'admin' | 'user';
   currency: 'USD' | 'COP' | 'MXN';
+  // Notification preferences
+  emailNotifications: boolean;
+  smsNotifications: boolean;
+  twoFactorEnabled: boolean;
+  twoFactorPhone: string | null;
+  weeklyDigest: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }

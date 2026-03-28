@@ -13,6 +13,13 @@ import {
   changePasswordValidation,
   deleteAccountValidation,
 } from '../controllers/UserController';
+import {
+  getNotificationPreferences,
+  updateNotificationPreferences,
+  enable2FA,
+  verify2FA,
+  disable2FA,
+} from '../controllers/NotificationController';
 import { authenticateToken } from '../middleware/auth.middleware';
 import { validate } from '../middleware/validate.middleware';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware';
@@ -430,5 +437,117 @@ router.get('/search', authenticateToken, asyncHandler(searchUsers));
  *         description: Usuario no encontrado o no está en tu red / User not found or not in your network
  */
 router.get('/:id/details', authenticateToken, asyncHandler(getUserDetails));
+
+// ============================================================
+// PHASE 2: NOTIFICATION ROUTES
+// ============================================================
+
+/**
+ * @swagger
+ * /users/me/notifications:
+ *   get:
+ *     summary: Obtener preferencias de notificación / Get notification preferences
+ *     tags: [users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Preferencias de notificación / Notification preferences
+ */
+router.get('/me/notifications', authenticateToken, asyncHandler(getNotificationPreferences));
+
+/**
+ * @swagger
+ * /users/me/notifications:
+ *   patch:
+ *     summary: Actualizar preferencias de notificación / Update notification preferences
+ *     tags: [users]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               emailNotifications:
+ *                 type: boolean
+ *               smsNotifications:
+ *                 type: boolean
+ *               weeklyDigest:
+ *                 type: boolean
+ *     responses:
+ *       200:
+ *         description: Preferencias actualizadas / Preferences updated
+ */
+router.patch('/me/notifications', authenticateToken, asyncHandler(updateNotificationPreferences));
+
+/**
+ * @swagger
+ * /users/me/2fa/enable:
+ *   post:
+ *     summary: Habilitar 2FA / Enable 2FA
+ *     tags: [users]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - phone
+ *             properties:
+ *               phone:
+ *                 type: string
+ *                 description: Teléfono en formato E.164
+ *     responses:
+ *       200:
+ *         description: Código de verificación enviado / Verification code sent
+ */
+router.post('/me/2fa/enable', authenticateToken, asyncHandler(enable2FA));
+
+/**
+ * @swagger
+ * /users/me/2fa/verify:
+ *   post:
+ *     summary: Verificar código 2FA / Verify 2FA code
+ *     tags: [users]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - code
+ *               - phone
+ *             properties:
+ *               code:
+ *                 type: string
+ *               phone:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: 2FA habilitado / 2FA enabled
+ */
+router.post('/me/2fa/verify', authenticateToken, asyncHandler(verify2FA));
+
+/**
+ * @swagger
+ * /users/me/2fa/disable:
+ *   post:
+ *     summary: Deshabilitar 2FA / Disable 2FA
+ *     tags: [users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: 2FA deshabilitado / 2FA disabled
+ */
+router.post('/me/2fa/disable', authenticateToken, asyncHandler(disable2FA));
 
 export default router;

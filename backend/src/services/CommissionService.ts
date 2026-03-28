@@ -24,6 +24,7 @@ import { sequelize } from '../config/database';
 import { User, Commission, Purchase } from '../models';
 import { COMMISSION_RATES } from '../types';
 import { walletService } from './WalletService';
+import { emailService } from './EmailService';
 
 export class CommissionService {
   /**
@@ -55,6 +56,17 @@ export class CommissionService {
         status: 'pending',
       });
       createdCommissions.push(directCommission);
+
+      // Send commission email notification / Enviar notificación de comisión por email
+      const firstName = sponsor.email.split('@')[0];
+      emailService
+        .sendCommission({
+          email: sponsor.email,
+          firstName,
+          amount: Number(directCommission.amount),
+          currency: purchase.currency,
+        })
+        .catch((err) => console.error('Commission email failed:', err));
     }
 
     const commissionTypeMap: Record<number, keyof typeof COMMISSION_RATES> = {
