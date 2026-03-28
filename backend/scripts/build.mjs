@@ -10,7 +10,7 @@ const buildOptions = {
   bundle: true,
   platform: 'node',
   target: 'node18',
-  outfile: 'dist/server.cjs',
+  outfile: 'dist/server.js',
   external: [
     'mysql2',
     'bcryptjs',
