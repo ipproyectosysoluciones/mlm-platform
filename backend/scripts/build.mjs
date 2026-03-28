@@ -30,11 +30,10 @@ const buildOptions = {
     // Dependencias que faltaban - se estaban bundeleando innecesariamente
     'axios',
     'csv-parse',
-    'nodemailer',
     'node-cron',
     'uuid',
     '@sentry/node',
-    'express-validator',
+    // NOT using external for nodemailer - needs types and should be bundled
   ],
   format: 'cjs',
   sourcemap: !isProduction,
