@@ -86,6 +86,11 @@ export class UserService {
       status: 'active',
       role: 'user',
       currency: data.currency || 'USD',
+      // Notification preferences - defaults
+      emailNotifications: true,
+      smsNotifications: false,
+      twoFactorEnabled: false,
+      weeklyDigest: true,
     });
 
     await treeService.insertWithClosure(userId, sponsorId);

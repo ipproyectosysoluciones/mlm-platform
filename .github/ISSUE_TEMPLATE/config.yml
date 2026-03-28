@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 Documentación
+    url: https://github.com/tu-usuario/mlm-platform/wiki
+    about: Consulta la wiki para documentación detallada
+  - name: 💬 Discord
+    url: https://discord.gg/tu-link
+    about: Únete a nuestra comunidad en Discord
+  - name: 📧 Contacto
+    url: mailto:tu-email@ejemplo.com
+    about: Para consultas directas
