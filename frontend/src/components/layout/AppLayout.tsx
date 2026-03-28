@@ -21,6 +21,7 @@ import {
   ChevronDown,
   Globe,
   Wallet,
+  DollarSign,
 } from 'lucide-react';
 
 // Navigation items
@@ -33,7 +34,10 @@ const NAV_ITEMS = [
   { path: '/profile', labelKey: 'nav.profile', icon: User },
 ];
 
-const ADMIN_ITEMS = [{ path: '/admin', labelKey: 'nav.admin', icon: Shield }];
+const ADMIN_ITEMS = [
+  { path: '/admin', labelKey: 'nav.admin', icon: Shield },
+  { path: '/admin/commissions', labelKey: 'nav.commissionConfig', icon: DollarSign },
+];
 
 interface AppLayoutProps {
   children: React.ReactNode;

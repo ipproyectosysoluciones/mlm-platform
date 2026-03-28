@@ -122,6 +122,7 @@ export class OrderService {
         {
           userId,
           productId: product.id,
+          businessType: 'producto' as const,
           amount: totalAmount,
           currency: product.currency,
           description: product.name,

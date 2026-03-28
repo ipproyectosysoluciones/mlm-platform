@@ -8,7 +8,7 @@ Backend API para sistema de membresía binaria MLM.
 - **Framework**: Express.js
 - **Lenguaje**: TypeScript (ES Modules)
 - **ORM**: Sequelize 6
-- **Base de datos**: MySQL 8 o PostgreSQL 16 (soporta ambos)
+- **Base de datos**: PostgreSQL 16 (Docker)
 - **Build**: esbuild (~1.2MB)
 - **Auth**: JWT
 - **Validación**: express-validator
@@ -18,8 +18,8 @@ Backend API para sistema de membresía binaria MLM.
 ## Requisitos Previos
 
 - Node.js 24+
-- MySQL 8 o PostgreSQL 16
-- npm o yarn
+- Docker (para PostgreSQL)
+- pnpm
 
 ## Instalación
 
@@ -30,19 +30,13 @@ cd backend
 # 2. Instalar dependencias
 pnpm install
 
-# 3. Crear archivo .env desde el ejemplo
+# 3. Iniciar PostgreSQL con Docker
+docker start mlm_postgres
+
+# 4. Crear archivo .env desde el ejemplo
 cp .env.example .env
 
-# 4. Editar .env con tus credenciales
-# MySQL (default):
-# DB_DIALECT=mysql
-# DB_HOST=localhost
-# DB_PORT=3306
-# DB_NAME=mlm_db
-# DB_USER=root
-# DB_PASSWORD=tu_password
-
-# O PostgreSQL:
+# 5. Editar .env con tus credenciales PostgreSQL:
 # DB_DIALECT=postgres
 # DB_HOST=localhost
 # DB_PORT=5434
@@ -50,9 +44,11 @@ cp .env.example .env
 # DB_USER=mlm
 # DB_PASSWORD=mlm123
 
-# 5. Iniciar el servidor (crea las tablas automáticamente)
-pnpm run dev
+# 6. Ejecutar seed (crea tablas + datos de prueba)
+pnpm run seed
 ```
+
+> **Nota**: El seed es re-ejecutable en cualquier momento. Si ya existen registros, los salta.
 
 ## Scripts Disponibles
 
@@ -162,13 +158,27 @@ backend/
 
 ## Comisiones
 
-| Tipo    | Descripción      | Porcentaje |
-| ------- | ---------------- | ---------- |
-| Direct  | Referido directo | 10%        |
-| Level 1 | Primer nivel     | 5%         |
-| Level 2 | Segundo nivel    | 3%         |
-| Level 3 | Tercer nivel     | 2%         |
-| Level 4 | Cuarto nivel     | 1%         |
+Las comisiones son **configurables dinámicamente** por tipo de negocio desde `/api/admin/commissions/config`.
+
+### Tipos de negocio
+
+| Tipo        | Descripción       |
+| ----------- | ----------------- |
+| suscripcion | Suscripciones     |
+| producto    | Productos físicos |
+| membresia   | Membresías        |
+| servicio    | Servicios         |
+| otro        | Otros negocios    |
+
+### Tasas por defecto
+
+| Tipo        | Direct | Lvl 1 | Lvl 2 | Lvl 3 | Lvl 4 |
+| ----------- | ------ | ----- | ----- | ----- | ----- |
+| suscripcion | 20%    | 10%   | 8%    | 5%    | 3%    |
+| producto    | 15%    | 8%    | 5%    | 3%    | 2%    |
+| membresia   | 25%    | 12%   | 8%    | 5%    | 3%    |
+| servicio    | 18%    | 10%   | 6%    | 4%    | 2%    |
+| otro        | 10%    | 5%    | 3%    | 2%    | 1%    |
 
 ## Swagger API Docs
 
@@ -182,19 +192,24 @@ Incluye todos los endpoints con ejemplos de Request/Response.
 
 ## Tests
 
-| Comando                      | Descripción                        |
-| ---------------------------- | ---------------------------------- |
-| `pnpm test`                  | Tests unitarios                    |
-| `pnpm test:unit`             | Solo tests unitarios               |
-| `pnpm test:integration`      | Tests de integración (requiere DB) |
-| `pnpm test:integration:auth` | Tests de integración específicos   |
+| Comando                      | Descripción                           |
+| ---------------------------- | ------------------------------------- |
+| `pnpm test`                  | Tests unitarios (73 tests ✅)         |
+| `pnpm test:unit`             | Solo tests unitarios                  |
+| `pnpm test:integration`      | ⏳ Tests integración (PENDIENTE)      |
+| `pnpm test:integration:auth` | ⏳ Tests integración auth (PENDIENTE) |
 
-Los tests de integración requieren:
+### Estado de Tests
 
-- **MySQL**: puerto 3307
-- **PostgreSQL**: puerto 5435
+- ✅ **Unitarios**: 73/73 pasan (AuthService, UserService, ProductService, OrderService, EmailService)
+- ⏳ **Integración**: Pendientes para próxima sesión. Requieren setup del test container PostgreSQL.
 
-Configurar con variables de entorno `DB_DIALECT`, `TEST_DB_PORT`.
+### Docker Containers
+
+| Container         | Puerto | Usuario  | Base de datos |
+| ----------------- | ------ | -------- | ------------- |
+| mlm_postgres      | 5434   | mlm      | mlm_db        |
+| mlm_postgres_test | 5435   | mlm_test | mlm_test      |
 
 ## Licencia
 

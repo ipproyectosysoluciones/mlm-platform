@@ -197,6 +197,65 @@ export const adminService = {
     const response = await api.get('/admin/reports/commissions', { params });
     return response.data;
   },
+
+  /**
+   * Get all commission configs
+   * Obtener todas las configuraciones de comisiones
+   */
+  getCommissionConfigs: async () => {
+    const response = await api.get('/admin/commissions/config');
+    return response.data;
+  },
+
+  /**
+   * Get commission config by ID
+   * Obtener configuración de comisión por ID
+   */
+  getCommissionConfigById: async (id: string) => {
+    const response = await api.get(`/admin/commissions/config/${id}`);
+    return response.data;
+  },
+
+  /**
+   * Create commission config
+   * Crear configuración de comisión
+   */
+  createCommissionConfig: async (data: {
+    businessType: string;
+    customBusinessName?: string;
+    level: string;
+    percentage: number;
+  }) => {
+    const response = await api.post('/admin/commissions/config', data);
+    return response.data;
+  },
+
+  /**
+   * Update commission config
+   * Actualizar configuración de comisión
+   */
+  updateCommissionConfig: async (id: string, data: { percentage?: number; isActive?: boolean }) => {
+    const response = await api.put(`/admin/commissions/config/${id}`, data);
+    return response.data;
+  },
+
+  /**
+   * Delete commission config
+   * Eliminar configuración de comisión
+   */
+  deleteCommissionConfig: async (id: string) => {
+    const response = await api.delete(`/admin/commissions/config/${id}`);
+    return response.data;
+  },
+
+  /**
+   * Get active commission rates for a business type
+   * Obtener tasas de comisión activas para un tipo de negocio
+   */
+  getCommissionRates: async (businessType: string) => {
+    const response = await api.get(`/admin/commissions/rates/${businessType}`);
+    return response.data;
+  },
 };
 
 /**

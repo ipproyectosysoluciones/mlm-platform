@@ -21,12 +21,33 @@
  * const { rows, count } = await commissionService.getUserCommissions(userId, { page: 1, limit: 20 });
  */
 import { sequelize } from '../config/database';
-import { User, Commission, Purchase } from '../models';
+import { User, Commission, Purchase, CommissionConfig } from '../models';
 import { COMMISSION_RATES } from '../types';
 import { walletService } from './WalletService';
 import { emailService } from './EmailService';
 
 export class CommissionService {
+  /**
+   * Get commission rate for a business type and level
+   * Falls back to static rates if no config exists
+   */
+  private async getCommissionRate(businessType: string, level: string): Promise<number> {
+    const config = await CommissionConfig.findOne({
+      where: {
+        businessType: businessType as any,
+        level: level as any,
+        isActive: true,
+      },
+    });
+
+    if (config) {
+      return Number(config.percentage);
+    }
+
+    // Fallback to static rates if no config found
+    return COMMISSION_RATES[level as keyof typeof COMMISSION_RATES] || 0;
+  }
+
   /**
    * Calcula comisiones por una compra
    * Calculates commissions for a purchase
@@ -44,14 +65,19 @@ export class CommissionService {
     const upline = await this.getUplineWithDepth(buyer.id);
     const createdCommissions: Commission[] = [];
 
+    // Get business type from purchase (defaults to 'producto')
+    const businessType = purchase.businessType || 'producto';
+
+    // Calculate direct commission for sponsor
     const sponsor = await User.findByPk(buyer.sponsorId);
     if (sponsor) {
+      const rate = await this.getCommissionRate(businessType, 'direct');
       const directCommission = await Commission.create({
         userId: sponsor.id,
         fromUserId: buyer.id,
         purchaseId: purchase.id,
         type: 'direct',
-        amount: Number(purchase.amount) * COMMISSION_RATES.direct,
+        amount: Number(purchase.amount) * rate,
         currency: purchase.currency,
         status: 'pending',
       });
@@ -69,7 +95,7 @@ export class CommissionService {
         .catch((err) => console.error('Commission email failed:', err));
     }
 
-    const commissionTypeMap: Record<number, keyof typeof COMMISSION_RATES> = {
+    const commissionTypeMap: Record<number, string> = {
       1: 'level_1',
       2: 'level_2',
       3: 'level_3',
@@ -83,7 +109,7 @@ export class CommissionService {
       const type = commissionTypeMap[ancestor.depth];
       if (!type) continue;
 
-      const rate = COMMISSION_RATES[type];
+      const rate = await this.getCommissionRate(businessType, type);
       const amount = Number(purchase.amount) * rate;
 
       const commission = await Commission.create({

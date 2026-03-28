@@ -12,6 +12,7 @@ import { Order } from './Order';
 import { Wallet } from './Wallet';
 import { WalletTransaction } from './WalletTransaction';
 import { WithdrawalRequest } from './WithdrawalRequest';
+import { CommissionConfig } from './CommissionConfig';
 
 // User relationships
 User.hasMany(User, { as: 'children', foreignKey: 'sponsorId', sourceKey: 'id' });
@@ -70,6 +71,7 @@ User.hasMany(WithdrawalRequest, { foreignKey: 'userId', sourceKey: 'id' });
 WithdrawalRequest.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
 
 export {
+  sequelize,
   User,
   UserClosure,
   Commission,
@@ -83,6 +85,7 @@ export {
   Wallet,
   WalletTransaction,
   WithdrawalRequest,
+  CommissionConfig,
 };
 
 export function initModels(): void {

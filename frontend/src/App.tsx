@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import TreeView from './pages/TreeView';
 import Profile from './pages/Profile';
 import AdminDashboard from './pages/AdminDashboard';
+import CommissionConfigPage from './pages/CommissionConfigPage';
 import PublicProfile from './pages/PublicProfile';
 import LandingPages from './pages/LandingPages';
 import CRM from './pages/CRM';
@@ -48,6 +49,32 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
+  }
+
+  return <AppLayout>{children}</AppLayout>;
+}
+
+function AdminRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated, isLoading, user } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-100">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+          <p className="text-slate-600">Cargando...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // Check if user is admin
+  if ((user as any)?.role !== 'admin') {
+    return <Navigate to="/dashboard" replace />;
   }
 
   return <AppLayout>{children}</AppLayout>;
@@ -128,9 +155,17 @@ function App() {
           <Route
             path="/admin"
             element={
-              <ProtectedRoute>
+              <AdminRoute>
                 <AdminDashboard />
-              </ProtectedRoute>
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/commissions"
+            element={
+              <AdminRoute>
+                <CommissionConfigPage />
+              </AdminRoute>
             }
           />
           <Route path="/ref/:code" element={<PublicProfile />} />

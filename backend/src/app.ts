@@ -11,6 +11,7 @@ import adminRoutes from './routes/admin.routes';
 import crmRoutes from './routes/crm.routes';
 import publicRoutes from './routes/public.routes';
 import landingRoutes from './routes/landing.routes';
+import commissionConfigRoutes from './routes/commission-config.routes';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 
 const app: Application = express();
@@ -152,6 +153,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/crm', crmRoutes);
 app.use('/api/public', publicRoutes);
 app.use('/api', landingRoutes);
+app.use('/api/admin/commissions', commissionConfigRoutes);
 
 // Sentry debug route (only in non-production)
 if (config.nodeEnv !== 'production') {

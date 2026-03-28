@@ -134,6 +134,7 @@ describe('OrderService', () => {
     id: 'purchase-1',
     userId: 'user-123',
     productId: 'product-1',
+    businessType: 'producto',
     amount: 15.99,
     currency: 'USD',
     description: 'Netflix Premium',

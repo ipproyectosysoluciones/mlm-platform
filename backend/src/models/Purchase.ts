@@ -10,6 +10,7 @@ export class Purchase extends Model<PurchaseAttributes, PurchaseCreation> {
   declare id: string;
   declare userId: ForeignKey<User['id']>;
   declare productId: string | null;
+  declare businessType: 'suscripcion' | 'producto' | 'membresia' | 'servicio' | 'otro';
   declare amount: number;
   declare currency: string;
   declare description: string | null;
@@ -37,6 +38,12 @@ Purchase.init(
       type: DataTypes.UUID,
       allowNull: true,
       field: 'product_id',
+    },
+    businessType: {
+      type: DataTypes.ENUM('suscripcion', 'producto', 'membresia', 'servicio', 'otro'),
+      allowNull: false,
+      defaultValue: 'producto',
+      field: 'business_type',
     },
     amount: {
       type: DataTypes.DECIMAL(10, 2),

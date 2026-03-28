@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import { connectDatabase, syncDatabase } from './config/database';
-import { initModels, User, UserClosure } from './models';
+import { initModels, User, UserClosure, CommissionConfig } from './models';
 import { hashPassword } from './services/AuthService';
 
 /**
@@ -103,11 +103,81 @@ async function populateClosures(): Promise<void> {
   }
 }
 
+/**
+ * Seed default commission configurations
+ */
+async function seedCommissionConfigs(): Promise<void> {
+  const businessTypes = ['suscripcion', 'producto', 'membresia', 'servicio', 'otro'];
+  const levels = ['direct', 'level_1', 'level_2', 'level_3', 'level_4'];
+
+  // Default rates for each business type
+  const defaultRates: Record<string, Record<string, number>> = {
+    suscripcion: {
+      direct: 0.2, // 20%
+      level_1: 0.1, // 10%
+      level_2: 0.08, // 8%
+      level_3: 0.05, // 5%
+      level_4: 0.03, // 3%
+    },
+    producto: {
+      direct: 0.15, // 15%
+      level_1: 0.08, // 8%
+      level_2: 0.05, // 5%
+      level_3: 0.03, // 3%
+      level_4: 0.02, // 2%
+    },
+    membresia: {
+      direct: 0.25, // 25%
+      level_1: 0.12, // 12%
+      level_2: 0.08, // 8%
+      level_3: 0.05, // 5%
+      level_4: 0.03, // 3%
+    },
+    servicio: {
+      direct: 0.18, // 18%
+      level_1: 0.1, // 10%
+      level_2: 0.06, // 6%
+      level_3: 0.04, // 4%
+      level_4: 0.02, // 2%
+    },
+    otro: {
+      direct: 0.1, // 10%
+      level_1: 0.05, // 5%
+      level_2: 0.03, // 3%
+      level_3: 0.02, // 2%
+      level_4: 0.01, // 1%
+    },
+  };
+
+  for (const businessType of businessTypes) {
+    for (const level of levels) {
+      const exists = await CommissionConfig.findOne({
+        where: { businessType: businessType as any, level: level as any },
+      });
+
+      if (!exists) {
+        await CommissionConfig.create({
+          businessType: businessType as any,
+          level: level as any,
+          percentage: defaultRates[businessType]?.[level] || 0.05,
+          isActive: true,
+        });
+        console.log(`  ✅ Created ${businessType} - ${level}`);
+      }
+    }
+  }
+
+  console.log('\n✅ Commission configs seeded');
+}
+
 async function seed(): Promise<void> {
   try {
     await connectDatabase();
     initModels();
     await syncDatabase(true);
+
+    // Seed commission configs first
+    await seedCommissionConfigs();
 
     // Create admin
     const adminPassword = await hashPassword('admin123');

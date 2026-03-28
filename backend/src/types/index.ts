@@ -56,6 +56,7 @@ export interface PurchaseAttributes {
   id: string;
   userId: string;
   productId: string | null;
+  businessType: 'suscripcion' | 'producto' | 'membresia' | 'servicio' | 'otro';
   amount: number;
   currency: string;
   description: string | null;
@@ -127,6 +128,49 @@ export const COMMISSION_RATES = {
   level_3: 0.02, // 2% / 2 por ciento - Level 3 downline commission
   level_4: 0.01, // 1% / 1 por ciento - Level 4 downline commission
 } as const;
+
+// ============================================
+// Business Types - Tipos de Negocio
+// ============================================
+
+export const BUSINESS_TYPES = {
+  SUSCRIPCION: 'suscripcion',
+  PRODUCTO: 'producto',
+  MEMBRESIA: 'membresia',
+  SERVICIO: 'servicio',
+  OTRO: 'otro',
+} as const;
+
+export type BusinessType = (typeof BUSINESS_TYPES)[keyof typeof BUSINESS_TYPES];
+
+// Commission levels
+export const COMMISSION_LEVELS = {
+  DIRECT: 'direct',
+  LEVEL_1: 'level_1',
+  LEVEL_2: 'level_2',
+  LEVEL_3: 'level_3',
+  LEVEL_4: 'level_4',
+} as const;
+
+export type CommissionLevel = (typeof COMMISSION_LEVELS)[keyof typeof COMMISSION_LEVELS];
+
+// Map level names to display
+export const COMMISSION_LEVEL_NAMES: Record<CommissionLevel, string> = {
+  direct: 'Directo',
+  level_1: 'Nivel 1',
+  level_2: 'Nivel 2',
+  level_3: 'Nivel 3',
+  level_4: 'Nivel 4',
+};
+
+// Map business types to display names
+export const BUSINESS_TYPE_NAMES: Record<BusinessType, string> = {
+  suscripcion: 'Suscripción',
+  producto: 'Producto',
+  membresia: 'Membresía',
+  servicio: 'Servicio',
+  otro: 'Otro',
+};
 
 /**
  * Level names mapping for user hierarchy

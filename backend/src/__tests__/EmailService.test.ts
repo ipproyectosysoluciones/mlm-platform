@@ -3,26 +3,21 @@
  * @description Tests for notification services
  * @module __tests__/EmailService
  */
-import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // Mock nodemailer
-vi.mock('nodemailer', () => ({
-  default: {
-    createTransport: vi.fn(() => ({
-      sendMail: vi.fn().mockResolvedValue({ messageId: 'test-message-id' }),
-    })),
-  },
+jest.mock('nodemailer', () => ({
+  createTransport: jest.fn(() => ({
+    sendMail: jest.fn().mockResolvedValue({ messageId: 'test-message-id' }),
+  })),
 }));
 
 // Mock axios for SMS
-vi.mock('axios', () => ({
-  default: {
-    post: vi.fn().mockResolvedValue({ data: { messageId: 'sms-test-id' } }),
-  },
+jest.mock('axios', () => ({
+  post: jest.fn().mockResolvedValue({ data: { messageId: 'sms-test-id' } }),
 }));
 
 // Mock config
-vi.mock('../config/env', () => ({
+jest.mock('../config/env', () => ({
   config: {
     brevo: {
       smtpHost: 'smtp.brevo.com',
