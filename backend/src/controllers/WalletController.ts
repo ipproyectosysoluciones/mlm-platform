@@ -7,6 +7,7 @@
  */
 import { Response } from 'express';
 import { walletService } from '../services/WalletService';
+import { getCryptoPrices } from '../services/CryptoPriceService';
 import type { ApiResponse } from '../types';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware';
 
@@ -340,5 +341,54 @@ export async function cancelWithdrawal(req: AuthenticatedRequest, res: Response)
       },
     };
     res.status(400).json(response);
+  }
+}
+
+/**
+ * Get current cryptocurrency prices
+ * Obtener precios actuales de criptomonedas
+ *
+ * @param req - Request (no auth required)
+ * @param res - Response with crypto prices
+ */
+export async function getCryptoPrices(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    const prices = await getCryptoPrices();
+
+    const response: ApiResponse<{
+      bitcoin: { usd: number; usd_24h_change?: number };
+      ethereum: { usd: number; usd_24h_change?: number };
+      tether: { usd: number; usd_24h_change?: number };
+      lastUpdated: string;
+    }> = {
+      success: true,
+      data: {
+        bitcoin: {
+          usd: prices.bitcoin.usd,
+          usd_24h_change: prices.bitcoin.usd_24h_change,
+        },
+        ethereum: {
+          usd: prices.ethereum.usd,
+          usd_24h_change: prices.ethereum.usd_24h_change,
+        },
+        tether: {
+          usd: prices.tether.usd,
+          usd_24h_change: prices.tether.usd_24h_change,
+        },
+        lastUpdated: prices.lastUpdated.toISOString(),
+      },
+    };
+
+    res.json(response);
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const response: ApiResponse<never> = {
+      success: false,
+      error: {
+        code: 'CRYPTO_PRICES_ERROR',
+        message: errorMessage,
+      },
+    };
+    res.status(500).json(response);
   }
 }

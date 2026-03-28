@@ -11,6 +11,7 @@ import type {
   WalletTransaction,
   WithdrawalRequest,
   WalletTransactionType,
+  CryptoPrices,
 } from '../types';
 import { walletService } from '../services/api';
 
@@ -39,12 +40,17 @@ interface WalletState {
   startDate: string | null;
   endDate: string | null;
 
+  // Crypto Prices
+  cryptoPrices: CryptoPrices | null;
+  isLoadingCryptoPrices: boolean;
+
   // Actions
   fetchBalance: () => Promise<void>;
   fetchTransactions: (reset?: boolean) => Promise<void>;
   createWithdrawal: (amount: number) => Promise<WithdrawalRequest>;
   cancelWithdrawal: (id: string) => Promise<WithdrawalRequest>;
   fetchWithdrawalStatus: (id: string) => Promise<WithdrawalRequest>;
+  fetchCryptoPrices: () => Promise<void>;
 
   // Setters
   setTransactionType: (type: WalletTransactionType | null) => void;
@@ -70,6 +76,8 @@ const initialState = {
   transactionType: null,
   startDate: null,
   endDate: null,
+  cryptoPrices: null,
+  isLoadingCryptoPrices: false,
 };
 
 export const useWalletStore = create<WalletState>((set, get) => ({
@@ -200,6 +208,21 @@ export const useWalletStore = create<WalletState>((set, get) => ({
       const message = error instanceof Error ? error.message : 'Failed to fetch withdrawal status';
       set({ withdrawalError: message, isLoadingWithdrawals: false });
       throw error;
+    }
+  },
+
+  /**
+   * Fetch cryptocurrency prices
+   * Obtiene precios de criptomonedas
+   */
+  fetchCryptoPrices: async () => {
+    set({ isLoadingCryptoPrices: true });
+    try {
+      const prices = await walletService.getCryptoPrices();
+      set({ cryptoPrices: prices, isLoadingCryptoPrices: false });
+    } catch (error) {
+      set({ isLoadingCryptoPrices: false });
+      console.error('Failed to fetch crypto prices:', error);
     }
   },
 

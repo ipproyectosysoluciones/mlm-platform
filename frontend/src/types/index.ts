@@ -274,3 +274,16 @@ export interface TransactionListResponse {
     totalPages: number;
   };
 }
+
+// Crypto Price Types
+export interface CryptoPriceInfo {
+  usd: number;
+  usd_24h_change?: number;
+}
+
+export interface CryptoPrices {
+  bitcoin: CryptoPriceInfo;
+  ethereum: CryptoPriceInfo;
+  tether: CryptoPriceInfo;
+  lastUpdated: string;
+}

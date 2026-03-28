@@ -400,3 +400,36 @@ export interface GetWithdrawalStatusResponse {
   data: WithdrawalRequestAttributes;
   error?: string;
 }
+
+// ============================================
+// Crypto Price Types - Tipos de Precios Crypto
+// ============================================
+
+/**
+ * Cryptocurrency price from API
+ * Precio de criptomoneda de API
+ */
+export interface CryptoPrice {
+  usd: number;
+  usd_24h_change?: number;
+}
+
+/**
+ * All supported cryptocurrency prices
+ * Precios de todas las criptomonedas soportadas
+ */
+export interface CryptoPrices {
+  bitcoin: CryptoPrice;
+  ethereum: CryptoPrice;
+  tether: CryptoPrice;
+  lastUpdated: Date;
+}
+
+/**
+ * API response for crypto prices
+ * Respuesta de API para precios crypto
+ */
+export interface GetCryptoPricesResponse {
+  success: boolean;
+  data: CryptoPrices;
+}

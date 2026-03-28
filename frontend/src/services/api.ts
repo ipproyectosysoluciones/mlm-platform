@@ -26,6 +26,7 @@ import type {
   WithdrawalRequest,
   TransactionListParams,
   TransactionListResponse,
+  CryptoPrices,
 } from '../types';
 
 /** @constant {string} API_URL - Backend base URL / URL base del backend */
@@ -681,6 +682,16 @@ export const walletService = {
     const response = await api.delete<{ success: boolean; data: WithdrawalRequest }>(
       `/wallet/withdrawals/${id}`
     );
+    return response.data.data!;
+  },
+
+  /**
+   * Get current cryptocurrency prices
+   * Obtener precios actuales de criptomonedas
+   * @returns {Promise<CryptoPrices>} Current crypto prices / Precios actuales de crypto
+   */
+  getCryptoPrices: async (): Promise<CryptoPrices> => {
+    const response = await api.get<{ success: boolean; data: CryptoPrices }>('/wallet/prices');
     return response.data.data!;
   },
 };

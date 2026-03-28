@@ -13,6 +13,7 @@ import {
   createWithdrawal,
   getWithdrawalStatus,
   cancelWithdrawal,
+  getCryptoPrices,
 } from '../controllers/WalletController';
 import { authenticateToken } from '../middleware/auth.middleware';
 import { validate } from '../middleware/validate.middleware';
@@ -208,5 +209,47 @@ router.delete(
   validate([param('id').isUUID().withMessage('Invalid withdrawal ID')]),
   asyncHandler(cancelWithdrawal)
 );
+
+// ============================================
+// Public routes - Rutas públicas
+// ============================================
+
+/**
+ * @swagger
+ * /api/wallets/prices:
+ *   get:
+ *     summary: Get current cryptocurrency prices
+ *     description: Returns real-time prices from CoinGecko API (BTC, ETH, USDT)
+ *     tags: [wallet]
+ *     responses:
+ *       200:
+ *         description: Current crypto prices
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     bitcoin:
+ *                       type: object
+ *                       properties:
+ *                         usd:
+ *                           type: number
+ *                         usd_24h_change:
+ *                           type: number
+ *                     ethereum:
+ *                       type: object
+ *                     tether:
+ *                       type: object
+ *                     lastUpdated:
+ *                       type: string
+ *       500:
+ *         description: Error fetching prices
+ */
+router.get('/prices', asyncHandler(getCryptoPrices));
 
 export default router;
