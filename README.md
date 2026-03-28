@@ -29,6 +29,10 @@ Plataforma MLM (Multi-Level Marketing) con sistema de afiliaciones binarias, com
 | phase-3-visual-tree               | Visual Tree UI con React Flow         | ✅ Archivado | 2026-03-27 |
 | sdd-horizontal-navbar             | Layout de navbar horizontal           | ✅ Archivado | 2026-03-27 |
 | phase-2-notifications             | Notificaciones Email & SMS con 2FA    | ✅ Archivado | 2026-03-27 |
+| es-modules-migration              | Migración a ES Modules                | ✅ Completo  | 2026-03-28 |
+| postgresql-support                | Soporte para PostgreSQL + Docker      | ✅ Completo  | 2026-03-28 |
+| build-optimization                | Build optimizado (3.4MB → 1.2MB)      | ✅ Completo  | 2026-03-28 |
+| github-templates                  | CODE_OF_CONDUCT, Issues, PR templates | ✅ Completo  | 2026-03-28 |
 
 ### 🚧 Cambios en Progreso
 
@@ -44,10 +48,12 @@ Plataforma MLM (Multi-Level Marketing) con sistema de afiliaciones binarias, com
 
 ## 📋 Requisitos / Requirements
 
-- Node.js 18+
-- MySQL 8.0+
+- Node.js 24+ (verificar con `node -v`)
+- MySQL 8.0+ o PostgreSQL 16+ (soporta ambos)
 - Redis 7+ (opcional)
 - Docker y Docker Compose (para desarrollo)
+
+> **Nota**: El proyecto migró a ES Modules (ESM). Asegúrate de usar Node.js 18+.
 
 ## 🛠️ Instalación / Installation
 
@@ -73,7 +79,20 @@ pnpm install
 cd backend
 docker compose up -d
 
-# MySQL, Redis y phpMyAdmin disponibles
+# Servicios disponibles:
+# - MySQL (puerto 3306)
+# - PostgreSQL (puertos 5434, 5435)
+# - Redis (puerto 6379)
+# - phpMyAdmin (puerto 8080)
+```
+
+### Usar PostgreSQL en lugar de MySQL
+
+```bash
+# Configurar variables de entorno
+export DB_DIALECT=postgres
+export DB_PORT=5434  # para desarrollo
+export TEST_DB_PORT=5435  # para tests
 ```
 
 ## ⚙️ Configuración / Configuration
@@ -82,11 +101,12 @@ docker compose up -d
 
 | Variable          | Descripción                     | Default   |
 | ----------------- | ------------------------------- | --------- |
-| `DB_HOST`         | Host de MySQL                   | localhost |
-| `DB_PORT`         | Puerto de MySQL                 | 3306      |
+| `DB_DIALECT`      | Dialecto de DB (mysql/postgres) | mysql     |
+| `DB_HOST`         | Host de MySQL/PostgreSQL        | localhost |
+| `DB_PORT`         | Puerto de MySQL/PostgreSQL      | 3306/5432 |
 | `DB_NAME`         | Nombre de la base de datos      | mlm_db    |
-| `DB_USER`         | Usuario de MySQL                | root      |
-| `DB_PASSWORD`     | Contraseña de MySQL             | -         |
+| `DB_USER`         | Usuario de MySQL/PostgreSQL     | root/mlm  |
+| `DB_PASSWORD`     | Contraseña de MySQL/PostgreSQL  | -         |
 | `JWT_SECRET`      | Secreto para JWT                | -         |
 | `REDIS_ENABLED`   | Habilitar Redis                 | false     |
 | `REDIS_HOST`      | Host de Redis                   | localhost |
@@ -250,11 +270,12 @@ MLM/
 **Backend:**
 
 - Node.js + Express
-- TypeScript
+- TypeScript (ES Modules)
 - Sequelize ORM
-- MySQL
+- MySQL / PostgreSQL (soporta ambos)
 - Redis (opcional)
 - JWT
+- esbuild (build optimizado)
 
 **Frontend:**
 

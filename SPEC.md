@@ -6,15 +6,16 @@ Binary MLM (Multi-Level Marketing) platform with automatic commission distributi
 
 ## Tech Stack
 
-| Layer     | Technology       |
-| --------- | ---------------- |
-| Runtime   | Node.js 18+      |
-| Framework | Express.js       |
-| Language  | TypeScript       |
-| ORM       | Sequelize 6      |
-| Database  | MySQL 8          |
-| Auth      | JWT              |
-| Testing   | Jest + Supertest |
+| Layer     | Technology              |
+| --------- | ----------------------- |
+| Runtime   | Node.js 24+ (ESM)       |
+| Framework | Express.js              |
+| Language  | TypeScript (ESM)        |
+| ORM       | Sequelize 6             |
+| Database  | MySQL 8 / PostgreSQL 16 |
+| Auth      | JWT                     |
+| Testing   | Jest + Supertest        |
+| Build     | esbuild (~1.2MB)        |
 
 ## Database Schema
 

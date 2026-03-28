@@ -4,11 +4,12 @@ Backend API para sistema de membresía binaria MLM.
 
 ## Stack Tecnológico
 
-- **Runtime**: Node.js 18+
+- **Runtime**: Node.js 24+ (ES Modules)
 - **Framework**: Express.js
-- **Lenguaje**: TypeScript
+- **Lenguaje**: TypeScript (ES Modules)
 - **ORM**: Sequelize 6
-- **Base de datos**: MySQL 8
+- **Base de datos**: MySQL 8 o PostgreSQL 16 (soporta ambos)
+- **Build**: esbuild (~1.2MB)
 - **Auth**: JWT
 - **Validación**: express-validator
 - **CSV**: csv-parse
@@ -16,8 +17,8 @@ Backend API para sistema de membresía binaria MLM.
 
 ## Requisitos Previos
 
-- Node.js 18+
-- MySQL 8 (o MySQL compatible)
+- Node.js 24+
+- MySQL 8 o PostgreSQL 16
 - npm o yarn
 
 ## Instalación
@@ -27,42 +28,49 @@ Backend API para sistema de membresía binaria MLM.
 cd backend
 
 # 2. Instalar dependencias
-npm install
+pnpm install
 
 # 3. Crear archivo .env desde el ejemplo
 cp .env.example .env
 
-# 4. Editar .env con tus credenciales de MySQL
+# 4. Editar .env con tus credenciales
+# MySQL (default):
+# DB_DIALECT=mysql
 # DB_HOST=localhost
 # DB_PORT=3306
 # DB_NAME=mlm_db
 # DB_USER=root
 # DB_PASSWORD=tu_password
 
-# 5. Crear la base de datos en MySQL
-mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS mlm_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+# O PostgreSQL:
+# DB_DIALECT=postgres
+# DB_HOST=localhost
+# DB_PORT=5434
+# DB_NAME=mlm_db
+# DB_USER=mlm
+# DB_PASSWORD=mlm123
 
-# 6. Iniciar el servidor (crea las tablas automáticamente)
-npm run dev
+# 5. Iniciar el servidor (crea las tablas automáticamente)
+pnpm run dev
 ```
 
 ## Scripts Disponibles
 
 ```bash
 # Desarrollo (con hot-reload)
-npm run dev
+pnpm run dev
 
 # Build para producción
-npm run build
+pnpm run build
 
 # Iniciar producción
-npm start
+pnpm start
 
 # Seed de datos de prueba
-npm run seed
+pnpm run seed
 
 # Tests
-npm test
+pnpm test
 ```
 
 ## Endpoints API
@@ -174,14 +182,19 @@ Incluye todos los endpoints con ejemplos de Request/Response.
 
 ## Tests
 
-| Comando                      | Descripción                           |
-| ---------------------------- | ------------------------------------- |
-| `pnpm test`                  | Tests unitarios                       |
-| `pnpm test:unit`             | Solo tests unitarios                  |
-| `pnpm test:integration`      | Tests de integración (requiere MySQL) |
-| `pnpm test:integration:auth` | Tests de integración específicos      |
+| Comando                      | Descripción                        |
+| ---------------------------- | ---------------------------------- |
+| `pnpm test`                  | Tests unitarios                    |
+| `pnpm test:unit`             | Solo tests unitarios               |
+| `pnpm test:integration`      | Tests de integración (requiere DB) |
+| `pnpm test:integration:auth` | Tests de integración específicos   |
 
-Los tests de integración requieren una base de datos MySQL corriendo en el puerto 3307 (ver `.env`).
+Los tests de integración requieren:
+
+- **MySQL**: puerto 3307
+- **PostgreSQL**: puerto 5435
+
+Configurar con variables de entorno `DB_DIALECT`, `TEST_DB_PORT`.
 
 ## Licencia
 
