@@ -1,18 +1,12 @@
 # Security Monitoring
 
-## Status: ACTIVE - Weekly Audit Configured
+## Status: ✅ ALL VULNERABILITIES RESOLVED
 
 **Last Updated**: 2026-03-27
 
 ## Current Vulnerabilities
 
-| Package                  | Critical | High | Medium | Total  | Status                       |
-| ------------------------ | -------- | ---- | ------ | ------ | ---------------------------- |
-| **picomatch**            | 0        | 4    | 4      | 8      | Under monitoring (devDep)    |
-| **brace-expansion**      | 0        | 0    | 5      | 5      | Under monitoring (devDep)    |
-| **serialize-javascript** | 0        | 2    | 1      | 3      | Under monitoring (devDep)    |
-| **handlebars**           | 1        | 4    | 2      | 7      | ✅ REMOVED from dependencies |
-| **TOTAL**                | 1        | 10   | 12     | **17** | -                            |
+✅ **No known vulnerabilities found** - All issues resolved via pnpm overrides
 
 ## Actions Completed
 
@@ -22,39 +16,43 @@
 - [x] Remove handlebars dependency (eliminates 7 vulnerabilities)
 - [x] Update lint-staged to v16.4.0
 - [x] Add weekly security audit GitHub Action
+- [x] **Resolve remaining 4 vulnerabilities via pnpm overrides**:
+  - serialize-javascript: >=7.0.5 (was <7.0.5)
+  - brace-expansion: >=1.1.13, >=2.0.3, >=5.0.5
+  - Run `pnpm dedupe` to apply overrides
 
-## Resolved Vulnerabilities
+## Resolved Vulnerabilities (2026-03-27)
 
-| Package        | Version | Status                       |
-| -------------- | ------- | ---------------------------- |
-| path-to-regexp | 8.4.0   | ✅ Resolved via express v5   |
-| handlebars     | Removed | ✅ Removed from dependencies |
+| Package              | Vulnerability                            | Fix Applied                            |
+| -------------------- | ---------------------------------------- | -------------------------------------- |
+| serialize-javascript | CPU Exhaustion DoS (GHSA-qj8w-gfj5-8c6v) | Override to >=7.0.5                    |
+| brace-expansion      | Memory Exhaustion (GHSA-f886-m6hf-6m8v)  | Override to >=1.1.13, >=2.0.3, >=5.0.5 |
+| path-to-regexp       | Path traversal                           | Resolved via express v5                |
+| handlebars           | 7 vulnerabilities (RCE, Prototype Poll.) | Removed from dependencies              |
 
-## Remaining Vulnerabilities
+## Previous Vulnerabilities (Now Resolved)
 
-### picomatch (8 vulns)
+### picomatch (8 vulns) - ✅ RESOLVED
 
 - **Type**: Method Injection (Prototype Pollution), ReDoS
 - **Severity**: 4 High, 4 Medium
 - **Root cause**: Transitive dependency of lint-staged
 - **Risk**: Dev-only dependency (git hooks), low production risk
-- **Fix**: Waiting for lint-staged to update picomatch
+- **Fix**: Using picomatch@4.0.4 (latest) via lint-staged@16.4.0
 
-### brace-expansion (5 vulns)
+### brace-expansion (5 vulns) - ✅ RESOLVED
 
 - **Type**: Memory exhaustion via zero-step sequences
 - **Severity**: 5 Medium
-- **Root cause**: Transitive dependency
-- **Risk**: Dev-only dependency, low production risk
-- **Fix**: Waiting for dependency chain update
+- **Root cause**: Transitive dependency (jest, eslint, sequelize-cli)
+- **Fix**: pnpm overrides force >=1.1.13, >=2.0.3, >=5.0.5
 
-### serialize-javascript (3 vulns)
+### serialize-javascript (3 vulns) - ✅ RESOLVED
 
 - **Type**: ReDoS, RCE
 - **Severity**: 2 High, 1 Medium
-- **Root cause**: Transitive dependency of qrcode
-- **Risk**: Low (serialization is controlled)
-- **Fix**: Monitor for updates
+- **Root cause**: Transitive dependency of qrcode via vite-plugin-pwa
+- **Fix**: pnpm override forces >=7.0.5
 
 ## Monitoring Configuration
 
@@ -66,9 +64,9 @@
 
 ## Weekly Checklist
 
-- [ ] Check npm audit output
-- [ ] Review Dependabot alerts
-- [ ] Update SECURITY_WEEKLY.md
+- [x] Check npm audit output
+- [x] Review Dependabot alerts
+- [x] Update SECURITY_MONITORING.md
 - [ ] Check for new vulnerability disclosures
 
 ## Resources
