@@ -29,6 +29,11 @@ export let testAgent: any;
 let sequelizeInstance: any = null;
 
 beforeAll(async () => {
+  console.log('=== SETUP: Starting integration test setup ===');
+  console.log('TEST_DB_NAME:', process.env.TEST_DB_NAME);
+  console.log('TEST_DB_HOST:', process.env.TEST_DB_HOST);
+  console.log('TEST_DB_PORT:', process.env.TEST_DB_PORT);
+
   // Reset any existing sequelize instance
   resetSequelize();
 
@@ -37,12 +42,17 @@ beforeAll(async () => {
   testDb = sequelize;
   sequelizeInstance = sequelize;
 
+  console.log('Sequelize instance created');
+
   // Import models to register them with sequelize
   require('../models');
+  console.log('Models registered');
 
   // Sync all models - force to recreate tables
   try {
-    await testDb.sync({ force: true });
+    console.log('Syncing database...');
+    // Use alter instead of force for faster syncs (keeps existing data, adds missing columns)
+    await testDb.sync({ alter: true });
     console.log('Test database synced successfully');
   } catch (error) {
     console.error('Error syncing test database:', error);
@@ -50,8 +60,17 @@ beforeAll(async () => {
   }
 
   // Create test agent
-  const app = require('../app').default;
-  testAgent = supertest(app);
+  try {
+    console.log('Loading app...');
+    const app = require('../app').default;
+    console.log('App loaded, creating test agent...');
+    testAgent = supertest(app);
+    console.log('Test agent created successfully');
+  } catch (error) {
+    console.error('Error creating test agent:', error);
+    throw error;
+  }
+  console.log('=== SETUP: Integration test setup complete ===');
 });
 
 afterAll(async () => {

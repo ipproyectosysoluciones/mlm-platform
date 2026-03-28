@@ -15,6 +15,10 @@
     "test:ui": "vitest --config vitest.config.ts --ui",
     "test:run": "vitest --config vitest.config.ts run"
   },
+  "engines": {
+    "node": ">=24.0.0",
+    "pnpm": ">=10.0.0"
+  },
   "packageManager": "pnpm@10.33.0",
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",

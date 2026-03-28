@@ -1,0 +1,92 @@
+-- E2E Tree Seed Script
+-- Creates a tree structure for E2E tests
+-- Password for all users: user123 (bcrypt hash: $2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK)
+
+USE mlm_db;
+
+-- Create admin user (password: admin123)
+INSERT INTO users (id, email, password_hash, referral_code, sponsor_id, position, level, status, role, currency, created_at, updated_at)
+VALUES 
+  ('00000000-0000-0000-0000-000000000001', 'admin@mlm.com', '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK', 'MLM-ADMIN-001', NULL, NULL, 1, 'active', 'admin', 'USD', NOW(), NOW())
+ON DUPLICATE KEY UPDATE email = email;
+
+-- Create Level 1 users (direct referrals of admin)
+INSERT INTO users (id, email, password_hash, referral_code, sponsor_id, position, level, status, role, currency, created_at, updated_at)
+VALUES 
+  ('00000000-0000-0000-0000-000000000002', 'user1@mlm.com', '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK', 'MLM-001-002', '00000000-0000-0000-0000-000000000001', 'left', 1, 'active', 'user', 'USD', NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000003', 'user2@mlm.com', '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK', 'MLM-002-003', '00000000-0000-0000-0000-000000000001', 'right', 1, 'active', 'user', 'USD', NOW(), NOW())
+ON DUPLICATE KEY UPDATE email = email;
+
+-- Create Level 2 users
+INSERT INTO users (id, email, password_hash, referral_code, sponsor_id, position, level, status, role, currency, created_at, updated_at)
+VALUES 
+  ('00000000-0000-0000-0000-000000000004', 'user3@mlm.com', '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK', 'MLM-003-004', '00000000-0000-0000-0000-000000000002', 'left', 2, 'active', 'user', 'USD', NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000005', 'user4@mlm.com', '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK', 'MLM-004-005', '00000000-0000-0000-0000-000000000002', 'right', 2, 'active', 'user', 'USD', NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000006', 'user5@mlm.com', '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK', 'MLM-005-006', '00000000-0000-0000-0000-000000000003', 'left', 2, 'active', 'user', 'USD', NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000007', 'user6@mlm.com', '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK', 'MLM-006-007', '00000000-0000-0000-0000-000000000003', 'right', 2, 'active', 'user', 'USD', NOW(), NOW())
+ON DUPLICATE KEY UPDATE email = email;
+
+-- Create Level 3 users
+INSERT INTO users (id, email, password_hash, referral_code, sponsor_id, position, level, status, role, currency, created_at, updated_at)
+VALUES 
+  ('00000000-0000-0000-0000-000000000008', 'user7@mlm.com', '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK', 'MLM-007-008', '00000000-0000-0000-0000-000000000004', 'left', 3, 'active', 'user', 'USD', NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000009', 'user8@mlm.com', '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK', 'MLM-008-009', '00000000-0000-0000-0000-000000000005', 'left', 3, 'active', 'user', 'USD', NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000010', 'user9@mlm.com', '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK', 'MLM-009-010', '00000000-0000-0000-0000-000000000006', 'right', 3, 'active', 'user', 'USD', NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000011', 'user10@mlm.com', '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK', 'MLM-010-011', '00000000-0000-0000-0000-000000000007', 'right', 3, 'active', 'user', 'USD', NOW(), NOW())
+ON DUPLICATE KEY UPDATE email = email;
+
+-- Create Closure Table entries (self-references first)
+INSERT INTO user_closure (ancestor_id, descendant_id, depth, created_at, updated_at) VALUES
+  ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000001', 0, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000002', 0, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000003', '00000000-0000-0000-0000-000000000003', 0, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000004', '00000000-0000-0000-0000-000000000004', 0, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000005', '00000000-0000-0000-0000-000000000005', 0, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000006', '00000000-0000-0000-0000-000000000006', 0, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000007', '00000000-0000-0000-0000-000000000007', 0, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000008', '00000000-0000-0000-0000-000000000008', 0, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000009', '00000000-0000-0000-0000-000000000009', 0, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000010', '00000000-0000-0000-0000-000000000010', 0, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000011', '00000000-0000-0000-0000-000000000011', 0, NOW(), NOW())
+ON DUPLICATE KEY UPDATE depth = depth;
+
+-- Create Closure Table entries (parent-child relationships)
+-- Level 1 children (depth 1 from admin)
+INSERT INTO user_closure (ancestor_id, descendant_id, depth, created_at, updated_at) VALUES
+  ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000002', 1, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000003', 1, NOW(), NOW())
+ON DUPLICATE KEY UPDATE depth = depth;
+
+-- Level 2 children (depth 1 from level 1, depth 2 from admin)
+INSERT INTO user_closure (ancestor_id, descendant_id, depth, created_at, updated_at) VALUES
+  ('00000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000004', 1, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000005', 1, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000003', '00000000-0000-0000-0000-000000000006', 1, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000003', '00000000-0000-0000-0000-000000000007', 1, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000004', 2, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000005', 2, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000006', 2, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000007', 2, NOW(), NOW())
+ON DUPLICATE KEY UPDATE depth = depth;
+
+-- Level 3 children
+INSERT INTO user_closure (ancestor_id, descendant_id, depth, created_at, updated_at) VALUES
+  ('00000000-0000-0000-0000-000000000004', '00000000-0000-0000-0000-000000000008', 1, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000005', '00000000-0000-0000-0000-000000000009', 1, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000006', '00000000-0000-0000-0000-000000000010', 1, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000007', '00000000-0000-0000-0000-000000000011', 1, NOW(), NOW()),
+  -- From admin to level 3 (depth 3)
+  ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000008', 3, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000009', 3, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000010', 3, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000011', 3, NOW(), NOW()),
+  -- From level 1 to level 3 (depth 2)
+  ('00000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000008', 2, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000009', 2, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000003', '00000000-0000-0000-0000-000000000010', 2, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000003', '00000000-0000-0000-0000-000000000011', 2, NOW(), NOW())
+ON DUPLICATE KEY UPDATE depth = depth;
+
+-- Verify the data
+SELECT 'Users created:' as info, COUNT(*) as count FROM users;
+SELECT 'Closure entries:' as info, COUNT(*) as count FROM user_closure;

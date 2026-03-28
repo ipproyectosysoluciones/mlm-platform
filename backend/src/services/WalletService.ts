@@ -22,12 +22,7 @@
 import { sequelize } from '../config/database';
 import { Wallet, WalletTransaction, WithdrawalRequest, User } from '../models';
 import { config } from '../config/env';
-import {
-  WalletTransactionCreationAttributes,
-  WithdrawalRequestCreationAttributes,
-  WALLET_TRANSACTION_TYPE,
-  WITHDRAWAL_STATUS,
-} from '../types';
+import { WALLET_TRANSACTION_TYPE, WITHDRAWAL_STATUS } from '../types';
 
 // Simple exchange rates to USD (in production, use an external API)
 const EXCHANGE_RATES: Record<string, number> = {
@@ -146,7 +141,7 @@ export class WalletService {
       referenceId,
       description: description || `Commission earned from purchase`,
       exchangeRate,
-    } as WalletTransactionCreationAttributes);
+    });
 
     // Update wallet balance
     wallet.balance = Number(wallet.balance) + amountInUSD;
@@ -197,7 +192,7 @@ export class WalletService {
       feeAmount,
       netAmount,
       status: WITHDRAWAL_STATUS.PENDING,
-    } as WithdrawalRequestCreationAttributes);
+    });
 
     // Deduct from wallet balance (reserve the amount)
     wallet.balance = Number(wallet.balance) - requestedAmount;
@@ -211,7 +206,7 @@ export class WalletService {
       currency: 'USD',
       referenceId: withdrawal.id,
       description: `Withdrawal fee for request ${withdrawal.id}`,
-    } as WalletTransactionCreationAttributes);
+    });
 
     // Create withdrawal transaction
     await WalletTransaction.create({
@@ -221,7 +216,7 @@ export class WalletService {
       currency: 'USD',
       referenceId: withdrawal.id,
       description: `Withdrawal request ${withdrawal.id}`,
-    } as WalletTransactionCreationAttributes);
+    });
 
     return withdrawal;
   }

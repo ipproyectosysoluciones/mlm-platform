@@ -160,7 +160,8 @@ export async function createWithdrawal(req: AuthenticatedRequest, res: Response)
         message: 'Please provide a valid amount',
       },
     };
-    return res.status(400).json(response);
+    res.status(400).json(response);
+    return;
   }
 
   try {
@@ -191,7 +192,6 @@ export async function createWithdrawal(req: AuthenticatedRequest, res: Response)
         processedAt: withdrawal.processedAt,
         createdAt: withdrawal.createdAt,
       },
-      message: `Withdrawal request created. Fee: $${withdrawal.feeAmount} USD`,
     };
 
     res.status(201).json(response);
@@ -230,7 +230,8 @@ export async function getWithdrawalStatus(req: AuthenticatedRequest, res: Respon
           message: 'Withdrawal request not found',
         },
       };
-      return res.status(404).json(response);
+      res.status(404).json(response);
+      return;
     }
 
     // Check ownership
@@ -242,7 +243,8 @@ export async function getWithdrawalStatus(req: AuthenticatedRequest, res: Respon
           message: 'You do not own this withdrawal request',
         },
       };
-      return res.status(403).json(response);
+      res.status(403).json(response);
+      return;
     }
 
     const response: ApiResponse<{
@@ -325,7 +327,6 @@ export async function cancelWithdrawal(req: AuthenticatedRequest, res: Response)
         processedAt: withdrawal.processedAt,
         createdAt: withdrawal.createdAt,
       },
-      message: 'Withdrawal request cancelled successfully',
     };
 
     res.json(response);
