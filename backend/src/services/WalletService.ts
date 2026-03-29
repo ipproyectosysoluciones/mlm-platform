@@ -19,10 +19,11 @@
  * // Español: Crear solicitud de retiro
  * const withdrawal = await walletService.createWithdrawal(userId, 100);
  */
-import { sequelize } from '../config/database';
+import { sequelize, DataTypes } from '../config/database';
 import { Wallet, WalletTransaction, WithdrawalRequest, User } from '../models';
 import { config } from '../config/env';
 import { WALLET_TRANSACTION_TYPE, WITHDRAWAL_STATUS } from '../types';
+import { Op } from 'sequelize';
 
 // Simple exchange rates to USD (in production, use an external API)
 const EXCHANGE_RATES: Record<string, number> = {
@@ -288,12 +289,12 @@ export class WalletService {
     const where: Record<string, unknown> = { walletId: wallet.id };
     if (options?.type) where.type = options.type;
     if (options?.startDate || options?.endDate) {
-      where.createdAt = {};
+      where.created_at = {};
       if (options?.startDate) {
-        (where.createdAt as Record<string, Date>).$gte = options.startDate;
+        (where.created_at as Record<string, Date>)[Op.gte] = options.startDate;
       }
       if (options?.endDate) {
-        (where.createdAt as Record<string, Date>).$lte = options.endDate;
+        (where.created_at as Record<string, Date>)[Op.lte] = options.endDate;
       }
     }
 
@@ -301,7 +302,7 @@ export class WalletService {
       where,
       limit,
       offset,
-      order: [['createdAt', 'DESC']],
+      order: [['created_at', 'DESC']],
     });
   }
 
@@ -328,7 +329,7 @@ export class WalletService {
       where: { userId },
       limit,
       offset,
-      order: [['createdAt', 'DESC']],
+      order: [['created_at', 'DESC']],
     });
   }
 

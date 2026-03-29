@@ -138,9 +138,9 @@ describe('Wallet Integration Tests', () => {
         .expect(200);
 
       expect(res.body.success).toBe(true);
-      // Should filter to only COMMISSION type
+      // Should filter to only commission_earned type
       res.body.data.forEach((tx: any) => {
-        expect(tx.type).toBe('COMMISSION');
+        expect(tx.type).toBe('commission_earned');
       });
     });
   });
