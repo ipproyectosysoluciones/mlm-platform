@@ -2,23 +2,34 @@ import { Page, Locator, expect } from '@playwright/test';
 import { BasePage } from '../pages/base-page';
 
 export class CheckoutPage extends BasePage {
-  readonly heading: Locator;
-  readonly orderSummarySection: Locator;
-  readonly paymentMethodSection: Locator;
-  readonly termsCheckbox: Locator;
-  readonly confirmButton: Locator;
-  readonly continueShoppingButton: Locator;
+  get heading() {
+    return this.page.getByRole('heading', { name: /checkout|pedido/i });
+  }
+
+  get orderSummarySection() {
+    return this.page.locator('text=order summary|resumen del pedido');
+  }
+
+  get paymentMethodSection() {
+    return this.page.getByText(/payment method|método de pago/i);
+  }
+
+  get termsCheckbox() {
+    return this.page.locator('input[type="checkbox"]');
+  }
+
+  get confirmButton() {
+    return this.page.getByRole('button', { name: /confirm purchase|confirmar compra/i });
+  }
+
+  get continueShoppingButton() {
+    return this.page.getByRole('button', {
+      name: /continue shopping|seguir comprando/i,
+    });
+  }
 
   constructor(page: Page) {
     super(page);
-    this.heading = page.getByRole('heading', { name: /checkout|pedido/i });
-    this.orderSummarySection = page.locator('text=order summary|resumen del pedido');
-    this.paymentMethodSection = page.getByText(/payment method|método de pago/i);
-    this.termsCheckbox = page.locator('input[type="checkbox"]');
-    this.confirmButton = page.getByRole('button', { name: /confirm purchase|confirmar compra/i });
-    this.continueShoppingButton = page.getByRole('button', {
-      name: /continue shopping|seguir comprando/i,
-    });
   }
 
   async goto(productId: string): Promise<void> {

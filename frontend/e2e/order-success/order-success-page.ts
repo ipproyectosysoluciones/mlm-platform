@@ -2,23 +2,34 @@ import { Page, Locator, expect } from '@playwright/test';
 import { BasePage } from '../pages/base-page';
 
 export class OrderSuccessPage extends BasePage {
-  readonly heading: Locator;
-  readonly orderNumberText: Locator;
-  readonly statusText: Locator;
-  readonly productDetailsSection: Locator;
-  readonly commissionSection: Locator;
-  readonly continueShoppingButton: Locator;
+  get heading() {
+    return this.page.getByRole('heading', { name: /success|éxito|comprado/i });
+  }
+
+  get orderNumberText() {
+    return this.page.getByText(/order number|número de pedido/i);
+  }
+
+  get statusText() {
+    return this.page.getByText(/status|estado/i);
+  }
+
+  get productDetailsSection() {
+    return this.page.locator('.grid > div').first();
+  }
+
+  get commissionSection() {
+    return this.page.getByText(/commission|comisión/i);
+  }
+
+  get continueShoppingButton() {
+    return this.page.getByRole('button', {
+      name: /continue shopping|seguir comprando/i,
+    });
+  }
 
   constructor(page: Page) {
     super(page);
-    this.heading = page.getByRole('heading', { name: /success|éxito|comprado/i });
-    this.orderNumberText = page.getByText(/order number|número de pedido/i);
-    this.statusText = page.getByText(/status|estado/i);
-    this.productDetailsSection = page.locator('.grid > div').first();
-    this.commissionSection = page.getByText(/commission|comisión/i);
-    this.continueShoppingButton = page.getByRole('button', {
-      name: /continue shopping|seguir comprando/i,
-    });
   }
 
   async goto(orderId: string): Promise<void> {

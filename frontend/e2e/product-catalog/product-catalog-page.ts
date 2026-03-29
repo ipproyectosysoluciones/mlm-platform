@@ -2,23 +2,34 @@ import { Page, Locator, expect } from '@playwright/test';
 import { BasePage } from '../pages/base-page';
 
 export class ProductCatalogPage extends BasePage {
-  readonly heading: Locator;
-  readonly productGrid: Locator;
-  readonly platformFilterButtons: Locator;
-  readonly allFilterButton: Locator;
-  readonly buyNowButtons: Locator;
-  readonly viewDetailsButtons: Locator;
+  get heading() {
+    return this.page.getByRole('heading', { name: /product/i });
+  }
+
+  get productGrid() {
+    return this.page.locator('.grid');
+  }
+
+  get platformFilterButtons() {
+    return this.page.getByRole('button', {
+      name: /netflix|spotify|hbo|disney|amazon/i,
+    });
+  }
+
+  get allFilterButton() {
+    return this.page.getByRole('button', { name: /all|todos/i }).first();
+  }
+
+  get buyNowButtons() {
+    return this.page.getByRole('button', { name: /buy now|comprar/i });
+  }
+
+  get viewDetailsButtons() {
+    return this.page.getByRole('button', { name: /view details|ver detalles/i });
+  }
 
   constructor(page: Page) {
     super(page);
-    this.heading = page.getByRole('heading', { name: /product/i });
-    this.productGrid = page.locator('.grid');
-    this.platformFilterButtons = page.getByRole('button', {
-      name: /netflix|spotify|hbo|disney|amazon/i,
-    });
-    this.allFilterButton = page.getByRole('button', { name: /all|todos/i }).first();
-    this.buyNowButtons = page.getByRole('button', { name: /buy now|comprar/i });
-    this.viewDetailsButtons = page.getByRole('button', { name: /view details|ver detalles/i });
   }
 
   async goto(): Promise<void> {
