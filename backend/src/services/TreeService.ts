@@ -221,8 +221,8 @@ export class TreeService {
     // Map counts by sponsorId + position para acceso O(1)
     // Map counts by sponsorId + position for O(1) access
     const countMap = new Map<string, number>();
-    (counts as unknown as Array<{ sponsorId: string; position: string; count: number }>).forEach(
-      (c) => countMap.set(`${c.sponsorId}-${c.position}`, c.count)
+    (counts as unknown as Array<{ sponsorId: string; position: string; count: string }>).forEach(
+      (c) => countMap.set(`${c.sponsorId}-${c.position}`, parseInt(c.count, 10))
     );
 
     const treeNodes: TreeNode[] = [];
@@ -326,7 +326,7 @@ export class TreeService {
 
     // Sequelize with MySQL returns single object when there's one result, not array
     const countObj = Array.isArray(rawResult) ? rawResult[0] : rawResult;
-    return (countObj as { count: number })?.count || 0;
+    return parseInt((countObj as { count: string })?.count || '0', 10);
   }
 
   // ============================================================

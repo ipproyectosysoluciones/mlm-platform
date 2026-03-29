@@ -75,7 +75,7 @@ const router: ExpressRouter = Router();
 router.post(
   '/',
   authenticateToken,
-  [
+  validate([
     // Validate items array
     body('items').isArray({ min: 1 }).withMessage('At least one item is required'),
     // Validate each item in the array
@@ -86,8 +86,7 @@ router.post(
       .withMessage('Quantity must be at least 1'),
     // Validate payment method
     body('paymentMethod').isString().notEmpty().withMessage('Payment method is required'),
-  ],
-  validate,
+  ]),
   asyncHandler(createOrder)
 );
 
@@ -144,7 +143,7 @@ router.post(
 router.get(
   '/',
   authenticateToken,
-  [
+  validate([
     // Validate page query parameter
     query('page').optional().isInt({ min: 1 }).withMessage('Page must be a positive integer'),
     // Validate limit query parameter
@@ -157,7 +156,7 @@ router.get(
       .optional()
       .isIn(['pending', 'completed', 'cancelled', 'refunded'])
       .withMessage('Status must be one of: pending, completed, cancelled, refunded'),
-  ],
+  ]),
   asyncHandler(getOrders)
 );
 
@@ -193,11 +192,12 @@ router.get(
 router.get(
   '/:id',
   authenticateToken,
-  [
-    // Validate UUID format for order ID
-    param('id').isUUID('4').withMessage('Order ID must be a valid UUID'),
-  ],
-  validate,
+  validate([
+    // Validate UUID format for order ID - accept any valid UUID including nil UUID
+    param('id')
+      .matches(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)
+      .withMessage('Order ID must be a valid UUID'),
+  ]),
   asyncHandler(getOrderById)
 );
 

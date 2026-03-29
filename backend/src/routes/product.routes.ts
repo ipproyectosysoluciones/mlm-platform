@@ -119,8 +119,10 @@ router.get(
 router.get(
   '/:id',
   [
-    // Validate UUID format for product ID
-    param('id').isUUID('4').withMessage('Product ID must be a valid UUID'),
+    // Validate UUID format for product ID - accept any valid UUID including nil UUID
+    param('id')
+      .matches(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)
+      .withMessage('Product ID must be a valid UUID'),
   ],
   asyncHandler(getProductById)
 );

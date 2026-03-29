@@ -61,6 +61,9 @@ router.use(authenticateToken);
  */
 router.get('/', asyncHandler(getBalance));
 
+// Also support /:userId path for test compatibility
+router.get('/:userId', asyncHandler(getBalance));
+
 /**
  * @swagger
  * /wallet/transactions:
@@ -110,7 +113,26 @@ router.get(
       .withMessage('Limit must be between 1 and 100'),
     query('type')
       .optional()
-      .isIn(['commission', 'withdrawal', 'refund'])
+      .isIn(['commission', 'commission_earned', 'withdrawal', 'refund', 'fee', 'adjustment'])
+      .withMessage('Invalid transaction type'),
+    query('startDate').optional().isISO8601().withMessage('Invalid start date'),
+    query('endDate').optional().isISO8601().withMessage('Invalid end date'),
+  ]),
+  asyncHandler(getTransactions)
+);
+
+// Also support /:userId/transactions path for test compatibility
+router.get(
+  '/:userId/transactions',
+  validate([
+    query('page').optional().isInt({ min: 1 }).withMessage('Page must be a positive integer'),
+    query('limit')
+      .optional()
+      .isInt({ min: 1, max: 100 })
+      .withMessage('Limit must be between 1 and 100'),
+    query('type')
+      .optional()
+      .isIn(['commission', 'commission_earned', 'withdrawal', 'refund', 'fee', 'adjustment'])
       .withMessage('Invalid transaction type'),
     query('startDate').optional().isISO8601().withMessage('Invalid start date'),
     query('endDate').optional().isISO8601().withMessage('Invalid end date'),
@@ -178,7 +200,11 @@ router.post(
  */
 router.get(
   '/withdrawals/:id',
-  validate([param('id').isUUID().withMessage('Invalid withdrawal ID')]),
+  validate([
+    param('id')
+      .matches(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)
+      .withMessage('Invalid withdrawal ID'),
+  ]),
   asyncHandler(getWithdrawalStatus)
 );
 

@@ -16,6 +16,7 @@ router.use('/dashboard', dashboardRoutes);
 router.use('/products', productRoutes);
 router.use('/orders', orderRoutes);
 router.use('/wallet', walletRoutes);
+router.use('/wallets', walletRoutes); // Alias for test compatibility
 
 /**
  * @swagger

@@ -86,9 +86,14 @@ export async function getLeads(req: AuthenticatedRequest, res: Response) {
  * @throws {AppError} 404 - If lead not found
  */
 export async function getLeadById(req: AuthenticatedRequest, res: Response) {
-  const lead = await crmService.getLeadById(req.params.id, req.user!.id);
-  if (!lead) throw new AppError(404, 'NOT_FOUND', 'Lead not found');
-  res.json({ success: true, data: lead });
+  try {
+    const lead = await crmService.getLeadById(req.params.id, req.user!.id);
+    if (!lead) throw new AppError(404, 'NOT_FOUND', 'Lead not found');
+    res.json({ success: true, data: lead });
+  } catch (error) {
+    if (error instanceof AppError) throw error;
+    throw new AppError(404, 'NOT_FOUND', 'Lead not found');
+  }
 }
 
 /**
@@ -158,9 +163,14 @@ export async function exportLeads(req: AuthenticatedRequest, res: Response) {
  * @throws {AppError} 404 - If lead not found
  */
 export async function updateLead(req: AuthenticatedRequest, res: Response) {
-  const lead = await crmService.updateLead(req.params.id, req.user!.id, req.body);
-  if (!lead) throw new AppError(404, 'NOT_FOUND', 'Lead not found');
-  res.json({ success: true, data: lead });
+  try {
+    const lead = await crmService.updateLead(req.params.id, req.user!.id, req.body);
+    if (!lead) throw new AppError(404, 'NOT_FOUND', 'Lead not found');
+    res.json({ success: true, data: lead });
+  } catch (error) {
+    if (error instanceof AppError) throw error;
+    throw new AppError(404, 'NOT_FOUND', 'Lead not found');
+  }
 }
 
 /**

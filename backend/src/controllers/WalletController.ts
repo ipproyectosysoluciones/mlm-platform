@@ -19,13 +19,40 @@ import type { AuthenticatedRequest } from '../middleware/auth.middleware';
  * @param res - Response with wallet balance
  */
 export async function getBalance(req: AuthenticatedRequest, res: Response): Promise<void> {
-  const userId = req.user!.id;
+  const authUserId = req.user!.id;
+  const paramUserId = req.params.userId;
+
+  // If userId is provided in the URL, check ownership
+  if (paramUserId && paramUserId !== authUserId) {
+    const response: ApiResponse<never> = {
+      success: false,
+      error: {
+        code: 'FORBIDDEN',
+        message: 'You do not have access to this wallet',
+      },
+    };
+    res.status(403).json(response);
+    return;
+  }
 
   try {
-    const wallet = await walletService.getWallet(userId);
+    const wallet = await walletService.getWallet(authUserId);
 
     if (!wallet) {
-      const newWallet = await walletService.createWallet(userId);
+      // If userId was explicitly provided in URL, return 404 (don't auto-create)
+      if (paramUserId) {
+        const response: ApiResponse<never> = {
+          success: false,
+          error: {
+            code: 'WALLET_NOT_FOUND',
+            message: 'Wallet not found',
+          },
+        };
+        res.status(404).json(response);
+        return;
+      }
+
+      const newWallet = await walletService.createWallet(authUserId);
 
       const response: ApiResponse<{
         id: string;
@@ -40,7 +67,9 @@ export async function getBalance(req: AuthenticatedRequest, res: Response): Prom
           userId: newWallet.userId,
           balance: Number(newWallet.balance),
           currency: newWallet.currency,
-          lastUpdated: newWallet.updatedAt.toISOString(),
+          lastUpdated: newWallet.updatedAt
+            ? newWallet.updatedAt.toISOString()
+            : new Date().toISOString(),
         },
       };
 
@@ -61,7 +90,7 @@ export async function getBalance(req: AuthenticatedRequest, res: Response): Prom
         userId: wallet.userId,
         balance: Number(wallet.balance),
         currency: wallet.currency,
-        lastUpdated: wallet.updatedAt.toISOString(),
+        lastUpdated: wallet.updatedAt ? wallet.updatedAt.toISOString() : new Date().toISOString(),
       },
     };
 

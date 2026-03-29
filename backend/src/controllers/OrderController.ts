@@ -89,7 +89,10 @@ export async function createOrder(req: AuthenticatedRequest, res: Response): Pro
     }
 
     const userId = req.user.id;
-    const { productId, paymentMethod, notes } = req.body;
+    const { items, paymentMethod, notes } = req.body;
+
+    // Extract productId from items array (route validation ensures items is a non-empty array)
+    const productId = items?.[0]?.productId;
 
     // Validate request body
     if (!productId) {
@@ -106,8 +109,8 @@ export async function createOrder(req: AuthenticatedRequest, res: Response): Pro
       return;
     }
 
-    // Validate UUID format
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    // Validate UUID format - accept any valid UUID including all-zeros
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     if (!uuidRegex.test(productId)) {
       res.status(400).json({
         success: false,
@@ -330,8 +333,8 @@ export async function getOrderById(req: AuthenticatedRequest, res: Response): Pr
     const { id } = req.params;
     const userId = req.user.id;
 
-    // Validate UUID format
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    // Validate UUID format - accept any valid UUID including all-zeros
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     if (!uuidRegex.test(id)) {
       res.status(400).json({
         success: false,

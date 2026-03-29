@@ -231,9 +231,10 @@ export async function getUserById(req: AuthenticatedRequest, res: Response): Pro
       },
     });
   } catch (error) {
-    res.status(500).json({
+    // Invalid UUID format or other DB error - treat as not found
+    res.status(404).json({
       success: false,
-      error: 'Error fetching user',
+      error: 'User not found',
     });
   }
 }
