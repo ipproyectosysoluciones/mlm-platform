@@ -20,14 +20,15 @@
 | E-commerce Streaming | Products catalog, orders, subscriptions (Netflix, Spotify, etc.)                           |
 | Wallet               | Balance tracking, deposits, withdrawals with fee calculation (5%, $20 min)                 |
 | Currency Conversion  | Frankfurter API integration                                                                |
-| Tests                | 158 integration + 37 E2E = 195 tests passing                                               |
+| CommissionConfig API | Admin CRUD for configurable commission rates                                               |
+| Tests                | 271 total (93 unit + 178 integration) + 37 E2E = 308 tests passing                         |
 | **2FA (TOTP)**       | **Two-Factor Authentication with TOTP, recovery codes, AES-256-GCM encryption** ⭐ NEW     |
 
 ### ⏳ IN PROGRESS
 
-| Feature              | Description                                   |
-| -------------------- | --------------------------------------------- |
-| CommissionConfig API | Admin CRUD for commission rate configurations |
+| Feature   | Description |
+| --------- | ----------- |
+| (ninguno) | -           |
 
 ### 📋 TODO - Future Features
 
@@ -737,19 +738,21 @@ pnpm test:integration
 
 ### Integration Tests (TIER 1 & 2)
 
-| Module          | Tests   | Status      |
-| --------------- | ------- | ----------- |
-| Auth            | 15      | ✅ PASS     |
-| Tree            | 10      | ✅ PASS     |
-| Commissions     | 17      | ✅ PASS     |
-| RBAC            | 20      | ✅ PASS     |
-| CRM             | 17      | ✅ PASS     |
-| Pagination      | 6       | ✅ PASS     |
-| Validation      | 24      | ✅ PASS     |
-| Wallet          | 15      | ✅ PASS     |
-| Tree Visual     | 17      | ✅ PASS     |
-| Performance     | 3       | ✅ PASS     |
-| **Integration** | **158** | **✅ PASS** |
+| Module           | Tests   | Status      |
+| ---------------- | ------- | ----------- |
+| Auth             | 15      | ✅ PASS     |
+| Tree             | 10      | ✅ PASS     |
+| Commissions      | 17      | ✅ PASS     |
+| RBAC             | 20      | ✅ PASS     |
+| CRM              | 17      | ✅ PASS     |
+| Pagination       | 6       | ✅ PASS     |
+| Validation       | 24      | ✅ PASS     |
+| Wallet           | 13      | ✅ PASS     |
+| Tree Visual      | 17      | ✅ PASS     |
+| Performance      | 3       | ✅ PASS     |
+| Products/Orders  | 16      | ✅ PASS     |
+| Two-Factor (2FA) | 20      | ✅ PASS     |
+| **Integration**  | **178** | **✅ PASS** |
 
 ### E2E Tests (Playwright)
 
@@ -762,9 +765,12 @@ pnpm test:integration
 
 ### Total Coverage
 
-| Category  | Tests   | Status             |
-| --------- | ------- | ------------------ |
-| **TOTAL** | **195** | **✅ ALL PASSING** |
+| Category    | Tests   | Status             |
+| ----------- | ------- | ------------------ |
+| Unit        | 93      | ✅ ALL PASSING     |
+| Integration | 178     | ✅ ALL PASSING     |
+| E2E         | 37      | ✅ ALL PASSING     |
+| **TOTAL**   | **308** | **✅ ALL PASSING** |
 
 ### Run Tests
 
@@ -824,9 +830,10 @@ pnpm test:all
   - Added bilingual documentation structure (ES/EN)
   - Created comprehensive PRD
 - **v1.3.0** - Complete platform with all MVP features
-  - Total: 195 tests (158 integration + 37 E2E)
+  - Total: 308 tests (93 unit + 178 integration + 37 E2E)
   - CRM complete (Kanban, CSV import/export, analytics)
   - E-commerce streaming (products, orders, subscriptions)
   - Wallet system (balance, withdrawals, currency conversion)
   - CommissionConfig API for admin rate management
   - Landing Pages builder with tracking
+  - Two-Factor Authentication (2FA) with TOTP

@@ -29,11 +29,11 @@ Plataforma MLM (Multi-Level Marketing) con sistema de afiliaciones binarias, com
 | sdd-i18n-bilingual                | Sistema de internacionalización ES/EN | ✅ Archivado | 2026-03-27 |
 | phase-3-visual-tree               | Visual Tree UI con React Flow         | ✅ Archivado | 2026-03-27 |
 | sdd-horizontal-navbar             | Layout de navbar horizontal           | ✅ Archivado | 2026-03-27 |
-| phase-2-notifications             | Notificaciones Email & SMS con 2FA    | ✅ Archivado | 2026-03-27 |
 | es-modules-migration              | Migración a ES Modules                | ✅ Completo  | 2026-03-28 |
 | postgresql-support                | Soporte para PostgreSQL + Docker      | ✅ Completo  | 2026-03-28 |
 | build-optimization                | Build optimizado (3.4MB → 1.2MB)      | ✅ Completo  | 2026-03-28 |
 | github-templates                  | CODE_OF_CONDUCT, Issues, PR templates | ✅ Completo  | 2026-03-28 |
+| 2fa-totp                          | Two-Factor Authentication con TOTP    | ✅ Archivado | 2026-03-29 |
 
 ### 🚧 Cambios en Progreso
 
