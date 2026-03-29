@@ -4,6 +4,36 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
+## [1.3.0] - 2026-03-29
+
+### Added
+
+- **Two-Factor Authentication (2FA)**
+  - TOTP-based 2FA using speakeasy library
+  - QR code generation for authenticator apps (Google Authenticator, Authy)
+  - Manual entry fallback with secret display
+  - Recovery codes (8 codes, bcrypt hashed)
+  - Rate limiting: 10 attempts/minute for 2FA endpoints
+  - Account lockout after 5 failed attempts (15 min)
+  - **20/20 integration tests passing** ✅
+
+### API Endpoints
+
+| Endpoint                     | Method | Description                                  |
+| ---------------------------- | ------ | -------------------------------------------- |
+| `/api/auth/2fa/status`       | GET    | Get user's 2FA status                        |
+| `/api/auth/2fa/setup`        | POST   | Initiate 2FA setup (generates QR code)       |
+| `/api/auth/2fa/verify-setup` | POST   | Verify TOTP code and enable 2FA              |
+| `/api/auth/2fa/disable`      | POST   | Disable 2FA (requires TOTP or recovery code) |
+| `/api/auth/2fa/verify`       | POST   | Verify TOTP code (used during login)         |
+
+### Security Features
+
+- AES-256-GCM encryption for TOTP secrets
+- bcrypt (12 rounds) hashing for recovery codes
+- 30-second TOTP window tolerance (±1 step)
+- Environment variable: `TWO_FACTOR_SECRET_KEY`
+
 ## [1.2.0] - 2026-03-29
 
 ### Fixed
