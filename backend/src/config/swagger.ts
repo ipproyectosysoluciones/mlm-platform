@@ -8,6 +8,8 @@ import swaggerJsdoc from 'swagger-jsdoc';
  * Phase 3: Added schemas for Visual Tree UI (UserDetails, UserSearchResult, Pagination)
  * Phase 4: Agregados Products y Orders para e-commerce y streaming subscriptions
  * Phase 4: Added Products and Orders for e-commerce and streaming subscriptions
+ * Phase 5: Agregado 2FA (Two-Factor Authentication) con TOTP y códigos de recuperación
+ * Phase 5: Added 2FA (Two-Factor Authentication) with TOTP and recovery codes
  */
 const options: swaggerJsdoc.Options = {
   definition: {
@@ -154,6 +156,111 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
         // ============================================================
         // AUTH / AUTENTICACIÓN
         // ============================================================
+
+        // ============================================================
+        // 2FA / AUTENTICACIÓN DE DOS FACTORES (Phase 5)
+        // ============================================================
+        TwoFactorStatus: {
+          type: 'object',
+          description: 'Estado de 2FA del usuario / 2FA status for user',
+          properties: {
+            enabled: {
+              type: 'boolean',
+              description: 'Indica si 2FA está habilitado / Indicates if 2FA is enabled',
+            },
+            enabledAt: {
+              type: 'string',
+              format: 'date-time',
+              nullable: true,
+              description: 'Fecha de habilitación / Enable date',
+            },
+            method: {
+              type: 'string',
+              enum: ['totp'],
+              description: 'Método de 2FA / 2FA method',
+            },
+          },
+        },
+
+        TwoFactorSetupResponse: {
+          type: 'object',
+          description: 'Respuesta de configuración de 2FA / 2FA setup response',
+          properties: {
+            qrCodeUrl: {
+              type: 'string',
+              description: 'URL del código QR para escanear / QR code URL to scan',
+            },
+            secret: {
+              type: 'string',
+              description: 'Secreto TOTP / TOTP secret',
+            },
+            expiresIn: {
+              type: 'integer',
+              description: 'Tiempo de expiración en segundos / Expiration time in seconds',
+            },
+          },
+        },
+
+        TwoFactorVerifyRequest: {
+          type: 'object',
+          required: ['code'],
+          properties: {
+            code: {
+              type: 'string',
+              description: 'Código TOTP de 6 dígitos / 6-digit TOTP code',
+              minLength: 6,
+              maxLength: 6,
+            },
+          },
+        },
+
+        TwoFactorVerifySetupResponse: {
+          type: 'object',
+          description: 'Respuesta de verificación de setup / Setup verification response',
+          properties: {
+            success: {
+              type: 'boolean',
+              description:
+                'Indica si la verificación fue exitosa / Indicates if verification was successful',
+            },
+            recoveryCodes: {
+              type: 'array',
+              items: { type: 'string' },
+              description: 'Códigos de recuperación / Recovery codes',
+            },
+            message: {
+              type: 'string',
+              description: 'Mensaje de respuesta / Response message',
+            },
+          },
+        },
+
+        TwoFactorVerifyResponse: {
+          type: 'object',
+          description: 'Respuesta de verificación de código / Code verification response',
+          properties: {
+            verified: {
+              type: 'boolean',
+              description: 'Indica si el código es válido / Indicates if code is valid',
+            },
+          },
+        },
+
+        TwoFactorDisableResponse: {
+          type: 'object',
+          description: 'Respuesta al deshabilitar 2FA / 2FA disable response',
+          properties: {
+            success: {
+              type: 'boolean',
+              description:
+                'Indica si se deshabilitó correctamente / Indicates if disabled successfully',
+            },
+            message: {
+              type: 'string',
+              description: 'Mensaje de respuesta / Response message',
+            },
+          },
+        },
         User: {
           type: 'object',
           description: 'Usuario / User',
@@ -971,6 +1078,11 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
     // ============================================================
     tags: [
       { name: 'auth', description: 'Autenticación / Authentication - Login, register, tokens' },
+      {
+        name: '2fa',
+        description:
+          'Two-Factor Authentication / Autenticación de Dos Factores - TOTP setup, verify, disable',
+      },
       {
         name: 'users',
         description: 'Gestión de usuarios / User Management - Profile, tree, search (Phase 3)',

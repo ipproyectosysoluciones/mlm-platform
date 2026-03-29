@@ -76,6 +76,126 @@ Headers: `Authorization: Bearer <token>`
 
 ---
 
+## Two-Factor Authentication (2FA)
+
+### GET /api/auth/2fa/status
+
+Obtiene el estado de 2FA del usuario actual.
+
+**Headers**: `Authorization: Bearer <token>`
+
+**Response 200**:
+
+```json
+{
+  "success": true,
+  "data": {
+    "enabled": false,
+    "enabledAt": null,
+    "method": "totp"
+  }
+}
+```
+
+### POST /api/auth/2fa/setup
+
+Inicia el proceso de configuración de 2FA.
+
+**Headers**: `Authorization: Bearer <token>`
+
+**Response 200**:
+
+```json
+{
+  "success": true,
+  "data": {
+    "qrCodeUrl": "data:image/png;base64,...",
+    "secret": "JBSWY3DPEHPK3PXP",
+    "expiresIn": 600
+  }
+}
+```
+
+### POST /api/auth/2fa/verify-setup
+
+Verifica el código TOTP y habilita 2FA.
+
+**Headers**: `Authorization: Bearer <token>`
+
+**Body**:
+
+```json
+{
+  "code": "123456"
+}
+```
+
+**Response 200**:
+
+```json
+{
+  "success": true,
+  "data": {
+    "success": true,
+    "recoveryCodes": ["ABCD-EFGH", "IJKL-MNOP", ...],
+    "message": "2FA has been enabled successfully..."
+  }
+}
+```
+
+### POST /api/auth/2fa/verify
+
+Verifica un código TOTP (usado durante login).
+
+**Headers**: `Authorization: Bearer <token>`
+
+**Body**:
+
+```json
+{
+  "code": "123456"
+}
+```
+
+**Response 200**:
+
+```json
+{
+  "success": true,
+  "data": {
+    "verified": true
+  }
+}
+```
+
+### POST /api/auth/2fa/disable
+
+Deshabilita 2FA (requiere código TOTP o código de recuperación).
+
+**Headers**: `Authorization: Bearer <token>`
+
+**Body**:
+
+```json
+{
+  "code": "123456"
+}
+```
+
+**Response 200**:
+
+```json
+{
+  "success": true,
+  "data": {
+    "success": true,
+    "message": "2FA has been disabled successfully."
+  }
+}
+```
+
+---
+
 ## Users / Usuarios
 
 ### Get My Tree / Mi Árbol

@@ -25,3 +25,31 @@ If the vulnerability is accepted, we will:
 - Offer a CVE assignment if applicable
 
 If the vulnerability is declined, we will provide a detailed explanation of our decision.
+
+---
+
+## Two-Factor Authentication (2FA)
+
+### Implementación
+
+- Algoritmo TOTP (Time-based One-Time Password)
+- Biblioteca: speakeasy
+- Período: 30 segundos
+- Ventana de tolerancia: ±1 período
+
+### Códigos de Recuperación
+
+- Cantidad: 8 códigos
+- Formato: XXXX-XXXX
+- Hash: bcrypt (12 rondas)
+- Uso: Solo para deshabilitar 2FA
+
+### Cifrado
+
+- Algoritmo: AES-256-GCM
+- Clave: Variable de entorno TWO_FACTOR_SECRET_KEY
+
+### Rate Limiting
+
+- Verificación: 10 intentos/minuto
+- Bloqueo: 5 intentos fallidos = 15 minutos de lockout

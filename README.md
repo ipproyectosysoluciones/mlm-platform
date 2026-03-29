@@ -16,6 +16,7 @@ Plataforma MLM (Multi-Level Marketing) con sistema de afiliaciones binarias, com
 - **Tests Automatizados** - Unit, Integration y E2E con Playwright
 - **i18n** - Interfaz bilingüe (Español/Inglés)
 - **Wallet Digital** - Billetera digital con retiros y transacciones
+- **2FA (TOTP)** - Two-Factor Authentication con códigos de recuperación
 
 ## 📊 Estado de Implementación / Implementation Status
 
@@ -264,6 +265,7 @@ MLM/
 - CORS configurado con validación de origins
 - Helmet security headers
 - Contraseñas hasheadas con bcrypt
+- **2FA (TOTP)** - Two-Factor Authentication con códigos de recuperación
 
 ## 📦 Stack Tecnológico
 
