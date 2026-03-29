@@ -75,13 +75,15 @@
 - [x] **Suscripciones** - Planes recurrentes (mensual)
 - [x] **Links de afiliado** - Tracking de conversiones
 
-### Fase 4: Red de Distribuidores ✅ PARCIAL
+### Fase 4: Red de Distribuidores ⚠️ PARCIAL
 
 - [x] **PWA básico** - Service Worker configurado
-- [ ] **Notificaciones push** - Alertas en tiempo real (pendiente)
-- [ ] **Comunicación team** - Chat interno o mensajería (pendiente)
-- [x] **Ranks/Niveles** - Progresión con badges visuales (parcial)
-- [ ] **Rewards** - Reconocimiento por logros (pendiente)
+- [ ] **Notificaciones push** - Alertas en tiempo real (NO PLANIFICADO)
+- [ ] **Comunicación team** - Chat interno o mensajería (NO PLANIFICADO)
+- [x] **Ranks/Niveles** - Progresión con badges visuales
+- [ ] **Rewards** - Reconocimiento por logros (NO PLANIFICADO)
+
+> **Nota**: Fase 4 paralizada. Notificaciones push, chat de equipo y rewards no están planificados para v1.x.
 
 ### Fase 5: Financiero ✅ COMPLETADO
 
@@ -91,20 +93,24 @@
 - [x] **Conversión de moneda** - API Frankfurter para tasas actualizadas
 - [x] **Pagos automáticos** - Job diario para procesar retiros aprobados
 - [x] **Migración histórica** - Script idempotente para comisiones existentes
-- [ ] **Múltiples pasarelas** - PayPal, Stripe, transferencia bancaria (pendiente)
-- [ ] **Multi-moneda completo** - Soporte para varias monedas (pendiente)
+- [ ] **Múltiples pasarelas** - PayPal, Stripe, transferencia bancaria (NO PLANIFICADO)
+- [ ] **Multi-moneda completo** - Soporte para varias monedas (NO PLANIFICADO)
 
-### Fase 6: Seguridad y Cumplimiento ✅ PARCIAL
+> **Nota**: Solo se implementó la conversión de moneda vía Frankfurter API. Las pasarelas de pago no están planificadas para v1.x.
+
+### Fase 6: Seguridad y Cumplimiento ⚠️ PARCIAL
 
 - [x] **CodeQL** - Escaneo de seguridad automático
 - [x] **Dependabot** - Actualizaciones de dependencias
 - [x] **Branch Protection** - Protección de ramas principales
 - [x] **Rulesets** - Reglas de desarrollo
-- [ ] **KYC básico** - Verificación de identidad (pendiente)
-- [ ] **Logs de auditoría** - Registro de cambios importantes (pendiente)
-- [ ] **2FA** - Autenticación de dos factores (pendiente)
-- [ ] **GDPR compliance** - Consentimiento de datos (pendiente)
-- [ ] **Términos y condiciones** - Aceptación obligatoria (pendiente)
+- [ ] **KYC básico** - Verificación de identidad (NO PLANIFICADO)
+- [ ] **Logs de auditoría** - Registro de cambios importantes (NO PLANIFICADO)
+- [ ] **2FA** - Autenticación de dos factores (NO PLANIFICADO)
+- [ ] **GDPR compliance** - Consentimiento de datos (NO PLANIFICADO)
+- [ ] **Términos y condiciones** - Aceptación obligatoria (NO PLANIFICADO)
+
+> **Nota**: Fase 6 paralizada. KYC, audit logs, 2FA y compliance no están planificados para v1.x.
 
 ---
 
@@ -112,30 +118,26 @@
 
 ### Alta Prioridad (MVP) ✅ COMPLETADO
 
-1. Kanban para leads
-2. Filtros avanzados
-3. Dashboard analítico con gráficos
-4. PWA/Mobile responsive mejorado
-5. Importación masiva de leads
-6. Plantillas de email
-7. **E-commerce streaming** ⭐ NUEVO - Catálogo y compras
-8. **Seguridad CI/CD** ⭐ NUEVO - CodeQL, Dependabot, Branch Protection
+1. Kanban para leads ✅
+2. Filtros avanzados ✅
+3. Dashboard analítico con gráficos ✅
+4. PWA/Mobile responsive mejorado ✅
+5. Importación masiva de leads ✅
+6. Plantillas de email ✅
+7. **E-commerce streaming** ✅ - Catálogo y compras
+8. **Seguridad CI/CD** ✅ - CodeQL, Dependabot, Branch Protection
+9. **Wallet** ✅ - Balance, retiros, conversión de moneda
 
-### Media Prioridad (v1.1)
+### NO PLANIFICADO para v1.x
 
-7. Notificaciones push
-8. Ranks visuales para distribuidores
-9. Wallet básico
-10. Reportes por período
-11. 2FA autenticación
-
-### Baja Prioridad (Futuro)
-
-12. E-commerce completo
-13. ML para predicción de conversión
-14. Multi-moneda
-15. KYC completo
-16. Chat interno
+- Notificaciones push
+- Chat interno
+- Rewards/Gamificación
+- Multi-pasarelas de pago (Stripe/PayPal)
+- KYC/Verificación de identidad
+- 2FA
+- Audit Logs
+- GDPR Compliance
 
 ---
 

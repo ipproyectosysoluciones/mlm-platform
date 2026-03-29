@@ -833,3 +833,342 @@ Headers: `Authorization: Bearer <token>`
 | `INVALID_AMOUNT`        | 400  | Amount must be positive            |
 | `VALIDATION_ERROR`      | 400  | General validation error           |
 | `SERVER_ERROR`          | 500  | Internal server error              |
+
+---
+
+## Commission Config / Configuración de Comisiones (Admin)
+
+### List All Configs / Listar Todas las Configuraciones
+
+**GET** `/api/admin/commissions/config`
+
+Headers: `Authorization: Bearer <token>` (admin only)
+
+```json
+// Response (200)
+{
+  "success": true,
+  "data": [
+    {
+      "id": "uuid",
+      "businessType": "suscripcion",
+      "level": "direct",
+      "percentage": 0.1,
+      "isActive": true,
+      "createdAt": "2024-01-15T10:30:00Z"
+    }
+  ]
+}
+```
+
+### Create Config / Crear Configuración
+
+**POST** `/api/admin/commissions/config`
+
+Headers: `Authorization: Bearer <token>` (admin only)
+
+```json
+// Request
+{
+  "businessType": "suscripcion",
+  "level": "direct",
+  "percentage": 0.10
+}
+
+// Response (201)
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "businessType": "suscripcion",
+    "level": "direct",
+    "percentage": 0.10,
+    "isActive": true
+  }
+}
+```
+
+Business types: `suscripcion`, `producto`, `membresia`, `servicio`, `otro`  
+Levels: `direct`, `level_1`, `level_2`, `level_3`, `level_4`
+
+### Update Config / Actualizar Configuración
+
+**PUT** `/api/admin/commissions/config/:id`
+
+Headers: `Authorization: Bearer <token>` (admin only)
+
+```json
+// Request
+{
+  "percentage": 0.15,
+  "isActive": false
+}
+
+// Response (200)
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "percentage": 0.15,
+    "isActive": false
+  }
+}
+```
+
+### Delete Config / Eliminar Configuración
+
+**DELETE** `/api/admin/commissions/config/:id`
+
+Headers: `Authorization: Bearer <token>` (admin only)
+
+### Get Active Rates / Obtener Tasas Activas
+
+**GET** `/api/admin/commissions/config/rates/:businessType`
+
+Headers: `Authorization: Bearer <token>` (admin only)
+
+```json
+// Response (200)
+{
+  "success": true,
+  "data": {
+    "businessType": "suscripcion",
+    "rates": [
+      { "level": "direct", "percentage": 0.1 },
+      { "level": "level_1", "percentage": 0.05 },
+      { "level": "level_2", "percentage": 0.03 },
+      { "level": "level_3", "percentage": 0.02 },
+      { "level": "level_4", "percentage": 0.01 }
+    ]
+  }
+}
+```
+
+---
+
+## Wallet / Billetera
+
+### Get Balance / Obtener Balance
+
+**GET** `/api/wallets/:userId`
+
+Headers: `Authorization: Bearer <token>`
+
+```json
+// Response (200)
+{
+  "success": true,
+  "data": {
+    "userId": "uuid",
+    "balance": 150.0,
+    "currency": "USD",
+    "pendingWithdrawal": 0.0,
+    "availableBalance": 150.0
+  }
+}
+```
+
+### Get Transactions / Obtener Transacciones
+
+**GET** `/api/wallets/:userId/transactions`
+
+Headers: `Authorization: Bearer <token>`
+
+Query params: `page`, `limit`, `type` (deposit|withdrawal|commission|adjustment)
+
+```json
+// Response (200)
+{
+  "success": true,
+  "data": [
+    {
+      "id": "uuid",
+      "type": "commission",
+      "amount": 10.0,
+      "currency": "USD",
+      "description": "Direct commission from referral",
+      "createdAt": "2024-01-15T10:30:00Z"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 20,
+    "total": 15,
+    "hasMore": false
+  }
+}
+```
+
+### Request Withdrawal / Solicitar Retiro
+
+**POST** `/api/wallets/withdraw`
+
+Headers: `Authorization: Bearer <token>`
+
+```json
+// Request
+{
+  "amount": 100.00,
+  "currency": "USD"
+}
+
+// Response (201)
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "userId": "uuid",
+    "amount": 100.00,
+    "fee": 5.00,
+    "netAmount": 95.00,
+    "currency": "USD",
+    "status": "pending",
+    "createdAt": "2024-01-15T10:30:00Z"
+  }
+}
+```
+
+> Note: Fee is 5% with $20 minimum. If 5% < $20, $20 fee applies.
+
+### Get Withdrawal / Obtener Retiro
+
+**GET** `/api/wallets/withdrawals/:id`
+
+Headers: `Authorization: Bearer <token>`
+
+```json
+// Response (200)
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "amount": 100.0,
+    "fee": 5.0,
+    "netAmount": 95.0,
+    "status": "pending",
+    "createdAt": "2024-01-15T10:30:00Z"
+  }
+}
+```
+
+### Cancel Withdrawal / Cancelar Retiro
+
+**DELETE** `/api/wallets/withdrawals/:id`
+
+Headers: `Authorization: Bearer <token>`
+
+```json
+// Response (200)
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "status": "cancelled"
+  }
+}
+```
+
+### Get Currency Prices / Obtener Precios de Moneda
+
+**GET** `/api/wallets/prices`
+
+Headers: `Authorization: Bearer <token>`
+
+Query params: `base` (default: USD)
+
+```json
+// Response (200)
+{
+  "success": true,
+  "data": {
+    "base": "USD",
+    "rates": {
+      "EUR": 0.92,
+      "GBP": 0.79,
+      "MXN": 17.15,
+      "COP": 3850.0
+    },
+    "updatedAt": "2024-01-15T10:30:00Z"
+  }
+}
+```
+
+---
+
+## Landing Pages
+
+### Create Landing Page / Crear Landing Page
+
+**POST** `/api/landing-pages`
+
+Headers: `Authorization: Bearer <token>`
+
+```json
+// Request
+{
+  "name": "Summer Campaign",
+  "template": "minimal",
+  "content": {
+    "title": "Join Our Team",
+    "subtitle": "Start earning today",
+    "ctaText": "Sign Up Now",
+    "ctaLink": "/register"
+  },
+  "styles": {
+    "primaryColor": "#4F46E5",
+    "backgroundColor": "#FFFFFF"
+  }
+}
+
+// Response (201)
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "slug": "summer-campaign",
+    "name": "Summer Campaign",
+    "status": "draft",
+    "views": 0,
+    "conversions": 0,
+    "createdAt": "2024-01-15T10:30:00Z"
+  }
+}
+```
+
+### List Landing Pages / Listar Landing Pages
+
+**GET** `/api/landing-pages`
+
+Headers: `Authorization: Bearer <token>`
+
+Query params: `page`, `limit`, `status`
+
+### Get Landing Page / Obtener Landing Page
+
+**GET** `/api/landing-pages/:slug`
+
+No authentication required
+
+### Update Landing Page / Actualizar Landing Page
+
+**PUT** `/api/landing-pages/:id`
+
+Headers: `Authorization: Bearer <token>`
+
+### Delete Landing Page / Eliminar Landing Page
+
+**DELETE** `/api/landing-pages/:id`
+
+Headers: `Authorization: Bearer <token>`
+
+### Track View / Registrar Vista
+
+**POST** `/api/landing-pages/:id/view`
+
+No authentication required (tracking endpoint)
+
+### Track Conversion / Registrar Conversión
+
+**POST** `/api/landing-pages/:id/convert`
+
+No authentication required (tracking endpoint)

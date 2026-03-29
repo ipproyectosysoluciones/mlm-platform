@@ -3,8 +3,8 @@
 ## MLM Platform - SaaS Binary Affiliation System
 
 **Version**: 1.0  
-**Status**: Draft  
-**Last Updated**: 2026-03-21  
+**Status**: ✅ MVP COMPLETED  
+**Last Updated**: 2026-03-29  
 **Document Owner**: MLM Development Team
 
 ---
@@ -19,9 +19,11 @@ Traditional MLM companies face critical challenges: outdated systems with decade
 
 ## Proposed Solution / Solución Propuesta
 
-Plataforma SaaS de afiliaciones binarias con distribución automática de comisiones, visualización del árbol genealógico en tiempo real, dashboard con métricas de rendimiento, panel administrativo completo, y CRM integrado para gestión de leads. Construida sobre arquitectura moderna (Node.js + React) con 131 tests automatizados garantizando estabilidad.
+Plataforma SaaS de afiliaciones binarias con distribución automática de comisiones, visualización del árbol genealógico en tiempo real, dashboard con métricas de rendimiento, panel administrativo completo, y CRM integrado para gestión de leads. Construida sobre arquitectura moderna (Node.js + React) con 195 tests automatizados garantizando estabilidad.
 
-Generic SaaS binary affiliation platform with automatic commission distribution, real-time genealogy tree visualization, performance metrics dashboard, complete admin panel, and integrated CRM for lead management. Built on modern architecture (Node.js + React) with 131 automated tests ensuring stability.
+> **Status**: MVP COMPLETED ✅ (v1.3.0)
+
+Generic SaaS binary affiliation platform with automatic commission distribution, real-time genealogy tree visualization, performance metrics dashboard, complete admin panel, and integrated CRM for lead management. Built on modern architecture (Node.js + React) with 195 automated tests ensuring stability.
 
 ## Success Criteria / Criterios de Éxito
 
@@ -472,42 +474,43 @@ Authorization: Bearer <jwt_token>
 
 ## Phased Rollout / Implementación por Fases
 
-### Phase 1: MVP ✅ (COMPLETED)
+### Phase 1: MVP ✅ COMPLETED
 
 **Scope / Alcance**:
 
 - ✅ User registration with sponsor codes
 - ✅ Binary tree with left/right placement (API)
-- ✅ Commission calculation (5 levels)
+- ✅ Commission calculation (5 levels) - CONFIGURABLE
 - ✅ Dashboard with statistics
 - ✅ Admin panel (user management)
 - ✅ CRM basic (leads, tasks, communications)
 - ✅ QR code generation
 - ✅ JWT authentication
-- ✅ Integration test suite (131 tests)
-- ✅ E2E test suite (24 tests)
+- ✅ Integration test suite (195 tests)
+- ✅ E2E test suite (37 tests)
 
 **Timeline**: Q1 2026  
 **Status**: **COMPLETE ✅**
 
 ---
 
-### Phase 2: v1.1 - Email & SMS Notifications
+### Phase 2: v1.1 - Email & SMS Notifications ❌ NOT PLANNED
 
 **Scope / Alcance**:
 
-- [ ] Email notifications (new commissions, downline activity, welcome, password reset)
-- [ ] Email templates (5 responsive HTML templates)
-- [ ] SMS 2FA via Twilio
-- [ ] User notification preferences API
-- [ ] Weekly digest cron job
+- [ ] ~~Email notifications (new commissions, downline activity, welcome, password reset)~~
+- [ ] ~~Email templates (5 responsive HTML templates)~~
+- [ ] ~~SMS 2FA via Twilio~~
+- [ ] ~~User notification preferences API~~
+- [ ] ~~Weekly digest cron job~~
 
-**Dependencies**: SendGrid account, Twilio account  
-**Timeline**: Q2 2026
+**Status**: ❌ NOT PLANNED for v1.x
+
+> **Rationale**: Email/SMS notifications were moved out of scope for v1.x. May be revisited in future versions.
 
 ---
 
-### Phase 3: v1.2 - Visual Tree UI ✅ COMPLETE
+### Phase 3: v1.2 - Visual Tree UI ✅ COMPLETED
 
 **Scope / Alcance**:
 
@@ -529,57 +532,63 @@ Authorization: Bearer <jwt_token>
 - Zustand for state management
 - Mobile-first responsive design
 - 13 E2E tests passing
-- 144 backend integration tests passing
+- 158 backend integration tests passing
 
 ---
 
-### Phase 4: v1.3 - E-commerce 🛒
+### Phase 4: v1.3 - E-commerce 🛒 ✅ PARTIAL
 
 **Scope / Alcance**:
 
-- [ ] Product catalog management
-- [ ] Product CRUD (admin)
-- [ ] Product categories
-- [ ] Shopping cart
-- [ ] Order management
-- [ ] Order status tracking
-- [ ] Product images and pricing
-- [ ] Inventory management
+- [x] Product catalog management
+- [x] Product CRUD (admin)
+- [x] Product categories
+- [x] ~~Shopping cart~~ - One-click purchase implemented
+- [x] Order management
+- [x] Order status tracking
+- [x] Product images and pricing
+- [x] ~~Inventory management~~ - Not required for streaming products
 
-**Dependencies**: Image storage (S3/Cloudinary)  
-**Timeline**: Q3 2026
+**Status**: ✅ PARTIAL - Streaming e-commerce completed
+
+> **Implemented**: Products (Netflix, Spotify, HBO, Disney+, Amazon Prime), subscriptions, orders, streaming access
+> **Not implemented**: Full e-commerce with inventory, physical products
 
 ---
 
-### Phase 5: v2.0 - Payments & E-Wallet 💰
+### Phase 5: v2.0 - Payments & E-Wallet 💰 ✅ PARTIAL
 
 **Scope / Alcance**:
 
-- [ ] Stripe Connect integration for commission payouts
-- [ ] PayPal integration for deposits
-- [ ] E-wallet system
-- [ ] Withdrawal requests
-- [ ] Payment history
-- [ ] Multi-currency support (COP, MXN, USD)
-- [ ] Audit logs
+- [ ] ~~Stripe Connect integration for commission payouts~~
+- [ ] ~~PayPal integration for deposits~~
+- [x] E-wallet system
+- [x] Withdrawal requests
+- [x] Payment history
+- [x] Currency conversion (Frankfurter API)
+- [ ] ~~Audit logs~~
+- [ ] ~~Multi-currency support (COP, MXN, USD)~~ - Single currency with conversion rates
 
-**Dependencies**: Stripe account, PayPal account  
-**Timeline**: Q3-Q4 2026
+**Status**: ✅ PARTIAL - Wallet implemented, gateways pending
+
+> **Implemented**: Wallet balance, deposits, withdrawals (5% fee, $20 min), transaction history, currency conversion API
+> **Not implemented**: Stripe/PayPal integration, audit logs
 
 ---
 
-### Phase 6: v2.1 - Mobile & Scale
+### Phase 6: v2.1 - Mobile & Scale ❌ NOT PLANNED
 
 **Scope / Alcance**:
 
-- [ ] React Native mobile app
-- [ ] Push notifications (Firebase)
-- [ ] Multi-language (Spanish, English, Portuguese)
-- [ ] Gamification (achievements, leaderboards)
-- [ ] Advanced analytics dashboard
+- [ ] ~~React Native mobile app~~
+- [ ] ~~Push notifications (Firebase)~~
+- [x] Multi-language (Spanish, English) - i18n implemented
+- [ ] ~~Gamification (achievements, leaderboards)~~
+- [ ] ~~Advanced analytics dashboard~~ - Basic analytics implemented in CRM
 
-**Dependencies**: Mobile developer, localization team  
-**Timeline**: Q4 2026
+**Status**: ❌ NOT PLANNED for v1.x
+
+> **Rationale**: Mobile app, push notifications, and gamification moved out of scope. Bilingual i18n (ES/EN) implemented.
 
 ---
 
@@ -595,9 +604,12 @@ Authorization: Bearer <jwt_token>
 - [ ] Custom domain support
 - [ ] Dedicated support tier
 - [ ] WhatsApp/Telegram bot
+- [ ] KYC/Identity verification
+- [ ] 2FA authentication
 
-**Dependencies**: Enterprise sales pipeline  
-**Timeline**: 2027+
+**Status**: Future roadmap (2027+)
+
+> **Pending**: All enterprise features including KYC, 2FA, custom commission structures
 
 ---
 

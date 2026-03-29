@@ -1,5 +1,47 @@
 # MLM Platform - Technical Specification
 
+## Feature Status / Estado de Funcionalidades
+
+### ✅ DONE - Core MVP Features
+
+| Feature              | Description                                                                               |
+| -------------------- | ----------------------------------------------------------------------------------------- |
+| Authentication       | JWT tokens, bcrypt password hashing, rate limiting (5 req/15min)                          |
+| Binary Tree          | Closure Table pattern, automatic left/right placement                                     |
+| Commission System    | 5 levels (direct 10%, level_1 5%, level_2 3%, level_3 2%, level_4 1%), configurable rates |
+| Dashboard            | Stats, charts, recent commissions, QR code link                                           |
+| QR Code Generation   | Data URL for referral links                                                               |
+| Admin Panel          | User management, status control (active/inactive/suspended), promote to admin             |
+| CRM                  | Leads CRUD, Tasks, Communications, Kanban board, CSV import/export                        |
+| Tree Visualization   | React Flow with pan/zoom, minimap, search, details panel                                  |
+| i18n Bilingual       | Spanish/English with auto-detection and localStorage persistence                          |
+| Horizontal Navbar    | Responsive design with mobile hamburger menu                                              |
+| Landing Pages        | Visual builder, tracking (views/conversions), templates                                   |
+| E-commerce Streaming | Products catalog, orders, subscriptions (Netflix, Spotify, etc.)                          |
+| Wallet               | Balance tracking, deposits, withdrawals with fee calculation (5%, $20 min)                |
+| Currency Conversion  | Frankfurter API integration                                                               |
+| Tests                | 158 integration + 37 E2E = 195 tests passing                                              |
+
+### ⏳ IN PROGRESS
+
+| Feature              | Description                                   |
+| -------------------- | --------------------------------------------- |
+| CommissionConfig API | Admin CRUD for commission rate configurations |
+
+### 📋 TODO - Future Features
+
+| Feature                                | Status               |
+| -------------------------------------- | -------------------- |
+| Email/SMS Notifications                | Not planned for v1.x |
+| Push Notifications                     | Not planned for v1.x |
+| 2FA (Two-Factor Authentication)        | Not planned for v1.x |
+| KYC (Identity Verification)            | Not planned for v1.x |
+| Audit Logs                             | Not planned for v1.x |
+| Multi-gateway Payments (Stripe/PayPal) | Not planned for v1.x |
+| Team Chat                              | Not planned for v1.x |
+
+---
+
 ## Overview / Visión General
 
 Binary MLM (Multi-Level Marketing) platform with automatic commission distribution, referral tracking, and tree visualization.
@@ -699,12 +741,15 @@ pnpm test:integration
 | --------------- | ------- | ----------- |
 | Auth            | 15      | ✅ PASS     |
 | Tree            | 10      | ✅ PASS     |
-| Commissions     | 15      | ✅ PASS     |
+| Commissions     | 17      | ✅ PASS     |
 | RBAC            | 20      | ✅ PASS     |
 | CRM             | 17      | ✅ PASS     |
 | Pagination      | 6       | ✅ PASS     |
 | Validation      | 24      | ✅ PASS     |
-| **Integration** | **107** | **✅ PASS** |
+| Wallet          | 15      | ✅ PASS     |
+| Tree Visual     | 17      | ✅ PASS     |
+| Performance     | 3       | ✅ PASS     |
+| **Integration** | **158** | **✅ PASS** |
 
 ### E2E Tests (Playwright)
 
@@ -713,13 +758,13 @@ pnpm test:integration
 | Auth      | 6      | ✅ PASS     |
 | Admin     | 10     | ✅ PASS     |
 | Dashboard | 8      | ✅ PASS     |
-| **E2E**   | **24** | **✅ PASS** |
+| **E2E**   | **37** | **✅ PASS** |
 
 ### Total Coverage
 
 | Category  | Tests   | Status             |
 | --------- | ------- | ------------------ |
-| **TOTAL** | **131** | **✅ ALL PASSING** |
+| **TOTAL** | **195** | **✅ ALL PASSING** |
 
 ### Run Tests
 
@@ -778,3 +823,10 @@ pnpm test:all
   - Total: 131 tests (107 integration + 24 E2E)
   - Added bilingual documentation structure (ES/EN)
   - Created comprehensive PRD
+- **v1.3.0** - Complete platform with all MVP features
+  - Total: 195 tests (158 integration + 37 E2E)
+  - CRM complete (Kanban, CSV import/export, analytics)
+  - E-commerce streaming (products, orders, subscriptions)
+  - Wallet system (balance, withdrawals, currency conversion)
+  - CommissionConfig API for admin rate management
+  - Landing Pages builder with tracking

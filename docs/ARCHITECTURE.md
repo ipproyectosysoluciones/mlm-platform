@@ -4,7 +4,27 @@
 
 ### Visión General
 
-La plataforma MLM está construida con una arquitectura de API RESTful, separando claramente el backend (Node.js + Express + TypeScript + Sequelize + MySQL) del frontend (React + Vite + TypeScript + Tailwind CSS).
+La plataforma MLM está construida con una arquitectura de API RESTful, separando claramente el backend (Node.js + Express + TypeScript + Sequelize + PostgreSQL) del frontend (React + Vite + TypeScript + Tailwind CSS).
+
+**Estado del Proyecto**: MVP COMPLETADO ✅
+
+**Características Implementadas**:
+
+- Autenticación JWT con rate limiting
+- Árbol binario con Closure Table
+- Sistema de comisiones de 5 niveles (configurable)
+- Dashboard con estadísticas y gráficos
+- Generación de códigos QR
+- Panel de administración
+- CRM completo (Leads, Tareas, Comunicaciones, Kanban)
+- Visualización de árbol con React Flow
+- Internacionalización bilingüe (ES/EN)
+- Navbar horizontal responsivo
+- Landing Pages constructor
+- E-commerce Streaming (productos, órdenes, suscripciones)
+- Wallet (balance, depósitos, retiros)
+- Conversión de moneda (API Frankfurter)
+- 195 tests automatizados
 
 ```map
 ┌─────────────────────────────────────────────────────────────┐
@@ -81,7 +101,27 @@ backend/src/
 
 ### Overview
 
-The MLM platform is built with a RESTful API architecture, clearly separating the backend (Node.js + Express + TypeScript + Sequelize + MySQL) from the frontend (React + Vite + TypeScript + Tailwind CSS).
+The MLM platform is built with a RESTful API architecture, clearly separating the backend (Node.js + Express + TypeScript + Sequelize + PostgreSQL) from the frontend (React + Vite + TypeScript + Tailwind CSS).
+
+**Project Status**: MVP COMPLETED ✅
+
+**Implemented Features**:
+
+- JWT Authentication with rate limiting
+- Binary Tree with Closure Table
+- 5-level Commission System (configurable)
+- Dashboard with stats and charts
+- QR Code Generation
+- Admin Panel
+- Full CRM (Leads, Tasks, Communications, Kanban)
+- Tree Visualization with React Flow
+- Bilingual i18n (ES/EN)
+- Responsive Horizontal Navbar
+- Landing Pages Builder
+- E-commerce Streaming (products, orders, subscriptions)
+- Wallet (balance, deposits, withdrawals)
+- Currency Conversion (Frankfurter API)
+- 195 automated tests
 
 ### Layer Structure
 
@@ -481,14 +521,15 @@ frontend/src/components/layout/
 | commissions.test.ts | 17      | Commission calculations   |
 | rbac.test.ts        | 20      | Role-based access control |
 | crm.test.ts         | 17      | Lead management           |
+| wallet.test.ts      | 15      | Wallet operations         |
 | pagination.test.ts  | 6       | Pagination                |
 | validation.test.ts  | 24      | Input validation          |
 | auth.spec.ts        | 6       | E2E auth flows            |
 | admin.spec.ts       | 10      | E2E admin flows           |
 | dashboard.spec.ts   | 8       | E2E dashboard flows       |
 | tree.spec.ts        | 13      | E2E tree visualization    |
-| **Integration**     | **149** | **Backend tests**         |
+| **Integration**     | **158** | **Backend tests**         |
 | **E2E**             | **37**  | **Playwright tests**      |
-| **TOTAL**           | **186** | **All passing**           |
+| **TOTAL**           | **195** | **All passing**           |
 
 > Note: CRM.tsx fully translated to bilingual (ES/EN), E2E tests updated with new selectors.
