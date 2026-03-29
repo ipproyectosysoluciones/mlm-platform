@@ -43,6 +43,12 @@ export class User extends Model<UserAttributes, UserCreation> {
   declare twoFactorEnabled: boolean;
   declare twoFactorPhone: string | null;
   declare weeklyDigest: boolean;
+  // 2FA fields
+  declare twoFactorSecretEncrypted: string | null;
+  declare twoFactorRecoveryCodesHash: string | null;
+  declare twoFactorEnabledAt: Date | null;
+  declare twoFactorFailedAttempts: number;
+  declare twoFactorLockedUntil: Date | null;
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
 }
@@ -124,6 +130,37 @@ User.init(
       type: DataTypes.BOOLEAN,
       defaultValue: true,
       field: 'weekly_digest',
+    },
+    // 2FA additional fields / Campos adicionales 2FA
+    twoFactorSecretEncrypted: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+      field: 'two_factor_secret_encrypted',
+      comment: 'Encrypted TOTP secret',
+    },
+    twoFactorRecoveryCodesHash: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+      field: 'two_factor_recovery_codes_hash',
+      comment: 'JSON array of bcrypt-hashed recovery codes',
+    },
+    twoFactorEnabledAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'two_factor_enabled_at',
+      comment: 'When 2FA was enabled',
+    },
+    twoFactorFailedAttempts: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      field: 'two_factor_failed_attempts',
+      comment: 'Failed 2FA verification attempts',
+    },
+    twoFactorLockedUntil: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'two_factor_locked_until',
+      comment: 'Account lockout until this time',
     },
   },
   {
