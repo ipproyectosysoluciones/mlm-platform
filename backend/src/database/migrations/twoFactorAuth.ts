@@ -5,7 +5,7 @@
  * @module database/migrations/twoFactorAuth
  */
 
-import { sequelize } from '../index';
+import { sequelize } from '../../config/database';
 
 /**
  * Migration: Add 2FA columns to users table
@@ -121,7 +121,12 @@ export async function down(): Promise<void> {
 }
 
 // Run if called directly
-if (require.main === module) {
+import { fileURLToPath } from 'url';
+import path from 'path';
+
+const isMainModule = process.argv[1] === fileURLToPath(import.meta.url);
+
+if (isMainModule) {
   (async () => {
     try {
       await up();

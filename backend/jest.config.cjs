@@ -6,6 +6,11 @@ module.exports = {
   testMatch: ['**/__tests__/**/*.test.ts'],
   testPathIgnorePatterns: ['/integration/'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+  transform: {
+    '^.+\\.tsx?$': ['ts-jest', {
+      tsconfig: '<rootDir>/tsconfig.test.json',
+    }],
+  },
   collectCoverageFrom: ['src/**/*.ts', '!src/**/*.d.ts'],
   coverageDirectory: 'coverage',
   verbose: true,
