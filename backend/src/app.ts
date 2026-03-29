@@ -136,6 +136,32 @@ if (!isTest) {
   app.use('/api/orders', orderLimiter);
 }
 
+// Rate limiting for 2FA verification (strict: 10 attempts per minute)
+// Rate limiting para verificación 2FA (estricto: 10 intentos por minuto)
+const twoFALimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 10, // 10 attempts per minute
+  message: {
+    success: false,
+    error: {
+      code: 'RATE_LIMIT',
+      message: 'Too many 2FA verification attempts. Please try again later.',
+    },
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: (req) => {
+    // Use user ID if authenticated, otherwise use IP
+    const user = (req as any).user;
+    return user?.id || req.ip || 'anonymous';
+  },
+});
+
+if (!isTest) {
+  app.use('/api/auth/2fa/verify', twoFALimiter);
+  app.use('/api/auth/2fa/verify-setup', twoFALimiter);
+}
+
 // Swagger UI
 app.use(
   '/api-docs',

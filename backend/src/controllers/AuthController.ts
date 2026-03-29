@@ -163,6 +163,29 @@ export const login: RequestHandler = asyncHandler(
       throw new AppError(401, 'UNAUTHORIZED', 'Invalid email or password');
     }
 
+    // Check if 2FA is enabled for this user
+    if (user.twoFactorEnabled) {
+      // Generate a limited token for 2FA verification
+      const tempToken = generateToken(user);
+
+      const response: ApiResponse<{
+        requires2FA: boolean;
+        tempToken: string;
+        userId: string;
+      }> = {
+        success: true,
+        data: {
+          requires2FA: true,
+          tempToken,
+          userId: user.id,
+        },
+      };
+
+      res.json(response);
+      return;
+    }
+
+    // Normal login without 2FA
     const token = generateToken(user);
 
     const response: ApiResponse<{
