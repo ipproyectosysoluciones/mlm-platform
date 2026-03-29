@@ -177,6 +177,9 @@ describe('OrderService', () => {
     mockTransaction.rollback.mockResolvedValue(undefined);
     // Reset commission mock
     mockCalculateCommissions.mockResolvedValue([]);
+    // Ensure commission calculation is NOT skipped in unit tests
+    // (integration tests use SKIP_COMMISSION_CALCULATION=true to prevent timeouts)
+    delete process.env.SKIP_COMMISSION_CALCULATION;
     orderService = new OrderService();
   });
 
