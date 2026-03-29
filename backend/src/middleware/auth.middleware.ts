@@ -68,7 +68,10 @@ export function authenticate(req: AuthenticatedRequest, res: Response, next: Nex
       console.log('[DEBUG] No token - returning 401');
       res.status(401).json({
         success: false,
-        error: 'Token requerido',
+        error: {
+          code: 'UNAUTHORIZED',
+          message: 'Token requerido',
+        },
       });
       return;
     }
@@ -80,7 +83,10 @@ export function authenticate(req: AuthenticatedRequest, res: Response, next: Nex
       console.log('[DEBUG] Invalid token - returning 401');
       res.status(401).json({
         success: false,
-        error: 'Token inválido o expirado',
+        error: {
+          code: 'UNAUTHORIZED',
+          message: 'Token inválido o expirado',
+        },
       });
       return;
     }
@@ -99,7 +105,10 @@ export function authenticate(req: AuthenticatedRequest, res: Response, next: Nex
     console.log('[DEBUG] Error in authenticate:', e);
     res.status(500).json({
       success: false,
-      error: 'Error de autenticación',
+      error: {
+        code: 'SERVER_ERROR',
+        message: 'Error de autenticación',
+      },
     });
   }
 }
@@ -134,7 +143,10 @@ export function requireRole(...allowedRoles: UserRole[]) {
     if (!req.user) {
       res.status(401).json({
         success: false,
-        error: 'No autenticado',
+        error: {
+          code: 'UNAUTHORIZED',
+          message: 'Authentication required',
+        },
       });
       return;
     }
@@ -142,9 +154,10 @@ export function requireRole(...allowedRoles: UserRole[]) {
     if (!allowedRoles.includes(req.user.role)) {
       res.status(403).json({
         success: false,
-        error: 'Acceso denegado',
-        requiredRoles: allowedRoles,
-        currentRole: req.user.role,
+        error: {
+          code: 'FORBIDDEN',
+          message: 'Access denied',
+        },
       });
       return;
     }
@@ -170,7 +183,10 @@ export function restrictToOwnResource(resourceField: 'userId' | 'sponsorId' = 'u
     if (!req.user) {
       res.status(401).json({
         success: false,
-        error: 'No autenticado',
+        error: {
+          code: 'UNAUTHORIZED',
+          message: 'Authentication required',
+        },
       });
       return;
     }
@@ -186,7 +202,10 @@ export function restrictToOwnResource(resourceField: 'userId' | 'sponsorId' = 'u
     if (resourceOwnerId && resourceOwnerId !== currentUserId) {
       res.status(403).json({
         success: false,
-        error: 'Solo puedes acceder a tu propia información',
+        error: {
+          code: 'FORBIDDEN',
+          message: 'Access denied',
+        },
       });
       return;
     }

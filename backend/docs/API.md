@@ -832,3 +832,4 @@ Headers: `Authorization: Bearer <token>`
 | `WEAK_PASSWORD`         | 400  | Password doesn't meet requirements |
 | `INVALID_AMOUNT`        | 400  | Amount must be positive            |
 | `VALIDATION_ERROR`      | 400  | General validation error           |
+| `SERVER_ERROR`          | 500  | Internal server error              |

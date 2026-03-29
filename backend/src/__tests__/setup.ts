@@ -5,24 +5,10 @@
  * @module __tests__/setup
  */
 
-// Set test environment BEFORE importing anything else
-process.env.NODE_ENV = 'test';
-// Use PostgreSQL for tests (set DB_DIALECT=postgres)
-process.env.DB_DIALECT = 'postgres';
-process.env.TEST_DB_NAME = 'mlm_test';
-process.env.TEST_DB_HOST = '127.0.0.1';
-process.env.TEST_DB_PORT = '5435'; // PostgreSQL test port
-process.env.TEST_DB_USER = 'mlm_test';
-process.env.TEST_DB_PASSWORD = 'mlm_test';
-process.env.DB_HOST = '127.0.0.1';
-// Disable Sentry for tests (prevents hanging on import)
-process.env.SENTRY_DSN = '';
-
-import { Sequelize } from 'sequelize';
+import { Sequelize, DataTypes } from 'sequelize';
 import supertest from 'supertest';
-import { resetSequelize } from '../config/database';
 
-// Test database instance
+// Test database instance - create fresh each time
 let testDb: Sequelize;
 
 // Global test agent - used by all integration tests
@@ -32,30 +18,82 @@ export let testAgent: any;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let sequelizeInstance: any = null;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let importedModels: any = {};
+
 beforeAll(async () => {
   console.log('=== SETUP: Starting integration test setup ===');
   console.log('TEST_DB_NAME:', process.env.TEST_DB_NAME);
   console.log('TEST_DB_HOST:', process.env.TEST_DB_HOST);
   console.log('TEST_DB_PORT:', process.env.TEST_DB_PORT);
 
-  // Reset any existing sequelize instance
-  resetSequelize();
+  // Create fresh Sequelize instance
+  testDb = new Sequelize({
+    database: process.env.TEST_DB_NAME || 'mlm_test',
+    username: process.env.TEST_DB_USER || 'mlm_test',
+    password: process.env.TEST_DB_PASSWORD || 'mlm_test',
+    host: process.env.TEST_DB_HOST || '127.0.0.1',
+    port: parseInt(process.env.TEST_DB_PORT || '5435'),
+    dialect: 'postgres',
+    logging: false,
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 30000,
+      idle: 10000,
+    },
+    define: {
+      timestamps: true,
+      underscored: true,
+      createdAt: 'created_at',
+      updatedAt: 'updated_at',
+    },
+  });
 
-  // Import sequelize - it will use the environment variables set above
-  const { sequelize } = require('../config/database');
-  testDb = sequelize;
-  sequelizeInstance = sequelize;
+  sequelizeInstance = testDb;
 
   console.log('Sequelize instance created');
 
-  // Import models to register them with sequelize
-  require('../models');
+  // Import models dynamically to register them with our sequelize instance
+  const {
+    User,
+    UserClosure,
+    Commission,
+    Purchase,
+    Lead,
+    Task,
+    Communication,
+    LandingPage,
+    Product,
+    Order,
+    Wallet,
+    WalletTransaction,
+    WithdrawalRequest,
+    CommissionConfig,
+  } = await import('../models');
+
+  importedModels = {
+    User,
+    UserClosure,
+    Commission,
+    Purchase,
+    Lead,
+    Task,
+    Communication,
+    LandingPage,
+    Product,
+    Order,
+    Wallet,
+    WalletTransaction,
+    WithdrawalRequest,
+    CommissionConfig,
+  };
+
   console.log('Models registered');
 
   // Sync all models - force to recreate tables
   try {
     console.log('Syncing database...');
-    // Use force to drop and recreate tables (faster for tests)
     await testDb.sync({ force: true });
     console.log('Test database synced successfully');
   } catch (error) {
@@ -97,6 +135,8 @@ beforeAll(async () => {
   // Create test agent
   try {
     console.log('Loading app...');
+    // Mock the database module to return our test sequelize
+    const originalRequire = (global as any).__mockDb;
     const app = require('../app').default;
     console.log('App loaded, creating test agent...');
     testAgent = supertest(app);
@@ -109,10 +149,13 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  if (testDb) {
-    await testDb.close();
-  }
-  resetSequelize();
+  // Don't close the connection here - Jest's forceExit will handle cleanup
+  // Closing the connection prematurely causes "ConnectionManager.getConnection
+  // was called after the connection manager was closed!" errors when tests
+  // run in serial (--runInBand) because other suites may still need the connection
+  //
+  // Jest's forceExit: true in the config will properly close connections on exit
+  // If we need to close explicitly, we'd need a globalTeardown file instead
 });
 
 // Clean tables before each test

@@ -5,11 +5,14 @@ module.exports = {
   roots: ['<rootDir>/src'],
   testMatch: ['**/__tests__/integration/**/*.test.ts'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+  transform: {
+    '^.+\\.tsx?$': ['ts-jest', {
+      tsconfig: '<rootDir>/tsconfig.test.json',
+    }],
+  },
   collectCoverageFrom: ['src/**/*.ts', '!src/**/*.d.ts'],
   coverageDirectory: 'coverage',
   verbose: true,
-  // setupFiles runs BEFORE module imports (sets env vars for DB, etc.)
-  setupFiles: ['<rootDir>/src/__tests__/env.setup.ts'],
   // setupFilesAfterEnv runs AFTER test framework is installed
   setupFilesAfterEnv: ['<rootDir>/src/__tests__/setup.ts'],
   testTimeout: 300000, // 5 minutes per test

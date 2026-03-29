@@ -6,16 +6,16 @@ Binary MLM (Multi-Level Marketing) platform with automatic commission distributi
 
 ## Tech Stack
 
-| Layer     | Technology              |
-| --------- | ----------------------- |
-| Runtime   | Node.js 24+ (ESM)       |
-| Framework | Express.js              |
-| Language  | TypeScript (ESM)        |
-| ORM       | Sequelize 6             |
-| Database  | MySQL 8 / PostgreSQL 16 |
-| Auth      | JWT                     |
-| Testing   | Jest + Supertest        |
-| Build     | esbuild (~1.2MB)        |
+| Layer     | Technology                 |
+| --------- | -------------------------- |
+| Runtime   | Node.js 24+ (ESM)          |
+| Framework | Express.js                 |
+| Language  | TypeScript (ESM)           |
+| ORM       | Sequelize 6                |
+| Database  | PostgreSQL 16 (Docker)     |
+| Auth      | JWT                        |
+| Testing   | Jest + Supertest + ts-jest |
+| Build     | esbuild (~1.2MB)           |
 
 ## Database Schema
 
@@ -636,6 +636,22 @@ User A purchases $100:
 
 ## Error Codes
 
+### Error Response Format
+
+All error responses follow this structure:
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "ERROR_CODE",
+    "message": "Human readable message"
+  }
+}
+```
+
+### Error Codes Reference
+
 | Code                    | HTTP Status | Description                        |
 | ----------------------- | ----------- | ---------------------------------- |
 | `UNAUTHORIZED`          | 401         | Missing or invalid JWT             |
@@ -651,10 +667,31 @@ User A purchases $100:
 | `INVALID_CURRENCY`      | 400         | Currency not supported             |
 | `INVALID_STATUS`        | 400         | Invalid status value               |
 | `VALIDATION_ERROR`      | 400         | General validation error           |
+| `SERVER_ERROR`          | 500         | Internal server error              |
 
 ---
 
 ## Testing
+
+### Test Infrastructure
+
+The test suite uses:
+
+- **ts-jest**: For TypeScript support in Jest (via `tsconfig.test.json`)
+- **Fresh Sequelize**: Each test run creates a new Sequelize instance
+- **PostgreSQL Test DB**: Separate container on port 5435
+
+```bash
+# Run integration tests
+pnpm test:integration
+```
+
+### Docker Containers for Testing
+
+| Container         | Puerto | Usuario  | Base de datos |
+| ----------------- | ------ | -------- | ------------- |
+| mlm_postgres      | 5434   | mlm      | mlm_db        |
+| mlm_postgres_test | 5435   | mlm_test | mlm_test      |
 
 ### Integration Tests (TIER 1 & 2)
 
@@ -704,18 +741,32 @@ pnpm test:all
 
 ## Environment Variables
 
+### Main Database
+
 | Variable          | Description        | Default     |
 | ----------------- | ------------------ | ----------- |
 | `NODE_ENV`        | Environment        | development |
 | `PORT`            | Server port        | 3000        |
-| `DB_HOST`         | MySQL host         | localhost   |
-| `DB_PORT`         | MySQL port         | 3306        |
+| `DB_DIALECT`      | Database dialect   | postgres    |
+| `DB_HOST`         | PostgreSQL host    | localhost   |
+| `DB_PORT`         | PostgreSQL port    | 5434        |
 | `DB_NAME`         | Database name      | mlm_db      |
-| `DB_USER`         | Database user      | root        |
-| `DB_PASSWORD`     | Database password  | -           |
+| `DB_USER`         | Database user      | mlm         |
+| `DB_PASSWORD`     | Database password  | mlm123      |
 | `JWT_SECRET`      | JWT signing secret | -           |
 | `JWT_EXPIRES_IN`  | Token expiry       | 7d          |
 | `ALLOWED_ORIGINS` | CORS origins       | localhost   |
+
+### Test Database (for integration tests)
+
+| Variable           | Description            | Default   |
+| ------------------ | ---------------------- | --------- |
+| `TEST_DB_HOST`     | Test PostgreSQL host   | 127.0.0.1 |
+| `TEST_DB_PORT`     | Test PostgreSQL port   | 5435      |
+| `TEST_DB_NAME`     | Test database name     | mlm_test  |
+| `TEST_DB_USER`     | Test database user     | mlm_test  |
+| `TEST_DB_PASSWORD` | Test database password | mlm_test  |
+| `TEST_DB_DIALECT`  | Test database dialect  | postgres  |
 
 ---
 

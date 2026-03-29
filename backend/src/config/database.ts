@@ -45,7 +45,14 @@ export function createSequelize(): Sequelize {
 export const sequelize = createSequelize();
 
 // For testing - reset the instance
-export function resetSequelize(): void {
+export async function resetSequelize(): Promise<void> {
+  if (_sequelize) {
+    try {
+      await _sequelize.close();
+    } catch {
+      // Ignore close errors
+    }
+  }
   _sequelize = null;
 }
 

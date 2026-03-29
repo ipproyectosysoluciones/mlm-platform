@@ -192,17 +192,44 @@ Incluye todos los endpoints con ejemplos de Request/Response.
 
 ## Tests
 
-| Comando                      | Descripción                           |
-| ---------------------------- | ------------------------------------- |
-| `pnpm test`                  | Tests unitarios (73 tests ✅)         |
-| `pnpm test:unit`             | Solo tests unitarios                  |
-| `pnpm test:integration`      | ⏳ Tests integración (PENDIENTE)      |
-| `pnpm test:integration:auth` | ⏳ Tests integración auth (PENDIENTE) |
+| Comando                      | Descripción                         |
+| ---------------------------- | ----------------------------------- |
+| `pnpm test`                  | Tests unitarios (73 tests ✅)       |
+| `pnpm test:unit`             | Solo tests unitarios                |
+| `pnpm test:integration`      | Tests de integración con PostgreSQL |
+| `pnpm test:integration:auth` | Tests de integración auth           |
 
 ### Estado de Tests
 
 - ✅ **Unitarios**: 73/73 pasan (AuthService, UserService, ProductService, OrderService, EmailService)
-- ⏳ **Integración**: Pendientes para próxima sesión. Requieren setup del test container PostgreSQL.
+- ✅ **Integración**: Funcionales con PostgreSQL (requieren container `mlm_postgres_test`)
+
+### Tests de Integración
+
+Los tests de integración requieren PostgreSQL configurado:
+
+```bash
+# 1. Iniciar container de test
+docker start mlm_postgres_test
+
+# 2. Verificar que esté corriendo
+docker ps | grep postgres
+
+# 3. Ejecutar tests de integración
+pnpm test:integration
+```
+
+**Configuración de PostgreSQL para tests:**
+
+| Variable           | Valor por defecto |
+| ------------------ | ----------------- |
+| `TEST_DB_HOST`     | 127.0.0.1         |
+| `TEST_DB_PORT`     | 5435              |
+| `TEST_DB_NAME`     | mlm_test          |
+| `TEST_DB_USER`     | mlm_test          |
+| `TEST_DB_PASSWORD` | mlm_test          |
+
+> **Nota**: Los tests de integración crean una fresh Sequelize instance y sincronizan las tablas automáticamente en cada ejecución.
 
 ### Docker Containers
 
