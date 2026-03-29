@@ -9,10 +9,13 @@ export default defineConfig({
   reporter: 'html',
 
   use: {
-    baseURL: 'http://localhost:5173',
+    baseURL: process.env.BASE_URL || 'http://localhost:5174',
     trace: 'on-first-retry',
-    screenshot: 'only-on-failure',
+    screenshot: 'always',
+    video: 'on',
   },
+
+  outputDir: './test-results',
 
   projects: [
     {
@@ -23,8 +26,10 @@ export default defineConfig({
 
   webServer: {
     command: 'pnpm dev',
-    url: 'http://localhost:5173',
-    reuseExistingServer: !process.env.CI,
+    url: process.env.BASE_URL
+      ? `http://localhost:${process.env.BASE_URL.split(':')[2]}`
+      : 'http://localhost:5174',
+    reuseExistingServer: true,
     timeout: 120 * 1000,
   },
 });
