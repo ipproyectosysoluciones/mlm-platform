@@ -15,6 +15,8 @@ process.env.TEST_DB_PORT = '5435'; // PostgreSQL test port
 process.env.TEST_DB_USER = 'mlm_test';
 process.env.TEST_DB_PASSWORD = 'mlm_test';
 process.env.DB_HOST = '127.0.0.1';
+// Disable Sentry for tests (prevents hanging on import)
+process.env.SENTRY_DSN = '';
 
 import { Sequelize } from 'sequelize';
 import supertest from 'supertest';
@@ -53,12 +55,43 @@ beforeAll(async () => {
   // Sync all models - force to recreate tables
   try {
     console.log('Syncing database...');
-    // Use alter instead of force for faster syncs (keeps existing data, adds missing columns)
-    await testDb.sync({ alter: true });
+    // Use force to drop and recreate tables (faster for tests)
+    await testDb.sync({ force: true });
     console.log('Test database synced successfully');
   } catch (error) {
     console.error('Error syncing test database:', error);
     throw error;
+  }
+
+  // Seed commission_configs if empty
+  try {
+    const existingConfigs = await sequelizeInstance?.query(
+      'SELECT COUNT(*) as count FROM "commission_configs"',
+      { type: 'SELECT' }
+    );
+    if (parseInt((existingConfigs as any)?.[0]?.count || '0') === 0) {
+      const businessTypes = ['suscripcion', 'producto', 'membresia', 'servicio', 'otro'];
+      const levels = ['direct', 'level_1', 'level_2', 'level_3', 'level_4'];
+      const defaultRates: Record<string, Record<string, number>> = {
+        suscripcion: { direct: 0.2, level_1: 0.1, level_2: 0.08, level_3: 0.05, level_4: 0.03 },
+        producto: { direct: 0.15, level_1: 0.08, level_2: 0.05, level_3: 0.03, level_4: 0.02 },
+        membresia: { direct: 0.25, level_1: 0.12, level_2: 0.08, level_3: 0.05, level_4: 0.03 },
+        servicio: { direct: 0.18, level_1: 0.1, level_2: 0.06, level_3: 0.04, level_4: 0.02 },
+        otro: { direct: 0.1, level_1: 0.05, level_2: 0.03, level_3: 0.02, level_4: 0.01 },
+      };
+      for (const bt of businessTypes) {
+        for (const lvl of levels) {
+          await sequelizeInstance?.query(
+            `INSERT INTO "commission_configs" ("id", "business_type", "level", "percentage", "is_active", "created_at", "updated_at")
+             VALUES (gen_random_uuid(), $1, $2, $3, true, NOW(), NOW())`,
+            { bind: [bt, lvl, defaultRates[bt][lvl]] }
+          );
+        }
+      }
+      console.log('Commission configs seeded for tests');
+    }
+  } catch (error) {
+    console.error('Error seeding commission_configs:', error);
   }
 
   // Create test agent

@@ -118,6 +118,7 @@ export async function createPurchase(req: AuthenticatedRequest, res: Response): 
 
   const purchase = await Purchase.create({
     userId,
+    businessType: 'producto' as const,
     amount,
     currency: currency || 'USD',
     description,

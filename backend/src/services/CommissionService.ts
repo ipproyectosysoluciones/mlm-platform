@@ -95,7 +95,7 @@ export class CommissionService {
         .catch((err) => console.error('Commission email failed:', err));
     }
 
-    const commissionTypeMap: Record<number, string> = {
+    const commissionTypeMap: Record<number, 'level_1' | 'level_2' | 'level_3' | 'level_4'> = {
       1: 'level_1',
       2: 'level_2',
       3: 'level_3',

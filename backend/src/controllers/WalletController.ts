@@ -7,7 +7,7 @@
  */
 import { Response } from 'express';
 import { walletService } from '../services/WalletService';
-import { getCryptoPrices } from '../services/CryptoPriceService';
+import { getCryptoPrices as fetchCryptoPrices } from '../services/CryptoPriceService';
 import type { ApiResponse } from '../types';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware';
 
@@ -353,7 +353,7 @@ export async function cancelWithdrawal(req: AuthenticatedRequest, res: Response)
  */
 export async function getCryptoPrices(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
-    const prices = await getCryptoPrices();
+    const prices = await fetchCryptoPrices();
 
     const response: ApiResponse<{
       bitcoin: { usd: number; usd_24h_change?: number };

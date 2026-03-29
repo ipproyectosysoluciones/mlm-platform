@@ -98,7 +98,7 @@ export async function createConfig(req: AuthenticatedRequest, res: Response): Pr
     const { businessType, customBusinessName, level, percentage, isActive } = req.body;
 
     // Validate businessType
-    if (!businessType || !Object.values(BUSINESS_TYPES).includes(businessType)) {
+    if (!businessType || !(Object.values(BUSINESS_TYPES) as string[]).includes(businessType)) {
       const response: ApiResponse<never> = {
         success: false,
         error: {
@@ -301,7 +301,7 @@ export async function getActiveRates(req: AuthenticatedRequest, res: Response): 
   try {
     const { businessType } = req.params;
 
-    if (!businessType || !Object.values(BUSINESS_TYPES).includes(businessType)) {
+    if (!businessType || !(Object.values(BUSINESS_TYPES) as string[]).includes(businessType)) {
       const response: ApiResponse<never> = {
         success: false,
         error: {

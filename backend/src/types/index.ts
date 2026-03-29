@@ -67,7 +67,7 @@ export interface PurchaseAttributes {
 
 export interface ApiResponse<T> {
   success: boolean;
-  data?: T;
+  data?: T | null;
   error?: {
     code: string;
     message: string;
