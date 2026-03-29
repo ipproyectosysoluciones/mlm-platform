@@ -4,6 +4,31 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
+## [1.2.0] - 2026-03-29
+
+### Fixed
+
+- **Tests de Integración** (con `pnpm`)
+  - Configuración ts-jest para ES Modules con CommonJS
+  - UUID validation: acepta nil UUID (00000000-0000-0000-0000-000000000000)
+  - Auth middleware: formato de errores consistente `{ code, message }`
+  - Wallet: nombres de columnas underscored (`created_at` vs `createdAt`)
+  - Wallet: tipo de transacción correcto (`commission_earned` vs `COMMISSION`)
+  - **158/158 tests de integración pasando** ✅
+
+### Changed
+
+- **Infraestructura de Tests**
+  - `tsconfig.test.json` para ts-jest (CommonJS module)
+  - `setup.ts` reescrito para crear Sequelize directamente
+  - `resetSequelize()` ahora es async para mejor cleanup
+  - Documentación de tests actualizada con `pnpm test:integration`
+
+### Added
+
+- **E2E Page Objects**
+  - Playwright: getters para locators (más resilientes)
+
 ## [1.1.0] - 2026-03-24
 
 ### Added
