@@ -62,13 +62,22 @@ cd frontend
 # Frontend on port 5173
 
 # Run all E2E tests / Ejecutar todos los E2E
-npx playwright test
+pnpm test:e2e
+
+# With browser visible / Con navegador visible
+pnpm test:e2e:headed
+
+# With Playwright UI / Con interfaz de Playwright
+pnpm test:e2e:ui
+
+# With UI and browser visible / Con interfaz y navegador visible
+pnpm test:e2e:ui:headed
+
+# Debug mode / Modo depuración
+pnpm test:e2e:debug
 
 # Specific test file / Archivo específico
-npx playwright test e2e/auth.spec.ts
-
-# With UI / Con interfaz
-npx playwright test --ui
+pnpm test:e2e e2e/auth.spec.ts
 ```
 
 ---
