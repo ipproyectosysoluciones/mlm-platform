@@ -4,7 +4,6 @@
  *
  * @module components/crm/TaskCard
  */
-import { useTranslation } from 'react-i18next';
 import { crmService } from '../../services/api';
 import type { Task } from '../../types';
 
@@ -14,8 +13,6 @@ interface TaskCardProps {
 }
 
 export default function TaskCard({ task, onComplete }: TaskCardProps) {
-  const { t } = useTranslation();
-
   const handleStatusToggle = async () => {
     try {
       await crmService.updateTask(task.id, {

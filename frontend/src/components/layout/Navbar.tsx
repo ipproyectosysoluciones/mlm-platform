@@ -20,7 +20,6 @@ import {
 } from 'lucide-react';
 import { LanguageSelector } from './LanguageSelector';
 import { UserMenu } from './UserMenu';
-import { MobileMenu } from './MobileMenu';
 
 // Navigation items
 const NAV_ITEMS = [

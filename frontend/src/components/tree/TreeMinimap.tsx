@@ -17,8 +17,6 @@ interface TreeMinimapProps {
   pannable?: boolean;
   /** Si permite zoom con el mouse */
   zoomable?: boolean;
-  /** Posición CSS personalizada */
-  position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 }
 
 /** Color por defecto: azul para left, púrpura para right */
@@ -32,7 +30,6 @@ export default function TreeMinimap({
   nodeColor = defaultNodeColor,
   pannable = true,
   zoomable = true,
-  position,
 }: TreeMinimapProps) {
   return (
     <MiniMap
