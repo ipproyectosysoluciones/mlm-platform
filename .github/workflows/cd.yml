@@ -11,6 +11,7 @@ env:
   REGISTRY: docker.io
   BACKEND_IMAGE: ipproyectos/mlm-backend
   FRONTEND_IMAGE: ipproyectos/mlm-frontend
+  FORCE_NODE24: true
 
 jobs:
   build-and-push:
@@ -46,7 +47,7 @@ jobs:
             type=semver,pattern={{version}}
 
       - name: Build and push Backend
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ./backend/Dockerfile
@@ -58,7 +59,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Build and push Frontend
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ./frontend/Dockerfile
