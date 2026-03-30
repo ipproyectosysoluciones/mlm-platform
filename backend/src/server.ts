@@ -11,10 +11,14 @@ async function startServer(): Promise<void> {
     await connectDatabase();
     initModels();
 
-    const forceSync = config.nodeEnv === 'development' && process.argv.includes('--force-sync');
+    // Sync database schema on startup (safe - only alters, doesn't drop)
+    const forceSync = process.argv.includes('--force-sync');
     if (forceSync) {
       await syncDatabase(true);
-      console.log('⚠️  Database synced with force=true');
+      console.log('⚠️  Database synced with force=true (drop tables)');
+    } else {
+      await syncDatabase(false);
+      console.log('✅ Database schema synced (alter mode)');
     }
 
     app.listen(config.port, () => {

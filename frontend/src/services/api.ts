@@ -30,7 +30,7 @@ import type {
 } from '../types';
 
 /** @constant {string} API_URL - Backend base URL / URL base del backend */
-const API_URL = 'http://localhost:3000/api';
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 /**
  * Axios instance with default config and interceptors
