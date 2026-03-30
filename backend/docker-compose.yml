@@ -1,25 +1,6 @@
 version: '3.8'
 
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: mlm_mysql
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: mlm_db
-      MYSQL_USER: mlm_user
-      MYSQL_PASSWORD: mlm_password
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
   postgres:
     image: postgres:16-alpine
     container_name: mlm_postgres
@@ -70,22 +51,20 @@ services:
       timeout: 5s
       retries: 5
 
-  phpmyadmin:
-    image: phpmyadmin:latest
-    container_name: mlm_phpmyadmin
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: mlm_pgadmin
     restart: unless-stopped
     environment:
-      PMA_HOST: mysql
-      PMA_USER: root
-      PMA_PASSWORD: rootpassword
+      PGADMIN_DEFAULT_EMAIL: admin@mlm.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
     ports:
       - "8080:80"
     depends_on:
-      mysql:
+      postgres:
         condition: service_healthy
 
 volumes:
-  mysql_data:
   postgres_data:
   postgres_test_data:
   redis_data:
