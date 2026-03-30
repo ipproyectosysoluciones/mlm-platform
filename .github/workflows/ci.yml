@@ -50,7 +50,9 @@ jobs:
           JWT_SECRET: ci-test-secret
 
       - name: Integration tests
-        run: pnpm test:integration
+        run: |
+          cd backend
+          pnpm test:integration
         env:
           DB_DIALECT: postgres
           TEST_DB_HOST: localhost
