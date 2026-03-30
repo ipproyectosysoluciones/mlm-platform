@@ -20,7 +20,7 @@ import {
   Users,
   Phone,
   Mail,
-  MessageSquare,
+  Building,
   CheckCircle,
   Clock,
   AlertCircle,
@@ -28,18 +28,18 @@ import {
   Search,
   Filter,
   X,
-  Building,
   Edit,
   Trash2,
-  Save,
   ArrowLeft,
   Upload,
   Download,
 } from 'lucide-react';
 import { crmService } from '../services/api';
-import KanbanBoard from '../components/crm/KanbanBoard';
+import { KanbanBoard, LeadCard, LeadModal, TaskCard, initialLeadFormData } from '../components/crm';
+import type { LeadFormData } from '../components/crm';
 import type { Lead, Task, Communication, CRMStats } from '../types';
 
+// Status colors for lead details panel
 const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
   new: { bg: 'bg-blue-100', text: 'text-blue-700' },
   contacted: { bg: 'bg-yellow-100', text: 'text-yellow-700' },
@@ -48,15 +48,6 @@ const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
   negotiation: { bg: 'bg-orange-100', text: 'text-orange-700' },
   won: { bg: 'bg-green-100', text: 'text-green-700' },
   lost: { bg: 'bg-red-100', text: 'text-red-700' },
-};
-
-const SOURCE_ICONS: Record<string, React.ReactNode> = {
-  website: <MessageSquare className="w-4 h-4" />,
-  referral: <Users className="w-4 h-4" />,
-  social: <MessageSquare className="w-4 h-4" />,
-  landing_page: <Filter className="w-4 h-4" />,
-  manual: <Edit className="w-4 h-4" />,
-  other: <Filter className="w-4 h-4" />,
 };
 
 // Status names now use i18n - t('crm.status.xxx')
@@ -112,24 +103,6 @@ const EMAIL_TEMPLATES = [
 
 type Tab = 'leads' | 'kanban' | 'tasks' | 'stats';
 
-interface LeadFormData {
-  contactName: string;
-  contactEmail: string;
-  contactPhone: string;
-  company: string;
-  source: string;
-  notes: string;
-}
-
-const initialFormData: LeadFormData = {
-  contactName: '',
-  contactEmail: '',
-  contactPhone: '',
-  company: '',
-  source: 'website',
-  notes: '',
-};
-
 export default function CRM() {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<Tab>('leads');
@@ -154,7 +127,7 @@ export default function CRM() {
   const [leadTasks, setLeadTasks] = useState<Task[]>([]);
   const [leadCommunications, setLeadCommunications] = useState<Communication[]>([]);
   const [showLeadForm, setShowLeadForm] = useState(false);
-  const [leadFormData, setLeadFormData] = useState<LeadFormData>(initialFormData);
+  const [leadFormData, setLeadFormData] = useState<LeadFormData>(initialLeadFormData);
   const [editingLead, setEditingLead] = useState<Lead | null>(null);
   const [stats, setStats] = useState<CRMStats | null>(null);
   const [allTasks, setAllTasks] = useState<Task[]>([]);
@@ -256,7 +229,7 @@ export default function CRM() {
       if (response.success) {
         await loadLeads();
         setShowLeadForm(false);
-        setLeadFormData(initialFormData);
+        setLeadFormData(initialLeadFormData);
       }
     } catch (error) {
       console.error('Failed to create lead:', error);
@@ -271,7 +244,7 @@ export default function CRM() {
         await loadLeads();
         setEditingLead(null);
         setShowLeadForm(false);
-        setLeadFormData(initialFormData);
+        setLeadFormData(initialLeadFormData);
       }
     } catch (error) {
       console.error('Failed to update lead:', error);
@@ -345,7 +318,7 @@ export default function CRM() {
           onClick={() => {
             setShowLeadForm(true);
             setEditingLead(null);
-            setLeadFormData(initialFormData);
+            setLeadFormData(initialLeadFormData);
           }}
           className="flex items-center gap-2 px-4 py-2.5 bg-emerald-500 text-white rounded-xl hover:bg-emerald-600 transition-colors font-medium"
         >
@@ -553,44 +526,7 @@ export default function CRM() {
               ) : (
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                   {filteredLeads.map((lead) => (
-                    <div
-                      key={lead.id}
-                      onClick={() => loadLeadDetails(lead.id)}
-                      className="bg-slate-50 rounded-xl p-4 hover:bg-slate-100 transition-colors cursor-pointer border border-slate-100"
-                    >
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-500 flex items-center justify-center text-white font-semibold">
-                            {lead.contactName[0].toUpperCase()}
-                          </div>
-                          <div>
-                            <h3 className="font-semibold text-slate-900">{lead.contactName}</h3>
-                            <p className="text-sm text-slate-500">{lead.contactEmail}</p>
-                          </div>
-                        </div>
-                        <span
-                          className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            STATUS_COLORS[lead.status]?.bg || 'bg-slate-100'
-                          } ${STATUS_COLORS[lead.status]?.text || 'text-slate-700'}`}
-                        >
-                          {t(`crm.status.${lead.status}`, { defaultValue: lead.status })}
-                        </span>
-                      </div>
-                      {lead.company && (
-                        <div className="flex items-center gap-2 text-sm text-slate-500 mb-2">
-                          <Building className="w-4 h-4" />
-                          {lead.company}
-                        </div>
-                      )}
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-slate-400 capitalize flex items-center gap-1">
-                          {SOURCE_ICONS[lead.source]} {lead.source.replace('_', ' ')}
-                        </span>
-                        <span className="text-slate-400">
-                          {new Date(lead.createdAt).toLocaleDateString()}
-                        </span>
-                      </div>
-                    </div>
+                    <LeadCard key={lead.id} lead={lead} onClick={() => loadLeadDetails(lead.id)} />
                   ))}
                 </div>
               )}
@@ -845,45 +781,7 @@ export default function CRM() {
             ) : (
               <div className="space-y-3">
                 {allTasks.map((task) => (
-                  <div
-                    key={task.id}
-                    className="flex items-center gap-4 p-4 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={task.status === 'completed'}
-                      onChange={async () => {
-                        try {
-                          await crmService.updateTask(task.id, {
-                            status: task.status === 'completed' ? 'pending' : 'completed',
-                          });
-                          loadAllTasks();
-                        } catch (error) {
-                          console.error('Failed to update task:', error);
-                        }
-                      }}
-                      className="w-5 h-5 rounded text-emerald-500 focus:ring-emerald-500"
-                    />
-                    <div className="flex-1">
-                      <h4
-                        className={`font-medium ${
-                          task.status === 'completed'
-                            ? 'text-slate-400 line-through'
-                            : 'text-slate-900'
-                        }`}
-                      >
-                        {task.title}
-                      </h4>
-                      {task.description && (
-                        <p className="text-sm text-slate-500 mt-1">{task.description}</p>
-                      )}
-                    </div>
-                    {task.dueDate && (
-                      <div className="text-sm text-slate-500">
-                        {new Date(task.dueDate).toLocaleDateString()}
-                      </div>
-                    )}
-                  </div>
+                  <TaskCard key={task.id} task={task} onComplete={loadAllTasks} />
                 ))}
               </div>
             )}
@@ -938,140 +836,18 @@ export default function CRM() {
         )}
       </div>
 
-      {/* Lead Form Modal */}
-      {showLeadForm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] overflow-auto">
-            <div className="p-6 border-b border-slate-200 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-slate-900">
-                {editingLead ? t('crm.modalEditLead') : t('crm.modalNewLead')}
-              </h2>
-              <button
-                onClick={() => {
-                  setShowLeadForm(false);
-                  setEditingLead(null);
-                  setLeadFormData(initialFormData);
-                }}
-                className="text-slate-400 hover:text-slate-600"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="p-6 space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  {t('crm.contactName')} *
-                </label>
-                <input
-                  type="text"
-                  value={leadFormData.contactName}
-                  onChange={(e) =>
-                    setLeadFormData({ ...leadFormData, contactName: e.target.value })
-                  }
-                  className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                  placeholder={t('crm.placeholderName')}
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  {t('crm.contactEmail')} *
-                </label>
-                <input
-                  type="email"
-                  value={leadFormData.contactEmail}
-                  onChange={(e) =>
-                    setLeadFormData({ ...leadFormData, contactEmail: e.target.value })
-                  }
-                  className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                  placeholder={t('crm.placeholderEmail')}
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  {t('crm.phone')}
-                </label>
-                <input
-                  type="tel"
-                  value={leadFormData.contactPhone}
-                  onChange={(e) =>
-                    setLeadFormData({ ...leadFormData, contactPhone: e.target.value })
-                  }
-                  className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                  placeholder={t('crm.placeholderPhone')}
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  {t('crm.company')}
-                </label>
-                <input
-                  type="text"
-                  value={leadFormData.company}
-                  onChange={(e) => setLeadFormData({ ...leadFormData, company: e.target.value })}
-                  className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                  placeholder={t('crm.placeholderCompany')}
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  {t('crm.source')}
-                </label>
-                <select
-                  value={leadFormData.source}
-                  onChange={(e) => setLeadFormData({ ...leadFormData, source: e.target.value })}
-                  className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                >
-                  <option value="website">{t('crm.sourceWebsite')}</option>
-                  <option value="referral">{t('crm.sourceReferral')}</option>
-                  <option value="social">{t('crm.sourceSocial')}</option>
-                  <option value="landing_page">{t('crm.sourceLandingPage')}</option>
-                  <option value="manual">{t('crm.sourceManual')}</option>
-                  <option value="other">{t('crm.sourceOther')}</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  {t('crm.notes')}
-                </label>
-                <textarea
-                  value={leadFormData.notes}
-                  onChange={(e) => setLeadFormData({ ...leadFormData, notes: e.target.value })}
-                  rows={3}
-                  className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                  placeholder={t('crm.placeholderNotes')}
-                />
-              </div>
-            </div>
-
-            <div className="p-6 border-t border-slate-200 flex justify-end gap-3">
-              <button
-                onClick={() => {
-                  setShowLeadForm(false);
-                  setEditingLead(null);
-                  setLeadFormData(initialFormData);
-                }}
-                className="px-4 py-2.5 border border-slate-200 rounded-xl hover:bg-slate-50"
-              >
-                {t('crm.cancel')}
-              </button>
-              <button
-                onClick={editingLead ? handleUpdateLead : handleCreateLead}
-                disabled={!leadFormData.contactName || !leadFormData.contactEmail}
-                className="px-4 py-2.5 bg-emerald-500 text-white rounded-xl hover:bg-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 font-medium"
-              >
-                <Save className="w-4 h-4" />
-                {editingLead ? t('crm.saveChanges') : t('crm.createLead')}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <LeadModal
+        isOpen={showLeadForm}
+        onClose={() => {
+          setShowLeadForm(false);
+          setEditingLead(null);
+          setLeadFormData(initialLeadFormData);
+        }}
+        onSubmit={editingLead ? handleUpdateLead : handleCreateLead}
+        formData={leadFormData}
+        onFormDataChange={setLeadFormData}
+        editingLead={editingLead}
+      />
 
       {/* Import CSV Modal */}
       {showImportModal && (
