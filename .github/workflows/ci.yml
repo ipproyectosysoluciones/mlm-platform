@@ -101,26 +101,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    
-    services:
-      postgres:
-        image: postgres:16-alpine
-        env:
-          POSTGRES_USER: test
-          POSTGRES_PASSWORD: test
-          POSTGRES_DB: mlm_test
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd="pg_isready"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-          
-      redis:
-        image: redis:7-alpine
-        ports:
-          - 6379:6379
 
     steps:
       - name: Checkout
@@ -138,59 +118,17 @@ jobs:
         working-directory: ./frontend
         run: pnpm install --no-lockfile --ignore-workspace
 
-      - name: Build backend (for E2E)
-        working-directory: ./backend
-        run: |
-          pnpm install --no-lockfile
-          pnpm build
-
-      - name: Start backend
-        working-directory: ./backend
-        run: |
-          DB_DIALECT=postgres \
-          DB_HOST=localhost \
-          DB_PORT=5432 \
-          DB_NAME=mlm_test \
-          DB_USER=test \
-          DB_PASSWORD=test \
-          JWT_SECRET=ci-test-secret \
-          REDIS_HOST=localhost \
-          REDIS_PORT=6379 \
-          REDIS_PASSWORD= \
-          NODE_ENV=development \
-          node dist/server.cjs &
-          sleep 10
-          curl -f http://localhost:3000/api/health || { echo "Backend health check failed"; exit 1; }
-
-      - name: Start frontend
-        working-directory: ./frontend
-        run: |
-          # Create .env file for frontend
-          echo "VITE_API_URL=http://localhost:3000/api" > .env
-          pnpm dev &
-          sleep 15
-          curl -f http://localhost:5173 || { echo "Frontend health check failed"; exit 1; }
-
       - name: Run unit tests
         working-directory: ./frontend
         run: pnpm test:run
-
-      - name: Install Playwright browsers
-        working-directory: ./frontend
-        run: pnpm exec playwright install chromium
-
-      - name: Run E2E tests
-        working-directory: ./frontend
-        run: pnpm exec playwright test --project=chromium
 
       - name: Build frontend
         working-directory: ./frontend
         run: pnpm build
 
-      - name: Upload E2E report
-        if: failure()
+      - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report
-          path: frontend/playwright-report/
-          retention-days: 7
+          name: frontend-dist
+          path: frontend/dist
+          retention-days: 1

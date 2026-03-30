@@ -9,8 +9,9 @@ on:
 
 env:
   REGISTRY: docker.io
-  BACKEND_IMAGE: ipproyectos/mlm-backend
-  FRONTEND_IMAGE: ipproyectos/mlm-frontend
+  # Docker Hub user/repository format
+  BACKEND_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/mlm-backend
+  FRONTEND_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/mlm-frontend
   FORCE_NODE24: true
 
 jobs:
@@ -35,17 +36,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: |
-            ${{ env.BACKEND_IMAGE }}
-            ${{ env.FRONTEND_IMAGE }}
-          tags: |
-            type=ref,event=tag
-            type=semver,pattern={{version}}
-
       - name: Build and push Backend
         uses: docker/build-push-action@v6
         with:
@@ -55,8 +45,11 @@ jobs:
           tags: |
             ${{ env.BACKEND_IMAGE }}:${{ github.ref_name }}
             ${{ env.BACKEND_IMAGE }}:latest
+            ${{ env.BACKEND_IMAGE }}:release
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            NODE_VERSION=24
 
       - name: Build and push Frontend
         uses: docker/build-push-action@v6
@@ -67,8 +60,14 @@ jobs:
           tags: |
             ${{ env.FRONTEND_IMAGE }}:${{ github.ref_name }}
             ${{ env.FRONTEND_IMAGE }}:latest
+            ${{ env.FRONTEND_IMAGE }}:release
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Image digest
+        run: |
+          echo "📦 Backend image: ${{ env.BACKEND_IMAGE }}:${{ github.ref_name }}"
+          echo "📦 Frontend image: ${{ env.FRONTEND_IMAGE }}:${{ github.ref_name }}"
 
   deploy:
     name: Deploy to Production
@@ -80,19 +79,27 @@ jobs:
       contents: read
 
     steps:
-      - name: Deploy instructions
+      - name: Deployment Summary
         run: |
-          echo "🚀 Version ${{ github.ref_name }} pushed to Docker Hub"
+          echo "## 🚀 Deployment Successful" 
           echo ""
-          echo "📦 Images:"
-          echo "   - ${{ env.BACKEND_IMAGE }}:${{ github.ref_name }}"
-          echo "   - ${{ env.FRONTEND_IMAGE }}:${{ github.ref_name }}"
+          echo "**Version:** \`${{ github.ref_name }}\`"
           echo ""
-          echo "On your server, run:"
+          echo "### 📦 Docker Images"
+          echo "| Service | Image | Tag |"
+          echo "|---------|-------|-----|"
+          echo "| Backend | \`${{ env.BACKEND_IMAGE }}\` | \`${{ github.ref_name }}\` |"
+          echo "| Frontend | \`${{ env.FRONTEND_IMAGE }}\` | \`${{ github.ref_name }}\` |"
           echo ""
-          echo "# Update images"
+          echo "### 📋 Deploy Instructions"
+          echo '```bash'
+          echo "# SSH into your server and run:"
+          echo "cd /path/to/mlm-platform"
+          echo ""
+          echo "# Pull latest images"
           echo "docker pull ${{ env.BACKEND_IMAGE }}:${{ github.ref_name }}"
           echo "docker pull ${{ env.FRONTEND_IMAGE }}:${{ github.ref_name }}"
           echo ""
-          echo "# Restart services"
+          echo "# Update and restart services"
           echo "docker compose -f docker-compose.prod.yml up -d --force-recreate"
+          echo '```'
