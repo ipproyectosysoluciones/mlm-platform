@@ -62,9 +62,9 @@ export async function getDashboard(req: AuthenticatedRequest, res: Response): Pr
   const referralsByMonth = await User.findAll({
     where: {
       sponsorId: fullUser.id,
-      createdAt: { [Op.gte]: sixMonthsAgo },
+      created_at: { [Op.gte]: sixMonthsAgo },
     },
-    attributes: ['createdAt'],
+    attributes: ['created_at'],
   });
 
   const referralsChart = Array.from({ length: 6 }, (_, i) => {
@@ -72,7 +72,7 @@ export async function getDashboard(req: AuthenticatedRequest, res: Response): Pr
     d.setMonth(d.getMonth() - (5 - i));
     const month = d.toLocaleString('default', { month: 'short' });
     const count = referralsByMonth.filter((r) => {
-      const created = new Date(r.createdAt);
+      const created = new Date(r.created_at);
       return created.getMonth() === d.getMonth() && created.getFullYear() === d.getFullYear();
     }).length;
     return { month, count };
@@ -82,10 +82,10 @@ export async function getDashboard(req: AuthenticatedRequest, res: Response): Pr
   const commissionsByMonth = await Commission.findAll({
     where: {
       userId: fullUser.id,
-      status: 'completed',
-      createdAt: { [Op.gte]: sixMonthsAgo },
+      status: 'approved',
+      created_at: { [Op.gte]: sixMonthsAgo },
     },
-    attributes: ['amount', 'createdAt'],
+    attributes: ['amount', 'created_at'],
   });
 
   const commissionsChart = Array.from({ length: 6 }, (_, i) => {
@@ -94,7 +94,7 @@ export async function getDashboard(req: AuthenticatedRequest, res: Response): Pr
     const month = d.toLocaleString('default', { month: 'short' });
     const amount = commissionsByMonth
       .filter((c) => {
-        const created = new Date(c.createdAt);
+        const created = new Date(c.created_at);
         return created.getMonth() === d.getMonth() && created.getFullYear() === d.getFullYear();
       })
       .reduce((sum, c) => sum + Number(c.amount), 0);

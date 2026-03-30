@@ -166,6 +166,8 @@ User.init(
   {
     sequelize,
     tableName: 'users',
+    underscored: true,
+    timestamps: true,
     indexes: [
       { unique: true, fields: ['email'] },
       { unique: true, fields: ['referral_code'] },

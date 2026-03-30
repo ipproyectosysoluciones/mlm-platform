@@ -10,6 +10,7 @@
  * @module stores/treeStore
  */
 import { create } from 'zustand';
+import { useShallow } from 'zustand/react/shallow';
 import type { TreeNode, UserDetails, User } from '../types';
 import { userService } from '../services/api';
 
@@ -113,15 +114,19 @@ export const useTreeStore = create<TreeState>((set) => ({
 
 // Selector hooks para componentes específicos
 export const useSelectedNode = () =>
-  useTreeStore((state) => ({
-    nodeId: state.selectedNodeId,
-    details: state.selectedNodeDetails,
-    isOpen: state.isDetailsPanelOpen,
-  }));
+  useTreeStore(
+    useShallow((state) => ({
+      nodeId: state.selectedNodeId,
+      details: state.selectedNodeDetails,
+      isOpen: state.isDetailsPanelOpen,
+    }))
+  );
 
 export const useTreeSearch = () =>
-  useTreeStore((state) => ({
-    query: state.searchQuery,
-    results: state.searchResults,
-    isSearching: state.isSearching,
-  }));
+  useTreeStore(
+    useShallow((state) => ({
+      query: state.searchQuery,
+      results: state.searchResults,
+      isSearching: state.isSearching,
+    }))
+  );

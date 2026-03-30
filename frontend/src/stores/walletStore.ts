@@ -6,6 +6,7 @@
  * @author MLM Development Team
  */
 import { create } from 'zustand';
+import { useShallow } from 'zustand/react/shallow';
 import type {
   WalletBalance,
   WalletTransaction,
@@ -259,33 +260,39 @@ export const useWalletStore = create<WalletState>((set, get) => ({
 
 // Selector hooks
 export const useWalletBalance = () =>
-  useWalletStore((state) => ({
-    balance: state.balance,
-    isLoading: state.isLoading,
-    error: state.error,
-    fetchBalance: state.fetchBalance,
-  }));
+  useWalletStore(
+    useShallow((state) => ({
+      balance: state.balance,
+      isLoading: state.isLoading,
+      error: state.error,
+      fetchBalance: state.fetchBalance,
+    }))
+  );
 
 export const useWalletTransactions = () =>
-  useWalletStore((state) => ({
-    transactions: state.transactions,
-    isLoading: state.isLoadingTransactions,
-    error: state.transactionError,
-    page: state.transactionPage,
-    hasMore: state.hasMoreTransactions,
-    fetchTransactions: state.fetchTransactions,
-    transactionType: state.transactionType,
-    setTransactionType: state.setTransactionType,
-  }));
+  useWalletStore(
+    useShallow((state) => ({
+      transactions: state.transactions,
+      isLoading: state.isLoadingTransactions,
+      error: state.transactionError,
+      page: state.transactionPage,
+      hasMore: state.hasMoreTransactions,
+      fetchTransactions: state.fetchTransactions,
+      transactionType: state.transactionType,
+      setTransactionType: state.setTransactionType,
+    }))
+  );
 
 export const useWalletWithdrawals = () =>
-  useWalletStore((state) => ({
-    withdrawalRequests: state.withdrawalRequests,
-    isLoading: state.isLoadingWithdrawals,
-    error: state.withdrawalError,
-    createWithdrawal: state.createWithdrawal,
-    cancelWithdrawal: state.cancelWithdrawal,
-    fetchWithdrawalStatus: state.fetchWithdrawalStatus,
-  }));
+  useWalletStore(
+    useShallow((state) => ({
+      withdrawalRequests: state.withdrawalRequests,
+      isLoading: state.isLoadingWithdrawals,
+      error: state.withdrawalError,
+      createWithdrawal: state.createWithdrawal,
+      cancelWithdrawal: state.cancelWithdrawal,
+      fetchWithdrawalStatus: state.fetchWithdrawalStatus,
+    }))
+  );
 
 export default useWalletStore;
