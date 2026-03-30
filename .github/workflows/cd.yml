@@ -2,6 +2,8 @@ name: CD - Docker Deploy
 
 on:
   push:
+    branches:
+      - release
     tags:
       - 'v*'
 

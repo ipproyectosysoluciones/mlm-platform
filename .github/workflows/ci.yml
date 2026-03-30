@@ -3,8 +3,10 @@ name: CI
 on:
   push:
     branches: [main, development]
+    tags-ignore:
+      - 'v*'
   pull_request:
-    branches: [main, development]
+    branches: [main, development, release]
 
 # Least privilege permissions for CI workflow
 permissions:
