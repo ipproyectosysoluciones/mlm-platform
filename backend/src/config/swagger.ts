@@ -4,19 +4,20 @@ import swaggerJsdoc from 'swagger-jsdoc';
  * Swagger/OpenAPI Configuration for MLM Binary Affiliations API
  * Configuración Swagger/OpenAPI para la API MLM de Afiliaciones Binarias
  *
- * Phase 3: Agregados schemas para Visual Tree UI (UserDetails, UserSearchResult, Pagination)
- * Phase 3: Added schemas for Visual Tree UI (UserDetails, UserSearchResult, Pagination)
- * Phase 4: Agregados Products y Orders para e-commerce y streaming subscriptions
- * Phase 4: Added Products and Orders for e-commerce and streaming subscriptions
- * Phase 5: Agregado 2FA (Two-Factor Authentication) con TOTP y códigos de recuperación
- * Phase 5: Added 2FA (Two-Factor Authentication) with TOTP and recovery codes
+ * Phase 1 (v1.0): MVP - Auth, Tree, Commissions, CRM, RBAC ✅
+ * Phase 2: Cancelado - Email & SMS Notifications ❌
+ * Phase 3 (v1.1): Visual Tree UI - React Flow, búsqueda, panel de detalles ✅
+ * Phase 4 (v1.2): E-commerce - Products, Orders, Streaming subscriptions ✅
+ * Phase 5 (v1.3): Deployment - Docker, CI/CD, PostgreSQL, documentation ✅
+ * Phase 6 (v1.4): Wallet & Payments - Balance, withdrawals, Stripe/PayPal (en desarrollo)
+ * Phase 7 (v2.0): Enterprise - White-label, SSO, KYC, advanced commissions
  */
 const options: swaggerJsdoc.Options = {
   definition: {
     openapi: '3.0.0',
     info: {
       title: 'MLM Binary Affiliations API',
-      version: '3.0.0',
+      version: '1.3.0',
       description: `
 ## API REST para plataforma MLM de Afiliaciones Binarias
 
@@ -36,10 +37,13 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
 | 429 | Rate limit excedido / Rate Limit Exceeded |
 
 ### Fases / Phases
-- **Phase 1** (v1.0.0): MVP - Auth, Tree, Commissions, CRM, RBAC
-- **Phase 2** (pendiente): Email & SMS Notifications
-- **Phase 3** (v3.0.0): Visual Tree UI - React Flow, búsqueda, panel de detalles
-- **Phase 4** (v4.0.0): Products & Orders - E-commerce, streaming subscriptions
+- **Phase 1** (v1.0.0): MVP - Auth, Tree, Commissions, CRM, RBAC ✅
+- **Phase 2** (cancelado): Email & SMS Notifications ❌
+- **Phase 3** (v1.1.0): Visual Tree UI - React Flow, búsqueda, panel de detalles ✅
+- **Phase 4** (v1.2.0): E-commerce - Products, Orders, Streaming subscriptions ✅
+- **Phase 5** (v1.3.0): Deployment - Docker, CI/CD, PostgreSQL ✅
+- **Phase 6** (v1.4.0): Wallet & Payments - Balance, withdrawals, Stripe (en desarrollo)
+- **Phase 7** (v2.0.0): Enterprise - White-label, SSO, KYC, advanced commissions
       `,
       contact: {
         name: 'MLM Support',
@@ -158,7 +162,7 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
         // ============================================================
 
         // ============================================================
-        // 2FA / AUTENTICACIÓN DE DOS FACTORES (Phase 5)
+        // 2FA / AUTENTICACIÓN DE DOS FACTORES (Phase 7 - v2.0)
         // ============================================================
         TwoFactorStatus: {
           type: 'object',
