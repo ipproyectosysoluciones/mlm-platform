@@ -37,7 +37,7 @@ import {
   Download,
 } from 'lucide-react';
 import { crmService } from '../services/api';
-import CRMKanban from '../components/CRM/CRMKanban';
+import KanbanBoard from '../components/crm/KanbanBoard';
 import type { Lead, Task, Communication, CRMStats } from '../types';
 
 const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
@@ -825,7 +825,7 @@ export default function CRM() {
         )}
 
         {/* Kanban Tab */}
-        {activeTab === 'kanban' && <CRMKanban />}
+        {activeTab === 'kanban' && <KanbanBoard />}
 
         {/* Tasks Tab */}
         {activeTab === 'tasks' && (
