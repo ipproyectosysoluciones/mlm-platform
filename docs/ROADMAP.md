@@ -226,6 +226,194 @@
 
 ---
 
+## 🔧 Refactorización del Código
+
+> **Prioridad**: ⭐ Alta  
+> **Estado**: 📋 Planeado  
+> **Objetivo**: Mejorar mantenibilidad, legibilidad y escalabilidad del código
+
+### 📋 Motivación
+
+El código actual funciona correctamente, pero algunos archivos han crecido mucho y necesitan ser modularizados para:
+
+- Mejor legibilidad y mantenimiento
+- Facilitar onboarding de nuevos desarrolladores
+- Mejor organización para testing
+- Preparar base para features futuras
+
+---
+
+### 🎨 Frontend React (Priority: Alta)
+
+**Archivos a refactorizar:**
+
+| Archivo Actual       | Problema    | Acción                                                |
+| -------------------- | ----------- | ----------------------------------------------------- |
+| `Dashboard.tsx`      | >500 líneas | Extraer: Cards, Charts, Stats a componentes separados |
+| `TreeView.tsx`       | >400 líneas | Extraer: Controls, Minimap, SearchPanel               |
+| `CRM.tsx`            | >600 líneas | Extraer: KanbanBoard, LeadCard, TaskModal             |
+| `AdminDashboard.tsx` | >350 líneas | Extraer: UserTable, StatsCards, Filters               |
+| `App.tsx`            | >300 líneas | Extraer: Routes config, Route guards                  |
+| `AppLayout.tsx`      | >250 líneas | Extraer: Navbar, MobileMenu, LanguageSelector         |
+
+**Estructura propuesta:**
+
+```
+frontend/src/
+├── components/
+│   ├── dashboard/
+│   │   ├── DashboardPage.tsx      # Componente principal
+│   │   ├── StatsCards.tsx         # Tarjetas de estadísticas
+│   │   ├── ReferralChart.tsx      # Gráfico de referidos
+│   │   ├── CommissionChart.tsx    # Gráfico de comisiones
+│   │   └── RecentActivity.tsx     # Actividad reciente
+│   │
+│   ├── tree/
+│   │   ├── TreeViewPage.tsx       # Página principal
+│   │   ├── TreeControls.tsx       # Controles de zoom/profundidad
+│   │   ├── TreeSearch.tsx         # Búsqueda de usuarios
+│   │   ├── TreeDetails.tsx        # Panel de detalles
+│   │   └── TreeMinimap.tsx       # Minimap
+│   │
+│   ├── crm/
+│   │   ├── CRMPage.tsx            # Página principal
+│   │   ├── KanbanBoard.tsx        # Tablero Kanban
+│   │   ├── LeadCard.tsx           # Tarjeta de lead
+│   │   ├── LeadModal.tsx          # Modal de creación/edición
+│   │   ├── TaskCard.tsx           # Tarjeta de tarea
+│   │   └── TaskModal.tsx          # Modal de tarea
+│   │
+│   ├── admin/
+│   │   ├── AdminPage.tsx          # Página principal
+│   │   ├── UsersTable.tsx         # Tabla de usuarios
+│   │   ├── StatsOverview.tsx      # Estadísticas generales
+│   │   └── UserFilters.tsx        # Filtros de búsqueda
+│   │
+│   ├── layout/
+│   │   ├── AppLayout.tsx          # Layout principal
+│   │   ├── Navbar.tsx             # Barra de navegación
+│   │   ├── MobileMenu.tsx         # Menú móvil
+│   │   ├── LanguageSelector.tsx   # Selector de idioma
+│   │   └── UserMenu.tsx           # Menú de usuario
+│   │
+│   └── shared/
+│       ├── LoadingSpinner.tsx     # Spinner de carga
+│       ├── ErrorBoundary.tsx      # Manejo de errores
+│       ├── EmptyState.tsx         # Estados vacíos
+│       └── ConfirmDialog.tsx      # Diálogos de confirmación
+```
+
+**Tareas específicas:**
+
+- [ ] Extraer componentes de Dashboard
+- [ ] Extraer componentes de TreeView
+- [ ] Extraer componentes de CRM
+- [ ] Extraer componentes de AdminDashboard
+- [ ] Refactorizar App.tsx routing
+- [ ] Crear carpeta `shared/` para componentes reutilizables
+- [ ] Actualizar imports en todos los archivos
+- [ ] Agregar JSDoc comments
+- [ ] Verificar que todos los tests pasen
+
+---
+
+### ⚙️ Backend Node.js (Priority: Media-Alta)
+
+**Archivos a refactorizar:**
+
+| Archivo Actual            | Problema    | Acción                                   |
+| ------------------------- | ----------- | ---------------------------------------- |
+| `AuthController.ts`       | >400 líneas | Separar: login, register, profile, 2FA   |
+| `UserController.ts`       | >350 líneas | Separar: tree, qr, profile               |
+| `CRMController.ts`        | >500 líneas | Separar: leads, tasks, communications    |
+| `CommissionController.ts` | >300 líneas | Separar: history, stats, config          |
+| `WalletController.ts`     | >400 líneas | Separar: balance, transactions, withdraw |
+
+**Estructura propuesta:**
+
+```
+backend/src/
+├── controllers/
+│   ├── auth/
+│   │   ├── AuthController.ts       # Auth principal
+│   │   ├── LoginController.ts     # Login endpoint
+│   │   ├── RegisterController.ts  # Register endpoint
+│   │   ├── ProfileController.ts   # Profile endpoints
+│   │   └── TwoFactorController.ts # 2FA endpoints
+│   │
+│   ├── users/
+│   │   ├── UserController.ts      # User principal
+│   │   ├── TreeController.ts      # Tree endpoints
+│   │   └── QRController.ts        # QR endpoints
+│   │
+│   ├── crm/
+│   │   ├── CRMController.ts       # CRM principal
+│   │   ├── LeadController.ts      # Lead endpoints
+│   │   ├── TaskController.ts      # Task endpoints
+│   │   └── CommunicationController.ts
+│   │
+│   ├── commissions/
+│   │   ├── CommissionController.ts
+│   │   ├── HistoryController.ts    # Commission history
+│   │   └── StatsController.ts     # Commission stats
+│   │
+│   └── wallet/
+│       ├── WalletController.ts     # Wallet principal
+│       ├── TransactionController.ts # Transactions
+│       └── WithdrawalController.ts # Withdrawals
+```
+
+**Tareas específicas:**
+
+- [ ] Separar AuthController en sub-controladores
+- [ ] Separar UserController en tree/qr
+- [ ] Separar CRMController en leads/tasks/comms
+- [ ] Separar CommissionController
+- [ ] Separar WalletController
+- [ ] Crear índice de exports por carpeta
+- [ ] Actualizar rutas para nuevos controllers
+- [ ] Verificar que todos los tests pasen
+
+---
+
+### 📊 Beneficios Esperados
+
+| Métrica                       | Antes    | Después |
+| ----------------------------- | -------- | ------- |
+| Líneas por archivo (promedio) | ~350     | ~150    |
+| Complejidad ciclomática       | Alta     | Media   |
+| Tiempo de onboarding          | 2-3 días | 1 día   |
+| Facilidad de testing          | Media    | Alta    |
+| Cobertura de tests            | 85%      | 90%+    |
+
+---
+
+### 🎯 Orden Sugerido de Ejecución
+
+```
+1. Frontend: Dashboard components (más usado)
+2. Frontend: Layout components (base para todo)
+3. Frontend: CRM components
+4. Frontend: TreeView components
+5. Backend: AuthController refactor
+6. Backend: CRMController refactor
+7. Frontend: Admin components
+8. Backend: UserController refactor
+9. Frontend: Cleanup shared components
+10. Backend: Commission/Wallet refactor
+```
+
+---
+
+### ⚠️ Precauciones
+
+- **No cambiar comportamiento**: Solo refactorizar, no reescribir lógica
+- **Mantener tests verdes**: Cada refactor debe mantener los tests pasando
+- **Commits atómicos**: Un archivo/refactor por commit
+- **Documentar decisiones**: Agregar comentarios de por qué se reorganizó
+
+---
+
 ## ❌ Cancelado
 
 ### 🚫 Phase 2 - Email & SMS Notifications
