@@ -58,11 +58,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '24'
-          cache: 'pnpm'
-          cache-dependency-path: backend/pnpm-lock.yaml
 
-      - name: Install pnpm globally
-        run: npm install -g pnpm@latest
+      - name: Enable pnpm via corepack
+        run: corepack enable && corepack prepare pnpm@latest --activate
 
       - name: Install dependencies
         working-directory: ./backend
@@ -132,11 +130,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '24'
-          cache: 'pnpm'
-          cache-dependency-path: frontend/pnpm-lock.yaml
 
-      - name: Install pnpm globally
-        run: npm install -g pnpm@latest
+      - name: Enable pnpm via corepack
+        run: corepack enable && corepack prepare pnpm@latest --activate
 
       - name: Install dependencies
         working-directory: ./frontend
