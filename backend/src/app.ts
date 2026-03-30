@@ -190,7 +190,7 @@ if (config.nodeEnv !== 'production') {
 // Sentry Express error handler (must be after routes, before other error handlers)
 // Disabled in test environment to prevent import hanging
 if (process.env.SENTRY_DSN && process.env.NODE_ENV !== 'test') {
-  const Sentry = require('@sentry/node');
+  const Sentry = await import('@sentry/node');
   Sentry.setupExpressErrorHandler(app);
 }
 

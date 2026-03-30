@@ -22,6 +22,7 @@ import {
   Globe,
   Wallet,
   DollarSign,
+  ShieldCheck,
 } from 'lucide-react';
 
 // Navigation items
@@ -170,6 +171,14 @@ export default function AppLayout({ children }: AppLayoutProps) {
                       >
                         <User className="w-4 h-4" />
                         {t('nav.myProfile')}
+                      </Link>
+                      <Link
+                        to="/profile/2fa"
+                        onClick={() => setUserMenuOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                      >
+                        <ShieldCheck className="w-4 h-4" />
+                        {t('nav.twoFactor')}
                       </Link>
                       <button
                         onClick={() => {

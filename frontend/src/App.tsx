@@ -6,6 +6,7 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import TreeView from './pages/TreeView';
 import Profile from './pages/Profile';
+import TwoFactor from './pages/TwoFactor';
 import AdminDashboard from './pages/AdminDashboard';
 import CommissionConfigPage from './pages/CommissionConfigPage';
 import PublicProfile from './pages/PublicProfile';
@@ -149,6 +150,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile/2fa"
+            element={
+              <ProtectedRoute>
+                <TwoFactor />
               </ProtectedRoute>
             }
           />
