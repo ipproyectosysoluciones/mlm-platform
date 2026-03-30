@@ -1,3 +1,9 @@
+/**
+ * KanbanBoard - CRM Kanban Board Component
+ * Tablero Kanban para gestión de leads
+ *
+ * @module components/crm/KanbanBoard
+ */
 import { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import type {
@@ -83,7 +89,7 @@ function LeadCard({ lead, onView, onEdit }: LeadCardProps) {
   );
 }
 
-export default function CRMKanban() {
+export default function KanbanBoard() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [stats, setStats] = useState<LeadStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);

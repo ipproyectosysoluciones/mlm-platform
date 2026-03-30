@@ -1,6 +1,6 @@
 /**
- * SearchBar - Componente de búsqueda de usuarios en el árbol
- * SearchBar - User search component for the tree
+ * TreeSearch - Componente de búsqueda de usuarios en el árbol
+ * TreeSearch - User search component for the tree
  *
  * Busca usuarios por email o referral code con debounce y dropdown de resultados.
  * Searches users by email or referral code with debounce and results dropdown.
@@ -8,7 +8,7 @@
  * Phase 3: Feature de búsqueda en tiempo real para Visual Tree UI.
  * Phase 3: Real-time search feature for Visual Tree UI.
  *
- * @module components/tree/SearchBar
+ * @module components/tree/TreeSearch
  */
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Search, X, Loader2, User } from 'lucide-react';
@@ -16,14 +16,14 @@ import { useTranslation } from 'react-i18next';
 import { userService } from '../../services/api';
 import type { User as UserType } from '../../types';
 
-interface SearchBarProps {
+interface TreeSearchProps {
   /** Callback cuando se selecciona un usuario */
   onSelect: (userId: string) => void;
   /** Placeholder personalizado */
   placeholder?: string;
 }
 
-export default function SearchBar({ onSelect, placeholder }: SearchBarProps) {
+export default function TreeSearch({ onSelect, placeholder }: TreeSearchProps) {
   const { t } = useTranslation();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<UserType[]>([]);
