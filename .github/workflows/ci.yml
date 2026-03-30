@@ -87,11 +87,11 @@ jobs:
         run: pnpm test:integration
         env:
           DB_DIALECT: postgres
-          DB_HOST: localhost
-          DB_PORT: 5432
-          DB_NAME: mlm_test
-          DB_USER: test
-          DB_PASSWORD: test
+          TEST_DB_HOST: localhost
+          TEST_DB_PORT: 5432
+          TEST_DB_NAME: mlm_test
+          TEST_DB_USER: test
+          TEST_DB_PASSWORD: test
           JWT_SECRET: ci-test-secret
           NODE_ENV: test
 
