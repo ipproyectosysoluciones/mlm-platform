@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import swaggerUi from 'swagger-ui-express';
+import * as Sentry from '@sentry/node';
 import { config } from './config/env';
 import { swaggerSpec } from './config/swagger';
 import routes from './routes';
@@ -190,7 +191,6 @@ if (config.nodeEnv !== 'production') {
 // Sentry Express error handler (must be after routes, before other error handlers)
 // Disabled in test environment to prevent import hanging
 if (process.env.SENTRY_DSN && process.env.NODE_ENV !== 'test') {
-  const Sentry = await import('@sentry/node');
   Sentry.setupExpressErrorHandler(app);
 }
 

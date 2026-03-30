@@ -15,13 +15,12 @@ import {
   Copy,
   RefreshCw,
   Key,
-  QrCode,
 } from 'lucide-react';
 import {
   twoFactorService,
-  TwoFactorStatus,
-  TwoFactorSetupResponse,
-  TwoFactorVerifySetupResponse,
+  type TwoFactorStatus,
+  type TwoFactorSetupResponse,
+  type TwoFactorVerifySetupResponse,
 } from '../services/twoFactorService';
 
 /**

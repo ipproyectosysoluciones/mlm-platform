@@ -10,7 +10,7 @@ COPY backend/src ./src
 
 # Install pnpm and dependencies
 RUN corepack enable && corepack prepare pnpm@latest --activate
-RUN pnpm install --no-frozen-lockfile --ignore-scripts
+RUN pnpm install --no-lockfile --ignore-scripts
 
 # Build with esbuild
 RUN node scripts/build.mjs

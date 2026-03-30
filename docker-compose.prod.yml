@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # PostgreSQL Database
   postgres:
@@ -38,12 +36,7 @@ services:
 
   # Backend API
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-      args:
-        - VERSION=${VERSION:-latest}
-    image: ipproyectosysoluciones/mlm-backend:${VERSION:-latest}
+    image: ipproyectos/mlm-backend:${VERSION:-latest}
     container_name: mlm_backend_prod
     restart: unless-stopped
     environment:
@@ -73,20 +66,15 @@ services:
 
   # Frontend (Nginx)
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-      args:
-        - VERSION=${VERSION:-latest}
-        - VITE_API_URL: ${VITE_API_URL:-/api}
-    image: ipproyectosysoluciones/mlm-frontend:${VERSION:-latest}
+    image: ipproyectos/mlm-frontend:${VERSION:-latest}
     container_name: mlm_frontend_prod
     restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
-    volumes:
-      - ./ssl:/etc/nginx/ssl:ro
+    # SSL certificates (uncomment for HTTPS)
+    # volumes:
+    #   - ./ssl:/etc/nginx/ssl:ro
     depends_on:
       - backend
     networks:

@@ -71,6 +71,15 @@ async function build() {
       
       console.log('✅ Build complete!');
       console.log('   Output: dist/server.cjs');
+      
+      // Rename .js to .cjs for CommonJS compatibility
+      if (existsSync('dist/server.js')) {
+        await rename('dist/server.js', 'dist/server.cjs');
+        if (result.metafile) {
+          const size = (result.metafile.outputs['dist/server.js']?.bytes || 0) / 1024;
+          console.log(`📦 dist/server.cjs: ${size.toFixed(1)} KB (renamed from server.js)`);
+        }
+      }
     }
   } catch (error) {
     console.error('❌ Build failed:', error);

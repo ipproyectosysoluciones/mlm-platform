@@ -3,14 +3,14 @@ FROM node:24-alpine AS builder
 
 WORKDIR /app
 
-# Copy package files
+# Copy package files from frontend subdirectory
 COPY frontend/package.json frontend/pnpm-lock.yaml ./
 
 # Install pnpm and dependencies
 RUN corepack enable && corepack prepare pnpm@latest --activate
-RUN pnpm install --no-frozen-lockfile
+RUN pnpm install --no-lockfile --include=dev
 
-# Copy source
+# Copy source (from frontend/ subdirectory)
 COPY frontend/ .
 
 # Build for production
@@ -19,7 +19,7 @@ RUN pnpm build
 # Production stage with nginx
 FROM nginx:alpine AS production
 
-# Copy custom nginx config
+# Copy custom nginx config (from frontend/ subdirectory)
 COPY frontend/nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy built files from builder
