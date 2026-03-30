@@ -21,3 +21,6 @@ export type { OrderStatusProps } from './OrderStatus';
 // UI Components
 export { EmptyState, default as EmptyStateDefault } from './EmptyState';
 export { ErrorToast, ErrorToastContainer, default as ErrorToastDefault } from './ErrorToast';
+
+// Route Guards
+export { ProtectedRoute, AdminRoute, PublicRoute, PublicProfileRoute } from './routes';

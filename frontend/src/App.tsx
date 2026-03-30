@@ -1,6 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import { AuthProvider } from './context/AuthContext';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
@@ -12,7 +12,7 @@ import CommissionConfigPage from './pages/CommissionConfigPage';
 import PublicProfile from './pages/PublicProfile';
 import LandingPages from './pages/LandingPages';
 import CRM from './pages/CRM';
-import AppLayout from './components/layout/AppLayout';
+import { ProtectedRoute, AdminRoute, PublicRoute, PublicProfileRoute } from './components/routes';
 
 // Lazy loaded pages for streaming subscriptions e-commerce
 const ProductCatalog = lazy(() => import('./pages/ProductCatalog'));
@@ -32,71 +32,6 @@ function PageLoader() {
       </div>
     </div>
   );
-}
-
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, isLoading } = useAuth();
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-100">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
-          <p className="text-slate-600">Cargando...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-
-  return <AppLayout>{children}</AppLayout>;
-}
-
-function AdminRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, isLoading, user } = useAuth();
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-100">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
-          <p className="text-slate-600">Cargando...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-
-  // Check if user is admin
-  if ((user as any)?.role !== 'admin') {
-    return <Navigate to="/dashboard" replace />;
-  }
-
-  return <AppLayout>{children}</AppLayout>;
-}
-
-function PublicRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, isLoading } = useAuth();
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-100">
-        <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
-
-  if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
-  }
-
-  return <>{children}</>;
 }
 
 function App() {
@@ -177,7 +112,14 @@ function App() {
               </AdminRoute>
             }
           />
-          <Route path="/ref/:code" element={<PublicProfile />} />
+          <Route
+            path="/ref/:code"
+            element={
+              <PublicProfileRoute>
+                <PublicProfile />
+              </PublicProfileRoute>
+            }
+          />
           <Route
             path="/landing-pages"
             element={
