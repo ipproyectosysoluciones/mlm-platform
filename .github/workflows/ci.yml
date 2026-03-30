@@ -34,12 +34,14 @@ jobs:
         with: { node-version: '24' }
       - run: corepack enable && corepack prepare pnpm@latest --activate
 
-      - name: Backend
-        run: |
-          cd backend
-          pnpm install --no-lockfile
-          pnpm build
-          pnpm test
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Build backend
+        run: cd backend && pnpm build
+
+      - name: Unit tests
+        run: cd backend && pnpm test
         env:
           DB_DIALECT: postgres
           DB_HOST: localhost
@@ -50,9 +52,7 @@ jobs:
           JWT_SECRET: ci-test-secret
 
       - name: Integration tests
-        run: |
-          cd backend
-          pnpm test:integration
+        run: cd backend && pnpm test:integration
         env:
           DB_DIALECT: postgres
           TEST_DB_HOST: localhost
@@ -63,6 +63,14 @@ jobs:
           JWT_SECRET: ci-test-secret
           NODE_ENV: test
 
+      - name: Upload backend artifact
+        uses: actions/upload-artifact@v4
+        if: github.ref == 'refs/heads/release' || startsWith(github.ref, 'refs/tags/v')
+        with:
+          name: backend-dist
+          path: backend/dist
+          retention-days: 1
+
   frontend:
     runs-on: ubuntu-latest
     steps:
@@ -71,9 +79,19 @@ jobs:
         with: { node-version: '24' }
       - run: corepack enable && corepack prepare pnpm@latest --activate
 
-      - name: Frontend
-        run: |
-          cd frontend
-          pnpm install --no-lockfile --ignore-workspace
-          pnpm test:run
-          pnpm build
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Unit tests
+        run: cd frontend && pnpm test:run
+
+      - name: Build frontend
+        run: cd frontend && pnpm build
+
+      - name: Upload frontend artifact
+        uses: actions/upload-artifact@v4
+        if: github.ref == 'refs/heads/release' || startsWith(github.ref, 'refs/tags/v')
+        with:
+          name: frontend-dist
+          path: frontend/dist
+          retention-days: 1

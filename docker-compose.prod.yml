@@ -63,7 +63,7 @@ services:
     image: ${DOCKERHUB_USERNAME:-ipproyectos}/mlm-frontend:${VERSION:-latest}
     restart: unless-stopped
     ports:
-      - "80:80"
+      - "3001:80"
     depends_on:
       - backend
     networks:

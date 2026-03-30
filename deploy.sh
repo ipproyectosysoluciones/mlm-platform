@@ -19,7 +19,10 @@ if [ ! -f .env.production ]; then
     exit 1
 fi
 
-# Build images
+# Compile locally first
+echo "⚙️  Compiling backend..."
+cd backend && pnpm build && cd ..
+
 echo "📦 Building images..."
 docker build -t ${BACKEND_IMAGE} -f backend/Dockerfile .
 docker build -t ${FRONTEND_IMAGE} -f frontend/Dockerfile .
