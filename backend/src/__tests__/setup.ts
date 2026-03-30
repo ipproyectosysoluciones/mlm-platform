@@ -5,11 +5,10 @@
  * @module __tests__/setup
  */
 
-import { Sequelize, DataTypes } from 'sequelize';
 import supertest from 'supertest';
 
-// Test database instance - create fresh each time
-let testDb: Sequelize;
+// Import the singleton sequelize - it already reads TEST_DB_* env vars
+import { sequelize } from '../config/database';
 
 // Global test agent - used by all integration tests
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -27,30 +26,8 @@ beforeAll(async () => {
   console.log('TEST_DB_HOST:', process.env.TEST_DB_HOST);
   console.log('TEST_DB_PORT:', process.env.TEST_DB_PORT);
 
-  // Create fresh Sequelize instance
-  testDb = new Sequelize({
-    database: process.env.TEST_DB_NAME || 'mlm_test',
-    username: process.env.TEST_DB_USER || 'mlm_test',
-    password: process.env.TEST_DB_PASSWORD || 'mlm_test',
-    host: process.env.TEST_DB_HOST || '127.0.0.1',
-    port: parseInt(process.env.TEST_DB_PORT || '5435'),
-    dialect: 'postgres',
-    logging: false,
-    pool: {
-      max: 5,
-      min: 0,
-      acquire: 30000,
-      idle: 10000,
-    },
-    define: {
-      timestamps: true,
-      underscored: true,
-      createdAt: 'created_at',
-      updatedAt: 'updated_at',
-    },
-  });
-
-  sequelizeInstance = testDb;
+  // Use the singleton sequelize - it already checks TEST_DB_* env vars
+  sequelizeInstance = sequelize;
 
   console.log('Sequelize instance created');
 
@@ -94,7 +71,7 @@ beforeAll(async () => {
   // Sync all models - force to recreate tables
   try {
     console.log('Syncing database...');
-    await testDb.sync({ force: true });
+    await sequelizeInstance.sync({ force: true });
     console.log('Test database synced successfully');
   } catch (error) {
     console.error('Error syncing test database:', error);
