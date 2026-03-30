@@ -34,12 +34,13 @@ Plataforma MLM (Multi-Level Marketing) con sistema de afiliaciones binarias, com
 | build-optimization                | Build optimizado (3.4MB → 1.2MB)      | ✅ Completo  | 2026-03-28 |
 | github-templates                  | CODE_OF_CONDUCT, Issues, PR templates | ✅ Completo  | 2026-03-28 |
 | 2fa-totp                          | Two-Factor Authentication con TOTP    | ✅ Archivado | 2026-03-29 |
+| playwright-visual-testing         | Scripts E2E con modo visual           | ✅ Archivado | 2026-03-29 |
 
 ### 🚧 Cambios en Progreso
 
-| Cambio    | Descripción | Progreso |
-| --------- | ----------- | -------- |
-| (ninguno) | -           | -        |
+| Cambio          | Descripción          | Progreso |
+| --------------- | -------------------- | -------- |
+| frontend-2fa-ui | UI de React para 2FA | 0%       |
 
 ### 📁 Ubicación de Artefactos
 

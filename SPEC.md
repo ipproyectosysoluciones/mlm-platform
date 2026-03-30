@@ -4,31 +4,32 @@
 
 ### ✅ DONE - Core MVP Features
 
-| Feature              | Description                                                                                |
-| -------------------- | ------------------------------------------------------------------------------------------ |
-| Authentication       | JWT tokens, bcrypt password hashing, rate limiting (5 req/15min)                           |
-| Binary Tree          | Closure Table pattern, automatic left/right placement                                      |
-| Commission System    | 5 niveles (direct 10%, level_1 5%, level_2 3%, level_3 2%, level_4 1%), configurable rates |
-| Dashboard            | Stats, charts, recent commissions, QR code link                                            |
-| QR Code Generation   | Data URL for referral links                                                                |
-| Admin Panel          | User management, status control (active/inactive/suspended), promote to admin              |
-| CRM                  | Leads CRUD, Tasks, Communications, Kanban board, CSV import/export                         |
-| Tree Visualization   | React Flow with pan/zoom, minimap, search, details panel                                   |
-| i18n Bilingual       | Spanish/English with auto-detection and localStorage persistence                           |
-| Horizontal Navbar    | Responsive design with mobile hamburger menu                                               |
-| Landing Pages        | Visual builder, tracking (views/conversions), templates                                    |
-| E-commerce Streaming | Products catalog, orders, subscriptions (Netflix, Spotify, etc.)                           |
-| Wallet               | Balance tracking, deposits, withdrawals with fee calculation (5%, $20 min)                 |
-| Currency Conversion  | Frankfurter API integration                                                                |
-| CommissionConfig API | Admin CRUD for configurable commission rates                                               |
-| Tests                | 271 total (93 unit + 178 integration) + 37 E2E = 308 tests passing                         |
-| **2FA (TOTP)**       | **Two-Factor Authentication with TOTP, recovery codes, AES-256-GCM encryption** ⭐ NEW     |
+| Feature                       | Description                                                                                |
+| ----------------------------- | ------------------------------------------------------------------------------------------ |
+| Authentication                | JWT tokens, bcrypt password hashing, rate limiting (5 req/15min)                           |
+| Binary Tree                   | Closure Table pattern, automatic left/right placement                                      |
+| Commission System             | 5 niveles (direct 10%, level_1 5%, level_2 3%, level_3 2%, level_4 1%), configurable rates |
+| Dashboard                     | Stats, charts, recent commissions, QR code link                                            |
+| QR Code Generation            | Data URL for referral links                                                                |
+| Admin Panel                   | User management, status control (active/inactive/suspended), promote to admin              |
+| CRM                           | Leads CRUD, Tasks, Communications, Kanban board, CSV import/export                         |
+| Tree Visualization            | React Flow with pan/zoom, minimap, search, details panel                                   |
+| i18n Bilingual                | Spanish/English with auto-detection and localStorage persistence                           |
+| Horizontal Navbar             | Responsive design with mobile hamburger menu                                               |
+| Landing Pages                 | Visual builder, tracking (views/conversions), templates                                    |
+| E-commerce Streaming          | Products catalog, orders, subscriptions (Netflix, Spotify, etc.)                           |
+| Wallet                        | Balance tracking, deposits, withdrawals with fee calculation (5%, $20 min)                 |
+| Currency Conversion           | Frankfurter API integration                                                                |
+| CommissionConfig API          | Admin CRUD for configurable commission rates                                               |
+| Tests                         | 271 total (93 unit + 178 integration) + 37 E2E = 308 tests passing                         |
+| **2FA (TOTP)**                | **Two-Factor Authentication with TOTP, recovery codes, AES-256-GCM encryption** ⭐ NEW     |
+| **Playwright Visual Testing** | **E2E tests with headed mode, video recording, UI mode** ⭐ NEW                            |
 
 ### ⏳ IN PROGRESS
 
-| Feature   | Description |
-| --------- | ----------- |
-| (ninguno) | -           |
+| Feature         | Description                                                 |
+| --------------- | ----------------------------------------------------------- |
+| Frontend 2FA UI | React UI for 2FA setup, QR code display, enable/disable 2FA |
 
 ### 📋 TODO - Future Features
 

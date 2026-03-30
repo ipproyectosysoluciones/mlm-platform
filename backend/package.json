@@ -9,7 +9,7 @@
     "pnpm": ">=10.0.0"
   },
   "scripts": {
-    "dev": "nodemon --exec ts-node src/server.ts",
+    "dev": "nodemon --exec tsx src/server.ts",
     "build": "node scripts/build.mjs",
     "build:watch": "node scripts/build.mjs --watch",
     "build:tsc": "tsc",
