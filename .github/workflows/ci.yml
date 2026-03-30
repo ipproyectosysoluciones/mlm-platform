@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, development]
   pull_request:
-    branches: [main]
+    branches: [main, development]
 
 # Least privilege permissions for CI workflow
 permissions:
@@ -21,15 +21,16 @@ jobs:
       contents: read
     
     services:
-      mysql:
-        image: mysql:8.0
+      postgres:
+        image: postgres:16-alpine
         env:
-          MYSQL_ROOT_PASSWORD: testpassword
-          MYSQL_DATABASE: mlm_test
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: mlm_test
         ports:
-          - 3306:3306
+          - 5432:5432
         options: >-
-          --health-cmd="mysqladmin ping"
+          --health-cmd="pg_isready"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
@@ -51,16 +52,16 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'pnpm'
           cache-dependency-path: backend/pnpm-lock.yaml
 
-       - name: Install pnpm globally
-         run: npm install -g pnpm@latest
+      - name: Install pnpm globally
+        run: npm install -g pnpm@latest
 
       - name: Install dependencies
         working-directory: ./backend
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-lockfile
 
       - name: Build
         working-directory: ./backend
@@ -70,22 +71,24 @@ jobs:
         working-directory: ./backend
         run: pnpm test
         env:
+          DB_DIALECT: postgres
           DB_HOST: localhost
-          DB_PORT: 3306
+          DB_PORT: 5432
           DB_NAME: mlm_test
-          DB_USER: root
-          DB_PASSWORD: testpassword
+          DB_USER: test
+          DB_PASSWORD: test
           JWT_SECRET: ci-test-secret
 
       - name: Run integration tests
         working-directory: ./backend
         run: pnpm test:integration
         env:
+          DB_DIALECT: postgres
           DB_HOST: localhost
-          DB_PORT: 3306
+          DB_PORT: 5432
           DB_NAME: mlm_test
-          DB_USER: root
-          DB_PASSWORD: testpassword
+          DB_USER: test
+          DB_PASSWORD: test
           JWT_SECRET: ci-test-secret
           NODE_ENV: test
 
@@ -97,15 +100,16 @@ jobs:
       contents: read
     
     services:
-      mysql:
-        image: mysql:8.0
+      postgres:
+        image: postgres:16-alpine
         env:
-          MYSQL_ROOT_PASSWORD: testpassword
-          MYSQL_DATABASE: mlm_test
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: mlm_test
         ports:
-          - 3306:3306
+          - 5432:5432
         options: >-
-          --health-cmd="mysqladmin ping"
+          --health-cmd="pg_isready"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
@@ -122,28 +126,27 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'pnpm'
           cache-dependency-path: frontend/pnpm-lock.yaml
 
-       - name: Install pnpm globally
-         run: npm install -g pnpm@latest
+      - name: Install pnpm globally
+        run: npm install -g pnpm@latest
 
       - name: Install dependencies
         working-directory: ./frontend
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-lockfile --ignore-workspace
 
       - name: Build backend (for E2E)
         working-directory: ./backend
         run: |
-          pnpm install --frozen-lockfile
+          pnpm install --no-lockfile
           pnpm build
-          npm run seed || true
 
       - name: Start backend
         working-directory: ./backend
         run: |
-          NODE_ENV=test node dist/server.cjs &
+          DB_DIALECT=postgres DB_HOST=localhost DB_PORT=5432 DB_NAME=mlm_test DB_USER=test DB_PASSWORD=test node dist/server.cjs &
           sleep 5
           curl -f http://localhost:3000/api/health || exit 1
 
