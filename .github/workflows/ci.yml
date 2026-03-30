@@ -172,7 +172,10 @@ jobs:
 
       - name: Run E2E tests
         working-directory: ./frontend
-        run: pnpm exec playwright test --project=chromium
+        run: |
+          # Create .env file for frontend - Vite needs this to start
+          echo "VITE_API_URL=http://localhost:3000/api" > .env
+          pnpm exec playwright test --project=chromium
 
       - name: Build frontend
         working-directory: ./frontend
