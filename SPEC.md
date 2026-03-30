@@ -24,12 +24,13 @@
 | Tests                         | 271 total (93 unit + 178 integration) + 37 E2E = 308 tests passing                         |
 | **2FA (TOTP)**                | **Two-Factor Authentication with TOTP, recovery codes, AES-256-GCM encryption** ⭐ NEW     |
 | **Playwright Visual Testing** | **E2E tests with headed mode, video recording, UI mode** ⭐ NEW                            |
+| **Frontend 2FA UI**           | **React UI for 2FA setup, QR code display, enable/disable, recovery codes** ⭐ NEW         |
 
 ### ⏳ IN PROGRESS
 
-| Feature         | Description                                                 |
-| --------------- | ----------------------------------------------------------- |
-| Frontend 2FA UI | React UI for 2FA setup, QR code display, enable/disable 2FA |
+| Feature   | Description |
+| --------- | ----------- |
+| (ninguno) | -           |
 
 ### 📋 TODO - Future Features
 
