@@ -17,7 +17,6 @@ import {
   ReactFlow,
   Background,
   Controls,
-  MiniMap,
   useNodesState,
   useEdgesState,
   type Node,
@@ -27,10 +26,13 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { ArrowLeft, TreeDeciduous, Loader2 } from 'lucide-react';
-import TreeNodeComponent from '../components/tree/TreeNodeComponent';
-import SearchBar from '../components/tree/SearchBar';
-import DetailsPanel from '../components/tree/DetailsPanel';
-import TreeControls from '../components/tree/TreeControls';
+import {
+  TreeNodeComponent,
+  TreeSearch,
+  TreeDetails,
+  TreeControls,
+  TreeMinimap,
+} from '../components/tree';
 import { useTreeStore } from '../stores/treeStore';
 import { treeService } from '../services/api';
 import type { TreeNode } from '../types';
@@ -257,7 +259,7 @@ export default function TreeView() {
           </div>
 
           <div className="hidden sm:block flex-1 max-w-md">
-            <SearchBar onSelect={handleSearchSelect} placeholder={t('tree.search.placeholder')} />
+            <TreeSearch onSelect={handleSearchSelect} placeholder={t('tree.search.placeholder')} />
           </div>
 
           <TreeControls
@@ -315,23 +317,13 @@ export default function TreeView() {
             showInteractive={false}
             className="!bg-white !shadow-lg !border !border-slate-200 !rounded-lg"
           />
-          <MiniMap
-            nodeColor={(node) => {
-              const position = (node.data?.label as TreeNode)?.position;
-              return position === 'left' ? '#3b82f6' : '#a855f7';
-            }}
-            maskColor="rgba(0,0,0,0.1)"
-            className="!bg-white !shadow-lg !border !border-slate-200 !rounded-lg"
-            style={{ bottom: 20, right: 20 }}
-            pannable
-            zoomable
-          />
+          <TreeMinimap />
         </ReactFlow>
       </div>
 
       {/* Details panel */}
       {isDetailsPanelOpen && (
-        <DetailsPanel
+        <TreeDetails
           user={selectedNodeDetails}
           isLoading={isStoreLoading}
           onClose={() => toggleDetailsPanel(false)}

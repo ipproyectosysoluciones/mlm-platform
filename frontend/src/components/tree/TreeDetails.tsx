@@ -1,6 +1,6 @@
 /**
- * DetailsPanel - Panel lateral de detalles del usuario
- * DetailsPanel - Side panel for user details
+ * TreeDetails - Panel lateral de detalles del usuario
+ * TreeDetails - Side panel for user details
  *
  * Muestra información extendida del usuario seleccionado en el árbol.
  * Shows extended information of the selected user in the tree.
@@ -8,14 +8,14 @@
  * Phase 3: Panel de detalles para Visual Tree UI.
  * Phase 3: Details panel for Visual Tree UI.
  *
- * @module components/tree/DetailsPanel
+ * @module components/tree/TreeDetails
  */
 import { useEffect } from 'react';
 import { X, User, Mail, MapPin, Calendar, ChevronRight, Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { UserDetails } from '../../types';
 
-interface DetailsPanelProps {
+interface TreeDetailsProps {
   /** Datos del usuario */
   user: UserDetails | null;
   /** Si está cargando */
@@ -26,12 +26,12 @@ interface DetailsPanelProps {
   onViewSubtree?: (userId: string) => void;
 }
 
-export default function DetailsPanel({
+export default function TreeDetails({
   user,
   isLoading = false,
   onClose,
   onViewSubtree,
-}: DetailsPanelProps) {
+}: TreeDetailsProps) {
   // Translation hook for i18n
   const { t } = useTranslation();
 
