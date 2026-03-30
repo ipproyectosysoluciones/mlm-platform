@@ -162,6 +162,15 @@ jobs:
           sleep 10
           curl -f http://localhost:3000/api/health || { echo "Backend health check failed"; exit 1; }
 
+      - name: Start frontend
+        working-directory: ./frontend
+        run: |
+          # Create .env file for frontend
+          echo "VITE_API_URL=http://localhost:3000/api" > .env
+          pnpm dev &
+          sleep 15
+          curl -f http://localhost:5173 || { echo "Frontend health check failed"; exit 1; }
+
       - name: Run unit tests
         working-directory: ./frontend
         run: pnpm test:run
@@ -172,10 +181,7 @@ jobs:
 
       - name: Run E2E tests
         working-directory: ./frontend
-        run: |
-          # Create .env file for frontend - Vite needs this to start
-          echo "VITE_API_URL=http://localhost:3000/api" > .env
-          pnpm exec playwright test --project=chromium
+        run: pnpm exec playwright test --project=chromium
 
       - name: Build frontend
         working-directory: ./frontend
