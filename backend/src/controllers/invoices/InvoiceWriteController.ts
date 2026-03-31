@@ -222,9 +222,14 @@ export const createInvoice = asyncHandler(
       return;
     }
 
-    // Calculate total amount
-    const totalAmount = body.items.reduce((sum, item) => {
-      return sum + item.quantity * item.unitPrice;
+    // Calculate total amount and enrich items with totals
+    const enrichedItems = body.items.map((item) => ({
+      ...item,
+      total: item.quantity * item.unitPrice,
+    }));
+
+    const totalAmount = enrichedItems.reduce((sum, item) => {
+      return sum + item.total;
     }, 0);
 
     // Create new invoice (mock - replace with actual service call)
@@ -239,7 +244,7 @@ export const createInvoice = asyncHandler(
       amount: totalAmount,
       currency: 'USD',
       description: body.description,
-      items: body.items,
+      items: enrichedItems,
       createdAt: new Date(),
       updatedAt: new Date(),
       dueDate: new Date(body.dueDate),

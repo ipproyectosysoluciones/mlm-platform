@@ -15,7 +15,7 @@
 import { Response } from 'express';
 import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
 import { asyncHandler } from '../../middleware/asyncHandler';
-import { invoiceStore } from './store';
+import { invoiceStore, InvoiceStatus } from './store';
 
 /**
  * UUID validation regex
