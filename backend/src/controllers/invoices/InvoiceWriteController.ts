@@ -15,44 +15,19 @@
 import { Response } from 'express';
 import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
 import { asyncHandler } from '../../middleware/asyncHandler';
+import {
+  invoiceStore,
+  InvoiceStatus,
+  InvoiceType,
+  type InvoiceData,
+  type InvoiceItem,
+} from './store';
 
 /**
  * UUID validation regex
  * Expresión regular para validación de UUID
  */
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
-/**
- * Invoice status enum
- * Enum de estados de factura
- */
-enum InvoiceStatus {
-  PENDING = 'pending',
-  PAID = 'paid',
-  CANCELLED = 'cancelled',
-  OVERDUE = 'overdue',
-}
-
-/**
- * Invoice type enum
- * Enum de tipos de factura
- */
-enum InvoiceType {
-  SUBSCRIPTION = 'subscription',
-  PURCHASE = 'purchase',
-  UPGRADE = 'upgrade',
-}
-
-/**
- * Invoice item interface
- * Interfaz de ítem de factura
- */
-interface InvoiceItem {
-  description: string;
-  quantity: number;
-  unitPrice: number;
-  total: number;
-}
 
 /**
  * Create invoice request body interface
@@ -98,12 +73,6 @@ interface InvoiceData {
   dueDate: Date;
   paidAt?: Date;
 }
-
-/**
- * Mock invoice storage (placeholder for future implementation)
- * Almacenamiento mock de facturas (placeholder para futura implementación)
- */
-const mockInvoices: InvoiceData[] = [];
 
 /**
  * Generate unique invoice number
@@ -276,7 +245,7 @@ export const createInvoice = asyncHandler(
       dueDate: new Date(body.dueDate),
     };
 
-    mockInvoices.push(newInvoice);
+    invoiceStore.push(newInvoice);
 
     const response = {
       success: true,
@@ -376,7 +345,7 @@ export const updateInvoice = asyncHandler(
     }
 
     // Find invoice (mock - replace with actual service call)
-    const invoiceIndex = mockInvoices.findIndex((inv) => inv.id === id);
+    const invoiceIndex = invoiceStore.findIndex((inv) => inv.id === id);
 
     if (invoiceIndex === -1) {
       res.status(404).json({
@@ -389,7 +358,7 @@ export const updateInvoice = asyncHandler(
       return;
     }
 
-    const invoice = mockInvoices[invoiceIndex];
+    const invoice = invoiceStore[invoiceIndex];
 
     // Validate status if provided
     if (body.status && !Object.values(InvoiceStatus).includes(body.status)) {
@@ -499,7 +468,7 @@ export const deleteInvoice = asyncHandler(
     }
 
     // Find and delete invoice (mock - replace with actual service call)
-    const invoiceIndex = mockInvoices.findIndex((inv) => inv.id === id);
+    const invoiceIndex = invoiceStore.findIndex((inv) => inv.id === id);
 
     if (invoiceIndex === -1) {
       res.status(404).json({
@@ -514,7 +483,7 @@ export const deleteInvoice = asyncHandler(
 
     // In production, prefer soft delete (mark as cancelled) instead of hard delete
     // For now, we'll implement hard delete in mock
-    const deletedInvoice = mockInvoices.splice(invoiceIndex, 1)[0];
+    const deletedInvoice = invoiceStore.splice(invoiceIndex, 1)[0];
 
     const response = {
       success: true,

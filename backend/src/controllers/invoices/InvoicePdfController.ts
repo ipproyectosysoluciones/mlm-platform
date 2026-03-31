@@ -15,72 +15,13 @@
 import { Response } from 'express';
 import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
 import { asyncHandler } from '../../middleware/asyncHandler';
+import { invoiceStore } from './store';
 
 /**
  * UUID validation regex
  * Expresión regular para validación de UUID
  */
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
-/**
- * Invoice status enum
- * Enum de estados de factura
- */
-enum InvoiceStatus {
-  PENDING = 'pending',
-  PAID = 'paid',
-  CANCELLED = 'cancelled',
-  OVERDUE = 'overdue',
-}
-
-/**
- * Invoice type enum
- * Enum de tipos de factura
- */
-enum InvoiceType {
-  SUBSCRIPTION = 'subscription',
-  PURCHASE = 'purchase',
-  UPGRADE = 'upgrade',
-}
-
-/**
- * Invoice item interface
- * Interfaz de ítem de factura
- */
-interface InvoiceItem {
-  description: string;
-  quantity: number;
-  unitPrice: number;
-  total: number;
-}
-
-/**
- * Invoice data interface
- * Interfaz de datos de factura
- */
-interface InvoiceData {
-  id: string;
-  invoiceNumber: string;
-  userId: string;
-  userName: string;
-  userEmail: string;
-  type: InvoiceType;
-  status: InvoiceStatus;
-  amount: number;
-  currency: string;
-  description: string;
-  items: InvoiceItem[];
-  createdAt: Date;
-  updatedAt: Date;
-  dueDate: Date;
-  paidAt?: Date;
-}
-
-/**
- * Mock invoice storage (placeholder for future implementation)
- * Almacenamiento mock de facturas (placeholder para futura implementación)
- */
-const mockInvoices: InvoiceData[] = [];
 
 /**
  * Company information for PDF generation
@@ -374,7 +315,7 @@ export const generateInvoicePdf = asyncHandler(
     }
 
     // Find invoice (mock - replace with actual service call)
-    const invoice = mockInvoices.find((inv) => inv.id === id);
+    const invoice = invoiceStore.find((inv) => inv.id === id);
 
     if (!invoice) {
       res.status(404).json({
@@ -464,7 +405,7 @@ export const downloadInvoicePdf = asyncHandler(
     }
 
     // Find invoice (mock - replace with actual service call)
-    const invoice = mockInvoices.find((inv) => inv.id === id);
+    const invoice = invoiceStore.find((inv) => inv.id === id);
 
     if (!invoice) {
       res.status(404).json({

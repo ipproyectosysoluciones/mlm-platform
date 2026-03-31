@@ -15,66 +15,13 @@
 import { Response } from 'express';
 import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
 import { asyncHandler } from '../../middleware/asyncHandler';
+import { invoiceStore } from './store';
 
 /**
  * UUID validation regex
  * Expresión regular para validación de UUID
  */
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
-/**
- * Invoice status enum
- * Enum de estados de factura
- */
-enum InvoiceStatus {
-  PENDING = 'pending',
-  PAID = 'paid',
-  CANCELLED = 'cancelled',
-  OVERDUE = 'overdue',
-}
-
-/**
- * Invoice type enum
- * Enum de tipos de factura
- */
-enum InvoiceType {
-  SUBSCRIPTION = 'subscription',
-  PURCHASE = 'purchase',
-  UPGRADE = 'upgrade',
-}
-
-/**
- * Mock invoice data structure (to be replaced with actual service)
- * Estructura de datos de factura mockeada (reemplazar con servicio real)
- */
-interface InvoiceData {
-  id: string;
-  invoiceNumber: string;
-  userId: string;
-  userName: string;
-  userEmail: string;
-  type: InvoiceType;
-  status: InvoiceStatus;
-  amount: number;
-  currency: string;
-  description: string;
-  items: Array<{
-    description: string;
-    quantity: number;
-    unitPrice: number;
-    total: number;
-  }>;
-  createdAt: Date;
-  updatedAt: Date;
-  dueDate: Date;
-  paidAt?: Date;
-}
-
-/**
- * Mock invoice service (placeholder for future implementation)
- * Servicio mock de facturas (placeholder para futura implementación)
- */
-const mockInvoices: InvoiceData[] = [];
 
 /**
  * Get list of invoices with pagination and optional status filtering
@@ -136,8 +83,8 @@ export const getInvoices = asyncHandler(
 
     // Mock implementation - replace with actual service call
     const filteredInvoices = validatedStatus
-      ? mockInvoices.filter((inv) => inv.status === validatedStatus)
-      : mockInvoices;
+      ? invoiceStore.filter((inv) => inv.status === validatedStatus)
+      : invoiceStore;
 
     const offset = (page - 1) * limit;
     const paginatedInvoices = filteredInvoices.slice(offset, offset + limit);
@@ -212,7 +159,7 @@ export const getInvoiceById = asyncHandler(
     }
 
     // Mock implementation - replace with actual service call
-    const invoice = mockInvoices.find((inv) => inv.id === id);
+    const invoice = invoiceStore.find((inv) => inv.id === id);
 
     if (!invoice) {
       res.status(404).json({
