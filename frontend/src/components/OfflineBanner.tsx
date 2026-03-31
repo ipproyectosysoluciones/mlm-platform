@@ -3,21 +3,30 @@
  *
  * @module components/OfflineBanner
  */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { WifiOff, X } from 'lucide-react';
 
 export default function OfflineBanner() {
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
   const [isVisible, setIsVisible] = useState(false);
+  const hideTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const handleOnline = () => {
       setIsOffline(false);
-      // Hide banner after going back online
-      setTimeout(() => setIsVisible(false), 3000);
+      // Hide banner after going back online - clear any existing timeout first
+      if (hideTimeoutRef.current) {
+        clearTimeout(hideTimeoutRef.current);
+      }
+      hideTimeoutRef.current = setTimeout(() => setIsVisible(false), 3000);
     };
 
     const handleOffline = () => {
+      // Clear the hide timeout when going offline
+      if (hideTimeoutRef.current) {
+        clearTimeout(hideTimeoutRef.current);
+        hideTimeoutRef.current = null;
+      }
       setIsOffline(true);
       setIsVisible(true);
     };
@@ -35,6 +44,10 @@ export default function OfflineBanner() {
     return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
+      // Clear timeout on unmount
+      if (hideTimeoutRef.current) {
+        clearTimeout(hideTimeoutRef.current);
+      }
     };
   }, []);
 
