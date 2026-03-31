@@ -2,8 +2,8 @@
 
 > Hoja de ruta completa para la plataforma MLM de Afiliaciones Binarias.
 
-**Versión actual**: 1.3.0  
-**Última actualización**: 2026-03-30  
+**Versión actual**: 1.6.0  
+**Última actualización**: 2026-03-31  
 **Estado**: Activo - Desarrollo continuo
 
 ---
@@ -11,18 +11,21 @@
 ## 📊 Resumen de Progreso
 
 ```
-███████████████░░░░░░░░░░░░░░ 75% Completado
+████████████████░░░░░░░░░░░░ 90% Completado
 ```
 
-| Fase    | Nombre         | Estado       | Versión |
-| ------- | -------------- | ------------ | ------- |
-| Phase 1 | MVP - Core     | ✅ Completo  | v1.0.0  |
-| Phase 2 | Notificaciones | ❌ Cancelado | -       |
-| Phase 3 | Visual Tree UI | ✅ Completo  | v1.1.0  |
-| Phase 4 | E-commerce     | ✅ Parcial   | v1.2.0  |
-| Phase 5 | Deployment     | ✅ Completo  | v1.3.0  |
-| Phase 6 | Wallet + Pagos | ✅ Completo  | v1.4.0  |
-| Phase 7 | Enterprise     | 📋 Planeado  | v2.0.0  |
+| Fase     | Nombre           | Estado      | Versión |
+| -------- | ---------------- | ----------- | ------- |
+| Phase 1  | MVP - Core       | ✅ Completo | v1.0.0  |
+| Phase 2  | Visual Tree UI   | ✅ Completo | v1.1.0  |
+| Phase 3  | E-commerce       | ✅ Parcial  | v1.2.0  |
+| Phase 4  | Deployment       | ✅ Completo | v1.3.0  |
+| Phase 5  | Wallet + Pagos   | ✅ Completo | v1.4.0  |
+| Phase 6  | Backend Refactor | ✅ Completo | v1.5.0  |
+| Phase 7  | Notificaciones   | ✅ Completo | v1.5.0  |
+| Phase 8  | PWA + Offline    | ✅ Completo | v1.6.0  |
+| Phase 9  | Landing Products | 📋 Planeado | v1.7.0  |
+| Phase 10 | Enterprise       | 📋 Planeado | v2.0.0  |
 
 ---
 
@@ -183,6 +186,47 @@
 
 ---
 
+### ✅ v1.5.0 - Backend Refactoring + Notificaciones (Marzo 2026)
+
+**Fecha de lanzamiento**: 2026-03-31  
+**Estado**: ✅ Stable
+
+#### Funcionalidades Implementadas
+
+- [x] Refactoring de controllers
+  - 10+ controllers modularizados
+  - Patrón barrel export implementado
+  - Auth, CRM, Commissions, Admin, Orders, Products, Reports, Dashboard, TwoFactor, Invoices
+- [x] Notificaciones Email
+  - EmailService con métodos de notificación
+  - sendWelcome, sendCommission, sendDownline
+  - sendWithdrawalApproved, sendWithdrawalRejected, sendLevelAchieved
+- [x] SECURITY.md
+  - Política de seguridad en repository root
+  - Habilitado en GitHub Security Policy
+
+---
+
+### ✅ v1.6.0 - PWA + Offline (Marzo 2026)
+
+**Fecha de lanzamiento**: 2026-03-31  
+**Estado**: ✅ Stable
+
+#### Funcionalidades Implementadas
+
+- [x] Página 404 Not Found
+  - Diseño consistente con la app
+  - Animación sutil
+  - Botón Dashboard
+- [x] Página Offline
+  - Sin conexión a internet
+  - Botón reintentar
+  - Sugerencias de conexión
+- [x] Rutas catch-all
+  - Cualquier ruta unknown redirige a /404
+
+---
+
 ## 📋 Planeado
 
 ### 📋 v2.0.0 - Enterprise
@@ -221,11 +265,25 @@
 
 ---
 
-## ❌ Cancelado
+## 📋 Planeado - Próximas Fases
 
-### 🚫 Phase 2 - Email & SMS Notifications
+### 📋 v1.7.0 - Landing Pages Productos
 
-**Razón**: Movido a v2.0 por enfoque en core features
+**Estado**: 📋 Planeado  
+**Target**: Q1 2026
+
+#### Funcionalidades Planeadas
+
+- [ ] Landing pages de productos/servicios
+  - Marketing de la plataforma
+  - SEO optimizado
+  - Templates de alto impacto
+- [ ] PWA Manifest completo
+  - Más iconos para PWA
+  - Colores de tema configurados
+  - Instalación en dispositivos
+
+### 📋 v2.0.0 - Enterprise
 
 | Feature Original    | Nueva Ubicación |
 | ------------------- | --------------- |
