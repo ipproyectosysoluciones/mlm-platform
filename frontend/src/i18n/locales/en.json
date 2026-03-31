@@ -1,4 +1,17 @@
 {
+  "notFound": {
+    "title": "Page Not Found",
+    "description": "The page you're looking for doesn't exist or has been moved.",
+    "goToDashboard": "Go to Dashboard",
+    "goBack": "Go Back"
+  },
+  "offline": {
+    "title": "No Internet Connection",
+    "description": "You seem to have lost your connection. Check your internet connection and try again.",
+    "hint": "You can also check if WiFi is on or if there's any issue with your data connection.",
+    "retry": "Retry",
+    "goBack": "Go Back"
+  },
   "tree": {
     "title": "Binary Tree",
     "search": {
