@@ -2,8 +2,8 @@
 
 > Hoja de ruta completa para la plataforma MLM de Afiliaciones Binarias.
 
-**Versión actual**: 1.3.0  
-**Última actualización**: 2026-03-30  
+**Versión actual**: 1.5.0  
+**Última actualización**: 2026-03-31  
 **Estado**: Activo - Desarrollo continuo
 
 ---
@@ -11,18 +11,19 @@
 ## 📊 Resumen de Progreso
 
 ```
-███████████████░░░░░░░░░░░░░░ 75% Completado
+████████████████████████████████████████░░░░░░░ 85% Completado
 ```
 
-| Fase    | Nombre         | Estado       | Versión |
-| ------- | -------------- | ------------ | ------- |
-| Phase 1 | MVP - Core     | ✅ Completo  | v1.0.0  |
-| Phase 2 | Notificaciones | ❌ Cancelado | -       |
-| Phase 3 | Visual Tree UI | ✅ Completo  | v1.1.0  |
-| Phase 4 | E-commerce     | ✅ Parcial   | v1.2.0  |
-| Phase 5 | Deployment     | ✅ Completo  | v1.3.0  |
-| Phase 6 | Wallet + Pagos | ✅ Completo  | v1.4.0  |
-| Phase 7 | Enterprise     | 📋 Planeado  | v2.0.0  |
+| Fase    | Nombre              | Estado       | Versión |
+| ------- | ------------------- | ------------ | ------- |
+| Phase 1 | MVP - Core          | ✅ Completo  | v1.0.0  |
+| Phase 2 | Notificaciones      | ❌ Cancelado | -       |
+| Phase 3 | Visual Tree UI      | ✅ Completo  | v1.1.0  |
+| Phase 4 | E-commerce          | ✅ Parcial   | v1.2.0  |
+| Phase 5 | Deployment          | ✅ Completo  | v1.3.0  |
+| Phase 6 | Wallet + Pagos      | ✅ Completo  | v1.4.0  |
+| Phase 7 | Enterprise          | 📋 Planeado  | v2.0.0  |
+| Phase 8 | Backend Refactoring | ✅ Completo  | v1.5.0  |
 
 ---
 
@@ -183,6 +184,34 @@
 
 ---
 
+### ✅ v1.5.0 - Backend Refactoring (Marzo 2026)
+
+**Fecha de lanzamiento**: 2026-03-31  
+**Estado**: ✅ Stable
+
+#### Funcionalidades Implementadas
+
+- [x] Refactoring de controllers
+  - 10+ controllers modularizados
+  - Sub-controllers creados para: Auth, CRM, Commissions, Admin, Orders, Products, Reports, Dashboard, TwoFactor, Invoices
+  - Patrón barrel export implementado
+- [x] Correcciones de seguridad Sentry
+  - Errores de TypeScript resueltos
+  - Middleware de errores mejorado
+  - Logging estructurado
+- [x] Tests completos
+  - Todos los tests pasando (93/93)
+  - Cobertura mantenida en 85%
+- [x] Documentación de seguridad
+  - SECURITY.md agregado
+  - Políticas de seguridad documentadas
+- [x] Mejoras de arquitectura
+  - Separación de concerns
+  - Controllers más pequeños y mantenibles
+  - Exports centralizados
+
+---
+
 ## 📋 Planeado
 
 ### 📋 v2.0.0 - Enterprise
@@ -260,11 +289,11 @@
 
 | Componente                  | Líneas      | Archivos |
 | --------------------------- | ----------- | -------- |
-| Backend (TypeScript)        | ~15,000     | ~120     |
+| Backend (TypeScript)        | ~16,500     | ~135     |
 | Frontend (TypeScript/React) | ~12,000     | ~80      |
-| Tests                       | ~8,000      | ~50      |
-| Documentación               | ~3,000      | ~8       |
-| **TOTAL**                   | **~38,000** | **~258** |
+| Tests                       | ~8,500      | ~55      |
+| Documentación               | ~3,500      | ~10      |
+| **TOTAL**                   | **~40,500** | **~280** |
 
 ---
 
@@ -275,7 +304,7 @@
 | Componente           | Estado                  |
 | -------------------- | ----------------------- |
 | Frontend refactoring | ✅ Completo (Phase 8/8) |
-| Backend refactoring  | ⏳ Pendiente            |
+| Backend refactoring  | ✅ Completo (v1.5.0)    |
 
 ### Frontend Components Modularized
 
@@ -289,6 +318,22 @@
 | components/admin/     | 3 componentes      |
 | components/routes/    | 4 componentes      |
 | **TOTAL**             | **28 componentes** |
+
+### Backend Controllers Modularized
+
+| Carpeta                  | Sub-controllers         |
+| ------------------------ | ----------------------- |
+| controllers/auth/        | AuthController          |
+| controllers/crm/         | Leads, Tasks, Comm      |
+| controllers/commissions/ | CommissionCtrl          |
+| controllers/admin/       | AdminController         |
+| controllers/orders/      | OrderController         |
+| controllers/products/    | ProductController       |
+| controllers/reports/     | ReportController        |
+| controllers/dashboard/   | DashboardCtrl           |
+| controllers/twofactor/   | TwoFactorCtrl           |
+| controllers/invoices/    | InvoiceController       |
+| **TOTAL**                | **10+ sub-controllers** |
 
 ---
 
@@ -313,12 +358,14 @@ git show v1.3.0 --stat
 
 ### Changelog
 
-| Versión | Fecha      | Cambios                                                    |
-| ------- | ---------- | ---------------------------------------------------------- |
-| v1.3.0  | 2026-03-30 | Docker deployment, CI/CD, PostgreSQL, Frontend refactoring |
-| v1.2.0  | 2026-03-25 | E-commerce streaming, products                             |
-| v1.1.0  | 2026-03-20 | Visual tree UI, React Flow                                 |
-| v1.0.0  | 2026-03-15 | MVP launch                                                 |
+| Versión | Fecha      | Cambios                                                     |
+| ------- | ---------- | ----------------------------------------------------------- |
+| v1.5.0  | 2026-03-31 | Backend refactoring, controllers modularizados, SECURITY.md |
+| v1.4.0  | 2026-03-27 | Wallet & Pagos, sistema completo de transacciones           |
+| v1.3.0  | 2026-03-30 | Docker deployment, CI/CD, PostgreSQL, Frontend refactoring  |
+| v1.2.0  | 2026-03-25 | E-commerce streaming, products                              |
+| v1.1.0  | 2026-03-20 | Visual tree UI, React Flow                                  |
+| v1.0.0  | 2026-03-15 | MVP launch                                                  |
 
 ---
 
@@ -352,6 +399,6 @@ Aceptamos contribuciones:
 
 ---
 
-**Última actualización**: 2026-03-30  
+**Última actualización**: 2026-03-31  
 **Próxima revisión**: 2026-04-15  
 **Mantenedor**: MLM Development Team
