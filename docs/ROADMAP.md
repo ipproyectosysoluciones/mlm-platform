@@ -207,7 +207,7 @@
 
 ---
 
-### ✅ v1.6.0 - PWA + Offline (Marzo 2026)
+### ✅ v1.6.0 - PWA + Offline + Offline Banner (Marzo 2026)
 
 **Fecha de lanzamiento**: 2026-03-31  
 **Estado**: ✅ Stable
@@ -224,10 +224,35 @@
   - Sugerencias de conexión
 - [x] Rutas catch-all
   - Cualquier ruta unknown redirige a /404
+- [x] OfflineBanner component
+  - Detección automática online/offline
+  - Banner cuando se pierde conexión
+  - Race condition fix
+- [x] PWA Manifest mejorado
+  - 8 tamaños de iconos (72px a 512px)
+  - Iconos maskable para Android
+  - Shortcuts: Dashboard, Mi Árbol, Cartera, Catálogo
+  - Screenshots para instalación
+- [x] Meta tags adicionales
+  - Open Graph, Twitter Card
+  - Apple splash screens
+  - Microsoft tiles (browserconfig.xml)
 
 ---
 
 ## 📋 Planeado
+
+### 📋 v1.7.0 - Landing Pages Productos
+
+**Estado**: 📋 Planeado  
+**Target**: Q2 2026
+
+#### Funcionalidades Planeadas
+
+- [ ] Landing pages de productos/servicios
+  - Marketing de la plataforma
+  - SEO optimizado
+  - Templates de alto impacto
 
 ### 📋 v2.0.0 - Enterprise
 
