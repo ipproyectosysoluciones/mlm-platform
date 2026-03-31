@@ -14,6 +14,7 @@ import LandingPages from './pages/LandingPages';
 import CRM from './pages/CRM';
 import NotFound from './pages/NotFound';
 import Offline from './pages/Offline';
+import OfflineBanner from './components/OfflineBanner';
 import { ProtectedRoute, AdminRoute, PublicRoute, PublicProfileRoute } from './components/routes';
 
 // Lazy loaded pages for streaming subscriptions e-commerce
@@ -39,6 +40,7 @@ function PageLoader() {
 function App() {
   return (
     <AuthProvider>
+      <OfflineBanner />
       <BrowserRouter>
         <Routes>
           <Route
