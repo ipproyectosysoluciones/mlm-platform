@@ -12,6 +12,8 @@ import CommissionConfigPage from './pages/CommissionConfigPage';
 import PublicProfile from './pages/PublicProfile';
 import LandingPages from './pages/LandingPages';
 import CRM from './pages/CRM';
+import NotFound from './pages/NotFound';
+import Offline from './pages/Offline';
 import { ProtectedRoute, AdminRoute, PublicRoute, PublicProfileRoute } from './components/routes';
 
 // Lazy loaded pages for streaming subscriptions e-commerce
@@ -170,6 +172,13 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+          {/* Error Pages */}
+          <Route path="/404" element={<NotFound />} />
+          <Route path="/offline" element={<Offline />} />
+
+          {/* Catch-all: Redirect unknown routes to 404 */}
+          <Route path="*" element={<Navigate to="/404" replace />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

@@ -1,4 +1,17 @@
 {
+  "notFound": {
+    "title": "Página no encontrada",
+    "description": "La página que buscas no existe o ha sido movida.",
+    "goToDashboard": "Ir al Dashboard",
+    "goBack": "Volver"
+  },
+  "offline": {
+    "title": "Sin conexión a internet",
+    "description": "Parece que perdiste la conexión. Verificá tu conexión a internet e intentá de nuevo.",
+    "hint": "También podés verificar si el WiFi está activado o si hay algún problema con tu conexión de datos.",
+    "retry": "Reintentar",
+    "goBack": "Volver"
+  },
   "tree": {
     "title": "Árbol Binario",
     "search": {
