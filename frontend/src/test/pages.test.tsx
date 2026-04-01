@@ -78,7 +78,7 @@ describe('Login Page', () => {
       </TestWrapper>
     );
 
-    expect(screen.getByPlaceholderText(/tu@email/i)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/name@example.com/i)).toBeInTheDocument();
   });
 
   it('renders login form with password input', () => {
@@ -98,7 +98,7 @@ describe('Login Page', () => {
       </TestWrapper>
     );
 
-    expect(screen.getByRole('button', { type: 'submit' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /login/i })).toBeInTheDocument();
   });
 
   it('has a link to register', () => {
@@ -108,7 +108,7 @@ describe('Login Page', () => {
       </TestWrapper>
     );
 
-    expect(screen.getByRole('link', { name: /registrate/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /sign up/i })).toBeInTheDocument();
   });
 });
 
@@ -124,7 +124,7 @@ describe('Register Page', () => {
       </TestWrapper>
     );
 
-    expect(screen.getByPlaceholderText(/tu@email/i)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/name@example.com/i)).toBeInTheDocument();
   });
 
   it('has a submit button', () => {
