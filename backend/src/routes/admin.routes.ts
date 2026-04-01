@@ -7,7 +7,7 @@ import {
   updateUserStatus,
   getCommissionsReport,
   promoteToAdmin,
-} from '../controllers/AdminController';
+} from '../controllers/admin';
 import { asyncHandler } from '../middleware/asyncHandler';
 
 const router: ExpressRouter = Router();

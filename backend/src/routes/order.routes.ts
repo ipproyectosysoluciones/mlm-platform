@@ -13,7 +13,7 @@
  * router.post('/', authenticateToken, createOrder);
  */
 import { Router, Router as ExpressRouter } from 'express';
-import { createOrder, getOrders, getOrderById } from '../controllers/OrderController';
+import { createOrder, getOrders, getOrderById } from '../controllers/orders';
 import { authenticateToken } from '../middleware/auth.middleware';
 import { validate } from '../middleware/validate.middleware';
 import { asyncHandler } from '../middleware/asyncHandler';

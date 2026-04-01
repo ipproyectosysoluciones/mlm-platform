@@ -1,64 +1,16 @@
 /**
- * @fileoverview ProductController - Product API endpoints for streaming subscriptions
- * @description Handles product listing, filtering, and retrieval for e-commerce.
- *             Gestión de endpoints de productos para suscripciones de streaming.
- * @module controllers/ProductController
- * @author MLM Development Team
- *
- * @example
- * // English: GET /api/products - List all products
- * const response = await fetch('/api/products?page=1&limit=20');
- *
- * // Español: GET /api/products - Listar todos los productos
- * const response = await fetch('/api/products?page=1&limit=20');
+ * @fileoverview Product Catalog Controller - Public product listing endpoints
+ * @description Handles public product catalog operations
+ * @module controllers/products/catalog
  */
 import { Response } from 'express';
-import { productService } from '../services/ProductService';
-import type { ApiResponse, ProductAttributes } from '../types';
-import type { AuthenticatedRequest } from '../middleware/auth.middleware';
-import { AppError } from '../middleware/error.middleware';
+import { productService } from '../../services/ProductService';
+import type { ApiResponse, ProductAttributes } from '../../types';
+import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
+import { AppError } from '../../middleware/error.middleware';
 
 /**
  * Get list of products with pagination and optional platform filtering
- * Obtener lista de productos con paginación y filtro opcional por plataforma
- *
- * @route GET /api/products
- * @access Public (no authentication required)
- * @param {AuthenticatedRequest} req - Express request with query params
- * @param {Response} res - Express response
- * @returns {ApiResponse} Paginated product list
- *
- * @swagger
- * /products:
- *   get:
- *     summary: Listar productos / List products
- *     description: Obtiene lista de productos con paginación opcional. No requiere autenticación.
- *     tags: [products]
- *     parameters:
- *       - in: query
- *         name: page
- *         schema:
- *           type: integer
- *           default: 1
- *         description: Número de página / Page number
- *       - in: query
- *         name: limit
- *         schema:
- *           type: integer
- *           default: 20
- *           maximum: 100
- *         description: Límite por página / Items per page
- *       - in: query
- *         name: platform
- *         schema:
- *           type: string
- *           enum: [subscription, streaming, one-time]
- *         description: Filtrar por tipo de producto / Filter by product type
- *     responses:
- *       200:
- *         description: Lista de productos / Product list
- *       500:
- *         description: Error del servidor / Server error
  */
 export async function getProducts(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
@@ -80,7 +32,6 @@ export async function getProducts(req: AuthenticatedRequest, res: Response): Pro
       if (allowedPlatforms.includes(platform)) {
         validatedPlatform = platform as ProductAttributes['platform'];
       } else {
-        // invalid platform, treat as undefined
         validatedPlatform = undefined;
       }
     }
@@ -89,7 +40,7 @@ export async function getProducts(req: AuthenticatedRequest, res: Response): Pro
       page,
       limit,
       platform: validatedPlatform,
-      isActive: true, // Only return active products
+      isActive: true,
     });
 
     const response: ApiResponse<ProductAttributes[]> = {
@@ -133,41 +84,11 @@ export async function getProducts(req: AuthenticatedRequest, res: Response): Pro
 
 /**
  * Get single product by ID
- * Obtener producto individual por ID
- *
- * @route GET /api/products/:id
- * @access Public (no authentication required)
- * @param {AuthenticatedRequest} req - Express request with product ID param
- * @param {Response} res - Express response
- * @returns {ApiResponse} Single product details
- *
- * @swagger
- * /products/{id}:
- *   get:
- *     summary: Obtener producto por ID / Get product by ID
- *     description: Retorna los detalles de un producto específico. No requiere autenticación.
- *     tags: [products]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *           format: uuid
- *         description: ID del producto / Product ID
- *     responses:
- *       200:
- *         description: Detalles del producto / Product details
- *       404:
- *         description: Producto no encontrado / Product not found
- *       400:
- *         description: ID inválido / Invalid ID format
  */
 export async function getProductById(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
     const { id } = req.params;
 
-    // Validate UUID format - accept any valid UUID including all-zeros
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     if (!uuidRegex.test(id)) {
       res.status(400).json({

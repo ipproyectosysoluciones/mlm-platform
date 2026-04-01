@@ -1,13 +1,12 @@
+/**
+ * @fileoverview Auth Routes - Authentication API endpoints
+ * @description Router for /api/auth endpoints
+ * @module routes/auth
+ */
 import { Router, Router as ExpressRouter } from 'express';
-import {
-  register,
-  login,
-  me,
-  registerValidation,
-  loginValidation,
-} from '../controllers/AuthController';
-import { authenticateToken } from '../middleware/auth.middleware';
-import { validate } from '../middleware/validate.middleware';
+import { register, login, me, registerValidation, loginValidation } from '../../controllers/auth';
+import { authenticateToken } from '../../middleware/auth.middleware';
+import { validate } from '../../middleware/validate.middleware';
 
 const router: ExpressRouter = Router();
 
@@ -42,21 +41,8 @@ const router: ExpressRouter = Router();
  *     responses:
  *       201:
  *         description: Usuario creado exitosamente / User created successfully
- *         content:
- *           application/json:
- *             schema:
- *               allOf:
- *                 - $ref: '#/components/schemas/ApiResponse'
- *                 - type: object
- *                   properties:
- *                     data:
- *                       $ref: '#/components/schemas/AuthToken'
  *       400:
  *         description: Email ya registrado o validación fallida / Email already registered or validation failed
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
  */
 router.post('/register', validate(registerValidation), register);
 
@@ -85,21 +71,8 @@ router.post('/register', validate(registerValidation), register);
  *     responses:
  *       200:
  *         description: Login exitoso / Successful login
- *         content:
- *           application/json:
- *             schema:
- *               allOf:
- *                 - $ref: '#/components/schemas/ApiResponse'
- *                 - type: object
- *                   properties:
- *                     data:
- *                       $ref: '#/components/schemas/AuthToken'
  *       401:
  *         description: Credenciales inválidas / Invalid credentials
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
  *       429:
  *         description: Rate limit excedido / Rate limit exceeded
  */
@@ -117,29 +90,8 @@ router.post('/login', validate(loginValidation), login);
  *     responses:
  *       200:
  *         description: Usuario actual / Current user
- *         content:
- *           application/json:
- *             schema:
- *               allOf:
- *                 - $ref: '#/components/schemas/ApiResponse'
- *                 - type: object
- *                   properties:
- *                     data:
- *                       type: object
- *                       properties:
- *                         id: { type: string }
- *                         email: { type: string }
- *                         referralCode: { type: string }
- *                         level: { type: integer }
- *                         levelName: { type: string }
- *                         currency: { type: string }
- *                         role: { type: string }
  *       401:
  *         description: Token requerido o inválido / Token required or invalid
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
  */
 router.get('/me', authenticateToken, me);
 

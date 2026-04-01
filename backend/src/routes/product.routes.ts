@@ -13,7 +13,7 @@
  * router.get('/', getProducts);
  */
 import { Router, Router as ExpressRouter } from 'express';
-import { getProducts, getProductById } from '../controllers/ProductController';
+import { getProducts, getProductById } from '../controllers/products';
 import { asyncHandler } from '../middleware/asyncHandler';
 import { body, param, query } from 'express-validator';
 

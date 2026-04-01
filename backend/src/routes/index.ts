@@ -1,17 +1,19 @@
 import { Router, Router as ExpressRouter } from 'express';
-import authRoutes from './auth.routes';
-import userRoutes from './user.routes';
+import authRoutes from './auth';
+import crmRoutes from './crm';
+import userRoutes from './users';
 import commissionRoutes from './commission.routes';
 import dashboardRoutes from './dashboard.routes';
 import productRoutes from './product.routes';
 import orderRoutes from './order.routes';
-import walletRoutes from './wallet.routes';
+import walletRoutes from './wallet';
 import twoFactorRoutes from './twoFactor.routes';
 
 const router: ExpressRouter = Router();
 
 router.use('/auth', authRoutes);
 router.use('/auth/2fa', twoFactorRoutes); // 2FA routes
+router.use('/crm', crmRoutes);
 router.use('/users', userRoutes);
 router.use('/commissions', commissionRoutes);
 router.use('/dashboard', dashboardRoutes);

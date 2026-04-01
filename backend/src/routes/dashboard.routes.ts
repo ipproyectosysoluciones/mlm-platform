@@ -1,5 +1,5 @@
 import { Router, Router as ExpressRouter } from 'express';
-import { getDashboard } from '../controllers/DashboardController';
+import { getDashboard } from '../controllers/dashboard';
 import { authenticateToken } from '../middleware/auth.middleware';
 import { asyncHandler } from '../middleware/asyncHandler';
 import { cacheMiddleware, CACHE_KEYS, CACHE_TTL } from '../middleware/cache.middleware';

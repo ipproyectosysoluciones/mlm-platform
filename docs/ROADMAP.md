@@ -189,14 +189,22 @@
 ### ✅ v1.5.0 - Backend Refactoring + Notificaciones (Marzo 2026)
 
 **Fecha de lanzamiento**: 2026-03-31  
-**Estado**: ✅ Stable
+**Estado**: ✅ Stable (ACTUALIZADO: 2026-03-31)
 
-#### Funcionalidades Implementadas
+#### Funcionalidades Implementadas (REFACTORING COMPLETADO)
 
-- [x] Refactoring de controllers
-  - 10+ controllers modularizados
-  - Patrón barrel export implementado
-  - Auth, CRM, Commissions, Admin, Orders, Products, Reports, Dashboard, TwoFactor, Invoices
+- [x] Refactoring de controllers (FASE 1 + FASE 2)
+  - ✅ Auth controllers: register, login, profile
+  - ✅ CRM controllers: leads, tasks, communications, analytics
+  - ✅ User controllers: profile, tree, qr
+  - ✅ Wallet controllers: balance, transactions, withdrawals
+  - ✅ Admin controllers: stats, users
+  - ✅ Order controllers: create, crud
+  - ✅ Product controllers: catalog
+  - ✅ Commission controllers: history, calculate
+  - ✅ TwoFactor controllers: enable, verify
+  - ✅ Dashboard controllers: stats
+- [x] Patrón barrel export implementado en todos los módulos
 - [x] Notificaciones Email
   - EmailService con métodos de notificación
   - sendWelcome, sendCommission, sendDownline

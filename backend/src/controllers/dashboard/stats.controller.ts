@@ -1,32 +1,23 @@
 /**
- * @fileoverview DashboardController - User dashboard and statistics endpoints
- * @description Handles the main user dashboard with statistics, referrals, and commissions overview.
- *              Gestiona el dashboard principal del usuario con estadísticas, referidos y vista general de comisiones.
- * @module controllers/DashboardController
- * @author MLM Development Team
+ * @fileoverview Dashboard Stats Controller - User dashboard endpoints
+ * @description Handles the main user dashboard with statistics, referrals, and commissions overview
+ * @module controllers/dashboard/stats
  */
 import { Response } from 'express';
 import { Op } from 'sequelize';
-import { userService, treeServiceInstance } from '../services/UserService';
-import { CommissionService } from '../services/CommissionService';
-import { QRService } from '../services/QRService';
-import { User, Commission } from '../models';
-import type { ApiResponse } from '../types';
-import { LEVEL_NAMES } from '../types';
-import type { AuthenticatedRequest } from '../middleware/auth.middleware';
+import { userService, treeServiceInstance } from '../../services/UserService';
+import { CommissionService } from '../../services/CommissionService';
+import { QRService } from '../../services/QRService';
+import { User, Commission } from '../../models';
+import type { ApiResponse } from '../../types';
+import { LEVEL_NAMES } from '../../types';
+import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
 
 const commissionService = new CommissionService();
 const qrService = new QRService();
 
 /**
  * Get user dashboard with stats, referrals, and commissions
- * Obtiene dashboard de usuario con estadísticas, referidos y comisiones
- *
- * @route GET /api/dashboard
- * @access Authenticated
- * @param {AuthenticatedRequest} req - Authenticated request with user token
- * @param {Response} res - Response with dashboard data
- * @returns {ApiResponse} Dashboard data including user info, stats, referrals, and recent commissions
  */
 export async function getDashboard(req: AuthenticatedRequest, res: Response): Promise<void> {
   const userId = req.user!.id;

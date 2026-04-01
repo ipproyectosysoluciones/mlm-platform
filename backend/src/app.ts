@@ -8,7 +8,6 @@ import { config } from './config/env';
 import { swaggerSpec } from './config/swagger';
 import routes from './routes';
 import adminRoutes from './routes/admin.routes';
-import crmRoutes from './routes/crm.routes';
 import publicRoutes from './routes/public.routes';
 import landingRoutes from './routes/landing.routes';
 import commissionConfigRoutes from './routes/commission-config.routes';
@@ -176,7 +175,6 @@ app.use(
 // API Routes
 app.use('/api', routes);
 app.use('/api/admin', adminRoutes);
-app.use('/api/crm', crmRoutes);
 app.use('/api/public', publicRoutes);
 app.use('/api', landingRoutes);
 app.use('/api/admin/commissions', commissionConfigRoutes);

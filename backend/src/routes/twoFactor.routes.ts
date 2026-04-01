@@ -21,7 +21,7 @@ import {
   verifySetup,
   verify2FA,
   disable2FA,
-} from '../controllers/TwoFactorController';
+} from '../controllers/twoFactor';
 import { authenticateToken } from '../middleware/auth.middleware';
 import { validate } from '../middleware/validate.middleware';
 

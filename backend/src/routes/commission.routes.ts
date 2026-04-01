@@ -1,10 +1,6 @@
 import { Router, Router as ExpressRouter } from 'express';
 import { body } from 'express-validator';
-import {
-  getCommissions,
-  getCommissionStats,
-  createPurchase,
-} from '../controllers/CommissionController';
+import { getCommissions, getCommissionStats, createPurchase } from '../controllers/commissions';
 import { authenticateToken } from '../middleware/auth.middleware';
 import { validate } from '../middleware/validate.middleware';
 import { asyncHandler } from '../middleware/asyncHandler';
