@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "MLM Platform API",
-    "description": "Complete API collection for MLM Binary Affiliations Platform",
+    "description": "Complete API collection for MLM Binary Affiliations Platform - v1.7.0 (PWA + Push Notifications)",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -770,6 +770,119 @@
               "raw": "{{baseUrl}}/admin/reports/commissions",
               "host": ["{{baseUrl}}"],
               "path": ["admin", "reports", "commissions"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Push Notifications",
+      "item": [
+        {
+          "name": "Get VAPID Public Key",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/push/vapid-public-key",
+              "host": ["{{baseUrl}}"],
+              "path": ["push", "vapid-public-key"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Subscribe to Push Notifications",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"endpoint\": \"https://fcm.googleapis.com/fcm/send/example-endpoint\",\n  \"keys\": {\n    \"p256dh\": \"BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAPA3LNt6l_cFPi1or1N5帘帘帘帘帘\",\n    \"auth\": \"tBHItJI5svbpezUK4PTR9w==\"\n  },\n  \"userAgent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/push/subscribe",
+              "host": ["{{baseUrl}}"],
+              "path": ["push", "subscribe"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Unsubscribe from Push Notifications",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"endpoint\": \"https://fcm.googleapis.com/fcm/send/example-endpoint\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/push/unsubscribe",
+              "host": ["{{baseUrl}}"],
+              "path": ["push", "unsubscribe"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Public / Landing Pages",
+      "item": [
+        {
+          "name": "Get Product Landing Page",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/public/landing/product/{{productId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["public", "landing", "product", "{{productId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Product Landing with Referral",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/public/landing/product/{{productId}}?ref={{referralCode}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["public", "landing", "product", "{{productId}}"],
+              "query": [
+                { "key": "ref", "value": "{{referralCode}}" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Affiliate Products",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/public/profile/{{referralCode}}/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["public", "profile", "{{referralCode}}", "products"]
             }
           },
           "response": []

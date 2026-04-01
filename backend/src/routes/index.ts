@@ -7,6 +7,9 @@ import productRoutes from './product.routes';
 import orderRoutes from './order.routes';
 import walletRoutes from './wallet.routes';
 import twoFactorRoutes from './twoFactor.routes';
+import pushRoutes from './push.routes';
+import publicRoutes from './public.routes';
+import landingPublicRoutes from './landing-public.routes';
 
 const router: ExpressRouter = Router();
 
@@ -19,6 +22,10 @@ router.use('/products', productRoutes);
 router.use('/orders', orderRoutes);
 router.use('/wallet', walletRoutes);
 router.use('/wallets', walletRoutes); // Alias for test compatibility
+router.use('/push', pushRoutes);
+router.use('/public', publicRoutes);
+router.use('/public/landing', landingPublicRoutes);
+router.use('/public/profile', landingPublicRoutes); // For /profile/:code/products
 
 /**
  * @swagger

@@ -13,6 +13,7 @@ import { Wallet } from './Wallet';
 import { WalletTransaction } from './WalletTransaction';
 import { WithdrawalRequest } from './WithdrawalRequest';
 import { CommissionConfig } from './CommissionConfig';
+import { PushSubscription } from './PushSubscription';
 
 // User relationships
 User.hasMany(User, { as: 'children', foreignKey: 'sponsorId', sourceKey: 'id' });
@@ -70,6 +71,10 @@ WalletTransaction.belongsTo(Wallet, { as: 'wallet', foreignKey: 'walletId', targ
 User.hasMany(WithdrawalRequest, { foreignKey: 'userId', sourceKey: 'id' });
 WithdrawalRequest.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
 
+// Push Subscription relationships
+User.hasMany(PushSubscription, { foreignKey: 'userId', sourceKey: 'id' });
+PushSubscription.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
+
 export {
   sequelize,
   User,
@@ -86,6 +91,7 @@ export {
   WalletTransaction,
   WithdrawalRequest,
   CommissionConfig,
+  PushSubscription,
 };
 
 export function initModels(): void {

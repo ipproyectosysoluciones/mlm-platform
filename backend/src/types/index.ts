@@ -477,3 +477,58 @@ export interface GetCryptoPricesResponse {
   success: boolean;
   data: CryptoPrices;
 }
+
+// ============================================
+// Push Notification Types - Tipos de Notificaciones Push
+// ============================================
+
+/**
+ * Push subscription keys from browser
+ * Claves de suscripción push del navegador
+ */
+export interface PushSubscriptionKeys {
+  p256dh: string;
+  auth: string;
+}
+
+/**
+ * Push subscription attributes
+ * Atributos de suscripción push
+ */
+export interface PushSubscriptionAttributes {
+  id: string;
+  userId: string | null;
+  endpoint: string;
+  keys: PushSubscriptionKeys;
+  browser: string | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+/**
+ * Push subscription creation attributes
+ * Atributos para crear suscripción push
+ */
+export interface PushSubscriptionCreationAttributes {
+  userId?: string | null;
+  endpoint: string;
+  keys: PushSubscriptionKeys;
+  browser?: string | null;
+}
+
+/**
+ * Push notification payload
+ * Payload de notificación push
+ */
+export interface PushNotificationPayload {
+  title: string;
+  body?: string;
+  icon?: string;
+  badge?: string;
+  data?: Record<string, unknown>;
+  actions?: Array<{
+    action: string;
+    title: string;
+    icon?: string;
+  }>;
+}

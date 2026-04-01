@@ -151,6 +151,7 @@ beforeEach(async () => {
     'wallets',
     'wallet_transactions',
     'withdrawal_requests',
+    'push_subscriptions',
   ];
 
   // Get dialect from sequelize
