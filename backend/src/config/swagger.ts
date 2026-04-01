@@ -4,6 +4,7 @@ import swaggerJsdoc from 'swagger-jsdoc';
  * Swagger/OpenAPI Configuration for MLM Binary Affiliations API
  * Configuración Swagger/OpenAPI para la API MLM de Afiliaciones Binarias
  *
+ * v1.7.0: PWA Landing Pages + Push Notifications
  * v1.6.0: PWA + Offline pages, icons multi-size
  * v1.5.0: Backend controllers refactoring (modular structure)
  * v1.4.0: Wallet digital + 2FA
@@ -14,7 +15,7 @@ const options: swaggerJsdoc.Options = {
     openapi: '3.0.0',
     info: {
       title: 'MLM Binary Affiliations API',
-      version: '1.6.0',
+      version: '1.7.0',
       description: `
 ## API REST para plataforma MLM de Afiliaciones Binarias
 
@@ -34,6 +35,7 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
 | 429 | Rate limit excedido / Rate Limit Exceeded |
 
 ### Versiones / Versions
+- **v1.7.0** (2026-04-02): PWA Landing Pages + Push Notifications
 - **v1.6.0** (2026-04-01): PWA, Offline pages, Backend refactoring completo
 - **v1.5.0** (2026-03-31): Controllers modulares, Notificaciones Email
 - **v1.4.0** (2026-03-28): Wallet Digital, 2FA TOTP
@@ -1068,6 +1070,141 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
             totalPages: { type: 'integer', description: 'Total de páginas / Total pages' },
           },
         },
+
+        // ============================================================
+        // PUSH NOTIFICATIONS (Phase 6)
+        // ============================================================
+        PushSubscription: {
+          type: 'object',
+          description: 'Suscripción a notificaciones push / Push notification subscription',
+          properties: {
+            id: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID único de la suscripción / Unique subscription ID',
+            },
+            endpoint: {
+              type: 'string',
+              description: 'URL del endpoint push / Push endpoint URL',
+            },
+            p256dh: {
+              type: 'string',
+              description: 'Clave pública P-256 / P-256 public key',
+            },
+            auth: {
+              type: 'string',
+              description: 'Clave de autenticación / Auth secret',
+            },
+            userAgent: {
+              type: 'string',
+              nullable: true,
+              description: 'User agent del navegador / Browser user agent',
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Fecha de creación / Creation date',
+            },
+          },
+        },
+
+        PushSubscribeRequest: {
+          type: 'object',
+          required: ['endpoint', 'keys'],
+          description: 'Solicitud de suscripción a push / Push subscription request',
+          properties: {
+            endpoint: {
+              type: 'string',
+              description: 'URL del endpoint push / Push endpoint URL',
+            },
+            keys: {
+              type: 'object',
+              required: ['p256dh', 'auth'],
+              description: 'Claves de suscripción / Subscription keys',
+              properties: {
+                p256dh: {
+                  type: 'string',
+                  description:
+                    'Clave pública P-256 codificada en Base64 / Base64 encoded P-256 public key',
+                },
+                auth: {
+                  type: 'string',
+                  description:
+                    'Secreto de autenticación codificado en Base64 / Base64 encoded auth secret',
+                },
+              },
+            },
+            userAgent: {
+              type: 'string',
+              nullable: true,
+              description: 'User agent del navegador (opcional) / Browser user agent (optional)',
+            },
+          },
+        },
+
+        PushUnsubscribeRequest: {
+          type: 'object',
+          required: ['endpoint'],
+          description: 'Solicitud de cancelación de push / Push unsubscription request',
+          properties: {
+            endpoint: {
+              type: 'string',
+              description: 'URL del endpoint push a cancelar / Push endpoint URL to remove',
+            },
+          },
+        },
+
+        VapidPublicKeyResponse: {
+          type: 'object',
+          description: 'Respuesta de clave pública VAPID / VAPID public key response',
+          properties: {
+            publicKey: {
+              type: 'string',
+              description: 'Clave pública VAPID para el cliente / VAPID public key for client',
+            },
+          },
+        },
+
+        // ============================================================
+        // PUBLIC LANDING PAGES (Phase 6)
+        // ============================================================
+        ProductLanding: {
+          type: 'object',
+          description: 'Datos de landing page de producto / Product landing page data',
+          properties: {
+            product: {
+              $ref: '#/components/schemas/Product',
+            },
+            affiliate: {
+              type: 'object',
+              nullable: true,
+              properties: {
+                referralCode: {
+                  type: 'string',
+                  description: 'Código de referido del afiliado / Affiliate referral code',
+                },
+                fullName: {
+                  type: 'string',
+                  description: 'Nombre del afiliado / Affiliate full name',
+                },
+              },
+            },
+          },
+        },
+
+        ProfileProducts: {
+          type: 'object',
+          description: 'Productos de perfil público / Public profile products',
+          properties: {
+            id: { type: 'string', format: 'uuid' },
+            name: { type: 'string' },
+            description: { type: 'string', nullable: true },
+            price: { type: 'number', format: 'float' },
+            currency: { type: 'string', enum: ['USD', 'COP', 'MXN'] },
+            platform: { type: 'string' },
+            imageUrl: { type: 'string' },
+          },
+        },
       },
     },
 
@@ -1102,6 +1239,15 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
       {
         name: 'orders',
         description: 'Pedidos / Orders - Order management and history',
+      },
+      {
+        name: 'push',
+        description:
+          'Push Notifications / Notificaciones Push - Subscribe, unsubscribe, VAPID key (Phase 6)',
+      },
+      {
+        name: 'public',
+        description: 'Public Endpoints / Endpoints Públicos - Landing pages, profiles (Phase 6)',
       },
     ],
   },

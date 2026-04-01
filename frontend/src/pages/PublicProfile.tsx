@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useProfileSEO } from '../hooks/useSEO';
 import api from '../services/api';
+import type { Product } from '../types';
 
 interface PublicProfileData {
   referralCode: string;
@@ -20,6 +21,8 @@ interface PublicProfileData {
 export default function PublicProfile() {
   const { code } = useParams<{ code: string }>();
   const [profile, setProfile] = useState<PublicProfileData | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoadingProducts, setIsLoadingProducts] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -34,6 +37,19 @@ export default function PublicProfile() {
         const { data } = await api.get(`/public/profile/${code}`);
         if (data.success) {
           setProfile(data.data);
+
+          // Fetch products for this affiliate
+          setIsLoadingProducts(true);
+          try {
+            const productsRes = await api.get(`/public/profile/${code}/products`);
+            if (productsRes.data.success) {
+              setProducts(productsRes.data.data || []);
+            }
+          } catch (productErr) {
+            console.error('Error fetching products:', productErr);
+          } finally {
+            setIsLoadingProducts(false);
+          }
         } else {
           setError('Perfil no encontrado');
         }
@@ -207,6 +223,61 @@ export default function PublicProfile() {
             )}
           </div>
         </div>
+
+        {/* Products Section */}
+        {(products.length > 0 || isLoadingProducts) && (
+          <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Productos Recomendados</h2>
+
+            {isLoadingProducts ? (
+              <div className="flex justify-center py-4">
+                <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin" />
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {products.slice(0, 4).map((product) => (
+                  <div
+                    key={product.id}
+                    className="border border-gray-200 rounded-lg p-4 hover:border-indigo-300 transition-colors"
+                  >
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center text-xl">
+                        {product.platform === 'netflix' && '🎬'}
+                        {product.platform === 'spotify' && '🎵'}
+                        {product.platform === 'disney_plus' && '🏰'}
+                        {product.platform === 'hbo_max' && '🎥'}
+                        {product.platform === 'amazon_prime' && '📦'}
+                        {product.platform === 'youtube_premium' && '▶️'}
+                        {product.platform === 'apple_tv_plus' && '🍎'}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-gray-900 truncate">{product.name}</div>
+                        <div className="text-sm text-gray-500">
+                          {new Intl.NumberFormat('es-ES', {
+                            style: 'currency',
+                            currency: product.currency,
+                          }).format(product.price)}
+                          {' / '}
+                          {product.durationDays === 30
+                            ? '1 mes'
+                            : product.durationDays === 365
+                              ? '1 año'
+                              : `${product.durationDays} días`}
+                        </div>
+                      </div>
+                    </div>
+                    <Link
+                      to={`/landing/product/${product.id}?ref=${profile.referralCode}`}
+                      className="block w-full mt-2 text-center bg-indigo-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors"
+                    >
+                      Comprar Ahora
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* CTA */}
         <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl shadow-lg p-6 text-center text-white">

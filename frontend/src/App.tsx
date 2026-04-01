@@ -22,6 +22,7 @@ const ProductCatalog = lazy(() => import('./pages/ProductCatalog'));
 const Checkout = lazy(() => import('./pages/Checkout'));
 const OrderSuccess = lazy(() => import('./pages/OrderSuccess'));
 const WalletPage = lazy(() => import('./pages/WalletPage'));
+const ProductLanding = lazy(() => import('./pages/ProductLanding'));
 
 /**
  * Loading fallback component for lazy loaded routes
@@ -178,6 +179,16 @@ function App() {
           {/* Error Pages */}
           <Route path="/404" element={<NotFound />} />
           <Route path="/offline" element={<Offline />} />
+
+          {/* Product Landing Page - Public */}
+          <Route
+            path="/landing/product/:id"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <ProductLanding />
+              </Suspense>
+            }
+          />
 
           {/* Catch-all: Redirect unknown routes to 404 */}
           <Route path="*" element={<Navigate to="/404" replace />} />

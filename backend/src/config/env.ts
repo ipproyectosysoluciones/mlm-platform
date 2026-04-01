@@ -126,4 +126,14 @@ export const config = {
     /** Daily payout job cron schedule (default: midnight UTC) / Cron del job de pagos diarios */
     cronTime: process.env.WALLET_CRON_TIME || '0 0 * * *',
   },
+
+  /** VAPID configuration for Web Push notifications / Configuración VAPID para notificaciones push */
+  vapid: {
+    /** VAPID public key / Clave pública VAPID */
+    publicKey: process.env.VAPID_PUBLIC_KEY || '',
+    /** VAPID private key / Clave privada VAPID */
+    privateKey: process.env.VAPID_PRIVATE_KEY || '',
+    /** VAPID subject (mailto or URL) / Asunto VAPID (mailto o URL) */
+    subject: process.env.VAPID_SUBJECT || 'mailto:admin@mlm-platform.com',
+  },
 };
