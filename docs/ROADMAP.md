@@ -2,7 +2,7 @@
 
 > Hoja de ruta completa para la plataforma MLM de Afiliaciones Binarias.
 
-**Versión actual**: 1.5.0  
+**Versión actual**: 1.6.0  
 **Última actualización**: 2026-03-31  
 **Estado**: Activo - Desarrollo continuo
 
@@ -11,19 +11,21 @@
 ## 📊 Resumen de Progreso
 
 ```
-████████████████████████████████████████░░░░░░░ 85% Completado
+████████████████░░░░░░░░░░░░ 90% Completado
 ```
 
-| Fase    | Nombre              | Estado       | Versión |
-| ------- | ------------------- | ------------ | ------- |
-| Phase 1 | MVP - Core          | ✅ Completo  | v1.0.0  |
-| Phase 2 | Notificaciones      | ❌ Cancelado | -       |
-| Phase 3 | Visual Tree UI      | ✅ Completo  | v1.1.0  |
-| Phase 4 | E-commerce          | ✅ Parcial   | v1.2.0  |
-| Phase 5 | Deployment          | ✅ Completo  | v1.3.0  |
-| Phase 6 | Wallet + Pagos      | ✅ Completo  | v1.4.0  |
-| Phase 7 | Enterprise          | 📋 Planeado  | v2.0.0  |
-| Phase 8 | Backend Refactoring | ✅ Completo  | v1.5.0  |
+| Fase     | Nombre           | Estado      | Versión |
+| -------- | ---------------- | ----------- | ------- |
+| Phase 1  | MVP - Core       | ✅ Completo | v1.0.0  |
+| Phase 2  | Visual Tree UI   | ✅ Completo | v1.1.0  |
+| Phase 3  | E-commerce       | ✅ Parcial  | v1.2.0  |
+| Phase 4  | Deployment       | ✅ Completo | v1.3.0  |
+| Phase 5  | Wallet + Pagos   | ✅ Completo | v1.4.0  |
+| Phase 6  | Backend Refactor | ✅ Completo | v1.5.0  |
+| Phase 7  | Notificaciones   | ✅ Completo | v1.5.0  |
+| Phase 8  | PWA + Offline    | ✅ Completo | v1.6.0  |
+| Phase 9  | Landing Products | 📋 Planeado | v1.7.0  |
+| Phase 10 | Enterprise       | 📋 Planeado | v2.0.0  |
 
 ---
 
@@ -184,7 +186,7 @@
 
 ---
 
-### ✅ v1.5.0 - Backend Refactoring (Marzo 2026)
+### ✅ v1.5.0 - Backend Refactoring + Notificaciones (Marzo 2026)
 
 **Fecha de lanzamiento**: 2026-03-31  
 **Estado**: ✅ Stable
@@ -193,26 +195,64 @@
 
 - [x] Refactoring de controllers
   - 10+ controllers modularizados
-  - Sub-controllers creados para: Auth, CRM, Commissions, Admin, Orders, Products, Reports, Dashboard, TwoFactor, Invoices
   - Patrón barrel export implementado
-- [x] Correcciones de seguridad Sentry
-  - Errores de TypeScript resueltos
-  - Middleware de errores mejorado
-  - Logging estructurado
-- [x] Tests completos
-  - Todos los tests pasando (93/93)
-  - Cobertura mantenida en 85%
-- [x] Documentación de seguridad
-  - SECURITY.md agregado
-  - Políticas de seguridad documentadas
-- [x] Mejoras de arquitectura
-  - Separación de concerns
-  - Controllers más pequeños y mantenibles
-  - Exports centralizados
+  - Auth, CRM, Commissions, Admin, Orders, Products, Reports, Dashboard, TwoFactor, Invoices
+- [x] Notificaciones Email
+  - EmailService con métodos de notificación
+  - sendWelcome, sendCommission, sendDownline
+  - sendWithdrawalApproved, sendWithdrawalRejected, sendLevelAchieved
+- [x] SECURITY.md
+  - Política de seguridad en repository root
+  - Habilitado en GitHub Security Policy
+
+---
+
+### ✅ v1.6.0 - PWA + Offline + Offline Banner (Marzo 2026)
+
+**Fecha de lanzamiento**: 2026-03-31  
+**Estado**: ✅ Stable
+
+#### Funcionalidades Implementadas
+
+- [x] Página 404 Not Found
+  - Diseño consistente con la app
+  - Animación sutil
+  - Botón Dashboard
+- [x] Página Offline
+  - Sin conexión a internet
+  - Botón reintentar
+  - Sugerencias de conexión
+- [x] Rutas catch-all
+  - Cualquier ruta unknown redirige a /404
+- [x] OfflineBanner component
+  - Detección automática online/offline
+  - Banner cuando se pierde conexión
+  - Race condition fix
+- [x] PWA Manifest mejorado
+  - 8 tamaños de iconos (72px a 512px)
+  - Iconos maskable para Android
+  - Shortcuts: Dashboard, Mi Árbol, Cartera, Catálogo
+  - Screenshots para instalación
+- [x] Meta tags adicionales
+  - Open Graph, Twitter Card
+  - Apple splash screens
+  - Microsoft tiles (browserconfig.xml)
 
 ---
 
 ## 📋 Planeado
+
+### 📋 v1.7.0 - Landing Pages Productos
+
+**Estado**: 📋 Planeado  
+**Target**: Q2 2026
+
+#### Funcionalidades Planeadas
+
+- [ ] Landing pages de productos/servicios
+  - Marketing de la plataforma
+  - SEO optimizado
+  - Templates de alto impacto
 
 ### 📋 v2.0.0 - Enterprise
 
@@ -250,11 +290,25 @@
 
 ---
 
-## ❌ Cancelado
+## 📋 Planeado - Próximas Fases
 
-### 🚫 Phase 2 - Email & SMS Notifications
+### 📋 v1.7.0 - Landing Pages Productos
 
-**Razón**: Movido a v2.0 por enfoque en core features
+**Estado**: 📋 Planeado  
+**Target**: Q1 2026
+
+#### Funcionalidades Planeadas
+
+- [ ] Landing pages de productos/servicios
+  - Marketing de la plataforma
+  - SEO optimizado
+  - Templates de alto impacto
+- [ ] PWA Manifest completo
+  - Más iconos para PWA
+  - Colores de tema configurados
+  - Instalación en dispositivos
+
+### 📋 v2.0.0 - Enterprise
 
 | Feature Original    | Nueva Ubicación |
 | ------------------- | --------------- |
@@ -289,11 +343,11 @@
 
 | Componente                  | Líneas      | Archivos |
 | --------------------------- | ----------- | -------- |
-| Backend (TypeScript)        | ~16,500     | ~135     |
+| Backend (TypeScript)        | ~15,000     | ~120     |
 | Frontend (TypeScript/React) | ~12,000     | ~80      |
-| Tests                       | ~8,500      | ~55      |
-| Documentación               | ~3,500      | ~10      |
-| **TOTAL**                   | **~40,500** | **~280** |
+| Tests                       | ~8,000      | ~50      |
+| Documentación               | ~3,000      | ~8       |
+| **TOTAL**                   | **~38,000** | **~258** |
 
 ---
 
@@ -304,7 +358,7 @@
 | Componente           | Estado                  |
 | -------------------- | ----------------------- |
 | Frontend refactoring | ✅ Completo (Phase 8/8) |
-| Backend refactoring  | ✅ Completo (v1.5.0)    |
+| Backend refactoring  | ⏳ Pendiente            |
 
 ### Frontend Components Modularized
 
@@ -318,22 +372,6 @@
 | components/admin/     | 3 componentes      |
 | components/routes/    | 4 componentes      |
 | **TOTAL**             | **28 componentes** |
-
-### Backend Controllers Modularized
-
-| Carpeta                  | Sub-controllers         |
-| ------------------------ | ----------------------- |
-| controllers/auth/        | AuthController          |
-| controllers/crm/         | Leads, Tasks, Comm      |
-| controllers/commissions/ | CommissionCtrl          |
-| controllers/admin/       | AdminController         |
-| controllers/orders/      | OrderController         |
-| controllers/products/    | ProductController       |
-| controllers/reports/     | ReportController        |
-| controllers/dashboard/   | DashboardCtrl           |
-| controllers/twofactor/   | TwoFactorCtrl           |
-| controllers/invoices/    | InvoiceController       |
-| **TOTAL**                | **10+ sub-controllers** |
 
 ---
 
@@ -358,14 +396,12 @@ git show v1.3.0 --stat
 
 ### Changelog
 
-| Versión | Fecha      | Cambios                                                     |
-| ------- | ---------- | ----------------------------------------------------------- |
-| v1.5.0  | 2026-03-31 | Backend refactoring, controllers modularizados, SECURITY.md |
-| v1.4.0  | 2026-03-27 | Wallet & Pagos, sistema completo de transacciones           |
-| v1.3.0  | 2026-03-30 | Docker deployment, CI/CD, PostgreSQL, Frontend refactoring  |
-| v1.2.0  | 2026-03-25 | E-commerce streaming, products                              |
-| v1.1.0  | 2026-03-20 | Visual tree UI, React Flow                                  |
-| v1.0.0  | 2026-03-15 | MVP launch                                                  |
+| Versión | Fecha      | Cambios                                                    |
+| ------- | ---------- | ---------------------------------------------------------- |
+| v1.3.0  | 2026-03-30 | Docker deployment, CI/CD, PostgreSQL, Frontend refactoring |
+| v1.2.0  | 2026-03-25 | E-commerce streaming, products                             |
+| v1.1.0  | 2026-03-20 | Visual tree UI, React Flow                                 |
+| v1.0.0  | 2026-03-15 | MVP launch                                                 |
 
 ---
 
@@ -399,6 +435,6 @@ Aceptamos contribuciones:
 
 ---
 
-**Última actualización**: 2026-03-31  
+**Última actualización**: 2026-03-30  
 **Próxima revisión**: 2026-04-15  
 **Mantenedor**: MLM Development Team

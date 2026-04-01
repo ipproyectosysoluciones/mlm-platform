@@ -2,21 +2,29 @@
 
 ## Supported Versions
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+We currently support the following versions with security updates:
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 1.x     | :white_check_mark: |
+| 1.5.x   | :white_check_mark: |
+| 1.6.x   | :white_check_mark: |
 | < 1.0   | :x:                |
 
 ## Reporting a Vulnerability
 
-Use this section to tell people how to report a vulnerability.
+We take security vulnerabilities seriously. If you discover a security issue, please report it responsibly.
 
-Please report security vulnerabilities by opening a private issue or emailing <security@mlm-platform.com> directly.
+**Please report security vulnerabilities by:**
 
-We will acknowledge receipt of your vulnerability report within 48 hours and provide a detailed response within 5 business days regarding how we are addressing the issue.
+- Opening a private security advisory on GitHub
+- Emailing us directly at **security@mlm-platform.com**
+
+### Response Timeline
+
+We will:
+
+- **Acknowledge** receipt of your vulnerability report within **48 hours**
+- Provide a detailed response within **5 business days** regarding how we are addressing the issue
 
 If the vulnerability is accepted, we will:
 
@@ -28,28 +36,67 @@ If the vulnerability is declined, we will provide a detailed explanation of our 
 
 ---
 
-## Two-Factor Authentication (2FA)
+## Security Features
 
-### Implementación
+### Two-Factor Authentication (2FA)
 
-- Algoritmo TOTP (Time-based One-Time Password)
-- Biblioteca: speakeasy
-- Período: 30 segundos
-- Ventana de tolerancia: ±1 período
+Our platform implements TOTP-based 2FA for enhanced account security:
 
-### Códigos de Recuperación
+| Feature          | Implementation                      |
+| ---------------- | ----------------------------------- |
+| Algorithm        | TOTP (Time-based One-Time Password) |
+| Library          | speakeasy                           |
+| Period           | 30 seconds                          |
+| Tolerance Window | ±1 period                           |
 
-- Cantidad: 8 códigos
-- Formato: XXXX-XXXX
-- Hash: bcrypt (12 rondas)
-- Uso: Solo para deshabilitar 2FA
+**Recovery Codes:**
 
-### Cifrado
+- Quantity: 8 codes
+- Format: XXXX-XXXX
+- Hash: bcrypt (12 rounds)
+- Usage: Only for disabling 2FA
 
-- Algoritmo: AES-256-GCM
-- Clave: Variable de entorno TWO_FACTOR_SECRET_KEY
+**Encryption:**
+
+- Algorithm: AES-256-GCM
+- Key: TWO_FACTOR_SECRET_KEY environment variable
 
 ### Rate Limiting
 
-- Verificación: 10 intentos/minuto
-- Bloqueo: 5 intentos fallidos = 15 minutos de lockout
+To prevent brute-force attacks:
+
+| Endpoint         | Limit                          |
+| ---------------- | ------------------------------ |
+| 2FA Verification | 10 attempts/minute             |
+| Lockout          | 5 failed attempts = 15 minutes |
+
+### Secret Scanning
+
+- Secret scanning is enabled on all pushes
+- Push protection blocks commits containing secrets
+
+---
+
+## Dependencies Security
+
+We use Dependabot for automated security updates:
+
+- Security alerts are monitored weekly
+- Critical vulnerabilities are prioritized
+- Updates are applied via pull requests
+
+---
+
+## Security Best Practices
+
+When contributing to this project:
+
+1. Never commit secrets or credentials
+2. Use environment variables for sensitive configuration
+3. Follow the principle of least privilege
+4. Report any security concerns immediately
+
+---
+
+_Last updated: 2026-04-01_
+_Version: 1.6.0_

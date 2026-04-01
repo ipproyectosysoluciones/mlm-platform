@@ -212,6 +212,116 @@ export class EmailService {
     `;
     return this.send(data.email, '📊 Tu resumen semanal de MLM Platform', html);
   }
+
+  /**
+   * Send withdrawal approved notification
+   * Envía notificación de retiro aprobado
+   * @param data - Withdrawal approved email data
+   * @returns Promise<boolean> - True if sent successfully
+   */
+  async sendWithdrawalApproved(data: {
+    email: string;
+    firstName: string;
+    amount: number;
+    currency: string;
+    withdrawalId: string;
+  }): Promise<boolean> {
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head><meta charset="utf-8"><title>Retiro Aprobado</title></head>
+      <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h1 style="color: #059669;">¡Retiro aprobado, ${data.firstName}!</h1>
+        <p>Tu solicitud de retiro ha sido procesada exitosamente.</p>
+        <div style="background: #d1fae5; padding: 16px; border-radius: 8px; margin: 20px 0; text-align: center;">
+          <p style="margin: 0; color: #6b7280;">Monto aprobado</p>
+          <p style="font-size: 32px; font-weight: bold; color: #059669; margin: 10px 0;">$${data.amount} ${data.currency}</p>
+        </div>
+        <p style="color: #6b7280; font-size: 12px;">ID de retiro: ${data.withdrawalId}</p>
+        <p>El monto será acreditado en tu cuenta según el método de pago utilizado.</p>
+      </body>
+      </html>
+    `;
+    return this.send(data.email, 'Retiro aprobado - MLM Platform', html);
+  }
+
+  /**
+   * Send withdrawal rejected notification
+   * Envía notificación de retiro rechazado
+   * @param data - Withdrawal rejected email data
+   * @returns Promise<boolean> - True if sent successfully
+   */
+  async sendWithdrawalRejected(data: {
+    email: string;
+    firstName: string;
+    amount: number;
+    currency: string;
+    withdrawalId: string;
+    reason: string;
+  }): Promise<boolean> {
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head><meta charset="utf-8"><title>Retiro Rechazado</title></head>
+      <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h1 style="color: #dc2626;">Retiro rechazado, ${data.firstName}</h1>
+        <p>Tu solicitud de retiro ha sido rechazada.</p>
+        <div style="background: #fee2e2; padding: 16px; border-radius: 8px; margin: 20px 0;">
+          <p style="margin: 0; color: #6b7280;">Monto solicitado</p>
+          <p style="font-size: 24px; font-weight: bold; color: #dc2626; margin: 10px 0;">$${data.amount} ${data.currency}</p>
+        </div>
+        <div style="background: #f3f4f6; padding: 16px; border-radius: 8px; margin: 20px 0;">
+          <p style="margin: 0; font-weight: bold;">Motivo del rechazo:</p>
+          <p style="margin: 10px 0 0 0;">${data.reason}</p>
+        </div>
+        <p style="color: #6b7280; font-size: 12px;">ID de retiro: ${data.withdrawalId}</p>
+        <p>Si tienes alguna duda, contacta al soporte.</p>
+      </body>
+      </html>
+    `;
+    return this.send(data.email, 'Retiro rechazado - MLM Platform', html);
+  }
+
+  /**
+   * Send level achieved notification
+   * Envía notificación de nivel alcanzado
+   * @param data - Level achieved email data
+   * @returns Promise<boolean> - True if sent successfully
+   */
+  async sendLevelAchieved(data: {
+    email: string;
+    firstName: string;
+    newLevel: number;
+    levelName: string;
+    benefits: string[];
+  }): Promise<boolean> {
+    const benefitsList = data.benefits.map((b) => `<li>${b}</li>`).join('');
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head><meta charset="utf-8"><title>Nivel Alcanzado</title></head>
+      <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h1 style="color: #7c3aed;">¡Felicitaciones, ${data.firstName}!</h1>
+        <p>Has alcanzado un nuevo nivel en MLM Platform.</p>
+        <div style="background: #ede9fe; padding: 24px; border-radius: 8px; margin: 20px 0; text-align: center;">
+          <p style="margin: 0; color: #6b7280;">Nuevo nivel</p>
+          <p style="font-size: 36px; font-weight: bold; color: #7c3aed; margin: 10px 0;">Nivel ${data.newLevel}</p>
+          <p style="font-size: 20px; color: #7c3aed; margin: 0;">${data.levelName}</p>
+        </div>
+        <h2 style="color: #059669;">Beneficios desbloqueados:</h2>
+        <ul style="line-height: 1.8;">
+          ${benefitsList}
+        </ul>
+        <p>¡Sigue creciendo tu red para alcanzar el siguiente nivel!</p>
+      </body>
+      </html>
+    `;
+    return this.send(
+      data.email,
+      `🎉 Has alcanzado el nivel ${data.newLevel} - ${data.levelName}!`,
+      html
+    );
+  }
 }
 
 // Export singleton instance
