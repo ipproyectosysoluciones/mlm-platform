@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Mail, Lock, Loader2, Eye, EyeOff, TreeDeciduous } from 'lucide-react';
+import { Loader2, Eye, EyeOff, TreeDeciduous } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { authService } from '../services/api';
 
