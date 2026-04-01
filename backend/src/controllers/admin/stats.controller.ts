@@ -4,6 +4,7 @@
  * @module controllers/admin/stats
  */
 import { Response } from 'express';
+import { Op } from 'sequelize';
 import { User, Commission, Purchase } from '../../models';
 import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
 import type { ApiResponse } from '../../types';
@@ -97,9 +98,9 @@ export async function getCommissionsReport(
 
     const where: any = {};
     if (startDate || endDate) {
-      where.created_at = {};
-      if (startDate) where.created_at.$gte = new Date(startDate as string);
-      if (endDate) where.created_at.$lte = new Date(endDate as string);
+      where.createdAt = {};
+      if (startDate) where.createdAt[Op.gte] = new Date(startDate as string);
+      if (endDate) where.createdAt[Op.lte] = new Date(endDate as string);
     }
     if (type && ['direct', 'level_1', 'level_2', 'level_3', 'level_4'].includes(type as string)) {
       where.type = type;

@@ -13,7 +13,6 @@ import { AppError } from '../../middleware/error.middleware';
  * Create a new order
  */
 export async function createOrder(req: AuthenticatedRequest, res: Response): Promise<void> {
-  console.log('[DEBUG] createOrder called, req.user:', req.user?.id);
   try {
     if (!req.user) {
       res.status(401).json({

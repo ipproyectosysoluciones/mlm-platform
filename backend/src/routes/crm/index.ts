@@ -34,77 +34,30 @@ const router = Router();
 
 router.use(authenticateToken);
 
-/**
- * @swagger
- * /crm/stats:
- *   get:
- *     summary: Obtener estadísticas del CRM / Get CRM statistics
- *     description: Retorna conteos de leads por estado y tareas pendientes.
- *     tags: [crm]
- *     security:
- *       - bearerAuth: []
- */
+// Static paths FIRST (before :id)
 router.get('/stats', asyncHandler(getCRMStats));
-
-/**
- * @swagger
- * /crm/analytics/report:
- *   get:
- *     summary: Obtener reporte de analítica por período
- *     tags: [crm]
- *     security:
- *       - bearerAuth: []
- */
 router.get('/analytics/report', asyncHandler(getAnalyticsReport));
-
-/**
- * @swagger
- * /crm/alerts:
- *   get:
- *     summary: Obtener alertas de CRM
- *     tags: [crm]
- *     security:
- *       - bearerAuth: []
- */
 router.get('/alerts', asyncHandler(getCRMAlerts));
-
-/**
- * @swagger
- * /crm/analytics/export:
- *   get:
- *     summary: Exportar reporte de analítica
- *     tags: [crm]
- *     security:
- *       - bearerAuth: []
- */
 router.get('/analytics/export', asyncHandler(exportAnalyticsReport));
-
-/**
- * @swagger
- * /crm/tasks:
- *   get:
- *     summary: Obtener tareas próximas
- *     tags: [crm]
- *     security:
- *       - bearerAuth: []
- */
 router.get('/tasks', asyncHandler(getUpcomingTasks));
-
-// Leads CRUD
-router.get('/', asyncHandler(getLeads));
-router.get('/:id', asyncHandler(getLeadById));
-router.post('/', validate(createLeadValidation), asyncHandler(createLead));
 router.post('/import', asyncHandler(importLeads));
 router.get('/export', asyncHandler(exportLeads));
+
+// Tasks (static path for task completion)
+router.patch('/tasks/:taskId/complete', asyncHandler(completeTask));
+
+// Leads CRUD (must come after static paths)
+router.get('/', asyncHandler(getLeads));
+router.post('/', validate(createLeadValidation), asyncHandler(createLead));
 router.put('/:id', validate(updateLeadValidation), asyncHandler(updateLead));
 router.delete('/:id', asyncHandler(deleteLead));
 
-// Tasks
-router.post('/:leadId/tasks', validate(createTaskValidation), asyncHandler(createTask));
-router.patch('/tasks/:taskId/complete', asyncHandler(completeTask));
-router.get('/:leadId/tasks', asyncHandler(getLeadTasks));
+// Dynamic routes with params LAST
+router.get('/:id', asyncHandler(getLeadById));
 
-// Communications
+// Lead-specific sub-resources
+router.post('/:leadId/tasks', validate(createTaskValidation), asyncHandler(createTask));
+router.get('/:leadId/tasks', asyncHandler(getLeadTasks));
 router.get('/:leadId/communications', asyncHandler(getLeadCommunications));
 router.post('/:leadId/communications', asyncHandler(addCommunication));
 

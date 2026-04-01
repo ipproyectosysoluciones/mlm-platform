@@ -19,7 +19,10 @@ import { asyncHandler } from '../../middleware/asyncHandler';
 
 const router: ExpressRouter = Router();
 
-// All wallet routes require authentication
+// Public routes (before auth middleware)
+router.get('/prices', asyncHandler(getCryptoPrices));
+
+// All other wallet routes require authentication
 router.use(authenticateToken);
 
 // Balance
@@ -86,8 +89,5 @@ router.delete(
   validate([param('id').isUUID().withMessage('Invalid withdrawal ID')]),
   asyncHandler(cancelWithdrawal)
 );
-
-// Public routes
-router.get('/prices', asyncHandler(getCryptoPrices));
 
 export default router;

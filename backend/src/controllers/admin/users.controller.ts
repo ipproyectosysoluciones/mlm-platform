@@ -4,6 +4,7 @@
  * @module controllers/admin/users
  */
 import { Response } from 'express';
+import { Op } from 'sequelize';
 import { User, Commission } from '../../models';
 import { TreeService } from '../../services/TreeService';
 import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
@@ -25,7 +26,7 @@ export async function getAllUsers(req: AuthenticatedRequest, res: Response): Pro
       where.status = status;
     }
     if (search) {
-      where.email = { $like: `%${search}%` };
+      where.email = { [Op.like]: `%${search}%` };
     }
 
     const { rows: users, count } = await User.findAndCountAll({

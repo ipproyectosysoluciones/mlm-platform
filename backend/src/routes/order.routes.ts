@@ -13,7 +13,7 @@
  * router.post('/', authenticateToken, createOrder);
  */
 import { Router, Router as ExpressRouter } from 'express';
-import { createOrder, getOrders, getOrderById } from '../controllers/orders';
+import { createOrder, getOrders, getOrderById, cancelOrder } from '../controllers/orders';
 import { authenticateToken } from '../middleware/auth.middleware';
 import { validate } from '../middleware/validate.middleware';
 import { asyncHandler } from '../middleware/asyncHandler';
@@ -193,12 +193,47 @@ router.get(
   '/:id',
   authenticateToken,
   validate([
-    // Validate UUID format for order ID - accept any valid UUID including nil UUID
     param('id')
       .matches(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)
       .withMessage('Order ID must be a valid UUID'),
   ]),
   asyncHandler(getOrderById)
+);
+
+/**
+ * @swagger
+ * /orders/{id}:
+ *   delete:
+ *     summary: Cancelar pedido / Cancel order
+ *     description: Cancela un pedido pendiente. Solo el propietario puede cancelarlo.
+ *     tags: [orders]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: ID del pedido / Order ID
+ *     responses:
+ *       200:
+ *         description: Pedido cancelado / Order cancelled
+ *       400:
+ *         description: No se puede cancelar / Cannot cancel
+ *       401:
+ *         description: No autenticado / Not authenticated
+ *       403:
+ *         description: Acceso denegado / Access denied
+ *       404:
+ *         description: Pedido no encontrado / Order not found
+ */
+router.delete(
+  '/:id',
+  authenticateToken,
+  validate([param('id').isUUID().withMessage('Order ID must be a valid UUID')]),
+  asyncHandler(cancelOrder)
 );
 
 export default router;

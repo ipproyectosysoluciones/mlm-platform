@@ -59,13 +59,10 @@ export function extractTokenFromHeader(authHeader?: string): string | null {
 // ============================================
 
 export function authenticate(req: AuthenticatedRequest, res: Response, next: NextFunction): void {
-  console.log('[DEBUG] authenticate middleware called');
   try {
     const token = extractTokenFromHeader(req.headers.authorization);
-    console.log('[DEBUG] token extracted:', token ? 'yes' : 'no');
 
     if (!token) {
-      console.log('[DEBUG] No token - returning 401');
       res.status(401).json({
         success: false,
         error: {
@@ -77,10 +74,8 @@ export function authenticate(req: AuthenticatedRequest, res: Response, next: Nex
     }
 
     const decoded = verifyToken(token);
-    console.log('[DEBUG] token decoded:', decoded ? 'yes' : 'no');
 
     if (!decoded) {
-      console.log('[DEBUG] Invalid token - returning 401');
       res.status(401).json({
         success: false,
         error: {
@@ -99,10 +94,8 @@ export function authenticate(req: AuthenticatedRequest, res: Response, next: Nex
     };
     req.userId = decoded.userId;
 
-    console.log('[DEBUG] Calling next()');
     next();
   } catch (e) {
-    console.log('[DEBUG] Error in authenticate:', e);
     res.status(500).json({
       success: false,
       error: {

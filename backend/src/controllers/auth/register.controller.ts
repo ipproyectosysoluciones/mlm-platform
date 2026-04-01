@@ -9,6 +9,7 @@ import { userService } from '../../services/UserService';
 import { hashPassword, generateToken } from '../../services/AuthService';
 import { emailService } from '../../services/EmailService';
 import { config } from '../../config/env';
+import { AppError } from '../../middleware/error.middleware';
 import type { ApiResponse, UserAttributes } from '../../types';
 import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
 import { asyncHandler } from '../../middleware/asyncHandler';
@@ -41,7 +42,7 @@ export const register: RequestHandler = asyncHandler(
 
     const existingUser = await userService.findByEmail(email);
     if (existingUser) {
-      throw new Error('Email already registered');
+      throw new AppError(400, 'EMAIL_ALREADY_EXISTS', 'Email already registered');
     }
 
     const passwordHash = await hashPassword(password);
