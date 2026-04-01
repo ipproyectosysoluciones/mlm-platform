@@ -35,8 +35,12 @@ services:
       - mlm-network
 
   backend:
-    image: ${DOCKERHUB_USERNAME:-ipproyectos}/mlm-backend:${VERSION:-latest}
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     restart: unless-stopped
+    ports:
+      - "3000:3000"
     environment:
       NODE_ENV: production
       PORT: 3000
