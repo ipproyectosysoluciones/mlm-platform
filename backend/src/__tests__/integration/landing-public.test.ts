@@ -9,7 +9,7 @@
 
 import { testAgent } from '../setup';
 import { createTestUser } from '../fixtures';
-import { Product } from '../models';
+import { Product } from '../../models';
 
 describe('Public Landing Integration Tests', () => {
   let testProduct: Product;
@@ -22,6 +22,7 @@ describe('Public Landing Integration Tests', () => {
       price: 15.99,
       currency: 'USD',
       platform: 'netflix',
+      durationDays: 30,
       isActive: true,
     });
   });

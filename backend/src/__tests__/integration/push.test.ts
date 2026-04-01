@@ -9,7 +9,7 @@
 
 import { testAgent } from '../setup';
 import { createTestUser, getAuthHeaders } from '../fixtures';
-import { PushSubscription } from '../models';
+import { PushSubscription } from '../../models';
 
 describe('Push Integration Tests', () => {
   let testUser: ReturnType<typeof createTestUser> extends Promise<infer T> ? T : never;
