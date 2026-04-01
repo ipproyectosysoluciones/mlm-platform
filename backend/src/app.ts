@@ -50,7 +50,8 @@ const corsOptions = {
 
     // In production: validate against whitelist
     if (isProduction) {
-      if (config.cors.allowedOrigins.includes(origin)) {
+      // Allow any subdomain of vercel.app
+      if (origin.endsWith('.vercel.app') || config.cors.allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
         callback(new Error(`CORS: Origin ${origin} not allowed`));
