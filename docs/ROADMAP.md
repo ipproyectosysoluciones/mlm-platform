@@ -3,7 +3,7 @@
 > Hoja de ruta completa para la plataforma MLM de Afiliaciones Binarias.
 
 **Versión actual**: 1.6.0  
-**Última actualización**: 2026-03-31  
+**Última actualización**: 2026-04-01  
 **Estado**: Activo - Desarrollo continuo
 
 ---
