@@ -60,7 +60,9 @@ services:
       - mlm-network
 
   frontend:
-    image: ${DOCKERHUB_USERNAME:-ipproyectos}/mlm-frontend:${VERSION:-latest}
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
     restart: unless-stopped
     ports:
       - "3001:80"
