@@ -21,6 +21,7 @@ export type { OrderStatusProps } from './OrderStatus';
 // UI Components
 export { EmptyState, default as EmptyStateDefault } from './EmptyState';
 export { ErrorToast, ErrorToastContainer, default as ErrorToastDefault } from './ErrorToast';
+export { default as OfflineBanner } from './OfflineBanner';
 
 // Route Guards
 export { ProtectedRoute, AdminRoute, PublicRoute, PublicProfileRoute } from './routes';

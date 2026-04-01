@@ -22,20 +22,24 @@ Plataforma MLM (Multi-Level Marketing) con sistema de afiliaciones binarias, com
 
 ### ✅ Cambios Completados
 
-| Cambio                            | Descripción                           | Estado       | Fecha      |
-| --------------------------------- | ------------------------------------- | ------------ | ---------- |
-| streaming-subscriptions-ecommerce | Sistema de suscripciones y e-commerce | ✅ Archivado | 2026-03-27 |
-| wallet-digital                    | Billetera digital con retiros         | ✅ Archivado | 2026-03-27 |
-| sdd-i18n-bilingual                | Sistema de internacionalización ES/EN | ✅ Archivado | 2026-03-27 |
-| phase-3-visual-tree               | Visual Tree UI con React Flow         | ✅ Archivado | 2026-03-27 |
-| sdd-horizontal-navbar             | Layout de navbar horizontal           | ✅ Archivado | 2026-03-27 |
-| es-modules-migration              | Migración a ES Modules                | ✅ Completo  | 2026-03-28 |
-| postgresql-support                | Soporte para PostgreSQL + Docker      | ✅ Completo  | 2026-03-28 |
-| build-optimization                | Build optimizado (3.4MB → 1.2MB)      | ✅ Completo  | 2026-03-28 |
-| github-templates                  | CODE_OF_CONDUCT, Issues, PR templates | ✅ Completo  | 2026-03-28 |
-| 2fa-totp                          | Two-Factor Authentication con TOTP    | ✅ Archivado | 2026-03-29 |
-| playwright-visual-testing         | Scripts E2E con modo visual           | ✅ Archivado | 2026-03-29 |
-| frontend-2fa-ui                   | UI de React para 2FA con QR code      | ✅ Completo  | 2026-03-30 |
+| Cambio                            | Descripción                            | Estado       | Fecha      |
+| --------------------------------- | -------------------------------------- | ------------ | ---------- |
+| streaming-subscriptions-ecommerce | Sistema de suscripciones y e-commerce  | ✅ Archivado | 2026-03-27 |
+| wallet-digital                    | Billetera digital con retiros          | ✅ Archivado | 2026-03-27 |
+| sdd-i18n-bilingual                | Sistema de internacionalización ES/EN  | ✅ Archivado | 2026-03-27 |
+| phase-3-visual-tree               | Visual Tree UI con React Flow          | ✅ Archivado | 2026-03-27 |
+| sdd-horizontal-navbar             | Layout de navbar horizontal            | ✅ Archivado | 2026-03-27 |
+| es-modules-migration              | Migración a ES Modules                 | ✅ Completo  | 2026-03-28 |
+| postgresql-support                | Soporte para PostgreSQL + Docker       | ✅ Completo  | 2026-03-28 |
+| build-optimization                | Build optimizado (3.4MB → 1.2MB)       | ✅ Completo  | 2026-03-28 |
+| github-templates                  | CODE_OF_CONDUCT, Issues, PR templates  | ✅ Completo  | 2026-03-28 |
+| 2fa-totp                          | Two-Factor Authentication con TOTP     | ✅ Archivado | 2026-03-29 |
+| playwright-visual-testing         | Scripts E2E con modo visual            | ✅ Archivado | 2026-03-29 |
+| frontend-2fa-ui                   | UI de React para 2FA con QR code       | ✅ Completo  | 2026-03-30 |
+| frontend-refactoring              | Modularización de componentes frontend | ✅ Completo  | 2026-03-30 |
+| backend-refactoring               | Controllers modulares (auth, crm, etc) | ✅ Completo  | 2026-04-01 |
+| pwa-offline-pages                 | Páginas 404 y Offline                  | ✅ Completo  | 2026-03-31 |
+| pwa-improvements                  | Iconos multi-size, OfflineBanner       | ✅ Completo  | 2026-03-31 |
 
 ### 🚧 Cambios en Progreso
 
@@ -56,7 +60,7 @@ Plataforma MLM (Multi-Level Marketing) con sistema de afiliaciones binarias, com
 - Redis 7+ (opcional)
 - Docker y Docker Compose (para desarrollo)
 
-> **Nota**: El proyecto migró a ES Modules (ESM). Asegúrate de usar Node.js 18+.
+> **Nota**: El proyecto usa ES Modules (ESM). Asegúrate de usar Node.js 18+.
 
 ## 🛠️ Instalación / Installation
 
@@ -117,39 +121,6 @@ export TEST_DB_PORT=5435  # para tests
 | `REDIS_PASSWORD`  | Contraseña de Redis (opcional)  | -         |
 | `ALLOWED_ORIGINS` | Origins permitidos (producción) | localhost |
 
-### Redis Configuration / Configuración de Redis
-
-Redis es **opcional** pero recomendado para producción. Habilita cacheo de datos y mejora el rendimiento.
-
-```bash
-# Habilitar Redis en .env
-REDIS_ENABLED=true
-REDIS_HOST=localhost
-REDIS_PORT=6379
-# REDIS_PASSWORD=tu_password # Si tienes password configurado
-```
-
-#### Cache TTL Values / Valores de TTL de Cache
-
-| TTL       | Duration  | Use Case / Caso de Uso                  |
-| --------- | --------- | --------------------------------------- |
-| `short`   | 1 minute  | Datos frecuentemente actualizados       |
-| `medium`  | 5 minutes | Dashboard stats, árbol de usuarios      |
-| `long`    | 1 hour    | Estadísticas globales, reportes         |
-| `session` | 7 days    | Sesiones de usuario, datos persistentes |
-
-#### Cache Keys / Claves de Cache
-
-```typescript
-import { CACHE_KEYS, CACHE_TTL } from './config/redis';
-
-// Ejemplos de uso
-const userKey = CACHE_KEYS.user('user-id-123'); // 'user:user-id-123'
-const treeKey = CACHE_KEYS.tree('user-id-123'); // 'tree:user-id-123'
-const dashKey = CACHE_KEYS.dashboard('user-id-123'); // 'dashboard:user-id-123'
-const statsKey = CACHE_KEYS.stats(); // 'stats:global'
-```
-
 ## 🚀 Ejecución / Running
 
 ### Development
@@ -196,11 +167,20 @@ pnpm test
 pnpm test:e2e
 ```
 
-## 📚 Documentación API
+## 📚 Documentación
 
-Swagger UI disponible en: `http://localhost:3000/api-docs`
+Ver [docs/INDEX.md](docs/INDEX.md) para el directorio completo de documentación.
 
-### Endpoints Principales
+### Documentación Principal
+
+| Documento                                    | Descripción                   |
+| -------------------------------------------- | ----------------------------- |
+| [docs/INDEX.md](docs/INDEX.md)               | Directorio de documentación   |
+| [docs/PRD.md](docs/PRD.md)                   | Product Requirements Document |
+| [docs/ROADMAP.md](docs/ROADMAP.md)           | Hoja de ruta del proyecto     |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Arquitectura del sistema      |
+
+### API Endpoints Principales
 
 | Método | Endpoint             | Descripción                   |
 | ------ | -------------------- | ----------------------------- |
@@ -213,111 +193,38 @@ Swagger UI disponible en: `http://localhost:3000/api-docs`
 | GET    | `/api/admin/stats`   | Estadísticas globales (admin) |
 | GET    | `/api/admin/users`   | Lista de usuarios (admin)     |
 
-## 👥 Credenciales de Prueba
-
-```text
-Admin: admin@mlm.com / admin123
-Usuario: user1@mlm.com / user123
-```
-
 ## 📁 Estructura del Proyecto / Project Structure
 
 ```tree
 MLM/
-├── docs/                     # Documentación general / General documentation
-│   ├── README.md            # Documentación principal / Main documentation
-│   ├── ARCHITECTURE.md      # Arquitectura del sistema / System architecture
-│   └── TESTING.md           # Guía de testing / Testing guide
+├── docs/                     # Documentación general
+│   ├── INDEX.md             # Directorio de documentación
+│   ├── PRD.md               # Product Requirements
+│   ├── ROADMAP.md           # Hoja de ruta
+│   ├── ARCHITECTURE.md      # Arquitectura del sistema
+│   ├── API.md               # Referencia de API
+│   ├── DEPLOYMENT.md        # Guía de deployment
+│   ├── TESTING.md           # Guía de testing
+│   └── guides/              # Guías y políticas
+│       ├── CONTRIBUTING.md
+│       ├── SECURITY.md
+│       └── CHANGELOG.md
 ├── backend/
-│   ├── docs/                # Documentación backend / Backend documentation
-│   │   ├── README.md        # Guía del backend / Backend guide
-│   │   ├── API.md           # Referencia de API / API reference
-│   │   └── MODELS.md        # Modelos de DB / Database models
-│   ├── src/
-│   │   ├── config/          # Configuración / Configuration
-│   │   ├── controllers/      # Controladores / Controllers
-│   │   ├── middleware/      # Middleware
-│   │   ├── models/          # Modelos Sequelize
-│   │   ├── routes/          # Rutas / Routes
-│   │   ├── services/        # Lógica de negocio / Business logic
-│   │   └── __tests__/       # Tests / Tests
-│   └── docker-compose.yml
+│   ├── src/                 # Código fuente
+│   └── ...
 ├── frontend/
-│   ├── docs/                # Documentación frontend / Frontend documentation
-│   │   └── README.md        # Guía del frontend / Frontend guide
-│   ├── src/
-│   │   ├── components/      # Componentes React
-│   │   ├── pages/           # Páginas / Pages
-│   │   ├── services/        # Servicios API
-│   │   ├── context/         # Contextos React
-│   │   └── test/            # Tests
-│   └── e2e/                 # Tests E2E (Playwright)
-├── SPEC.md                   # Especificaciones técnicas / Technical specs
-├── CHANGELOG.md             # Historial de cambios / Change history
-├── BRANCHING.md             # Estrategia de ramas / Branching strategy
-└── CONTRIBUTING.md           # Guía de contribuciones / Contributing guide
+│   ├── src/                 # Código fuente
+│   └── ...
+├── docker-compose.prod.yml  # Producción
+└── deploy.sh               # Script de deployment
 ```
 
-```text
+## 📞 Contacto
 
-## 🔒 Seguridad / Security
+- **Proyecto**: MLM Binary Affiliations Platform
+- **GitHub**: https://github.com/ipproyectosysoluciones/mlm-platform
+- **Docker Hub**: https://hub.docker.com/u/ipproyectos
 
-- JWT Authentication
-- Rate Limiting en endpoints de auth
-- CORS configurado con validación de origins
-- Helmet security headers
-- Contraseñas hasheadas con bcrypt
-- **2FA (TOTP)** - Two-Factor Authentication con códigos de recuperación
+## 📄 Licencia
 
-## 📦 Stack Tecnológico
-
-**Backend:**
-
-- Node.js + Express
-- TypeScript (ES Modules)
-- Sequelize ORM
-- MySQL / PostgreSQL (soporta ambos)
-- Redis (opcional)
-- JWT
-- esbuild (build optimizado)
-
-**Frontend:**
-
-- React 19
-- Vite
-- TypeScript
-- Tailwind CSS
-- React Router
-- Axios
-
-**Testing:**
-
-- Vitest (unit)
-- Playwright (E2E)
-- Jest (backend)
-
-## 🔄 Versionado / Versioning
-
-Este proyecto usa [Semantic Versioning](https://semver.org/):
-
-```
-
-MAJOR.MINOR.PATCH
-1.0.0
-
-````text
-
-Tags:
-
-```bash
-git tag -a v1.0.0 -m "Release 1.0.0"
-git push origin --tags
-````
-
-## 📄 Licencia / License
-
-MIT
-
-## 👥 Autores / Authors
-
-- MLM Development Team
+ISC

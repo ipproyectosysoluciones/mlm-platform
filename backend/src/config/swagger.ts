@@ -4,20 +4,17 @@ import swaggerJsdoc from 'swagger-jsdoc';
  * Swagger/OpenAPI Configuration for MLM Binary Affiliations API
  * Configuración Swagger/OpenAPI para la API MLM de Afiliaciones Binarias
  *
- * Phase 1 (v1.0): MVP - Auth, Tree, Commissions, CRM, RBAC ✅
- * Phase 2: Cancelado - Email & SMS Notifications ❌
- * Phase 3 (v1.1): Visual Tree UI - React Flow, búsqueda, panel de detalles ✅
- * Phase 4 (v1.2): E-commerce - Products, Orders, Streaming subscriptions ✅
- * Phase 5 (v1.3): Deployment - Docker, CI/CD, PostgreSQL, documentation ✅
- * Phase 6 (v1.4): Wallet & Payments - Balance, withdrawals, Stripe/PayPal (en desarrollo)
- * Phase 7 (v2.0): Enterprise - White-label, SSO, KYC, advanced commissions
+ * v1.6.0: PWA + Offline pages, icons multi-size
+ * v1.5.0: Backend controllers refactoring (modular structure)
+ * v1.4.0: Wallet digital + 2FA
+ * v1.0.0: MVP - Auth, Tree, Commissions, CRM, RBAC
  */
 const options: swaggerJsdoc.Options = {
   definition: {
     openapi: '3.0.0',
     info: {
       title: 'MLM Binary Affiliations API',
-      version: '1.3.0',
+      version: '1.6.0',
       description: `
 ## API REST para plataforma MLM de Afiliaciones Binarias
 
@@ -36,14 +33,11 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
 | 404 | No encontrado / Not Found |
 | 429 | Rate limit excedido / Rate Limit Exceeded |
 
-### Fases / Phases
-- **Phase 1** (v1.0.0): MVP - Auth, Tree, Commissions, CRM, RBAC ✅
-- **Phase 2** (cancelado): Email & SMS Notifications ❌
-- **Phase 3** (v1.1.0): Visual Tree UI - React Flow, búsqueda, panel de detalles ✅
-- **Phase 4** (v1.2.0): E-commerce - Products, Orders, Streaming subscriptions ✅
-- **Phase 5** (v1.3.0): Deployment - Docker, CI/CD, PostgreSQL ✅
-- **Phase 6** (v1.4.0): Wallet & Payments - Balance, withdrawals, Stripe (en desarrollo)
-- **Phase 7** (v2.0.0): Enterprise - White-label, SSO, KYC, advanced commissions
+### Versiones / Versions
+- **v1.6.0** (2026-04-01): PWA, Offline pages, Backend refactoring completo
+- **v1.5.0** (2026-03-31): Controllers modulares, Notificaciones Email
+- **v1.4.0** (2026-03-28): Wallet Digital, 2FA TOTP
+- **v1.0.0** (2026-03-15): MVP - Auth, Tree, Commissions, CRM, RBAC
       `,
       contact: {
         name: 'MLM Support',
@@ -162,7 +156,7 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
         // ============================================================
 
         // ============================================================
-        // 2FA / AUTENTICACIÓN DE DOS FACTORES (Phase 7 - v2.0)
+        // 2FA / AUTENTICACIÓN DE DOS FACTORES (Phase 5)
         // ============================================================
         TwoFactorStatus: {
           type: 'object',

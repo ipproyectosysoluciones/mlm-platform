@@ -2,8 +2,8 @@
 
 > Hoja de ruta completa para la plataforma MLM de Afiliaciones Binarias.
 
-**Versión actual**: 1.3.0  
-**Última actualización**: 2026-03-30  
+**Versión actual**: 1.6.0  
+**Última actualización**: 2026-04-01  
 **Estado**: Activo - Desarrollo continuo
 
 ---
@@ -11,18 +11,21 @@
 ## 📊 Resumen de Progreso
 
 ```
-███████████████░░░░░░░░░░░░░░ 75% Completado
+████████████████░░░░░░░░░░░░ 90% Completado
 ```
 
-| Fase    | Nombre         | Estado           | Versión |
-| ------- | -------------- | ---------------- | ------- |
-| Phase 1 | MVP - Core     | ✅ Completo      | v1.0.0  |
-| Phase 2 | Notificaciones | ❌ Cancelado     | -       |
-| Phase 3 | Visual Tree UI | ✅ Completo      | v1.1.0  |
-| Phase 4 | E-commerce     | ✅ Parcial       | v1.2.0  |
-| Phase 5 | Deployment     | ✅ Completo      | v1.3.0  |
-| Phase 6 | Wallet + Pagos | 🔄 En desarrollo | v1.4.0  |
-| Phase 7 | Enterprise     | 📋 Planeado      | v2.0.0  |
+| Fase     | Nombre           | Estado      | Versión |
+| -------- | ---------------- | ----------- | ------- |
+| Phase 1  | MVP - Core       | ✅ Completo | v1.0.0  |
+| Phase 2  | Visual Tree UI   | ✅ Completo | v1.1.0  |
+| Phase 3  | E-commerce       | ✅ Parcial  | v1.2.0  |
+| Phase 4  | Deployment       | ✅ Completo | v1.3.0  |
+| Phase 5  | Wallet + Pagos   | ✅ Completo | v1.4.0  |
+| Phase 6  | Backend Refactor | ✅ Completo | v1.5.0  |
+| Phase 7  | Notificaciones   | ✅ Completo | v1.5.0  |
+| Phase 8  | PWA + Offline    | ✅ Completo | v1.6.0  |
+| Phase 9  | Landing Products | 📋 Planeado | v1.7.0  |
+| Phase 10 | Enterprise       | 📋 Planeado | v2.0.0  |
 
 ---
 
@@ -143,6 +146,8 @@
   - API.md
   - DEPLOYMENT.md
   - PRD.md
+  - ROADMAP.md
+  - INDEX.md (directorio)
 - [x] Migración a PostgreSQL
   - Sequelize con dialecto postgres
   - Índices optimizados
@@ -150,45 +155,104 @@
   - React 19 + Zustand compatibility
   - CORS para localhost:3001
   - Commission status enum fix
+- [x] Frontend refactoring
+  - 28 componentes modularizados
+  - Barrel exports por carpeta
+  - Reducción de líneas en archivos principales
 
 ---
 
-## 🔄 En Desarrollo
+### ✅ v1.4.0 - Wallet & Pagos (Marzo 2026)
 
-### 🚧 v1.4.0 - Wallet & Pagos
+**Fecha de lanzamiento**: 2026-03-27  
+**Estado**: ✅ Stable
 
-**Estado**: 🔄 En desarrollo  
-**Target**: Abril 2026
+#### Funcionalidades Implementadas
 
-#### Funcionalidades Planeadas
+- [x] Sistema de wallet completo
+  - Balance de usuario
+  - Depósitos
+  - Retiros (5% fee, $20 min)
+  - Historial de transacciones
+- [x] Conversión de moneda
+  - API Frankfurter integration
+  - Tasas en tiempo real
+- [x] Pagos automáticos
+  - Integración con comisiones
+  - Cálculo automático
+- [x] Auditoría de transacciones
+  - Logs detallados
+  - Reportes financieros
 
-- [ ] Sistema de wallet completo
-  - [x] Balance de usuario
-  - [x] Depósitos
-  - [x] Retiros (5% fee, $20 min)
-  - [ ] Historial de transacciones
-- [ ] Conversión de moneda
-  - [x] API Frankfurter integration
-  - [ ] Tasas en tiempo real en frontend
-- [ ] Pagos automáticos
-  - [ ] Integración con Stripe Connect
-  - [ ] Integración con PayPal
-  - [ ] Transferencias bancarias
-- [ ] Auditoría de transacciones
-  - [ ] Logs detallados
-  - [ ] Reportes financieros
+---
 
-#### Dependencias
+### ✅ v1.5.0 - Backend Refactoring + Notificaciones (Marzo 2026)
 
-| Dependencia    | Estado       | Notas                      |
-| -------------- | ------------ | -------------------------- |
-| Stripe Connect | ⏳ Pendiente | Requiere cuenta de negocio |
-| PayPal         | ⏳ Pendiente | Sandbox disponible         |
-| Brevo (Email)  | ⏳ Pendiente | Para notificaciones        |
+**Fecha de lanzamiento**: 2026-03-31  
+**Estado**: ✅ Stable
+
+#### Funcionalidades Implementadas
+
+- [x] Refactoring de controllers
+  - 10+ controllers modularizados
+  - Patrón barrel export implementado
+  - Auth, CRM, Commissions, Admin, Orders, Products, Reports, Dashboard, TwoFactor, Invoices
+- [x] Notificaciones Email
+  - EmailService con métodos de notificación
+  - sendWelcome, sendCommission, sendDownline
+  - sendWithdrawalApproved, sendWithdrawalRejected, sendLevelAchieved
+- [x] SECURITY.md
+  - Política de seguridad en repository root
+  - Habilitado en GitHub Security Policy
+
+---
+
+### ✅ v1.6.0 - PWA + Offline + Offline Banner (Marzo 2026)
+
+**Fecha de lanzamiento**: 2026-03-31  
+**Estado**: ✅ Stable
+
+#### Funcionalidades Implementadas
+
+- [x] Página 404 Not Found
+  - Diseño consistente con la app
+  - Animación sutil
+  - Botón Dashboard
+- [x] Página Offline
+  - Sin conexión a internet
+  - Botón reintentar
+  - Sugerencias de conexión
+- [x] Rutas catch-all
+  - Cualquier ruta unknown redirige a /404
+- [x] OfflineBanner component
+  - Detección automática online/offline
+  - Banner cuando se pierde conexión
+  - Race condition fix
+- [x] PWA Manifest mejorado
+  - 8 tamaños de iconos (72px a 512px)
+  - Iconos maskable para Android
+  - Shortcuts: Dashboard, Mi Árbol, Cartera, Catálogo
+  - Screenshots para instalación
+- [x] Meta tags adicionales
+  - Open Graph, Twitter Card
+  - Apple splash screens
+  - Microsoft tiles (browserconfig.xml)
 
 ---
 
 ## 📋 Planeado
+
+### 📋 v1.7.0 - Landing Pages Productos
+
+**Estado**: 📋 Planeado  
+**Target**: Q2 2026
+
+#### Funcionalidades Planeadas
+
+- [ ] Landing pages de productos/servicios
+  - Marketing de la plataforma
+  - SEO optimizado
+  - Templates de alto impacto
 
 ### 📋 v2.0.0 - Enterprise
 
@@ -204,7 +268,7 @@
 - [ ] Estructuras de comisión avanzadas
   - [ ] Unilevel
   - [ ] Matrix
-  - [ ]自定义
+  - [ ] Personalizadas
 - [ ] SSO/SAML
   - [ ] Google Workspace
   - [ ] Azure AD
@@ -226,199 +290,25 @@
 
 ---
 
-## 🔧 Refactorización del Código
+## 📋 Planeado - Próximas Fases
 
-> **Prioridad**: ⭐ Alta  
-> **Estado**: 📋 Planeado  
-> **Objetivo**: Mejorar mantenibilidad, legibilidad y escalabilidad del código
+### 📋 v1.7.0 - Landing Pages Productos
 
-### 📋 Motivación
+**Estado**: 📋 Planeado  
+**Target**: Q1 2026
 
-El código actual funciona correctamente, pero algunos archivos han crecido mucho y necesitan ser modularizados para:
+#### Funcionalidades Planeadas
 
-- Mejor legibilidad y mantenimiento
-- Facilitar onboarding de nuevos desarrolladores
-- Mejor organización para testing
-- Preparar base para features futuras
+- [ ] Landing pages de productos/servicios
+  - Marketing de la plataforma
+  - SEO optimizado
+  - Templates de alto impacto
+- [ ] PWA Manifest completo
+  - Más iconos para PWA
+  - Colores de tema configurados
+  - Instalación en dispositivos
 
----
-
-### 🎨 Frontend React (Priority: Alta)
-
-**Archivos a refactorizar:**
-
-| Archivo Actual       | Problema    | Acción                                                |
-| -------------------- | ----------- | ----------------------------------------------------- |
-| `Dashboard.tsx`      | >500 líneas | Extraer: Cards, Charts, Stats a componentes separados |
-| `TreeView.tsx`       | >400 líneas | Extraer: Controls, Minimap, SearchPanel               |
-| `CRM.tsx`            | >600 líneas | Extraer: KanbanBoard, LeadCard, TaskModal             |
-| `AdminDashboard.tsx` | >350 líneas | Extraer: UserTable, StatsCards, Filters               |
-| `App.tsx`            | >300 líneas | Extraer: Routes config, Route guards                  |
-| `AppLayout.tsx`      | >250 líneas | Extraer: Navbar, MobileMenu, LanguageSelector         |
-
-**Estructura propuesta:**
-
-```
-frontend/src/
-├── components/
-│   ├── dashboard/
-│   │   ├── DashboardPage.tsx      # Componente principal
-│   │   ├── StatsCards.tsx         # Tarjetas de estadísticas
-│   │   ├── ReferralChart.tsx      # Gráfico de referidos
-│   │   ├── CommissionChart.tsx    # Gráfico de comisiones
-│   │   └── RecentActivity.tsx     # Actividad reciente
-│   │
-│   ├── tree/
-│   │   ├── TreeViewPage.tsx       # Página principal
-│   │   ├── TreeControls.tsx       # Controles de zoom/profundidad
-│   │   ├── TreeSearch.tsx         # Búsqueda de usuarios
-│   │   ├── TreeDetails.tsx        # Panel de detalles
-│   │   └── TreeMinimap.tsx       # Minimap
-│   │
-│   ├── crm/
-│   │   ├── CRMPage.tsx            # Página principal
-│   │   ├── KanbanBoard.tsx        # Tablero Kanban
-│   │   ├── LeadCard.tsx           # Tarjeta de lead
-│   │   ├── LeadModal.tsx          # Modal de creación/edición
-│   │   ├── TaskCard.tsx           # Tarjeta de tarea
-│   │   └── TaskModal.tsx          # Modal de tarea
-│   │
-│   ├── admin/
-│   │   ├── AdminPage.tsx          # Página principal
-│   │   ├── UsersTable.tsx         # Tabla de usuarios
-│   │   ├── StatsOverview.tsx      # Estadísticas generales
-│   │   └── UserFilters.tsx        # Filtros de búsqueda
-│   │
-│   ├── layout/
-│   │   ├── AppLayout.tsx          # Layout principal
-│   │   ├── Navbar.tsx             # Barra de navegación
-│   │   ├── MobileMenu.tsx         # Menú móvil
-│   │   ├── LanguageSelector.tsx   # Selector de idioma
-│   │   └── UserMenu.tsx           # Menú de usuario
-│   │
-│   └── shared/
-│       ├── LoadingSpinner.tsx     # Spinner de carga
-│       ├── ErrorBoundary.tsx      # Manejo de errores
-│       ├── EmptyState.tsx         # Estados vacíos
-│       └── ConfirmDialog.tsx      # Diálogos de confirmación
-```
-
-**Tareas específicas:**
-
-- [ ] Extraer componentes de Dashboard
-- [ ] Extraer componentes de TreeView
-- [ ] Extraer componentes de CRM
-- [ ] Extraer componentes de AdminDashboard
-- [ ] Refactorizar App.tsx routing
-- [ ] Crear carpeta `shared/` para componentes reutilizables
-- [ ] Actualizar imports en todos los archivos
-- [ ] Agregar JSDoc comments
-- [ ] Verificar que todos los tests pasen
-
----
-
-### ⚙️ Backend Node.js (Priority: Media-Alta)
-
-**Archivos a refactorizar:**
-
-| Archivo Actual            | Problema    | Acción                                   |
-| ------------------------- | ----------- | ---------------------------------------- |
-| `AuthController.ts`       | >400 líneas | Separar: login, register, profile, 2FA   |
-| `UserController.ts`       | >350 líneas | Separar: tree, qr, profile               |
-| `CRMController.ts`        | >500 líneas | Separar: leads, tasks, communications    |
-| `CommissionController.ts` | >300 líneas | Separar: history, stats, config          |
-| `WalletController.ts`     | >400 líneas | Separar: balance, transactions, withdraw |
-
-**Estructura propuesta:**
-
-```
-backend/src/
-├── controllers/
-│   ├── auth/
-│   │   ├── AuthController.ts       # Auth principal
-│   │   ├── LoginController.ts     # Login endpoint
-│   │   ├── RegisterController.ts  # Register endpoint
-│   │   ├── ProfileController.ts   # Profile endpoints
-│   │   └── TwoFactorController.ts # 2FA endpoints
-│   │
-│   ├── users/
-│   │   ├── UserController.ts      # User principal
-│   │   ├── TreeController.ts      # Tree endpoints
-│   │   └── QRController.ts        # QR endpoints
-│   │
-│   ├── crm/
-│   │   ├── CRMController.ts       # CRM principal
-│   │   ├── LeadController.ts      # Lead endpoints
-│   │   ├── TaskController.ts      # Task endpoints
-│   │   └── CommunicationController.ts
-│   │
-│   ├── commissions/
-│   │   ├── CommissionController.ts
-│   │   ├── HistoryController.ts    # Commission history
-│   │   └── StatsController.ts     # Commission stats
-│   │
-│   └── wallet/
-│       ├── WalletController.ts     # Wallet principal
-│       ├── TransactionController.ts # Transactions
-│       └── WithdrawalController.ts # Withdrawals
-```
-
-**Tareas específicas:**
-
-- [ ] Separar AuthController en sub-controladores
-- [ ] Separar UserController en tree/qr
-- [ ] Separar CRMController en leads/tasks/comms
-- [ ] Separar CommissionController
-- [ ] Separar WalletController
-- [ ] Crear índice de exports por carpeta
-- [ ] Actualizar rutas para nuevos controllers
-- [ ] Verificar que todos los tests pasen
-
----
-
-### 📊 Beneficios Esperados
-
-| Métrica                       | Antes    | Después |
-| ----------------------------- | -------- | ------- |
-| Líneas por archivo (promedio) | ~350     | ~150    |
-| Complejidad ciclomática       | Alta     | Media   |
-| Tiempo de onboarding          | 2-3 días | 1 día   |
-| Facilidad de testing          | Media    | Alta    |
-| Cobertura de tests            | 85%      | 90%+    |
-
----
-
-### 🎯 Orden Sugerido de Ejecución
-
-```
-1. Frontend: Dashboard components (más usado)
-2. Frontend: Layout components (base para todo)
-3. Frontend: CRM components
-4. Frontend: TreeView components
-5. Backend: AuthController refactor
-6. Backend: CRMController refactor
-7. Frontend: Admin components
-8. Backend: UserController refactor
-9. Frontend: Cleanup shared components
-10. Backend: Commission/Wallet refactor
-```
-
----
-
-### ⚠️ Precauciones
-
-- **No cambiar comportamiento**: Solo refactorizar, no reescribir lógica
-- **Mantener tests verdes**: Cada refactor debe mantener los tests pasando
-- **Commits atómicos**: Un archivo/refactor por commit
-- **Documentar decisiones**: Agregar comentarios de por qué se reorganizó
-
----
-
-## ❌ Cancelado
-
-### 🚫 Phase 2 - Email & SMS Notifications
-
-**Razón**: Movido a v2.0 por enfoque en core features
+### 📋 v2.0.0 - Enterprise
 
 | Feature Original    | Nueva Ubicación |
 | ------------------- | --------------- |
@@ -461,30 +351,27 @@ backend/src/
 
 ---
 
-## 🗓️ Timeline Esperado
+## 🔧 Refactorización del Código
 
-```
-2026
-├── Q1 (Completado)
-│   ├── Enero    ████████████████████ MVP v1.0 ✅
-│   ├── Febrero  ████████░░░░░░░░░░░░░░░░░░░░░░  Planning
-│   └── Marzo    ████████████████████████ v1.3 ✅
-│
-├── Q2 (En Progreso)
-│   ├── Abril    ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ Wallet v1.4 🔄
-│   ├── Mayo     ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ Wallet v1.4 🔄
-│   └── Junio    ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ Stability
-│
-├── Q3 (Planeado)
-│   ├── Julio    ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ Payments
-│   ├── Agosto   ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ Payments
-│   └── Sept     ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ Enterprise
-│
-└── Q4 (Planeado)
-    ├── Oct      ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ Enterprise
-    ├── Nov      ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ Enterprise
-    └── Dic      ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ v2.0 Launch
-```
+### Estado Actual
+
+| Componente           | Estado                  |
+| -------------------- | ----------------------- |
+| Frontend refactoring | ✅ Completo (Phase 8/8) |
+| Backend refactoring  | ⏳ Pendiente            |
+
+### Frontend Components Modularized
+
+| Carpeta               | Componentes        |
+| --------------------- | ------------------ |
+| components/shared/    | 3 componentes      |
+| components/layout/    | 4 componentes      |
+| components/dashboard/ | 4 componentes      |
+| components/tree/      | 5 componentes      |
+| components/crm/       | 5 componentes      |
+| components/admin/     | 3 componentes      |
+| components/routes/    | 4 componentes      |
+| **TOTAL**             | **28 componentes** |
 
 ---
 
@@ -509,12 +396,12 @@ git show v1.3.0 --stat
 
 ### Changelog
 
-| Versión | Fecha      | Cambios                              |
-| ------- | ---------- | ------------------------------------ |
-| v1.3.0  | 2026-03-30 | Docker deployment, CI/CD, PostgreSQL |
-| v1.2.0  | 2026-03-25 | E-commerce streaming, products       |
-| v1.1.0  | 2026-03-20 | Visual tree UI, React Flow           |
-| v1.0.0  | 2026-03-15 | MVP launch                           |
+| Versión | Fecha      | Cambios                                                    |
+| ------- | ---------- | ---------------------------------------------------------- |
+| v1.3.0  | 2026-03-30 | Docker deployment, CI/CD, PostgreSQL, Frontend refactoring |
+| v1.2.0  | 2026-03-25 | E-commerce streaming, products                             |
+| v1.1.0  | 2026-03-20 | Visual tree UI, React Flow                                 |
+| v1.0.0  | 2026-03-15 | MVP launch                                                 |
 
 ---
 

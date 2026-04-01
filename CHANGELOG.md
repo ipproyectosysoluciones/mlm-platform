@@ -4,6 +4,83 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
+## [1.6.0] - 2026-04-01
+
+### Added
+
+- **PWA Improvements**
+  - PWA con Service Worker para offline
+  - Páginas offline dedicadas (404, offline)
+  - Iconos multi-size (72, 96, 128, 144, 152, 192, 384, 512)
+  - OfflineBanner component para detectar estado de conexión
+  - Theme colors en manifest.json
+
+- **Backend Refactoring**
+  - Controllers modulares por dominio (auth, crm, commissions, wallet, products)
+  - Estructura de carpetas reorganizada
+  - Mejor separación de responsabilidades
+
+- **Email Notifications**
+  - Integración con nodemailer
+  - Notificaciones de registro, comisiones, withdrawals
+
+### Changed
+
+- Swagger version actualizado a 1.6.0
+- Documentación actualizada (README, INDEX, ROADMAP)
+
+## [1.5.0] - 2026-03-31
+
+### Added
+
+- **Backend Controllers Modularization**
+  - AuthController: autenticación y 2FA
+  - CRMController: leads y tareas
+  - CommissionController: comisiones y purchases
+  - WalletController: wallet y transacciones
+  - ProductController: productos
+  - OrderController: pedidos
+
+- **Email Notifications Integration**
+  - Configuración de email con nodemailer
+  - Templates de email para diferentes eventos
+
+### Changed
+
+- Reorganización de rutas en `/src/routes/`
+- Middleware refactorizado para mejor modularidad
+
+## [1.4.0] - 2026-03-28
+
+### Added
+
+- **Wallet Digital**
+  - Billetera digital para usuarios
+  - Balance y historial de transacciones
+  - Sistema de retiros (withdrawals)
+  - Comisiones integradas a wallet
+  - Estados: pending, approved, paid, rejected
+
+- **Two-Factor Authentication (2FA)**
+  - TOTP-based 2FA usando speakeasy
+  - QR code para apps autenticadoras (Google Authenticator, Authy)
+  - Códigos de recuperación (8 códigos)
+  - Rate limiting: 10 intentos/minuto
+  - Bloqueo después de 5 intentos fallidos (15 min)
+
+### API Endpoints
+
+| Endpoint                     | Method | Description              |
+| ---------------------------- | ------ | ------------------------ |
+| `/api/wallet`                | GET    | Get user wallet balance  |
+| `/api/wallet/transactions`   | GET    | List wallet transactions |
+| `/api/wallet/withdraw`       | POST   | Request withdrawal       |
+| `/api/auth/2fa/status`       | GET    | Get user's 2FA status    |
+| `/api/auth/2fa/setup`        | POST   | Initiate 2FA setup       |
+| `/api/auth/2fa/verify-setup` | POST   | Verify and enable 2FA    |
+| `/api/auth/2fa/disable`      | POST   | Disable 2FA              |
+| `/api/auth/2fa/verify`       | POST   | Verify TOTP code         |
+
 ## [1.3.0] - 2026-03-29
 
 ### Added

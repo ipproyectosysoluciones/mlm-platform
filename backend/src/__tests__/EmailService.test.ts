@@ -111,6 +111,49 @@ describe('EmailService', () => {
       expect(result).toBe(true);
     });
   });
+
+  describe('sendWithdrawalApproved', () => {
+    it('should send withdrawal approved notification', async () => {
+      const result = await emailService.sendWithdrawalApproved({
+        email: 'user@example.com',
+        firstName: 'John',
+        amount: 100,
+        currency: 'USD',
+        withdrawalId: 'withdrawal-123',
+      });
+
+      expect(result).toBe(true);
+    });
+  });
+
+  describe('sendWithdrawalRejected', () => {
+    it('should send withdrawal rejected notification with reason', async () => {
+      const result = await emailService.sendWithdrawalRejected({
+        email: 'user@example.com',
+        firstName: 'John',
+        amount: 100,
+        currency: 'USD',
+        withdrawalId: 'withdrawal-123',
+        reason: 'Verificación de identidad pendiente',
+      });
+
+      expect(result).toBe(true);
+    });
+  });
+
+  describe('sendLevelAchieved', () => {
+    it('should send level achieved notification', async () => {
+      const result = await emailService.sendLevelAchieved({
+        email: 'user@example.com',
+        firstName: 'John',
+        newLevel: 2,
+        levelName: 'Distributor',
+        benefits: ['5% de comisión adicional', 'Acceso a panel de reportes'],
+      });
+
+      expect(result).toBe(true);
+    });
+  });
 });
 
 describe('SMSService', () => {
