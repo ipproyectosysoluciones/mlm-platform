@@ -6,17 +6,17 @@ FROM node:24-alpine
 WORKDIR /app
 
 # Copy package files for production deps only
-COPY backend/package.json backend/pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml ./
 
 # Install production dependencies only
 RUN corepack enable && corepack prepare pnpm@latest --activate && \
     pnpm install --no-frozen-lockfile --prod
 
-# Copy compiled dist from host (compiled during deploy.sh)
-COPY backend/dist ./dist
+# Copy compiled dist from host
+COPY dist ./dist
 
 # Copy init script
-COPY backend/scripts/init-db.sh ./
+COPY scripts/init-db.sh ./
 
 # Setup non-root user for security
 RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001 && \

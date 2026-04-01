@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { VitePWA } from 'vite-plugin-pwa';
+import path from 'path';
 
 // Feature flags from environment variables (opt-in by default in development)
 // VITE_PWA_ENABLED=true - Enable PWA functionality
@@ -239,6 +240,11 @@ const pwaPlugin =
 
 export default defineConfig({
   plugins: [react(), tailwindcss(), ...(pwaPlugin ? [pwaPlugin] : [])],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
   build: {
     target: 'es2020',
     minify: 'esbuild',

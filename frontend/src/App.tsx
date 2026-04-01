@@ -15,6 +15,7 @@ import CRM from './pages/CRM';
 import NotFound from './pages/NotFound';
 import Offline from './pages/Offline';
 import OfflineBanner from './components/OfflineBanner';
+import { AppLayout } from './components/layout/AppLayout';
 import { ProtectedRoute, AdminRoute, PublicRoute, PublicProfileRoute } from './components/routes';
 
 // Lazy loaded pages for streaming subscriptions e-commerce
@@ -60,7 +61,17 @@ function App() {
               </PublicRoute>
             }
           />
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          {/* Landing page - Product Catalog as home */}
+          <Route
+            path="/"
+            element={
+              <AppLayout>
+                <Suspense fallback={<PageLoader />}>
+                  <ProductCatalog />
+                </Suspense>
+              </AppLayout>
+            }
+          />
           <Route
             path="/dashboard"
             element={

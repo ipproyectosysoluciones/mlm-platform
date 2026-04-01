@@ -23,9 +23,13 @@ router.use('/orders', orderRoutes);
 router.use('/wallet', walletRoutes);
 router.use('/wallets', walletRoutes); // Alias for test compatibility
 router.use('/push', pushRoutes);
+
+// Profile public routes (MUST be before publicRoutes to avoid /profile/:code conflict)
+import profilePublicRoutes from './profile-public.routes';
+router.use('/public/profile', profilePublicRoutes);
+
 router.use('/public', publicRoutes);
 router.use('/public/landing', landingPublicRoutes);
-router.use('/public/profile', landingPublicRoutes); // For /profile/:code/products
 
 /**
  * @swagger

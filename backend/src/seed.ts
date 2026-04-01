@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import { connectDatabase, syncDatabase } from './config/database';
-import { initModels, User, UserClosure, CommissionConfig } from './models';
+import { initModels, User, UserClosure, CommissionConfig, Product } from './models';
 import { hashPassword } from './services/AuthService';
 
 /**
@@ -170,6 +170,92 @@ async function seedCommissionConfigs(): Promise<void> {
   console.log('\n✅ Commission configs seeded');
 }
 
+/**
+ * Seed default products for landing pages
+ */
+async function seedProducts(): Promise<void> {
+  const products = [
+    {
+      id: '00000000-0000-0000-0000-000000000101',
+      name: 'Netflix Premium',
+      description:
+        'Enjoy unlimited access to thousands of TV shows, movies, and original content. Stream in 4K Ultra HD on multiple devices.',
+      platform: 'netflix' as const,
+      price: 22.99,
+      currency: 'USD',
+      durationDays: 30,
+      isActive: true,
+    },
+    {
+      id: '00000000-0000-0000-0000-000000000102',
+      name: 'Spotify Premium',
+      description:
+        'Ad-free music streaming with offline downloads and high-quality audio. Access to exclusive podcasts and playlists.',
+      platform: 'spotify' as const,
+      price: 10.99,
+      currency: 'USD',
+      durationDays: 30,
+      isActive: true,
+    },
+    {
+      id: '00000000-0000-0000-0000-000000000103',
+      name: 'Disney+ Bundle',
+      description:
+        'Get Disney+, Pixar, Marvel, Star Wars, and National Geographic. Family-friendly content for everyone.',
+      platform: 'disney_plus' as const,
+      price: 14.99,
+      currency: 'USD',
+      durationDays: 30,
+      isActive: true,
+    },
+    {
+      id: '00000000-0000-0000-0000-000000000104',
+      name: 'HBO Max',
+      description:
+        'Stream HBO originals, Warner Bros. movies, and DC Universe content. Ad-free streaming experience.',
+      platform: 'hbo_max' as const,
+      price: 15.99,
+      currency: 'USD',
+      durationDays: 30,
+      isActive: true,
+    },
+    {
+      id: '00000000-0000-0000-0000-000000000105',
+      name: 'Amazon Prime',
+      description:
+        'Prime Video, free shipping, Prime Music, and exclusive deals. Complete Amazon ecosystem membership.',
+      platform: 'amazon_prime' as const,
+      price: 14.99,
+      currency: 'USD',
+      durationDays: 30,
+      isActive: true,
+    },
+    {
+      id: '00000000-0000-0000-0000-000000000106',
+      name: 'YouTube Premium',
+      description:
+        'Ad-free YouTube, YouTube Music Premium, background play, and offline downloads.',
+      platform: 'youtube_premium' as const,
+      price: 13.99,
+      currency: 'USD',
+      durationDays: 30,
+      isActive: true,
+    },
+  ];
+
+  for (const product of products) {
+    const exists = await Product.findByPk(product.id);
+    if (!exists) {
+      await Product.create(product);
+      console.log(`  ✅ Created product: ${product.name}`);
+    } else {
+      console.log(`  ⏭️  Product already exists: ${product.name}`);
+    }
+  }
+
+  console.log('\n✅ Products seeded');
+}
+
 async function seed(): Promise<void> {
   try {
     await connectDatabase();
@@ -178,6 +264,9 @@ async function seed(): Promise<void> {
 
     // Seed commission configs first
     await seedCommissionConfigs();
+
+    // Seed products for landing pages
+    await seedProducts();
 
     // Create admin
     const adminPassword = await hashPassword('admin123');

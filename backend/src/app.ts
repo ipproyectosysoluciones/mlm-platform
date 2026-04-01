@@ -1,6 +1,7 @@
 import express, { Application } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
 import swaggerUi from 'swagger-ui-express';
 import * as Sentry from '@sentry/node';
@@ -17,6 +18,15 @@ import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 const app: Application = express();
 const isTest = process.env.NODE_ENV === 'test';
 const isProduction = process.env.NODE_ENV === 'production';
+
+// Trust proxy for ngrok/reverse proxy support
+app.set('trust proxy', 1);
+
+// Morgan logging - shows HTTP requests in console
+// En producción usa 'combined' (más detalle), desarrollo usa 'dev'
+if (!isTest) {
+  app.use(morgan(isProduction ? 'combined' : 'dev'));
+}
 
 // CORS configuration with origin validation
 // Security: In production, only allow origins from config whitelist
