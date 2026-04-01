@@ -4,19 +4,17 @@ import swaggerJsdoc from 'swagger-jsdoc';
  * Swagger/OpenAPI Configuration for MLM Binary Affiliations API
  * Configuración Swagger/OpenAPI para la API MLM de Afiliaciones Binarias
  *
- * Phase 3: Agregados schemas para Visual Tree UI (UserDetails, UserSearchResult, Pagination)
- * Phase 3: Added schemas for Visual Tree UI (UserDetails, UserSearchResult, Pagination)
- * Phase 4: Agregados Products y Orders para e-commerce y streaming subscriptions
- * Phase 4: Added Products and Orders for e-commerce and streaming subscriptions
- * Phase 5: Agregado 2FA (Two-Factor Authentication) con TOTP y códigos de recuperación
- * Phase 5: Added 2FA (Two-Factor Authentication) with TOTP and recovery codes
+ * v1.6.0: PWA + Offline pages, icons multi-size
+ * v1.5.0: Backend controllers refactoring (modular structure)
+ * v1.4.0: Wallet digital + 2FA
+ * v1.0.0: MVP - Auth, Tree, Commissions, CRM, RBAC
  */
 const options: swaggerJsdoc.Options = {
   definition: {
     openapi: '3.0.0',
     info: {
       title: 'MLM Binary Affiliations API',
-      version: '3.0.0',
+      version: '1.6.0',
       description: `
 ## API REST para plataforma MLM de Afiliaciones Binarias
 
@@ -35,11 +33,11 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
 | 404 | No encontrado / Not Found |
 | 429 | Rate limit excedido / Rate Limit Exceeded |
 
-### Fases / Phases
-- **Phase 1** (v1.0.0): MVP - Auth, Tree, Commissions, CRM, RBAC
-- **Phase 2** (pendiente): Email & SMS Notifications
-- **Phase 3** (v3.0.0): Visual Tree UI - React Flow, búsqueda, panel de detalles
-- **Phase 4** (v4.0.0): Products & Orders - E-commerce, streaming subscriptions
+### Versiones / Versions
+- **v1.6.0** (2026-04-01): PWA, Offline pages, Backend refactoring completo
+- **v1.5.0** (2026-03-31): Controllers modulares, Notificaciones Email
+- **v1.4.0** (2026-03-28): Wallet Digital, 2FA TOTP
+- **v1.0.0** (2026-03-15): MVP - Auth, Tree, Commissions, CRM, RBAC
       `,
       contact: {
         name: 'MLM Support',

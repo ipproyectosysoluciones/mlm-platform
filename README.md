@@ -37,6 +37,9 @@ Plataforma MLM (Multi-Level Marketing) con sistema de afiliaciones binarias, com
 | playwright-visual-testing         | Scripts E2E con modo visual            | ✅ Archivado | 2026-03-29 |
 | frontend-2fa-ui                   | UI de React para 2FA con QR code       | ✅ Completo  | 2026-03-30 |
 | frontend-refactoring              | Modularización de componentes frontend | ✅ Completo  | 2026-03-30 |
+| backend-refactoring               | Controllers modulares (auth, crm, etc) | ✅ Completo  | 2026-04-01 |
+| pwa-offline-pages                 | Páginas 404 y Offline                  | ✅ Completo  | 2026-03-31 |
+| pwa-improvements                  | Iconos multi-size, OfflineBanner       | ✅ Completo  | 2026-03-31 |
 
 ### 🚧 Cambios en Progreso
 

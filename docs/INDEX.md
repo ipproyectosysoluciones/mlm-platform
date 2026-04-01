@@ -6,10 +6,10 @@
 
 | Documento                          | Descripción                          | Última Actualización |
 | ---------------------------------- | ------------------------------------ | -------------------- |
-| [README.md](../README.md)          | Documentación principal del proyecto | 2026-03-30           |
-| [PRD.md](PRD.md)                   | Product Requirements Document        | 2026-03-30           |
-| [ROADMAP.md](ROADMAP.md)           | Hoja de ruta completa                | 2026-03-30           |
-| [ARCHITECTURE.md](ARCHITECTURE.md) | Arquitectura del sistema             | 2026-03-30           |
+| [README.md](../README.md)          | Documentación principal del proyecto | 2026-04-01           |
+| [PRD.md](PRD.md)                   | Product Requirements Document        | 2026-04-01           |
+| [ROADMAP.md](ROADMAP.md)           | Hoja de ruta completa                | 2026-04-01           |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | Arquitectura del sistema             | 2026-04-01           |
 
 ## 🔧 Guías de Desarrollo
 
@@ -63,6 +63,10 @@
 | sdd-i18n-bilingual                | Internacionalización     | 2026-03-27 |
 | phase-3-visual-tree               | Visual Tree UI           | 2026-03-27 |
 | sdd-horizontal-navbar             | Layout horizontal        | 2026-03-27 |
+| backend-refactoring               | Controllers modulares    | 2026-04-01 |
+| pwa-offline-pages                 | Páginas 404 y Offline    | 2026-04-01 |
+| pwa-improvements                  | Iconos, OfflineBanner    | 2026-04-01 |
+| notifications-integration         | Email notifications      | 2026-04-01 |
 
 ## 🔗 Enlaces Útiles
 
@@ -83,4 +87,4 @@
 
 ---
 
-_Última actualización: 2026-03-30_
+_Última actualización: 2026-04-01_
