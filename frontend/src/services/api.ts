@@ -32,6 +32,12 @@ import type {
 /** @constant {string} API_URL - Backend base URL / URL base del backend */
 const API_URL = import.meta.env.VITE_API_URL || '/api';
 
+/** @constant {string} CF_ACCESS_CLIENT_ID - Cloudflare Access Client ID */
+const CF_ACCESS_CLIENT_ID = import.meta.env.VITE_CF_ACCESS_CLIENT_ID;
+
+/** @constant {string} CF_ACCESS_CLIENT_SECRET - Cloudflare Access Client Secret */
+const CF_ACCESS_CLIENT_SECRET = import.meta.env.VITE_CF_ACCESS_CLIENT_SECRET;
+
 /**
  * Axios instance with default config and interceptors
  * Instancia de Axios con configuración por defecto e interceptores
@@ -40,6 +46,12 @@ const api = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
+    // Cloudflare Access headers (if configured)
+    ...(CF_ACCESS_CLIENT_ID &&
+      CF_ACCESS_CLIENT_SECRET && {
+        'CF-Access-Client-Id': CF_ACCESS_CLIENT_ID,
+        'CF-Access-Client-Secret': CF_ACCESS_CLIENT_SECRET,
+      }),
   },
 });
 
