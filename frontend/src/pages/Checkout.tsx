@@ -261,7 +261,7 @@ export default function Checkout() {
                     {t('common.cancel')}
                   </button>
                   <button
-                    onClick={handleConfirmPurchase}
+                    onClick={() => handleConfirmPurchase('simulated')}
                     disabled={isSubmitting}
                     className={cn(
                       'flex flex-1 items-center justify-center gap-2 rounded-xl py-3 font-semibold',

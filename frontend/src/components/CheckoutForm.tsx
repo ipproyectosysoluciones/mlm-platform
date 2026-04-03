@@ -10,6 +10,7 @@ import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import { CreditCard, AlertTriangle, Loader2, Check } from 'lucide-react';
 import type { PaymentMethod } from '../types';
 import { cn } from '../utils/cn';
+import { paymentService } from '../services/paymentService';
 
 const PAYPAL_CLIENT_ID = import.meta.env.VITE_PAYPAL_CLIENT_ID || '';
 
@@ -85,11 +86,18 @@ const PayPalButton = React.memo(function PayPalButton({
             ],
           });
         }}
-        onApprove={async (_data, actions) => {
+        onApprove={async (data, _actions) => {
           try {
-            const details = await actions.order?.capture();
-            if (details) {
+            // IMPORTANT: capture must go through our backend for validation.
+            // Never trust a client-side capture result — the backend verifies
+            // the payment status with PayPal before updating the order.
+            const result = await paymentService.completeWithPayPal({
+              orderId: data.orderID,
+            });
+            if (result.success) {
               onPayPalSuccess?.('paypal');
+            } else {
+              onError?.(t('checkout.paypalCaptureError'));
             }
           } catch (err) {
             console.error('PayPal capture error:', err);
@@ -107,14 +115,18 @@ const PayPalButton = React.memo(function PayPalButton({
 
 /**
  * Payment methods
+ * Note: MercadoPago is excluded until frontend integration is complete.
  */
-const paymentMethods: { value: PaymentMethod; icon: React.ReactNode; label: string }[] = [
-  { value: 'paypal', icon: <span className="text-lg font-bold">P</span>, label: 'PayPal' },
-  { value: 'simulated', icon: <CreditCard className="h-5 w-5" />, label: 'Simulated' },
+const paymentMethods: { value: PaymentMethod; icon: React.ReactNode; labelKey: string }[] = [
   {
-    value: 'mercadopago',
-    icon: <span className="text-lg font-bold">M</span>,
-    label: 'MercadoPago',
+    value: 'paypal',
+    icon: <span className="text-lg font-bold">P</span>,
+    labelKey: 'checkout.paymentMethods.paypal',
+  },
+  {
+    value: 'simulated',
+    icon: <CreditCard className="h-5 w-5" />,
+    labelKey: 'checkout.paymentMethods.simulated',
   },
 ];
 
@@ -213,7 +225,7 @@ export function CheckoutForm({
                 </span>
                 <span className="flex items-center gap-3 text-white">
                   {method.icon}
-                  {method.label}
+                  {t(method.labelKey)}
                 </span>
               </label>
             ))}

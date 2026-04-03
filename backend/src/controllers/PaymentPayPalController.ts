@@ -71,6 +71,12 @@ export class PaymentPayPalController {
         .json(ApiResponse.error('INVALID_ORDER_ID', 'Invalid PayPal order ID format', 400));
     }
 
+    if (!internalOrderId) {
+      return res
+        .status(400)
+        .json(ApiResponse.error('MISSING_INTERNAL_ORDER_ID', 'Internal order ID is required', 400));
+    }
+
     const capturedOrder = await paypalService.captureOrder({
       orderId,
       internalOrderId,

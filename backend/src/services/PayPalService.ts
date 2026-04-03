@@ -8,6 +8,22 @@ import axios from 'axios';
 import crypto from 'crypto';
 import { config } from '../config/env.js';
 
+/**
+ * CRC32 implementation required by PayPal webhook signature spec.
+ * PayPal uses CRC32 of the raw body, not SHA256.
+ */
+function crc32(data: string): number {
+  let crc = 0xffffffff;
+  const buf = Buffer.from(data, 'utf8');
+  for (let i = 0; i < buf.length; i++) {
+    crc ^= buf[i];
+    for (let j = 0; j < 8; j++) {
+      crc = crc & 1 ? (crc >>> 1) ^ 0xedb88320 : crc >>> 1;
+    }
+  }
+  return (crc ^ 0xffffffff) >>> 0;
+}
+
 const PAYPAL_API_BASE =
   config.paypal.mode === 'sandbox'
     ? 'https://api-m.sandbox.paypal.com'
@@ -65,6 +81,20 @@ class PayPalService {
    */
   private idempotencyCache = new Map<string, number>();
   private readonly IDEMPOTENCY_TTL = 5 * 60 * 1000; // 5 minutes
+  private readonly CACHE_MAX_SIZE = 10_000;
+
+  /**
+   * Periodic cleanup: remove all expired entries from the idempotency cache.
+   * Called on every markAsProcessed call to keep memory bounded.
+   */
+  private cleanupIdempotencyCache(): void {
+    const now = Date.now();
+    for (const [key, timestamp] of this.idempotencyCache) {
+      if (now - timestamp >= this.IDEMPOTENCY_TTL) {
+        this.idempotencyCache.delete(key);
+      }
+    }
+  }
 
   /**
    * Verify PayPal webhook signature
@@ -78,8 +108,8 @@ class PayPalService {
     const webhookId = config.paypal.webhookId;
 
     if (!webhookId) {
-      console.warn('[PayPal] Webhook ID not configured, skipping verification');
-      return true; // Skip verification if not configured
+      console.warn('[PayPal] Webhook ID not configured — rejecting webhook');
+      return false; // Fail closed: do NOT skip verification if webhookId is missing
     }
 
     const transmissionId = headers['paypal-transmission-id'];
@@ -120,8 +150,10 @@ class PayPalService {
     // Construct the expected signature
     const expectedSignature = Buffer.from(transmissionSig, 'base64');
 
-    // Build the message to verify
-    const message = `${transmissionId}|${transmissionTime}|${webhookId}|${crypto.createHash('sha256').update(body).digest('hex')}`;
+    // Build the message to verify — PayPal spec requires CRC32 of the raw body (NOT SHA256)
+    // See: https://developer.paypal.com/docs/api-basics/notifications/webhooks/verify-signatures/
+    const bodyCrc32 = crc32(body);
+    const message = `${transmissionId}|${transmissionTime}|${webhookId}|${bodyCrc32}`;
 
     // Verify the signature using the certificate
     const verify = crypto.createVerify('SHA256');
@@ -151,6 +183,10 @@ class PayPalService {
    * Mark an order as processed for idempotency
    */
   markAsProcessed(paypalOrderId: string): void {
+    // Cleanup expired entries before adding new ones to prevent unbounded growth
+    if (this.idempotencyCache.size >= this.CACHE_MAX_SIZE) {
+      this.cleanupIdempotencyCache();
+    }
     this.idempotencyCache.set(paypalOrderId, Date.now());
   }
 
