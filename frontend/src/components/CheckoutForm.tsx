@@ -23,7 +23,7 @@ interface CheckoutFormProps {
   className?: string;
   total?: number;
   currency?: string;
-  onPayPalSuccess?: () => void;
+  onPayPalSuccess?: (paymentMethod: PaymentMethod) => void;
 }
 
 /**
@@ -115,7 +115,7 @@ export function CheckoutForm({
             try {
               const details = await actions.order?.capture();
               if (details) {
-                onPayPalSuccess?.();
+                onPayPalSuccess?.('paypal');
               }
             } catch (err) {
               console.error('PayPal capture error:', err);
