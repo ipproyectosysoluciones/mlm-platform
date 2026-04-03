@@ -71,7 +71,7 @@ export default function Checkout() {
   /**
    * Handle payment submission
    */
-  const handlePayment = async (paymentMethod: PaymentMethod) => {
+  const handlePayment = async (_paymentMethod: PaymentMethod) => {
     if (!product) return;
 
     setShowConfirmModal(true);
