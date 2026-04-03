@@ -5,6 +5,7 @@ import app from './app';
 import { connectDatabase, syncDatabase } from './config/database';
 import { config } from './config/env';
 import { initModels } from './models';
+import { achievementService } from './services/AchievementService';
 
 // Auto-seed function
 async function autoSeed(): Promise<void> {
@@ -205,6 +206,9 @@ async function startServer(): Promise<void> {
 
     // Auto-seed if database is empty
     await autoSeed();
+
+    // Seed achievements (idempotent — safe on every restart)
+    achievementService.seedAchievements().catch((err) => console.error('[Achievements seed]', err));
 
     app.listen(config.port, () => {
       console.log(`

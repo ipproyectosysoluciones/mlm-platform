@@ -14,6 +14,8 @@ import CommissionConfigPage from './pages/CommissionConfigPage';
 import PublicProfile from './pages/PublicProfile';
 import LandingPages from './pages/LandingPages';
 import CRM from './pages/CRM';
+import LeaderboardPage from './pages/LeaderboardPage';
+import AchievementsPage from './pages/AchievementsPage';
 import NotFound from './pages/NotFound';
 import Offline from './pages/Offline';
 import OfflineBanner from './components/OfflineBanner';
@@ -26,6 +28,7 @@ import { dashboardService, authService } from './services/api';
 const ProductCatalog = lazy(() => import('./pages/ProductCatalog'));
 const Checkout = lazy(() => import('./pages/Checkout'));
 const OrderSuccess = lazy(() => import('./pages/OrderSuccess'));
+const OrderProcessing = lazy(() => import('./pages/OrderProcessing'));
 const WalletPage = lazy(() => import('./pages/WalletPage'));
 const ProductLanding = lazy(() => import('./pages/ProductLanding'));
 
@@ -117,6 +120,22 @@ function App() {
             }
           />
           <Route
+            path="/leaderboard"
+            element={
+              <ProtectedRoute>
+                <LeaderboardPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/achievements"
+            element={
+              <ProtectedRoute>
+                <AchievementsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/profile"
             element={
               <ProtectedRoute>
@@ -192,6 +211,32 @@ function App() {
                   <OrderSuccess />
                 </Suspense>
               </ProtectedRoute>
+            }
+          />
+
+          {/* MercadoPago back_url routes — shown after MP Checkout Pro redirect */}
+          <Route
+            path="/order-processing"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <OrderProcessing />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/orders/success"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <OrderProcessing />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/orders/pending"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <OrderProcessing />
+              </Suspense>
             }
           />
 

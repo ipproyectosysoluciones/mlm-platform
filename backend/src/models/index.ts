@@ -14,6 +14,9 @@ import { WalletTransaction } from './WalletTransaction';
 import { WithdrawalRequest } from './WithdrawalRequest';
 import { CommissionConfig } from './CommissionConfig';
 import { PushSubscription } from './PushSubscription';
+import { Achievement } from './Achievement';
+import { Badge } from './Badge';
+import { UserAchievement } from './UserAchievement';
 
 // User relationships
 User.hasMany(User, { as: 'children', foreignKey: 'sponsorId', sourceKey: 'id' });
@@ -72,8 +75,22 @@ User.hasMany(WithdrawalRequest, { foreignKey: 'userId', sourceKey: 'id' });
 WithdrawalRequest.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
 
 // Push Subscription relationships
-User.hasMany(PushSubscription, { foreignKey: 'userId', sourceKey: 'id' });
+User.hasMany(PushSubscription, { foreignKey: 'userId' });
 PushSubscription.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
+
+// Achievement relationships
+Achievement.hasOne(Badge, { foreignKey: 'achievementId', as: 'badge' });
+Badge.belongsTo(Achievement, { foreignKey: 'achievementId', as: 'achievement' });
+
+User.hasMany(UserAchievement, { foreignKey: 'userId', as: 'userAchievements' });
+UserAchievement.belongsTo(User, { foreignKey: 'userId', as: 'user', targetKey: 'id' });
+
+Achievement.hasMany(UserAchievement, { foreignKey: 'achievementId', as: 'userAchievements' });
+UserAchievement.belongsTo(Achievement, {
+  foreignKey: 'achievementId',
+  as: 'achievement',
+  targetKey: 'id',
+});
 
 export {
   sequelize,
@@ -92,6 +109,9 @@ export {
   WithdrawalRequest,
   CommissionConfig,
   PushSubscription,
+  Achievement,
+  Badge,
+  UserAchievement,
 };
 
 export function initModels(): void {

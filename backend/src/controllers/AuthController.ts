@@ -30,6 +30,7 @@ import { body } from 'express-validator';
 import { userService } from '../services/UserService';
 import { hashPassword, verifyPassword, generateToken } from '../services/AuthService';
 import { emailService } from '../services/EmailService';
+import { achievementService } from '../services/AchievementService';
 import { config } from '../config/env';
 import type { ApiResponse, UserAttributes } from '../types';
 import { AppError } from '../middleware/error.middleware';
@@ -189,6 +190,11 @@ export const login: RequestHandler = asyncHandler(
 
     // Normal login without 2FA
     const token = generateToken(user);
+
+    // Fire-and-forget: check login achievements (future-ready for consistency_30)
+    achievementService
+      .checkAndUnlock(user.id, 'login')
+      .catch((err) => console.error('[Achievements]', err));
 
     const response: ApiResponse<{
       user: Partial<UserAttributes>;

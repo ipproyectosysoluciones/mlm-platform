@@ -18,6 +18,8 @@ import { AppError } from '../middleware/error.middleware';
 import { CommissionService } from './CommissionService';
 import { body } from 'express-validator';
 import type { OrderAttributes } from '../types';
+import { leaderboardService } from './LeaderboardService';
+import { achievementService } from './AchievementService';
 
 // Express-validator validation chains (reusable in controllers)
 export const orderValidationRules = {
@@ -177,6 +179,11 @@ export class OrderService {
       // Commit transaction
       await transaction.commit();
 
+      // Fire-and-forget achievement check after successful order creation
+      achievementService
+        .checkAndUnlock(userId, 'sale_completed')
+        .catch((err) => console.error('[Achievements]', err));
+
       // Reload order with associations
       return (await Order.findByPk(order.id, {
         include: [
@@ -333,6 +340,16 @@ export class OrderService {
 
     order.status = status;
     await order.save();
+
+    // Invalidate leaderboard sellers cache when order is completed (fire and forget)
+    if (status === 'completed') {
+      leaderboardService.invalidateCache('sellers');
+      // Fire-and-forget achievement check — never blocks main flow
+      achievementService
+        .checkAndUnlock(order.userId, 'sale_completed')
+        .catch((err) => console.error('[Achievements]', err));
+    }
+
     return order;
   }
 
