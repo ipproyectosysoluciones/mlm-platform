@@ -2,8 +2,8 @@
 
 > Hoja de ruta completa para la plataforma MLM de Afiliaciones Binarias.
 
-**Versión actual**: 1.6.0  
-**Última actualización**: 2026-04-01  
+**Versión actual**: 1.7.1  
+**Última actualización**: 2026-04-03  
 **Estado**: Activo - Desarrollo continuo
 
 ---
@@ -11,21 +11,22 @@
 ## 📊 Resumen de Progreso
 
 ```
-████████████████░░░░░░░░░░░░ 90% Completado
+████████████████░░░░░░░░░░░ 95% Completado
 ```
 
-| Fase     | Nombre           | Estado      | Versión |
-| -------- | ---------------- | ----------- | ------- |
-| Phase 1  | MVP - Core       | ✅ Completo | v1.0.0  |
-| Phase 2  | Visual Tree UI   | ✅ Completo | v1.1.0  |
-| Phase 3  | E-commerce       | ✅ Parcial  | v1.2.0  |
-| Phase 4  | Deployment       | ✅ Completo | v1.3.0  |
-| Phase 5  | Wallet + Pagos   | ✅ Completo | v1.4.0  |
-| Phase 6  | Backend Refactor | ✅ Completo | v1.5.0  |
-| Phase 7  | Notificaciones   | ✅ Completo | v1.5.0  |
-| Phase 8  | PWA + Offline    | ✅ Completo | v1.6.0  |
-| Phase 9  | Landing Products | 📋 Planeado | v1.7.0  |
-| Phase 10 | Enterprise       | 📋 Planeado | v2.0.0  |
+| Fase     | Nombre            | Estado      | Versión |
+| -------- | ----------------- | ----------- | ------- |
+| Phase 1  | MVP - Core        | ✅ Completo | v1.0.0  |
+| Phase 2  | Visual Tree UI    | ✅ Completo | v1.1.0  |
+| Phase 3  | E-commerce        | ✅ Completo | v1.2.0  |
+| Phase 4  | Deployment        | ✅ Completo | v1.3.0  |
+| Phase 5  | Wallet + Pagos    | ✅ Completo | v1.4.0  |
+| Phase 6  | Backend Refactor  | ✅ Completo | v1.5.0  |
+| Phase 7  | Notificaciones    | ✅ Completo | v1.5.0  |
+| Phase 8  | PWA + Offline     | ✅ Completo | v1.6.0  |
+| Phase 9  | Landing Products  | ✅ Completo | v1.7.0  |
+| Phase 10 | Cloudflare+Vercel | ✅ Completo | v1.7.1  |
+| Phase 11 | Enterprise        | 📋 Planeado | v2.0.0  |
 
 ---
 
@@ -240,19 +241,68 @@
 
 ---
 
+### ✅ v1.7.0 - Landing Products (Abril 2026)
+
+**Fecha de lanzamiento**: 2026-04-01  
+**Estado**: ✅ Stable
+
+#### Funcionalidades Implementadas
+
+- [x] ProductCatalog page
+  - Modern landing page design
+  - Hero section con gradientes
+  - Grid de productos con filtros
+- [x] ProductCard component
+  - Cards con diseño glassmorphism
+  - Animaciones hover
+  - Platform icons
+- [x] Checkout flow
+  - Proceso de compra simplificado
+  - Validación de formularios
+
+---
+
+### ✅ v1.7.1 - Cloudflare Tunnel + Vercel (Abril 2026)
+
+**Fecha de lanzamiento**: 2026-04-03  
+**Estado**: ✅ Stable
+
+#### Funcionalidades Implementadas
+
+- [x] Cloudflare Tunnel deployment
+  - Backend accessible via `backend.lordastaroth77.cloudflareaccess.com`
+  - Zero Trust Access policies configured
+  - Service Token authentication
+- [x] Vercel Frontend deployment
+  - Frontend deployed to Vercel CDN
+  - Environment variables for API URL
+  - Automatic deployments via GitHub Actions
+- [x] Separate CI/CD workflows
+  - `cd-backend.yml`: Backend → Docker Hub
+  - `deploy-frontend.yml`: Frontend → Vercel
+  - `deploy-backend.sh`: Local deployment script
+- [x] API URL migration
+  - From ngrok to Cloudflare Tunnel
+  - Updated vercel.json rewrites
+  - Updated .env.production
+
+---
+
 ## 📋 Planeado
 
-### 📋 v1.7.0 - Landing Pages Productos
+### 📋 v1.8.0 - Performance Optimization
 
 **Estado**: 📋 Planeado  
 **Target**: Q2 2026
 
 #### Funcionalidades Planeadas
 
-- [ ] Landing pages de productos/servicios
-  - Marketing de la plataforma
-  - SEO optimizado
-  - Templates de alto impacto
+- [ ] Code splitting y lazy loading
+- [ ] Database query optimization
+- [ ] Redis caching improvements
+- [ ] CDN para assets estáticos
+
+### 📋 v2.0.0 - Enterprise
 
 ### 📋 v2.0.0 - Enterprise
 
@@ -398,6 +448,11 @@ git show v1.3.0 --stat
 
 | Versión | Fecha      | Cambios                                                    |
 | ------- | ---------- | ---------------------------------------------------------- |
+| v1.7.1  | 2026-04-03 | Cloudflare Tunnel, Vercel deployment, separate CI/CD       |
+| v1.7.0  | 2026-04-01 | Landing products page, ProductCatalog, modern design       |
+| v1.6.0  | 2026-03-31 | PWA, offline pages, OfflineBanner, multi-size icons        |
+| v1.5.0  | 2026-03-31 | Backend refactoring, email notifications, security         |
+| v1.4.0  | 2026-03-27 | Wallet system, deposits, withdrawals, transactions         |
 | v1.3.0  | 2026-03-30 | Docker deployment, CI/CD, PostgreSQL, Frontend refactoring |
 | v1.2.0  | 2026-03-25 | E-commerce streaming, products                             |
 | v1.1.0  | 2026-03-20 | Visual tree UI, React Flow                                 |
