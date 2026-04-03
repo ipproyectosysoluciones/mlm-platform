@@ -130,7 +130,7 @@ export default function OrderProcessing() {
   }
 
   const status: MPStatus = (['approved', 'pending', 'rejected', 'failure'] as const).includes(
-    rawStatus as MPStatus
+    rawStatus as any
   )
     ? (rawStatus as MPStatus)
     : 'unknown';
