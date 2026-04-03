@@ -167,5 +167,7 @@ export const config = {
     webhookId: process.env.MERCADOPAGO_WEBHOOK_ID || '',
     /** MercadoPago integration type: 'checkout' or 'wallet' */
     integrationType: process.env.MERCADOPAGO_INTEGRATION_TYPE || 'checkout',
+    /** MercadoPago webhook secret for HMAC-SHA256 signature verification (optional in dev) */
+    webhookSecret: process.env.MERCADOPAGO_WEBHOOK_SECRET || '',
   },
 };

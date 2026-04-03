@@ -9,6 +9,8 @@ import { asyncHandler } from '../middleware/asyncHandler.js';
 import { mercadoPagoService } from '../services/MercadoPagoService.js';
 import { ApiResponse } from '../utils/response.util.js';
 import { config } from '../config/env.js';
+import { Purchase, Order, Product } from '../models/index.js';
+import { CommissionService } from '../services/CommissionService.js';
 
 export class PaymentMercadoPagoController {
   /**
@@ -150,23 +152,155 @@ export class PaymentMercadoPagoController {
    */
   static webhook = asyncHandler(async (req: Request, res: Response) => {
     const topic = req.query.topic || req.body.topic;
+    const action = req.body.action;
 
-    // Handle IPN (Instant Payment Notification)
-    if (topic === 'payment') {
+    // ─── TODO 2.1: Signature verification ────────────────────────────────────
+    const webhookSecret = config.mercadopago.webhookSecret;
+    if (webhookSecret) {
+      const xSignature = req.headers['x-signature'] as string | undefined;
+      const tsMatch = xSignature?.match(/ts=([^,]+)/);
+      const ts = tsMatch ? tsMatch[1] : '';
+
+      // rawBody must be a string; express.raw() or express.json() with verify can provide it
+      const rawBody: string =
+        (req as any).rawBody ||
+        (typeof req.body === 'string' ? req.body : JSON.stringify(req.body));
+
+      if (
+        !xSignature ||
+        !ts ||
+        !mercadoPagoService.verifyWebhookSignature(ts, rawBody, xSignature)
+      ) {
+        console.warn('[MercadoPago Webhook] Invalid signature — rejecting request');
+        return res
+          .status(401)
+          .json(ApiResponse.error('INVALID_SIGNATURE', 'Invalid webhook signature', 401));
+      }
+    } else {
+      console.warn(
+        '[MercadoPago Webhook] MERCADOPAGO_WEBHOOK_SECRET not configured — skipping signature verification (dev mode)'
+      );
+    }
+
+    // ─── TODO 2.2: Handle payment notification ───────────────────────────────
+    // Support both IPN (topic=payment) and Webhooks API (action=payment.updated)
+    const isPaymentNotification =
+      topic === 'payment' || (action === 'payment.updated' && req.body.data?.id);
+
+    if (isPaymentNotification) {
       const paymentId = req.body.id || req.body.data?.id;
 
       if (paymentId) {
         try {
           const payment = await mercadoPagoService.getPayment(paymentId.toString());
-          console.log('[MercadoPago Webhook] Payment:', payment.id, payment.status);
+          console.log('[MercadoPago Webhook] Payment received:', payment.id, payment.status);
 
-          // Handle different payment statuses
           switch (payment.status) {
-            case 'approved':
+            case 'approved': {
               console.log('[MercadoPago] Payment approved:', payment.id);
-              // TODO: Trigger commission calculation
-              // TODO: Create or update order
+
+              try {
+                // ── Step 1: Extract buyer info from external_reference (= userId) ──
+                const userId = payment.external_reference;
+                if (!userId) {
+                  console.error(
+                    '[MercadoPago Webhook] No external_reference (userId) in payment',
+                    payment.id
+                  );
+                  break;
+                }
+
+                // ── Step 2: Idempotency check — skip if Order already exists for this MP payment ──
+                const existingOrder = await Order.findOne({
+                  where: { notes: `mercadopago:${payment.id}` },
+                });
+                if (existingOrder) {
+                  console.log(
+                    '[MercadoPago Webhook] Order already exists for payment',
+                    payment.id,
+                    '— skipping'
+                  );
+                  break;
+                }
+
+                // ── Step 3: Resolve productId from payment items or fallback to first active product ──
+                const itemProductId: string | undefined = (payment as any).additional_info
+                  ?.items?.[0]?.id;
+
+                let productId: string;
+                if (itemProductId) {
+                  const foundProduct = await Product.findByPk(itemProductId);
+                  productId = foundProduct ? foundProduct.id : '';
+                } else {
+                  const fallbackProduct = await Product.findOne({ where: { isActive: true } });
+                  productId = fallbackProduct?.id ?? '';
+                }
+
+                if (!productId) {
+                  console.error(
+                    '[MercadoPago Webhook] Could not resolve productId for payment',
+                    payment.id
+                  );
+                  break;
+                }
+
+                const amount = payment.transaction_amount ?? 0;
+                const currency = payment.currency_id ?? 'COP';
+
+                // ── Step 4: Create Purchase record ──
+                const purchase = await Purchase.create({
+                  userId,
+                  productId,
+                  businessType: 'producto',
+                  amount,
+                  currency,
+                  description: `MercadoPago payment ${payment.id}`,
+                  status: 'completed',
+                });
+
+                // ── Step 5: Create Order record ──
+                const orderNumber =
+                  'ORD-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+
+                await Order.create({
+                  orderNumber,
+                  userId,
+                  productId,
+                  purchaseId: purchase.id,
+                  totalAmount: amount,
+                  currency,
+                  status: 'completed',
+                  paymentMethod: 'mercadopago',
+                  notes: `mercadopago:${payment.id}`,
+                });
+
+                console.log(
+                  '[MercadoPago Webhook] Purchase & Order created for payment',
+                  payment.id
+                );
+
+                // ── Step 6: Trigger commission calculation (fire-and-forget, don't break 200) ──
+                try {
+                  const commissionService = new CommissionService();
+                  await commissionService.calculateCommissions(purchase.id);
+                  console.log(
+                    '[MercadoPago Webhook] Commissions calculated for purchase',
+                    purchase.id
+                  );
+                } catch (commissionError) {
+                  console.error(
+                    '[MercadoPago Webhook] Commission calculation failed:',
+                    commissionError
+                  );
+                  // Non-fatal — MP still gets 200
+                }
+              } catch (orderError) {
+                console.error('[MercadoPago Webhook] Error creating Purchase/Order:', orderError);
+                // Non-fatal — MP must receive 200 regardless
+              }
+
               break;
+            }
             case 'pending':
               console.log('[MercadoPago] Payment pending:', payment.id);
               break;
@@ -185,7 +319,7 @@ export class PaymentMercadoPagoController {
       }
     }
 
-    // Return 200 to acknowledge receipt
+    // Return 200 to acknowledge receipt (MercadoPago requires this regardless of processing)
     return res.status(200).json({ received: true });
   });
 }

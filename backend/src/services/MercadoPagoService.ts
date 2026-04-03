@@ -4,6 +4,7 @@
  * @module services/MercadoPagoService
  */
 
+import { createHmac } from 'crypto';
 import { MercadoPagoConfig, Preference, Payment, PaymentRefund } from 'mercadopago';
 import { config } from '../config/env.js';
 
@@ -67,6 +68,29 @@ class MercadoPagoService {
       init_point: result.init_point!,
       sandbox_init_point: result.sandbox_init_point!,
     };
+  }
+
+  /**
+   * Verify MercadoPago webhook signature
+   * @param ts - Timestamp from `x-signature` header (ts=<value>)
+   * @param rawBody - Raw request body as string
+   * @param signature - Full `x-signature` header value (ts=<ts>,v1=<hmac>)
+   * @returns true if signature is valid, false otherwise
+   */
+  verifyWebhookSignature(ts: string, rawBody: string, signature: string): boolean {
+    const secret = config.mercadopago.webhookSecret;
+    if (!secret) return false;
+
+    // Parse v1=<hmac> from the x-signature header
+    const v1Match = signature.match(/v1=([a-f0-9]+)/);
+    if (!v1Match) return false;
+    const expectedHmac = v1Match[1];
+
+    // HMAC-SHA256 of "ts.rawBody"
+    const manifest = `${ts}.${rawBody}`;
+    const computed = createHmac('sha256', secret).update(manifest).digest('hex');
+
+    return computed === expectedHmac;
   }
 
   /**
