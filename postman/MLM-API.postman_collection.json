@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "MLM Platform API",
-    "description": "Complete API collection for MLM Binary Affiliations Platform - v1.7.0 (PWA + Push Notifications)",
+    "description": "Complete API collection for MLM Binary Affiliations Platform - v1.9.0 (Gamification + Leaderboards + Achievements)",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -36,8 +36,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/register",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "register"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
             }
           },
           "response": []
@@ -73,8 +78,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/login",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "login"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
             }
           },
           "response": []
@@ -91,8 +101,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/auth/me",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "me"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
             }
           },
           "response": []
@@ -114,8 +129,12 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/dashboard",
-              "host": ["{{baseUrl}}"],
-              "path": ["dashboard"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dashboard"
+              ]
             }
           },
           "response": []
@@ -137,8 +156,12 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm",
-              "host": ["{{baseUrl}}"],
-              "path": ["crm"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crm"
+              ]
             }
           },
           "response": []
@@ -155,8 +178,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm/{{leadId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["crm", "{{leadId}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crm",
+                "{{leadId}}"
+              ]
             }
           },
           "response": []
@@ -181,8 +209,12 @@
             },
             "url": {
               "raw": "{{baseUrl}}/crm",
-              "host": ["{{baseUrl}}"],
-              "path": ["crm"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crm"
+              ]
             }
           },
           "response": []
@@ -207,8 +239,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/crm/{{leadId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["crm", "{{leadId}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crm",
+                "{{leadId}}"
+              ]
             }
           },
           "response": []
@@ -225,8 +262,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm/{{leadId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["crm", "{{leadId}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crm",
+                "{{leadId}}"
+              ]
             }
           },
           "response": []
@@ -251,8 +293,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/crm/import",
-              "host": ["{{baseUrl}}"],
-              "path": ["crm", "import"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crm",
+                "import"
+              ]
             }
           },
           "response": []
@@ -269,8 +316,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm/export",
-              "host": ["{{baseUrl}}"],
-              "path": ["crm", "export"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crm",
+                "export"
+              ]
             }
           },
           "response": []
@@ -287,8 +339,14 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm/{{leadId}}/tasks",
-              "host": ["{{baseUrl}}"],
-              "path": ["crm", "{{leadId}}", "tasks"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crm",
+                "{{leadId}}",
+                "tasks"
+              ]
             }
           },
           "response": []
@@ -313,8 +371,14 @@
             },
             "url": {
               "raw": "{{baseUrl}}/crm/{{leadId}}/tasks",
-              "host": ["{{baseUrl}}"],
-              "path": ["crm", "{{leadId}}", "tasks"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crm",
+                "{{leadId}}",
+                "tasks"
+              ]
             }
           },
           "response": []
@@ -331,8 +395,15 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm/tasks/{{taskId}}/complete",
-              "host": ["{{baseUrl}}"],
-              "path": ["crm", "tasks", "{{taskId}}", "complete"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crm",
+                "tasks",
+                "{{taskId}}",
+                "complete"
+              ]
             }
           },
           "response": []
@@ -357,8 +428,14 @@
             },
             "url": {
               "raw": "{{baseUrl}}/crm/{{leadId}}/communications",
-              "host": ["{{baseUrl}}"],
-              "path": ["crm", "{{leadId}}", "communications"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crm",
+                "{{leadId}}",
+                "communications"
+              ]
             }
           },
           "response": []
@@ -375,8 +452,14 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm/{{leadId}}/communications",
-              "host": ["{{baseUrl}}"],
-              "path": ["crm", "{{leadId}}", "communications"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crm",
+                "{{leadId}}",
+                "communications"
+              ]
             }
           },
           "response": []
@@ -393,8 +476,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm/stats",
-              "host": ["{{baseUrl}}"],
-              "path": ["crm", "stats"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crm",
+                "stats"
+              ]
             }
           },
           "response": []
@@ -411,8 +499,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm/tasks",
-              "host": ["{{baseUrl}}"],
-              "path": ["crm", "tasks"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crm",
+                "tasks"
+              ]
             }
           },
           "response": []
@@ -429,8 +522,14 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm/analytics/report?period=month",
-              "host": ["{{baseUrl}}"],
-              "path": ["crm", "analytics", "report"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crm",
+                "analytics",
+                "report"
+              ]
             }
           },
           "response": []
@@ -447,8 +546,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm/alerts?daysInactive=7",
-              "host": ["{{baseUrl}}"],
-              "path": ["crm", "alerts"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crm",
+                "alerts"
+              ]
             }
           },
           "response": []
@@ -465,8 +569,14 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm/analytics/export?period=month",
-              "host": ["{{baseUrl}}"],
-              "path": ["crm", "analytics", "export"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crm",
+                "analytics",
+                "export"
+              ]
             }
           },
           "response": []
@@ -488,8 +598,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/users/me",
-              "host": ["{{baseUrl}}"],
-              "path": ["users", "me"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "me"
+              ]
             }
           },
           "response": []
@@ -506,8 +621,14 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/users/me/tree",
-              "host": ["{{baseUrl}}"],
-              "path": ["users", "me", "tree"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "me",
+                "tree"
+              ]
             }
           },
           "response": []
@@ -524,8 +645,14 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/users/me/qr-url",
-              "host": ["{{baseUrl}}"],
-              "path": ["users", "me", "qr-url"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "me",
+                "qr-url"
+              ]
             }
           },
           "response": []
@@ -550,8 +677,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/users/me",
-              "host": ["{{baseUrl}}"],
-              "path": ["users", "me"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "me"
+              ]
             }
           },
           "response": []
@@ -576,8 +708,14 @@
             },
             "url": {
               "raw": "{{baseUrl}}/users/me/change-password",
-              "host": ["{{baseUrl}}"],
-              "path": ["users", "me", "change-password"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "me",
+                "change-password"
+              ]
             }
           },
           "response": []
@@ -599,8 +737,12 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/commissions",
-              "host": ["{{baseUrl}}"],
-              "path": ["commissions"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "commissions"
+              ]
             }
           },
           "response": []
@@ -617,8 +759,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/commissions/stats",
-              "host": ["{{baseUrl}}"],
-              "path": ["commissions", "stats"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "commissions",
+                "stats"
+              ]
             }
           },
           "response": []
@@ -643,8 +790,12 @@
             },
             "url": {
               "raw": "{{baseUrl}}/commissions",
-              "host": ["{{baseUrl}}"],
-              "path": ["commissions"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "commissions"
+              ]
             }
           },
           "response": []
@@ -666,8 +817,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/admin/stats",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "stats"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "stats"
+              ]
             }
           },
           "response": []
@@ -684,11 +840,22 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/admin/users?page=1&limit=20",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "users"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "users"
+              ],
               "query": [
-                { "key": "page", "value": "1" },
-                { "key": "limit", "value": "20" }
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
               ]
             }
           },
@@ -706,8 +873,14 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/admin/users/{{userId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "users", "{{userId}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "users",
+                "{{userId}}"
+              ]
             }
           },
           "response": []
@@ -732,8 +905,15 @@
             },
             "url": {
               "raw": "{{baseUrl}}/admin/users/{{userId}}/status",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "users", "{{userId}}", "status"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "users",
+                "{{userId}}",
+                "status"
+              ]
             }
           },
           "response": []
@@ -750,8 +930,15 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/admin/users/{{userId}}/promote",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "users", "{{userId}}", "promote"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "users",
+                "{{userId}}",
+                "promote"
+              ]
             }
           },
           "response": []
@@ -768,8 +955,14 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/admin/reports/commissions",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "reports", "commissions"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "reports",
+                "commissions"
+              ]
             }
           },
           "response": []
@@ -785,8 +978,13 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/push/vapid-public-key",
-              "host": ["{{baseUrl}}"],
-              "path": ["push", "vapid-public-key"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "push",
+                "vapid-public-key"
+              ]
             }
           },
           "response": []
@@ -811,8 +1009,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/push/subscribe",
-              "host": ["{{baseUrl}}"],
-              "path": ["push", "subscribe"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "push",
+                "subscribe"
+              ]
             }
           },
           "response": []
@@ -837,8 +1040,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/push/unsubscribe",
-              "host": ["{{baseUrl}}"],
-              "path": ["push", "unsubscribe"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "push",
+                "unsubscribe"
+              ]
             }
           },
           "response": []
@@ -854,8 +1062,15 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/public/landing/product/{{productId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["public", "landing", "product", "{{productId}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "public",
+                "landing",
+                "product",
+                "{{productId}}"
+              ]
             }
           },
           "response": []
@@ -866,10 +1081,20 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/public/landing/product/{{productId}}?ref={{referralCode}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["public", "landing", "product", "{{productId}}"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "public",
+                "landing",
+                "product",
+                "{{productId}}"
+              ],
               "query": [
-                { "key": "ref", "value": "{{referralCode}}" }
+                {
+                  "key": "ref",
+                  "value": "{{referralCode}}"
+                }
               ]
             }
           },
@@ -881,8 +1106,15 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/public/profile/{{referralCode}}/products",
-              "host": ["{{baseUrl}}"],
-              "path": ["public", "profile", "{{referralCode}}", "products"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "public",
+                "profile",
+                "{{referralCode}}",
+                "products"
+              ]
             }
           },
           "response": []
@@ -898,8 +1130,86 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/health",
-              "host": ["{{baseUrl}}"],
-              "path": ["health"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Achievements",
+      "item": [
+        {
+          "name": "Get All Achievements",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/achievements",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "achievements"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Achievements",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/achievements/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "achievements",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Achievement Summary",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/achievements/me/summary",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "achievements",
+                "me",
+                "summary"
+              ]
             }
           },
           "response": []

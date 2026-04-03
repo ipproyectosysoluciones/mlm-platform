@@ -350,6 +350,82 @@ jobs:
 
 ---
 
+## Test Coverage Summary / Resumen de Cobertura de Tests
+
+### Overall Test Count / Cantidad Total de Tests
+
+| Version | Unit | Integration | E2E | Total   |
+| ------- | ---- | ----------- | --- | ------- |
+| v1.8.x  | 93   | 178         | 37  | 308     |
+| v1.9.0  | 93   | 208         | 37  | **338** |
+
+### v1.9.0 New Tests / Nuevos Tests en v1.9.0
+
+#### Achievements Tests (7 tests)
+
+```bash
+# Run achievement tests / Ejecutar tests de logros
+cd backend
+npx jest src/__tests__/integration/achievements.test.ts
+```
+
+**Coverage:**
+
+- Get all achievements with user progress ✅
+- Get user's unlocked achievements ✅
+- Get achievement summary ✅
+- Auto-unlock achievement on login ✅
+- Auto-unlock achievement on first order ✅
+- Progress tracking for multi-step achievements ✅
+- Tier progression calculation ✅
+
+#### Leaderboards Tests (14 tests)
+
+```bash
+# Run leaderboard tests / Ejecutar tests del leaderboard
+cd backend
+npx jest src/__tests__/integration/leaderboards.test.ts
+```
+
+**Coverage:**
+
+- Get top sellers weekly ✅
+- Get top sellers monthly ✅
+- Get top sellers all-time ✅
+- Get top referrers weekly ✅
+- Get top referrers monthly ✅
+- Get top referrers all-time ✅
+- Get user rank as seller ✅
+- Get user rank as referrer ✅
+- Leaderboard Redis caching ✅
+- Cache invalidation on new order ✅
+- Cache invalidation on new referral ✅
+- Rank calculation with ties ✅
+- Percentile calculation accuracy ✅
+- Limit parameter validation (max 50) ✅
+
+#### MercadoPago Webhook Tests (9 tests)
+
+```bash
+# Run MercadoPago tests / Ejecutar tests de MercadoPago
+cd backend
+npx jest src/__tests__/integration/mercadopago.test.ts
+```
+
+**Coverage:**
+
+- Webhook signature verification (HMAC-SHA256) ✅
+- Invalid webhook signature rejection ✅
+- Webhook idempotency (duplicate handling) ✅
+- Payment status update from webhook ✅
+- Commission calculation after payment ✅
+- Achievement auto-unlock on order ✅
+- Leaderboard update on new order ✅
+- Currency conversion on international orders ✅
+- Webhook rate limiting ✅
+
+---
+
 ## Coverage Reports / Reportes de Cobertura
 
 ```bash

@@ -883,6 +883,229 @@ POST /api/payment/mercadopago/webhook
 
 ---
 
+## 🏆 Achievements / Logros
+
+### Get All Achievements
+
+```
+GET /api/achievements
+```
+
+**Authentication Required:** Yes (Bearer Token)
+
+**Description:** Returns all achievements (active and coming_soon) with unlock status and current progress for the authenticated user. / Retorna todos los logros (activos y próximos) con estado de desbloqueo y progreso actual del usuario autenticado.
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "acc-login-1",
+      "name": "First Login / Primer Login",
+      "description": "Log in for the first time / Inicia sesión por primera vez",
+      "icon": "🎯",
+      "category": "engagement",
+      "points": 10,
+      "status": "active",
+      "unlocked": true,
+      "unlockedAt": "2026-03-30T10:15:00.000Z",
+      "progress": 1,
+      "requirement": 1,
+      "badge": {
+        "id": "badge-login-1",
+        "name": "Newcomer / Novato",
+        "color": "#4CAF50"
+      }
+    }
+  ]
+}
+```
+
+---
+
+### Get User's Unlocked Achievements
+
+```
+GET /api/achievements/me
+```
+
+**Authentication Required:** Yes (Bearer Token)
+
+**Description:** Returns only the achievements the authenticated user has unlocked with unlock dates. / Retorna solo los logros desbloqueados por el usuario autenticado con fechas.
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "acc-login-1",
+      "name": "First Login / Primer Login",
+      "unlockedAt": "2026-03-30T10:15:00.000Z",
+      "points": 10,
+      "badge": {
+        "id": "badge-login-1",
+        "name": "Newcomer / Novato"
+      }
+    }
+  ]
+}
+```
+
+---
+
+### Get Achievement Summary
+
+```
+GET /api/achievements/me/summary
+```
+
+**Authentication Required:** Yes (Bearer Token)
+
+**Description:** Returns aggregate statistics — total unlocked, points earned, tier breakdown, and recent unlocks. / Retorna estadísticas agregadas — total desbloqueado, puntos ganados, desglose de niveles y desbloqueos recientes.
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "totalUnlocked": 5,
+    "totalPoints": 150,
+    "tier": "Silver",
+    "tierProgress": 0.75,
+    "nextTierUnlock": 200,
+    "recentUnlocks": [
+      {
+        "id": "acc-first-order",
+        "name": "First Order / Primer Pedido",
+        "unlockedAt": "2026-04-03T14:30:00.000Z"
+      }
+    ]
+  }
+}
+```
+
+---
+
+## 📊 Leaderboards / Tableros de Clasificación
+
+### Get Top Sellers
+
+```
+GET /api/leaderboard/sellers?period=weekly&limit=10
+```
+
+**Authentication Required:** Yes (Bearer Token)
+
+**Query Parameters:**
+
+- `period` (optional): `weekly` | `monthly` | `all-time` (default: `weekly`)
+- `limit` (optional): 1-50 (default: `10`)
+
+**Description:** Returns top sellers ranked by revenue in the specified period. / Retorna los mejores vendedores clasificados por ingresos en el período especificado.
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "rank": 1,
+      "userId": "user-abc123",
+      "email": "seller@example.com",
+      "firstName": "John",
+      "lastName": "Doe",
+      "avatar": "https://...",
+      "revenue": 5000.0,
+      "orderCount": 25,
+      "period": "weekly"
+    }
+  ]
+}
+```
+
+---
+
+### Get Top Referrers
+
+```
+GET /api/leaderboard/referrers?period=weekly&limit=10
+```
+
+**Authentication Required:** Yes (Bearer Token)
+
+**Query Parameters:**
+
+- `period` (optional): `weekly` | `monthly` | `all-time` (default: `weekly`)
+- `limit` (optional): 1-50 (default: `10`)
+
+**Description:** Returns top referrers ranked by number of referred users. / Retorna los mejores referidores clasificados por cantidad de usuarios referidos.
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "rank": 1,
+      "userId": "user-xyz789",
+      "email": "referrer@example.com",
+      "firstName": "Jane",
+      "lastName": "Smith",
+      "avatar": "https://...",
+      "referralCount": 50,
+      "period": "weekly"
+    }
+  ]
+}
+```
+
+---
+
+### Get User Rank
+
+```
+GET /api/leaderboard/me?period=weekly&category=sellers
+```
+
+**Authentication Required:** Yes (Bearer Token)
+
+**Query Parameters:**
+
+- `period` (optional): `weekly` | `monthly` | `all-time` (default: `weekly`)
+- `category` (optional): `sellers` | `referrers` (default: `sellers`)
+
+**Description:** Returns the authenticated user's rank and stats in the specified leaderboard category. / Retorna la posición y estadísticas del usuario autenticado en la categoría de tabla de clasificación especificada.
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "rank": 3,
+    "userId": "user-abc123",
+    "email": "user@example.com",
+    "firstName": "John",
+    "lastName": "Doe",
+    "revenue": 2500.0,
+    "orderCount": 12,
+    "percentile": 85,
+    "totalUsers": 1200,
+    "period": "weekly",
+    "category": "sellers"
+  }
+}
+```
+
+---
+
 ## ⚠️ Error Codes
 
 | Code               | Description              |

@@ -4,28 +4,30 @@
 
 ### ✅ DONE - Core MVP Features
 
-| Feature                         | Description                                                                                                                                     |
-| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| Authentication                  | JWT tokens, bcrypt password hashing, rate limiting (5 req/15min)                                                                                |
-| Binary Tree                     | Closure Table pattern, automatic left/right placement                                                                                           |
-| Commission System               | 5 niveles (direct 10%, level_1 5%, level_2 3%, level_3 2%, level_4 1%), configurable rates                                                      |
-| Dashboard                       | Stats, charts, recent commissions, QR code link                                                                                                 |
-| QR Code Generation              | Data URL for referral links                                                                                                                     |
-| Admin Panel                     | User management, status control (active/inactive/suspended), promote to admin                                                                   |
-| CRM                             | Leads CRUD, Tasks, Communications, Kanban board, CSV import/export                                                                              |
-| Tree Visualization              | React Flow with pan/zoom, minimap, search, details panel                                                                                        |
-| i18n Bilingual                  | Spanish/English with auto-detection and localStorage persistence                                                                                |
-| Horizontal Navbar               | Responsive design with mobile hamburger menu                                                                                                    |
-| Landing Pages                   | Visual builder, tracking (views/conversions), templates                                                                                         |
-| E-commerce Streaming            | Products catalog, orders, subscriptions (Netflix, Spotify, etc.)                                                                                |
-| Wallet                          | Balance tracking, deposits, withdrawals with fee calculation (5%, $20 min)                                                                      |
-| Currency Conversion             | Frankfurter API integration                                                                                                                     |
-| CommissionConfig API            | Admin CRUD for configurable commission rates                                                                                                    |
-| Tests                           | 271 total (93 unit + 178 integration) + 37 E2E = 308 tests passing                                                                              |
-| **2FA (TOTP)**                  | **Two-Factor Authentication with TOTP, recovery codes, AES-256-GCM encryption** ⭐ NEW                                                          |
-| **Playwright Visual Testing**   | **E2E tests with headed mode, video recording, UI mode** ⭐ NEW                                                                                 |
-| **Frontend 2FA UI**             | **React UI for 2FA setup, QR code display, enable/disable, recovery codes** ⭐ NEW                                                              |
-| **Payment Gateway Integration** | **PayPal (global) + MercadoPago (Colombia) — order creation, capture, refunds, webhooks, idempotency, SSRF-safe certificate validation** ⭐ NEW |
+| Feature                         | Description                                                                                                                                        |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Authentication                  | JWT tokens, bcrypt password hashing, rate limiting (5 req/15min)                                                                                   |
+| Binary Tree                     | Closure Table pattern, automatic left/right placement                                                                                              |
+| Commission System               | 5 niveles (direct 10%, level_1 5%, level_2 3%, level_3 2%, level_4 1%), configurable rates                                                         |
+| Dashboard                       | Stats, charts, recent commissions, QR code link                                                                                                    |
+| QR Code Generation              | Data URL for referral links                                                                                                                        |
+| Admin Panel                     | User management, status control (active/inactive/suspended), promote to admin                                                                      |
+| CRM                             | Leads CRUD, Tasks, Communications, Kanban board, CSV import/export                                                                                 |
+| Tree Visualization              | React Flow with pan/zoom, minimap, search, details panel                                                                                           |
+| i18n Bilingual                  | Spanish/English with auto-detection and localStorage persistence                                                                                   |
+| Horizontal Navbar               | Responsive design with mobile hamburger menu                                                                                                       |
+| Landing Pages                   | Visual builder, tracking (views/conversions), templates                                                                                            |
+| E-commerce Streaming            | Products catalog, orders, subscriptions (Netflix, Spotify, etc.)                                                                                   |
+| Wallet                          | Balance tracking, deposits, withdrawals with fee calculation (5%, $20 min)                                                                         |
+| Currency Conversion             | Frankfurter API integration                                                                                                                        |
+| CommissionConfig API            | Admin CRUD for configurable commission rates                                                                                                       |
+| Tests                           | 271 total (93 unit + 178 integration) + 37 E2E = 308 tests passing                                                                                 |
+| **2FA (TOTP)**                  | **Two-Factor Authentication with TOTP, recovery codes, AES-256-GCM encryption** ⭐ v1.7.0                                                          |
+| **Playwright Visual Testing**   | **E2E tests with headed mode, video recording, UI mode** ⭐ v1.7.0                                                                                 |
+| **Frontend 2FA UI**             | **React UI for 2FA setup, QR code display, enable/disable, recovery codes** ⭐ v1.7.0                                                              |
+| **Payment Gateway Integration** | **PayPal (global) + MercadoPago (Colombia) — order creation, capture, refunds, webhooks, idempotency, SSRF-safe certificate validation** ⭐ v1.8.1 |
+| **Leaderboards System**         | **Weekly/monthly/all-time leaderboards with Redis cache, seller rankings, referrer rankings, user percentile** ⭐ v1.9.0                           |
+| **Achievements & Badges**       | **8 achievements with auto-unlock system, user progress tracking, achievement summary, tier progression** ⭐ v1.9.0                                |
 
 ### ⏳ IN PROGRESS
 
@@ -886,3 +888,13 @@ pnpm test:all
   - PayPal SDK: order creation, capture, refunds, webhooks, duplicate prevention, idempotency
   - MercadoPago SDK v2: Colombian market — preferences, payments, refunds, webhooks
   - SSRF fix in PayPalService: validates certificate URLs before fetching
+- **v1.9.0** - Gamification & Leaderboards System (Sprint 1 Complete)
+  - Leaderboards: Weekly/monthly/all-time rankings with Redis cache
+    - Top sellers by revenue
+    - Top referrers by count
+    - User rank & percentile
+  - Achievements & Badges: Auto-unlock system with 8 achievements
+    - First login, first order, referral milestones, sales targets
+    - User progress tracking & achievement summary
+    - Badge tier progression
+  - Total: 308 tests + 30 new tests for gamification (v1.9.0)
