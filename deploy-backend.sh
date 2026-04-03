@@ -29,7 +29,7 @@ cd backend && pnpm build && cd ..
 
 # Build image
 echo "📦 Building backend image..."
-docker build -t ${BACKEND_IMAGE} -f backend/Dockerfile .
+docker build -t ${BACKEND_IMAGE} -f backend/Dockerfile ./backend
 docker tag ${BACKEND_IMAGE} ipproyectos/mlm-backend:latest
 
 # Test local
