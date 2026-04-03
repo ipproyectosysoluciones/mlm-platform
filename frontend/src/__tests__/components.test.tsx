@@ -16,16 +16,46 @@ vi.mock('../services/api', async () => {
     delete: vi.fn().mockRejectedValue(new Error('Network Error')),
     interceptors: { request: { use: vi.fn() }, response: { use: vi.fn() } },
   };
+
+  // DashboardData shape — matches the DashboardData interface in types/index.ts
+  const mockDashboardData = {
+    user: {
+      id: 'test-user',
+      email: 'test@example.com',
+      referralCode: 'ABC123',
+      level: 1,
+    },
+    stats: {
+      totalReferrals: 0,
+      leftCount: 0,
+      rightCount: 0,
+      totalEarnings: 0,
+      pendingEarnings: 0,
+    },
+    referralLink: 'https://example.com/ref/ABC123',
+    recentCommissions: [],
+    recentReferrals: [],
+    referralsChart: [],
+    commissionsChart: [],
+  };
+
+  // ProductListResponse shape — matches what ProductCatalog does: response.products
+  const mockProductListResponse = {
+    products: [],
+    total: 0,
+    page: 1,
+    limit: 10,
+    totalPages: 0,
+  };
+
   return {
     default: mockApiClient,
     productService: {
-      getProducts: vi
-        .fn()
-        .mockResolvedValue({ data: { products: [], total: 0, page: 1, limit: 10, totalPages: 0 } }),
+      getProducts: vi.fn().mockResolvedValue(mockProductListResponse),
     },
     orderService: { createOrder: vi.fn() },
-    dashboardService: { getDashboard: vi.fn().mockResolvedValue({ data: null }) },
-    userService: { getProfile: vi.fn().mockResolvedValue({ data: null }) },
+    dashboardService: { getDashboard: vi.fn().mockResolvedValue(mockDashboardData) },
+    userService: { getProfile: vi.fn().mockResolvedValue(null) },
   };
 });
 
