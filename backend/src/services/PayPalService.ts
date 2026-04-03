@@ -81,8 +81,28 @@ class PayPalService {
       return false;
     }
 
+    // Validate certificate URL to prevent SSRF
+    let parsedCertUrl: URL;
+    try {
+      parsedCertUrl = new URL(certUrl);
+    } catch (err) {
+      console.error('[PayPal] Invalid certificate URL format:', certUrl);
+      return false;
+    }
+
+    // Only allow HTTPS URLs to PayPal domains
+    const allowedHostSuffix = '.paypal.com';
+    const hostname = parsedCertUrl.hostname.toLowerCase();
+    if (
+      parsedCertUrl.protocol !== 'https:' ||
+      (!hostname.endsWith(allowedHostSuffix) && hostname !== 'paypal.com')
+    ) {
+      console.error('[PayPal] Certificate URL not allowed:', certUrl);
+      return false;
+    }
+
     // Download the certificate
-    const certResponse = await axios.get(certUrl, { responseType: 'text' });
+    const certResponse = await axios.get(parsedCertUrl.toString(), { responseType: 'text' });
     const cert = certResponse.data;
 
     // Construct the expected signature
