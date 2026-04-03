@@ -62,6 +62,9 @@ jobs:
           TEST_DB_PASSWORD: test
           JWT_SECRET: ci-test-secret
           NODE_ENV: test
+          VAPID_PUBLIC_KEY: BEGdQfcWcRjRhc1CDD29mmfF6pEHpW0hSHyvu22XpZMKozkI8gBE17tbS_rxKs0hlVgiAJDvhwHc1ARPZaD7eWI
+          VAPID_PRIVATE_KEY: 8u_1W1XU6Gx6FHs46I7dz4LjKkwXD9kA0eA4xIFblis
+          VAPID_SUBJECT: mailto:test@mlm-test.com
 
       - name: Upload backend artifact
         uses: actions/upload-artifact@v4

@@ -71,6 +71,12 @@ export class PaymentPayPalController {
         .json(ApiResponse.error('INVALID_ORDER_ID', 'Invalid PayPal order ID format', 400));
     }
 
+    if (!internalOrderId) {
+      return res
+        .status(400)
+        .json(ApiResponse.error('MISSING_INTERNAL_ORDER_ID', 'Internal order ID is required', 400));
+    }
+
     const capturedOrder = await paypalService.captureOrder({
       orderId,
       internalOrderId,
@@ -95,33 +101,62 @@ export class PaymentPayPalController {
   /**
    * POST /api/payment/paypal/webhook
    * Handle PayPal webhook events
+   * @see https://developer.paypal.com/docs/api-basics/notifications/webhooks/
    */
   static webhook = asyncHandler(async (req: Request, res: Response) => {
+    const body = JSON.stringify(req.body);
+    const headers = {
+      'paypal-transmission-id': req.headers['paypal-transmission-id'] as string,
+      'paypal-transmission-time': req.headers['paypal-transmission-time'] as string,
+      'paypal-transmission-sig': req.headers['paypal-transmission-sig'] as string,
+      'paypal-cert-url': req.headers['paypal-cert-url'] as string,
+      'paypal-auth-algo': req.headers['paypal-auth-algo'] as string,
+    };
+
+    // Verify webhook signature
+    const isValid = await paypalService.verifyWebhookSignature(headers, body);
+    if (!isValid) {
+      console.error('[PayPal Webhook] Invalid signature');
+      return res
+        .status(403)
+        .json(ApiResponse.error('INVALID_SIGNATURE', 'Webhook signature verification failed', 403));
+    }
+
     const event = req.body;
 
-    // Log webhook event (in production, verify webhook signature)
+    // Check idempotency
+    if (paypalService.isIdempotent(event.resource?.id)) {
+      console.log('[PayPal Webhook] Duplicate event, skipping:', event.resource?.id);
+      return res.status(200).json({ received: true, duplicate: true });
+    }
+
     console.log('[PayPal Webhook]', event.event_type, event.resource?.id);
 
     switch (event.event_type) {
       case 'CHECKOUT.ORDER.APPROVED':
         // Order was approved by user
-        console.log('[PayPal] Order approved:', event.resource.id);
+        console.log('[PayPal] Order approved:', event.resource?.id);
         break;
 
       case 'PAYMENT.CAPTURE.COMPLETED':
         // Payment successfully captured
-        console.log('[PayPal] Payment completed:', event.resource.id);
+        console.log('[PayPal] Payment completed:', event.resource?.id);
         // TODO: Trigger commission calculation
         break;
 
       case 'PAYMENT.CAPTURE.REFUNDED':
         // Payment was refunded
-        console.log('[PayPal] Payment refunded:', event.resource.id);
+        console.log('[PayPal] Payment refunded:', event.resource?.id);
         // TODO: Reverse commissions if applicable
         break;
 
       default:
         console.log('[PayPal] Unhandled event:', event.event_type);
+    }
+
+    // Mark as processed for idempotency
+    if (event.resource?.id) {
+      paypalService.markAsProcessed(event.resource.id);
     }
 
     return res.status(200).json({ received: true });

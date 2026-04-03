@@ -20,7 +20,9 @@ module.exports = {
   detectOpenHandles: true,
   workerIdleMemoryLimit: '512MB',
   // Mock Sentry to prevent hanging (Sentry v10 hangs on import with fake DSN)
+  // Map .js imports to .ts files (ESM-style imports used in source with ts-jest)
   moduleNameMapper: {
     '^@sentry/node$': '<rootDir>/src/__tests__/__mocks__/sentry.ts',
+    '^(\\.{1,2}/.*)\\.js$': '$1',
   },
 };

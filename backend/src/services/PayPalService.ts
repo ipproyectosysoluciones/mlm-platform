@@ -5,7 +5,24 @@
  */
 
 import axios from 'axios';
+import crypto from 'crypto';
 import { config } from '../config/env.js';
+
+/**
+ * CRC32 implementation required by PayPal webhook signature spec.
+ * PayPal uses CRC32 of the raw body, not SHA256.
+ */
+function crc32(data: string): number {
+  let crc = 0xffffffff;
+  const buf = Buffer.from(data, 'utf8');
+  for (let i = 0; i < buf.length; i++) {
+    crc ^= buf[i];
+    for (let j = 0; j < 8; j++) {
+      crc = crc & 1 ? (crc >>> 1) ^ 0xedb88320 : crc >>> 1;
+    }
+  }
+  return (crc ^ 0xffffffff) >>> 0;
+}
 
 const PAYPAL_API_BASE =
   config.paypal.mode === 'sandbox'
@@ -45,6 +62,133 @@ interface CaptureOrderRequest {
 class PayPalService {
   private accessToken: string | null = null;
   private tokenExpiry: number = 0;
+
+  /**
+   * Validate a PayPal identifier used in URL path segments.
+   * This restricts the characters and length to prevent malformed paths.
+   */
+  private validatePayPalId(id: string): void {
+    // Allow URL-safe alpha-numeric IDs with optional dashes, up to 64 chars.
+    const PAYPAL_ID_REGEX = /^[A-Za-z0-9-]{1,64}$/;
+    if (!PAYPAL_ID_REGEX.test(id)) {
+      throw new Error('Invalid PayPal identifier format');
+    }
+  }
+
+  /**
+   * In-memory idempotency cache (for production, use Redis)
+   * Key: PayPal order ID, Value: timestamp
+   */
+  private idempotencyCache = new Map<string, number>();
+  private readonly IDEMPOTENCY_TTL = 5 * 60 * 1000; // 5 minutes
+  private readonly CACHE_MAX_SIZE = 10_000;
+
+  /**
+   * Periodic cleanup: remove all expired entries from the idempotency cache.
+   * Called on every markAsProcessed call to keep memory bounded.
+   */
+  private cleanupIdempotencyCache(): void {
+    const now = Date.now();
+    for (const [key, timestamp] of this.idempotencyCache) {
+      if (now - timestamp >= this.IDEMPOTENCY_TTL) {
+        this.idempotencyCache.delete(key);
+      }
+    }
+  }
+
+  /**
+   * Verify PayPal webhook signature
+   * @see https://developer.paypal.com/docs/api-basics/notifications/webhooks/verify-signatures/
+   */
+  async verifyWebhookSignature(
+    headers: Record<string, string | undefined>,
+    body: string
+  ): Promise<boolean> {
+    const { clientId } = config.paypal;
+    const webhookId = config.paypal.webhookId;
+
+    if (!webhookId) {
+      console.warn('[PayPal] Webhook ID not configured — rejecting webhook');
+      return false; // Fail closed: do NOT skip verification if webhookId is missing
+    }
+
+    const transmissionId = headers['paypal-transmission-id'];
+    const transmissionTime = headers['paypal-transmission-time'];
+    const transmissionSig = headers['paypal-transmission-sig'];
+    const certUrl = headers['paypal-cert-url'];
+    const authAlgo = headers['paypal-auth-algo'];
+
+    if (!transmissionId || !transmissionTime || !transmissionSig || !certUrl || !authAlgo) {
+      console.error('[PayPal] Missing webhook headers');
+      return false;
+    }
+
+    // Validate certificate URL to prevent SSRF
+    let parsedCertUrl: URL;
+    try {
+      parsedCertUrl = new URL(certUrl);
+    } catch (err) {
+      console.error('[PayPal] Invalid certificate URL format:', certUrl);
+      return false;
+    }
+
+    // Only allow HTTPS URLs to PayPal domains
+    const allowedHostSuffix = '.paypal.com';
+    const hostname = parsedCertUrl.hostname.toLowerCase();
+    if (
+      parsedCertUrl.protocol !== 'https:' ||
+      (!hostname.endsWith(allowedHostSuffix) && hostname !== 'paypal.com')
+    ) {
+      console.error('[PayPal] Certificate URL not allowed:', certUrl);
+      return false;
+    }
+
+    // Download the certificate
+    const certResponse = await axios.get(parsedCertUrl.toString(), { responseType: 'text' });
+    const cert = certResponse.data;
+
+    // Construct the expected signature
+    const expectedSignature = Buffer.from(transmissionSig, 'base64');
+
+    // Build the message to verify — PayPal spec requires CRC32 of the raw body (NOT SHA256)
+    // See: https://developer.paypal.com/docs/api-basics/notifications/webhooks/verify-signatures/
+    const bodyCrc32 = crc32(body);
+    const message = `${transmissionId}|${transmissionTime}|${webhookId}|${bodyCrc32}`;
+
+    // Verify the signature using the certificate
+    const verify = crypto.createVerify('SHA256');
+    verify.update(message);
+    const isValid = verify.verify(cert, expectedSignature);
+
+    return isValid;
+  }
+
+  /**
+   * Check idempotency for a PayPal order
+   * Returns true if the order was already processed recently
+   */
+  isIdempotent(paypalOrderId: string): boolean {
+    const timestamp = this.idempotencyCache.get(paypalOrderId);
+    if (timestamp && Date.now() - timestamp < this.IDEMPOTENCY_TTL) {
+      return true;
+    }
+    // Clean up old entries
+    if (timestamp) {
+      this.idempotencyCache.delete(paypalOrderId);
+    }
+    return false;
+  }
+
+  /**
+   * Mark an order as processed for idempotency
+   */
+  markAsProcessed(paypalOrderId: string): void {
+    // Cleanup expired entries before adding new ones to prevent unbounded growth
+    if (this.idempotencyCache.size >= this.CACHE_MAX_SIZE) {
+      this.cleanupIdempotencyCache();
+    }
+    this.idempotencyCache.set(paypalOrderId, Date.now());
+  }
 
   /**
    * Get OAuth token from PayPal
@@ -135,6 +279,7 @@ class PayPalService {
    * POST /v2/checkout/orders/{orderId}/capture
    */
   async captureOrder(request: CaptureOrderRequest): Promise<PayPalOrder> {
+    this.validatePayPalId(request.orderId);
     const token = await this.getAccessToken();
 
     const response = await axios.post(
@@ -156,6 +301,7 @@ class PayPalService {
    * POST /v2/payments/captures/{captureId}/refund
    */
   async refundPayment(captureId: string, amount?: number, currency: string = 'USD'): Promise<void> {
+    this.validatePayPalId(captureId);
     const token = await this.getAccessToken();
 
     const refundData: Record<string, unknown> = {};
@@ -180,6 +326,7 @@ class PayPalService {
    * GET /v2/checkout/orders/{orderId}
    */
   async getOrder(orderId: string): Promise<PayPalOrder> {
+    this.validatePayPalId(orderId);
     const token = await this.getAccessToken();
 
     const response = await axios.get(`${PAYPAL_API_BASE}/v2/checkout/orders/${orderId}`, {
