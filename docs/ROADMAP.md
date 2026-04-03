@@ -2,494 +2,340 @@
 
 > Hoja de ruta completa para la plataforma MLM de Afiliaciones Binarias.
 
-**Versión actual**: 1.7.1  
+**Versión actual**: 1.8.0  
 **Última actualización**: 2026-04-03  
-**Estado**: Activo - Desarrollo continuo
+**Estado**: Activo - Desarrollo intensivo  
+**Meta**: v2.0.0 en ~1 mes
 
 ---
 
-## 📊 Resumen de Progreso
+## 📊 Estado Actual del Proyecto
+
+### ✅ Lo que YA está implementado (15 días)
+
+| Área               | Funcionalidad                     | Estado |
+| ------------------ | --------------------------------- | ------ |
+| **Auth**           | JWT, 2FA, Roles                   | ✅     |
+| **MLM**            | Binario con Closure Table         | ✅     |
+| **Comisiones**     | 5 niveles configurables           | ✅     |
+| **E-commerce**     | Productos streaming (MVP ejemplo) | ✅     |
+| **Wallet**         | Balance, transacciones, retiros   | ✅     |
+| **CRM**            | Leads, Tasks, Communications      | ✅     |
+| **Notificaciones** | Email (Brevo), Push (Web)         | ✅     |
+| **PWA**            | Offline, instalable, shortcuts    | ✅     |
+| **Landing Pages**  | Productos con SEO                 | ✅     |
+| **Dashboard**      | Stats, tree view, perfil          | ✅     |
+| **i18n**           | Español + Inglés                  | ✅     |
+| **Tests**          | 225 tests (backend + frontend)    | ✅     |
+
+---
+
+## 🎯 Visión del Proyecto
+
+### Modelo de Negocio
+
+- **Multi-vendor Marketplace**: Los afiliados pueden vender
+- **Productos Genéricos**: Adaptable a cualquier negocio
+- **Delivery Integrado**: Pickup + DiDi + Uber + InDriver
+
+### Tipos de Negocio Soportados
 
 ```
-████████████████░░░░░░░░░░░ 95% Completado
+□ Streaming (Netflix, Spotify, etc.) ← MVP actual
+□ SaaS / Software
+□ Servicios Locales (limpieza, jardinería, plomería)
+□ Productos Físicos (tienda, dropshipping)
+□ Cursos / Educación
+□ Membresías / Club
+□ Comida / Delivery ( Rappi, PedidosYa, etc.)
+□ Travel
+□ Health & Wellness
 ```
 
-| Fase     | Nombre            | Estado      | Versión |
-| -------- | ----------------- | ----------- | ------- |
-| Phase 1  | MVP - Core        | ✅ Completo | v1.0.0  |
-| Phase 2  | Visual Tree UI    | ✅ Completo | v1.1.0  |
-| Phase 3  | E-commerce        | ✅ Completo | v1.2.0  |
-| Phase 4  | Deployment        | ✅ Completo | v1.3.0  |
-| Phase 5  | Wallet + Pagos    | ✅ Completo | v1.4.0  |
-| Phase 6  | Backend Refactor  | ✅ Completo | v1.5.0  |
-| Phase 7  | Notificaciones    | ✅ Completo | v1.5.0  |
-| Phase 8  | PWA + Offline     | ✅ Completo | v1.6.0  |
-| Phase 9  | Landing Products  | ✅ Completo | v1.7.0  |
-| Phase 10 | Cloudflare+Vercel | ✅ Completo | v1.7.1  |
-| Phase 11 | Enterprise        | 📋 Planeado | v2.0.0  |
-
----
-
-## 🎯 Historial de Versiones
-
-### ✅ v1.0.0 - MVP (Marzo 2026)
-
-**Fecha de lanzamiento**: 2026-03-15  
-**Estado**: ✅ Stable
-
-#### Funcionalidades Implementadas
-
-- [x] Sistema de autenticación JWT
-  - Registro con código de patrocinador
-  - Login con email/password
-  - Renovación de tokens
-- [x] Árbol binario con Closure Table
-  - Colocación automática izquierda/derecha
-  - Consulta de upline y downline
-- [x] Sistema de comisiones (5 niveles)
-  - Directo: 10%
-  - Nivel 1: 5%
-  - Nivel 2: 3%
-  - Nivel 3: 2%
-  - Nivel 4: 1%
-- [x] Dashboard con estadísticas
-  - Total de referidos
-  - Conteo izquierda/derecha
-  - Ganancias totales y pendientes
-- [x] Panel de administración
-  - Gestión de usuarios
-  - Cambio de estado
-  - Roles admin/user
-- [x] CRM básico
-  - Leads (prospectos)
-  - Tareas
-  - Comunicaciones
-- [x] Generación de códigos QR
-- [x] Rate limiting
-- [x] 158 tests de integración
-
----
-
-### ✅ v1.1.0 - Visual Tree UI (Marzo 2026)
-
-**Fecha de lanzamiento**: 2026-03-20  
-**Estado**: ✅ Stable
-
-#### Funcionalidades Implementadas
-
-- [x] Visualización interactiva del árbol (React Flow)
-  - Pan y zoom suaves
-  - Minimap para navegación
-- [x] Nodos personalizados
-  - Indicadores de posición (izquierda/derecha)
-  - Estados: vacío, con usuario, seleccionado
-- [x] Búsqueda de miembros
-  - Por nombre o email
-  - Navegación directa al nodo
-- [x] Panel de detalles
-  - Información del usuario
-  - Estadísticas del nodo
-  - Navegación a subárbol
-- [x] Controles de profundidad
-  - Selector de niveles (1-10)
-- [x] Estados de carga optimizados
-  - Loading con skeleton
-  - Empty state con mensaje
-  - Error state con retry
-- [x] Internacionalización (ES/EN)
-- [x] 13 tests E2E adicionales
-
----
-
-### ✅ v1.2.0 - E-commerce Streaming (Marzo 2026)
-
-**Fecha de lanzamiento**: 2026-03-25  
-**Estado**: ✅ Stable
-
-#### Funcionalidades Implementadas
-
-- [x] Catálogo de productos
-  - Netflix, Spotify, HBO, Disney+, Amazon Prime
-  - Suscripciones de streaming
-- [x] Gestión de productos (admin)
-  - CRUD completo
-  - Categorías
-  - Precios configurables
-- [x] Sistema de pedidos
-  - Compra con un clic
-  - Estado del pedido
-  - Historial de compras
-- [x] URLs de streaming
-  - Generación de tokens
-  - URLs temporales
-- [x] Integración con comisiones
-  - Comisiones automáticas al comprar
-- [x] 17 tests adicionales
-
----
-
-### ✅ v1.3.0 - Deployment & CI/CD (Marzo 2026)
-
-**Fecha de lanzamiento**: 2026-03-30  
-**Estado**: ✅ Stable
-
-#### Funcionalidades Implementadas
-
-- [x] Docker deployment
-  - Imágenes optimizadas
-  - Multi-stage builds
-  - docker-compose.prod.yml
-- [x] CI/CD con GitHub Actions
-  - Pipeline de CI (tests)
-  - Pipeline de CD (Docker Hub)
-- [x] Documentación completa
-  - ARCHITECTURE.md
-  - API.md
-  - DEPLOYMENT.md
-  - PRD.md
-  - ROADMAP.md
-  - INDEX.md (directorio)
-- [x] Migración a PostgreSQL
-  - Sequelize con dialecto postgres
-  - Índices optimizados
-- [x] Fixes de producción
-  - React 19 + Zustand compatibility
-  - CORS para localhost:3001
-  - Commission status enum fix
-- [x] Frontend refactoring
-  - 28 componentes modularizados
-  - Barrel exports por carpeta
-  - Reducción de líneas en archivos principales
-
----
-
-### ✅ v1.4.0 - Wallet & Pagos (Marzo 2026)
-
-**Fecha de lanzamiento**: 2026-03-27  
-**Estado**: ✅ Stable
-
-#### Funcionalidades Implementadas
-
-- [x] Sistema de wallet completo
-  - Balance de usuario
-  - Depósitos
-  - Retiros (5% fee, $20 min)
-  - Historial de transacciones
-- [x] Conversión de moneda
-  - API Frankfurter integration
-  - Tasas en tiempo real
-- [x] Pagos automáticos
-  - Integración con comisiones
-  - Cálculo automático
-- [x] Auditoría de transacciones
-  - Logs detallados
-  - Reportes financieros
-
----
-
-### ✅ v1.5.0 - Backend Refactoring + Notificaciones (Marzo 2026)
-
-**Fecha de lanzamiento**: 2026-03-31  
-**Estado**: ✅ Stable
-
-#### Funcionalidades Implementadas
-
-- [x] Refactoring de controllers
-  - 10+ controllers modularizados
-  - Patrón barrel export implementado
-  - Auth, CRM, Commissions, Admin, Orders, Products, Reports, Dashboard, TwoFactor, Invoices
-- [x] Notificaciones Email
-  - EmailService con métodos de notificación
-  - sendWelcome, sendCommission, sendDownline
-  - sendWithdrawalApproved, sendWithdrawalRejected, sendLevelAchieved
-- [x] SECURITY.md
-  - Política de seguridad en repository root
-  - Habilitado en GitHub Security Policy
-
----
-
-### ✅ v1.6.0 - PWA + Offline + Offline Banner (Marzo 2026)
-
-**Fecha de lanzamiento**: 2026-03-31  
-**Estado**: ✅ Stable
-
-#### Funcionalidades Implementadas
-
-- [x] Página 404 Not Found
-  - Diseño consistente con la app
-  - Animación sutil
-  - Botón Dashboard
-- [x] Página Offline
-  - Sin conexión a internet
-  - Botón reintentar
-  - Sugerencias de conexión
-- [x] Rutas catch-all
-  - Cualquier ruta unknown redirige a /404
-- [x] OfflineBanner component
-  - Detección automática online/offline
-  - Banner cuando se pierde conexión
-  - Race condition fix
-- [x] PWA Manifest mejorado
-  - 8 tamaños de iconos (72px a 512px)
-  - Iconos maskable para Android
-  - Shortcuts: Dashboard, Mi Árbol, Cartera, Catálogo
-  - Screenshots para instalación
-- [x] Meta tags adicionales
-  - Open Graph, Twitter Card
-  - Apple splash screens
-  - Microsoft tiles (browserconfig.xml)
-
----
-
-### ✅ v1.7.0 - Landing Products (Abril 2026)
-
-**Fecha de lanzamiento**: 2026-04-01  
-**Estado**: ✅ Stable
-
-#### Funcionalidades Implementadas
-
-- [x] ProductCatalog page
-  - Modern landing page design
-  - Hero section con gradientes
-  - Grid de productos con filtros
-- [x] ProductCard component
-  - Cards con diseño glassmorphism
-  - Animaciones hover
-  - Platform icons
-- [x] Checkout flow
-  - Proceso de compra simplificado
-  - Validación de formularios
-
----
-
-### ✅ v1.7.1 - Cloudflare Tunnel + Vercel (Abril 2026)
-
-**Fecha de lanzamiento**: 2026-04-03  
-**Estado**: ✅ Stable
-
-#### Funcionalidades Implementadas
-
-- [x] Cloudflare Tunnel deployment
-  - Backend accessible via `backend.lordastaroth77.cloudflareaccess.com`
-  - Zero Trust Access policies configured
-  - Service Token authentication
-- [x] Vercel Frontend deployment
-  - Frontend deployed to Vercel CDN
-  - Environment variables for API URL
-  - Automatic deployments via GitHub Actions
-- [x] Separate CI/CD workflows
-  - `cd-backend.yml`: Backend → Docker Hub
-  - `deploy-frontend.yml`: Frontend → Vercel
-  - `deploy-backend.sh`: Local deployment script
-- [x] API URL migration
-  - From ngrok to Cloudflare Tunnel
-  - Updated vercel.json rewrites
-  - Updated .env.production
-
----
-
-## 📋 Planeado
-
-### 📋 v1.8.0 - Performance Optimization
-
-**Estado**: 📋 Planeado  
-**Target**: Q2 2026
-
-#### Funcionalidades Planeadas
-
-- [ ] Code splitting y lazy loading
-- [ ] Database query optimization
-- [ ] Redis caching improvements
-- [ ] CDN para assets estáticos
-
-### 📋 v2.0.0 - Enterprise
-
-### 📋 v2.0.0 - Enterprise
-
-**Estado**: 📋 Planeado  
-**Target**: Q3-Q4 2026
-
-#### Funcionalidades Enterprise
-
-- [ ] White-label
-  - [ ] Dominios personalizados
-  - [ ] Temas configurables
-  - [ ] Logo personalizable
-- [ ] Estructuras de comisión avanzadas
-  - [ ] Unilevel
-  - [ ] Matrix
-  - [ ] Personalizadas
-- [ ] SSO/SAML
-  - [ ] Google Workspace
-  - [ ] Azure AD
-  - [ ] Okta
-- [ ] Permisos avanzados
-  - [ ] Equipos y departamentos
-  - [ ] Permisos granulares
-- [ ] Webhooks API
-  - [ ] Eventos de usuario
-  - [ ] Eventos de comisión
-  - [ ] Eventos de orden
-- [ ] KYC/Verificación de identidad
-  - [ ] Documentos de identidad
-  - [ ] Verificación facial
-- [ ] 2FA (TOTP)
-  - [ ] Códigos QR
-  - [ ] Códigos de recuperación
-  - [ ] App authenticator
-
----
-
-## 📋 Planeado - Próximas Fases
-
-### 📋 v1.7.0 - Landing Pages Productos
-
-**Estado**: 📋 Planeado  
-**Target**: Q1 2026
-
-#### Funcionalidades Planeadas
-
-- [ ] Landing pages de productos/servicios
-  - Marketing de la plataforma
-  - SEO optimizado
-  - Templates de alto impacto
-- [ ] PWA Manifest completo
-  - Más iconos para PWA
-  - Colores de tema configurados
-  - Instalación en dispositivos
-
-### 📋 v2.0.0 - Enterprise
-
-| Feature Original    | Nueva Ubicación |
-| ------------------- | --------------- |
-| Email notifications | v2.0            |
-| SMS 2FA             | v2.0            |
-| Weekly digest       | v2.0            |
-| Push notifications  | v2.0            |
-
----
-
-## 📈 Métricas de Proyecto
-
-### Test Coverage
+### Delivery Methods
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    Cobertura de Tests                    │
-├─────────────────────────────────────────────────────────┤
-│                                                          │
-│  Unit Tests:        ████████████████████  61 tests      │
-│  Integration Tests: ████████████████████  158 tests     │
-│  E2E Tests:        ████████████████░░░░  37 tests      │
-│                                                          │
-│  TOTAL:            ████████████████████  256 tests      │
-│                                                          │
-│  Cobertura:        █████████████████░░░  85%             │
-│                                                          │
-└─────────────────────────────────────────────────────────┘
+✅ Pickup - Cliente recoge en punto designado
+✅ DiDi Envíos - Integración con DiDi
+✅ Uber Flash/Rush - Integración con Uber
+✅ InDriver - Integración con InDriver
 ```
-
-### Líneas de Código
-
-| Componente                  | Líneas      | Archivos |
-| --------------------------- | ----------- | -------- |
-| Backend (TypeScript)        | ~15,000     | ~120     |
-| Frontend (TypeScript/React) | ~12,000     | ~80      |
-| Tests                       | ~8,000      | ~50      |
-| Documentación               | ~3,000      | ~8       |
-| **TOTAL**                   | **~38,000** | **~258** |
 
 ---
 
-## 🔧 Refactorización del Código
+## 📋 GitHub Project
 
-### Estado Actual
+**URL**: https://github.com/users/ipproyectosysoluciones/projects/4
 
-| Componente           | Estado                  |
-| -------------------- | ----------------------- |
-| Frontend refactoring | ✅ Completo (Phase 8/8) |
-| Backend refactoring  | ⏳ Pendiente            |
+### Issues Creados (13 tareas)
 
-### Frontend Components Modularized
-
-| Carpeta               | Componentes        |
-| --------------------- | ------------------ |
-| components/shared/    | 3 componentes      |
-| components/layout/    | 4 componentes      |
-| components/dashboard/ | 4 componentes      |
-| components/tree/      | 5 componentes      |
-| components/crm/       | 5 componentes      |
-| components/admin/     | 3 componentes      |
-| components/routes/    | 4 componentes      |
-| **TOTAL**             | **28 componentes** |
-
----
-
-## 🔗 Recursos
-
-### Repositorio
-
-```
-GitHub: https://github.com/ipproyectosysoluciones/mlm-platform
-Docker Hub: https://hub.docker.com/u/ipproyectos
-```
-
-### Tags y Releases
-
-```bash
-# Ver todas las versiones
-git tag -l
-
-# Ver release notes
-git show v1.3.0 --stat
-```
-
-### Changelog
-
-| Versión | Fecha      | Cambios                                                    |
-| ------- | ---------- | ---------------------------------------------------------- |
-| v1.7.1  | 2026-04-03 | Cloudflare Tunnel, Vercel deployment, separate CI/CD       |
-| v1.7.0  | 2026-04-01 | Landing products page, ProductCatalog, modern design       |
-| v1.6.0  | 2026-03-31 | PWA, offline pages, OfflineBanner, multi-size icons        |
-| v1.5.0  | 2026-03-31 | Backend refactoring, email notifications, security         |
-| v1.4.0  | 2026-03-27 | Wallet system, deposits, withdrawals, transactions         |
-| v1.3.0  | 2026-03-30 | Docker deployment, CI/CD, PostgreSQL, Frontend refactoring |
-| v1.2.0  | 2026-03-25 | E-commerce streaming, products                             |
-| v1.1.0  | 2026-03-20 | Visual tree UI, React Flow                                 |
-| v1.0.0  | 2026-03-15 | MVP launch                                                 |
+| #   | Sprint   | Task                                        | Priority    |
+| --- | -------- | ------------------------------------------- | ----------- |
+| 17  | Sprint 1 | Pagos: Integrar PayPal SDK                  | 🔴 High     |
+| 18  | Sprint 1 | Pagos: Integrar MercadoPago SDK             | 🔴 High     |
+| 19  | Sprint 1 | Gamificación: Leaderboards                  | 🔴 High     |
+| 20  | Sprint 1 | Gamificación: Achievements y Badges         | 🔴 High     |
+| 21  | Sprint 2 | E-commerce: Carrito Abandonado              | 🟡 Medium   |
+| 22  | Sprint 2 | Email: Automation Sequences con Brevo       | 🟡 Medium   |
+| 23  | Sprint 2 | E-commerce: Gift Cards                      | 🟡 Medium   |
+| 25  | Sprint 3 | Marketplace: Multi-vendor Support           | 🟡 Medium   |
+| 26  | Sprint 3 | Delivery: Pickup + Ride-hailing             | 🟡 Medium   |
+| 27  | Sprint 3 | E-commerce: Productos Genéricos + Inventory | 🔴 High     |
+| 28  | Sprint 4 | QA: Test Coverage Expansion                 | 🔴 High     |
+| 29  | Sprint 4 | Deploy: v1.8.0 Production Release           | 🔴 Critical |
+| 30  | Sprint 4 | Docs: Actualizar documentación técnica      | 🟡 Medium   |
 
 ---
 
-## 📞 Contribuir al Roadmap
+## 🗓️ Timeline - 4 Semanas
 
-### Reportar Issues
-
-Si encuentras bugs o tienes sugerencias:
-
-1. Abre un issue en GitHub
-2. Usa el template de bug report
-3. Incluir pasos para reproducir
-
-### Proponer Features
-
-Para proponer nuevas características:
-
-1. Discute en GitHub Discussions
-2. Crea un feature request
-3. El equipo evaluará para futuras versiones
-
-### Pull Requests
-
-Aceptamos contribuciones:
-
-1. Fork el repositorio
-2. Crea una rama (`git checkout -b feature/mi-feature`)
-3. Commit (`git commit -am 'Agrega mi feature'`)
-4. Push (`git push origin feature/mi-feature`)
-5. Abre un Pull Request
+```
+╔══════════════════════════════════════════════════════════════════════╗
+║                    MES 1: HASTA 2026-05-03                         ║
+╠══════════════════════════════════════════════════════════════════════╣
+║  SEMANA 1 (Mar 30 - Abr 5): MONETIZACIÓN                         ║
+║  ├── Pagos: PayPal SDK                                            ║
+║  ├── Pagos: MercadoPago SDK                                       ║
+║  └── Gamificación: Leaderboards + Achievements                    ║
+╠══════════════════════════════════════════════════════════════════════╣
+║  SEMANA 2 (Abr 6 - Abr 12): MONETIZACIÓN (cont.)                 ║
+║  ├── Testing Pagos                                                ║
+║  ├── Testing Gamificación                                         ║
+║  └── Preparar Sprint 2                                            ║
+╠══════════════════════════════════════════════════════════════════════╣
+║  SEMANA 3 (Abr 13 - Abr 19): E-COMMERCE + DELIVERY              ║
+║  ├── Carrito Abandonado                                          ║
+║  ├── Email Automation Sequences                                   ║
+║  ├── Gift Cards                                                   ║
+║  ├── Productos Genéricos                                          ║
+║  ├── Multi-vendor Support                                         ║
+║  └── Delivery: Pickup + DiDi/Uber/InDriver                       ║
+╠══════════════════════════════════════════════════════════════════════╣
+║  SEMANA 4 (Abr 20 - Abr 26): QA + RELEASE                       ║
+║  ├── Test Coverage Expansion (90%+)                              ║
+║  ├── Integration Testing                                         ║
+║  ├── Documentation                                                ║
+║  └── v1.8.0 RELEASE (Abr 27)                                    ║
+╚══════════════════════════════════════════════════════════════════════╝
+```
 
 ---
 
-**Última actualización**: 2026-03-30  
-**Próxima revisión**: 2026-04-15  
-**Mantenedor**: MLM Development Team
+## 📋 Detalle de Sprints
+
+### 🔴 SPRINT 1: Monetización (Semana 1-2)
+
+#### 1.1 Pagos: PayPal + MercadoPago
+
+```
+□ PayPal SDK (@paypal/react-paypal-js)
+  ├── Crear PayPalService
+  ├── Flujo: Create Order → Capture
+  └── Webhook handler
+
+□ MercadoPago SDK (@mercadopago/sdk-react)
+  ├── Crear MercadoPagoService
+  ├── Flujo: Preference → Checkout Pro
+  └── Webhook handler
+
+⚠️ Colombia: Stripe NO disponible
+✅ PayPal: Funciona en Colombia
+✅ MercadoPago: Funciona en Colombia
+```
+
+#### 1.2 Gamificación
+
+```
+□ Leaderboards
+  ├── Rankings semanales (reset lunes)
+  ├── Rankings mensuales (reset día 1)
+  └── Rankings all-time
+  └── Por: ventas ($), referidos (cantidad)
+
+□ Achievements (15+)
+  ├── first_referral - Primer referido
+  ├── team_10 - 10 referidos
+  ├── team_50 - 50 referidos
+  ├── first_sale - Primera compra
+  ├── sales_1000 - $1000 en ventas
+  ├── sales_10000 - $10000 en ventas
+  ├── consistency_30 - 30 días login
+  └── binary_balanced - 10 izq + 10 der
+```
+
+---
+
+### 🟡 SPRINT 2: E-commerce + Automation (Semana 3)
+
+#### 2.1 Carrito Abandonado
+
+```
+Flujo de recuperación:
+├── 0 min: Usuario agrega al carrito
+├── 1 hr: Email recordatorio #1
+├── 24 hr: Email recordatorio #2 + 10% descuento
+└── 72 hr: Email final + 15% descuento
+```
+
+#### 2.2 Email Automation (Brevo)
+
+```
+Secuencias:
+├── Welcome Series (4 emails, Días 0-7)
+├── Onboarding (7 emails, Días 1-7)
+├── Cumpleaños (2 emails, Anual)
+├── Carrito Abandonado (3 emails)
+├── Inactividad (3 emails, 7/14/30 días)
+└── Commission Alert (inmediato)
+```
+
+#### 2.3 Gift Cards
+
+```
+├── Comprar gift cards (pagadas)
+├── Redimir en checkout
+├── Email de entrega
+└── Dashboard admin: ver/gestionar
+```
+
+---
+
+### 🟡 SPRINT 3: Multi-vendor + Delivery (Semana 3)
+
+#### 3.1 Marketplace Multi-vendor
+
+```
+□ Vendor model
+├── Dashboard para afiliados vendedores
+├── CRUD de productos por vendor
+├── Split payments (plataforma + vendor)
+└── Estados: pending, approved, rejected
+```
+
+#### 3.2 Productos Genéricos
+
+```
+Tipos de producto:
+├── digital: entrega automática (email/API)
+├── physical: requiere shipping
+├── service: requiere cita/reserva
+└── membership: acceso exclusivo
+
+Features:
+├── Inventory tracking opcional
+├── SKU generable
+├── Metadatos flexibles (JSON)
+└── Categorías jerárquicas
+```
+
+#### 3.3 Delivery Integration
+
+```
+Providers:
+├── Pickup - Puntos de recogida
+├── DiDi Envíos - Integración DiDi
+├── Uber Flash/Rush - Integración Uber
+└── InDriver - Integración InDriver
+
+Features:
+├── Cotizador de envío por provider
+├── Tracking de delivery
+├── Notificaciones de status
+└── Cálculo de comisiones por delivery
+```
+
+---
+
+### 🟢 SPRINT 4: QA + Release (Semana 4)
+
+#### 4.1 Test Coverage Expansion
+
+```
+Meta: 90%+ coverage
+
+□ Backend: 123 → ~180 tests
+□ Frontend: 102 → ~150 tests
+□ E2E: ~50 tests
+
+Flujos críticos a testear:
+├── Registro → Login → Compra → Comisión
+├── Checkout PayPal/MercadoPago
+├── Gamificación completa
+└── Delivery flow
+```
+
+#### 4.2 Documentation
+
+```
+□ API.md - nuevos endpoints
+□ ARCHITECTURE.md - multi-vendor
+□ DEPLOYMENT.md - servicios externos
+□ ROADMAP.md - marcar v1.8.0
+└□ README.md - features nuevos
+```
+
+---
+
+## 🏗️ Arquitectura Técnológica
+
+### Backend Stack
+
+```
+Runtime: Node 24+ (ESM)
+Framework: Express 5
+Database: PostgreSQL + Redis
+Email: Brevo (SMTP + API)
+SMS: Brevo SMS
+Pagos: PayPal + MercadoPago
+Delivery: DiDi + Uber + InDriver
+Testing: Jest (123 tests)
+```
+
+### Frontend Stack
+
+```
+Framework: React 19 + Vite
+Styling: Tailwind 4 + shadcn/ui
+State: Zustand 5
+Routing: React Router 7
+i18n: i18next
+PWA: Workbox
+Testing: Vitest (102 tests)
+```
+
+---
+
+## 📈 Métricas Objetivo
+
+| Métrica       | Antes       | Objetivo                 |
+| ------------- | ----------- | ------------------------ |
+| Test Coverage | ~60%        | **90%+**                 |
+| Tests Totales | 225         | **~350**                 |
+| Features      | Streaming   | **Multi-vendor**         |
+| Delivery      | N/A         | **Pickup + 3 providers** |
+| Pagos         | Wallet only | **PayPal + MP**          |
+
+---
+
+## 🏷️ Labels Disponibles
+
+```
+area:backend         - Backend area
+area:frontend        - Frontend area
+type:feature         - New feature
+type:docs           - Documentation
+priority:critical    - Critical priority
+priority:high        - High priority
+priority:medium      - Medium priority
+priority:low         - Low priority
+sprint:1             - Sprint 1
+sprint:2             - Sprint 2
+sprint:3             - Sprint 3
+sprint:4             - Sprint 4
+```
+
+---
+
+**Última actualización**: 2026-04-03  
+**Proyecto**: https://github.com/users/ipproyectosysoluciones/projects/4  
+**Desarrollador**: MLM Platform Team

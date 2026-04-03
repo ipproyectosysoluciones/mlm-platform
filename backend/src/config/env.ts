@@ -144,4 +144,14 @@ export const config = {
     /** VAPID subject (mailto or URL) / Asunto VAPID (mailto o URL) */
     subject: process.env.VAPID_SUBJECT || 'mailto:admin@mlm-platform.com',
   },
+
+  /** PayPal configuration / Configuración de PayPal */
+  paypal: {
+    /** PayPal mode: 'sandbox' or 'live' / Modo de PayPal: 'sandbox' o 'live' */
+    mode: process.env.PAYPAL_MODE || 'sandbox',
+    /** PayPal client ID / Client ID de PayPal */
+    clientId: process.env.PAYPAL_CLIENT_ID || '',
+    /** PayPal client secret / Client secret de PayPal */
+    clientSecret: process.env.PAYPAL_CLIENT_SECRET || '',
+  },
 };
