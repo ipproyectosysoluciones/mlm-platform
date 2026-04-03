@@ -4,27 +4,28 @@
 
 ### ✅ DONE - Core MVP Features
 
-| Feature                       | Description                                                                                |
-| ----------------------------- | ------------------------------------------------------------------------------------------ |
-| Authentication                | JWT tokens, bcrypt password hashing, rate limiting (5 req/15min)                           |
-| Binary Tree                   | Closure Table pattern, automatic left/right placement                                      |
-| Commission System             | 5 niveles (direct 10%, level_1 5%, level_2 3%, level_3 2%, level_4 1%), configurable rates |
-| Dashboard                     | Stats, charts, recent commissions, QR code link                                            |
-| QR Code Generation            | Data URL for referral links                                                                |
-| Admin Panel                   | User management, status control (active/inactive/suspended), promote to admin              |
-| CRM                           | Leads CRUD, Tasks, Communications, Kanban board, CSV import/export                         |
-| Tree Visualization            | React Flow with pan/zoom, minimap, search, details panel                                   |
-| i18n Bilingual                | Spanish/English with auto-detection and localStorage persistence                           |
-| Horizontal Navbar             | Responsive design with mobile hamburger menu                                               |
-| Landing Pages                 | Visual builder, tracking (views/conversions), templates                                    |
-| E-commerce Streaming          | Products catalog, orders, subscriptions (Netflix, Spotify, etc.)                           |
-| Wallet                        | Balance tracking, deposits, withdrawals with fee calculation (5%, $20 min)                 |
-| Currency Conversion           | Frankfurter API integration                                                                |
-| CommissionConfig API          | Admin CRUD for configurable commission rates                                               |
-| Tests                         | 271 total (93 unit + 178 integration) + 37 E2E = 308 tests passing                         |
-| **2FA (TOTP)**                | **Two-Factor Authentication with TOTP, recovery codes, AES-256-GCM encryption** ⭐ NEW     |
-| **Playwright Visual Testing** | **E2E tests with headed mode, video recording, UI mode** ⭐ NEW                            |
-| **Frontend 2FA UI**           | **React UI for 2FA setup, QR code display, enable/disable, recovery codes** ⭐ NEW         |
+| Feature                         | Description                                                                                                                                     |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Authentication                  | JWT tokens, bcrypt password hashing, rate limiting (5 req/15min)                                                                                |
+| Binary Tree                     | Closure Table pattern, automatic left/right placement                                                                                           |
+| Commission System               | 5 niveles (direct 10%, level_1 5%, level_2 3%, level_3 2%, level_4 1%), configurable rates                                                      |
+| Dashboard                       | Stats, charts, recent commissions, QR code link                                                                                                 |
+| QR Code Generation              | Data URL for referral links                                                                                                                     |
+| Admin Panel                     | User management, status control (active/inactive/suspended), promote to admin                                                                   |
+| CRM                             | Leads CRUD, Tasks, Communications, Kanban board, CSV import/export                                                                              |
+| Tree Visualization              | React Flow with pan/zoom, minimap, search, details panel                                                                                        |
+| i18n Bilingual                  | Spanish/English with auto-detection and localStorage persistence                                                                                |
+| Horizontal Navbar               | Responsive design with mobile hamburger menu                                                                                                    |
+| Landing Pages                   | Visual builder, tracking (views/conversions), templates                                                                                         |
+| E-commerce Streaming            | Products catalog, orders, subscriptions (Netflix, Spotify, etc.)                                                                                |
+| Wallet                          | Balance tracking, deposits, withdrawals with fee calculation (5%, $20 min)                                                                      |
+| Currency Conversion             | Frankfurter API integration                                                                                                                     |
+| CommissionConfig API            | Admin CRUD for configurable commission rates                                                                                                    |
+| Tests                           | 271 total (93 unit + 178 integration) + 37 E2E = 308 tests passing                                                                              |
+| **2FA (TOTP)**                  | **Two-Factor Authentication with TOTP, recovery codes, AES-256-GCM encryption** ⭐ NEW                                                          |
+| **Playwright Visual Testing**   | **E2E tests with headed mode, video recording, UI mode** ⭐ NEW                                                                                 |
+| **Frontend 2FA UI**             | **React UI for 2FA setup, QR code display, enable/disable, recovery codes** ⭐ NEW                                                              |
+| **Payment Gateway Integration** | **PayPal (global) + MercadoPago (Colombia) — order creation, capture, refunds, webhooks, idempotency, SSRF-safe certificate validation** ⭐ NEW |
 
 ### ⏳ IN PROGRESS
 
@@ -34,14 +35,14 @@
 
 ### 📋 TODO - Future Features
 
-| Feature                                | Status               |
-| -------------------------------------- | -------------------- |
-| Email/SMS Notifications                | Not planned for v1.x |
-| Push Notifications                     | Not planned for v1.x |
-| KYC (Identity Verification)            | Not planned for v1.x |
-| Audit Logs                             | Not planned for v1.x |
-| Multi-gateway Payments (Stripe/PayPal) | Not planned for v1.x |
-| Team Chat                              | Not planned for v1.x |
+| Feature                                | Status                                                                      |
+| -------------------------------------- | --------------------------------------------------------------------------- |
+| Email/SMS Notifications                | Not planned for v1.x                                                        |
+| Push Notifications                     | Not planned for v1.x                                                        |
+| KYC (Identity Verification)            | Not planned for v1.x                                                        |
+| Audit Logs                             | Not planned for v1.x                                                        |
+| Multi-gateway Payments (Stripe/PayPal) | ~~Not planned for v1.x~~ — **Implemented in v1.8.0** (PayPal + MercadoPago) |
+| Team Chat                              | Not planned for v1.x                                                        |
 
 ---
 
@@ -646,6 +647,30 @@ Get commissions report with breakdown by type.
 
 ---
 
+### Payment Endpoints
+
+#### PayPal
+
+| Method | Endpoint                                | Auth     | Description                                        |
+| ------ | --------------------------------------- | -------- | -------------------------------------------------- |
+| POST   | `/api/payment/paypal/create-order`      | Required | Create a PayPal order for checkout                 |
+| POST   | `/api/payment/paypal/capture-order`     | Required | Capture (complete) an approved PayPal order        |
+| GET    | `/api/payment/paypal/order/:orderId`    | Required | Retrieve details of a PayPal order                 |
+| POST   | `/api/payment/paypal/refund/:captureId` | Required | Issue a refund for a captured PayPal payment       |
+| POST   | `/api/payment/paypal/webhook`           | None     | Receive PayPal webhook events (signature-verified) |
+
+#### MercadoPago
+
+| Method | Endpoint                                      | Auth     | Description                                             |
+| ------ | --------------------------------------------- | -------- | ------------------------------------------------------- |
+| POST   | `/api/payment/mercadopago/create-preference`  | Required | Create a MercadoPago checkout preference                |
+| POST   | `/api/payment/mercadopago/process`            | Required | Process a direct card payment via MercadoPago           |
+| GET    | `/api/payment/mercadopago/payment/:paymentId` | Required | Retrieve details of a MercadoPago payment               |
+| GET    | `/api/payment/mercadopago/payment-methods`    | Required | List available payment methods in Colombia              |
+| POST   | `/api/payment/mercadopago/webhook`            | None     | Receive MercadoPago webhook events (signature-verified) |
+
+---
+
 ## Commission Distribution
 
 ### Rates by Level
@@ -821,6 +846,24 @@ pnpm test:all
 | `TEST_DB_PASSWORD` | Test database password | mlm_test  |
 | `TEST_DB_DIALECT`  | Test database dialect  | postgres  |
 
+### Payment Gateways
+
+#### PayPal
+
+| Variable               | Description                              | Example          |
+| ---------------------- | ---------------------------------------- | ---------------- |
+| `PAYPAL_CLIENT_ID`     | PayPal app client ID                     | -                |
+| `PAYPAL_CLIENT_SECRET` | PayPal app client secret                 | -                |
+| `PAYPAL_WEBHOOK_ID`    | PayPal webhook ID for event verification | -                |
+| `PAYPAL_MODE`          | API environment                          | `sandbox`/`live` |
+
+#### MercadoPago
+
+| Variable                     | Description                                    | Example |
+| ---------------------------- | ---------------------------------------------- | ------- |
+| `MERCADOPAGO_ACCESS_TOKEN`   | MercadoPago API access token (Colombia)        | -       |
+| `MERCADOPAGO_WEBHOOK_SECRET` | Secret for MercadoPago webhook signature check | -       |
+
 ---
 
 ## Version History
@@ -839,3 +882,7 @@ pnpm test:all
   - CommissionConfig API for admin rate management
   - Landing Pages builder with tracking
   - Two-Factor Authentication (2FA) with TOTP
+- **v1.8.0** - Payment Gateway Integration
+  - PayPal SDK: order creation, capture, refunds, webhooks, duplicate prevention, idempotency
+  - MercadoPago SDK v2: Colombian market — preferences, payments, refunds, webhooks
+  - SSRF fix in PayPalService: validates certificate URLs before fetching

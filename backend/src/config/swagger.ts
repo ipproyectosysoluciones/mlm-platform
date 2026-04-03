@@ -4,6 +4,7 @@ import swaggerJsdoc from 'swagger-jsdoc';
  * Swagger/OpenAPI Configuration for MLM Binary Affiliations API
  * Configuración Swagger/OpenAPI para la API MLM de Afiliaciones Binarias
  *
+ * v1.8.0: PayPal + MercadoPago payment integrations
  * v1.7.0: PWA Landing Pages + Push Notifications
  * v1.6.0: PWA + Offline pages, icons multi-size
  * v1.5.0: Backend controllers refactoring (modular structure)
@@ -15,7 +16,7 @@ const options: swaggerJsdoc.Options = {
     openapi: '3.0.0',
     info: {
       title: 'MLM Binary Affiliations API',
-      version: '1.7.0',
+      version: '1.8.0',
       description: `
 ## API REST para plataforma MLM de Afiliaciones Binarias
 
@@ -35,6 +36,7 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
 | 429 | Rate limit excedido / Rate Limit Exceeded |
 
 ### Versiones / Versions
+- **v1.8.0** (2026-04-03): PayPal + MercadoPago payment integrations
 - **v1.7.0** (2026-04-02): PWA Landing Pages + Push Notifications
 - **v1.6.0** (2026-04-01): PWA, Offline pages, Backend refactoring completo
 - **v1.5.0** (2026-03-31): Controllers modulares, Notificaciones Email
@@ -1205,6 +1207,97 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
             imageUrl: { type: 'string' },
           },
         },
+
+        // ============================================================
+        // PAYPAL PAYMENTS (Phase 7 / v1.8.0)
+        // ============================================================
+        PayPalCreateOrderRequest: {
+          type: 'object',
+          required: ['amount', 'currency', 'orderReference'],
+          properties: {
+            amount: { type: 'string', example: '10.00', description: 'Payment amount as string' },
+            currency: { type: 'string', example: 'USD', description: 'ISO 4217 currency code' },
+            orderReference: {
+              type: 'string',
+              example: 'ORDER-123',
+              description: 'Internal order reference',
+            },
+          },
+        },
+
+        PayPalCaptureOrderRequest: {
+          type: 'object',
+          required: ['orderId'],
+          properties: {
+            orderId: {
+              type: 'string',
+              example: 'PAYPAL_ORDER_ID',
+              description: 'PayPal order ID to capture',
+            },
+          },
+        },
+
+        PayPalRefundRequest: {
+          type: 'object',
+          required: ['amount', 'currency'],
+          properties: {
+            amount: { type: 'string', example: '10.00' },
+            currency: { type: 'string', example: 'USD' },
+            note: {
+              type: 'string',
+              example: 'Customer refund',
+              description: 'Optional refund reason',
+            },
+          },
+        },
+
+        // ============================================================
+        // MERCADOPAGO PAYMENTS (Phase 7 / v1.8.0)
+        // ============================================================
+        MercadoPagoCreatePreferenceRequest: {
+          type: 'object',
+          required: ['items', 'payer'],
+          properties: {
+            items: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  title: { type: 'string', example: 'Product name' },
+                  quantity: { type: 'integer', example: 1 },
+                  unit_price: {
+                    type: 'number',
+                    example: 50000,
+                    description: 'Price in Colombian pesos (COP)',
+                  },
+                },
+              },
+            },
+            payer: {
+              type: 'object',
+              properties: {
+                email: { type: 'string', format: 'email', example: 'customer@example.com' },
+              },
+            },
+          },
+        },
+
+        MercadoPagoProcessPaymentRequest: {
+          type: 'object',
+          required: ['token', 'payment_method_id', 'installments', 'transaction_amount', 'payer'],
+          properties: {
+            token: { type: 'string', description: 'Card token from MercadoPago.js' },
+            payment_method_id: { type: 'string', example: 'visa' },
+            installments: { type: 'integer', example: 1, minimum: 1 },
+            transaction_amount: { type: 'number', example: 50000 },
+            payer: {
+              type: 'object',
+              properties: {
+                email: { type: 'string', format: 'email', example: 'customer@example.com' },
+              },
+            },
+          },
+        },
       },
     },
 
@@ -1248,6 +1341,11 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
       {
         name: 'public',
         description: 'Public Endpoints / Endpoints Públicos - Landing pages, profiles (Phase 6)',
+      },
+      { name: 'PayPal', description: 'PayPal payment processing endpoints' },
+      {
+        name: 'MercadoPago',
+        description: 'MercadoPago payment processing endpoints (Colombian market)',
       },
     ],
   },

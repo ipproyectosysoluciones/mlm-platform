@@ -627,6 +627,262 @@ Authorization: Bearer <token> (admin only)
 
 ---
 
+## 💳 Payments
+
+> All payment endpoints live under `/api/payment/`. Webhook endpoints do **not** require a Bearer token — they are verified via provider signature.
+
+---
+
+### PayPal
+
+#### Create PayPal Order
+
+```
+POST /api/payment/paypal/create-order
+Authorization: Bearer <token>
+```
+
+**Body:**
+
+```json
+{
+  "amount": "10.00",
+  "currency": "USD",
+  "orderReference": "ORDER-123"
+}
+```
+
+**Response:**
+
+```json
+{
+  "id": "PAYPAL_ORDER_ID",
+  "status": "CREATED",
+  "approveUrl": "https://www.sandbox.paypal.com/checkoutnow?token=PAYPAL_ORDER_ID"
+}
+```
+
+---
+
+#### Capture PayPal Order
+
+```
+POST /api/payment/paypal/capture-order
+Authorization: Bearer <token>
+```
+
+**Body:**
+
+```json
+{
+  "orderId": "PAYPAL_ORDER_ID"
+}
+```
+
+**Response:**
+
+```json
+{
+  "id": "CAPTURE_ID",
+  "status": "COMPLETED",
+  "amount": {
+    "value": "10.00",
+    "currencyCode": "USD"
+  }
+}
+```
+
+---
+
+#### Get PayPal Order
+
+```
+GET /api/payment/paypal/order/:orderId
+Authorization: Bearer <token>
+```
+
+**Response:** PayPal order details object as returned by the PayPal Orders API.
+
+---
+
+#### Refund PayPal Capture
+
+```
+POST /api/payment/paypal/refund/:captureId
+Authorization: Bearer <token>
+```
+
+**Body:**
+
+```json
+{
+  "amount": "10.00",
+  "currency": "USD",
+  "note": "Customer refund"
+}
+```
+
+**Response:**
+
+```json
+{
+  "id": "REFUND_ID",
+  "status": "COMPLETED"
+}
+```
+
+---
+
+#### PayPal Webhook
+
+```
+POST /api/payment/paypal/webhook
+```
+
+> No Bearer token required. PayPal signature is verified server-side (SSRF-safe certificate URL validation).
+
+**Body:** PayPal webhook event payload (as sent by PayPal).
+
+**Response:**
+
+```json
+{
+  "received": true
+}
+```
+
+---
+
+### MercadoPago
+
+#### Create Preference
+
+```
+POST /api/payment/mercadopago/create-preference
+Authorization: Bearer <token>
+```
+
+**Body:**
+
+```json
+{
+  "items": [
+    {
+      "title": "Product",
+      "quantity": 1,
+      "unit_price": 50000
+    }
+  ],
+  "payer": {
+    "email": "customer@example.com"
+  }
+}
+```
+
+**Response:**
+
+```json
+{
+  "id": "PREFERENCE_ID",
+  "init_point": "https://www.mercadopago.com.co/checkout/v1/redirect?pref_id=PREFERENCE_ID",
+  "sandbox_init_point": "https://sandbox.mercadopago.com.co/checkout/v1/redirect?pref_id=PREFERENCE_ID"
+}
+```
+
+---
+
+#### Process Payment
+
+```
+POST /api/payment/mercadopago/process
+Authorization: Bearer <token>
+```
+
+**Body:**
+
+```json
+{
+  "token": "CARD_TOKEN",
+  "payment_method_id": "visa",
+  "installments": 1,
+  "transaction_amount": 50000,
+  "payer": {
+    "email": "customer@example.com"
+  }
+}
+```
+
+**Response:**
+
+```json
+{
+  "id": 123456,
+  "status": "approved",
+  "status_detail": "accredited"
+}
+```
+
+---
+
+#### Get Payment
+
+```
+GET /api/payment/mercadopago/payment/:paymentId
+Authorization: Bearer <token>
+```
+
+**Response:** MercadoPago payment object as returned by the MercadoPago Payments API.
+
+---
+
+#### Get Payment Methods
+
+```
+GET /api/payment/mercadopago/payment-methods
+Authorization: Bearer <token>
+```
+
+**Response:**
+
+```json
+{
+  "payment_methods": [
+    {
+      "id": "visa",
+      "name": "Visa",
+      "payment_type_id": "credit_card"
+    },
+    {
+      "id": "mastercard",
+      "name": "Mastercard",
+      "payment_type_id": "credit_card"
+    }
+  ]
+}
+```
+
+---
+
+#### MercadoPago Webhook
+
+```
+POST /api/payment/mercadopago/webhook
+```
+
+> No Bearer token required. MercadoPago signature is verified server-side.
+
+**Body:** MercadoPago webhook event payload (as sent by MercadoPago).
+
+**Response:**
+
+```json
+{
+  "received": true
+}
+```
+
+---
+
 ## ⚠️ Error Codes
 
 | Code               | Description              |
