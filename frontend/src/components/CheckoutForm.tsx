@@ -111,6 +111,11 @@ const PayPalButton = React.memo(function PayPalButton({
 const paymentMethods: { value: PaymentMethod; icon: React.ReactNode; label: string }[] = [
   { value: 'paypal', icon: <span className="text-lg font-bold">P</span>, label: 'PayPal' },
   { value: 'simulated', icon: <CreditCard className="h-5 w-5" />, label: 'Simulated' },
+  {
+    value: 'mercadopago',
+    icon: <span className="text-lg font-bold">M</span>,
+    label: 'MercadoPago',
+  },
 ];
 
 /**
