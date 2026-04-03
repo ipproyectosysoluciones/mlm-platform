@@ -1,10 +1,58 @@
-# Deployment Guide
+# Deployment Guide / Guía de Despliegue
 
 > Complete guide for deploying the MLM Platform to production.
+> Guía completa para desplegar la MLM Platform a producción.
 
-## 🚀 Quick Deploy
+## 🏗️ Architecture / Arquitectura
 
-### Using Docker Compose (Recommended)
+The platform uses a **hybrid deployment model**:
+
+| Component    | Deployment | Platform                       |
+| ------------ | ---------- | ------------------------------ |
+| **Backend**  | Docker     | Docker Hub + Cloudflare Tunnel |
+| **Frontend** | Vercel     | Vercel (automatic CDN)         |
+
+### Benefits / Beneficios
+
+- **Backend**: Full control, self-hosted, runs via Cloudflare Tunnel
+- **Frontend**: Global CDN, edge caching, automatic SSL
+
+---
+
+## 🚀 Quick Deploy / Despliegue Rápido
+
+### Backend (Docker)
+
+```bash
+# Pull latest
+docker pull ipproyectos/mlm-backend:latest
+
+# Run with Docker Compose
+docker compose -f docker-compose.prod.yml up -d backend
+```
+
+### Frontend (Vercel)
+
+Automatic deployment via GitHub Actions when pushing to `release` branch.
+
+---
+
+### Using Deploy Script / Usando Script de Deploy
+
+```bash
+# Make executable
+chmod +x deploy-backend.sh
+
+# Deploy backend only
+./deploy-backend.sh latest
+
+# Deploy specific version
+./deploy-backend.sh v1.7.2
+```
+
+---
+
+### Using Docker Compose (Recommended) / Usando Docker Compose (Recomendado)
 
 ```bash
 # Clone repository
@@ -37,14 +85,13 @@ chmod +x deploy.sh
 
 ---
 
-## 🐳 Docker Images
+## 🐳 Docker Images (Backend Only)
 
 ### Pre-built Images (Docker Hub)
 
 ```bash
-# Pull images
+# Pull backend image
 docker pull ipproyectos/mlm-backend:latest
-docker pull ipproyectos/mlm-frontend:latest
 
 # Run backend
 docker run -d \
@@ -57,13 +104,9 @@ docker run -d \
   -e DB_PASSWORD=secret \
   -e JWT_SECRET=your-secret \
   ipproyectos/mlm-backend:latest
-
-# Run frontend (with nginx)
-docker run -d \
-  --name mlm-frontend \
-  -p 80:80 \
-  ipproyectos/mlm-frontend:latest
 ```
+
+> **Note**: Frontend is deployed via Vercel, not Docker. / El frontend se despliega vía Vercel, no Docker.
 
 ---
 
