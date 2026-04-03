@@ -7,7 +7,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://yi-nondepraved-johanna.ngrok-free.dev/api/$1"
+      "destination": "https://backend.lordastaroth77.cloudflareaccess.com/api/$1"
     },
     {
       "source": "/(.*)",
