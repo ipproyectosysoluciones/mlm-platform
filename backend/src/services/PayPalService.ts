@@ -123,7 +123,9 @@ class PayPalService {
       return false;
     }
 
-    // Validate certificate URL to prevent SSRF
+    // Validate certificate URL to prevent SSRF:
+    // Parse the user-supplied URL, validate every component, then reconstruct
+    // a clean URL from trusted parts only — never pass the raw user input to axios.
     let parsedCertUrl: URL;
     try {
       parsedCertUrl = new URL(certUrl);
@@ -132,7 +134,7 @@ class PayPalService {
       return false;
     }
 
-    // Only allow HTTPS URLs to PayPal domains
+    // Only allow HTTPS URLs to *.paypal.com or paypal.com exactly
     const allowedHostSuffix = '.paypal.com';
     const hostname = parsedCertUrl.hostname.toLowerCase();
     if (
@@ -143,8 +145,14 @@ class PayPalService {
       return false;
     }
 
-    // Download the certificate
-    const certResponse = await axios.get(parsedCertUrl.toString(), { responseType: 'text' });
+    // Reconstruct the URL from validated components to eliminate taint from user input.
+    // Only allow path + query from the original URL — no credentials, no fragment.
+    const safeCertUrl = new URL(
+      `https://${hostname}${parsedCertUrl.pathname}${parsedCertUrl.search}`
+    );
+
+    // Download the certificate using the reconstructed, sanitized URL
+    const certResponse = await axios.get(safeCertUrl.toString(), { responseType: 'text' });
     const cert = certResponse.data;
 
     // Construct the expected signature
