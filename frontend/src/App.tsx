@@ -1,10 +1,11 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Analytics } from '@vercel/analytics/react';
 import { AuthProvider } from './context/AuthContext';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
+import DashboardStreaming from './pages/DashboardStreaming';
 import TreeView from './pages/TreeView';
 import Profile from './pages/Profile';
 import TwoFactor from './pages/TwoFactor';
@@ -18,6 +19,8 @@ import Offline from './pages/Offline';
 import OfflineBanner from './components/OfflineBanner';
 import { AppLayout } from './components/layout/AppLayout';
 import { ProtectedRoute, AdminRoute, PublicRoute, PublicProfileRoute } from './components/routes';
+import { preloadData } from './lib/preload';
+import { dashboardService, authService } from './services/api';
 
 // Lazy loaded pages for streaming subscriptions e-commerce
 const ProductCatalog = lazy(() => import('./pages/ProductCatalog'));
@@ -41,6 +44,14 @@ function PageLoader() {
 }
 
 function App() {
+  // Preload critical data on app init
+  useEffect(() => {
+    // Preload dashboard data for streaming
+    preloadData('dashboard', () => dashboardService.getDashboard());
+    // Preload current user data
+    preloadData('currentUser', () => authService.getProfile());
+  }, []);
+
   return (
     <AuthProvider>
       <OfflineBanner />
@@ -78,6 +89,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/streaming"
+            element={
+              <ProtectedRoute>
+                <DashboardStreaming />
               </ProtectedRoute>
             }
           />
