@@ -429,7 +429,8 @@
     "paymentMethods": {
       "credit_card": "Credit Card",
       "debit_card": "Debit Card",
-      "simulated": "Simulated Payment"
+      "simulated": "Simulated Payment",
+      "paypal": "PayPal"
     },
     "selectPayment": "Select payment method",
     "terms": "I agree to the terms and conditions",
@@ -444,7 +445,11 @@
     "productUnavailable": "This product is currently unavailable",
     "productNotFound": "The product you are looking for could not be found",
     "commissionBreakdown": "Commission Breakdown",
-    "totalCommission": "Total Commission"
+    "totalCommission": "Total Commission",
+    "paypalDescription": "MLM Platform Purchase",
+    "paypalNotConfigured": "PayPal is not configured. Please contact support or use simulated payment.",
+    "paypalError": "PayPal payment failed. Please try again.",
+    "paypalCaptureError": "Failed to complete PayPal payment. Please try again."
   },
   "orders": {
     "title": "My Orders",

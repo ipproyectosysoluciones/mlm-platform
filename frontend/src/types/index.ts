@@ -182,7 +182,7 @@ export interface ProductListResponse {
 
 // Order Types - Streaming Subscriptions E-Commerce
 export type OrderStatus = 'pending' | 'completed' | 'failed' | 'cancelled';
-export type PaymentMethod = 'credit_card' | 'debit_card' | 'simulated';
+export type PaymentMethod = 'credit_card' | 'debit_card' | 'simulated' | 'paypal' | 'mercadopago';
 
 export interface Order {
   id: string;

@@ -4,6 +4,39 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
+## [1.8.0] - 2026-04-03
+
+### Added
+
+- **Payment Integrations**
+  - PayPal SDK full integration: create order, capture, refund, webhooks, idempotency keys
+  - MercadoPago SDK v2 integration: preferences, payments, refunds, webhooks — Colombian market
+
+### Fixed
+
+- **Security**
+  - Prevent SSRF in PayPal webhook certificate URL validation — reconstructs URL from validated hostname instead of trusting user-supplied URL (CWE-918)
+
+## [1.7.0] - 2026-04-02
+
+### Added
+
+- **PWA**
+  - PWA support with service worker and offline pages
+  - Offline-dedicated pages (404, offline) with OfflineBanner component
+
+- **Product Landing Pages**
+  - Public product landing pages with public routes
+
+- **Push Notifications**
+  - Push notifications system with VAPID keys (Web Push)
+
+- **Public Profiles**
+  - Public profile pages with UUID support
+
+- **Infrastructure**
+  - Cloudflare Access headers support in CORS configuration
+
 ## [1.6.0] - 2026-04-01
 
 ### Added

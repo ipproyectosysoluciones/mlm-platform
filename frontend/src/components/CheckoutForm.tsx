@@ -1,14 +1,20 @@
 /**
  * @fileoverview CheckoutForm Component - Payment form
- * @description Form component for payment with simulated payment option, terms checkbox, and confirm button
+ * @description Form component for payment with PayPal, MercadoPago, and simulated payment options, terms checkbox, and confirm button
  * @module components/CheckoutForm
  */
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CreditCard, AlertTriangle, Loader2, Check } from 'lucide-react';
+import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
+import { CreditCard, AlertTriangle, Loader2, Check, ExternalLink } from 'lucide-react';
 import type { PaymentMethod } from '../types';
 import { cn } from '../utils/cn';
+import { paymentService } from '../services/paymentService';
+import type { MPItem } from '../services/paymentService';
+
+const PAYPAL_CLIENT_ID = import.meta.env.VITE_PAYPAL_CLIENT_ID || '';
+const MP_SANDBOX = import.meta.env.VITE_MP_SANDBOX === 'true' || import.meta.env.DEV;
 
 /**
  * CheckoutForm props
@@ -18,29 +24,147 @@ interface CheckoutFormProps {
   isProcessing?: boolean;
   error?: string | null;
   className?: string;
+  total?: number;
+  currency?: string;
+  onPayPalSuccess?: (paymentMethod: PaymentMethod) => void;
+  /** Product data needed to build MP preference items */
+  productId?: string;
+  productName?: string;
 }
 
 /**
- * Payment methods
+ * PayPalButton Props
  */
-const paymentMethods: { value: PaymentMethod; icon: React.ReactNode }[] = [
-  { value: 'simulated', icon: <CreditCard className="h-5 w-5" /> },
+interface PayPalButtonProps {
+  isProcessing: boolean;
+  agreedToTerms: boolean;
+  currency: string;
+  total: number;
+  onPayPalSuccess?: (paymentMethod: PaymentMethod) => void;
+  onError?: (error: string) => void;
+}
+
+/**
+ * PayPalButton - Moved outside CheckoutForm to prevent remount on re-render
+ */
+const PayPalButton = React.memo(function PayPalButton({
+  isProcessing,
+  agreedToTerms,
+  currency,
+  total,
+  onPayPalSuccess,
+  onError,
+}: PayPalButtonProps) {
+  const { t } = useTranslation();
+  const isPayPalAvailable = !!PAYPAL_CLIENT_ID;
+
+  if (!isPayPalAvailable) {
+    return (
+      <div className="rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4">
+        <p className="text-sm text-yellow-200">{t('checkout.paypalNotConfigured')}</p>
+      </div>
+    );
+  }
+
+  return (
+    <PayPalScriptProvider
+      options={{
+        clientId: PAYPAL_CLIENT_ID,
+        currency: currency,
+        intent: 'capture',
+      }}
+    >
+      <PayPalButtons
+        style={{ layout: 'vertical', color: 'blue', shape: 'rect' }}
+        disabled={isProcessing || !agreedToTerms}
+        createOrder={(_data, actions) => {
+          return actions.order.create({
+            intent: 'CAPTURE',
+            purchase_units: [
+              {
+                amount: {
+                  currency_code: currency,
+                  value: total.toFixed(2),
+                },
+                description: t('checkout.paypalDescription'),
+              },
+            ],
+          });
+        }}
+        onApprove={async (data, _actions) => {
+          try {
+            // IMPORTANT: capture must go through our backend for validation.
+            // Never trust a client-side capture result — the backend verifies
+            // the payment status with PayPal before updating the order.
+            const result = await paymentService.completeWithPayPal({
+              orderId: data.orderID,
+            });
+            if (result.success) {
+              onPayPalSuccess?.('paypal');
+            } else {
+              onError?.(t('checkout.paypalCaptureError'));
+            }
+          } catch (err) {
+            console.error('PayPal capture error:', err);
+            onError?.(t('checkout.paypalCaptureError'));
+          }
+        }}
+        onError={(err) => {
+          console.error('PayPal error:', err);
+          onError?.(t('checkout.paypalError'));
+        }}
+      />
+    </PayPalScriptProvider>
+  );
+});
+
+/**
+ * Available payment methods
+ */
+const paymentMethods: { value: PaymentMethod; icon: React.ReactNode; labelKey: string }[] = [
+  {
+    value: 'mercadopago',
+    icon: (
+      <span className="flex h-5 w-5 items-center justify-center rounded text-xs font-extrabold text-white bg-[#009ee3]">
+        MP
+      </span>
+    ),
+    labelKey: 'checkout.paymentMethods.mercadopago',
+  },
+  {
+    value: 'paypal',
+    icon: <span className="text-lg font-bold">P</span>,
+    labelKey: 'checkout.paymentMethods.paypal',
+  },
+  {
+    value: 'simulated',
+    icon: <CreditCard className="h-5 w-5" />,
+    labelKey: 'checkout.paymentMethods.simulated',
+  },
 ];
 
 /**
- * CheckoutForm component - Payment form with simulated payment
- * Componente de formulario de pago - Formulario de pago con opción simulada
+ * CheckoutForm component - Payment form with PayPal, MercadoPago, and simulated payment
+ * Componente de formulario de pago - Formulario de pago con PayPal, MercadoPago y opción simulada
  */
 export function CheckoutForm({
   onSubmit,
   isProcessing = false,
   error,
   className,
+  total = 0,
+  currency = 'USD',
+  onPayPalSuccess,
+  productId,
+  productName,
 }: CheckoutFormProps) {
   const { t } = useTranslation();
-  const [selectedPayment, setSelectedPayment] = useState<PaymentMethod>('simulated');
+  const [selectedPayment, setSelectedPayment] = useState<PaymentMethod>('mercadopago');
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [termsError, setTermsError] = useState(false);
+  const [paypalError, setPaypalError] = useState<string | null>(null);
+  const [mpLoading, setMpLoading] = useState(false);
+  const [mpError, setMpError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,6 +185,46 @@ export function CheckoutForm({
       setTermsError(false);
     }
   };
+
+  /**
+   * Handles MercadoPago redirect flow:
+   * 1. Creates a Checkout Pro preference via backend
+   * 2. Redirects to sandboxInitPoint (dev) or initPoint (prod)
+   */
+  const handleMercadoPagoPayment = async () => {
+    if (!agreedToTerms) {
+      setTermsError(true);
+      return;
+    }
+
+    setTermsError(false);
+    setMpError(null);
+    setMpLoading(true);
+
+    try {
+      const items: MPItem[] = [
+        {
+          id: productId ?? 'product',
+          title: productName ?? t('checkout.paypalDescription'),
+          quantity: 1,
+          unit_price: total,
+          currency_id: currency,
+        },
+      ];
+
+      const preference = await paymentService.createMercadoPagoPreference(items);
+      const redirectUrl = MP_SANDBOX ? preference.sandboxInitPoint : preference.initPoint;
+      paymentService.redirectToMercadoPago(redirectUrl);
+    } catch (err) {
+      console.error('MercadoPago preference creation failed:', err);
+      setMpError(t('checkout.mpError'));
+    } finally {
+      setMpLoading(false);
+    }
+  };
+
+  // Check if PayPal is available
+  const isPayPalAvailable = !!PAYPAL_CLIENT_ID;
 
   return (
     <form
@@ -88,7 +252,8 @@ export function CheckoutForm({
                   'flex cursor-pointer items-center gap-4 rounded-lg border p-4 transition-all',
                   selectedPayment === method.value
                     ? 'border-purple-500 bg-purple-500/10'
-                    : 'border-slate-600 bg-slate-700/50 hover:border-slate-500'
+                    : 'border-slate-600 bg-slate-700/50 hover:border-slate-500',
+                  method.value === 'paypal' && !isPayPalAvailable && 'opacity-50'
                 )}
               >
                 <input
@@ -98,7 +263,7 @@ export function CheckoutForm({
                   checked={selectedPayment === method.value}
                   onChange={() => setSelectedPayment(method.value)}
                   className="sr-only"
-                  disabled={isProcessing}
+                  disabled={isProcessing || (method.value === 'paypal' && !isPayPalAvailable)}
                 />
                 <span
                   className={cn(
@@ -114,12 +279,40 @@ export function CheckoutForm({
                 </span>
                 <span className="flex items-center gap-3 text-white">
                   {method.icon}
-                  {t(`checkout.paymentMethods.${method.value}`)}
+                  {t(method.labelKey)}
                 </span>
               </label>
             ))}
           </div>
         </div>
+
+        {/* PayPal Button */}
+        {selectedPayment === 'paypal' && (
+          <div className="flex flex-col gap-2">
+            <PayPalButton
+              isProcessing={isProcessing}
+              agreedToTerms={agreedToTerms}
+              currency={currency}
+              total={total}
+              onPayPalSuccess={onPayPalSuccess}
+              onError={setPaypalError}
+            />
+            {paypalError && (
+              <div className="flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-500/10 p-3">
+                <AlertTriangle className="h-4 w-4 text-red-400" />
+                <p className="text-sm text-red-300">{paypalError}</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* MercadoPago Info Banner */}
+        {selectedPayment === 'mercadopago' && (
+          <div className="flex items-start gap-3 rounded-lg border border-[#009ee3]/30 bg-[#009ee3]/10 p-4">
+            <ExternalLink className="h-5 w-5 shrink-0 text-[#009ee3]" />
+            <p className="text-sm text-slate-200">{t('checkout.mpRedirectInfo')}</p>
+          </div>
+        )}
 
         {/* Simulated Payment Warning */}
         {selectedPayment === 'simulated' && (
@@ -154,30 +347,68 @@ export function CheckoutForm({
           </div>
         )}
 
-        {/* Submit Button */}
-        <button
-          type="submit"
-          disabled={isProcessing || !agreedToTerms}
-          className={cn(
-            'flex w-full items-center justify-center gap-2 rounded-xl py-3 text-lg font-semibold',
-            'bg-purple-600 text-white transition-all',
-            'hover:bg-purple-500 hover:shadow-lg hover:shadow-purple-500/25',
-            'disabled:bg-slate-600 disabled:text-slate-400 disabled:cursor-not-allowed',
-            'focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-slate-800'
-          )}
-        >
-          {isProcessing ? (
-            <>
-              <Loader2 className="h-5 w-5 animate-spin" />
-              {t('checkout.processing')}
-            </>
-          ) : (
-            <>
-              <Check className="h-5 w-5" />
-              {t('checkout.confirmPurchase')}
-            </>
-          )}
-        </button>
+        {/* MercadoPago Error */}
+        {mpError && (
+          <div className="flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-500/10 p-3">
+            <AlertTriangle className="h-4 w-4 text-red-400" />
+            <p className="text-sm text-red-300">{mpError}</p>
+          </div>
+        )}
+
+        {/* MercadoPago Button */}
+        {selectedPayment === 'mercadopago' && (
+          <button
+            type="button"
+            onClick={handleMercadoPagoPayment}
+            disabled={isProcessing || mpLoading || !agreedToTerms}
+            className={cn(
+              'flex w-full items-center justify-center gap-2 rounded-xl py-3 text-lg font-semibold',
+              'bg-[#009ee3] text-white transition-all',
+              'hover:bg-[#0082c4] hover:shadow-lg hover:shadow-[#009ee3]/25',
+              'disabled:bg-slate-600 disabled:text-slate-400 disabled:cursor-not-allowed',
+              'focus:outline-none focus:ring-2 focus:ring-[#009ee3] focus:ring-offset-2 focus:ring-offset-slate-800'
+            )}
+          >
+            {mpLoading ? (
+              <>
+                <Loader2 className="h-5 w-5 animate-spin" />
+                {t('checkout.processing')}
+              </>
+            ) : (
+              <>
+                <ExternalLink className="h-5 w-5" />
+                {t('checkout.payWithMercadoPago')}
+              </>
+            )}
+          </button>
+        )}
+
+        {/* Submit Button (for simulated payment) */}
+        {selectedPayment === 'simulated' && (
+          <button
+            type="submit"
+            disabled={isProcessing || !agreedToTerms}
+            className={cn(
+              'flex w-full items-center justify-center gap-2 rounded-xl py-3 text-lg font-semibold',
+              'bg-purple-600 text-white transition-all',
+              'hover:bg-purple-500 hover:shadow-lg hover:shadow-purple-500/25',
+              'disabled:bg-slate-600 disabled:text-slate-400 disabled:cursor-not-allowed',
+              'focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-slate-800'
+            )}
+          >
+            {isProcessing ? (
+              <>
+                <Loader2 className="h-5 w-5 animate-spin" />
+                {t('checkout.processing')}
+              </>
+            ) : (
+              <>
+                <Check className="h-5 w-5" />
+                {t('checkout.confirmPurchase')}
+              </>
+            )}
+          </button>
+        )}
 
         {/* Back to Products Link */}
         <button

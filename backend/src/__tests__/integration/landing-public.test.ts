@@ -119,6 +119,15 @@ describe('Public Landing Integration Tests', () => {
   });
 
   describe('GET /api/public/profile/:code/products', () => {
+    beforeEach(async () => {
+      // Create the user that owns the PUSHTEST referral code
+      // This cannot depend on push.test.ts since tests are isolated
+      await createTestUser({
+        email: 'push-test@test.mlm',
+        referralCode: 'PUSHTEST',
+      });
+    });
+
     it('should return products for valid referral code', async () => {
       const res = await testAgent.get('/api/public/profile/PUSHTEST/products').expect(200);
 

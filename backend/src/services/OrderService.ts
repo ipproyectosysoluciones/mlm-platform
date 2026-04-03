@@ -91,8 +91,15 @@ export class OrderService {
     if (!data.paymentMethod) {
       throw new AppError(400, 'VALIDATION_ERROR', 'Payment method is required');
     }
-    if (data.paymentMethod && !['manual', 'simulated'].includes(data.paymentMethod)) {
-      throw new AppError(400, 'VALIDATION_ERROR', 'Payment method must be manual or simulated');
+    if (
+      data.paymentMethod &&
+      !['manual', 'simulated', 'paypal', 'mercadopago'].includes(data.paymentMethod)
+    ) {
+      throw new AppError(
+        400,
+        'VALIDATION_ERROR',
+        'Payment method must be manual, simulated, paypal, or mercadopago'
+      );
     }
 
     // Validate user exists

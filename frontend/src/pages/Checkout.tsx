@@ -32,6 +32,7 @@ export default function Checkout() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [orderCreated, setOrderCreated] = useState<string | null>(null);
+  const [pendingPaymentMethod, setPendingPaymentMethod] = useState<PaymentMethod>('simulated');
 
   /**
    * Load product data
@@ -70,17 +71,23 @@ export default function Checkout() {
 
   /**
    * Handle payment submission
+   * MercadoPago redirects directly from CheckoutForm — only simulated/paypal reach this handler
    */
-  const handlePayment = async (_paymentMethod: PaymentMethod) => {
+  const handlePayment = async (paymentMethod: PaymentMethod) => {
     if (!product) return;
 
+    // MP redirects directly from CheckoutForm — skip the confirmation modal
+    if (paymentMethod === 'mercadopago') return;
+
+    setPendingPaymentMethod(paymentMethod);
     setShowConfirmModal(true);
   };
 
   /**
    * Handle confirmation modal confirm
+   * @param paymentMethod - Payment method used (paypal, simulated, etc.)
    */
-  const handleConfirmPurchase = async () => {
+  const handleConfirmPurchase = async (paymentMethod: PaymentMethod = pendingPaymentMethod) => {
     if (!product) return;
 
     setIsSubmitting(true);
@@ -89,7 +96,7 @@ export default function Checkout() {
     try {
       const order = await orderService.createOrder({
         productId: product.id,
-        paymentMethod: 'simulated',
+        paymentMethod,
       });
 
       setOrderCreated(order.id);
@@ -182,6 +189,11 @@ export default function Checkout() {
               onSubmit={handlePayment}
               isProcessing={isSubmitting}
               error={submitError}
+              total={product.price}
+              currency={product.currency}
+              onPayPalSuccess={handleConfirmPurchase}
+              productId={product.id}
+              productName={product.name}
             />
           </div>
         </div>
@@ -257,7 +269,7 @@ export default function Checkout() {
                     {t('common.cancel')}
                   </button>
                   <button
-                    onClick={handleConfirmPurchase}
+                    onClick={() => handleConfirmPurchase(pendingPaymentMethod)}
                     disabled={isSubmitting}
                     className={cn(
                       'flex flex-1 items-center justify-center gap-2 rounded-xl py-3 font-semibold',

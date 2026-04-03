@@ -144,4 +144,30 @@ export const config = {
     /** VAPID subject (mailto or URL) / Asunto VAPID (mailto o URL) */
     subject: process.env.VAPID_SUBJECT || 'mailto:admin@mlm-platform.com',
   },
+
+  /** PayPal configuration / Configuración de PayPal */
+  paypal: {
+    /** PayPal mode: 'sandbox' or 'live' / Modo de PayPal: 'sandbox' o 'live' */
+    mode: process.env.PAYPAL_MODE || 'sandbox',
+    /** PayPal client ID / Client ID de PayPal */
+    clientId: process.env.PAYPAL_CLIENT_ID || '',
+    /** PayPal client secret / Client secret de PayPal */
+    clientSecret: process.env.PAYPAL_CLIENT_SECRET || '',
+    /** PayPal webhook ID for signature verification / Webhook ID de PayPal para verificación de firma */
+    webhookId: process.env.PAYPAL_WEBHOOK_ID || '',
+  },
+
+  /** MercadoPago configuration / Configuración de MercadoPago */
+  mercadopago: {
+    /** MercadoPago access token / Access token de MercadoPago */
+    accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN || '',
+    /** MercadoPago public key / Clave pública de MercadoPago */
+    publicKey: process.env.MERCADOPAGO_PUBLIC_KEY || '',
+    /** MercadoPago webhook ID / Webhook ID de MercadoPago */
+    webhookId: process.env.MERCADOPAGO_WEBHOOK_ID || '',
+    /** MercadoPago integration type: 'checkout' or 'wallet' */
+    integrationType: process.env.MERCADOPAGO_INTEGRATION_TYPE || 'checkout',
+    /** MercadoPago webhook secret for HMAC-SHA256 signature verification (optional in dev) */
+    webhookSecret: process.env.MERCADOPAGO_WEBHOOK_SECRET || '',
+  },
 };

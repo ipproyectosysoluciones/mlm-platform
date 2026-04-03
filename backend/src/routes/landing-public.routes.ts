@@ -97,8 +97,11 @@ const refCodeValidation = [
     .optional()
     .isString()
     .trim()
-    .isLength({ min: 3, max: 15 })
-    .withMessage('Referral code must be 3-15 characters'),
+    .custom((value: string) => {
+      // Allow empty string (treated as "no ref"), or valid 3-15 char code
+      if (value === '' || (value.length >= 3 && value.length <= 15)) return true;
+      throw new Error('Referral code must be 3-15 characters');
+    }),
 ];
 
 /**

@@ -7,6 +7,58 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
+// Mock the API service to prevent real network calls in unit tests
+vi.mock('../services/api', async () => {
+  const mockApiClient = {
+    get: vi.fn().mockRejectedValue(new Error('Network Error')),
+    post: vi.fn().mockRejectedValue(new Error('Network Error')),
+    put: vi.fn().mockRejectedValue(new Error('Network Error')),
+    delete: vi.fn().mockRejectedValue(new Error('Network Error')),
+    interceptors: { request: { use: vi.fn() }, response: { use: vi.fn() } },
+  };
+
+  // DashboardData shape — matches the DashboardData interface in types/index.ts
+  const mockDashboardData = {
+    user: {
+      id: 'test-user',
+      email: 'test@example.com',
+      referralCode: 'ABC123',
+      level: 1,
+    },
+    stats: {
+      totalReferrals: 0,
+      leftCount: 0,
+      rightCount: 0,
+      totalEarnings: 0,
+      pendingEarnings: 0,
+    },
+    referralLink: 'https://example.com/ref/ABC123',
+    recentCommissions: [],
+    recentReferrals: [],
+    referralsChart: [],
+    commissionsChart: [],
+  };
+
+  // ProductListResponse shape — matches what ProductCatalog does: response.products
+  const mockProductListResponse = {
+    products: [],
+    total: 0,
+    page: 1,
+    limit: 10,
+    totalPages: 0,
+  };
+
+  return {
+    default: mockApiClient,
+    productService: {
+      getProducts: vi.fn().mockResolvedValue(mockProductListResponse),
+    },
+    orderService: { createOrder: vi.fn() },
+    dashboardService: { getDashboard: vi.fn().mockResolvedValue(mockDashboardData) },
+    userService: { getProfile: vi.fn().mockResolvedValue(null) },
+  };
+});
+
 // Mock AuthContext
 vi.mock('../context/AuthContext', async () => {
   return {
