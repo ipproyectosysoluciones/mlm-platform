@@ -7,6 +7,28 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
+// Mock the API service to prevent real network calls in unit tests
+vi.mock('../services/api', async () => {
+  const mockApiClient = {
+    get: vi.fn().mockRejectedValue(new Error('Network Error')),
+    post: vi.fn().mockRejectedValue(new Error('Network Error')),
+    put: vi.fn().mockRejectedValue(new Error('Network Error')),
+    delete: vi.fn().mockRejectedValue(new Error('Network Error')),
+    interceptors: { request: { use: vi.fn() }, response: { use: vi.fn() } },
+  };
+  return {
+    default: mockApiClient,
+    productService: {
+      getProducts: vi
+        .fn()
+        .mockResolvedValue({ data: { products: [], total: 0, page: 1, limit: 10, totalPages: 0 } }),
+    },
+    orderService: { createOrder: vi.fn() },
+    dashboardService: { getDashboard: vi.fn().mockResolvedValue({ data: null }) },
+    userService: { getProfile: vi.fn().mockResolvedValue({ data: null }) },
+  };
+});
+
 // Mock AuthContext
 vi.mock('../context/AuthContext', async () => {
   return {
