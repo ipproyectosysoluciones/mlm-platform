@@ -182,6 +182,9 @@ export default function Checkout() {
               onSubmit={handlePayment}
               isProcessing={isSubmitting}
               error={submitError}
+              total={product.price}
+              currency={product.currency}
+              onPayPalSuccess={handleConfirmPurchase}
             />
           </div>
         </div>
