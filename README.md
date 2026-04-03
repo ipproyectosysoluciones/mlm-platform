@@ -17,29 +17,32 @@ Plataforma MLM (Multi-Level Marketing) con sistema de afiliaciones binarias, com
 - **i18n** - Interfaz bilingüe (Español/Inglés)
 - **Wallet Digital** - Billetera digital con retiros y transacciones
 - **2FA (TOTP)** - Two-Factor Authentication con códigos de recuperación
+- **🎮 Gamificación (v1.9.0)** - Achievements & Badges, Leaderboards semanal/mensual/todo tiempo
+- **💳 Pagos (v1.9.0)** - PayPal e integración MercadoPago con webhooks
 
 ## 📊 Estado de Implementación / Implementation Status
 
 ### ✅ Cambios Completados
 
-| Cambio                            | Descripción                            | Estado       | Fecha      |
-| --------------------------------- | -------------------------------------- | ------------ | ---------- |
-| streaming-subscriptions-ecommerce | Sistema de suscripciones y e-commerce  | ✅ Archivado | 2026-03-27 |
-| wallet-digital                    | Billetera digital con retiros          | ✅ Archivado | 2026-03-27 |
-| sdd-i18n-bilingual                | Sistema de internacionalización ES/EN  | ✅ Archivado | 2026-03-27 |
-| phase-3-visual-tree               | Visual Tree UI con React Flow          | ✅ Archivado | 2026-03-27 |
-| sdd-horizontal-navbar             | Layout de navbar horizontal            | ✅ Archivado | 2026-03-27 |
-| es-modules-migration              | Migración a ES Modules                 | ✅ Completo  | 2026-03-28 |
-| postgresql-support                | Soporte para PostgreSQL + Docker       | ✅ Completo  | 2026-03-28 |
-| build-optimization                | Build optimizado (3.4MB → 1.2MB)       | ✅ Completo  | 2026-03-28 |
-| github-templates                  | CODE_OF_CONDUCT, Issues, PR templates  | ✅ Completo  | 2026-03-28 |
-| 2fa-totp                          | Two-Factor Authentication con TOTP     | ✅ Archivado | 2026-03-29 |
-| playwright-visual-testing         | Scripts E2E con modo visual            | ✅ Archivado | 2026-03-29 |
-| frontend-2fa-ui                   | UI de React para 2FA con QR code       | ✅ Completo  | 2026-03-30 |
-| frontend-refactoring              | Modularización de componentes frontend | ✅ Completo  | 2026-03-30 |
-| backend-refactoring               | Controllers modulares (auth, crm, etc) | ✅ Completo  | 2026-04-01 |
-| pwa-offline-pages                 | Páginas 404 y Offline                  | ✅ Completo  | 2026-03-31 |
-| pwa-improvements                  | Iconos multi-size, OfflineBanner       | ✅ Completo  | 2026-03-31 |
+| Cambio                             | Descripción                                   | Estado          | Fecha          |
+| ---------------------------------- | --------------------------------------------- | --------------- | -------------- |
+| streaming-subscriptions-ecommerce  | Sistema de suscripciones y e-commerce         | ✅ Archivado    | 2026-03-27     |
+| wallet-digital                     | Billetera digital con retiros                 | ✅ Archivado    | 2026-03-27     |
+| sdd-i18n-bilingual                 | Sistema de internacionalización ES/EN         | ✅ Archivado    | 2026-03-27     |
+| phase-3-visual-tree                | Visual Tree UI con React Flow                 | ✅ Archivado    | 2026-03-27     |
+| sdd-horizontal-navbar              | Layout de navbar horizontal                   | ✅ Archivado    | 2026-03-27     |
+| es-modules-migration               | Migración a ES Modules                        | ✅ Completo     | 2026-03-28     |
+| postgresql-support                 | Soporte para PostgreSQL + Docker              | ✅ Completo     | 2026-03-28     |
+| build-optimization                 | Build optimizado (3.4MB → 1.2MB)              | ✅ Completo     | 2026-03-28     |
+| github-templates                   | CODE_OF_CONDUCT, Issues, PR templates         | ✅ Completo     | 2026-03-28     |
+| 2fa-totp                           | Two-Factor Authentication con TOTP            | ✅ Archivado    | 2026-03-29     |
+| playwright-visual-testing          | Scripts E2E con modo visual                   | ✅ Archivado    | 2026-03-29     |
+| frontend-2fa-ui                    | UI de React para 2FA con QR code              | ✅ Completo     | 2026-03-30     |
+| frontend-refactoring               | Modularización de componentes frontend        | ✅ Completo     | 2026-03-30     |
+| backend-refactoring                | Controllers modulares (auth, crm, etc)        | ✅ Completo     | 2026-04-01     |
+| pwa-offline-pages                  | Páginas 404 y Offline                         | ✅ Completo     | 2026-03-31     |
+| pwa-improvements                   | Iconos multi-size, OfflineBanner              | ✅ Completo     | 2026-03-31     |
+| **Sprint 1: Pagos y Gamificación** | **MercadoPago + Leaderboards + Achievements** | **✅ Completo** | **2026-04-03** |
 
 ### 🚧 Cambios en Progreso
 

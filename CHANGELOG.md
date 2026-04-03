@@ -4,6 +4,48 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
+## [1.9.0] - 2026-04-03
+
+### Added
+
+- **Gamification System**
+  - Achievements & Badges system with 8 achievements (bronze/silver/gold/platinum tiers)
+  - Achievement types: sales, referrals, network depth, top seller, login streak
+  - User progress tracking per achievement with unlock dates
+  - Achievements API: GET /api/achievements, /me, /me/summary endpoints
+  - Badge rewards tied to achievement milestones
+  - Automatic achievement checks on purchase, registration, login events
+  - Dashboard integration with achievement summary banners
+
+- **Leaderboard System**
+  - Weekly, monthly, and all-time rankings
+  - Redis-cached leaderboard queries (TTL 5 min) for performance
+  - Leaderboard API: GET /api/leaderboards/:period with top 10 + user rank
+  - Frontend Leaderboard page with animated podium (top 3) and ranking table
+  - User rank banner showing current position
+  - Auto cache invalidation on sales and user registration
+
+- **Payment Integrations Enhanced**
+  - MercadoPago Checkout Pro redirect flow (replaces inline iframe)
+  - Webhook signature verification (HMAC-SHA256)
+  - Purchase + Order creation from webhook payloads
+  - OrderProcessing page for post-payment redirect handling
+  - Automatic commission calculation on payment success
+
+### Fixed
+
+- Leaderboard monthly period calculation (fixed to first day of month, not rolling 30 days)
+- Achievement response shape alignment with frontend contract (progress %, currentValue, targetValue)
+- Achievement summary response keys (unlocked, total, recent)
+- TypeScript implicit any (TS7006) in AchievementController callbacks
+
+### Notes
+
+- consistency_30 achievement (30-day login streak) seeded as coming_soon (requires loginStreak column on User model)
+- All achievements tested with 7 unit tests + 3 component tests + 4 integration tests
+- Leaderboard tested with 13 unit tests + 7 component tests
+- MercadoPago tested with 9 webhook tests + 10 OrderProcessing tests
+
 ## [1.8.0] - 2026-04-03
 
 ### Added
