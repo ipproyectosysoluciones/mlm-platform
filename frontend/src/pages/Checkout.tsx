@@ -71,7 +71,7 @@ export default function Checkout() {
   /**
    * Handle payment submission
    */
-  const handlePayment = async (_paymentMethod: PaymentMethod) => {
+  const handlePayment = async (paymentMethod: PaymentMethod) => {
     if (!product) return;
 
     setShowConfirmModal(true);
@@ -79,8 +79,9 @@ export default function Checkout() {
 
   /**
    * Handle confirmation modal confirm
+   * @param paymentMethod - Payment method used (paypal, simulated, etc.)
    */
-  const handleConfirmPurchase = async () => {
+  const handleConfirmPurchase = async (paymentMethod: PaymentMethod = 'simulated') => {
     if (!product) return;
 
     setIsSubmitting(true);
@@ -89,7 +90,7 @@ export default function Checkout() {
     try {
       const order = await orderService.createOrder({
         productId: product.id,
-        paymentMethod: 'simulated',
+        paymentMethod,
       });
 
       setOrderCreated(order.id);
@@ -182,6 +183,9 @@ export default function Checkout() {
               onSubmit={handlePayment}
               isProcessing={isSubmitting}
               error={submitError}
+              total={product.price}
+              currency={product.currency}
+              onPayPalSuccess={handleConfirmPurchase}
             />
           </div>
         </div>

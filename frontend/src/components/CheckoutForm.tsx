@@ -1,14 +1,17 @@
 /**
  * @fileoverview CheckoutForm Component - Payment form
- * @description Form component for payment with simulated payment option, terms checkbox, and confirm button
+ * @description Form component for payment with PayPal and simulated payment options, terms checkbox, and confirm button
  * @module components/CheckoutForm
  */
 
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import { CreditCard, AlertTriangle, Loader2, Check } from 'lucide-react';
 import type { PaymentMethod } from '../types';
 import { cn } from '../utils/cn';
+
+const PAYPAL_CLIENT_ID = import.meta.env.VITE_PAYPAL_CLIENT_ID || '';
 
 /**
  * CheckoutForm props
@@ -18,29 +21,37 @@ interface CheckoutFormProps {
   isProcessing?: boolean;
   error?: string | null;
   className?: string;
+  total?: number;
+  currency?: string;
+  onPayPalSuccess?: (paymentMethod: PaymentMethod) => void;
 }
 
 /**
  * Payment methods
  */
-const paymentMethods: { value: PaymentMethod; icon: React.ReactNode }[] = [
-  { value: 'simulated', icon: <CreditCard className="h-5 w-5" /> },
+const paymentMethods: { value: PaymentMethod; icon: React.ReactNode; label: string }[] = [
+  { value: 'paypal', icon: <span className="text-lg font-bold">P</span>, label: 'PayPal' },
+  { value: 'simulated', icon: <CreditCard className="h-5 w-5" />, label: 'Simulated' },
 ];
 
 /**
- * CheckoutForm component - Payment form with simulated payment
- * Componente de formulario de pago - Formulario de pago con opción simulada
+ * CheckoutForm component - Payment form with PayPal and simulated payment
+ * Componente de formulario de pago - Formulario de pago con PayPal y opción simulada
  */
 export function CheckoutForm({
   onSubmit,
   isProcessing = false,
   error,
   className,
+  total = 0,
+  currency = 'USD',
+  onPayPalSuccess,
 }: CheckoutFormProps) {
   const { t } = useTranslation();
-  const [selectedPayment, setSelectedPayment] = useState<PaymentMethod>('simulated');
+  const [selectedPayment, setSelectedPayment] = useState<PaymentMethod>('paypal');
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [termsError, setTermsError] = useState(false);
+  const [paypalError, setPaypalError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,6 +71,64 @@ export function CheckoutForm({
     if (e.target.checked) {
       setTermsError(false);
     }
+  };
+
+  // Check if PayPal is available
+  const isPayPalAvailable = !!PAYPAL_CLIENT_ID;
+
+  // PayPal button component
+  const PayPalButton = () => {
+    if (!isPayPalAvailable) {
+      return (
+        <div className="rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4">
+          <p className="text-sm text-yellow-200">{t('checkout.paypalNotConfigured')}</p>
+        </div>
+      );
+    }
+
+    return (
+      <PayPalScriptProvider
+        options={{
+          clientId: PAYPAL_CLIENT_ID,
+          currency: currency,
+          intent: 'capture',
+        }}
+      >
+        <PayPalButtons
+          style={{ layout: 'vertical', color: 'blue', shape: 'rect' }}
+          disabled={isProcessing || !agreedToTerms}
+          createOrder={(_data, actions) => {
+            return actions.order.create({
+              intent: 'CAPTURE',
+              purchase_units: [
+                {
+                  amount: {
+                    currency_code: currency,
+                    value: total.toFixed(2),
+                  },
+                  description: t('checkout.paypalDescription'),
+                },
+              ],
+            });
+          }}
+          onApprove={async (_data, actions) => {
+            try {
+              const details = await actions.order?.capture();
+              if (details) {
+                onPayPalSuccess?.('paypal');
+              }
+            } catch (err) {
+              console.error('PayPal capture error:', err);
+              setPaypalError(t('checkout.paypalCaptureError'));
+            }
+          }}
+          onError={(err) => {
+            console.error('PayPal error:', err);
+            setPaypalError(t('checkout.paypalError'));
+          }}
+        />
+      </PayPalScriptProvider>
+    );
   };
 
   return (
@@ -88,7 +157,8 @@ export function CheckoutForm({
                   'flex cursor-pointer items-center gap-4 rounded-lg border p-4 transition-all',
                   selectedPayment === method.value
                     ? 'border-purple-500 bg-purple-500/10'
-                    : 'border-slate-600 bg-slate-700/50 hover:border-slate-500'
+                    : 'border-slate-600 bg-slate-700/50 hover:border-slate-500',
+                  method.value === 'paypal' && !isPayPalAvailable && 'opacity-50'
                 )}
               >
                 <input
@@ -98,7 +168,7 @@ export function CheckoutForm({
                   checked={selectedPayment === method.value}
                   onChange={() => setSelectedPayment(method.value)}
                   className="sr-only"
-                  disabled={isProcessing}
+                  disabled={isProcessing || (method.value === 'paypal' && !isPayPalAvailable)}
                 />
                 <span
                   className={cn(
@@ -114,12 +184,25 @@ export function CheckoutForm({
                 </span>
                 <span className="flex items-center gap-3 text-white">
                   {method.icon}
-                  {t(`checkout.paymentMethods.${method.value}`)}
+                  {method.label}
                 </span>
               </label>
             ))}
           </div>
         </div>
+
+        {/* PayPal Button */}
+        {selectedPayment === 'paypal' && (
+          <div className="flex flex-col gap-2">
+            <PayPalButton />
+            {paypalError && (
+              <div className="flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-500/10 p-3">
+                <AlertTriangle className="h-4 w-4 text-red-400" />
+                <p className="text-sm text-red-300">{paypalError}</p>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Simulated Payment Warning */}
         {selectedPayment === 'simulated' && (
@@ -154,30 +237,32 @@ export function CheckoutForm({
           </div>
         )}
 
-        {/* Submit Button */}
-        <button
-          type="submit"
-          disabled={isProcessing || !agreedToTerms}
-          className={cn(
-            'flex w-full items-center justify-center gap-2 rounded-xl py-3 text-lg font-semibold',
-            'bg-purple-600 text-white transition-all',
-            'hover:bg-purple-500 hover:shadow-lg hover:shadow-purple-500/25',
-            'disabled:bg-slate-600 disabled:text-slate-400 disabled:cursor-not-allowed',
-            'focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-slate-800'
-          )}
-        >
-          {isProcessing ? (
-            <>
-              <Loader2 className="h-5 w-5 animate-spin" />
-              {t('checkout.processing')}
-            </>
-          ) : (
-            <>
-              <Check className="h-5 w-5" />
-              {t('checkout.confirmPurchase')}
-            </>
-          )}
-        </button>
+        {/* Submit Button (for simulated payment) */}
+        {selectedPayment === 'simulated' && (
+          <button
+            type="submit"
+            disabled={isProcessing || !agreedToTerms}
+            className={cn(
+              'flex w-full items-center justify-center gap-2 rounded-xl py-3 text-lg font-semibold',
+              'bg-purple-600 text-white transition-all',
+              'hover:bg-purple-500 hover:shadow-lg hover:shadow-purple-500/25',
+              'disabled:bg-slate-600 disabled:text-slate-400 disabled:cursor-not-allowed',
+              'focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-slate-800'
+            )}
+          >
+            {isProcessing ? (
+              <>
+                <Loader2 className="h-5 w-5 animate-spin" />
+                {t('checkout.processing')}
+              </>
+            ) : (
+              <>
+                <Check className="h-5 w-5" />
+                {t('checkout.confirmPurchase')}
+              </>
+            )}
+          </button>
+        )}
 
         {/* Back to Products Link */}
         <button

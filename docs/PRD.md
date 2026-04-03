@@ -1,681 +1,499 @@
 # Product Requirements Document (PRD)
 
-## MLM Platform - SaaS Binary Affiliation System
+## MLM Platform - Multi-Vendor Marketplace con Sistema de Afiliaciones
 
-**Version**: 1.3.0  
-**Status**: ✅ MVP COMPLETED  
-**Last Updated**: 2026-03-30  
+**Version**: 1.8.0  
+**Status**: 🚀 IN DEVELOPMENT  
+**Last Updated**: 2026-04-03  
 **Document Owner**: MLM Development Team
 
 ---
 
-# 1. Executive Summary / Resumen Ejecutivo
+# 1. Executive Summary
 
-## Problem Statement / Declaración del Problema
+## Problem Statement
 
-Las empresas MLM tradicionales enfrentan desafíos críticos: sistemas obsoletos con tecnología de hace décadas, comisiones manuales propensas a errores, árbol genealógico opaco para los distribuidores, y plataformas que no escalan con el crecimiento de la red. Los distribuidores necesitan transparencia en tiempo real sobre sus comisiones y estructura de red.
+Las empresas MLM y e-commerce tradicionales enfrentan múltiples desafíos:
 
-Traditional MLM companies face critical challenges: outdated systems with decades-old technology, error-prone manual commissions, opaque genealogy trees for distributors, and platforms that don't scale with network growth. Distributors need real-time transparency on their commissions and network structure.
+- Sistemas obsoletos con tecnología de hace décadas
+- Comisiones manuales propensas a errores
+- Falta de flexibilidad para diferentes modelos de negocio
+- Plataformas que no escalan con el crecimiento
+- Pagos complicados en mercados emergentes (Latinoamérica)
 
-## Proposed Solution / Solución Propuesta
+**Traditional Challenge**: MLM companies face outdated tech, manual commissions, and inflexible platforms that don't scale or support modern payment methods.
 
-Plataforma SaaS de afiliaciones binarias con distribución automática de comisiones, visualización del árbol genealógico en tiempo real, dashboard con métricas de rendimiento, panel administrativo completo, y CRM integrado para gestión de leads. Construida sobre arquitectura moderna (Node.js + React) con 195 tests automatizados garantizando estabilidad.
+## Proposed Solution
 
-> **Status**: MVP COMPLETED ✅ (v1.3.0)
+**Plataforma SaaS Multi-Vendor con Sistema de Afiliaciones Binarias/Unilevel** que permite:
 
-Generic SaaS binary affiliation platform with automatic commission distribution, real-time genealogy tree visualization, performance metrics dashboard, complete admin panel, and integrated CRM for lead management. Built on modern architecture (Node.js + React) with 195 automated tests ensuring stability.
+- Vendedores independientes (afiliados) que pueden vender productos
+- Red de distribuidores con comisiones automáticas
+- Productos genéricos (cualquier tipo de negocio)
+- Entrega flexible: pickup + delivery (DiDi, Uber, InDriver)
+- Pagos locales: PayPal + MercadoPago (optimizado para Colombia)
 
-## Success Criteria / Criterios de Éxito
-
-| KPI                                                                  | Target        | Measurement                                     |
-| -------------------------------------------------------------------- | ------------- | ----------------------------------------------- |
-| User Retention Rate / Tasa de Retención de Usuarios                  | >= 85%        | Monthly active users / Monthly registered users |
-| Commission Calculation Accuracy / Precisión de Cálculo de Comisiones | 100%          | Automated test suite validation                 |
-| System Uptime / Disponibilidad del Sistema                           | >= 99.5%      | Monthly SLA monitoring                          |
-| API Response Time / Tiempo de Respuesta API                          | < 200ms (p95) | APM metrics                                     |
-| Test Coverage / Cobertura de Tests                                   | >= 80%        | Code coverage reports                           |
+> **Status**: v1.8.0 IN DEVELOPMENT (target: Mayo 2026)
 
 ---
 
-# 2. User Experience & Functionality / Experiencia de Usuario y Funcionalidad
+# 2. Vision del Producto
 
-## User Personas / Personas de Usuario
+## Modelo de Negocio
 
-### 1. Distributor (B2C) / Distribuidor
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    MLM PLATFORM - CORE                             │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  MULTI-VENDOR MARKETPLACE                                          │
+│  ├── Afiliados pueden VENDER (no solo referir)                    │
+│  ├── Admin puede crear vendedores approved                        │
+│  └── Split payments (plataforma + vendor)                         │
+│                                                                     │
+│  SISTEMAS MLM SOPORTADOS                                          │
+│  ├── Binario (original): Left/Right placement + binary spillover │
+│  └── Unilevel (nuevo): Profundidad hasta nivel 10               │
+│                                                                     │
+│  TIPOS DE NEGOCIO SOPORTADOS                                      │
+│  ├── Streaming (Netflix, Spotify, HBO)                           │
+│  ├── SaaS / Software (herramientas, cursos)                       │
+│  ├── Servicios Locales (limpieza, plomería)                      │
+│  ├── Productos Físicos (tienda, dropshipping)                    │
+│  ├── Comida / Delivery ( Rappi-like)                            │
+│  ├── Cursos / Educación (membresías)                            │
+│  └── Travel (hoteles, tours)                                     │
+│                                                                     │
+│  DELIVERY METHODS                                                 │
+│  ├── Pickup - Cliente recoge en punto                            │
+│  ├── DiDi Envíos - Integración con DiDi                         │
+│  ├── Uber Flash/Rush - Integración con Uber                      │
+│  └── InDriver - Integración con InDriver                        │
+│                                                                     │
+│  PAGOS (Colombia-Friendly)                                        │
+│  ├── PayPal - Funciona en Colombia ✅                            │
+│  ├── MercadoPago - Funciona en Colombia ✅                        │
+│  └── Wallet interno - Balance de comisiones                       │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
 
-**Profile / Perfil**:
+## User Personas
+
+### 1. Afiliado-Vendedor (Dual Role)
+
+**Profile**:
 
 - Age: 25-55
-- Tech Savviness: Medium
-- Primary Goal: Grow their network and track earnings / Crecer su red y seguir sus ganancias
+- Tech Savviness: Medium-High
+- Primary Goal: Generar ingresos por ventas Y construir red de referidos
 
-**Needs / Necesidades**:
+**Needs**:
 
-- Onboarding rápido con código de afiliado único
-- Visualización clara del árbol binario
-- Acceso móvil a comisiones y estadísticas
-- Notificaciones de nuevas comisiones
+- Dashboard con ventas, comisiones y red
+- Catálogo de productos para vender
+- Herramientas de marketing (links de referido)
+- Gestión de pedidos y delivery
+- Notificaciones de nuevas ventas/comisiones
 
-### 2. Corporate Admin (B2B) / Administrador Corporativo
+### 2. Comprador/Cliente
 
-**Profile / Perfil**:
+**Profile**:
 
-- Role: Operations Manager / IT Manager
-- Primary Goal: Platform management and user support / Gestión de plataforma y soporte a usuarios
+- Age: 18-65
+- Tech Savviness: Variable
+- Primary Goal: Comprar productos de forma rápida y segura
 
-**Needs / Necesidades**:
+**Needs**:
 
-- Panel de control completo con métricas globales
-- Gestión de usuarios (status, roles, bans)
-- Reportes de comisiones y volumen
-- Herramientas de CRM para leads
+- Checkout rápido
+- Múltiples métodos de pago
+- Opciones de delivery flexibles
+- Seguimiento de pedido en tiempo real
 
-### 3. System Administrator / Administrador del Sistema
+### 3. Admin Corporativo
 
-**Profile / Perfil**:
+**Profile**:
 
-- Role: DevOps / Backend Developer
-- Primary Goal: Platform stability and scalability / Estabilidad y escalabilidad de la plataforma
+- Role: Operations Manager
+- Primary Goal: Gestión de plataforma y vendedores
 
-**Needs / Necesidades**:
+**Needs**:
 
-- Logs centralizados
-- Métricas de rendimiento
-- Backup automatizado
-- CI/CD pipeline
-
----
-
-## User Stories / Historias de Usuario
-
-### Authentication / Autenticación
-
-| Story  | As a...       | I want...                        | So that...                               |
-| ------ | ------------- | -------------------------------- | ---------------------------------------- |
-| US-001 | New user      | Register with email and password | I can join the platform                  |
-| US-002 | New user      | Enter a sponsor code             | I can join under an existing distributor |
-| US-003 | Existing user | Login with credentials           | I can access my dashboard                |
-| US-004 | Existing user | Receive a unique referral code   | I can invite others to join my network   |
-| US-005 | Existing user | Generate my QR code              | Others can scan and register under me    |
-
-**Acceptance Criteria / Criterios de Aceptación**:
-
-- [ ] Registration requires valid email format (RFC 5322)
-- [ ] Password must be minimum 8 chars, 1 uppercase, 1 number, 1 special character
-- [ ] Sponsor code validation returns 400 with `INVALID_REFERRAL_CODE` error if not found
-- [ ] JWT token expires after 7 days
-- [ ] QR code contains referral link with embedded sponsor code
-
-### Binary Tree / Árbol Binario
-
-| Story  | As a...     | I want...                      | So that...                        |
-| ------ | ----------- | ------------------------------ | --------------------------------- |
-| US-010 | Distributor | View my binary tree structure  | I can see my network organization |
-| US-011 | Distributor | See left/right leg counts      | I can track my business volume    |
-| US-012 | Distributor | View specific user's tree      | I can help my downline            |
-| US-013 | System      | Auto-balance new registrations | Tree remains balanced             |
-
-**Acceptance Criteria**:
-
-- [ ] Tree endpoint returns complete structure with max 3 levels by default
-- [ ] `leftCount` and `rightCount` update within 100ms of new registration
-- [ ] Tree visualization renders in < 500ms for trees with < 1000 nodes
-- [ ] Closure table maintains accurate ancestor-descendant relationships
-
-### Commission System / Sistema de Comisiones
-
-| Story  | As a...     | I want...                              | So that...                          |
-| ------ | ----------- | -------------------------------------- | ----------------------------------- |
-| US-020 | Distributor | See my commission history              | I can track my earnings             |
-| US-021 | Distributor | View commission by type                | I understand my income sources      |
-| US-022 | Distributor | Get statistics (total earned, pending) | I can plan my business              |
-| US-023 | System      | Auto-calculate commissions on purchase | Distributors get paid automatically |
-
-**Acceptance Criteria**:
-
-- [ ] Commission types: direct (10%), level_1 (5%), level_2 (3%), level_3 (2%), level_4 (1%)
-- [ ] Commission calculation completes within 500ms of purchase
-- [ ] Commission history supports pagination (default: 10 items)
-- [ ] Commission statistics update in real-time
-
-### Admin Panel / Panel de Administración
-
-| Story  | As a... | I want...                                      | So that...                          |
-| ------ | ------- | ---------------------------------------------- | ----------------------------------- |
-| US-030 | Admin   | View global platform statistics                | I can monitor business health       |
-| US-031 | Admin   | List all users with filters                    | I can manage the platform           |
-| US-032 | Admin   | Update user status (active/inactive/suspended) | I can enforce platform rules        |
-| US-033 | Admin   | Promote user to admin role                     | I can delegate management           |
-| US-034 | Admin   | View commission reports                        | I can audit commission distribution |
-
-**Acceptance Criteria**:
-
-- [ ] Admin endpoints require `role: "admin"` in JWT
-- [ ] User status update reflects immediately in auth checks
-- [ ] Commission report supports date range filtering
-- [ ] Pagination supports page and limit parameters (max 100)
-
-### CRM Module / Módulo CRM
-
-| Story  | As a... | I want...               | So that...                      |
-| ------ | ------- | ----------------------- | ------------------------------- |
-| US-040 | Admin   | Create and manage leads | I can track potential customers |
-| US-041 | Admin   | Assign tasks to leads   | I can organize follow-ups       |
-| US-042 | Admin   | Log communications      | I can maintain contact history  |
-| US-043 | Admin   | View CRM statistics     | I can measure sales pipeline    |
-
-**Acceptance Criteria**:
-
-- [ ] Lead creation requires contactName and contactEmail (valid format)
-- [ ] Task due dates support scheduling
-- [ ] Communication types: call, email, meeting, note
-- [ ] Lead status workflow: new → contacted → qualified → proposal → negotiation → won/lost
+- Panel de control con métricas globales
+- Gestión de vendedores (approve/reject)
+- Reportes de ventas y comisiones
+- CRM para leads
 
 ---
 
-## Non-Goals / Objetivos No Incluidos
+# 3. Funcionalidades Core
 
-The following are explicitly **NOT** part of this PRD:
+## 3.1 Sistema de Autenticación
 
-| Feature                            | Reason / Razón                                                         |
-| ---------------------------------- | ---------------------------------------------------------------------- |
-| Payment processing (Stripe/PayPal) | MVP focuses on commission calculation; payment distribution is phase 2 |
-| Mobile app                         | Web responsive design is MVP scope; native apps are phase 2            |
-| Multi-language (i18n)              | English/Spanish documentation; UI defaults to Spanish                  |
-| Gamification                       | Deferred to enhance retention after MVP metrics established            |
-| Push notifications                 | Email notifications MVP scope; push is phase 2                         |
-| WhatsApp/Telegram integration      | Deferred; depends on payment MVP success                               |
-| Advanced analytics                 | Basic dashboard metrics MVP scope; advanced BI is phase 2              |
-| White-label customization          | Deferred to enterprise tier                                            |
+| Feature                   | Descripción                          | Prioridad |
+| ------------------------- | ------------------------------------ | --------- |
+| Registro con sponsor code | Usuario se registra bajo un afiliado | 🔴 Alta   |
+| Login JWT                 | Autenticación con tokens             | 🔴 Alta   |
+| 2FA                       | Códigos TOTP                         | 🟡 Media  |
+| KYC (futuro)              | Verificación de identidad            | 🟢 Baja   |
 
----
+## 3.2 Sistema MLM
 
-# 3. Technical Specifications / Especificaciones Técnicas
+### Binario (Original)
 
-## Architecture Overview / Visión General de Arquitectura
-
-```map
-┌─────────────────────────────────────────────────────────────┐
-│                     MLM SAAS PLATFORM                         │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  ┌──────────────────┐     ┌──────────────────┐              │
-│  │   FRONTEND        │     │   MOBILE (v2)    │              │
-│  │   React 19        │────▶│   React Native    │              │
-│  │   Tailwind CSS    │     │   (Future)       │              │
-│  │   Vite 8          │     └──────────────────┘              │
-│  └────────┬──────────┘                                       │
-│           │ REST API                                          │
-│           ▼                                                   │
-│  ┌──────────────────────────────────────────────────────┐    │
-│  │                    BACKEND API                          │    │
-│  │                                                       │    │
-│  │  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌────────┐ │    │
-│  │  │  Auth   │  │  Users  │  │  Comm   │  │  CRM   │ │    │
-│  │  │ Route   │  │ Route   │  │ Route   │  │ Route  │ │    │
-│  │  └────┬────┘  └────┬────┘  └────┬────┘  └───┬────┘ │    │
-│  │       │            │            │           │       │    │
-│  │       ▼            ▼            ▼           ▼       │    │
-│  │  ┌─────────────────────────────────────────────┐  │    │
-│  │  │           SERVICE LAYER                       │  │    │
-│  │  │  AuthService │ UserService │ CommissionSvc  │  │    │
-│  │  │  TreeService │ CRMService  │ QRService     │  │    │
-│  │  └─────────────────────────────────────────────┘  │    │
-│  │                         │                           │    │
-│  │                         ▼                           │    │
-│  │  ┌─────────────────────────────────────────────┐  │    │
-│  │  │           DATA LAYER                         │  │    │
-│  │  │  User │ Commission │ Purchase │ Lead │ Task │  │    │
-│  │  └─────────────────────────────────────────────┘  │    │
-│  └──────────────────────────────────────────────────────┘    │
-│                          │                                    │
-│                          ▼                                    │
-│  ┌─────────────────────────────────────────────┐            │
-│  │              DATABASE CLUSTER                   │            │
-│  │     MySQL 8.0 (Primary) + Redis (Cache)       │            │
-│  └─────────────────────────────────────────────┘            │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
+```
+Estructura:
+├── Left/Right placement automático
+├── Binary commissions (10% directo, niveles 1-5)
+├── Spillover cuando un lado está vacío
+└── Closure Table para queries eficientes
 ```
 
-## Tech Stack
+### Unilevel (Nuevo)
 
-### Current (MVP) / Actual (MVP)
-
-| Component     | Technology       | Version |
-| ------------- | ---------------- | ------- |
-| Runtime       | Node.js          | 18+     |
-| API Framework | Express.js       | 4.x     |
-| Language      | TypeScript       | 5.x     |
-| ORM           | Sequelize        | 6.x     |
-| Database      | MySQL            | 8.0     |
-| Cache         | Redis            | 7+      |
-| Frontend      | React            | 19      |
-| Build Tool    | Vite             | 8.x     |
-| Styling       | Tailwind CSS     | 4.x     |
-| Testing       | Jest + Supertest | -       |
-| E2E Testing   | Playwright       | 1.58+   |
-
-### Future (v2.0) / Futuro (v2.0)
-
-| Component     | Technology               |
-| ------------- | ------------------------ |
-| Mobile        | React Native / Expo      |
-| Payments      | Stripe Connect           |
-| Notifications | Firebase Cloud Messaging |
-| Analytics     | Metabase / Grafana       |
-| Monitoring    | Datadog / Sentry         |
-
----
-
-## Database Schema / Esquema de Base de Datos
-
-### Core Tables / Tablas Principales
-
-```map
-┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐
-│      USER        │────▶│    PURCHASE      │◀────│   COMMISSION     │
-├──────────────────┤     ├──────────────────┤     ├──────────────────┤
-│ id (PK)          │     │ id (PK)          │     │ id (PK)          │
-│ email            │     │ userId (FK)      │     │ userId (FK)      │
-│ passwordHash     │     │ amount           │     │ fromUserId (FK)  │
-│ referralCode     │     │ currency         │     │ purchaseId (FK)  │
-│ sponsorId (FK)   │     │ status           │     │ type             │
-│ position         │     └──────────────────┘     │ amount           │
-│ level            │                             │ status           │
-│ status           │                             └──────────────────┘
-│ role             │
-│ currency         │
-└────────┬─────────┘
-         │
-         ▼
-┌──────────────────┐
-│  USER_CLOSURE    │ (Binary Tree Materialized Path)
-├──────────────────┤
-│ ancestorId (PK)  │
-│ descendantId (PK) │
-│ depth             │
-└──────────────────┘
-
-┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐
-│       LEAD       │────▶│      TASK       │     │  COMMUNICATION   │
-├──────────────────┤     ├──────────────────┤     ├──────────────────┤
-│ id (PK)          │     │ id (PK)          │     │ id (PK)          │
-│ userId (FK)      │     │ leadId (FK)      │     │ leadId (FK)      │
-│ contactName       │     │ userId (FK)      │     │ userId (FK)      │
-│ contactEmail      │     │ title            │     │ type             │
-│ contactPhone      │     │ dueDate          │     │ subject          │
-│ company           │     │ priority         │     │ notes            │
-│ status            │     │ status           │     └──────────────────┘
-│ source            │     └──────────────────┘
-│ value             │
-│ metadata (JSON)   │
-└──────────────────┘
+```
+Estructura:
+├── Profundidad hasta nivel 10
+├── Porcentaje plano configurable por nivel
+└── Sin limitación izquierda/derecha
 ```
 
-### Indexes / Índices
+### Configuración de Comisiones
 
-| Table        | Index                             | Purpose         |
-| ------------ | --------------------------------- | --------------- |
-| users        | `email` (UNIQUE)                  | Login lookup    |
-| users        | `referralCode` (UNIQUE)           | Sponsor lookup  |
-| users        | `sponsorId`                       | Tree queries    |
-| user_closure | `(ancestorId, descendantId)` (PK) | Closure queries |
-| commissions  | `userId, createdAt`               | User history    |
-| leads        | `userId, status`                  | CRM filters     |
-
----
-
-## API Reference / Referencia de API
-
-### Base URL
-
-```text
-Production: https://api.mlm-platform.com/api
-Staging: https://staging-api.mlm-platform.com/api
-Development: http://localhost:3000/api
-```
-
-### Authentication / Autenticación
-
-All protected endpoints require:
-
-```text
-Authorization: Bearer <jwt_token>
-```
-
-### Endpoints Matrix / Matriz de Endpoints
-
-| Method | Endpoint                 | Auth | Role  | Description           |
-| ------ | ------------------------ | ---- | ----- | --------------------- |
-| POST   | /auth/register           | No   | -     | User registration     |
-| POST   | /auth/login              | No   | -     | User login            |
-| GET    | /auth/me                 | Yes  | user  | Current user profile  |
-| GET    | /users/me/tree           | Yes  | user  | User's binary tree    |
-| GET    | /users/me/qr-url         | Yes  | user  | QR code data URL      |
-| GET    | /dashboard               | Yes  | user  | Dashboard statistics  |
-| GET    | /commissions             | Yes  | user  | Commission history    |
-| GET    | /commissions/stats       | Yes  | user  | Commission statistics |
-| POST   | /commissions             | Yes  | user  | Create purchase       |
-| GET    | /admin/stats             | Yes  | admin | Global statistics     |
-| GET    | /admin/users             | Yes  | admin | List all users        |
-| PATCH  | /admin/users/:id/status  | Yes  | admin | Update user status    |
-| PATCH  | /admin/users/:id/promote | Yes  | admin | Promote to admin      |
-| GET    | /crm                     | Yes  | admin | List leads            |
-| POST   | /crm                     | Yes  | admin | Create lead           |
-| POST   | /crm/:id/tasks           | Yes  | admin | Create task           |
-
-### Response Format / Formato de Respuesta
-
-**Success / Éxito**:
-
-```json
+```typescript
+// Ejemplo: Binary
 {
-  "success": true,
-  "data": { ... },
-  "pagination": { "page": 1, "limit": 10, "totalPages": 5 }
+  type: 'binary',
+  direct: 0.10,      // 10%
+  level_1: 0.05,    // 5%
+  level_2: 0.03,    // 3%
+  level_3: 0.02,    // 2%
+  level_4: 0.01     // 1%
+}
+
+// Ejemplo: Unilevel
+{
+  type: 'unilevel',
+  level_1: 0.10,    // 10%
+  level_2: 0.08,     // 8%
+  level_3: 0.05,     // 5%
+  level_4: 0.03,     // 3%
+  level_5: 0.02,     // 2%
+  // ... hasta level 10
 }
 ```
 
-**Error / Error**:
+## 3.3 Multi-Vendor Marketplace
 
-```json
-{
-  "success": false,
-  "error": {
-    "code": "ERROR_CODE",
-    "message": "Human readable message",
-    "details": { ... }
-  }
-}
+| Feature            | Descripción                                        | Prioridad |
+| ------------------ | -------------------------------------------------- | --------- |
+| Vendor申请         | Afiliados pueden aplicar para ser vendedores       | 🔴 Alta   |
+| Admin approval     | Admin approves/rejects vendors                     | 🔴 Alta   |
+| Vendor dashboard   | Dashboard para gestionar productos y pedidos       | 🔴 Alta   |
+| Split payments     | % configurable para plataforma y vendor            | 🔴 Alta   |
+| Vendor commissions | Los vendors también ganan comisiones por referrals | 🟡 Media  |
+
+## 3.4 Productos Genéricos
+
+| Feature             | Descripción                            | Prioridad |
+| ------------------- | -------------------------------------- | --------- |
+| CRUD productos      | Crear/editar/eliminar productos        | 🔴 Alta   |
+| Tipos de producto   | digital, physical, service, membership | 🔴 Alta   |
+| Inventory tracking  | Stock opcional con alertas             | 🟡 Media  |
+| Categorías          | Jerárquicas (parent-child)             | 🔴 Alta   |
+| SKU generable       | Auto-generado o manual                 | 🟡 Media  |
+| Metadatos flexibles | JSON para atributos extra              | 🟢 Baja   |
+
+## 3.5 Delivery Integration
+
+| Provider        | Status             | Description              |
+| --------------- | ------------------ | ------------------------ |
+| Pickup Points   | 🚀 Por implementar | Puntos de recogida       |
+| DiDi Envíos     | 🚀 Por implementar | Integración DiDi API     |
+| Uber Flash/Rush | 🚀 Por implementar | Integración Uber API     |
+| InDriver        | 🚀 Por implementar | Integración InDriver API |
+
+## 3.6 Gamificación
+
+### Leaderboards
+
+| Type     | Reset       | Metrics           |
+| -------- | ----------- | ----------------- |
+| Semanal  | Lunes 00:00 | Ventas, Referidos |
+| Mensual  | Día 1 00:00 | Ventas, Referidos |
+| All-time | Nunca       | Ventas, Referidos |
+
+### Achievements (15+)
+
+| ID              | Nombre                | Condición       | Reward |
+| --------------- | --------------------- | --------------- | ------ |
+| first_referral  | Primer Paso           | 1 referral      | Badge  |
+| team_10         | Equipo en Crecimiento | 10 referrals    | Badge  |
+| team_50         | Líder                 | 50 referrals    | Badge  |
+| first_sale      | Primera Venta         | 1 order         | Badge  |
+| sales_1000      | Vendedor              | $1000 total     | Badge  |
+| sales_10000     | Top Seller            | $10000 total    | Badge  |
+| consistency_30  | Constante             | 30 días login   | Badge  |
+| binary_balanced | Equilibrado           | 10 izq + 10 der | Badge  |
+
+## 3.7 Email Automation (Brevo)
+
+| Secuencia          | Trigger                | Emails           | Prioridad |
+| ------------------ | ---------------------- | ---------------- | --------- |
+| Welcome Series     | Registro               | 4 (Días 0-7)     | 🔴 Alta   |
+| Onboarding         | Registro               | 7 (Días 1-7)     | 🔴 Alta   |
+| Birthday           | Fecha nacimiento       | 2 (anual)        | 🟡 Media  |
+| Carrito Abandonado | Carrito sin checkout   | 3 (1h, 24h, 72h) | 🔴 Alta   |
+| Inactividad        | Sin login 7/14/30 días | 3                | 🟡 Media  |
+| Commission Alert   | Nueva comisión         | 1 (inmediato)    | 🔴 Alta   |
+
+---
+
+# 4. Tech Stack
+
+## Backend
+
+```
+Runtime: Node 24+ (ESM)
+Framework: Express 5
+Database: PostgreSQL + Redis
+ORM: Sequelize 6
+Email: Brevo (SMTP + API)
+SMS: Brevo SMS
+Payments: PayPal SDK + MercadoPago SDK
+Delivery: DiDi + Uber + InDriver APIs
+Testing: Jest (123+ tests)
 ```
 
-### Error Codes / Códigos de Error
+## Frontend
 
-| Code                  | HTTP | Description                   |
-| --------------------- | ---- | ----------------------------- |
-| UNAUTHORIZED          | 401  | Missing or invalid token      |
-| FORBIDDEN             | 403  | Insufficient permissions      |
-| NOT_FOUND             | 404  | Resource not found            |
-| INVALID_EMAIL         | 400  | Invalid email format          |
-| EMAIL_EXISTS          | 400  | Email already registered      |
-| INVALID_REFERRAL_CODE | 400  | Sponsor code not found        |
-| INVALID_CREDENTIALS   | 401  | Wrong email or password       |
-| WEAK_PASSWORD         | 400  | Password requirements not met |
-| RATE_LIMIT            | 429  | Too many requests             |
-
----
-
-## Security & Privacy / Seguridad y Privacidad
-
-### Authentication / Autenticación
-
-- JWT tokens with 7-day expiry
-- Password hashing: bcrypt (12 rounds)
-- Rate limiting: 5 requests/15min per IP on auth endpoints
-
-### Data Protection / Protección de Datos
-
-- All passwords stored as bcrypt hashes (never plaintext)
-- JWT tokens are stateless; Redis used for session invalidation
-- API responses never expose passwordHash
-
-### Compliance / Cumplimiento
-
-- GDPR: User data export capability (future phase)
-- Data retention policy: 7 years for financial records
-- SSL/TLS required for all API communication
-
----
-
-# 4. Integration Points / Puntos de Integración
-
-## Third-Party Services / Servicios de Terceros
-
-| Service               | Purpose              | Status  |
-| --------------------- | -------------------- | ------- |
-| Twilio (SMS)          | 2FA notifications    | Planned |
-| SendGrid (Email)      | Transactional emails | Planned |
-| Stripe Connect        | Commission payouts   | v2.0    |
-| WhatsApp Business API | CRM integration      | v2.0    |
-| Firebase              | Push notifications   | v2.0    |
-
-## Internal Systems / Sistemas Internos
-
-| System          | Integration      | Method                |
-| --------------- | ---------------- | --------------------- |
-| Admin Dashboard | Real-time stats  | REST API              |
-| CRM Module      | Lead management  | Internal service      |
-| Reporting       | Commission audit | Database read replica |
-
----
-
-# 5. Risks & Roadmap / Riesgos y Hoja de Ruta
-
-## Technical Risks / Riesgos Técnicos
-
-| Risk                                  | Probability | Impact   | Mitigation                              |
-| ------------------------------------- | ----------- | -------- | --------------------------------------- |
-| Commission calculation errors         | Low         | Critical | 100% test coverage on CommissionService |
-| Database connection exhaustion        | Medium      | High     | Connection pooling + Redis caching      |
-| Tree performance degradation at scale | Medium      | Medium   | Closure table + pagination              |
-| Security vulnerabilities              | Low         | Critical | OWASP guidelines + security audit       |
-| Rate limiting false positives         | Medium      | Low      | Graceful degradation + monitoring       |
-
-## Non-Technical Risks / Riesgos No Técnicos
-
-| Risk                          | Probability | Impact | Mitigation                      |
-| ----------------------------- | ----------- | ------ | ------------------------------- |
-| Competitor price undercutting | Medium      | Medium | Focus on UX + reliability       |
-| Regulatory changes (MLM laws) | Low         | High   | Legal review + geo-restrictions |
-| Payment processor rejection   | Medium      | High   | Multi-processor strategy        |
-
----
-
-## Phased Rollout / Implementación por Fases
-
-### Phase 1: MVP ✅ COMPLETED
-
-**Scope / Alcance**:
-
-- ✅ User registration with sponsor codes
-- ✅ Binary tree with left/right placement (API)
-- ✅ Commission calculation (5 levels) - CONFIGURABLE
-- ✅ Dashboard with statistics
-- ✅ Admin panel (user management)
-- ✅ CRM basic (leads, tasks, communications)
-- ✅ QR code generation
-- ✅ JWT authentication
-- ✅ Integration test suite (195 tests)
-- ✅ E2E test suite (37 tests)
-
-**Timeline**: Q1 2026  
-**Status**: **COMPLETE ✅**
-
----
-
-### Phase 2: v1.1 - Email & SMS Notifications ❌ NOT PLANNED
-
-**Scope / Alcance**:
-
-- [ ] ~~Email notifications (new commissions, downline activity, welcome, password reset)~~
-- [ ] ~~Email templates (5 responsive HTML templates)~~
-- [ ] ~~SMS 2FA via Twilio~~
-- [ ] ~~User notification preferences API~~
-- [ ] ~~Weekly digest cron job~~
-
-**Status**: ❌ NOT PLANNED for v1.x
-
-> **Rationale**: Email/SMS notifications were moved out of scope for v1.x. May be revisited in future versions.
-
----
-
-### Phase 3: v1.2 - Visual Tree UI ✅ COMPLETED
-
-**Scope / Alcance**:
-
-- [x] Interactive binary tree visualization component (React Flow)
-- [x] Tree node rendering with user info (avatar, name, status)
-- [x] Zoom in/out controls
-- [x] Pan/scroll navigation
-- [x] Search member by name/email
-- [x] Click node to view user details
-- [x] Tree depth controls (levels to display)
-- [x] Mobile responsive tree view
-
-**Dependencies**: D3.js or React Flow library (React Flow selected)  
-**Timeline**: Q2 2026 ✅ Completed March 2026
-
-**Implementation Details**:
-
-- React Flow for interactive tree visualization
-- Zustand for state management
-- Mobile-first responsive design
-- 13 E2E tests passing
-- 158 backend integration tests passing
-
----
-
-### Phase 4: v1.3 - E-commerce 🛒 ✅ PARTIAL
-
-**Scope / Alcance**:
-
-- [x] Product catalog management
-- [x] Product CRUD (admin)
-- [x] Product categories
-- [x] ~~Shopping cart~~ - One-click purchase implemented
-- [x] Order management
-- [x] Order status tracking
-- [x] Product images and pricing
-- [x] ~~Inventory management~~ - Not required for streaming products
-
-**Status**: ✅ PARTIAL - Streaming e-commerce completed
-
-> **Implemented**: Products (Netflix, Spotify, HBO, Disney+, Amazon Prime), subscriptions, orders, streaming access
-> **Not implemented**: Full e-commerce with inventory, physical products
-
----
-
-### Phase 5: v2.0 - Payments & E-Wallet 💰 ✅ PARTIAL
-
-**Scope / Alcance**:
-
-- [ ] ~~Stripe Connect integration for commission payouts~~
-- [ ] ~~PayPal integration for deposits~~
-- [x] E-wallet system
-- [x] Withdrawal requests
-- [x] Payment history
-- [x] Currency conversion (Frankfurter API)
-- [ ] ~~Audit logs~~
-- [ ] ~~Multi-currency support (COP, MXN, USD)~~ - Single currency with conversion rates
-
-**Status**: ✅ PARTIAL - Wallet implemented, gateways pending
-
-> **Implemented**: Wallet balance, deposits, withdrawals (5% fee, $20 min), transaction history, currency conversion API
-> **Not implemented**: Stripe/PayPal integration, audit logs
-
----
-
-### Phase 6: v2.1 - Mobile & Scale ❌ NOT PLANNED
-
-**Scope / Alcance**:
-
-- [ ] ~~React Native mobile app~~
-- [ ] ~~Push notifications (Firebase)~~
-- [x] Multi-language (Spanish, English) - i18n implemented
-- [ ] ~~Gamification (achievements, leaderboards)~~
-- [ ] ~~Advanced analytics dashboard~~ - Basic analytics implemented in CRM
-
-**Status**: ❌ NOT PLANNED for v1.x
-
-> **Rationale**: Mobile app, push notifications, and gamification moved out of scope. Bilingual i18n (ES/EN) implemented.
-
----
-
-### Phase 7: Enterprise
-
-**Scope / Alcance**:
-
-- [ ] White-label capabilities
-- [ ] Custom commission structures (Unilevel, Matrix)
-- [ ] SSO (SAML, OAuth)
-- [ ] Advanced permissions (teams, departments)
-- [ ] API webhooks
-- [ ] Custom domain support
-- [ ] Dedicated support tier
-- [ ] WhatsApp/Telegram bot
-- [ ] KYC/Identity verification
-- [ ] 2FA authentication
-
-**Status**: Future roadmap (2027+)
-
-> **Pending**: All enterprise features including KYC, 2FA, custom commission structures
-
----
-
-# 6. Testing Strategy / Estrategia de Testing
-
-## Test Coverage Requirements / Requisitos de Cobertura
-
-| Layer       | Minimum Coverage    | Tool             |
-| ----------- | ------------------- | ---------------- |
-| Services    | 90%                 | Jest             |
-| Controllers | 80%                 | Jest + Supertest |
-| Models      | 85%                 | Jest             |
-| E2E Flows   | 100% critical paths | Playwright       |
-
-## Critical Test Paths / Caminos Críticos de Test
-
-```text
-1. Registration → Login → Dashboard → Tree View
-2. Registration with Sponsor → Commission Earned → Commission History
-3. Admin Login → User Status Change → User Login Blocked
-4. CRM: Create Lead → Create Task → Complete Task
 ```
-
-## Test Execution / Ejecución de Tests
-
-```bash
-# CI/CD Pipeline
-pnpm test              # Unit tests (must pass)
-pnpm test:integration  # Integration tests (must pass)
-pnpm test:e2e          # E2E tests (must pass)
-pnpm test:coverage     # Generate coverage report
+Framework: React 19 + Vite
+Styling: Tailwind CSS 4 + shadcn/ui
+State: Zustand 5
+Routing: React Router 7
+i18n: i18next
+PWA: Workbox
+Testing: Vitest (102+ tests)
+E2E: Playwright
 ```
 
 ---
 
-# 7. Appendix / Apéndice
+# 5. API Endpoints
 
-## Glossary / Glosario
+## Payments
 
-| Term          | Definition                                       |
-| ------------- | ------------------------------------------------ |
-| Sponsor       | User who invites another to join the platform    |
-| Referral Code | Unique code for identifying sponsors             |
-| Binary Tree   | Network structure with left/right placement      |
-| Closure Table | Database pattern for efficient tree queries      |
-| Commission    | Payment to distributor based on network activity |
-| Upline        | All ancestors in the binary tree                 |
-| Downline      | All descendants in the binary tree               |
-| Leg           | Left or right branch of the binary tree          |
+```
+POST /api/payment/paypal/create      - Crear orden PayPal
+POST /api/payment/paypal/capture     - Capturar pago PayPal
+POST /api/payment/paypal/webhook     - Webhook PayPal
+POST /api/payment/mercadopago/preference - Crear preferencia MP
+POST /api/payment/mercadopago/webhook    - Webhook MP
+```
 
-## References / Referencias
+## Gamificación
 
-- [Sequelize Documentation](https://sequelize.org/)
-- [JWT Best Practices](https://jwt.io/introduction/)
-- [OWASP API Security](https://owasp.org/www-project-api-security/)
-- [MLM Regulatory Guidelines](https://www.ftc.gov/tips-advice/business-center/guidance/multilevel-marketing)
+```
+GET  /api/leaderboard              - Obtener rankings
+GET  /api/achievements             - Obtener achievements
+POST /api/achievements/claim       - Reclamar reward
+```
 
-## Document History / Historial del Documento
+## Marketplace
 
-| Version | Date       | Author   | Changes           |
-| ------- | ---------- | -------- | ----------------- |
-| 1.0     | 2026-03-21 | MLM Team | Initial PRD draft |
+```
+POST /api/vendors                  - Solicitar ser vendor
+GET  /api/vendors                  - Listar vendors
+PATCH /api/vendors/:id/approve     - Aprobar vendor
+PATCH /api/vendors/:id/reject      - Rechazar vendor
+```
+
+## Delivery
+
+```
+POST /api/delivery/quote           - Cotizar envío
+POST /api/delivery/create          - Crear envío
+GET  /api/delivery/track/:id      - Tracking de envío
+```
+
+## Productos
+
+```
+GET  /api/products                 - Listar productos
+POST /api/products                 - Crear producto (vendor)
+PATCH /api/products/:id            - Editar producto
+DELETE /api/products/:id           - Eliminar producto
+```
 
 ---
 
-**Approval / Aprobación**
+# 6. Database Schema
+
+## Nuevas Tablas
+
+### Vendors
+
+```sql
+CREATE TABLE vendors (
+  id UUID PRIMARY KEY,
+  user_id UUID REFERENCES users(id),
+  business_name VARCHAR(255),
+  status ENUM('pending', 'approved', 'rejected'),
+  commission_rate DECIMAL(5,2),  -- % para vendor
+  platform_fee DECIMAL(5,2),      -- % para plataforma
+  approved_at TIMESTAMP,
+  approved_by UUID REFERENCES users(id),
+  created_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+### Products (Refactorizado)
+
+```sql
+CREATE TABLE products (
+  id UUID PRIMARY KEY,
+  vendor_id UUID REFERENCES vendors(id),  -- NULL = admin
+  name VARCHAR(255) NOT NULL,
+  description TEXT,
+  price DECIMAL(10,2) NOT NULL,
+  currency VARCHAR(3) DEFAULT 'USD',
+  type ENUM('digital', 'physical', 'service', 'membership'),
+  delivery_method ENUM('automatic', 'shipping', 'pickup', 'appointment'),
+  inventory_tracked BOOLEAN DEFAULT false,
+  inventory_quantity INTEGER,
+  sku VARCHAR(100),
+  metadata JSONB,
+  status ENUM('active', 'inactive'),
+  created_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+### Achievements
+
+```sql
+CREATE TABLE achievements (
+  id UUID PRIMARY KEY,
+  code VARCHAR(50) UNIQUE NOT NULL,
+  name VARCHAR(100) NOT NULL,
+  description TEXT,
+  icon_url VARCHAR(500),
+  points INTEGER DEFAULT 0,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE user_achievements (
+  id UUID PRIMARY KEY,
+  user_id UUID REFERENCES users(id),
+  achievement_id UUID REFERENCES achievements(id),
+  unlocked_at TIMESTAMP DEFAULT NOW(),
+  UNIQUE(user_id, achievement_id)
+);
+```
+
+### Leaderboards
+
+```sql
+CREATE TABLE leaderboard_entries (
+  id UUID PRIMARY KEY,
+  user_id UUID REFERENCES users(id),
+  period ENUM('weekly', 'monthly', 'all_time'),
+  metric VARCHAR(50),           -- 'sales', 'referrals'
+  value DECIMAL(15,2),
+  rank INTEGER,
+  period_start DATE,
+  period_end DATE,
+  created_at TIMESTAMP DEFAULT NOW(),
+  UNIQUE(user_id, period, metric, period_start)
+);
+```
+
+### GiftCards
+
+```sql
+CREATE TABLE gift_cards (
+  id UUID PRIMARY KEY,
+  code VARCHAR(50) UNIQUE NOT NULL,
+  amount DECIMAL(10,2) NOT NULL,
+  currency VARCHAR(3) DEFAULT 'USD',
+  balance DECIMAL(10,2) NOT NULL,
+  purchaser_id UUID REFERENCES users(id),
+  recipient_email VARCHAR(255),
+  status ENUM('active', 'redeemed', 'expired'),
+  expires_at TIMESTAMP,
+  redeemed_at TIMESTAMP,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+---
+
+# 7. Roadmap v1.8.0
+
+### Sprint 1: Monetización (Semanas 1-2)
+
+- [ ] #17 PayPal SDK Integration
+- [ ] #18 MercadoPago SDK Integration
+- [ ] #19 Leaderboards
+- [ ] #20 Achievements + Badges
+
+### Sprint 2: E-commerce + Automation (Semana 3)
+
+- [ ] #21 Carrito Abandonado
+- [ ] #22 Email Automation (Brevo)
+- [ ] #23 Gift Cards
+
+### Sprint 3: Multi-vendor + Delivery (Semana 3)
+
+- [ ] #25 Multi-vendor Support
+- [ ] #26 Delivery: Pickup + DiDi/Uber/InDriver
+- [ ] #27 Productos Genéricos + Inventory
+
+### Sprint 4: QA + Release (Semana 4)
+
+- [ ] #28 Test Coverage Expansion (90%+)
+- [ ] #29 v1.8.0 Production Release
+- [ ] #30 Documentation Update
+
+**GitHub Project**: https://github.com/users/ipproyectosysoluciones/projects/4
+
+---
+
+# 8. Success Metrics
+
+| KPI                  | Target        | Current |
+| -------------------- | ------------- | ------- |
+| Test Coverage        | >= 90%        | ~60%    |
+| API Response Time    | < 200ms (p95) | TBD     |
+| System Uptime        | >= 99.5%      | TBD     |
+| Payment Success Rate | >= 95%        | N/A     |
+| Email Open Rate      | >= 20%        | N/A     |
+
+---
+
+# 9. Risks & Mitigations
+
+| Risk                          | Probability | Impact   | Mitigation                         |
+| ----------------------------- | ----------- | -------- | ---------------------------------- |
+| Payment gateway downtime      | Medium      | High     | Multiple providers (PayPal + MP)   |
+| Delivery API changes          | Medium      | Medium   | Abstract provider behind interface |
+| Commission calculation errors | Low         | Critical | 100% test coverage                 |
+| Vendor fraud                  | Medium      | High     | Admin approval + KYC (future)      |
+
+---
+
+# 10. Document History
+
+| Version | Date       | Author   | Changes                                  |
+| ------- | ---------- | -------- | ---------------------------------------- |
+| 1.8.0   | 2026-04-03 | MLM Team | Updated to multi-vendor + delivery scope |
+| 1.3.0   | 2026-03-30 | MLM Team | MVP streaming e-commerce                 |
+| 1.0.0   | 2026-03-21 | MLM Team | Initial PRD                              |
+
+---
+
+**Approval**
 
 | Role          | Name | Date | Signature |
 | ------------- | ---- | ---- | --------- |
