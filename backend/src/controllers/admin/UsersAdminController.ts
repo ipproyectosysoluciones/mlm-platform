@@ -5,11 +5,16 @@
  * @author MLM Development Team
  */
 import { Response } from 'express';
-import { Op } from 'sequelize';
+import { Op, WhereOptions } from 'sequelize';
 import { User, Commission } from '../../models';
+import type { UserAttributes } from '../../types';
+
+// Type for User where clauses
+type UserWhereClause = WhereOptions<UserAttributes>;
 import { UserService } from '../../services/UserService';
 import { TreeService } from '../../services/TreeService';
 import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
+import { ApiResponse } from '../../utils/response.util';
 
 const userService = new UserService();
 const treeService = new TreeService();
@@ -30,7 +35,7 @@ export async function getAllUsers(req: AuthenticatedRequest, res: Response): Pro
     const status = req.query.status as string;
     const search = req.query.search as string;
 
-    const where: any = {};
+    const where: UserWhereClause = {};
     if (status && ['active', 'inactive'].includes(status)) {
       where.status = status;
     }
@@ -77,10 +82,7 @@ export async function getAllUsers(req: AuthenticatedRequest, res: Response): Pro
       },
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: 'Error fetching users',
-    });
+    res.status(500).json(ApiResponse.error('INTERNAL_ERROR', 'Error fetching users', 500));
   }
 }
 
@@ -112,10 +114,7 @@ export async function getUserById(req: AuthenticatedRequest, res: Response): Pro
     });
 
     if (!user) {
-      res.status(404).json({
-        success: false,
-        error: 'User not found',
-      });
+      res.status(404).json(ApiResponse.error('NOT_FOUND', 'User not found', 404));
       return;
     }
 
@@ -150,10 +149,7 @@ export async function getUserById(req: AuthenticatedRequest, res: Response): Pro
     });
   } catch (error) {
     // Invalid UUID format or other DB error - treat as not found
-    res.status(404).json({
-      success: false,
-      error: 'User not found',
-    });
+    res.status(404).json(ApiResponse.error('NOT_FOUND', 'User not found', 404));
   }
 }
 
@@ -172,19 +168,13 @@ export async function updateUserStatus(req: AuthenticatedRequest, res: Response)
     const { status } = req.body;
 
     if (!['active', 'inactive'].includes(status)) {
-      res.status(400).json({
-        success: false,
-        error: 'Invalid status',
-      });
+      res.status(400).json(ApiResponse.error('INVALID_PARAMS', 'Invalid status', 400));
       return;
     }
 
     const user = await User.findByPk(userId);
     if (!user) {
-      res.status(404).json({
-        success: false,
-        error: 'User not found',
-      });
+      res.status(404).json(ApiResponse.error('NOT_FOUND', 'User not found', 404));
       return;
     }
 
@@ -218,19 +208,13 @@ export async function promoteToAdmin(req: AuthenticatedRequest, res: Response): 
     const currentUser = req.user!;
 
     if (currentUser.id === userId) {
-      res.status(400).json({
-        success: false,
-        error: 'Cannot change your own role',
-      });
+      res.status(400).json(ApiResponse.error('INVALID_PARAMS', 'Cannot change your own role', 400));
       return;
     }
 
     const user = await User.findByPk(userId);
     if (!user) {
-      res.status(404).json({
-        success: false,
-        error: 'User not found',
-      });
+      res.status(404).json(ApiResponse.error('NOT_FOUND', 'User not found', 404));
       return;
     }
 
@@ -242,9 +226,6 @@ export async function promoteToAdmin(req: AuthenticatedRequest, res: Response): 
       data: { id: user.id, role: user.role },
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: 'Error promoting user',
-    });
+    res.status(500).json(ApiResponse.error('INTERNAL_ERROR', 'Error promoting user', 500));
   }
 }

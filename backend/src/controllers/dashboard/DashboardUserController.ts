@@ -8,6 +8,7 @@ import { userService } from '../../services/UserService';
 import { LEVEL_NAMES } from '../../types';
 import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
 import type { ApiResponse } from '../../types';
+import { ApiResponse } from '../../utils/response.util';
 
 /**
  * Get user info for dashboard
@@ -21,7 +22,7 @@ export async function getDashboardUser(req: AuthenticatedRequest, res: Response)
   const fullUser = await userService.findById(userId);
 
   if (!fullUser) {
-    res.status(404).json({ success: false, error: 'User not found' });
+    res.status(404).json(ApiResponse.error('NOT_FOUND', 'User not found', 404));
     return;
   }
 

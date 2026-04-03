@@ -10,6 +10,7 @@ import { userService } from '../../services/UserService';
 import { QRService } from '../../services/QRService';
 import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
 import type { ApiResponse } from '../../types';
+import { ApiResponse as ResponseUtil } from '../../utils/response.util';
 
 /**
  * Get recent referrals and referral link for dashboard
@@ -26,7 +27,7 @@ export async function getDashboardReferrals(
   const fullUser = await userService.findById(userId);
 
   if (!fullUser) {
-    res.status(404).json({ success: false, error: 'User not found' });
+    res.status(404).json(ResponseUtil.error('NOT_FOUND', 'User not found', 404));
     return;
   }
 

@@ -5,10 +5,15 @@
  * @author MLM Development Team
  */
 import { Response } from 'express';
-import { Op } from 'sequelize';
+import { Op, WhereOptions } from 'sequelize';
 import { User, Commission, Purchase } from '../../models';
 import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
 import type { ApiResponse } from '../../types';
+import { ApiResponse as ResponseUtil } from '../../utils/response.util';
+import type { CommissionAttributes } from '../../types';
+
+// Type for Commission where clauses
+type CommissionWhereClause = WhereOptions<CommissionAttributes>;
 
 /**
  * Get global platform statistics
@@ -86,10 +91,7 @@ export async function getGlobalStats(req: AuthenticatedRequest, res: Response): 
 
     res.json(response);
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: 'Error fetching global stats',
-    });
+    res.status(500).json(ResponseUtil.error('INTERNAL_ERROR', 'Error fetching global stats', 500));
   }
 }
 
@@ -109,14 +111,14 @@ export async function getCommissionsReport(
   try {
     const { startDate, endDate, type } = req.query;
 
-    const where: any = {};
+    const where: CommissionWhereClause = {};
     if (startDate || endDate) {
-      where.created_at = {};
-      if (startDate) where.created_at[Op.gte] = new Date(startDate as string);
-      if (endDate) where.created_at[Op.lte] = new Date(endDate as string);
+      where.createdAt = {};
+      if (startDate) where.createdAt[Op.gte] = new Date(startDate as string);
+      if (endDate) where.createdAt[Op.lte] = new Date(endDate as string);
     }
     if (type && ['direct', 'level_1', 'level_2', 'level_3', 'level_4'].includes(type as string)) {
-      where.type = type;
+      where.type = type as CommissionAttributes['type'];
     }
 
     const commissions = await Commission.findAll({
@@ -155,9 +157,8 @@ export async function getCommissionsReport(
       },
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: 'Error generating commissions report',
-    });
+    res
+      .status(500)
+      .json(ResponseUtil.error('INTERNAL_ERROR', 'Error generating commissions report', 500));
   }
 }

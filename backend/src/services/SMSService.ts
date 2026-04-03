@@ -5,6 +5,7 @@
  */
 import axios from 'axios';
 import { config } from '../config/env';
+import { ApiResponse } from '../utils/response.util';
 
 /**
  * SMSService - Brevo SMS delivery

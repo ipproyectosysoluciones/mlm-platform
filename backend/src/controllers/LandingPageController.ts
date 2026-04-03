@@ -11,6 +11,7 @@ import { Response } from 'express';
 import { landingPageService } from '../services/LandingPageService';
 import type { ApiResponse } from '../types';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware';
+import { ApiResponse as ResponseUtil } from '../utils/response.util';
 import type { Request } from 'express';
 
 /**
@@ -107,12 +108,12 @@ export async function getLandingPageById(req: AuthenticatedRequest, res: Respons
   const page = await landingPageService.findById(id);
 
   if (!page) {
-    res.status(404).json({ success: false, error: 'Landing page not found' });
+    res.status(404).json(ResponseUtil.error('NOT_FOUND', 'Landing page not found', 404));
     return;
   }
 
   if (page.userId !== userId && req.user!.role !== 'admin') {
-    res.status(403).json({ success: false, error: 'Not authorized' });
+    res.status(403).json(ResponseUtil.error('FORBIDDEN', 'Not authorized', 403));
     return;
   }
 
@@ -141,12 +142,12 @@ export async function updateLandingPage(req: AuthenticatedRequest, res: Response
   const existingPage = await landingPageService.findById(id);
 
   if (!existingPage) {
-    res.status(404).json({ success: false, error: 'Landing page not found' });
+    res.status(404).json(ResponseUtil.error('NOT_FOUND', 'Landing page not found', 404));
     return;
   }
 
   if (existingPage.userId !== userId && req.user!.role !== 'admin') {
-    res.status(403).json({ success: false, error: 'Not authorized' });
+    res.status(403).json(ResponseUtil.error('FORBIDDEN', 'Not authorized', 403));
     return;
   }
 
@@ -177,12 +178,12 @@ export async function deleteLandingPage(req: AuthenticatedRequest, res: Response
   const existingPage = await landingPageService.findById(id);
 
   if (!existingPage) {
-    res.status(404).json({ success: false, error: 'Landing page not found' });
+    res.status(404).json(ResponseUtil.error('NOT_FOUND', 'Landing page not found', 404));
     return;
   }
 
   if (existingPage.userId !== userId && req.user!.role !== 'admin') {
-    res.status(403).json({ success: false, error: 'Not authorized' });
+    res.status(403).json(ResponseUtil.error('FORBIDDEN', 'Not authorized', 403));
     return;
   }
 
@@ -212,7 +213,7 @@ export async function getPublicLandingPage(req: Request, res: Response): Promise
   const page = await landingPageService.findBySlug(slug);
 
   if (!page) {
-    res.status(404).json({ success: false, error: 'Landing page not found' });
+    res.status(404).json(ResponseUtil.error('NOT_FOUND', 'Landing page not found', 404));
     return;
   }
 
@@ -242,7 +243,7 @@ export async function trackConversion(req: Request, res: Response): Promise<void
   const page = await landingPageService.findBySlug(slug);
 
   if (!page) {
-    res.status(404).json({ success: false, error: 'Landing page not found' });
+    res.status(404).json(ResponseUtil.error('NOT_FOUND', 'Landing page not found', 404));
     return;
   }
 
