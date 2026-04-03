@@ -156,4 +156,16 @@ export const config = {
     /** PayPal webhook ID for signature verification / Webhook ID de PayPal para verificación de firma */
     webhookId: process.env.PAYPAL_WEBHOOK_ID || '',
   },
+
+  /** MercadoPago configuration / Configuración de MercadoPago */
+  mercadopago: {
+    /** MercadoPago access token / Access token de MercadoPago */
+    accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN || '',
+    /** MercadoPago public key / Clave pública de MercadoPago */
+    publicKey: process.env.MERCADOPAGO_PUBLIC_KEY || '',
+    /** MercadoPago webhook ID / Webhook ID de MercadoPago */
+    webhookId: process.env.MERCADOPAGO_WEBHOOK_ID || '',
+    /** MercadoPago integration type: 'checkout' or 'wallet' */
+    integrationType: process.env.MERCADOPAGO_INTEGRATION_TYPE || 'checkout',
+  },
 };
