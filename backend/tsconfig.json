@@ -14,7 +14,7 @@
     "resolveJsonModule": true,
     "declaration": true,
     "declarationMap": true,
-    "sourceMap": true,
+    "sourceMap": false,
     "verbatimModuleSyntax": false
   },
   "include": ["src/**/*"],

@@ -14,6 +14,7 @@ import type { ApiResponse } from '../types';
 import { LEVEL_NAMES } from '../types';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware';
 import { AppError } from '../middleware/error.middleware';
+import { ApiResponse } from '../utils/response.util';
 
 const qrService = new QRService();
 
@@ -60,7 +61,7 @@ export async function getMe(req: AuthenticatedRequest, res: Response): Promise<v
   const fullUser = await userService.findById(userId);
 
   if (!fullUser) {
-    res.status(404).json({ success: false, error: 'User not found' });
+    res.status(404).json(ApiResponse.error('NOT_FOUND', 'User not found', 404));
     return;
   }
 
@@ -235,7 +236,7 @@ export async function updateProfile(req: AuthenticatedRequest, res: Response): P
 
   const user = await userService.updateUser(userId, { firstName, lastName, phone });
   if (!user) {
-    res.status(404).json({ success: false, error: 'User not found' });
+    res.status(404).json(ApiResponse.error('NOT_FOUND', 'User not found', 404));
     return;
   }
 
@@ -256,7 +257,7 @@ export async function changePassword(req: AuthenticatedRequest, res: Response): 
 
   const user = await userService.findById(userId);
   if (!user) {
-    res.status(404).json({ success: false, error: 'User not found' });
+    res.status(404).json(ApiResponse.error('NOT_FOUND', 'User not found', 404));
     return;
   }
 
@@ -285,12 +286,12 @@ export async function deleteAccount(req: AuthenticatedRequest, res: Response): P
 
   const user = await userService.findById(userId);
   if (!user) {
-    res.status(404).json({ success: false, error: 'User not found' });
+    res.status(404).json(ApiResponse.error('NOT_FOUND', 'User not found', 404));
     return;
   }
 
   if (user.role === 'admin') {
-    res.status(403).json({ success: false, error: 'Admin accounts cannot be deleted' });
+    res.status(403).json(ApiResponse.error('FORBIDDEN', 'Admin accounts cannot be deleted', 403));
     return;
   }
 

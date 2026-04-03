@@ -21,6 +21,7 @@
 import { Request, Response } from 'express';
 import { User } from '../models/User';
 import { smsService } from '../services/SMSService';
+import { ApiResponse } from '../utils/response.util';
 
 // In-memory store for 2FA codes (use Redis in production)
 // Almacenamiento en memoria para códigos 2FA (usar Redis en producción)
@@ -39,14 +40,14 @@ export async function getNotificationPreferences(req: Request, res: Response): P
     const userId = (req as any).user?.id;
 
     if (!userId) {
-      res.status(401).json({ success: false, error: 'Unauthorized' });
+      res.status(401).json(ApiResponse.error('UNAUTHORIZED', 'Unauthorized', 401));
       return;
     }
 
     const user = await User.findByPk(userId);
 
     if (!user) {
-      res.status(404).json({ success: false, error: 'User not found' });
+      res.status(404).json(ApiResponse.error('NOT_FOUND', 'User not found', 404));
       return;
     }
 
@@ -62,7 +63,7 @@ export async function getNotificationPreferences(req: Request, res: Response): P
     });
   } catch (error) {
     console.error('Error getting notification preferences:', error);
-    res.status(500).json({ success: false, error: 'Internal server error' });
+    res.status(500).json(ApiResponse.error('INTERNAL_ERROR', 'Internal server error', 500));
   }
 }
 
@@ -80,14 +81,14 @@ export async function updateNotificationPreferences(req: Request, res: Response)
     const { emailNotifications, smsNotifications, weeklyDigest } = req.body;
 
     if (!userId) {
-      res.status(401).json({ success: false, error: 'Unauthorized' });
+      res.status(401).json(ApiResponse.error('UNAUTHORIZED', 'Unauthorized', 401));
       return;
     }
 
     const user = await User.findByPk(userId);
 
     if (!user) {
-      res.status(404).json({ success: false, error: 'User not found' });
+      res.status(404).json(ApiResponse.error('NOT_FOUND', 'User not found', 404));
       return;
     }
 
@@ -116,7 +117,7 @@ export async function updateNotificationPreferences(req: Request, res: Response)
     });
   } catch (error) {
     console.error('Error updating notification preferences:', error);
-    res.status(500).json({ success: false, error: 'Internal server error' });
+    res.status(500).json(ApiResponse.error('INTERNAL_ERROR', 'Internal server error', 500));
   }
 }
 
@@ -134,12 +135,12 @@ export async function enable2FA(req: Request, res: Response): Promise<void> {
     const { phone } = req.body;
 
     if (!userId) {
-      res.status(401).json({ success: false, error: 'Unauthorized' });
+      res.status(401).json(ApiResponse.error('UNAUTHORIZED', 'Unauthorized', 401));
       return;
     }
 
     if (!phone) {
-      res.status(400).json({ success: false, error: 'Phone number is required' });
+      res.status(400).json(ApiResponse.error('INVALID_PARAMS', 'Phone number is required', 400));
       return;
     }
 
@@ -148,10 +149,13 @@ export async function enable2FA(req: Request, res: Response): Promise<void> {
     if (!e164Regex.test(phone)) {
       res
         .status(400)
-        .json({
-          success: false,
-          error: 'Invalid phone number format. Use E.164 format (+1234567890)',
-        });
+        .json(
+          ApiResponse.error(
+            'INVALID_FORMAT',
+            'Invalid phone number format. Use E.164 format (+1234567890)',
+            400
+          )
+        );
       return;
     }
 
@@ -161,7 +165,9 @@ export async function enable2FA(req: Request, res: Response): Promise<void> {
     if (!result.success) {
       res
         .status(500)
-        .json({ success: false, error: result.error || 'Failed to send verification code' });
+        .json(
+          ApiResponse.error('SEND_FAILED', result.error || 'Failed to send verification code', 500)
+        );
       return;
     }
 
@@ -181,7 +187,7 @@ export async function enable2FA(req: Request, res: Response): Promise<void> {
     });
   } catch (error) {
     console.error('Error enabling 2FA:', error);
-    res.status(500).json({ success: false, error: 'Internal server error' });
+    res.status(500).json(ApiResponse.error('INTERNAL_ERROR', 'Internal server error', 500));
   }
 }
 
@@ -199,12 +205,12 @@ export async function verify2FA(req: Request, res: Response): Promise<void> {
     const { code, phone } = req.body;
 
     if (!userId) {
-      res.status(401).json({ success: false, error: 'Unauthorized' });
+      res.status(401).json(ApiResponse.error('UNAUTHORIZED', 'Unauthorized', 401));
       return;
     }
 
     if (!code || !phone) {
-      res.status(400).json({ success: false, error: 'Code and phone are required' });
+      res.status(400).json(ApiResponse.error('INVALID_PARAMS', 'Code and phone are required', 400));
       return;
     }
 
@@ -213,7 +219,13 @@ export async function verify2FA(req: Request, res: Response): Promise<void> {
     if (!stored) {
       res
         .status(400)
-        .json({ success: false, error: 'No verification code found. Request a new code first.' });
+        .json(
+          ApiResponse.error(
+            'NOT_FOUND',
+            'No verification code found. Request a new code first.',
+            400
+          )
+        );
       return;
     }
 
@@ -221,7 +233,9 @@ export async function verify2FA(req: Request, res: Response): Promise<void> {
     const result = smsService.verifyCode(code, stored.code, stored.expiry);
 
     if (!result.valid) {
-      res.status(400).json({ success: false, error: result.error });
+      res
+        .status(400)
+        .json(ApiResponse.error('INVALID_CODE', result.error || 'Invalid verification code', 400));
       return;
     }
 
@@ -229,7 +243,7 @@ export async function verify2FA(req: Request, res: Response): Promise<void> {
     const user = await User.findByPk(userId);
 
     if (!user) {
-      res.status(404).json({ success: false, error: 'User not found' });
+      res.status(404).json(ApiResponse.error('NOT_FOUND', 'User not found', 404));
       return;
     }
 
@@ -246,7 +260,7 @@ export async function verify2FA(req: Request, res: Response): Promise<void> {
     });
   } catch (error) {
     console.error('Error verifying 2FA:', error);
-    res.status(500).json({ success: false, error: 'Internal server error' });
+    res.status(500).json(ApiResponse.error('INTERNAL_ERROR', 'Internal server error', 500));
   }
 }
 
@@ -263,14 +277,14 @@ export async function disable2FA(req: Request, res: Response): Promise<void> {
     const userId = (req as any).user?.id;
 
     if (!userId) {
-      res.status(401).json({ success: false, error: 'Unauthorized' });
+      res.status(401).json(ApiResponse.error('UNAUTHORIZED', 'Unauthorized', 401));
       return;
     }
 
     const user = await User.findByPk(userId);
 
     if (!user) {
-      res.status(404).json({ success: false, error: 'User not found' });
+      res.status(404).json(ApiResponse.error('NOT_FOUND', 'User not found', 404));
       return;
     }
 
@@ -285,6 +299,6 @@ export async function disable2FA(req: Request, res: Response): Promise<void> {
     });
   } catch (error) {
     console.error('Error disabling 2FA:', error);
-    res.status(500).json({ success: false, error: 'Internal server error' });
+    res.status(500).json(ApiResponse.error('INTERNAL_ERROR', 'Internal server error', 500));
   }
 }

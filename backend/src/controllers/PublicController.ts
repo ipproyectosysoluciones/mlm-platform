@@ -13,6 +13,7 @@ import { userService, treeServiceInstance } from '../services/UserService';
 import type { ApiResponse } from '../types';
 import { LEVEL_NAMES } from '../types';
 import type { Request } from 'express';
+import { ApiResponse as ResponseUtil } from '../utils/response.util';
 
 /**
  * Get public user profile by referral code
@@ -27,7 +28,7 @@ export async function getPublicProfile(req: Request, res: Response): Promise<voi
   const { code } = req.params;
 
   if (!code) {
-    res.status(400).json({ success: false, error: 'Referral code is required' });
+    res.status(400).json(ResponseUtil.error('INVALID_PARAMS', 'Referral code is required', 400));
     return;
   }
 
@@ -46,7 +47,7 @@ export async function getPublicProfile(req: Request, res: Response): Promise<voi
   });
 
   if (!user) {
-    res.status(404).json({ success: false, error: 'Profile not found' });
+    res.status(404).json(ResponseUtil.error('NOT_FOUND', 'Profile not found', 404));
     return;
   }
 
