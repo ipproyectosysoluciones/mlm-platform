@@ -5,6 +5,7 @@
  */
 
 import axios from 'axios';
+import crypto from 'crypto';
 import { config } from '../config/env.js';
 
 const PAYPAL_API_BASE =
@@ -45,6 +46,81 @@ interface CaptureOrderRequest {
 class PayPalService {
   private accessToken: string | null = null;
   private tokenExpiry: number = 0;
+
+  /**
+   * In-memory idempotency cache (for production, use Redis)
+   * Key: PayPal order ID, Value: timestamp
+   */
+  private idempotencyCache = new Map<string, number>();
+  private readonly IDEMPOTENCY_TTL = 5 * 60 * 1000; // 5 minutes
+
+  /**
+   * Verify PayPal webhook signature
+   * @see https://developer.paypal.com/docs/api-basics/notifications/webhooks/verify-signatures/
+   */
+  async verifyWebhookSignature(
+    headers: Record<string, string | undefined>,
+    body: string
+  ): Promise<boolean> {
+    const { clientId } = config.paypal;
+    const webhookId = config.paypal.webhookId;
+
+    if (!webhookId) {
+      console.warn('[PayPal] Webhook ID not configured, skipping verification');
+      return true; // Skip verification if not configured
+    }
+
+    const transmissionId = headers['paypal-transmission-id'];
+    const transmissionTime = headers['paypal-transmission-time'];
+    const transmissionSig = headers['paypal-transmission-sig'];
+    const certUrl = headers['paypal-cert-url'];
+    const authAlgo = headers['paypal-auth-algo'];
+
+    if (!transmissionId || !transmissionTime || !transmissionSig || !certUrl || !authAlgo) {
+      console.error('[PayPal] Missing webhook headers');
+      return false;
+    }
+
+    // Download the certificate
+    const certResponse = await axios.get(certUrl, { responseType: 'text' });
+    const cert = certResponse.data;
+
+    // Construct the expected signature
+    const expectedSignature = Buffer.from(transmissionSig, 'base64');
+
+    // Build the message to verify
+    const message = `${transmissionId}|${transmissionTime}|${webhookId}|${crypto.createHash('sha256').update(body).digest('hex')}`;
+
+    // Verify the signature using the certificate
+    const verify = crypto.createVerify('SHA256');
+    verify.update(message);
+    const isValid = verify.verify(cert, expectedSignature);
+
+    return isValid;
+  }
+
+  /**
+   * Check idempotency for a PayPal order
+   * Returns true if the order was already processed recently
+   */
+  isIdempotent(paypalOrderId: string): boolean {
+    const timestamp = this.idempotencyCache.get(paypalOrderId);
+    if (timestamp && Date.now() - timestamp < this.IDEMPOTENCY_TTL) {
+      return true;
+    }
+    // Clean up old entries
+    if (timestamp) {
+      this.idempotencyCache.delete(paypalOrderId);
+    }
+    return false;
+  }
+
+  /**
+   * Mark an order as processed for idempotency
+   */
+  markAsProcessed(paypalOrderId: string): void {
+    this.idempotencyCache.set(paypalOrderId, Date.now());
+  }
 
   /**
    * Get OAuth token from PayPal
