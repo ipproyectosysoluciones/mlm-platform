@@ -129,18 +129,18 @@ export class PaymentPayPalController {
     switch (event.event_type) {
       case 'CHECKOUT.ORDER.APPROVED':
         // Order was approved by user
-        console.log('[PayPal] Order approved:', event.resource.id);
+        console.log('[PayPal] Order approved:', event.resource?.id);
         break;
 
       case 'PAYMENT.CAPTURE.COMPLETED':
         // Payment successfully captured
-        console.log('[PayPal] Payment completed:', event.resource.id);
+        console.log('[PayPal] Payment completed:', event.resource?.id);
         // TODO: Trigger commission calculation
         break;
 
       case 'PAYMENT.CAPTURE.REFUNDED':
         // Payment was refunded
-        console.log('[PayPal] Payment refunded:', event.resource.id);
+        console.log('[PayPal] Payment refunded:', event.resource?.id);
         // TODO: Reverse commissions if applicable
         break;
 

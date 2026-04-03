@@ -4,7 +4,7 @@
  * @module components/CheckoutForm
  */
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import { CreditCard, AlertTriangle, Loader2, Check } from 'lucide-react';
@@ -25,6 +25,85 @@ interface CheckoutFormProps {
   currency?: string;
   onPayPalSuccess?: (paymentMethod: PaymentMethod) => void;
 }
+
+/**
+ * PayPalButton Props
+ */
+interface PayPalButtonProps {
+  isProcessing: boolean;
+  agreedToTerms: boolean;
+  currency: string;
+  total: number;
+  onPayPalSuccess?: (paymentMethod: PaymentMethod) => void;
+  onError?: (error: string) => void;
+}
+
+/**
+ * PayPalButton - Moved outside CheckoutForm to prevent remount on re-render
+ */
+const PayPalButton = React.memo(function PayPalButton({
+  isProcessing,
+  agreedToTerms,
+  currency,
+  total,
+  onPayPalSuccess,
+  onError,
+}: PayPalButtonProps) {
+  const { t } = useTranslation();
+  const isPayPalAvailable = !!PAYPAL_CLIENT_ID;
+
+  if (!isPayPalAvailable) {
+    return (
+      <div className="rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4">
+        <p className="text-sm text-yellow-200">{t('checkout.paypalNotConfigured')}</p>
+      </div>
+    );
+  }
+
+  return (
+    <PayPalScriptProvider
+      options={{
+        clientId: PAYPAL_CLIENT_ID,
+        currency: currency,
+        intent: 'capture',
+      }}
+    >
+      <PayPalButtons
+        style={{ layout: 'vertical', color: 'blue', shape: 'rect' }}
+        disabled={isProcessing || !agreedToTerms}
+        createOrder={(_data, actions) => {
+          return actions.order.create({
+            intent: 'CAPTURE',
+            purchase_units: [
+              {
+                amount: {
+                  currency_code: currency,
+                  value: total.toFixed(2),
+                },
+                description: t('checkout.paypalDescription'),
+              },
+            ],
+          });
+        }}
+        onApprove={async (_data, actions) => {
+          try {
+            const details = await actions.order?.capture();
+            if (details) {
+              onPayPalSuccess?.('paypal');
+            }
+          } catch (err) {
+            console.error('PayPal capture error:', err);
+            onError?.(t('checkout.paypalCaptureError'));
+          }
+        }}
+        onError={(err) => {
+          console.error('PayPal error:', err);
+          onError?.(t('checkout.paypalError'));
+        }}
+      />
+    </PayPalScriptProvider>
+  );
+});
 
 /**
  * Payment methods
@@ -75,61 +154,6 @@ export function CheckoutForm({
 
   // Check if PayPal is available
   const isPayPalAvailable = !!PAYPAL_CLIENT_ID;
-
-  // PayPal button component
-  const PayPalButton = () => {
-    if (!isPayPalAvailable) {
-      return (
-        <div className="rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4">
-          <p className="text-sm text-yellow-200">{t('checkout.paypalNotConfigured')}</p>
-        </div>
-      );
-    }
-
-    return (
-      <PayPalScriptProvider
-        options={{
-          clientId: PAYPAL_CLIENT_ID,
-          currency: currency,
-          intent: 'capture',
-        }}
-      >
-        <PayPalButtons
-          style={{ layout: 'vertical', color: 'blue', shape: 'rect' }}
-          disabled={isProcessing || !agreedToTerms}
-          createOrder={(_data, actions) => {
-            return actions.order.create({
-              intent: 'CAPTURE',
-              purchase_units: [
-                {
-                  amount: {
-                    currency_code: currency,
-                    value: total.toFixed(2),
-                  },
-                  description: t('checkout.paypalDescription'),
-                },
-              ],
-            });
-          }}
-          onApprove={async (_data, actions) => {
-            try {
-              const details = await actions.order?.capture();
-              if (details) {
-                onPayPalSuccess?.('paypal');
-              }
-            } catch (err) {
-              console.error('PayPal capture error:', err);
-              setPaypalError(t('checkout.paypalCaptureError'));
-            }
-          }}
-          onError={(err) => {
-            console.error('PayPal error:', err);
-            setPaypalError(t('checkout.paypalError'));
-          }}
-        />
-      </PayPalScriptProvider>
-    );
-  };
 
   return (
     <form
@@ -194,7 +218,14 @@ export function CheckoutForm({
         {/* PayPal Button */}
         {selectedPayment === 'paypal' && (
           <div className="flex flex-col gap-2">
-            <PayPalButton />
+            <PayPalButton
+              isProcessing={isProcessing}
+              agreedToTerms={agreedToTerms}
+              currency={currency}
+              total={total}
+              onPayPalSuccess={onPayPalSuccess}
+              onError={setPaypalError}
+            />
             {paypalError && (
               <div className="flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-500/10 p-3">
                 <AlertTriangle className="h-4 w-4 text-red-400" />
