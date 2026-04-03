@@ -143,7 +143,11 @@ router.post(
       success: true,
       data: {
         id: subscription.id,
-        createdAt: subscription.createdAt.toISOString(),
+        createdAt: (
+          subscription.createdAt ??
+          subscription.dataValues?.createdAt ??
+          new Date()
+        ).toISOString(),
       },
     };
 
