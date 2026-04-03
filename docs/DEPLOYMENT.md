@@ -19,6 +19,18 @@ The platform uses a **hybrid deployment model**:
 
 ---
 
+## 🔗 Production URLs / URLs de Producción
+
+| Service  | URL                                                     | Purpose                |
+| -------- | ------------------------------------------------------- | ---------------------- |
+| Frontend | https://mlm-platform-ip-proyectosysoluciones.vercel.app | Production (principal) |
+| Backend  | https://backend.lordastaroth77.cloudflareaccess.com     | API Backend            |
+| Docker   | https://hub.docker.com/r/ipproyectos/mlm-backend        | Container Registry     |
+
+> **Note**: Backup/internal URL: `https://frontend-beta-rosy-89.vercel.app`
+
+---
+
 ## 🚀 Quick Deploy / Despliegue Rápido
 
 ### Backend (Docker)
