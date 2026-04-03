@@ -9,6 +9,12 @@ import { asyncHandler } from '../middleware/asyncHandler.js';
 import { paypalService } from '../services/PayPalService.js';
 import { ApiResponse } from '../utils/response.util.js';
 
+/**
+ * PayPal order ID format: alphanumeric, 17 characters
+ * @see https://developer.paypal.com/docs/api/orders/v2/
+ */
+const PAYPAL_ORDER_ID_REGEX = /^[A-Z0-9]{17}$/;
+
 export class PaymentPayPalController {
   /**
    * POST /api/payment/paypal/create
@@ -56,6 +62,13 @@ export class PaymentPayPalController {
       return res
         .status(400)
         .json(ApiResponse.error('MISSING_ORDER_ID', 'PayPal order ID is required', 400));
+    }
+
+    // Validate orderId format to prevent SSRF (CodeQL)
+    if (!PAYPAL_ORDER_ID_REGEX.test(orderId)) {
+      return res
+        .status(400)
+        .json(ApiResponse.error('INVALID_ORDER_ID', 'Invalid PayPal order ID format', 400));
     }
 
     const capturedOrder = await paypalService.captureOrder({
@@ -125,6 +138,13 @@ export class PaymentPayPalController {
       return res
         .status(400)
         .json(ApiResponse.error('MISSING_ORDER_ID', 'Order ID is required', 400));
+    }
+
+    // Validate orderId format to prevent SSRF (CodeQL)
+    if (!PAYPAL_ORDER_ID_REGEX.test(orderId)) {
+      return res
+        .status(400)
+        .json(ApiResponse.error('INVALID_ORDER_ID', 'Invalid PayPal order ID format', 400));
     }
 
     const order = await paypalService.getOrder(orderId);
