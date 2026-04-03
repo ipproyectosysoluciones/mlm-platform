@@ -130,7 +130,11 @@ router.post(
     const userId = (req as any).user?.id;
     const { endpoint, keys, userAgent } = req.body;
 
-    const subscription = await pushService.handleSubscription(userId, keys, userAgent);
+    const subscription = await pushService.handleSubscription(
+      userId,
+      { endpoint, keys },
+      userAgent
+    );
 
     const response: ApiResponse<{
       id: string;
