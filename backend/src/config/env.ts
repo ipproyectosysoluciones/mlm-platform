@@ -71,6 +71,12 @@ export const config = {
     expiresIn: process.env.JWT_EXPIRES_IN || '7d',
   },
 
+  /** Two-Factor Authentication configuration / Configuración de autenticación de dos factores */
+  twoFactor: {
+    /** 2FA secret key - CHANGE IN PRODUCTION / Clave secreta 2FA - CAMBIAR EN PRODUCCIÓN */
+    secretKey: process.env.TWO_FACTOR_SECRET_KEY || '',
+  },
+
   /** Application URLs / URLs de la aplicación */
   app: {
     /** Backend API URL / URL del API backend */
@@ -89,6 +95,8 @@ export const config = {
 
   /** Redis cache configuration / Configuración de caché Redis */
   redis: {
+    /** Redis enabled / Redis habilitado */
+    enabled: process.env.REDIS_ENABLED === 'true',
     /** Redis host / Host de Redis */
     host: process.env.REDIS_HOST || 'localhost',
     /** Redis port / Puerto de Redis */

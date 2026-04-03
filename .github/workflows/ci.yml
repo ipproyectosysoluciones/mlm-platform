@@ -95,3 +95,29 @@ jobs:
           name: frontend-dist
           path: frontend/dist
           retention-days: 1
+
+  # Playwright E2E tests - ONLY runs on development branch
+  # Heavy tests, not suitable for production deployments
+  playwright:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/development'
+    needs: [frontend]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '24' }
+      - run: corepack enable && corepack prepare pnpm@latest --activate
+
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Install Playwright Browsers
+        run: cd frontend && npx playwright install --with-deps chromium
+
+      - name: Build frontend
+        run: cd frontend && pnpm build
+
+      - name: Run Playwright tests
+        run: cd frontend && npx playwright test
+        env:
+          VITE_API_URL: http://localhost:3000/api

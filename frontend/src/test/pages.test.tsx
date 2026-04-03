@@ -134,7 +134,8 @@ describe('Register Page', () => {
       </TestWrapper>
     );
 
-    expect(screen.getByRole('button', { type: 'submit' })).toBeInTheDocument();
+    // Search by name to avoid multiple button matches (eye toggle buttons)
+    expect(screen.getByRole('button', { name: /create account/i })).toBeInTheDocument();
   });
 
   it('has a link to login page', () => {
@@ -144,8 +145,8 @@ describe('Register Page', () => {
       </TestWrapper>
     );
 
-    // The link text comes from i18n: auth.signIn = "Iniciar Sesión"
-    expect(screen.getByText(/Iniciar/i)).toBeInTheDocument();
+    // Link text is hardcoded in English: "Already have an account? Sign in"
+    expect(screen.getByText(/sign in/i)).toBeInTheDocument();
   });
 });
 
