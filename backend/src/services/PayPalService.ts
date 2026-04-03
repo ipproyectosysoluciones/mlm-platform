@@ -48,6 +48,18 @@ class PayPalService {
   private tokenExpiry: number = 0;
 
   /**
+   * Validate a PayPal identifier used in URL path segments.
+   * This restricts the characters and length to prevent malformed paths.
+   */
+  private validatePayPalId(id: string): void {
+    // Allow URL-safe alpha-numeric IDs with optional dashes, up to 64 chars.
+    const PAYPAL_ID_REGEX = /^[A-Za-z0-9-]{1,64}$/;
+    if (!PAYPAL_ID_REGEX.test(id)) {
+      throw new Error('Invalid PayPal identifier format');
+    }
+  }
+
+  /**
    * In-memory idempotency cache (for production, use Redis)
    * Key: PayPal order ID, Value: timestamp
    */
@@ -231,6 +243,7 @@ class PayPalService {
    * POST /v2/checkout/orders/{orderId}/capture
    */
   async captureOrder(request: CaptureOrderRequest): Promise<PayPalOrder> {
+    this.validatePayPalId(request.orderId);
     const token = await this.getAccessToken();
 
     const response = await axios.post(
@@ -252,6 +265,7 @@ class PayPalService {
    * POST /v2/payments/captures/{captureId}/refund
    */
   async refundPayment(captureId: string, amount?: number, currency: string = 'USD'): Promise<void> {
+    this.validatePayPalId(captureId);
     const token = await this.getAccessToken();
 
     const refundData: Record<string, unknown> = {};
@@ -276,6 +290,7 @@ class PayPalService {
    * GET /v2/checkout/orders/{orderId}
    */
   async getOrder(orderId: string): Promise<PayPalOrder> {
+    this.validatePayPalId(orderId);
     const token = await this.getAccessToken();
 
     const response = await axios.get(`${PAYPAL_API_BASE}/v2/checkout/orders/${orderId}`, {
