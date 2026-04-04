@@ -12,6 +12,20 @@ const PAYPAL_API_BASE =
     ? 'https://api-m.sandbox.paypal.com'
     : 'https://api-m.paypal.com';
 
+/**
+ * Validate PayPal identifier format to prevent SSRF
+ * PayPal IDs are alphanumeric (letters, digits, hyphens, underscores)
+ * Validates: PayPal order IDs, capture IDs, etc.
+ *
+ * Valida formato de identificador PayPal para prevenir SSRF
+ * @throws {Error} if the ID contains invalid characters
+ */
+function validatePayPalId(id: string, label: string): void {
+  if (!id || !/^[A-Za-z0-9_-]+$/.test(id)) {
+    throw new Error(`Invalid ${label}: must be alphanumeric (got "${id}")`);
+  }
+}
+
 interface PayPalOrder {
   id: string;
   status: 'CREATED' | 'APPROVED' | 'COMPLETED' | 'REFUNDED' | 'CANCELLED';
@@ -135,6 +149,7 @@ class PayPalService {
    * POST /v2/checkout/orders/{orderId}/capture
    */
   async captureOrder(request: CaptureOrderRequest): Promise<PayPalOrder> {
+    validatePayPalId(request.orderId, 'PayPal order ID');
     const token = await this.getAccessToken();
 
     const response = await axios.post(
@@ -156,6 +171,7 @@ class PayPalService {
    * POST /v2/payments/captures/{captureId}/refund
    */
   async refundPayment(captureId: string, amount?: number, currency: string = 'USD'): Promise<void> {
+    validatePayPalId(captureId, 'PayPal capture ID');
     const token = await this.getAccessToken();
 
     const refundData: Record<string, unknown> = {};
@@ -180,6 +196,7 @@ class PayPalService {
    * GET /v2/checkout/orders/{orderId}
    */
   async getOrder(orderId: string): Promise<PayPalOrder> {
+    validatePayPalId(orderId, 'PayPal order ID');
     const token = await this.getAccessToken();
 
     const response = await axios.get(`${PAYPAL_API_BASE}/v2/checkout/orders/${orderId}`, {

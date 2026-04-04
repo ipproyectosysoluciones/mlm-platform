@@ -20,7 +20,9 @@ module.exports = {
   detectOpenHandles: true,
   workerIdleMemoryLimit: '512MB',
   // Mock Sentry to prevent hanging (Sentry v10 hangs on import with fake DSN)
+  // Rewrite .js extensions to .ts for ts-jest compatibility with NodeNext imports
   moduleNameMapper: {
     '^@sentry/node$': '<rootDir>/src/__tests__/__mocks__/sentry.ts',
+    '^(\\.{1,2}/.*)\\.js$': '$1',
   },
 };

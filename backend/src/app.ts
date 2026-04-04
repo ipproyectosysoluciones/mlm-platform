@@ -14,6 +14,8 @@ import publicRoutes from './routes/public.routes';
 import landingRoutes from './routes/landing.routes';
 import commissionConfigRoutes from './routes/commission-config.routes';
 import paymentRoutes from './routes/payment.routes';
+import { resolveShortCode } from './controllers/GiftCardController';
+import { asyncHandler } from './middleware/asyncHandler';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 
 const app: Application = express();
@@ -199,6 +201,12 @@ app.use('/api/public', publicRoutes);
 app.use('/api', landingRoutes);
 app.use('/api/admin/commissions', commissionConfigRoutes);
 app.use('/api/payment', paymentRoutes);
+
+// ============================================
+// Public QR short code resolver (no auth required)
+// Resolver público de código corto QR (sin autenticación)
+// ============================================
+app.get('/q/:shortCode', asyncHandler(resolveShortCode as any));
 
 // Sentry debug route (only in non-production)
 if (config.nodeEnv !== 'production') {

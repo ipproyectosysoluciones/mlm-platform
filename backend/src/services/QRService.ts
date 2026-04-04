@@ -1,17 +1,18 @@
 /**
- * @fileoverview QRService - QR code generation for referral links
- * @description Generates QR codes for user referral links with customizable options.
- *              Genera códigos QR para enlaces de referido de usuarios con opciones personalizables.
+ * @fileoverview QRService - QR code generation for referral links and gift cards
+ * @description Generates QR codes for user referral links and gift card short URLs with customizable options.
+ *              Genera códigos QR para enlaces de referido y URLs cortas de gift cards con opciones personalizables.
  * @module services/QRService
  * @author MLM Development Team
  */
 
 import QRCode from 'qrcode';
 import { config } from '../config/env';
+import { QrMapping } from '../models';
 
 /**
- * QR Code Service - Generates QR codes for referral links
- * Servicio de Códigos QR - Genera códigos QR para enlaces de referido
+ * QR Code Service - Generates QR codes for referral links and gift cards
+ * Servicio de Códigos QR - Genera códigos QR para enlaces de referido y gift cards
  */
 export class QRService {
   private baseUrl: string;
@@ -117,4 +118,70 @@ export class QRService {
       width: 300,
     });
   }
+
+  // ============================================
+  // Gift Card QR Methods — Métodos QR de Gift Card
+  // ============================================
+
+  /**
+   * Generate QR code data URL for a gift card short code
+   * Genera URL de datos QR para un código corto de gift card
+   *
+   * @param shortCode - Short code for the gift card / Código corto de la gift card
+   * @returns Base64 data URL (data:image/png;base64,...) / URL de datos base64
+   *
+   * @example
+   * // English: Generate gift card QR
+   * const dataUrl = await qrService.generateGiftCardQR('abc123xyz');
+   *
+   * // Español: Generar QR de gift card
+   * const dataUrl = await qrService.generateGiftCardQR('abc123xyz');
+   */
+  async generateGiftCardQR(shortCode: string): Promise<string> {
+    const qrUrl = `${this.baseUrl}/q/${shortCode}`;
+
+    return QRCode.toDataURL(qrUrl, {
+      errorCorrectionLevel: 'H',
+      type: 'image/png',
+      margin: 2,
+      width: 300,
+      color: {
+        dark: '#000000',
+        light: '#ffffff',
+      },
+    });
+  }
+
+  /**
+   * Resolve a short code to its gift card ID, incrementing scan count
+   * Resuelve un código corto a su ID de gift card, incrementando contador de escaneos
+   *
+   * @param shortCode - The short code to resolve / El código corto a resolver
+   * @returns Gift card ID or null if not found / ID de gift card o null si no se encontró
+   *
+   * @example
+   * // English: Resolve short code
+   * const giftCardId = await qrService.resolveShortCode('abc123xyz');
+   *
+   * // Español: Resolver código corto
+   * const giftCardId = await qrService.resolveShortCode('abc123xyz');
+   */
+  async resolveShortCode(shortCode: string): Promise<string | null> {
+    const mapping = await QrMapping.findOne({ where: { shortCode } });
+
+    if (!mapping) {
+      return null;
+    }
+
+    // Increment scan count and update last scanned timestamp
+    await mapping.update({
+      scanCount: mapping.scanCount + 1,
+      lastScannedAt: new Date(),
+    });
+
+    return mapping.giftCardId;
+  }
 }
+
+// Export singleton instance
+export const qrService = new QRService();
