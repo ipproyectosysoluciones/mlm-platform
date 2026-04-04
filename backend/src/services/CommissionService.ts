@@ -266,4 +266,185 @@ export class CommissionService {
 
     return approved;
   }
+
+  /**
+   * Calculate vendor commission (3-way split)
+   * Calcular comisión del vendedor (división 3 vías)
+   *
+   * For vendor products:
+   * - vendorAmount = price × vendor.commissionRate (e.g., $100 × 0.70 = $70.00)
+   * - platformFee = price - vendorAmount ($100 - $70 = $30.00)
+   * - mlmCommissions = platformFee × mlmRate[level] (from MLM tree)
+   * - platformNet = platformFee - sum(mlmCommissions) ($30 - upline commissions)
+   *
+   * For platform products (vendorId === null):
+   * - Works as before — full amount through MLM rates, no vendor split
+   *
+   * @param price - Product price
+   * @param vendorId - Vendor UUID (null for platform products)
+   * @param buyerId - Buyer UUID (to find upline)
+   * @param businessType - Business type for commission config
+   * @returns Commission split result
+   */
+  async calculateVendorCommission(
+    price: number,
+    vendorId: string | null,
+    buyerId: string,
+    businessType: string = 'producto'
+  ): Promise<{
+    vendorAmount: number;
+    platformFee: number;
+    mlmCommissions: Array<{ userId: string; level: string; amount: number }>;
+    platformNet: number;
+  }> {
+    // Platform product (no vendor split)
+    if (!vendorId) {
+      // Use existing commission logic - full amount goes through MLM
+      const upline = await this.getUplineWithDepth(buyerId);
+      const mlmCommissions: Array<{ userId: string; level: string; amount: number }> = [];
+
+      const commissionTypeMap: Record<number, 'level_1' | 'level_2' | 'level_3' | 'level_4'> = {
+        1: 'level_1',
+        2: 'level_2',
+        3: 'level_3',
+        4: 'level_4',
+      };
+
+      for (const ancestor of upline) {
+        if (ancestor.depth > 4) break;
+
+        const type = commissionTypeMap[ancestor.depth];
+        if (!type) continue;
+
+        const rate = await this.getCommissionRate(businessType, type);
+        const amount = this.roundDecimal(price * rate, 2);
+        mlmCommissions.push({ userId: ancestor.id, level: type, amount });
+      }
+
+      const totalMlm = mlmCommissions.reduce((sum, c) => sum + c.amount, 0);
+
+      return {
+        vendorAmount: 0,
+        platformFee: price,
+        mlmCommissions,
+        platformNet: this.roundDecimal(price - totalMlm, 2),
+      };
+    }
+
+    // Vendor product - calculate 3-way split
+    const { Vendor } = await import('../models');
+    const vendor = await Vendor.findByPk(vendorId);
+
+    if (!vendor) {
+      throw new Error('Vendor not found');
+    }
+
+    if (vendor.status !== 'approved') {
+      throw new Error('Vendor is not approved');
+    }
+
+    const commissionRate = Number(vendor.commissionRate);
+
+    // Calculate vendor amount (e.g., $100 × 0.70 = $70.00)
+    const vendorAmount = this.roundDecimal(price * commissionRate, 2);
+
+    // Platform fee is what remains after vendor cut
+    const platformFee = this.roundDecimal(price - vendorAmount, 2);
+
+    // Calculate MLM commissions from platform fee
+    const buyer = await User.findByPk(buyerId);
+    if (!buyer || !buyer.sponsorId) {
+      // No upline - all platform fee is platform net
+      return {
+        vendorAmount,
+        platformFee,
+        mlmCommissions: [],
+        platformNet: platformFee,
+      };
+    }
+
+    const upline = await this.getUplineWithDepth(buyerId);
+    const mlmCommissions: Array<{ userId: string; level: string; amount: number }> = [];
+
+    const commissionTypeMap: Record<number, 'level_1' | 'level_2' | 'level_3' | 'level_4'> = {
+      1: 'level_1',
+      2: 'level_2',
+      3: 'level_3',
+      4: 'level_4',
+    };
+
+    for (const ancestor of upline) {
+      if (ancestor.depth > 4) break;
+      if (ancestor.id === buyer.sponsorId) continue; // Skip direct sponsor (handled separately)
+
+      const type = commissionTypeMap[ancestor.depth];
+      if (!type) continue;
+
+      const rate = await this.getCommissionRate(businessType, type);
+      // MLM commission is calculated from platform fee, not full price
+      const amount = this.roundDecimal(platformFee * rate, 2);
+      mlmCommissions.push({ userId: ancestor.id, level: type, amount });
+    }
+
+    const totalMlm = mlmCommissions.reduce((sum, c) => sum + c.amount, 0);
+    const platformNet = this.roundDecimal(platformFee - totalMlm, 2);
+
+    // Verify: vendorAmount + platformNet + sum(mlm) === price
+    const verification = this.roundDecimal(vendorAmount + platformNet + totalMlm, 2);
+    if (verification !== this.roundDecimal(price, 2)) {
+      console.warn(
+        `[CommissionService] Commission math verification failed: ${verification} !== ${this.roundDecimal(price, 2)}`
+      );
+    }
+
+    return {
+      vendorAmount,
+      platformFee,
+      mlmCommissions,
+      platformNet,
+    };
+  }
+
+  /**
+   * Round decimal using HALF_UP mode
+   * Redondear decimal usando modo HALF_UP
+   */
+  private roundDecimal(value: number, decimals: number): number {
+    const multiplier = Math.pow(10, decimals);
+    return Math.round(value * multiplier) / multiplier;
+  }
+
+  /**
+   * Create MLM commissions from vendor commission split
+   * Crear comisiones MLM desde la división de comisión del vendedor
+   *
+   * @param mlmCommissions - Array of MLM commission objects
+   * @param purchaseId - Purchase ID
+   * @param buyerId - Buyer UUID
+   * @param totalAmount - Total order amount for currency reference
+   */
+  async createMlmCommissionsFromSplit(
+    mlmCommissions: Array<{ userId: string; level: string; amount: number }>,
+    purchaseId: string,
+    buyerId: string,
+    totalAmount: number
+  ): Promise<Commission[]> {
+    const createdCommissions: Commission[] = [];
+    const buyer = await User.findByPk(buyerId);
+
+    for (const commission of mlmCommissions) {
+      const comm = await Commission.create({
+        userId: commission.userId,
+        fromUserId: buyerId,
+        purchaseId,
+        type: commission.level as 'level_1' | 'level_2' | 'level_3' | 'level_4',
+        amount: commission.amount,
+        currency: buyer?.currency || 'USD',
+        status: 'pending',
+      });
+      createdCommissions.push(comm);
+    }
+
+    return createdCommissions;
+  }
 }
