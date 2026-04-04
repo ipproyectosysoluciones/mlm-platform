@@ -25,6 +25,8 @@ import { EmailCampaign } from './EmailCampaign';
 import { CampaignRecipient } from './CampaignRecipient';
 import { EmailQueue } from './EmailQueue';
 import { EmailCampaignLog } from './EmailCampaignLog';
+import { Category, MAX_CATEGORY_DEPTH } from './Category';
+import { InventoryMovement } from './InventoryMovement';
 
 // User relationships
 User.hasMany(User, { as: 'children', foreignKey: 'sponsorId', sourceKey: 'id' });
@@ -237,6 +239,60 @@ EmailCampaignLog.belongsTo(CampaignRecipient, {
   targetKey: 'id',
 });
 
+// ============================================
+// GENERIC PRODUCTS — Category & Inventory (#27)
+// ============================================
+
+// Category hierarchical relationships
+Category.belongsTo(Category, {
+  as: 'parent',
+  foreignKey: 'parentId',
+  targetKey: 'id',
+});
+
+Category.hasMany(Category, {
+  as: 'children',
+  foreignKey: 'parentId',
+  sourceKey: 'id',
+  onDelete: 'SET NULL',
+});
+
+// Product - Category relationship
+Category.hasMany(Product, {
+  as: 'products',
+  foreignKey: 'categoryId',
+  sourceKey: 'id',
+});
+Product.belongsTo(Category, {
+  as: 'category',
+  foreignKey: 'categoryId',
+  targetKey: 'id',
+});
+
+// Inventory Movement relationships
+Product.hasMany(InventoryMovement, {
+  as: 'inventoryMovements',
+  foreignKey: 'productId',
+  sourceKey: 'id',
+  onDelete: 'CASCADE',
+});
+InventoryMovement.belongsTo(Product, {
+  as: 'product',
+  foreignKey: 'productId',
+  targetKey: 'id',
+});
+
+User.hasMany(InventoryMovement, {
+  as: 'inventoryMovements',
+  foreignKey: 'performedBy',
+  sourceKey: 'id',
+});
+InventoryMovement.belongsTo(User, {
+  as: 'performedByUser',
+  foreignKey: 'performedBy',
+  targetKey: 'id',
+});
+
 export {
   sequelize,
   User,
@@ -265,6 +321,9 @@ export {
   CampaignRecipient,
   EmailQueue,
   EmailCampaignLog,
+  Category,
+  MAX_CATEGORY_DEPTH,
+  InventoryMovement,
 };
 
 export function initModels(): void {
