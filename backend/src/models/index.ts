@@ -20,6 +20,11 @@ import { GiftCardTransaction } from './GiftCardTransaction';
 import { Cart } from './Cart';
 import { CartItem } from './CartItem';
 import { CartRecoveryToken } from './CartRecoveryToken';
+import { EmailTemplate } from './EmailTemplate';
+import { EmailCampaign } from './EmailCampaign';
+import { CampaignRecipient } from './CampaignRecipient';
+import { EmailQueue } from './EmailQueue';
+import { EmailCampaignLog } from './EmailCampaignLog';
 
 // User relationships
 User.hasMany(User, { as: 'children', foreignKey: 'sponsorId', sourceKey: 'id' });
@@ -134,6 +139,104 @@ CartRecoveryToken.belongsTo(Cart, { as: 'cart', foreignKey: 'cartId', targetKey:
 User.hasMany(CartRecoveryToken, { foreignKey: 'userId', sourceKey: 'id' });
 CartRecoveryToken.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
 
+// Email Automation relationships (#22)
+User.hasMany(EmailTemplate, {
+  as: 'emailTemplates',
+  foreignKey: 'createdByUserId',
+  sourceKey: 'id',
+});
+EmailTemplate.belongsTo(User, {
+  as: 'createdByUser',
+  foreignKey: 'createdByUserId',
+  targetKey: 'id',
+});
+
+User.hasMany(EmailCampaign, {
+  as: 'emailCampaigns',
+  foreignKey: 'createdByUserId',
+  sourceKey: 'id',
+});
+EmailCampaign.belongsTo(User, {
+  as: 'createdByUser',
+  foreignKey: 'createdByUserId',
+  targetKey: 'id',
+});
+
+EmailTemplate.hasMany(EmailCampaign, {
+  as: 'campaigns',
+  foreignKey: 'emailTemplateId',
+  sourceKey: 'id',
+});
+EmailCampaign.belongsTo(EmailTemplate, {
+  as: 'emailTemplate',
+  foreignKey: 'emailTemplateId',
+  targetKey: 'id',
+});
+
+EmailCampaign.hasMany(CampaignRecipient, {
+  as: 'recipients',
+  foreignKey: 'campaignId',
+  sourceKey: 'id',
+  onDelete: 'CASCADE',
+});
+CampaignRecipient.belongsTo(EmailCampaign, {
+  as: 'campaign',
+  foreignKey: 'campaignId',
+  targetKey: 'id',
+});
+
+User.hasMany(CampaignRecipient, { foreignKey: 'userId', sourceKey: 'id' });
+CampaignRecipient.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
+
+EmailCampaign.hasMany(EmailQueue, {
+  as: 'queueItems',
+  foreignKey: 'campaignId',
+  sourceKey: 'id',
+  onDelete: 'CASCADE',
+});
+EmailQueue.belongsTo(EmailCampaign, {
+  as: 'campaign',
+  foreignKey: 'campaignId',
+  targetKey: 'id',
+});
+
+CampaignRecipient.hasMany(EmailQueue, {
+  as: 'queueItems',
+  foreignKey: 'campaignRecipientId',
+  sourceKey: 'id',
+});
+EmailQueue.belongsTo(CampaignRecipient, {
+  as: 'campaignRecipient',
+  foreignKey: 'campaignRecipientId',
+  targetKey: 'id',
+});
+
+User.hasMany(EmailQueue, { foreignKey: 'userId', sourceKey: 'id' });
+EmailQueue.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
+
+EmailCampaign.hasMany(EmailCampaignLog, {
+  as: 'logs',
+  foreignKey: 'campaignId',
+  sourceKey: 'id',
+  onDelete: 'CASCADE',
+});
+EmailCampaignLog.belongsTo(EmailCampaign, {
+  as: 'campaign',
+  foreignKey: 'campaignId',
+  targetKey: 'id',
+});
+
+CampaignRecipient.hasMany(EmailCampaignLog, {
+  as: 'logs',
+  foreignKey: 'campaignRecipientId',
+  sourceKey: 'id',
+});
+EmailCampaignLog.belongsTo(CampaignRecipient, {
+  as: 'campaignRecipient',
+  foreignKey: 'campaignRecipientId',
+  targetKey: 'id',
+});
+
 export {
   sequelize,
   User,
@@ -157,6 +260,11 @@ export {
   Cart,
   CartItem,
   CartRecoveryToken,
+  EmailTemplate,
+  EmailCampaign,
+  CampaignRecipient,
+  EmailQueue,
+  EmailCampaignLog,
 };
 
 export function initModels(): void {

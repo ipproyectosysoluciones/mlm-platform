@@ -814,3 +814,264 @@ export interface CartRecoveryTokenCreationAttributes {
   lastClickedAt?: Date | null;
   metadata?: Record<string, unknown>;
 }
+
+// ============================================
+// EMAIL AUTOMATION — Email Campaign System (#22)
+// AUTOMATIZACIÓN DE EMAIL — Sistema de campañas (#22)
+// ============================================
+
+/**
+ * Email campaign status lifecycle
+ * Ciclo de vida del estado de campaña de email
+ */
+export const EMAIL_CAMPAIGN_STATUS = {
+  DRAFT: 'draft',
+  SCHEDULED: 'scheduled',
+  SENDING: 'sending',
+  PAUSED: 'paused',
+  COMPLETED: 'completed',
+  CANCELLED: 'cancelled',
+} as const;
+
+export type EmailCampaignStatus =
+  (typeof EMAIL_CAMPAIGN_STATUS)[keyof typeof EMAIL_CAMPAIGN_STATUS];
+
+/**
+ * Campaign recipient delivery status
+ * Estado de entrega de destinatario de campaña
+ */
+export const CAMPAIGN_RECIPIENT_STATUS = {
+  PENDING: 'pending',
+  SENT: 'sent',
+  DELIVERED: 'delivered',
+  OPENED: 'opened',
+  CLICKED: 'clicked',
+  BOUNCED: 'bounced',
+  FAILED: 'failed',
+} as const;
+
+export type CampaignRecipientStatus =
+  (typeof CAMPAIGN_RECIPIENT_STATUS)[keyof typeof CAMPAIGN_RECIPIENT_STATUS];
+
+/**
+ * Email queue item status
+ * Estado de item en cola de email
+ */
+export const EMAIL_QUEUE_STATUS = {
+  PENDING: 'pending',
+  PROCESSING: 'processing',
+  SENT: 'sent',
+  DEFERRED: 'deferred',
+  FAILED: 'failed',
+} as const;
+
+export type EmailQueueStatus = (typeof EMAIL_QUEUE_STATUS)[keyof typeof EMAIL_QUEUE_STATUS];
+
+/**
+ * Allowed template variables (allowlist)
+ * Variables de template permitidas (allowlist)
+ */
+export const ALLOWED_TEMPLATE_VARIABLES = [
+  'firstName',
+  'lastName',
+  'email',
+  'referralCode',
+  'discountCode',
+  'expiresAt',
+] as const;
+
+export type TemplateVariable = (typeof ALLOWED_TEMPLATE_VARIABLES)[number];
+
+/**
+ * Email template attributes
+ * Atributos de template de email
+ */
+export interface EmailTemplateAttributes {
+  id: string;
+  createdByUserId: string;
+  name: string;
+  subjectLine: string;
+  htmlContent: string;
+  wysiwygState: Record<string, unknown>;
+  variablesUsed: string[];
+  deletedAt: Date | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+/**
+ * Email template creation attributes
+ * Atributos para crear template de email
+ */
+export interface EmailTemplateCreationAttributes {
+  createdByUserId: string;
+  name: string;
+  subjectLine: string;
+  htmlContent: string;
+  wysiwygState?: Record<string, unknown>;
+  variablesUsed?: string[];
+  deletedAt?: Date | null;
+}
+
+/**
+ * Email campaign attributes
+ * Atributos de campaña de email
+ */
+export interface EmailCampaignAttributes {
+  id: string;
+  createdByUserId: string;
+  emailTemplateId: string;
+  name: string;
+  status: EmailCampaignStatus;
+  scheduledFor: Date | null;
+  startedAt: Date | null;
+  completedAt: Date | null;
+  recipientSegment: Record<string, unknown> | null;
+  recipientCount: number;
+  sentCount: number;
+  failedCount: number;
+  deferredCount: number;
+  bounceCount: number;
+  openCount: number;
+  clickCount: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+/**
+ * Email campaign creation attributes
+ * Atributos para crear campaña de email
+ */
+export interface EmailCampaignCreationAttributes {
+  createdByUserId: string;
+  emailTemplateId: string;
+  name: string;
+  status?: EmailCampaignStatus;
+  scheduledFor?: Date | null;
+  recipientSegment?: Record<string, unknown> | null;
+  recipientCount?: number;
+}
+
+/**
+ * Campaign recipient attributes
+ * Atributos de destinatario de campaña
+ */
+export interface CampaignRecipientAttributes {
+  id: string;
+  campaignId: string;
+  userId: string;
+  emailAddress: string;
+  status: CampaignRecipientStatus;
+  openedAt: Date | null;
+  firstClickAt: Date | null;
+  clickCount: number;
+  sentAt: Date | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+/**
+ * Campaign recipient creation attributes
+ * Atributos para crear destinatario de campaña
+ */
+export interface CampaignRecipientCreationAttributes {
+  campaignId: string;
+  userId: string;
+  emailAddress: string;
+  status?: CampaignRecipientStatus;
+  openedAt?: Date | null;
+  firstClickAt?: Date | null;
+  clickCount?: number;
+  sentAt?: Date | null;
+}
+
+/**
+ * Email queue attributes
+ * Atributos de cola de email
+ */
+export interface EmailQueueAttributes {
+  id: string;
+  campaignId: string;
+  campaignRecipientId: string;
+  userId: string;
+  emailAddress: string;
+  subjectLine: string;
+  htmlContent: string;
+  status: EmailQueueStatus;
+  retryCount: number;
+  nextRetryAt: Date | null;
+  lastError: string | null;
+  brevoMessageId: string | null;
+  brevoResponse: Record<string, unknown> | null;
+  createdAt?: Date;
+  processedAt: Date | null;
+}
+
+/**
+ * Email queue creation attributes
+ * Atributos para crear item en cola de email
+ */
+export interface EmailQueueCreationAttributes {
+  campaignId: string;
+  campaignRecipientId: string;
+  userId: string;
+  emailAddress: string;
+  subjectLine: string;
+  htmlContent: string;
+  status?: EmailQueueStatus;
+  retryCount?: number;
+  nextRetryAt?: Date | null;
+  lastError?: string | null;
+  brevoMessageId?: string | null;
+  brevoResponse?: Record<string, unknown> | null;
+  processedAt?: Date | null;
+}
+
+/**
+ * Email campaign log attributes
+ * Atributos de log de campaña de email
+ */
+export interface EmailCampaignLogAttributes {
+  id: string;
+  campaignId: string;
+  campaignRecipientId: string | null;
+  eventType: string;
+  eventTimestamp: Date;
+  details: Record<string, unknown>;
+  createdAt?: Date;
+}
+
+/**
+ * Email campaign log creation attributes
+ * Atributos para crear log de campaña de email
+ */
+export interface EmailCampaignLogCreationAttributes {
+  campaignId: string;
+  campaignRecipientId?: string | null;
+  eventType: string;
+  eventTimestamp?: Date;
+  details?: Record<string, unknown>;
+}
+
+/**
+ * Template validation result
+ * Resultado de validación de template
+ */
+export interface TemplateValidationResult {
+  valid: boolean;
+  variablesUsed?: string[];
+  error?: string;
+  allowed?: readonly string[];
+}
+
+/**
+ * Create campaign DTO
+ * DTO para crear campaña
+ */
+export interface CreateCampaignDto {
+  createdByUserId: string;
+  emailTemplateId: string;
+  name: string;
+  recipientSegment?: Record<string, unknown> | null;
+  scheduledFor?: Date | null;
+}
