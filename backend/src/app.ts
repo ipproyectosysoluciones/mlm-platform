@@ -1,7 +1,8 @@
 import express, { Application } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-import morgan from 'morgan';
+import pino from 'pino';
+import { pinoHttp } from 'pino-http';
 import rateLimit from 'express-rate-limit';
 import swaggerUi from 'swagger-ui-express';
 import * as Sentry from '@sentry/node';
@@ -25,10 +26,19 @@ const isProduction = process.env.NODE_ENV === 'production';
 // Trust proxy for ngrok/reverse proxy support
 app.set('trust proxy', 1);
 
-// Morgan logging - shows HTTP requests in console
-// En producción usa 'combined' (más detalle), desarrollo usa 'dev'
+/**
+ * HTTP request logger — pino-http (ESM-native replacement for morgan)
+ * Logger de requests HTTP — pino-http (reemplazo ESM-nativo de morgan)
+ * - Production: JSON structured logs (Grafana/Loki-ready)
+ * - Development: pino-pretty colorized output
+ */
+const logger = pino({
+  level: isProduction ? 'info' : 'debug',
+  ...(isProduction ? {} : { transport: { target: 'pino-pretty' } }),
+});
+
 if (!isTest) {
-  app.use(morgan(isProduction ? 'combined' : 'dev'));
+  app.use(pinoHttp({ logger }));
 }
 
 // CORS configuration with origin validation
@@ -246,4 +256,5 @@ app.get('/debug/routes', (req, res) => {
 app.use(notFoundHandler);
 app.use(errorHandler);
 
+export { logger };
 export default app;

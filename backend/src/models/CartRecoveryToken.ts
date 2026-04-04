@@ -132,6 +132,10 @@ CartRecoveryToken.init(
         fields: ['expires_at'],
         where: { status: 'pending' },
       },
+      {
+        name: 'idx_cart_recovery_tokens_status_expires',
+        fields: ['status', 'expires_at'],
+      },
     ],
   }
 );

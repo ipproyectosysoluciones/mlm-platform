@@ -1,0 +1,32 @@
+change: sprint3-backlog
+status: COMPLETED
+version: v1.11.0
+created: 2026-04-04
+updated_at: 2026-04-04
+branch: development
+
+priority_order:
+  - security-hardening  # DONE — SSRF, XSS, pino-http, Docker hardening
+  - tech-debt-cleanup   # DONE — fixed skipped tests, TS strict improvements
+  - marketplace         # DONE — Vendor, VendorProduct, VendorOrder, 3-way split
+  - products-generic    # DONE — Category, Product, Inventory, CRUD endpoints
+  - delivery            # DONE — ShippingAddress, DeliveryProvider, ShipmentTracking
+  - contracts           # DONE — ContractTemplate, AffiliateContract, admin CRUD
+
+completed_phases:
+  - phase-0-security-hardening
+  - phase-1-generic-products-inventory
+  - phase-1-followup-tests-swagger
+  - phase-2-marketplace-multivendor
+  - phase-3-delivery-integration
+  - phase-35-affiliate-contracts-mvp
+
+notes: >
+  All 6 phases completed. 307 integration tests passing.
+  Routes: addresses at /api/addresses (not /api/shipping-addresses).
+  Vendor orders not implemented as resource; only dashboard and products.
+  Shipments not as /api/shipments resource; only PUT /api/orders/:id/shipping
+  and GET /api/orders/:id/tracking.
+  Admin vendor commission: PATCH /api/admin/vendors/:id/commission-rate.
+
+next_action: "sdd-archive sprint3-backlog"

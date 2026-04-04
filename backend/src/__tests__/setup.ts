@@ -58,6 +58,10 @@ beforeAll(async () => {
     CampaignRecipient,
     EmailQueue,
     EmailCampaignLog,
+    Category,
+    InventoryMovement,
+    ContractTemplate,
+    AffiliateContract,
   } = await import('../models');
 
   importedModels = {
@@ -86,6 +90,10 @@ beforeAll(async () => {
     CampaignRecipient,
     EmailQueue,
     EmailCampaignLog,
+    Category,
+    InventoryMovement,
+    ContractTemplate,
+    AffiliateContract,
   };
 
   console.log('Models registered');
@@ -160,6 +168,8 @@ afterAll(async () => {
 // Clean tables before each test
 beforeEach(async () => {
   const tables = [
+    'affiliate_contracts',
+    'contract_templates',
     'cart_recovery_tokens',
     'cart_items',
     'carts',
@@ -180,6 +190,8 @@ beforeEach(async () => {
     'wallet_transactions',
     'withdrawal_requests',
     'push_subscriptions',
+    'categories',
+    'inventory_movements',
   ];
 
   // Get dialect from sequelize

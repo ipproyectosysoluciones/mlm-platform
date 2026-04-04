@@ -1,0 +1,48 @@
+change: sprint2-complete
+status: ARCHIVED
+version: v1.10.0
+created: 2026-04-03
+completed: 2026-04-04
+branch: development
+tag: v1.10.0
+pr: "#39"
+commits:
+  development: b00014e
+  main: 274823c
+  merge: e73ee7c
+github_release: https://github.com/ipproyectosysoluciones/mlm-platform/releases/tag/v1.10.0
+
+phases:
+  explore: complete
+  propose: complete
+  spec: complete
+  design: complete
+  tasks: complete
+  apply: complete
+  verify: complete
+  archive: complete
+
+features:
+  - name: Gift Cards
+    issue: "#23"
+    tasks: 11
+    story_points: 18
+  - name: Abandoned Cart Recovery
+    issue: "#21"
+    tasks: 10
+    story_points: 19.5
+  - name: Email Automation
+    issue: "#22"
+    tasks: 10
+    story_points: 28
+
+stats:
+  total_tasks: 31
+  total_story_points: 65.5
+  files_changed: 104
+  lines_added: ~26755
+  spec_compliance: "52/54 (96.3%)"
+  backend_tests: 237
+  frontend_tests: 132
+  e2e_tests: 13
+  total_tests: 382

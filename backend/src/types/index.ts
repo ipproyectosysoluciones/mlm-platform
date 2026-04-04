@@ -245,6 +245,10 @@ export interface OrderAttributes {
   status: 'pending' | 'completed' | 'failed';
   paymentMethod: 'manual' | 'simulated' | 'paypal' | 'mercadopago'; // Payment methods
   notes: string | null; // Optional internal notes
+  // Shipping fields (Phase 3 - Delivery Integration)
+  shippingAddressId: string | null;
+  shippingCost: number | null;
+  shippingStatus: ShippingStatus;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -679,6 +683,129 @@ export interface GiftCardValidationResult {
 }
 
 // ============================================
+// GENERIC PRODUCTS — Multi-type Product System (#27)
+// PRODUCTOS GENÉRICOS — Sistema de productos multi-tipo (#27)
+// ============================================
+
+/**
+ * Product types for generic product catalog
+ * Tipos de productos para catálogo genérico
+ */
+export const PRODUCT_TYPE = {
+  PHYSICAL: 'physical',
+  DIGITAL: 'digital',
+  SUBSCRIPTION: 'subscription',
+  SERVICE: 'service',
+} as const;
+
+export type ProductType = (typeof PRODUCT_TYPE)[keyof typeof PRODUCT_TYPE];
+
+/**
+ * Inventory movement types for stock audit trail
+ * Tipos de movimiento de inventario para trazabilidad de stock
+ */
+export const INVENTORY_MOVEMENT_TYPE = {
+  INITIAL: 'initial',
+  RESERVE: 'reserve',
+  RELEASE: 'release',
+  ADJUST: 'adjust',
+  RETURN: 'return',
+} as const;
+
+export type InventoryMovementType =
+  (typeof INVENTORY_MOVEMENT_TYPE)[keyof typeof INVENTORY_MOVEMENT_TYPE];
+
+/**
+ * Category attributes for hierarchical categories
+ * Atributos de categoría para categorías jerárquicas
+ */
+export interface CategoryAttributes {
+  id: string;
+  parentId: string | null;
+  name: string;
+  slug: string;
+  description: string | null;
+  isActive: boolean;
+  sortOrder: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface CategoryCreationAttributes {
+  parentId?: string | null;
+  name: string;
+  slug: string;
+  description?: string | null;
+  isActive?: boolean;
+  sortOrder?: number;
+}
+
+/**
+ * Extended Product attributes for generic products
+ * Atributos extendidos de producto para productos genéricos
+ */
+export interface GenericProductAttributes extends ProductAttributes {
+  type: ProductType;
+  sku: string | null;
+  categoryId: string | null;
+  stock: number;
+  isDigital: boolean;
+  maxQuantityPerUser: number | null;
+  metadata: Record<string, unknown> | null;
+  images: string[];
+  vendorId: string | null;
+}
+
+export interface GenericProductCreationAttributes extends ProductCreationAttributes {
+  type?: ProductType;
+  sku?: string | null;
+  categoryId?: string | null;
+  stock?: number;
+  isDigital?: boolean;
+  maxQuantityPerUser?: number | null;
+  metadata?: Record<string, unknown> | null;
+  images?: string[];
+  vendorId?: string | null;
+}
+
+/**
+ * Inventory movement attributes for audit trail
+ * Atributos de movimiento de inventario para trazabilidad
+ */
+export interface InventoryMovementAttributes {
+  id: string;
+  productId: string;
+  type: InventoryMovementType;
+  quantity: number;
+  reason: string;
+  referenceId: string | null;
+  performedBy: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface InventoryMovementCreationAttributes {
+  productId: string;
+  type: InventoryMovementType;
+  quantity: number;
+  reason: string;
+  referenceId?: string | null;
+  performedBy: string;
+}
+
+/**
+ * Product list options for filtering
+ * Opciones de listado de productos para filtrado
+ */
+export interface GenericProductListOptions extends ProductListOptions {
+  type?: ProductType;
+  categoryId?: string;
+  minStock?: number;
+  maxStock?: number;
+  search?: string;
+}
+
+// ============================================
 // CART — Abandoned Cart Recovery (#21)
 // CARRITO — Recuperación de carritos abandonados (#21)
 // ============================================
@@ -1074,4 +1201,449 @@ export interface CreateCampaignDto {
   name: string;
   recipientSegment?: Record<string, unknown> | null;
   scheduledFor?: Date | null;
+}
+
+// ============================================
+// MARKETPLACE MULTI-VENDOR — Phase 2 (#25)
+// MULTI-VENDEDOR — Fase 2 (#25)
+// ============================================
+
+/**
+ * Vendor status lifecycle
+ * Ciclo de vida del estado del vendedor
+ */
+export const VENDOR_STATUS = {
+  PENDING: 'pending',
+  APPROVED: 'approved',
+  SUSPENDED: 'suspended',
+  REJECTED: 'rejected',
+} as const;
+
+export type VendorStatus = (typeof VENDOR_STATUS)[keyof typeof VENDOR_STATUS];
+
+/**
+ * Vendor order status
+ * Estado del pedido del vendedor
+ */
+export const VENDOR_ORDER_STATUS = {
+  PENDING: 'pending',
+  PROCESSING: 'processing',
+  COMPLETED: 'completed',
+  CANCELLED: 'cancelled',
+} as const;
+
+export type VendorOrderStatus = (typeof VENDOR_ORDER_STATUS)[keyof typeof VENDOR_ORDER_STATUS];
+
+/**
+ * Vendor payout status
+ * Estado del pago al vendedor
+ */
+export const VENDOR_PAYOUT_STATUS = {
+  PENDING: 'pending',
+  PROCESSING: 'processing',
+  COMPLETED: 'completed',
+  FAILED: 'failed',
+} as const;
+
+export type VendorPayoutStatus = (typeof VENDOR_PAYOUT_STATUS)[keyof typeof VENDOR_PAYOUT_STATUS];
+
+/**
+ * Vendor attributes
+ * Atributos del vendedor
+ */
+export interface VendorAttributes {
+  id: string;
+  userId: string;
+  businessName: string;
+  slug: string;
+  description: string | null;
+  logoUrl: string | null;
+  status: VendorStatus;
+  commissionRate: number; // DECIMAL(5,4) - default 0.7000 (70%)
+  contactEmail: string;
+  contactPhone: string | null;
+  address: Record<string, unknown> | null;
+  bankDetails: Record<string, unknown> | null; // Encrypted
+  metadata: Record<string, unknown> | null;
+  approvedAt: Date | null;
+  approvedBy: string | null;
+  deletedAt: Date | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+/**
+ * Vendor creation attributes
+ * Atributos para crear vendedor
+ */
+export interface VendorCreationAttributes {
+  userId: string;
+  businessName: string;
+  slug: string;
+  description?: string | null;
+  logoUrl?: string | null;
+  status?: VendorStatus;
+  commissionRate?: number;
+  contactEmail: string;
+  contactPhone?: string | null;
+  address?: Record<string, unknown> | null;
+  bankDetails?: Record<string, unknown> | null;
+  metadata?: Record<string, unknown> | null;
+}
+
+/**
+ * Vendor order attributes
+ * Atributos del pedido del vendedor
+ */
+export interface VendorOrderAttributes {
+  id: string;
+  orderId: string;
+  vendorId: string | null; // null for platform orders
+  subtotal: number;
+  commissionAmount: number; // DECIMAL(10,4)
+  vendorAmount: number; // DECIMAL(10,4)
+  platformAmount: number; // DECIMAL(10,4)
+  status: VendorOrderStatus;
+  notes: string | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+/**
+ * Vendor order creation attributes
+ * Atributos para crear pedido de vendedor
+ */
+export interface VendorOrderCreationAttributes {
+  orderId: string;
+  vendorId?: string | null;
+  subtotal: number;
+  commissionAmount?: number;
+  vendorAmount?: number;
+  platformAmount?: number;
+  status?: VendorOrderStatus;
+  notes?: string | null;
+}
+
+/**
+ * Vendor payout attributes
+ * Atributos del pago al vendedor
+ */
+export interface VendorPayoutAttributes {
+  id: string;
+  vendorId: string;
+  amount: number; // DECIMAL(10,2)
+  currency: string; // Default: 'USD'
+  status: VendorPayoutStatus;
+  paymentMethod: string | null;
+  paymentReference: string | null;
+  periodStart: Date | null;
+  periodEnd: Date | null;
+  requestedAt: Date;
+  processedAt: Date | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+/**
+ * Vendor payout creation attributes
+ * Atributos para crear pago al vendedor
+ */
+export interface VendorPayoutCreationAttributes {
+  vendorId: string;
+  amount: number;
+  currency?: string;
+  status?: VendorPayoutStatus;
+  paymentMethod?: string | null;
+  paymentReference?: string | null;
+  periodStart?: Date | null;
+  periodEnd?: Date | null;
+}
+
+/**
+ * Commission split result for vendor orders
+ * Resultado de división de comisiones para pedidos de vendedor
+ */
+export interface VendorCommissionSplit {
+  vendorAmount: number;
+  platformFee: number;
+  mlmCommissions: Array<{
+    userId: string;
+    level: string;
+    amount: number;
+  }>;
+  platformNet: number;
+}
+
+/**
+ * Vendor dashboard data
+ * Datos del panel del vendedor
+ */
+export interface VendorDashboardData {
+  totalSales: number;
+  totalRevenue: number;
+  pendingPayouts: number;
+  productCount: number;
+  recentSales: Array<{
+    orderId: string;
+    amount: number;
+    status: VendorOrderStatus;
+    createdAt: Date;
+  }>;
+}
+
+// ============================================
+// DELIVERY INTEGRATION — Phase 3 (#26)
+// ENVÍOS — Fase 3 (#26)
+// ============================================
+
+/**
+ * Shipping status for orders
+ * Estado de envío para pedidos
+ */
+export const SHIPPING_STATUS = {
+  NOT_REQUIRED: 'not_required',
+  PENDING_SHIPMENT: 'pending_shipment',
+  SHIPPED: 'shipped',
+  IN_TRANSIT: 'in_transit',
+  DELIVERED: 'delivered',
+} as const;
+
+export type ShippingStatus = (typeof SHIPPING_STATUS)[keyof typeof SHIPPING_STATUS];
+
+/**
+ * Shipment tracking status
+ * Estado de seguimiento de envío
+ */
+export const SHIPMENT_TRACKING_STATUS = {
+  PENDING: 'pending',
+  PICKED_UP: 'picked_up',
+  IN_TRANSIT: 'in_transit',
+  OUT_FOR_DELIVERY: 'out_for_delivery',
+  DELIVERED: 'delivered',
+  FAILED: 'failed',
+  RETURNED: 'returned',
+} as const;
+
+export type ShipmentTrackingStatus =
+  (typeof SHIPMENT_TRACKING_STATUS)[keyof typeof SHIPMENT_TRACKING_STATUS];
+
+/**
+ * Status history entry for shipment tracking
+ * Entrada de historial de estado para seguimiento de envío
+ */
+export interface ShipmentStatusHistoryEntry {
+  status: ShipmentTrackingStatus;
+  timestamp: Date;
+  details?: string;
+}
+
+/**
+ * Shipping address attributes
+ * Atributos de dirección de envío
+ */
+export interface ShippingAddressAttributes {
+  id: string;
+  userId: string;
+  label: string | null;
+  recipientName: string;
+  street: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string; // ISO 3166-1 alpha-3
+  phone: string | null;
+  isDefault: boolean;
+  instructions: string | null;
+  deletedAt: Date | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+/**
+ * Shipping address creation attributes
+ * Atributos para crear dirección de envío
+ */
+export interface ShippingAddressCreationAttributes {
+  userId: string;
+  label?: string | null;
+  recipientName: string;
+  street: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+  phone?: string | null;
+  isDefault?: boolean;
+  instructions?: string | null;
+}
+
+/**
+ * Delivery provider attributes
+ * Atributos del proveedor de envíos
+ */
+export interface DeliveryProviderAttributes {
+  id: string;
+  name: string;
+  slug: string;
+  trackingUrlTemplate: string | null;
+  webhookSecret: string | null;
+  isActive: boolean;
+  metadata: Record<string, unknown> | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+/**
+ * Delivery provider creation attributes
+ * Atributos para crear proveedor de envíos
+ */
+export interface DeliveryProviderCreationAttributes {
+  name: string;
+  slug: string;
+  trackingUrlTemplate?: string | null;
+  webhookSecret?: string | null;
+  isActive?: boolean;
+  metadata?: Record<string, unknown> | null;
+}
+
+/**
+ * Shipment tracking attributes
+ * Atributos de seguimiento de envío
+ */
+export interface ShipmentTrackingAttributes {
+  id: string;
+  orderId: string | null;
+  vendorOrderId: string | null;
+  providerId: string | null;
+  trackingNumber: string;
+  status: ShipmentTrackingStatus;
+  statusHistory: ShipmentStatusHistoryEntry[];
+  estimatedDelivery: Date | null;
+  actualDelivery: Date | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+/**
+ * Shipment tracking creation attributes
+ * Atributos para crear seguimiento de envío
+ */
+export interface ShipmentTrackingCreationAttributes {
+  orderId?: string | null;
+  vendorOrderId?: string | null;
+  providerId?: string | null;
+  trackingNumber: string;
+  status?: ShipmentTrackingStatus;
+  statusHistory?: ShipmentStatusHistoryEntry[];
+  estimatedDelivery?: Date | null;
+  actualDelivery?: Date | null;
+}
+
+/**
+ * Add tracking data DTO
+ * DTO para agregar seguimiento
+ */
+export interface AddTrackingDto {
+  trackingNumber: string;
+  providerId?: string;
+  estimatedDelivery?: string;
+}
+
+// ============================================
+// AFFILIATE CONTRACTS — Phase 3.5 (#44)
+// CONTRATOS DE AFILIADO — Fase 3.5 (#44)
+// ============================================
+
+/**
+ * Contract types for legal compliance
+ * Tipos de contrato para cumplimiento legal
+ */
+export const CONTRACT_TYPE = {
+  AFFILIATE_AGREEMENT: 'AFFILIATE_AGREEMENT',
+  COMPENSATION_PLAN: 'COMPENSATION_PLAN',
+  PRIVACY_POLICY: 'PRIVACY_POLICY',
+  TERMS_OF_SERVICE: 'TERMS_OF_SERVICE',
+} as const;
+
+export type ContractType = (typeof CONTRACT_TYPE)[keyof typeof CONTRACT_TYPE];
+
+/**
+ * Contract acceptance status
+ * Estado de aceptación del contrato
+ */
+export const CONTRACT_STATUS = {
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED',
+  DECLINED: 'DECLINED',
+  REVOKED: 'REVOKED',
+} as const;
+
+export type ContractStatus = (typeof CONTRACT_STATUS)[keyof typeof CONTRACT_STATUS];
+
+/**
+ * Contract template attributes
+ * Atributos de template de contrato
+ */
+export interface ContractTemplateAttributes {
+  id: string;
+  type: ContractType;
+  version: string; // e.g., "1.0.0"
+  title: string;
+  content: string; // Full contract HTML
+  contentHash: string; // SHA256 of content at creation time
+  effectiveFrom: Date;
+  effectiveTo: Date | null; // NULL = current active version
+  isActive: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+/**
+ * Contract template creation attributes
+ * Atributos para crear template de contrato
+ */
+export interface ContractTemplateCreationAttributes {
+  type: ContractType;
+  version: string;
+  title: string;
+  content: string;
+  contentHash?: string;
+  effectiveFrom: Date;
+  effectiveTo?: Date | null;
+  isActive?: boolean;
+}
+
+/**
+ * Affiliate contract (user acceptance record)
+ * Registro de aceptación del usuario
+ */
+export interface AffiliateContractAttributes {
+  id: string;
+  userId: string;
+  templateId: string;
+  status: ContractStatus;
+  signedAt: Date | null; // When accepted
+  ipAddress: string; // IPv4/IPv6
+  userAgent: string | null;
+  contentHash: string; // Hash of content at time of signing
+  revokedAt: Date | null;
+  revokedBy: string | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+/**
+ * Affiliate contract creation attributes
+ * Atributos para crear registro de aceptación
+ */
+export interface AffiliateContractCreationAttributes {
+  userId: string;
+  templateId: string;
+  status: ContractStatus;
+  signedAt?: Date | null;
+  ipAddress: string;
+  userAgent?: string | null;
+  contentHash: string;
+  revokedAt?: Date | null;
+  revokedBy?: string | null;
 }

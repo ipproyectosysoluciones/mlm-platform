@@ -74,14 +74,29 @@ jest.mock('../models', () => ({
     belongsTo: jest.fn(),
     count: jest.fn(),
   },
+  VendorOrder: {
+    create: jest.fn(),
+    init: jest.fn(),
+    hasMany: jest.fn(),
+    belongsTo: jest.fn(),
+  },
 }));
 
 // Mock CommissionService - create a mock calculateCommissions function
 const mockCalculateCommissions = jest.fn().mockResolvedValue([]);
+const mockCalculateVendorCommission = jest.fn().mockResolvedValue({
+  vendorAmount: 70,
+  platformFee: 30,
+  mlmCommissions: [],
+  platformNet: 30,
+});
+const mockCreateMlmCommissionsFromSplit = jest.fn().mockResolvedValue([]);
 
 jest.mock('../services/CommissionService', () => ({
   CommissionService: jest.fn().mockImplementation(() => ({
     calculateCommissions: mockCalculateCommissions,
+    calculateVendorCommission: mockCalculateVendorCommission,
+    createMlmCommissionsFromSplit: mockCreateMlmCommissionsFromSplit,
   })),
 }));
 

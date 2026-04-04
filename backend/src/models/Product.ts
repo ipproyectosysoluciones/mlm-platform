@@ -1,47 +1,98 @@
 /**
- * @fileoverview Product - Product model for streaming subscriptions
- * @description Sequelize model for products (Netflix, Disney+, Spotify, etc.).
- *             Modelo Sequelize para productos de streaming.
+ * @fileoverview Product - Product model for streaming subscriptions + generic products
+ * @description Sequelize model for products (Netflix, Disney+, Spotify, etc.) AND generic products.
+ *             Extended with type, category, inventory, and metadata fields.
+ *             Modelo Sequelize para productos de streaming y genéricos.
  * @module models/Product
  * @author MLM Development Team
  *
  * @example
  * // English: Get all active streaming products
- * const products = await Product.findAll({ where: { status: 'active' } });
+ * const products = await Product.findAll({ where: { isActive: true } });
  *
  * // Español: Obtener todos los productos de streaming activos
- * const products = await Product.findAll({ where: { status: 'active' } });
+ * const products = await Product.findAll({ where: { isActive: true } });
+ *
+ * @example
+ * // English: Get products by type (physical, digital, subscription, service)
+ * const digitalProducts = await Product.findAll({ where: { type: 'digital' } });
+ *
+ * // Español: Obtener productos por tipo
+ * const digitalProducts = await Product.findAll({ where: { type: 'digital' } });
  */
 import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../config/database';
-import type { ProductAttributes, ProductCreationAttributes } from '../types';
+import type {
+  ProductAttributes,
+  ProductCreationAttributes,
+  ProductType,
+  GenericProductAttributes,
+  GenericProductCreationAttributes,
+} from '../types';
 
+// Base optional attributes (without extensions)
 type ProductCreation = Optional<ProductAttributes, 'id' | 'createdAt' | 'updatedAt'>;
 
+// Extended optional attributes
+type GenericProductCreation = Optional<
+  GenericProductAttributes,
+  | 'id'
+  | 'createdAt'
+  | 'updatedAt'
+  | 'type'
+  | 'sku'
+  | 'categoryId'
+  | 'stock'
+  | 'isDigital'
+  | 'maxQuantityPerUser'
+  | 'metadata'
+  | 'images'
+>;
+
 /**
- * Product Model - Represents streaming subscription products
- * Modelo de Producto - Representa productos de suscripción de streaming
+ * Product Model - Represents streaming subscription products AND generic products
+ * Modelo de Producto - Representa productos de suscripción de streaming Y productos genéricos
  */
-export class Product extends Model<ProductAttributes, ProductCreation> {
+export class Product
+  extends Model<GenericProductAttributes, GenericProductCreation>
+  implements GenericProductAttributes
+{
+  // Base ProductAttributes
   declare id: string;
   declare name: string;
   declare description: string | null;
-  declare platform:
-    | 'netflix'
-    | 'disney_plus'
-    | 'spotify'
-    | 'hbo_max'
-    | 'amazon_prime'
-    | 'youtube_premium'
-    | 'apple_tv'
-    | 'other';
+  declare platform: ProductAttributes['platform'];
   declare price: number;
   declare currency: string;
   declare durationDays: number;
   declare isActive: boolean;
+
+  // Extended GenericProductAttributes
+  declare type: ProductType;
+  declare sku: string | null;
+  declare categoryId: string | null;
+  declare stock: number;
+  declare isDigital: boolean;
+  declare maxQuantityPerUser: number | null;
+  declare metadata: Record<string, unknown> | null;
+  declare images: string[];
+
+  // Vendor relationship (marketplace)
+  declare vendorId: string | null;
+
+  // Timestamps
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
+
+  // Associations
+  declare category?: Category | null;
+  declare inventoryMovements?: InventoryMovement[];
 }
+
+// Placeholder imports for associations - will be set up in index.ts
+import type { Category } from './Category';
+import type { InventoryMovement } from './InventoryMovement';
+import type { Vendor } from './Vendor';
 
 Product.init(
   {
@@ -94,12 +145,80 @@ Product.init(
       defaultValue: true,
       field: 'is_active',
     },
+    // Extended fields for generic products
+    type: {
+      type: DataTypes.ENUM('physical', 'digital', 'subscription', 'service'),
+      allowNull: true,
+      defaultValue: 'subscription',
+      field: 'type',
+      comment: 'Product type: physical, digital, subscription, service',
+    },
+    sku: {
+      type: DataTypes.STRING(100),
+      allowNull: true,
+      field: 'sku',
+      comment: 'Stock Keeping Unit - unique product identifier',
+    },
+    categoryId: {
+      type: DataTypes.UUID,
+      allowNull: true,
+      field: 'category_id',
+      comment: 'Foreign key to categories table',
+    },
+    stock: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+      field: 'stock',
+      comment: 'Available stock quantity',
+    },
+    isDigital: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+      field: 'is_digital',
+      comment: 'Whether product is digital (no physical shipping)',
+    },
+    maxQuantityPerUser: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      field: 'max_quantity_per_user',
+      comment: 'Maximum quantity a single user can purchase',
+    },
+    metadata: {
+      type: DataTypes.JSONB,
+      allowNull: true,
+      defaultValue: null,
+      field: 'metadata',
+      comment: 'Flexible metadata for product-specific attributes',
+    },
+    images: {
+      type: DataTypes.ARRAY(DataTypes.STRING(500)),
+      allowNull: true,
+      defaultValue: [],
+      field: 'images',
+      comment: 'Array of product image URLs',
+    },
+    vendorId: {
+      type: DataTypes.UUID,
+      allowNull: true,
+      field: 'vendor_id',
+      comment: 'FK to vendors table - null means platform-owned product',
+    },
   },
   {
     sequelize,
     tableName: 'products',
     timestamps: true,
     underscored: true,
-    indexes: [{ fields: ['platform'] }, { fields: ['is_active'] }],
+    indexes: [
+      { fields: ['platform'] },
+      { fields: ['is_active'] },
+      { fields: ['type'] },
+      { fields: ['category_id'] },
+      { fields: ['sku'] },
+      { fields: ['stock'] },
+      { fields: ['vendor_id'] },
+    ],
   }
 );

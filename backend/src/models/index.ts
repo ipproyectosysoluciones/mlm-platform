@@ -25,6 +25,16 @@ import { EmailCampaign } from './EmailCampaign';
 import { CampaignRecipient } from './CampaignRecipient';
 import { EmailQueue } from './EmailQueue';
 import { EmailCampaignLog } from './EmailCampaignLog';
+import { Category, MAX_CATEGORY_DEPTH } from './Category';
+import { InventoryMovement } from './InventoryMovement';
+import { Vendor } from './Vendor';
+import { VendorOrder } from './VendorOrder';
+import { VendorPayout } from './VendorPayout';
+import { ShippingAddress } from './ShippingAddress';
+import { DeliveryProvider } from './DeliveryProvider';
+import { ShipmentTracking } from './ShipmentTracking';
+import { ContractTemplate } from './ContractTemplate';
+import { AffiliateContract } from './AffiliateContract';
 
 // User relationships
 User.hasMany(User, { as: 'children', foreignKey: 'sponsorId', sourceKey: 'id' });
@@ -237,6 +247,163 @@ EmailCampaignLog.belongsTo(CampaignRecipient, {
   targetKey: 'id',
 });
 
+// ============================================
+// GENERIC PRODUCTS — Category & Inventory (#27)
+// ============================================
+
+// Category hierarchical relationships
+Category.belongsTo(Category, {
+  as: 'parent',
+  foreignKey: 'parentId',
+  targetKey: 'id',
+});
+
+Category.hasMany(Category, {
+  as: 'children',
+  foreignKey: 'parentId',
+  sourceKey: 'id',
+  onDelete: 'SET NULL',
+});
+
+// Product - Category relationship
+Category.hasMany(Product, {
+  as: 'products',
+  foreignKey: 'categoryId',
+  sourceKey: 'id',
+});
+Product.belongsTo(Category, {
+  as: 'category',
+  foreignKey: 'categoryId',
+  targetKey: 'id',
+});
+
+// Inventory Movement relationships
+Product.hasMany(InventoryMovement, {
+  as: 'inventoryMovements',
+  foreignKey: 'productId',
+  sourceKey: 'id',
+  onDelete: 'CASCADE',
+});
+InventoryMovement.belongsTo(Product, {
+  as: 'product',
+  foreignKey: 'productId',
+  targetKey: 'id',
+});
+
+User.hasMany(InventoryMovement, {
+  as: 'inventoryMovements',
+  foreignKey: 'performedBy',
+  sourceKey: 'id',
+});
+InventoryMovement.belongsTo(User, {
+  as: 'performedByUser',
+  foreignKey: 'performedBy',
+  targetKey: 'id',
+});
+
+// ============================================
+// MARKETPLACE MULTI-VENDOR — Vendor Relations
+// ============================================
+
+// User - Vendor (one vendor per user)
+User.hasMany(Vendor, { as: 'vendor', foreignKey: 'userId', sourceKey: 'id' });
+Vendor.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
+
+// User - VendorPayout (as approver - approvedBy)
+User.hasMany(VendorPayout, { as: 'approvedPayouts', foreignKey: 'approvedBy', sourceKey: 'id' });
+VendorPayout.belongsTo(User, { as: 'approver', foreignKey: 'approvedBy', targetKey: 'id' });
+
+// Order - VendorOrder
+Order.hasMany(VendorOrder, { as: 'vendorOrders', foreignKey: 'orderId', sourceKey: 'id' });
+VendorOrder.belongsTo(Order, { as: 'order', foreignKey: 'orderId', targetKey: 'id' });
+
+// Vendor - VendorOrder
+Vendor.hasMany(VendorOrder, { as: 'orders', foreignKey: 'vendorId', sourceKey: 'id' });
+VendorOrder.belongsTo(Vendor, { as: 'vendor', foreignKey: 'vendorId', targetKey: 'id' });
+
+// Vendor - VendorPayout
+Vendor.hasMany(VendorPayout, { as: 'payouts', foreignKey: 'vendorId', sourceKey: 'id' });
+VendorPayout.belongsTo(Vendor, { as: 'vendor', foreignKey: 'vendorId', targetKey: 'id' });
+
+// Product - Vendor (marketplace)
+Vendor.hasMany(Product, { as: 'products', foreignKey: 'vendorId', sourceKey: 'id' });
+Product.belongsTo(Vendor, { as: 'vendor', foreignKey: 'vendorId', targetKey: 'id' });
+
+// ============================================
+// DELIVERY INTEGRATION — Shipping & Tracking (#26)
+// ============================================
+
+// User - ShippingAddress
+User.hasMany(ShippingAddress, { foreignKey: 'userId', sourceKey: 'id' });
+ShippingAddress.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
+
+// Order - ShipmentTracking
+Order.hasMany(ShipmentTracking, {
+  as: 'shipmentTrackings',
+  foreignKey: 'orderId',
+  sourceKey: 'id',
+});
+ShipmentTracking.belongsTo(Order, { as: 'order', foreignKey: 'orderId', targetKey: 'id' });
+
+// VendorOrder - ShipmentTracking
+VendorOrder.hasMany(ShipmentTracking, {
+  as: 'shipmentTrackings',
+  foreignKey: 'vendorOrderId',
+  sourceKey: 'id',
+});
+ShipmentTracking.belongsTo(VendorOrder, {
+  as: 'vendorOrder',
+  foreignKey: 'vendorOrderId',
+  targetKey: 'id',
+});
+
+// DeliveryProvider - ShipmentTracking
+DeliveryProvider.hasMany(ShipmentTracking, {
+  as: 'shipmentTrackings',
+  foreignKey: 'providerId',
+  sourceKey: 'id',
+});
+ShipmentTracking.belongsTo(DeliveryProvider, {
+  as: 'provider',
+  foreignKey: 'providerId',
+  targetKey: 'id',
+});
+
+// Order - ShippingAddress
+Order.belongsTo(ShippingAddress, {
+  as: 'shippingAddress',
+  foreignKey: 'shippingAddressId',
+  targetKey: 'id',
+});
+
+// ============================================
+// AFFILIATE CONTRACTS — Contract Relations
+// ============================================
+
+// User - AffiliateContract (user acceptance records)
+User.hasMany(AffiliateContract, { foreignKey: 'userId', sourceKey: 'id' });
+AffiliateContract.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
+
+// ContractTemplate - AffiliateContract
+ContractTemplate.hasMany(AffiliateContract, { foreignKey: 'templateId', sourceKey: 'id' });
+AffiliateContract.belongsTo(ContractTemplate, {
+  as: 'template',
+  foreignKey: 'templateId',
+  targetKey: 'id',
+});
+
+// User - AffiliateContract (for revokedBy)
+User.hasMany(AffiliateContract, {
+  as: 'revokedContracts',
+  foreignKey: 'revokedBy',
+  sourceKey: 'id',
+});
+AffiliateContract.belongsTo(User, {
+  as: 'revokedByUser',
+  foreignKey: 'revokedBy',
+  targetKey: 'id',
+});
+
 export {
   sequelize,
   User,
@@ -265,6 +432,17 @@ export {
   CampaignRecipient,
   EmailQueue,
   EmailCampaignLog,
+  Category,
+  MAX_CATEGORY_DEPTH,
+  InventoryMovement,
+  Vendor,
+  VendorOrder,
+  VendorPayout,
+  ShippingAddress,
+  DeliveryProvider,
+  ShipmentTracking,
+  ContractTemplate,
+  AffiliateContract,
 };
 
 export function initModels(): void {

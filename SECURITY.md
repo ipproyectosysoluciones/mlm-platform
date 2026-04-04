@@ -6,10 +6,11 @@ We currently support the following versions with security updates:
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 1.9.x   | :white_check_mark: |
-| 1.8.x   | :white_check_mark: |
-| 1.7.x   | :white_check_mark: |
-| < 1.7   | :x:                |
+| 1.11.x  | :white_check_mark: |
+| 1.10.x  | :white_check_mark: |
+| 1.6.x   | :white_check_mark: |
+| 1.5.x   | :x:                |
+| < 1.5   | :x:                |
 
 ## Reporting a Vulnerability
 
@@ -38,6 +39,46 @@ If the vulnerability is declined, we will provide a detailed explanation of our 
 ---
 
 ## Security Features
+
+### Phase 0: Security Hardening (v1.11.0)
+
+Implemented as part of Sprint 3 to address CodeQL findings (#29, #30 SSRF and #36 DOM XSS):
+
+#### SSRF Protection
+
+All external URL integrations (webhooks, email services, delivery providers) are validated before any outbound request:
+
+| Check                   | Action                              |
+| ----------------------- | ----------------------------------- |
+| Private IP ranges       | Blocked (10.x, 172.16.x, 192.168.x) |
+| Loopback addresses      | Blocked (127.0.0.1, ::1)            |
+| Cloud metadata endpoint | Blocked (169.254.169.254)           |
+| Protocol restriction    | Only HTTPS in production            |
+
+#### XSS Sanitization
+
+All user-supplied HTML content (email templates, landing pages) is sanitized before storage and rendering to prevent Cross-Site Scripting attacks.
+
+#### Secure Logging with pino-http
+
+Request/response logging is performed via `pino-http` with the following sensitive fields redacted from logs:
+
+- `authorization` header
+- `cookie` header
+- `x-api-key` header
+- Password fields in request bodies
+
+#### Docker Hardening
+
+| Measure              | Configuration                             |
+| -------------------- | ----------------------------------------- |
+| Non-root user        | Container runs as `node` (UID 1000)       |
+| Read-only filesystem | `/tmp` mounted as tmpfs for writes        |
+| No new privileges    | `--security-opt no-new-privileges:true`   |
+| Health checks        | `HEALTHCHECK` with timeout and retries    |
+| Minimal base image   | `node:24-alpine` (minimal attack surface) |
+
+---
 
 ### Two-Factor Authentication (2FA)
 
@@ -140,5 +181,5 @@ When contributing to this project:
 
 ---
 
-_Last updated: 2026-04-03_
-_Version: 1.9.0_
+_Last updated: 2026-04-04_
+_Version: 1.11.0_

@@ -27,6 +27,19 @@ import type {
   TransactionListParams,
   TransactionListResponse,
   CryptoPrices,
+  CreateProductPayload,
+  UpdateProductPayload,
+  InventoryReservePayload,
+  InventoryReleasePayload,
+  InventoryAdjustPayload,
+  InventoryInitialPayload,
+  InventoryReturnPayload,
+  CreateCategoryPayload,
+  UpdateCategoryPayload,
+  Vendor,
+  VendorRegistrationPayload,
+  VendorDashboard,
+  VendorPayoutRequest,
 } from '../types';
 
 /** @constant {string} API_URL - Backend base URL / URL base del backend */
@@ -636,6 +649,188 @@ export const productService = {
 };
 
 /**
+ * @namespace adminProductService
+ * @description Admin Product API methods - Full CRUD + inventory management
+ */
+export const adminProductService = {
+  /**
+   * Get all products (admin view)
+   */
+  getProducts: async (params?: ProductListParams) => {
+    const response = await api.get('/admin/products', { params });
+    return response.data;
+  },
+
+  /**
+   * Get product by ID (admin view)
+   */
+  getProduct: async (productId: string) => {
+    const response = await api.get(`/admin/products/${productId}`);
+    return response.data;
+  },
+
+  /**
+   * Create a new product
+   */
+  createProduct: async (data: CreateProductPayload) => {
+    const response = await api.post('/admin/products', data);
+    return response.data;
+  },
+
+  /**
+   * Update a product
+   */
+  updateProduct: async (productId: string, data: UpdateProductPayload) => {
+    const response = await api.put(`/admin/products/${productId}`, data);
+    return response.data;
+  },
+
+  /**
+   * Delete a product (soft delete)
+   */
+  deleteProduct: async (productId: string) => {
+    const response = await api.delete(`/admin/products/${productId}`);
+    return response.data;
+  },
+
+  // Inventory management
+  /**
+   * Reserve stock
+   */
+  reserveStock: async (productId: string, data: InventoryReservePayload) => {
+    const response = await api.post(`/admin/products/${productId}/inventory/reserve`, data);
+    return response.data;
+  },
+
+  /**
+   * Release stock
+   */
+  releaseStock: async (productId: string, data: InventoryReleasePayload) => {
+    const response = await api.post(`/admin/products/${productId}/inventory/release`, data);
+    return response.data;
+  },
+
+  /**
+   * Adjust stock manually
+   */
+  adjustStock: async (productId: string, data: InventoryAdjustPayload) => {
+    const response = await api.post(`/admin/products/${productId}/inventory/adjust`, data);
+    return response.data;
+  },
+
+  /**
+   * Set initial stock
+   */
+  setInitialStock: async (productId: string, data: InventoryInitialPayload) => {
+    const response = await api.post(`/admin/products/${productId}/inventory/initial`, data);
+    return response.data;
+  },
+
+  /**
+   * Record return
+   */
+  recordReturn: async (productId: string, data: InventoryReturnPayload) => {
+    const response = await api.post(`/admin/products/${productId}/inventory/return`, data);
+    return response.data;
+  },
+
+  /**
+   * Get inventory movements
+   */
+  getInventoryMovements: async (productId: string, limit?: number) => {
+    const response = await api.get(`/admin/products/${productId}/inventory/movements`, {
+      params: { limit },
+    });
+    return response.data;
+  },
+};
+
+/**
+ * @namespace categoryService
+ * @description Category API methods - Category management
+ */
+export const categoryService = {
+  /**
+   * Get category tree
+   */
+  getTree: async (includeInactive?: boolean) => {
+    const response = await api.get('/categories/tree', {
+      params: { includeInactive },
+    });
+    return response.data;
+  },
+
+  /**
+   * Get category by ID
+   */
+  getCategory: async (categoryId: string) => {
+    const response = await api.get(`/categories/${categoryId}`);
+    return response.data;
+  },
+
+  /**
+   * Get breadcrumb for category
+   */
+  getBreadcrumb: async (categoryId: string) => {
+    const response = await api.get(`/categories/${categoryId}/breadcrumb`);
+    return response.data;
+  },
+
+  /**
+   * List all categories
+   */
+  listCategories: async (params?: {
+    includeInactive?: boolean;
+    parentId?: string;
+    isActive?: boolean;
+  }) => {
+    const response = await api.get('/categories', { params });
+    return response.data;
+  },
+
+  // Admin methods
+  /**
+   * List all categories (admin)
+   */
+  listCategoriesAdmin: async (params?: { includeInactive?: boolean; parentId?: string }) => {
+    const response = await api.get('/admin/categories', { params });
+    return response.data;
+  },
+
+  /**
+   * Get category by ID (admin)
+   */
+  getCategoryAdmin: async (categoryId: string) => {
+    const response = await api.get(`/admin/categories/${categoryId}`);
+    return response.data;
+  },
+
+  /**
+   * Create a new category
+   */
+  createCategory: async (data: CreateCategoryPayload) => {
+    const response = await api.post('/admin/categories', data);
+    return response.data;
+  },
+
+  /**
+   * Update a category
+   */
+  updateCategory: async (categoryId: string, data: UpdateCategoryPayload) => {
+    const response = await api.put(`/admin/categories/${categoryId}`, data);
+    return response.data;
+  },
+
+  /**
+   * Delete a category
+   */
+  deleteCategory: async (categoryId: string) => {
+    const response = await api.delete(`/admin/categories/${categoryId}`);
+    return response.data;
+  },
+};
+
+/**
  * @namespace orderService
  * @description Order API methods - Purchase orders / Métodos de API de órdenes
  */
@@ -763,6 +958,158 @@ export const walletService = {
    */
   getCryptoPrices: async (): Promise<CryptoPrices> => {
     const response = await api.get<{ success: boolean; data: CryptoPrices }>('/wallet/prices');
+    return response.data.data!;
+  },
+};
+
+/**
+ * @namespace vendorService
+ * @description Vendor API methods - Marketplace vendor operations
+ */
+export const vendorService = {
+  /**
+   * Register as a vendor
+   * Registrarse como vendedor
+   * @param {VendorRegistrationPayload} data - Vendor registration data
+   * @returns {Promise<Vendor>} Created vendor
+   */
+  register: async (data: VendorRegistrationPayload): Promise<Vendor> => {
+    const response = await api.post<{ success: boolean; data: Vendor }>('/vendors/register', data);
+    return response.data.data!;
+  },
+
+  /**
+   * Get current vendor profile
+   * Obtener perfil del vendedor actual
+   * @returns {Promise<Vendor>} Vendor profile
+   */
+  getProfile: async (): Promise<Vendor> => {
+    const response = await api.get<{ success: boolean; data: Vendor }>('/vendors/me');
+    return response.data.data!;
+  },
+
+  /**
+   * Get vendor products
+   * Obtener productos del vendedor
+   * @param {number} page - Page number
+   * @param {number} limit - Items per page
+   * @returns {Promise<{data: Product[]; pagination: any}>} Vendor products with pagination
+   */
+  getProducts: async (page?: number, limit?: number) => {
+    const response = await api.get('/vendors/me/products', { params: { page, limit } });
+    return response.data;
+  },
+
+  /**
+   * Get vendor dashboard
+   * Obtener panel del vendedor
+   * @returns {Promise<VendorDashboard>} Dashboard data
+   */
+  getDashboard: async (): Promise<VendorDashboard> => {
+    const response = await api.get<{ success: boolean; data: VendorDashboard }>(
+      '/vendors/me/dashboard'
+    );
+    return response.data.data!;
+  },
+
+  /**
+   * Request payout
+   * Solicitar pago
+   * @param {VendorPayoutRequest} data - Payout request data
+   * @returns {Promise<any>} Created payout
+   */
+  requestPayout: async (data: VendorPayoutRequest) => {
+    const response = await api.post<{ success: boolean; data: any }>('/vendors/me/payouts', data);
+    return response.data.data!;
+  },
+};
+
+/**
+ * @namespace adminVendorService
+ * @description Admin Vendor API methods - Vendor management for admins
+ */
+export const adminVendorService = {
+  /**
+   * List all vendors
+   * Listar todos los vendedores
+   * @param {number} page - Page number
+   * @param {number} limit - Items per page
+   * @param {string} status - Filter by status
+   * @returns {Promise<{data: Vendor[]; pagination: any}>} Vendor list with pagination
+   */
+  listVendors: async (page?: number, limit?: number, status?: string) => {
+    const response = await api.get('/admin/vendors', { params: { page, limit, status } });
+    return response.data;
+  },
+
+  /**
+   * Get vendor by ID
+   * Obtener vendedor por ID
+   * @param {string} vendorId - Vendor ID
+   * @returns {Promise<Vendor>} Vendor data
+   */
+  getVendor: async (vendorId: string): Promise<Vendor> => {
+    const response = await api.get<{ success: boolean; data: Vendor }>(
+      `/admin/vendors/${vendorId}`
+    );
+    return response.data.data!;
+  },
+
+  /**
+   * Approve vendor
+   * Aprobar vendedor
+   * @param {string} vendorId - Vendor ID
+   * @returns {Promise<Vendor>} Updated vendor
+   */
+  approveVendor: async (vendorId: string): Promise<Vendor> => {
+    const response = await api.post<{ success: boolean; data: Vendor }>(
+      `/admin/vendors/${vendorId}/approve`
+    );
+    return response.data.data!;
+  },
+
+  /**
+   * Reject vendor
+   * Rechazar vendedor
+   * @param {string} vendorId - Vendor ID
+   * @param {string} reason - Rejection reason
+   * @returns {Promise<Vendor>} Updated vendor
+   */
+  rejectVendor: async (vendorId: string, reason: string): Promise<Vendor> => {
+    const response = await api.post<{ success: boolean; data: Vendor }>(
+      `/admin/vendors/${vendorId}/reject`,
+      { reason }
+    );
+    return response.data.data!;
+  },
+
+  /**
+   * Suspend vendor
+   * Suspender vendedor
+   * @param {string} vendorId - Vendor ID
+   * @param {string} reason - Suspension reason
+   * @returns {Promise<Vendor>} Updated vendor
+   */
+  suspendVendor: async (vendorId: string, reason: string): Promise<Vendor> => {
+    const response = await api.post<{ success: boolean; data: Vendor }>(
+      `/admin/vendors/${vendorId}/suspend`,
+      { reason }
+    );
+    return response.data.data!;
+  },
+
+  /**
+   * Update vendor commission rate
+   * Actualizar tasa de comisión del vendedor
+   * @param {string} vendorId - Vendor ID
+   * @param {number} commissionRate - New commission rate (0-1)
+   * @returns {Promise<Vendor>} Updated vendor
+   */
+  updateCommissionRate: async (vendorId: string, commissionRate: number): Promise<Vendor> => {
+    const response = await api.patch<{ success: boolean; data: Vendor }>(
+      `/admin/vendors/${vendorId}/commission-rate`,
+      { commissionRate }
+    );
     return response.data.data!;
   },
 };

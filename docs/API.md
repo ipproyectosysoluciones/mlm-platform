@@ -1149,3 +1149,637 @@ Or via ReDoc:
 ```
 http://localhost:3000/api/docs/redoc
 ```
+
+---
+
+## 🏪 Products & Categories (Sprint 3)
+
+### Public: List Active Products
+
+```
+GET /api/products
+GET /api/products?page=1&limit=20&category=<slug>
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "uuid",
+      "name": "Product Name",
+      "sku": "SKU-001",
+      "price": 29.99,
+      "type": "physical",
+      "category": { "id": "uuid", "name": "Electronics", "slug": "electronics" },
+      "status": "active"
+    }
+  ],
+  "pagination": { "total": 50, "page": 1, "limit": 20, "totalPages": 3 }
+}
+```
+
+---
+
+### Public: Get Product Detail
+
+```
+GET /api/products/:id
+```
+
+---
+
+### Public: List Active Categories
+
+```
+GET /api/categories
+```
+
+---
+
+### Admin: List All Products
+
+```
+GET /api/admin/products
+Authorization: Bearer <token> (admin only)
+```
+
+---
+
+### Admin: Create Product
+
+```
+POST /api/admin/products
+Authorization: Bearer <token> (admin only)
+```
+
+**Body:**
+
+```json
+{
+  "name": "New Product",
+  "sku": "SKU-002",
+  "price": 49.99,
+  "type": "digital",
+  "categoryId": "uuid",
+  "description": "Product description",
+  "metadata": {}
+}
+```
+
+---
+
+### Admin: Update Product
+
+```
+PUT /api/admin/products/:id
+Authorization: Bearer <token> (admin only)
+```
+
+---
+
+### Admin: Delete Product
+
+```
+DELETE /api/admin/products/:id
+Authorization: Bearer <token> (admin only)
+```
+
+---
+
+### Admin: Get Inventory
+
+```
+GET /api/admin/products/:id/inventory
+Authorization: Bearer <token> (admin only)
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "productId": "uuid",
+    "stock": 150,
+    "minStock": 10,
+    "updatedAt": "2026-04-04T00:00:00.000Z"
+  }
+}
+```
+
+---
+
+### Admin: Update Inventory Stock
+
+```
+POST /api/admin/products/:id/inventory
+Authorization: Bearer <token> (admin only)
+```
+
+**Body:**
+
+```json
+{
+  "stock": 200,
+  "minStock": 10
+}
+```
+
+---
+
+### Admin: Get Inventory Movements
+
+```
+GET /api/admin/products/:id/inventory/movements
+Authorization: Bearer <token> (admin only)
+```
+
+---
+
+### Admin: Record Inventory Movement
+
+```
+POST /api/admin/products/:id/inventory/movements
+Authorization: Bearer <token> (admin only)
+```
+
+**Body:**
+
+```json
+{
+  "type": "in",
+  "quantity": 50,
+  "reason": "Restocking",
+  "reference": "PO-2026-001"
+}
+```
+
+---
+
+### Admin: List All Categories
+
+```
+GET /api/admin/categories
+Authorization: Bearer <token> (admin only)
+```
+
+---
+
+### Admin: Create Category
+
+```
+POST /api/admin/categories
+Authorization: Bearer <token> (admin only)
+```
+
+**Body:**
+
+```json
+{
+  "name": "Electronics",
+  "slug": "electronics",
+  "description": "Electronic products",
+  "parentId": null
+}
+```
+
+---
+
+### Admin: Update Category
+
+```
+PUT /api/admin/categories/:id
+Authorization: Bearer <token> (admin only)
+```
+
+---
+
+### Admin: Delete Category
+
+```
+DELETE /api/admin/categories/:id
+Authorization: Bearer <token> (admin only)
+```
+
+---
+
+## 🏬 Marketplace / Vendors (Sprint 3)
+
+### Vendor: Dashboard
+
+```
+GET /api/vendor/dashboard
+Authorization: Bearer <token> (vendor role)
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "totalProducts": 12,
+    "totalOrders": 45,
+    "totalRevenue": 2500.0,
+    "pendingOrders": 3,
+    "commissionRate": 0.15
+  }
+}
+```
+
+---
+
+### Vendor: My Products
+
+```
+GET /api/vendor/products
+Authorization: Bearer <token> (vendor role)
+```
+
+---
+
+### Admin: List Vendors
+
+```
+GET /api/admin/vendors
+Authorization: Bearer <token> (admin only)
+```
+
+---
+
+### Admin: Get Vendor Detail
+
+```
+GET /api/admin/vendors/:id
+Authorization: Bearer <token> (admin only)
+```
+
+---
+
+### Admin: Update Vendor Commission Rate
+
+```
+PATCH /api/admin/vendors/:id/commission-rate
+Authorization: Bearer <token> (admin only)
+```
+
+**Body:**
+
+```json
+{
+  "commissionRate": 0.2
+}
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "commissionRate": 0.2,
+    "updatedAt": "2026-04-04T00:00:00.000Z"
+  }
+}
+```
+
+---
+
+## 🚚 Shipping & Delivery (Sprint 3)
+
+### Get Shipping Addresses
+
+```
+GET /api/addresses
+Authorization: Bearer <token>
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "uuid",
+      "fullName": "John Doe",
+      "street": "123 Main St",
+      "city": "Buenos Aires",
+      "state": "CABA",
+      "country": "AR",
+      "postalCode": "1000",
+      "phone": "+54911...",
+      "isDefault": true
+    }
+  ]
+}
+```
+
+---
+
+### Create Shipping Address
+
+```
+POST /api/addresses
+Authorization: Bearer <token>
+```
+
+**Body:**
+
+```json
+{
+  "fullName": "John Doe",
+  "street": "123 Main St",
+  "city": "Buenos Aires",
+  "state": "CABA",
+  "country": "AR",
+  "postalCode": "1000",
+  "phone": "+54911...",
+  "isDefault": false
+}
+```
+
+---
+
+### Get Address Detail
+
+```
+GET /api/addresses/:id
+Authorization: Bearer <token>
+```
+
+---
+
+### Update Address
+
+```
+PUT /api/addresses/:id
+Authorization: Bearer <token>
+```
+
+---
+
+### Delete Address
+
+```
+DELETE /api/addresses/:id
+Authorization: Bearer <token>
+```
+
+---
+
+### Set Default Address
+
+```
+PATCH /api/addresses/:id/default
+Authorization: Bearer <token>
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": { "id": "uuid", "isDefault": true }
+}
+```
+
+---
+
+### Assign Shipping to Order
+
+```
+PUT /api/orders/:id/shipping
+Authorization: Bearer <token>
+```
+
+**Body:**
+
+```json
+{
+  "providerId": "uuid",
+  "shippingAddressId": "uuid",
+  "trackingNumber": "TRACK-123456"
+}
+```
+
+---
+
+### Get Order Tracking
+
+```
+GET /api/orders/:id/tracking
+Authorization: Bearer <token>
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "orderId": "uuid",
+    "trackingNumber": "TRACK-123456",
+    "provider": "DiDi Envíos",
+    "status": "in_transit",
+    "estimatedDelivery": "2026-04-06T18:00:00.000Z",
+    "events": [
+      { "timestamp": "2026-04-04T10:00:00Z", "status": "picked_up", "location": "Buenos Aires" }
+    ]
+  }
+}
+```
+
+---
+
+### Delivery Provider Webhook
+
+```
+POST /api/webhooks/shipping/:providerId
+```
+
+**Body:** Provider-specific payload (status update, tracking events).
+
+**Note:** This endpoint does NOT require authentication — it uses a provider secret for validation.
+
+---
+
+## 📄 Affiliate Contracts (Sprint 3)
+
+### List Active Contracts with Acceptance Status
+
+```
+GET /api/contracts
+Authorization: Bearer <token>
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "uuid",
+      "title": "Terms of Service",
+      "version": "1.2.0",
+      "userStatus": "accepted",
+      "acceptedAt": "2026-04-01T12:00:00.000Z"
+    }
+  ]
+}
+```
+
+---
+
+### Get Contract Template
+
+```
+GET /api/contracts/:id
+Authorization: Bearer <token>
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "title": "Terms of Service",
+    "version": "1.2.0",
+    "content": "# Terms of Service\n\nFull markdown content...",
+    "isActive": true
+  }
+}
+```
+
+---
+
+### Accept Contract
+
+```
+POST /api/contracts/:id/accept
+Authorization: Bearer <token>
+```
+
+Records acceptance with IP address, user agent, and SHA-256 hash of the contract content.
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "contractId": "uuid",
+    "userId": "uuid",
+    "status": "accepted",
+    "hash": "sha256-hash-of-content",
+    "acceptedAt": "2026-04-04T00:00:00.000Z"
+  }
+}
+```
+
+---
+
+### Decline Contract
+
+```
+POST /api/contracts/:id/decline
+Authorization: Bearer <token>
+```
+
+---
+
+### Admin: List All Contract Templates
+
+```
+GET /api/admin/contracts
+Authorization: Bearer <token> (admin only)
+```
+
+---
+
+### Admin: Create Contract Template
+
+```
+POST /api/admin/contracts
+Authorization: Bearer <token> (admin only)
+```
+
+**Body:**
+
+```json
+{
+  "title": "Affiliate Agreement",
+  "content": "# Affiliate Agreement\n\n...",
+  "version": "1.0.0",
+  "isActive": true
+}
+```
+
+---
+
+### Admin: Update Contract Template (creates new version)
+
+```
+PUT /api/admin/contracts/:id
+Authorization: Bearer <token> (admin only)
+```
+
+**Note:** Updating a contract creates a new version automatically. Existing acceptances remain valid under the old version.
+
+---
+
+### Admin: Get User Contract Acceptances
+
+```
+GET /api/admin/contracts/users/:userId
+Authorization: Bearer <token> (admin only)
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "contractId": "uuid",
+      "title": "Terms of Service",
+      "version": "1.2.0",
+      "status": "accepted",
+      "acceptedAt": "2026-04-01T12:00:00.000Z",
+      "ip": "192.168.1.1",
+      "hash": "sha256-hash"
+    }
+  ]
+}
+```
+
+---
+
+### Admin: Revoke User Contract Acceptance
+
+```
+POST /api/admin/contracts/:id/revoke/:userId
+Authorization: Bearer <token> (admin only)
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "contractId": "uuid",
+    "userId": "uuid",
+    "status": "revoked",
+    "revokedAt": "2026-04-04T00:00:00.000Z"
+  }
+}
+```

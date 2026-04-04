@@ -320,8 +320,208 @@ export interface CommissionRates {
   levels: Record<CommissionLevel, number>;
 }
 
+// ============================================
+// GENERIC PRODUCTS — Multi-type Product System (#27)
+// PRODUCTOS GENÉRICOS — Sistema de productos multi-tipo (#27)
+// ============================================
+
+/**
+ * Product types for generic product catalog
+ * Tipos de productos para catálogo genérico
+ */
+export type ProductType = 'physical' | 'digital' | 'subscription' | 'service';
+
+/**
+ * Inventory movement types for stock audit trail
+ * Tipos de movimiento de inventario para trazabilidad de stock
+ */
+export type InventoryMovementType = 'initial' | 'reserve' | 'release' | 'adjust' | 'return';
+
+/**
+ * Category for hierarchical categories
+ * Categoría para categorías jerárquicas
+ */
+export interface Category {
+  id: string;
+  parentId: string | null;
+  name: string;
+  slug: string;
+  description?: string | null;
+  isActive: boolean;
+  sortOrder: number;
+  children?: Category[];
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+/**
+ * Extended Product for generic products
+ * Producto extendido para productos genéricos
+ */
+export interface GenericProduct extends Product {
+  type: ProductType;
+  sku?: string | null;
+  categoryId?: string | null;
+  category?: Category;
+  stock: number;
+  isDigital: boolean;
+  maxQuantityPerUser?: number | null;
+  metadata?: Record<string, unknown> | null;
+  images?: string[];
+}
+
+/**
+ * Inventory movement for audit trail
+ * Movimiento de inventario para trazabilidad
+ */
+export interface InventoryMovement {
+  id: string;
+  productId: string;
+  type: InventoryMovementType;
+  quantity: number;
+  reason: string;
+  referenceId?: string | null;
+  performedBy: string;
+  performedByUser?: { email: string };
+  createdAt: string;
+}
+
+/**
+ * Product list params with generic filters
+ * Params de listado de productos con filtros genéricos
+ */
+export interface GenericProductListParams extends ProductListParams {
+  type?: ProductType;
+  categoryId?: string;
+  minStock?: number;
+  maxStock?: number;
+  search?: string;
+}
+
 // Gift Card Types
 export type GiftCardStatus = 'active' | 'redeemed' | 'expired';
+
+// ============================================
+// ADMIN PRODUCT TYPES
+// ============================================
+
+export interface AdminProductResponse {
+  id: string;
+  name: string;
+  platform: StreamingPlatform;
+  description?: string;
+  price: number;
+  currency: string;
+  durationDays: number;
+  isActive: boolean;
+  type: ProductType;
+  sku?: string | null;
+  categoryId?: string | null;
+  category?: Category;
+  stock: number;
+  isDigital: boolean;
+  maxQuantityPerUser?: number | null;
+  metadata?: Record<string, unknown> | null;
+  images?: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateProductPayload {
+  name: string;
+  platform?: StreamingPlatform;
+  description?: string;
+  price: number;
+  currency?: string;
+  durationDays?: number;
+  isActive?: boolean;
+  type?: ProductType;
+  sku?: string | null;
+  categoryId?: string | null;
+  stock?: number;
+  isDigital?: boolean;
+  maxQuantityPerUser?: number | null;
+  metadata?: Record<string, unknown> | null;
+  images?: string[];
+}
+
+export interface UpdateProductPayload {
+  name?: string;
+  platform?: StreamingPlatform;
+  description?: string | null;
+  price?: number;
+  currency?: string;
+  durationDays?: number;
+  isActive?: boolean;
+  type?: ProductType;
+  sku?: string | null;
+  categoryId?: string | null;
+  stock?: number;
+  isDigital?: boolean;
+  maxQuantityPerUser?: number | null;
+  metadata?: Record<string, unknown> | null;
+  images?: string[];
+}
+
+export interface ProductListParams {
+  page?: number;
+  limit?: number;
+  platform?: StreamingPlatform;
+  isActive?: boolean;
+  type?: ProductType;
+  categoryId?: string;
+  minStock?: number;
+  maxStock?: number;
+  search?: string;
+}
+
+// Inventory management types
+export interface InventoryReservePayload {
+  quantity: number;
+  referenceId: string;
+}
+
+export interface InventoryReleasePayload {
+  quantity: number;
+  referenceId: string;
+}
+
+export interface InventoryAdjustPayload {
+  quantity: number;
+  reason: string;
+}
+
+export interface InventoryInitialPayload {
+  quantity: number;
+}
+
+export interface InventoryReturnPayload {
+  quantity: number;
+  reason: string;
+  referenceId?: string;
+}
+
+// ============================================
+// ADMIN CATEGORY TYPES
+// ============================================
+
+export interface CreateCategoryPayload {
+  name: string;
+  slug: string;
+  description?: string;
+  parentId?: string | null;
+  isActive?: boolean;
+  sortOrder?: number;
+}
+
+export interface UpdateCategoryPayload {
+  name?: string;
+  slug?: string;
+  description?: string | null;
+  parentId?: string | null;
+  isActive?: boolean;
+  sortOrder?: number;
+}
 
 export interface GiftCardResponse {
   id: string;
@@ -546,3 +746,165 @@ export type TemplateVariable = (typeof ALLOWED_TEMPLATE_VARIABLES)[number];
 
 // Push Notification Types
 export * from './push';
+
+// ============================================
+// MARKETPLACE MULTI-VENDOR — Phase 2 (#25)
+// MULTI-VENDEDOR — Fase 2 (#25)
+// ============================================
+
+/**
+ * Vendor status lifecycle
+ * Ciclo de vida del estado del vendedor
+ */
+export type VendorStatus = 'pending' | 'approved' | 'suspended' | 'rejected';
+
+/**
+ * Vendor order status
+ * Estado del pedido del vendedor
+ */
+export type VendorOrderStatus = 'pending' | 'processing' | 'completed' | 'cancelled';
+
+/**
+ * Vendor payout status
+ * Estado del pago al vendedor
+ */
+export type VendorPayoutStatus = 'pending' | 'processing' | 'completed' | 'failed';
+
+/**
+ * Vendor attributes
+ * Atributos del vendedor
+ */
+export interface Vendor {
+  id: string;
+  userId: string;
+  businessName: string;
+  slug: string;
+  description?: string | null;
+  logoUrl?: string | null;
+  status: VendorStatus;
+  commissionRate: number;
+  contactEmail: string;
+  contactPhone?: string | null;
+  address?: Record<string, unknown> | null;
+  bankDetails?: Record<string, unknown> | null;
+  metadata?: Record<string, unknown> | null;
+  approvedAt?: string | null;
+  approvedBy?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/**
+ * Vendor creation payload
+ * Payload para crear vendedor
+ */
+export interface VendorRegistrationPayload {
+  businessName: string;
+  contactEmail: string;
+  contactPhone?: string;
+  description?: string;
+  address?: Record<string, unknown>;
+}
+
+/**
+ * Vendor order attributes
+ * Atributos del pedido del vendedor
+ */
+export interface VendorOrder {
+  id: string;
+  orderId: string;
+  vendorId?: string | null;
+  subtotal: number;
+  commissionAmount: number;
+  vendorAmount: number;
+  platformAmount: number;
+  status: VendorOrderStatus;
+  notes?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/**
+ * Vendor payout attributes
+ * Atributos del pago al vendedor
+ */
+export interface VendorPayout {
+  id: string;
+  vendorId: string;
+  amount: number;
+  currency: string;
+  status: VendorPayoutStatus;
+  paymentMethod?: string | null;
+  paymentReference?: string | null;
+  periodStart?: string | null;
+  periodEnd?: string | null;
+  requestedAt: string;
+  processedAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/**
+ * Vendor payout request
+ * Solicitud de pago del vendedor
+ */
+export interface VendorPayoutRequest {
+  amount: number;
+  paymentMethod?: string;
+}
+
+/**
+ * Vendor dashboard data
+ * Datos del panel del vendedor
+ */
+export interface VendorDashboard {
+  totalSales: number;
+  totalRevenue: number;
+  pendingPayouts: number;
+  productCount: number;
+  recentSales: Array<{
+    orderId: string;
+    amount: number;
+    status: VendorOrderStatus;
+    createdAt: string;
+  }>;
+}
+
+// ============================================
+// AFFILIATE CONTRACTS — Phase 3.5 (#44)
+// CONTRATOS DE AFILIADO — Fase 3.5 (#44)
+// ============================================
+
+export type ContractType =
+  | 'AFFILIATE_AGREEMENT'
+  | 'COMPENSATION_PLAN'
+  | 'PRIVACY_POLICY'
+  | 'TERMS_OF_SERVICE';
+
+export type ContractStatus = 'PENDING' | 'ACCEPTED' | 'DECLINED' | 'REVOKED';
+
+export interface Contract {
+  id: string;
+  type: ContractType;
+  version: string;
+  title: string;
+  content: string;
+  effectiveFrom: string;
+  status: ContractStatus | null;
+  signedAt: string | null;
+  contentHash: string;
+}
+
+export interface ContractAcceptanceRequest {
+  templateId: string;
+}
+
+export interface ContractAcceptanceResponse {
+  success: boolean;
+  message?: string;
+  data?: {
+    id: string;
+    status: ContractStatus;
+    signedAt: string;
+  };
+}

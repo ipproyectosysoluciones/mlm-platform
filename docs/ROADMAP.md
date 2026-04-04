@@ -2,7 +2,7 @@
 
 > Hoja de ruta completa para la plataforma MLM de Afiliaciones Binarias.
 
-**Versión actual**: 1.10.0  
+**Versión actual**: v1.11.0 — Sprint 3 Completado ✅  
 **Última actualización**: 2026-04-04  
 **Estado**: Activo - Desarrollo intensivo  
 **Meta**: v2.0.0 en ~1 mes
@@ -11,27 +11,32 @@
 
 ## 📊 Estado Actual del Proyecto
 
-### ✅ Lo que YA está implementado (v1.10.0)
+### ✅ Lo que YA está implementado (v1.11.0)
 
-| Área               | Funcionalidad                        | Estado |
-| ------------------ | ------------------------------------ | ------ |
-| **Auth**           | JWT, 2FA, Roles                      | ✅     |
-| **MLM**            | Binario con Closure Table            | ✅     |
-| **Comisiones**     | 5 niveles configurables              | ✅     |
-| **E-commerce**     | Productos streaming (MVP ejemplo)    | ✅     |
-| **Wallet**         | Balance, transacciones, retiros      | ✅     |
-| **CRM**            | Leads, Tasks, Communications         | ✅     |
-| **Notificaciones** | Email (Brevo), Push (Web)            | ✅     |
-| **PWA**            | Offline, instalable, shortcuts       | ✅     |
-| **Landing Pages**  | Productos con SEO                    | ✅     |
-| **Dashboard**      | Stats, tree view, perfil             | ✅     |
-| **i18n**           | Español + Inglés                     | ✅     |
-| **Pagos**          | PayPal + MercadoPago                 | ✅     |
-| **Gamificación**   | Leaderboards + Achievements          | ✅     |
-| **Gift Cards**     | CRUD, redeem, balance, admin         | ✅     |
-| **Cart Recovery**  | Persistence, tokens, emails          | ✅     |
-| **Email Auto**     | Templates, campaigns, scheduling     | ✅     |
-| **Tests**          | 382 tests (237 BE + 132 FE + 13 E2E) | ✅     |
+| Área               | Funcionalidad                             | Estado |
+| ------------------ | ----------------------------------------- | ------ |
+| **Auth**           | JWT, 2FA, Roles                           | ✅     |
+| **MLM**            | Binario con Closure Table                 | ✅     |
+| **Comisiones**     | 5 niveles configurables                   | ✅     |
+| **E-commerce**     | Productos streaming (MVP ejemplo)         | ✅     |
+| **Wallet**         | Balance, transacciones, retiros           | ✅     |
+| **CRM**            | Leads, Tasks, Communications              | ✅     |
+| **Notificaciones** | Email (Brevo), Push (Web)                 | ✅     |
+| **PWA**            | Offline, instalable, shortcuts            | ✅     |
+| **Landing Pages**  | Productos con SEO                         | ✅     |
+| **Dashboard**      | Stats, tree view, perfil                  | ✅     |
+| **i18n**           | Español + Inglés                          | ✅     |
+| **Pagos**          | PayPal + MercadoPago                      | ✅     |
+| **Gamificación**   | Leaderboards + Achievements               | ✅     |
+| **Gift Cards**     | CRUD, redeem, balance, admin              | ✅     |
+| **Cart Recovery**  | Persistence, tokens, emails               | ✅     |
+| **Email Auto**     | Templates, campaigns, scheduling          | ✅     |
+| **Security**       | SSRF, XSS, pino-http, Docker hardening    | ✅     |
+| **Products**       | Generic products + inventory + categories | ✅     |
+| **Marketplace**    | Multi-vendor, commission split 3-way      | ✅     |
+| **Delivery**       | Shipping addresses, providers, tracking   | ✅     |
+| **Contracts**      | Affiliate contracts MVP con hash/IP       | ✅     |
+| **Tests**          | 307 tests (integration + E2E)             | ✅     |
 
 ---
 
@@ -83,12 +88,12 @@
 | 21  | Sprint 2 | E-commerce: Carrito Abandonado              | 🟡 Medium | ✅     |
 | 22  | Sprint 2 | Email: Automation Sequences con Brevo       | 🟡 Medium | ✅     |
 | 23  | Sprint 2 | E-commerce: Gift Cards                      | 🟡 Medium | ✅     |
-| 25  | Sprint 3 | Marketplace: Multi-vendor Support           | 🟡 Medium | 📋     |
-| 26  | Sprint 3 | Delivery: Pickup + Ride-hailing             | 🟡 Medium | 📋     |
-| 27  | Sprint 3 | E-commerce: Productos Genéricos + Inventory | 🔴 High   | 📋     |
-| 29  | Sprint 3 | CodeQL: SSRF Fix                            | 🔴 High   | 📋     |
-| 30  | Sprint 3 | CodeQL: SSRF Fix                            | 🔴 High   | 📋     |
-| 36  | Sprint 3 | CodeQL: DOM XSS Fix                         | 🔴 High   | 📋     |
+| 25  | Sprint 3 | Marketplace: Multi-vendor Support           | 🟡 Medium | ✅     |
+| 26  | Sprint 3 | Delivery: Pickup + Ride-hailing             | 🟡 Medium | ✅     |
+| 27  | Sprint 3 | E-commerce: Productos Genéricos + Inventory | 🔴 High   | ✅     |
+| 29  | Sprint 3 | CodeQL: SSRF Fix                            | 🔴 High   | ✅     |
+| 30  | Sprint 3 | CodeQL: SSRF Fix                            | 🔴 High   | ✅     |
+| 36  | Sprint 3 | CodeQL: DOM XSS Fix                         | 🔴 High   | ✅     |
 | 28  | Sprint 4 | QA: Test Coverage Expansion                 | 🔴 High   | 📋     |
 | 39  | Sprint 2 | PR: Sprint 2 v1.10.0 (merged)               | 🔴 High   | ✅     |
 
@@ -110,11 +115,11 @@
 ║  ├── ✅ Carrito Abandonado (#21)                                   ║
 ║  └── ✅ Email Automation (#22)                                     ║
 ╠══════════════════════════════════════════════════════════════════════╣
-║  SEMANA 3 (Abr 13 - Abr 19): MULTI-VENDOR + DELIVERY             ║
-║  ├── Security Hardening (#29, #30, #36)                            ║
-║  ├── Productos Genéricos                                           ║
-║  ├── Multi-vendor Support                                          ║
-║  └── Delivery: Pickup + DiDi/Uber/InDriver                        ║
+║  ✅ SEMANA 3 (Abr 13 - Abr 19): MULTI-VENDOR + DELIVERY — v1.11.0║
+║  ├── ✅ Security Hardening (#29, #30, #36)                        ║
+║  ├── ✅ Productos Genéricos + Inventario                          ║
+║  ├── ✅ Multi-vendor Support + Affiliate Contracts                ║
+║  └── ✅ Delivery: Shipping Addresses + Tracking                   ║
 ╠══════════════════════════════════════════════════════════════════════╣
 ║  SEMANA 4 (Abr 20 - Abr 26): QA + RELEASE                        ║
 ║  ├── Test Coverage Expansion (90%+)                                ║
@@ -223,66 +228,67 @@ Features implementados:
 
 ---
 
-### 🟡 SPRINT 3: Multi-vendor + Delivery + Security Hardening (Semana 3-4)
+### ✅ SPRINT 3: Multi-vendor + Delivery + Security Hardening — COMPLETADO (v1.11.0)
 
-> **Deuda técnica pendiente**: CodeQL fixes (#29 SSRF, #30 SSRF, #36 DOM XSS), Sentry issues,  
-> 5 skipped tests, 610 TypeScript strict errors
+> **Stats**: 6 fases completadas, 307 tests totales (eran 195 antes del Sprint 3)  
+> **Issues**: #25 Marketplace, #26 Delivery, #27 Productos Genéricos, #29/#30 SSRF, #36 DOM XSS
 
-#### 3.1 Security Hardening (Pre-requisito)
-
-```
-□ CodeQL Fixes
-  ├── #29 SSRF vulnerability (backend)
-  ├── #30 SSRF vulnerability (backend)
-  └── #36 DOM XSS vulnerability (frontend)
-
-□ Sentry Issues - Resolver errores de producción
-
-□ Test Debt
-  ├── Fix 5 skipped tests
-  └── Address 610 TypeScript strict errors
-```
-
-#### 3.2 Marketplace Multi-vendor
+#### 3.0 Security Hardening ✅
 
 ```
-□ Vendor model
-├── Dashboard para afiliados vendedores
-├── CRUD de productos por vendor
-├── Split payments (plataforma + vendor)
-└── Estados: pending, approved, rejected
+✅ CodeQL Fixes
+  ├── #29 SSRF vulnerability (backend) — URL validation
+  ├── #30 SSRF vulnerability (backend) — URL validation
+  └── #36 DOM XSS vulnerability (frontend) — HTML sanitization
+
+✅ pino-http secure logging (redacta tokens/cookies)
+✅ Docker hardening (non-root, read-only, no-new-privileges)
 ```
 
-#### 3.3 Productos Genéricos
+#### 3.1 Generic Products + Inventory ✅
 
 ```
-Tipos de producto:
-├── digital: entrega automática (email/API)
-├── physical: requiere shipping
-├── service: requiere cita/reserva
-└── membership: acceso exclusivo
-
-Features:
-├── Inventory tracking opcional
-├── SKU generable
-├── Metadatos flexibles (JSON)
-└── Categorías jerárquicas
+✅ Category model (nombre, slug único, parent_id, soft-delete)
+✅ Product model (SKU, tipo digital/physical/service/membership, metadatos JSON)
+✅ Inventory model (stock, minStock, movimientos)
+✅ Admin CRUD: /api/admin/categories, /api/admin/products
+✅ Admin inventory: /api/admin/products/:id/inventory/*
+✅ Public: GET /api/products, GET /api/categories
 ```
 
-#### 3.4 Delivery Integration
+#### 3.2 Marketplace Multi-vendor ✅
 
 ```
-Providers:
-├── Pickup - Puntos de recogida
-├── DiDi Envíos - Integración DiDi
-├── Uber Flash/Rush - Integración Uber
-└── InDriver - Integración InDriver
+✅ Vendor model (commission_rate, status: pending/approved/rejected)
+✅ VendorProduct, VendorOrder models
+✅ Split 3-way: plataforma / vendor / afiliado
+✅ /api/vendor/dashboard — stats del vendor
+✅ /api/vendor/products — productos del vendor
+✅ Admin: /api/admin/vendors, PATCH /api/admin/vendors/:id/commission-rate
+```
 
-Features:
-├── Cotizador de envío por provider
-├── Tracking de delivery
-├── Notificaciones de status
-└── Cálculo de comisiones por delivery
+#### 3.3 Delivery Integration ✅
+
+```
+✅ ShippingAddress model (multi-dirección, is_default)
+✅ DeliveryProvider model (config JSON, activo/inactivo)
+✅ ShipmentTracking model (tracking_number, eventos)
+✅ /api/addresses — CRUD de direcciones (montado en /api/addresses)
+✅ PUT /api/orders/:id/shipping — asignar envío
+✅ GET /api/orders/:id/tracking — ver tracking
+✅ POST /api/webhooks/shipping/:providerId — webhook del provider
+```
+
+#### 3.4 Affiliate Contracts MVP ✅
+
+```
+✅ ContractTemplate model (versionado semver, Markdown)
+✅ AffiliateContract model (IP, userAgent, SHA-256 hash, timestamp)
+✅ /api/contracts — listar con estado de aceptación
+✅ POST /api/contracts/:id/accept — aceptar (graba IP/hash)
+✅ POST /api/contracts/:id/decline — declinar
+✅ Admin CRUD: /api/admin/contracts
+✅ Migración: 20260412000000-create-contract-tables.js
 ```
 
 ---
@@ -328,8 +334,8 @@ Database: PostgreSQL + Redis
 Email: Brevo (SMTP + API)
 SMS: Brevo SMS
 Pagos: PayPal + MercadoPago
-Delivery: DiDi + Uber + InDriver
-Testing: Jest (237 tests)
+Delivery: Providers via webhooks
+Testing: Jest (307 tests)
 ```
 
 ### Frontend Stack
@@ -348,16 +354,18 @@ Testing: Vitest (132 tests) + Playwright (13 E2E)
 
 ## 📈 Métricas Objetivo
 
-| Métrica       | Actual (v1.10.0)           | Objetivo                 |
-| ------------- | -------------------------- | ------------------------ |
-| Test Coverage | ~70%                       | **90%+**                 |
-| Tests Totales | 382 (237 BE+132 FE+13 E2E) | **~550**                 |
-| Features      | Pagos + Gamif + E-commerce | **Multi-vendor**         |
-| Delivery      | N/A                        | **Pickup + 3 providers** |
-| Pagos         | PayPal + MP                | **+ Gift Cards** ✅      |
-| Gift Cards    | ✅ Implementado            | —                        |
-| Email Auto    | ✅ Implementado            | —                        |
-| Cart Recovery | ✅ Implementado            | —                        |
+| Métrica       | Actual (v1.11.0)                                                 | Objetivo                 |
+| ------------- | ---------------------------------------------------------------- | ------------------------ |
+| Test Coverage | ~70%                                                             | **90%+**                 |
+| Tests Totales | 307 (integration + E2E)                                          | **~550**                 |
+| Features      | Pagos + Gamif + E-commerce + Multi-vendor + Delivery + Contracts | **Release v2.0.0**       |
+| Delivery      | Shipping addresses + tracking                                    | **+ DiDi/Uber/InDriver** |
+| Pagos         | PayPal + MP                                                      | **+ Gift Cards** ✅      |
+| Gift Cards    | ✅ Implementado                                                  | —                        |
+| Email Auto    | ✅ Implementado                                                  | —                        |
+| Cart Recovery | ✅ Implementado                                                  | —                        |
+| Multi-vendor  | ✅ Implementado                                                  | —                        |
+| Contracts     | ✅ Implementado                                                  | —                        |
 
 ---
 

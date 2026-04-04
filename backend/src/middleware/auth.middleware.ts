@@ -11,7 +11,7 @@ import { config } from '../config/env';
 // TYPES
 // ============================================
 
-export type UserRole = 'admin' | 'user';
+export type UserRole = 'admin' | 'user' | 'vendor';
 
 interface TokenPayload {
   userId: string;
@@ -172,6 +172,77 @@ export function requireAdmin(req: AuthenticatedRequest, res: Response, next: Nex
 
 export function requireUser(req: AuthenticatedRequest, res: Response, next: NextFunction): void {
   return requireRole('user')(req, res, next);
+}
+
+export function requireVendor(req: AuthenticatedRequest, res: Response, next: NextFunction): void {
+  return requireRole('vendor')(req, res, next);
+}
+
+export function requireVendorOrAdmin(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): void {
+  if (!req.user) {
+    res.status(401).json({
+      success: false,
+      error: {
+        code: 'UNAUTHORIZED',
+        message: 'Authentication required',
+      },
+    });
+    return;
+  }
+
+  if (req.user.role !== 'vendor' && req.user.role !== 'admin') {
+    res.status(403).json({
+      success: false,
+      error: {
+        code: 'FORBIDDEN',
+        message: 'Access denied',
+      },
+    });
+    return;
+  }
+
+  next();
+}
+
+// ============================================
+// PRODUCT OWNERSHIP CHECK
+// ============================================
+
+/**
+ * Check if user can manage a product
+ * Admins can manage any product
+ * Vendors can only manage their own products (product.vendorId === user.id)
+ *
+ * @param userId - The user's ID
+ * @param product - The product object (must have vendorId property)
+ * @returns true if user can manage the product
+ */
+export function canManageProduct(
+  userId: string,
+  userRole: UserRole,
+  product: { vendorId: string | null } | null
+): boolean {
+  // Admins can manage any product
+  if (userRole === 'admin') {
+    return true;
+  }
+
+  // If no product, assume not manageable
+  if (!product) {
+    return false;
+  }
+
+  // Vendors can only manage their own products
+  if (userRole === 'vendor') {
+    return product.vendorId === userId;
+  }
+
+  // Regular users cannot manage products
+  return false;
 }
 
 // ============================================
