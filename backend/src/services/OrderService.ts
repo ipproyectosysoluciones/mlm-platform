@@ -13,7 +13,7 @@
  * const order = await orderService.createOrder(userId, { productId, paymentMethod });
  */
 import { sequelize } from '../config/database';
-import { Order, Product, Purchase, User } from '../models';
+import { Order, Product, Purchase, User, VendorOrder } from '../models';
 import { AppError } from '../middleware/error.middleware';
 import { CommissionService } from './CommissionService';
 import { body } from 'express-validator';
@@ -155,7 +155,44 @@ export class OrderService {
         // Skip commission calculation to prevent timeouts in integration tests
       } else {
         try {
-          await commissionService.calculateCommissions(purchase.id);
+          // Calculate vendor commission split (3-way split)
+          const vendorId = (product as any).vendorId || null;
+          const commissionResult = await commissionService.calculateVendorCommission(
+            totalAmount,
+            vendorId,
+            userId,
+            'producto'
+          );
+
+          // Create vendor order record for vendor products
+          if (vendorId) {
+            await VendorOrder.create(
+              {
+                orderId: order.id,
+                vendorId,
+                subtotal: totalAmount,
+                vendorAmount: commissionResult.vendorAmount,
+                platformAmount: commissionResult.platformNet,
+                commissionAmount: commissionResult.mlmCommissions.reduce(
+                  (sum, c) => sum + c.amount,
+                  0
+                ),
+                status: 'completed',
+              },
+              { transaction }
+            );
+
+            // Create MLM commissions for uplines
+            await commissionService.createMlmCommissionsFromSplit(
+              commissionResult.mlmCommissions,
+              purchase.id,
+              userId,
+              totalAmount
+            );
+          } else {
+            // Platform product - use existing logic
+            await commissionService.calculateCommissions(purchase.id);
+          }
         } catch (commissionError) {
           // Log and throw AppError so that transaction is rolled back and error is propagated
           console.error('Commission calculation failed:', commissionError);

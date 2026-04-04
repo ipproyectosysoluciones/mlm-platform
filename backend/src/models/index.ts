@@ -27,6 +27,9 @@ import { EmailQueue } from './EmailQueue';
 import { EmailCampaignLog } from './EmailCampaignLog';
 import { Category, MAX_CATEGORY_DEPTH } from './Category';
 import { InventoryMovement } from './InventoryMovement';
+import { Vendor } from './Vendor';
+import { VendorOrder } from './VendorOrder';
+import { VendorPayout } from './VendorPayout';
 
 // User relationships
 User.hasMany(User, { as: 'children', foreignKey: 'sponsorId', sourceKey: 'id' });
@@ -293,6 +296,34 @@ InventoryMovement.belongsTo(User, {
   targetKey: 'id',
 });
 
+// ============================================
+// MARKETPLACE MULTI-VENDOR — Vendor Relations
+// ============================================
+
+// User - Vendor (one vendor per user)
+User.hasMany(Vendor, { as: 'vendor', foreignKey: 'userId', sourceKey: 'id' });
+Vendor.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
+
+// User - VendorPayout (as approver - approvedBy)
+User.hasMany(VendorPayout, { as: 'approvedPayouts', foreignKey: 'approvedBy', sourceKey: 'id' });
+VendorPayout.belongsTo(User, { as: 'approver', foreignKey: 'approvedBy', targetKey: 'id' });
+
+// Order - VendorOrder
+Order.hasMany(VendorOrder, { as: 'vendorOrders', foreignKey: 'orderId', sourceKey: 'id' });
+VendorOrder.belongsTo(Order, { as: 'order', foreignKey: 'orderId', targetKey: 'id' });
+
+// Vendor - VendorOrder
+Vendor.hasMany(VendorOrder, { as: 'orders', foreignKey: 'vendorId', sourceKey: 'id' });
+VendorOrder.belongsTo(Vendor, { as: 'vendor', foreignKey: 'vendorId', targetKey: 'id' });
+
+// Vendor - VendorPayout
+Vendor.hasMany(VendorPayout, { as: 'payouts', foreignKey: 'vendorId', sourceKey: 'id' });
+VendorPayout.belongsTo(Vendor, { as: 'vendor', foreignKey: 'vendorId', targetKey: 'id' });
+
+// Product - Vendor (marketplace)
+Vendor.hasMany(Product, { as: 'products', foreignKey: 'vendorId', sourceKey: 'id' });
+Product.belongsTo(Vendor, { as: 'vendor', foreignKey: 'vendorId', targetKey: 'id' });
+
 export {
   sequelize,
   User,
@@ -324,6 +355,9 @@ export {
   Category,
   MAX_CATEGORY_DEPTH,
   InventoryMovement,
+  Vendor,
+  VendorOrder,
+  VendorPayout,
 };
 
 export function initModels(): void {

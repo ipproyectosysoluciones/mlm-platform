@@ -77,6 +77,9 @@ export class Product
   declare metadata: Record<string, unknown> | null;
   declare images: string[];
 
+  // Vendor relationship (marketplace)
+  declare vendorId: string | null;
+
   // Timestamps
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
@@ -89,6 +92,7 @@ export class Product
 // Placeholder imports for associations - will be set up in index.ts
 import type { Category } from './Category';
 import type { InventoryMovement } from './InventoryMovement';
+import type { Vendor } from './Vendor';
 
 Product.init(
   {
@@ -195,6 +199,12 @@ Product.init(
       field: 'images',
       comment: 'Array of product image URLs',
     },
+    vendorId: {
+      type: DataTypes.UUID,
+      allowNull: true,
+      field: 'vendor_id',
+      comment: 'FK to vendors table - null means platform-owned product',
+    },
   },
   {
     sequelize,
@@ -208,6 +218,7 @@ Product.init(
       { fields: ['category_id'] },
       { fields: ['sku'] },
       { fields: ['stock'] },
+      { fields: ['vendor_id'] },
     ],
   }
 );

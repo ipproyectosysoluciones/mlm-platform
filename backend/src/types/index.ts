@@ -749,6 +749,7 @@ export interface GenericProductAttributes extends ProductAttributes {
   maxQuantityPerUser: number | null;
   metadata: Record<string, unknown> | null;
   images: string[];
+  vendorId: string | null;
 }
 
 export interface GenericProductCreationAttributes extends ProductCreationAttributes {
@@ -760,6 +761,7 @@ export interface GenericProductCreationAttributes extends ProductCreationAttribu
   maxQuantityPerUser?: number | null;
   metadata?: Record<string, unknown> | null;
   images?: string[];
+  vendorId?: string | null;
 }
 
 /**
@@ -1195,4 +1197,192 @@ export interface CreateCampaignDto {
   name: string;
   recipientSegment?: Record<string, unknown> | null;
   scheduledFor?: Date | null;
+}
+
+// ============================================
+// MARKETPLACE MULTI-VENDOR — Phase 2 (#25)
+// MULTI-VENDEDOR — Fase 2 (#25)
+// ============================================
+
+/**
+ * Vendor status lifecycle
+ * Ciclo de vida del estado del vendedor
+ */
+export const VENDOR_STATUS = {
+  PENDING: 'pending',
+  APPROVED: 'approved',
+  SUSPENDED: 'suspended',
+  REJECTED: 'rejected',
+} as const;
+
+export type VendorStatus = (typeof VENDOR_STATUS)[keyof typeof VENDOR_STATUS];
+
+/**
+ * Vendor order status
+ * Estado del pedido del vendedor
+ */
+export const VENDOR_ORDER_STATUS = {
+  PENDING: 'pending',
+  PROCESSING: 'processing',
+  COMPLETED: 'completed',
+  CANCELLED: 'cancelled',
+} as const;
+
+export type VendorOrderStatus = (typeof VENDOR_ORDER_STATUS)[keyof typeof VENDOR_ORDER_STATUS];
+
+/**
+ * Vendor payout status
+ * Estado del pago al vendedor
+ */
+export const VENDOR_PAYOUT_STATUS = {
+  PENDING: 'pending',
+  PROCESSING: 'processing',
+  COMPLETED: 'completed',
+  FAILED: 'failed',
+} as const;
+
+export type VendorPayoutStatus = (typeof VENDOR_PAYOUT_STATUS)[keyof typeof VENDOR_PAYOUT_STATUS];
+
+/**
+ * Vendor attributes
+ * Atributos del vendedor
+ */
+export interface VendorAttributes {
+  id: string;
+  userId: string;
+  businessName: string;
+  slug: string;
+  description: string | null;
+  logoUrl: string | null;
+  status: VendorStatus;
+  commissionRate: number; // DECIMAL(5,4) - default 0.7000 (70%)
+  contactEmail: string;
+  contactPhone: string | null;
+  address: Record<string, unknown> | null;
+  bankDetails: Record<string, unknown> | null; // Encrypted
+  metadata: Record<string, unknown> | null;
+  approvedAt: Date | null;
+  approvedBy: string | null;
+  deletedAt: Date | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+/**
+ * Vendor creation attributes
+ * Atributos para crear vendedor
+ */
+export interface VendorCreationAttributes {
+  userId: string;
+  businessName: string;
+  slug: string;
+  description?: string | null;
+  logoUrl?: string | null;
+  status?: VendorStatus;
+  commissionRate?: number;
+  contactEmail: string;
+  contactPhone?: string | null;
+  address?: Record<string, unknown> | null;
+  bankDetails?: Record<string, unknown> | null;
+  metadata?: Record<string, unknown> | null;
+}
+
+/**
+ * Vendor order attributes
+ * Atributos del pedido del vendedor
+ */
+export interface VendorOrderAttributes {
+  id: string;
+  orderId: string;
+  vendorId: string | null; // null for platform orders
+  subtotal: number;
+  commissionAmount: number; // DECIMAL(10,4)
+  vendorAmount: number; // DECIMAL(10,4)
+  platformAmount: number; // DECIMAL(10,4)
+  status: VendorOrderStatus;
+  notes: string | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+/**
+ * Vendor order creation attributes
+ * Atributos para crear pedido de vendedor
+ */
+export interface VendorOrderCreationAttributes {
+  orderId: string;
+  vendorId?: string | null;
+  subtotal: number;
+  commissionAmount?: number;
+  vendorAmount?: number;
+  platformAmount?: number;
+  status?: VendorOrderStatus;
+  notes?: string | null;
+}
+
+/**
+ * Vendor payout attributes
+ * Atributos del pago al vendedor
+ */
+export interface VendorPayoutAttributes {
+  id: string;
+  vendorId: string;
+  amount: number; // DECIMAL(10,2)
+  currency: string; // Default: 'USD'
+  status: VendorPayoutStatus;
+  paymentMethod: string | null;
+  paymentReference: string | null;
+  periodStart: Date | null;
+  periodEnd: Date | null;
+  requestedAt: Date;
+  processedAt: Date | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+/**
+ * Vendor payout creation attributes
+ * Atributos para crear pago al vendedor
+ */
+export interface VendorPayoutCreationAttributes {
+  vendorId: string;
+  amount: number;
+  currency?: string;
+  status?: VendorPayoutStatus;
+  paymentMethod?: string | null;
+  paymentReference?: string | null;
+  periodStart?: Date | null;
+  periodEnd?: Date | null;
+}
+
+/**
+ * Commission split result for vendor orders
+ * Resultado de división de comisiones para pedidos de vendedor
+ */
+export interface VendorCommissionSplit {
+  vendorAmount: number;
+  platformFee: number;
+  mlmCommissions: Array<{
+    userId: string;
+    level: string;
+    amount: number;
+  }>;
+  platformNet: number;
+}
+
+/**
+ * Vendor dashboard data
+ * Datos del panel del vendedor
+ */
+export interface VendorDashboardData {
+  totalSales: number;
+  totalRevenue: number;
+  pendingPayouts: number;
+  productCount: number;
+  recentSales: Array<{
+    orderId: string;
+    amount: number;
+    status: VendorOrderStatus;
+    createdAt: Date;
+  }>;
 }

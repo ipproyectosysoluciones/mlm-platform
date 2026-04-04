@@ -35,7 +35,7 @@ export class User extends Model<UserAttributes, UserCreation> {
   declare position: 'left' | 'right' | null;
   declare level: number;
   declare status: 'active' | 'inactive';
-  declare role: 'admin' | 'user';
+  declare role: 'admin' | 'user' | 'vendor';
   declare currency: 'USD' | 'COP' | 'MXN';
   // Notification preferences
   declare emailNotifications: boolean;
@@ -102,7 +102,7 @@ User.init(
       defaultValue: 'USD',
     },
     role: {
-      type: DataTypes.ENUM('admin', 'user'),
+      type: DataTypes.ENUM('admin', 'user', 'vendor'),
       defaultValue: 'user',
     },
     // Notification preferences / Preferencias de notificación
