@@ -135,7 +135,7 @@ export class ContractService {
       where: { isActive: true },
       order: [
         ['type', 'ASC'],
-        ['effectiveFrom', 'DESC'],
+        ['effective_from', 'DESC'],
       ],
     });
 
@@ -427,7 +427,7 @@ export class ContractService {
       where: { isActive: true },
       order: [
         ['type', 'ASC'],
-        ['effectiveFrom', 'DESC'],
+        ['effective_from', 'DESC'],
       ],
     });
 
@@ -443,7 +443,7 @@ export class ContractService {
     // Get all user acceptances
     const acceptances = await AffiliateContract.findAll({
       where: { userId },
-      order: [['createdAt', 'DESC']],
+      order: [['created_at', 'DESC']],
     });
 
     // Build response
