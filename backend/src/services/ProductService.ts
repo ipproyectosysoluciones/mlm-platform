@@ -599,7 +599,7 @@ export class ProductService {
 
     return InventoryMovement.findAll({
       where: { productId: product.id },
-      order: [['createdAt', 'DESC']],
+      order: [['created_at', 'DESC']],
       limit,
     });
   }
