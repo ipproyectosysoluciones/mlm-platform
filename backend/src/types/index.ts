@@ -677,3 +677,140 @@ export interface GiftCardValidationResult {
   reason?: 'NOT_FOUND' | 'ALREADY_REDEEMED' | 'EXPIRED' | 'INACTIVE';
   card?: GiftCardAttributes;
 }
+
+// ============================================
+// CART — Abandoned Cart Recovery (#21)
+// CARRITO — Recuperación de carritos abandonados (#21)
+// ============================================
+
+/**
+ * Cart status lifecycle
+ * Ciclo de vida del estado del carrito
+ */
+export const CART_STATUS = {
+  ACTIVE: 'active',
+  ABANDONED: 'abandoned',
+  RECOVERED: 'recovered',
+  CHECKED_OUT: 'checked_out',
+  EXPIRED: 'expired',
+} as const;
+
+export type CartStatus = (typeof CART_STATUS)[keyof typeof CART_STATUS];
+
+/**
+ * Cart recovery token status
+ * Estado del token de recuperación del carrito
+ */
+export const CART_RECOVERY_TOKEN_STATUS = {
+  PENDING: 'pending',
+  USED: 'used',
+  EXPIRED: 'expired',
+} as const;
+
+export type CartRecoveryTokenStatus =
+  (typeof CART_RECOVERY_TOKEN_STATUS)[keyof typeof CART_RECOVERY_TOKEN_STATUS];
+
+/**
+ * Cart attributes
+ * Atributos del carrito
+ */
+export interface CartAttributes {
+  id: string;
+  userId: string;
+  status: CartStatus;
+  lastActivityAt: Date;
+  abandonedAt: Date | null;
+  recoveredAt: Date | null;
+  checkedOutAt: Date | null;
+  deletedAt: Date | null;
+  totalAmount: number;
+  itemCount: number;
+  metadata: Record<string, unknown>;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+/**
+ * Cart creation attributes
+ * Atributos para crear carrito
+ */
+export interface CartCreationAttributes {
+  userId: string;
+  status?: CartStatus;
+  lastActivityAt?: Date;
+  abandonedAt?: Date | null;
+  recoveredAt?: Date | null;
+  checkedOutAt?: Date | null;
+  deletedAt?: Date | null;
+  totalAmount?: number;
+  itemCount?: number;
+  metadata?: Record<string, unknown>;
+}
+
+/**
+ * Cart item attributes
+ * Atributos de item del carrito
+ */
+export interface CartItemAttributes {
+  id: string;
+  cartId: string;
+  productId: string;
+  quantity: number;
+  unitPrice: number;
+  subtotal: number;
+  addedAt: Date;
+  metadata: Record<string, unknown>;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+/**
+ * Cart item creation attributes
+ * Atributos para crear item del carrito
+ */
+export interface CartItemCreationAttributes {
+  cartId: string;
+  productId: string;
+  quantity: number;
+  unitPrice: number;
+  subtotal: number;
+  addedAt?: Date;
+  metadata?: Record<string, unknown>;
+}
+
+/**
+ * Cart recovery token attributes
+ * Atributos del token de recuperación del carrito
+ */
+export interface CartRecoveryTokenAttributes {
+  id: string;
+  cartId: string;
+  userId: string;
+  tokenHash: string;
+  status: CartRecoveryTokenStatus;
+  expiresAt: Date;
+  usedAt: Date | null;
+  emailSentAt: Date | null;
+  clickCount: number;
+  lastClickedAt: Date | null;
+  metadata: Record<string, unknown>;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+/**
+ * Cart recovery token creation attributes
+ * Atributos para crear token de recuperación
+ */
+export interface CartRecoveryTokenCreationAttributes {
+  cartId: string;
+  userId: string;
+  tokenHash: string;
+  status?: CartRecoveryTokenStatus;
+  expiresAt: Date;
+  usedAt?: Date | null;
+  emailSentAt?: Date | null;
+  clickCount?: number;
+  lastClickedAt?: Date | null;
+  metadata?: Record<string, unknown>;
+}

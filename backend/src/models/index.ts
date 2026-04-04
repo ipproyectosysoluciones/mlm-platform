@@ -17,6 +17,9 @@ import { PushSubscription } from './PushSubscription';
 import { GiftCard } from './GiftCard';
 import { QrMapping } from './QrMapping';
 import { GiftCardTransaction } from './GiftCardTransaction';
+import { Cart } from './Cart';
+import { CartItem } from './CartItem';
+import { CartRecoveryToken } from './CartRecoveryToken';
 
 // User relationships
 User.hasMany(User, { as: 'children', foreignKey: 'sponsorId', sourceKey: 'id' });
@@ -110,6 +113,27 @@ GiftCardTransaction.belongsTo(User, {
   targetKey: 'id',
 });
 
+// Cart relationships (Abandoned Cart Recovery #21)
+User.hasMany(Cart, { as: 'carts', foreignKey: 'userId', sourceKey: 'id' });
+Cart.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
+
+Cart.hasMany(CartItem, { as: 'items', foreignKey: 'cartId', sourceKey: 'id', onDelete: 'CASCADE' });
+CartItem.belongsTo(Cart, { as: 'cart', foreignKey: 'cartId', targetKey: 'id' });
+
+Product.hasMany(CartItem, { foreignKey: 'productId', sourceKey: 'id' });
+CartItem.belongsTo(Product, { as: 'product', foreignKey: 'productId', targetKey: 'id' });
+
+Cart.hasMany(CartRecoveryToken, {
+  as: 'recoveryTokens',
+  foreignKey: 'cartId',
+  sourceKey: 'id',
+  onDelete: 'CASCADE',
+});
+CartRecoveryToken.belongsTo(Cart, { as: 'cart', foreignKey: 'cartId', targetKey: 'id' });
+
+User.hasMany(CartRecoveryToken, { foreignKey: 'userId', sourceKey: 'id' });
+CartRecoveryToken.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
+
 export {
   sequelize,
   User,
@@ -130,6 +154,9 @@ export {
   GiftCard,
   QrMapping,
   GiftCardTransaction,
+  Cart,
+  CartItem,
+  CartRecoveryToken,
 };
 
 export function initModels(): void {

@@ -50,6 +50,9 @@ beforeAll(async () => {
     GiftCard,
     QrMapping,
     GiftCardTransaction,
+    Cart,
+    CartItem,
+    CartRecoveryToken,
   } = await import('../models');
 
   importedModels = {
@@ -70,6 +73,9 @@ beforeAll(async () => {
     GiftCard,
     QrMapping,
     GiftCardTransaction,
+    Cart,
+    CartItem,
+    CartRecoveryToken,
   };
 
   console.log('Models registered');
@@ -144,6 +150,9 @@ afterAll(async () => {
 // Clean tables before each test
 beforeEach(async () => {
   const tables = [
+    'cart_recovery_tokens',
+    'cart_items',
+    'carts',
     'gift_card_transactions',
     'qr_mappings',
     'gift_cards',
