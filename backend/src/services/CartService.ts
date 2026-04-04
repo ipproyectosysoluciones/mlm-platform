@@ -542,9 +542,12 @@ export class CartService {
    */
   async recoverCart(tokenPlain: string): Promise<Cart> {
     return await sequelize.transaction(async (t) => {
+      // Step 1: Find ALL non-expired tokens (regardless of status) so we can
+      // distinguish "invalid token" (400) from "already used" (410).
+      // The P0-03 security fix filtered by status:PENDING which made USED tokens
+      // invisible, collapsing the 410 case into a generic 400.
       const tokens = await CartRecoveryToken.findAll({
         where: {
-          status: CART_RECOVERY_TOKEN_STATUS.PENDING,
           expiresAt: { [Op.gt]: new Date() },
         },
         transaction: t,
@@ -560,15 +563,24 @@ export class CartService {
         }
       }
 
+      // Step 2: No token matched at all → truly invalid
       if (!matchedToken) {
         const error = new Error('Invalid or expired recovery token');
         (error as any).statusCode = 400;
         throw error;
       }
 
+      // Step 3: Token found but already used → 410 Gone (replay prevention)
       if (matchedToken.status === CART_RECOVERY_TOKEN_STATUS.USED || matchedToken.usedAt !== null) {
         const error = new Error('Token already used');
         (error as any).statusCode = 410;
+        throw error;
+      }
+
+      // Step 4: Token found but not PENDING (e.g. expired status) → invalid
+      if (matchedToken.status !== CART_RECOVERY_TOKEN_STATUS.PENDING) {
+        const error = new Error('Invalid or expired recovery token');
+        (error as any).statusCode = 400;
         throw error;
       }
 

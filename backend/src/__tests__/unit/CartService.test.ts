@@ -1,9 +1,9 @@
 /**
- * @fileoverview CartService Unit Tests — Table Lock Fix
- * @description Tests for the recoverCart() security fix: status PENDING filter in where clause
- *              to prevent table-wide row locking, and token validation logic.
- *              Pruebas para la corrección de recoverCart(): filtro status PENDING en where clause
- *              para prevenir bloqueo de todas las filas, y lógica de validación de tokens.
+ * @fileoverview CartService Unit Tests — Recovery Token Logic
+ * @description Tests for the recoverCart() method: two-phase token lookup (find by hash,
+ *              then check status) to correctly distinguish 400 (invalid) vs 410 (already used).
+ *              Pruebas para el método recoverCart(): búsqueda de token en dos fases (buscar por hash,
+ *              luego verificar estado) para distinguir correctamente 400 (inválido) vs 410 (ya usado).
  * @module __tests__/unit/CartService
  */
 
@@ -77,18 +77,18 @@ import { CART_RECOVERY_TOKEN_STATUS, CART_STATUS } from '../../types';
 import bcrypt from 'bcryptjs';
 import { Op } from 'sequelize';
 
-describe('CartService — Table Lock Fix (recoverCart)', () => {
+describe('CartService — Recovery Token Logic (recoverCart)', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   // ============================================
-  // recoverCart — status PENDING in where clause
+  // recoverCart — two-phase token lookup
   // ============================================
 
   describe('recoverCart()', () => {
-    it('should call CartRecoveryToken.findAll with status PENDING in where clause', async () => {
-      // Setup: findAll returns a matching token
+    it('should call CartRecoveryToken.findAll WITHOUT status filter to support 410 detection', async () => {
+      // Setup: findAll returns a matching PENDING token
       const mockToken = {
         id: 'token-1',
         cartId: 'cart-1',
@@ -114,16 +114,36 @@ describe('CartService — Table Lock Fix (recoverCart)', () => {
 
       await cartService.recoverCart('plain-token-123');
 
-      // CRITICAL ASSERTION: The where clause MUST include status: PENDING
-      expect(CartRecoveryToken.findAll).toHaveBeenCalledWith(
-        expect.objectContaining({
-          where: expect.objectContaining({
-            status: CART_RECOVERY_TOKEN_STATUS.PENDING,
-          }),
-          lock: 'UPDATE',
-          transaction: expect.anything(),
-        })
-      );
+      // CRITICAL ASSERTION: The where clause must NOT include status filter
+      // so that USED tokens are found and can trigger 410 instead of 400
+      const findAllArgs = (CartRecoveryToken.findAll as jest.Mock).mock.calls[0][0];
+      expect(findAllArgs.where).not.toHaveProperty('status');
+      expect(findAllArgs.where).toHaveProperty('expiresAt');
+      expect(findAllArgs.lock).toBe('UPDATE');
+      expect(findAllArgs.transaction).toBeDefined();
+    });
+
+    it('should return 410 when token is found but already USED (replay prevention)', async () => {
+      const mockUsedToken = {
+        id: 'token-1',
+        cartId: 'cart-1',
+        tokenHash: '$2a$12$hashed',
+        status: CART_RECOVERY_TOKEN_STATUS.USED,
+        usedAt: new Date(),
+        clickCount: 1,
+        update: jest.fn().mockResolvedValue(undefined),
+      };
+
+      (CartRecoveryToken.findAll as jest.Mock).mockResolvedValue([mockUsedToken]);
+      (bcrypt.compare as jest.Mock).mockResolvedValue(true);
+
+      await expect(cartService.recoverCart('used-token')).rejects.toThrow('Token already used');
+
+      try {
+        await cartService.recoverCart('used-token');
+      } catch (error: any) {
+        expect(error.statusCode).toBe(410);
+      }
     });
 
     it('should recover cart when token matches (bcrypt.compare → true)', async () => {
