@@ -29,5 +29,20 @@ export { GiftCardCreateForm, GiftCardCreateFormDefault } from './GiftCards';
 // Checkout
 export { GiftCardRedeem, GiftCardRedeemDefault } from './Checkout';
 
+// Email Builder
+export { EmailBuilder, EmailBuilderDefault, VariablePicker, PreviewPane } from './EmailBuilder';
+
+// Email Campaigns
+export {
+  CampaignDashboard,
+  CampaignDashboardDefault,
+  CampaignCreateForm,
+  CampaignCreateFormDefault,
+  CampaignMonitor,
+  CampaignMonitorDefault,
+  CampaignLogsTable,
+  CampaignLogsTableDefault,
+} from './EmailCampaigns';
+
 // Route Guards
 export { ProtectedRoute, AdminRoute, PublicRoute, PublicProfileRoute } from './routes';
