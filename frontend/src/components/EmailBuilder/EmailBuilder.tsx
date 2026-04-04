@@ -127,7 +127,7 @@ const TOOLBAR_ACTIONS: ToolbarAction[] = [
  */
 export function EmailBuilder({ initialData, onSave }: EmailBuilderProps) {
   const { t } = useTranslation();
-  const { createTemplate, isCreatingTemplate, templateError, clearErrors } = useEmailTemplates();
+  const { createTemplate, isCreatingTemplate, templateError } = useEmailTemplates();
 
   // Form state
   const [templateName, setTemplateName] = useState(initialData?.name ?? '');

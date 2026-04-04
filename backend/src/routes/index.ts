@@ -38,8 +38,8 @@ router.use('/carts', cartRoutes);
 import profilePublicRoutes from './profile-public.routes';
 router.use('/public/profile', profilePublicRoutes);
 
-router.use('/public', publicRoutes);
 router.use('/public/landing', landingPublicRoutes);
+router.use('/public', publicRoutes);
 
 /**
  * @swagger

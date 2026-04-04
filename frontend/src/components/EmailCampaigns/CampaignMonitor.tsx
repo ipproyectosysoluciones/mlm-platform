@@ -17,7 +17,6 @@ import {
   CheckCircle2,
   Loader2,
   RefreshCw,
-  Pause,
   Play,
   ArrowLeft,
   Users,

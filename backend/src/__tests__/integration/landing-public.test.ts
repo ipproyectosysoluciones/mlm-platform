@@ -15,6 +15,12 @@ describe('Public Landing Integration Tests', () => {
   let testProduct: Product;
 
   beforeEach(async () => {
+    // Create a test user with referral code PUSHTEST (needed by profile tests)
+    await createTestUser({
+      email: 'pushtest@test.mlm',
+      referralCode: 'PUSHTEST',
+    });
+
     // Create a test product for the tests
     testProduct = await Product.create({
       name: 'Premium Netflix Subscription',
