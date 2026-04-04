@@ -23,5 +23,11 @@ export { EmptyState, default as EmptyStateDefault } from './EmptyState';
 export { ErrorToast, ErrorToastContainer, default as ErrorToastDefault } from './ErrorToast';
 export { default as OfflineBanner } from './OfflineBanner';
 
+// Gift Cards
+export { GiftCardCreateForm, GiftCardCreateFormDefault } from './GiftCards';
+
+// Checkout
+export { GiftCardRedeem, GiftCardRedeemDefault } from './Checkout';
+
 // Route Guards
 export { ProtectedRoute, AdminRoute, PublicRoute, PublicProfileRoute } from './routes';
