@@ -359,8 +359,11 @@ export class CategoryService {
    * @returns {Promise<Category>} Category with associations
    */
   async getWithRelations(id: string): Promise<Category> {
-    const category = await Category.findByPk(id, {
-      where: { isActive: true },
+    // Use findOne with paranoid:false to find soft-deleted records,
+    // then manually filter by isActive so deleted categories return 404
+    const category = await Category.findOne({
+      where: { id, isActive: true },
+      paranoid: false,
       include: [
         { model: Category, as: 'parent', where: { isActive: true }, required: false },
         { model: Category, as: 'children', where: { isActive: true }, required: false },
