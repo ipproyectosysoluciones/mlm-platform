@@ -58,6 +58,8 @@ beforeAll(async () => {
     CampaignRecipient,
     EmailQueue,
     EmailCampaignLog,
+    Category,
+    InventoryMovement,
   } = await import('../models');
 
   importedModels = {
@@ -86,6 +88,8 @@ beforeAll(async () => {
     CampaignRecipient,
     EmailQueue,
     EmailCampaignLog,
+    Category,
+    InventoryMovement,
   };
 
   console.log('Models registered');
@@ -180,6 +184,8 @@ beforeEach(async () => {
     'wallet_transactions',
     'withdrawal_requests',
     'push_subscriptions',
+    'categories',
+    'inventory_movements',
   ];
 
   // Get dialect from sequelize
