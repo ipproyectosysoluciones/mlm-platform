@@ -1,0 +1,14 @@
+change: sprint3-backlog
+status: NOT_STARTED
+version: v1.11.0 (target)
+created: 2026-04-04
+branch: development
+
+priority_order:
+  - security-hardening  # MUST DO FIRST — CRITICAL/HIGH vulnerabilities
+  - tech-debt-cleanup   # Fix skipped tests, TS strict, Sentry issues
+  - marketplace         # New features
+  - products-generic
+  - delivery
+
+next_action: "/sdd-new sprint3-security-hardening"
