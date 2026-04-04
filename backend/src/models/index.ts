@@ -30,6 +30,9 @@ import { InventoryMovement } from './InventoryMovement';
 import { Vendor } from './Vendor';
 import { VendorOrder } from './VendorOrder';
 import { VendorPayout } from './VendorPayout';
+import { ShippingAddress } from './ShippingAddress';
+import { DeliveryProvider } from './DeliveryProvider';
+import { ShipmentTracking } from './ShipmentTracking';
 
 // User relationships
 User.hasMany(User, { as: 'children', foreignKey: 'sponsorId', sourceKey: 'id' });
@@ -324,6 +327,53 @@ VendorPayout.belongsTo(Vendor, { as: 'vendor', foreignKey: 'vendorId', targetKey
 Vendor.hasMany(Product, { as: 'products', foreignKey: 'vendorId', sourceKey: 'id' });
 Product.belongsTo(Vendor, { as: 'vendor', foreignKey: 'vendorId', targetKey: 'id' });
 
+// ============================================
+// DELIVERY INTEGRATION — Shipping & Tracking (#26)
+// ============================================
+
+// User - ShippingAddress
+User.hasMany(ShippingAddress, { foreignKey: 'userId', sourceKey: 'id' });
+ShippingAddress.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
+
+// Order - ShipmentTracking
+Order.hasMany(ShipmentTracking, {
+  as: 'shipmentTrackings',
+  foreignKey: 'orderId',
+  sourceKey: 'id',
+});
+ShipmentTracking.belongsTo(Order, { as: 'order', foreignKey: 'orderId', targetKey: 'id' });
+
+// VendorOrder - ShipmentTracking
+VendorOrder.hasMany(ShipmentTracking, {
+  as: 'shipmentTrackings',
+  foreignKey: 'vendorOrderId',
+  sourceKey: 'id',
+});
+ShipmentTracking.belongsTo(VendorOrder, {
+  as: 'vendorOrder',
+  foreignKey: 'vendorOrderId',
+  targetKey: 'id',
+});
+
+// DeliveryProvider - ShipmentTracking
+DeliveryProvider.hasMany(ShipmentTracking, {
+  as: 'shipmentTrackings',
+  foreignKey: 'providerId',
+  sourceKey: 'id',
+});
+ShipmentTracking.belongsTo(DeliveryProvider, {
+  as: 'provider',
+  foreignKey: 'providerId',
+  targetKey: 'id',
+});
+
+// Order - ShippingAddress
+Order.belongsTo(ShippingAddress, {
+  as: 'shippingAddress',
+  foreignKey: 'shippingAddressId',
+  targetKey: 'id',
+});
+
 export {
   sequelize,
   User,
@@ -358,6 +408,9 @@ export {
   Vendor,
   VendorOrder,
   VendorPayout,
+  ShippingAddress,
+  DeliveryProvider,
+  ShipmentTracking,
 };
 
 export function initModels(): void {
