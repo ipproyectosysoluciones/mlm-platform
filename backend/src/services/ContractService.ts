@@ -19,6 +19,7 @@ import type {
   ContractStatus,
 } from '../types';
 import { sequelize } from '../config/database';
+import type { Request } from 'express';
 
 export interface CreateTemplateData {
   type: ContractType;
@@ -254,7 +255,7 @@ export class ContractService {
   async acceptContract(
     userId: string,
     templateId: string,
-    req: Express.Request
+    req: Request
   ): Promise<AffiliateContractAttributes> {
     // Get template to compute hash at acceptance time
     const template = await this.getTemplate(templateId);
@@ -332,7 +333,7 @@ export class ContractService {
   async declineContract(
     userId: string,
     templateId: string,
-    req: Express.Request
+    req: Request
   ): Promise<AffiliateContractAttributes> {
     // Validate template exists
     await this.getTemplate(templateId);

@@ -2,6 +2,8 @@
 
 Plataforma MLM (Multi-Level Marketing) con sistema de afiliaciones binarias, comisiones por niveles y visualización de árbol genealógico.
 
+**Versión actual: v1.11.0** — Sprint 3 completado (2026-04-04)
+
 ## 🚀 Características / Features
 
 - **Sistema de Afiliaciones Binarias** - Red de usuarios con izquierda/derecha
@@ -13,37 +15,42 @@ Plataforma MLM (Multi-Level Marketing) con sistema de afiliaciones binarias, com
 - **Landing Pages** - Creador de páginas de captura
 - **Panel de Administración** - Gestión completa de usuarios y comisiones
 - **API REST Documentada** - OpenAPI/Swagger bilingüe (ES/EN)
-- **Tests Automatizados** - Unit, Integration y E2E con Playwright
+- **Tests Automatizados** - 307 tests (Unit + Integration + E2E con Playwright)
 - **i18n** - Interfaz bilingüe (Español/Inglés)
 - **Wallet Digital** - Billetera digital con retiros y transacciones
 - **2FA (TOTP)** - Two-Factor Authentication con códigos de recuperación
 - **Gift Cards** — Creación, validación y redención de tarjetas regalo con QR
 - **Abandoned Cart Recovery** — Detección automática, emails de recuperación con tokens seguros
 - **Email Automation** — Constructor WYSIWYG, campañas programadas, integración Brevo con fallback SMTP
+- **Generic Products + Inventory** — Catálogo genérico (digital/physical/service/membership), SKU, stock tracking, categorías jerárquicas
+- **Marketplace Multi-vendor** — Vendors con dashboard propio, split de comisiones 3-way (plataforma/vendor/afiliado)
+- **Delivery Integration** — Shipping addresses, delivery providers, shipment tracking con webhooks
+- **Affiliate Contracts MVP** — Templates versionados, aceptación con IP/userAgent/hash, admin CRUD
 
 ## 📊 Estado de Implementación / Implementation Status
 
 ### ✅ Cambios Completados
 
-| Cambio                            | Descripción                                  | Estado       | Fecha      |
-| --------------------------------- | -------------------------------------------- | ------------ | ---------- |
-| streaming-subscriptions-ecommerce | Sistema de suscripciones y e-commerce        | ✅ Archivado | 2026-03-27 |
-| wallet-digital                    | Billetera digital con retiros                | ✅ Archivado | 2026-03-27 |
-| sdd-i18n-bilingual                | Sistema de internacionalización ES/EN        | ✅ Archivado | 2026-03-27 |
-| phase-3-visual-tree               | Visual Tree UI con React Flow                | ✅ Archivado | 2026-03-27 |
-| sdd-horizontal-navbar             | Layout de navbar horizontal                  | ✅ Archivado | 2026-03-27 |
-| es-modules-migration              | Migración a ES Modules                       | ✅ Completo  | 2026-03-28 |
-| postgresql-support                | Soporte para PostgreSQL + Docker             | ✅ Completo  | 2026-03-28 |
-| build-optimization                | Build optimizado (3.4MB → 1.2MB)             | ✅ Completo  | 2026-03-28 |
-| github-templates                  | CODE_OF_CONDUCT, Issues, PR templates        | ✅ Completo  | 2026-03-28 |
-| 2fa-totp                          | Two-Factor Authentication con TOTP           | ✅ Archivado | 2026-03-29 |
-| playwright-visual-testing         | Scripts E2E con modo visual                  | ✅ Archivado | 2026-03-29 |
-| frontend-2fa-ui                   | UI de React para 2FA con QR code             | ✅ Completo  | 2026-03-30 |
-| frontend-refactoring              | Modularización de componentes frontend       | ✅ Completo  | 2026-03-30 |
-| backend-refactoring               | Controllers modulares (auth, crm, etc)       | ✅ Completo  | 2026-04-01 |
-| pwa-offline-pages                 | Páginas 404 y Offline                        | ✅ Completo  | 2026-03-31 |
-| pwa-improvements                  | Iconos multi-size, OfflineBanner             | ✅ Completo  | 2026-03-31 |
-| sprint2-v1.10.0                   | Gift Cards, Abandoned Cart, Email Automation | ✅ Completo  | 2026-04-04 |
+| Cambio                            | Descripción                                          | Estado       | Fecha      |
+| --------------------------------- | ---------------------------------------------------- | ------------ | ---------- |
+| streaming-subscriptions-ecommerce | Sistema de suscripciones y e-commerce                | ✅ Archivado | 2026-03-27 |
+| wallet-digital                    | Billetera digital con retiros                        | ✅ Archivado | 2026-03-27 |
+| sdd-i18n-bilingual                | Sistema de internacionalización ES/EN                | ✅ Archivado | 2026-03-27 |
+| phase-3-visual-tree               | Visual Tree UI con React Flow                        | ✅ Archivado | 2026-03-27 |
+| sdd-horizontal-navbar             | Layout de navbar horizontal                          | ✅ Archivado | 2026-03-27 |
+| es-modules-migration              | Migración a ES Modules                               | ✅ Completo  | 2026-03-28 |
+| postgresql-support                | Soporte para PostgreSQL + Docker                     | ✅ Completo  | 2026-03-28 |
+| build-optimization                | Build optimizado (3.4MB → 1.2MB)                     | ✅ Completo  | 2026-03-28 |
+| github-templates                  | CODE_OF_CONDUCT, Issues, PR templates                | ✅ Completo  | 2026-03-28 |
+| 2fa-totp                          | Two-Factor Authentication con TOTP                   | ✅ Archivado | 2026-03-29 |
+| playwright-visual-testing         | Scripts E2E con modo visual                          | ✅ Archivado | 2026-03-29 |
+| frontend-2fa-ui                   | UI de React para 2FA con QR code                     | ✅ Completo  | 2026-03-30 |
+| frontend-refactoring              | Modularización de componentes frontend               | ✅ Completo  | 2026-03-30 |
+| backend-refactoring               | Controllers modulares (auth, crm, etc)               | ✅ Completo  | 2026-04-01 |
+| pwa-offline-pages                 | Páginas 404 y Offline                                | ✅ Completo  | 2026-03-31 |
+| pwa-improvements                  | Iconos multi-size, OfflineBanner                     | ✅ Completo  | 2026-03-31 |
+| sprint2-v1.10.0                   | Gift Cards, Abandoned Cart, Email Automation         | ✅ Completo  | 2026-04-04 |
+| sprint3-v1.11.0                   | Security, Products, Marketplace, Delivery, Contracts | ✅ Completo  | 2026-04-04 |
 
 ### 🚧 Cambios en Progreso
 
@@ -60,7 +67,7 @@ Plataforma MLM (Multi-Level Marketing) con sistema de afiliaciones binarias, com
 ## 📋 Requisitos / Requirements
 
 - Node.js 24+ (verificar con `node -v`)
-- MySQL 8.0+ o PostgreSQL 16+ (soporta ambos)
+- PostgreSQL 16+ (base de datos principal)
 - Redis 7+ (opcional)
 - Docker y Docker Compose (para desarrollo)
 
@@ -91,16 +98,15 @@ cd backend
 docker compose up -d
 
 # Servicios disponibles:
-# - MySQL (puerto 3306)
-# - PostgreSQL (puertos 5434, 5435)
+# - PostgreSQL dev (puerto 5434)
+# - PostgreSQL test (puerto 5435)
 # - Redis (puerto 6379)
-# - phpMyAdmin (puerto 8080)
 ```
 
-### Usar PostgreSQL en lugar de MySQL
+### Configurar base de datos
 
 ```bash
-# Configurar variables de entorno
+# Variables de entorno (por defecto usa PostgreSQL)
 export DB_DIALECT=postgres
 export DB_PORT=5434  # para desarrollo
 export TEST_DB_PORT=5435  # para tests
@@ -112,12 +118,12 @@ export TEST_DB_PORT=5435  # para tests
 
 | Variable                             | Descripción                              | Default              |
 | ------------------------------------ | ---------------------------------------- | -------------------- |
-| `DB_DIALECT`                         | Dialecto de DB (mysql/postgres)          | mysql                |
-| `DB_HOST`                            | Host de MySQL/PostgreSQL                 | localhost            |
-| `DB_PORT`                            | Puerto de MySQL/PostgreSQL               | 3306/5432            |
+| `DB_DIALECT`                         | Dialecto de DB (postgres)                | postgres             |
+| `DB_HOST`                            | Host de PostgreSQL                       | localhost            |
+| `DB_PORT`                            | Puerto de PostgreSQL                     | 5434                 |
 | `DB_NAME`                            | Nombre de la base de datos               | mlm_db               |
-| `DB_USER`                            | Usuario de MySQL/PostgreSQL              | root/mlm             |
-| `DB_PASSWORD`                        | Contraseña de MySQL/PostgreSQL           | -                    |
+| `DB_USER`                            | Usuario de PostgreSQL                    | mlm                  |
+| `DB_PASSWORD`                        | Contraseña de PostgreSQL                 | -                    |
 | `JWT_SECRET`                         | Secreto para JWT                         | -                    |
 | `REDIS_ENABLED`                      | Habilitar Redis                          | false                |
 | `REDIS_HOST`                         | Host de Redis                            | localhost            |
@@ -201,30 +207,44 @@ Ver [docs/INDEX.md](docs/INDEX.md) para el directorio completo de documentación
 
 ### API Endpoints Principales
 
-| Método | Endpoint                             | Descripción                         |
-| ------ | ------------------------------------ | ----------------------------------- |
-| POST   | `/api/auth/register`                 | Registrar usuario                   |
-| POST   | `/api/auth/login`                    | Iniciar sesión                      |
-| GET    | `/api/auth/me`                       | Usuario actual                      |
-| GET    | `/api/dashboard`                     | Dashboard del usuario               |
-| GET    | `/api/users/me/tree`                 | Árbol binario                       |
-| GET    | `/api/commissions`                   | Lista de comisiones                 |
-| GET    | `/api/admin/stats`                   | Estadísticas globales (admin)       |
-| GET    | `/api/admin/users`                   | Lista de usuarios (admin)           |
-| POST   | `/api/v1/gift-cards`                 | Crear tarjeta regalo (admin)        |
-| GET    | `/api/v1/gift-cards/{id}/validate`   | Validar tarjeta regalo              |
-| POST   | `/api/v1/gift-cards/{id}/redeem`     | Redimir tarjeta regalo              |
-| GET    | `/api/v1/gift-cards`                 | Listar tarjetas (admin)             |
-| GET    | `/api/v1/carts/me`                   | Obtener carrito actual              |
-| POST   | `/api/v1/carts/me/items`             | Agregar item al carrito             |
-| GET    | `/api/v1/carts/recover/{token}`      | Recuperar carrito abandonado        |
-| GET    | `/api/v1/carts/abandoned`            | Listar carritos abandonados (admin) |
-| POST   | `/api/v1/email-templates`            | Crear template de email             |
-| POST   | `/api/v1/email-campaigns`            | Crear campaña de email              |
-| POST   | `/api/v1/email-campaigns/{id}/send`  | Enviar campaña                      |
-| POST   | `/api/v1/email-campaigns/{id}/pause` | Pausar campaña                      |
-| GET    | `/api/v1/email-campaigns/{id}/logs`  | Ver logs de campaña                 |
-| GET    | `/api/v1/email-campaigns`            | Listar campañas                     |
+| Método | Endpoint                                 | Descripción                               |
+| ------ | ---------------------------------------- | ----------------------------------------- |
+| POST   | `/api/auth/register`                     | Registrar usuario                         |
+| POST   | `/api/auth/login`                        | Iniciar sesión                            |
+| GET    | `/api/auth/me`                           | Usuario actual                            |
+| GET    | `/api/dashboard`                         | Dashboard del usuario                     |
+| GET    | `/api/users/me/tree`                     | Árbol binario                             |
+| GET    | `/api/commissions`                       | Lista de comisiones                       |
+| GET    | `/api/admin/stats`                       | Estadísticas globales (admin)             |
+| GET    | `/api/admin/users`                       | Lista de usuarios (admin)                 |
+| POST   | `/api/v1/gift-cards`                     | Crear tarjeta regalo (admin)              |
+| GET    | `/api/v1/gift-cards/{id}/validate`       | Validar tarjeta regalo                    |
+| POST   | `/api/v1/gift-cards/{id}/redeem`         | Redimir tarjeta regalo                    |
+| GET    | `/api/v1/gift-cards`                     | Listar tarjetas (admin)                   |
+| GET    | `/api/v1/carts/me`                       | Obtener carrito actual                    |
+| POST   | `/api/v1/carts/me/items`                 | Agregar item al carrito                   |
+| GET    | `/api/v1/carts/recover/{token}`          | Recuperar carrito abandonado              |
+| GET    | `/api/v1/carts/abandoned`                | Listar carritos abandonados (admin)       |
+| POST   | `/api/v1/email-templates`                | Crear template de email                   |
+| POST   | `/api/v1/email-campaigns`                | Crear campaña de email                    |
+| POST   | `/api/v1/email-campaigns/{id}/send`      | Enviar campaña                            |
+| POST   | `/api/v1/email-campaigns/{id}/pause`     | Pausar campaña                            |
+| GET    | `/api/v1/email-campaigns/{id}/logs`      | Ver logs de campaña                       |
+| GET    | `/api/v1/email-campaigns`                | Listar campañas                           |
+| GET    | `/api/products`                          | Listar productos activos (público)        |
+| GET    | `/api/products/:id`                      | Detalle de producto                       |
+| GET    | `/api/categories`                        | Listar categorías activas                 |
+| GET    | `/api/addresses`                         | Listar direcciones de envío               |
+| POST   | `/api/addresses`                         | Crear dirección de envío                  |
+| PATCH  | `/api/addresses/:id/default`             | Marcar dirección como predeterminada      |
+| PUT    | `/api/orders/:id/shipping`               | Asignar envío a una orden                 |
+| GET    | `/api/orders/:id/tracking`               | Ver tracking de una orden                 |
+| GET    | `/api/contracts`                         | Listar contratos con estado de aceptación |
+| POST   | `/api/contracts/:id/accept`              | Aceptar contrato (guarda IP/hash)         |
+| GET    | `/api/vendor/dashboard`                  | Dashboard del vendor                      |
+| GET    | `/api/admin/products`                    | Listar todos los productos (admin)        |
+| PATCH  | `/api/admin/vendors/:id/commission-rate` | Actualizar comisión de vendor             |
+| GET    | `/api/admin/contracts`                   | Gestión de contratos (admin)              |
 
 ## 📁 Estructura del Proyecto / Project Structure
 
@@ -247,7 +267,15 @@ MLM/
 │   │   ├── controllers/       # Express controllers
 │   │   │   ├── GiftCardController.ts
 │   │   │   ├── CartController.ts
-│   │   │   └── EmailCampaignController.ts
+│   │   │   ├── EmailCampaignController.ts
+│   │   │   ├── CategoryController.ts
+│   │   │   ├── ProductController.ts
+│   │   │   ├── AdminCategoryController.ts
+│   │   │   ├── AdminProductController.ts
+│   │   │   ├── VendorController.ts
+│   │   │   ├── AdminVendorController.ts
+│   │   │   ├── ContractController.ts
+│   │   │   └── AdminContractController.ts
 │   │   ├── services/          # Business logic
 │   │   │   ├── GiftCardService.ts
 │   │   │   ├── QRService.ts
@@ -256,7 +284,8 @@ MLM/
 │   │   │   ├── EmailCampaignService.ts
 │   │   │   ├── BrevoEmailService.ts
 │   │   │   ├── EmailQueueService.ts
-│   │   │   └── SchedulerService.ts
+│   │   │   ├── SchedulerService.ts
+│   │   │   └── ContractService.ts
 │   │   ├── models/            # Sequelize models
 │   │   ├── routes/            # API routes
 │   │   └── middleware/        # Auth, rate limiting

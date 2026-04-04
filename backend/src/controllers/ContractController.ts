@@ -36,6 +36,13 @@ const contractService = new ContractService();
  *                   items:
  *                     $ref: '#/components/schemas/Contract'
  */
+/**
+ * @description Get all active contracts with the user's acceptance status
+ * @description_es Obtiene todos los contratos activos con el estado de aceptación del usuario
+ * @param {AuthenticatedRequest} req - Authenticated Express request / Request autenticado de Express
+ * @param {Response} res - Express response / Respuesta de Express
+ * @returns {Promise<void>} JSON list of contracts / Lista JSON de contratos
+ */
 export async function getContracts(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
     const userId = req.user!.id;
@@ -85,6 +92,13 @@ export async function getContracts(req: AuthenticatedRequest, res: Response): Pr
  *                   type: boolean
  *                 data:
  *                   $ref: '#/components/schemas/Contract'
+ */
+/**
+ * @description Get a specific contract template by ID
+ * @description_es Obtiene una plantilla de contrato específica por ID
+ * @param {Request} req - Express request with `id` param / Request de Express con parámetro `id`
+ * @param {Response} res - Express response / Respuesta de Express
+ * @returns {Promise<void>} JSON contract template / Plantilla de contrato en JSON
  */
 export async function getContract(req: Request, res: Response): Promise<void> {
   try {
@@ -148,6 +162,13 @@ export async function getContract(req: Request, res: Response): Promise<void> {
  *                   type: string
  *       400:
  *         description: Contract already accepted
+ */
+/**
+ * @description Accept a contract, recording IP, userAgent, and content hash for legal compliance
+ * @description_es Acepta un contrato registrando IP, userAgent y hash del contenido para cumplimiento legal
+ * @param {AuthenticatedRequest} req - Authenticated Express request with `id` param / Request autenticado con parámetro `id`
+ * @param {Response} res - Express response / Respuesta de Express
+ * @returns {Promise<void>} JSON acceptance record / Registro de aceptación en JSON
  */
 export async function acceptContract(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
@@ -214,6 +235,13 @@ export async function acceptContract(req: AuthenticatedRequest, res: Response): 
  *     responses:
  *       200:
  *         description: Contract declined successfully
+ */
+/**
+ * @description Decline a contract, recording the user's decision
+ * @description_es Rechaza un contrato registrando la decisión del usuario
+ * @param {AuthenticatedRequest} req - Authenticated Express request with `id` param / Request autenticado con parámetro `id`
+ * @param {Response} res - Express response / Respuesta de Express
+ * @returns {Promise<void>} JSON declination record / Registro de rechazo en JSON
  */
 export async function declineContract(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {

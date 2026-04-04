@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "MLM Platform API",
-    "description": "Complete API collection for MLM Binary Affiliations Platform - v1.10.0 (Sprint 2: Gift Cards, Carts, Email Campaigns)",
+    "description": "Complete API collection for MLM Binary Affiliations Platform - v1.11.0 (Sprint 3: Categories, Products, Inventory, Vendors, Contracts, Shipping)",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -1441,6 +1441,939 @@
               "raw": "{{baseUrl}}/health",
               "host": ["{{baseUrl}}"],
               "path": ["health"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "List Active Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["categories"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Admin: List All Categories",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "categories"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Admin: Create Category",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Electronics\",\n  \"description\": \"Electronic products\",\n  \"slug\": \"electronics\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "categories"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Admin: Update Category",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Name\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/categories/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "categories", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Admin: Delete Category",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/categories/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "categories", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "List Active Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["products"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Product Detail",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Admin: List All Products",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "products"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Admin: Create Product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Sample Product\",\n  \"sku\": \"PROD-001\",\n  \"price\": 29.99,\n  \"categoryId\": \"{{categoryId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "products"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Admin: Update Product",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Product\",\n  \"price\": 24.99\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/products/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "products", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Admin: Delete Product",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/products/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "products", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Inventory",
+      "item": [
+        {
+          "name": "Get Product Inventory",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/products/:id/inventory",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "products", ":id", "inventory"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Inventory Stock",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 100,\n  \"minStock\": 10\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/products/:id/inventory",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "products", ":id", "inventory"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Inventory Movements",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/products/:id/inventory/movements",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "products", ":id", "inventory", "movements"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Record Inventory Movement",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"IN\",\n  \"quantity\": 50,\n  \"reason\": \"Purchase order received\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/products/:id/inventory/movements",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "products", ":id", "inventory", "movements"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Vendors",
+      "item": [
+        {
+          "name": "Vendor Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{vendorToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/vendor/dashboard",
+              "host": ["{{baseUrl}}"],
+              "path": ["vendor", "dashboard"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Vendor Products",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/vendor/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["vendor", "products"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin Vendors",
+      "item": [
+        {
+          "name": "List All Vendors",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/vendors",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "vendors"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Vendor Detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/vendors/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "vendors", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Vendor Commission Rate",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"commissionRate\": 15.5\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/vendors/:id/commission-rate",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "vendors", ":id", "commission-rate"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Contracts",
+      "item": [
+        {
+          "name": "List My Contracts",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/contracts",
+              "host": ["{{baseUrl}}"],
+              "path": ["contracts"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Contract Template",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/contracts/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["contracts", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Accept Contract",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/contracts/:id/accept",
+              "host": ["{{baseUrl}}"],
+              "path": ["contracts", ":id", "accept"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Decline Contract",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/contracts/:id/decline",
+              "host": ["{{baseUrl}}"],
+              "path": ["contracts", ":id", "decline"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin Contracts",
+      "item": [
+        {
+          "name": "List All Contract Templates",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/contracts",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "contracts"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Contract Template",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"AFFILIATE_AGREEMENT\",\n  \"version\": \"1.0.0\",\n  \"title\": \"Affiliate Agreement\",\n  \"content\": \"Contract terms...\",\n  \"effectiveFrom\": \"2026-04-04\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/contracts",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "contracts"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Contract Template",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Title\",\n  \"content\": \"New terms...\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/contracts/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "contracts", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Contract Acceptances",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/contracts/users/:userId",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "contracts", "users", ":userId"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Revoke User Contract",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/contracts/:id/revoke/:userId",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "contracts", ":id", "revoke", ":userId"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                },
+                {
+                  "key": "userId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Shipping & Addresses",
+      "item": [
+        {
+          "name": "List My Addresses",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/addresses",
+              "host": ["{{baseUrl}}"],
+              "path": ["addresses"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Shipping Address",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Home\",\n  \"street\": \"123 Main St\",\n  \"city\": \"Buenos Aires\",\n  \"state\": \"BA\",\n  \"postalCode\": \"1001\",\n  \"country\": \"AR\",\n  \"phone\": \"+54911234567\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addresses",
+              "host": ["{{baseUrl}}"],
+              "path": ["addresses"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Address",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/addresses/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["addresses", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Address",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"street\": \"456 New St\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/addresses/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["addresses", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Address",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/addresses/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["addresses", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Set Default Address",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/addresses/:id/default",
+              "host": ["{{baseUrl}}"],
+              "path": ["addresses", ":id", "default"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Assign Shipping to Order",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"providerId\": \"{{providerId}}\",\n  \"addressId\": \"{{addressId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/orders/:id/shipping",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders", ":id", "shipping"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Order Tracking",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orders/:id/tracking",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders", ":id", "tracking"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
             }
           },
           "response": []
