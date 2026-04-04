@@ -6,6 +6,7 @@
 
 import axios from 'axios';
 import { config } from '../config/env.js';
+import { AppError } from '../middleware/error.middleware.js';
 
 const PAYPAL_API_BASE =
   config.paypal.mode === 'sandbox'
@@ -18,11 +19,15 @@ const PAYPAL_API_BASE =
  * Validates: PayPal order IDs, capture IDs, etc.
  *
  * Valida formato de identificador PayPal para prevenir SSRF
- * @throws {Error} if the ID contains invalid characters
+ * @throws {AppError} if the ID contains invalid characters
  */
 function validatePayPalId(id: string, label: string): void {
   if (!id || !/^[A-Za-z0-9_-]+$/.test(id)) {
-    throw new Error(`Invalid ${label}: must be alphanumeric (got "${id}")`);
+    throw new AppError(
+      400,
+      'INVALID_PAYPAL_ID',
+      `Invalid ${label}: must be alphanumeric (got "${id}")`
+    );
   }
 }
 
@@ -61,6 +66,25 @@ class PayPalService {
   private tokenExpiry: number = 0;
 
   /**
+   * Build a safe PayPal API URL using the URL constructor.
+   * Each path segment is validated individually (alphanumeric + hyphen + underscore only)
+   * to prevent SSRF via path traversal or injection.
+   *
+   * Construye una URL segura de la API de PayPal usando el constructor URL.
+   * @throws {AppError} if any segment contains invalid characters
+   */
+  private buildPayPalUrl(...segments: string[]): string {
+    const base = new URL(PAYPAL_API_BASE);
+    for (const segment of segments) {
+      if (!/^[A-Za-z0-9_-]+$/.test(segment)) {
+        throw new AppError(400, 'INVALID_PAYPAL_ID', `Invalid PayPal identifier: ${segment}`);
+      }
+    }
+    base.pathname = ['', ...base.pathname.split('/').filter(Boolean), ...segments].join('/');
+    return base.toString();
+  }
+
+  /**
    * Get OAuth token from PayPal
    */
   private async getAccessToken(): Promise<string> {
@@ -77,16 +101,13 @@ class PayPalService {
 
     const auth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
 
-    const response = await axios.post(
-      `${PAYPAL_API_BASE}/v1/oauth2/token`,
-      'grant_type=client_credentials',
-      {
-        headers: {
-          Authorization: `Basic ${auth}`,
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      }
-    );
+    const tokenUrl = new URL('/v1/oauth2/token', PAYPAL_API_BASE);
+    const response = await axios.post(tokenUrl.toString(), 'grant_type=client_credentials', {
+      headers: {
+        Authorization: `Basic ${auth}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
 
     this.accessToken = response.data.access_token;
     // Expire token 5 minutes before actual expiry
@@ -102,8 +123,9 @@ class PayPalService {
   async createOrder(request: CreateOrderRequest): Promise<PayPalOrder> {
     const token = await this.getAccessToken();
 
+    const createOrderUrl = new URL('/v2/checkout/orders', PAYPAL_API_BASE);
     const response = await axios.post(
-      `${PAYPAL_API_BASE}/v2/checkout/orders`,
+      createOrderUrl.toString(),
       {
         intent: 'CAPTURE',
         purchase_units: [
@@ -152,8 +174,9 @@ class PayPalService {
     validatePayPalId(request.orderId, 'PayPal order ID');
     const token = await this.getAccessToken();
 
+    const captureUrl = this.buildPayPalUrl('v2', 'checkout', 'orders', request.orderId, 'capture');
     const response = await axios.post(
-      `${PAYPAL_API_BASE}/v2/checkout/orders/${request.orderId}/capture`,
+      captureUrl,
       {},
       {
         headers: {
@@ -183,7 +206,8 @@ class PayPalService {
       };
     }
 
-    await axios.post(`${PAYPAL_API_BASE}/v2/payments/captures/${captureId}/refund`, refundData, {
+    const refundUrl = this.buildPayPalUrl('v2', 'payments', 'captures', captureId, 'refund');
+    await axios.post(refundUrl, refundData, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
@@ -199,7 +223,8 @@ class PayPalService {
     validatePayPalId(orderId, 'PayPal order ID');
     const token = await this.getAccessToken();
 
-    const response = await axios.get(`${PAYPAL_API_BASE}/v2/checkout/orders/${orderId}`, {
+    const orderUrl = this.buildPayPalUrl('v2', 'checkout', 'orders', orderId);
+    const response = await axios.get(orderUrl, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

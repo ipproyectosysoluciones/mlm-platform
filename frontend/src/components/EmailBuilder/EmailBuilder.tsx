@@ -10,6 +10,7 @@
 
 import { useState, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import DOMPurify from 'dompurify';
 import {
   Save,
   Loader2,
@@ -116,6 +117,16 @@ const TOOLBAR_ACTIONS: ToolbarAction[] = [
   { icon: Link, label: 'Link', command: 'createLink' },
   { icon: Image, label: 'Image', command: 'insertImage' },
 ];
+
+// ============================================
+// Sanitization / Sanitización
+// ============================================
+
+/**
+ * Sanitize HTML to prevent DOM XSS attacks
+ * Sanitizar HTML para prevenir ataques DOM XSS
+ */
+const sanitizeHtml = (html: string): string => DOMPurify.sanitize(html);
 
 // ============================================
 // Component / Componente
@@ -425,7 +436,7 @@ export function EmailBuilder({ initialData, onSave }: EmailBuilderProps) {
                 )}
                 onInput={syncWysiwygContent}
                 onBlur={syncWysiwygContent}
-                dangerouslySetInnerHTML={{ __html: htmlContent }}
+                dangerouslySetInnerHTML={{ __html: sanitizeHtml(htmlContent) }}
                 data-testid="wysiwyg-editor"
               />
             ) : (

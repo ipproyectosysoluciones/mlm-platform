@@ -762,6 +762,85 @@ describe('EmailCampaignService', () => {
   });
 
   // ============================================
+  // TASK P0-06: 0-recipient guard in sendCampaign
+  // ============================================
+
+  describe('sendCampaign() — 0-recipient guard', () => {
+    it('should mark campaign as COMPLETED with recipientCount=0 when no recipients match', async () => {
+      const mockCampaign = {
+        id: 'camp-empty',
+        status: EMAIL_CAMPAIGN_STATUS.DRAFT,
+        emailTemplateId: 'tpl-uuid',
+        recipientSegment: null,
+        update: jest.fn().mockResolvedValue(undefined),
+      };
+      const mockTemplate = {
+        id: 'tpl-uuid',
+        htmlContent: '<p>Hi {{firstName}}</p>',
+        subjectLine: 'Hello {{firstName}}',
+      };
+
+      (EmailCampaign.findByPk as jest.Mock).mockResolvedValue(mockCampaign);
+      (EmailTemplate.findByPk as jest.Mock).mockResolvedValue(mockTemplate);
+      // 0 recipients — empty array
+      (User.findAll as jest.Mock).mockResolvedValue([]);
+      (EmailCampaignLog.create as jest.Mock).mockResolvedValue({});
+
+      await emailCampaignService.sendCampaign('camp-empty');
+
+      // Campaign should be marked COMPLETED with recipientCount = 0
+      expect(mockCampaign.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          status: EMAIL_CAMPAIGN_STATUS.COMPLETED,
+          recipientCount: 0,
+          completedAt: expect.any(Date),
+        }),
+        expect.objectContaining({ transaction: expect.anything() })
+      );
+
+      // Should NOT create recipients or queue items
+      expect(CampaignRecipient.bulkCreate).not.toHaveBeenCalled();
+      expect(EmailQueue.bulkCreate).not.toHaveBeenCalled();
+    });
+
+    it('should create a log entry with eventType completed_no_recipients when 0 recipients', async () => {
+      const mockCampaign = {
+        id: 'camp-no-recips',
+        status: EMAIL_CAMPAIGN_STATUS.DRAFT,
+        emailTemplateId: 'tpl-uuid',
+        recipientSegment: { status: 'premium' },
+        update: jest.fn().mockResolvedValue(undefined),
+      };
+      const mockTemplate = {
+        id: 'tpl-uuid',
+        htmlContent: '<p>Hello</p>',
+        subjectLine: 'Promo',
+      };
+
+      (EmailCampaign.findByPk as jest.Mock).mockResolvedValue(mockCampaign);
+      (EmailTemplate.findByPk as jest.Mock).mockResolvedValue(mockTemplate);
+      (User.findAll as jest.Mock).mockResolvedValue([]);
+      (EmailCampaignLog.create as jest.Mock).mockResolvedValue({});
+
+      await emailCampaignService.sendCampaign('camp-no-recips');
+
+      // Verify log entry with correct eventType
+      expect(EmailCampaignLog.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          campaignId: 'camp-no-recips',
+          eventType: 'completed_no_recipients',
+          eventTimestamp: expect.any(Date),
+          details: expect.objectContaining({
+            recipientCount: 0,
+            reason: 'No recipients matched segment',
+          }),
+        }),
+        expect.objectContaining({ transaction: expect.anything() })
+      );
+    });
+  });
+
+  // ============================================
   // SINGLETON EXPORT
   // ============================================
 

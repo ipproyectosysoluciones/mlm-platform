@@ -544,6 +544,7 @@ export class CartService {
     return await sequelize.transaction(async (t) => {
       const tokens = await CartRecoveryToken.findAll({
         where: {
+          status: CART_RECOVERY_TOKEN_STATUS.PENDING,
           expiresAt: { [Op.gt]: new Date() },
         },
         transaction: t,
