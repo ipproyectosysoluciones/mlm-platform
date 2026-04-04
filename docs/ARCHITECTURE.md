@@ -6,7 +6,7 @@
 
 La plataforma MLM está construida con una arquitectura de API RESTful, separando claramente el backend (Node.js + Express + TypeScript + Sequelize + PostgreSQL) del frontend (React + Vite + TypeScript + Tailwind CSS).
 
-**Estado del Proyecto**: MVP COMPLETADO ✅
+**Estado del Proyecto**: v1.11.0 — Sprint 3 Completado ✅
 
 **Características Implementadas**:
 
@@ -24,7 +24,12 @@ La plataforma MLM está construida con una arquitectura de API RESTful, separand
 - E-commerce Streaming (productos, órdenes, suscripciones)
 - Wallet (balance, depósitos, retiros)
 - Conversión de moneda (API Frankfurter)
-- 195 tests automatizados
+- **Security Hardening**: SSRF protection, XSS sanitization, pino-http logging, Docker hardening
+- **Generic Products + Inventory**: Category, Product, Inventory con stock tracking
+- **Marketplace Multi-vendor**: Vendor, VendorProduct, VendorOrder, split de comisiones 3-way
+- **Delivery Integration**: ShippingAddress, DeliveryProvider, ShipmentTracking
+- **Affiliate Contracts MVP**: ContractTemplate, AffiliateContract con versionado y hash
+- 307 tests automatizados
 
 ```map
 ┌─────────────────────────────────────────────────────────────┐
@@ -59,7 +64,7 @@ La plataforma MLM está construida con una arquitectura de API RESTful, separand
 │                              ▼                               │
 │   ┌─────────────────────────────────────────────────────┐   │
 │   │                    DATABASE                           │   │
-│   │              MySQL 8.0 + Sequelize ORM                 │   │
+│   │              PostgreSQL 16 + Sequelize ORM              │   │
 │   └─────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -77,33 +82,47 @@ backend/src/
 │   ├── UserController.ts
 │   ├── CommissionController.ts
 │   ├── AdminController.ts
-│   └── CRMController.ts
+│   ├── CRMController.ts
+│   ├── CategoryController.ts        # Sprint 3
+│   ├── ProductController.ts         # Sprint 3
+│   ├── AdminCategoryController.ts   # Sprint 3
+│   ├── AdminProductController.ts    # Sprint 3
+│   ├── VendorController.ts          # Sprint 3
+│   ├── AdminVendorController.ts     # Sprint 3
+│   ├── ContractController.ts        # Sprint 3
+│   └── AdminContractController.ts   # Sprint 3
 ├── services/           # Lógica de negocio / Business Logic
 │   ├── AuthService.ts
 │   ├── UserService.ts
 │   ├── TreeService.ts
 │   ├── CommissionService.ts
-│   └── CRMService.ts
+│   ├── CRMService.ts
+│   └── ContractService.ts           # Sprint 3
 ├── models/             # Modelos Sequelize / Sequelize Models
 │   ├── User.ts
 │   ├── Commission.ts
 │   ├── Purchase.ts
 │   ├── Lead.ts
-│   └── Task.ts
+│   ├── Task.ts
+│   ├── Category.ts                  # Sprint 3
+│   ├── Product.ts                   # Sprint 3
+│   ├── Inventory.ts                 # Sprint 3
+│   ├── Vendor.ts                    # Sprint 3
+│   ├── VendorProduct.ts             # Sprint 3
+│   ├── VendorOrder.ts               # Sprint 3
+│   ├── ShippingAddress.ts           # Sprint 3
+│   ├── DeliveryProvider.ts          # Sprint 3
+│   ├── ShipmentTracking.ts          # Sprint 3
+│   ├── ContractTemplate.ts          # Sprint 3
+│   └── AffiliateContract.ts         # Sprint 3
 ├── routes/             # Definiciones de rutas / Route Definitions
 ├── middleware/         # Middleware (auth, errors, validation)
 └── utils/             # Utilidades / Utilities
 ```
 
----
-
-## English
-
-### Overview
-
 The MLM platform is built with a RESTful API architecture, clearly separating the backend (Node.js + Express + TypeScript + Sequelize + PostgreSQL) from the frontend (React + Vite + TypeScript + Tailwind CSS).
 
-**Project Status**: MVP COMPLETED ✅
+**Project Status**: v1.11.0 — Sprint 3 Completed ✅
 
 **Implemented Features**:
 
@@ -121,7 +140,12 @@ The MLM platform is built with a RESTful API architecture, clearly separating th
 - E-commerce Streaming (products, orders, subscriptions)
 - Wallet (balance, deposits, withdrawals)
 - Currency Conversion (Frankfurter API)
-- 195 automated tests
+- **Security Hardening**: SSRF protection, XSS sanitization, pino-http logging, Docker hardening
+- **Generic Products + Inventory**: Category, Product, Inventory with stock tracking
+- **Marketplace Multi-vendor**: Vendor, VendorProduct, VendorOrder, 3-way commission split
+- **Delivery Integration**: ShippingAddress, DeliveryProvider, ShipmentTracking
+- **Affiliate Contracts MVP**: ContractTemplate, AffiliateContract with versioning and hash
+- 307 automated tests
 
 ### Layer Structure
 
@@ -136,19 +160,39 @@ backend/src/
 │   ├── UserController.ts
 │   ├── CommissionController.ts
 │   ├── AdminController.ts
-│   └── CRMController.ts
+│   ├── CRMController.ts
+│   ├── CategoryController.ts        # Sprint 3
+│   ├── ProductController.ts         # Sprint 3
+│   ├── AdminCategoryController.ts   # Sprint 3
+│   ├── AdminProductController.ts    # Sprint 3
+│   ├── VendorController.ts          # Sprint 3
+│   ├── AdminVendorController.ts     # Sprint 3
+│   ├── ContractController.ts        # Sprint 3
+│   └── AdminContractController.ts   # Sprint 3
 ├── services/            # Business Logic
 │   ├── AuthService.ts
 │   ├── UserService.ts
 │   ├── TreeService.ts
 │   ├── CommissionService.ts
-│   └── CRMService.ts
+│   ├── CRMService.ts
+│   └── ContractService.ts           # Sprint 3
 ├── models/             # Sequelize Models
 │   ├── User.ts
 │   ├── Commission.ts
 │   ├── Purchase.ts
 │   ├── Lead.ts
-│   └── Task.ts
+│   ├── Task.ts
+│   ├── Category.ts                  # Sprint 3
+│   ├── Product.ts                   # Sprint 3
+│   ├── Inventory.ts                 # Sprint 3
+│   ├── Vendor.ts                    # Sprint 3
+│   ├── VendorProduct.ts             # Sprint 3
+│   ├── VendorOrder.ts               # Sprint 3
+│   ├── ShippingAddress.ts           # Sprint 3
+│   ├── DeliveryProvider.ts          # Sprint 3
+│   ├── ShipmentTracking.ts          # Sprint 3
+│   ├── ContractTemplate.ts          # Sprint 3
+│   └── AffiliateContract.ts         # Sprint 3
 ├── routes/             # Route Definitions
 ├── middleware/         # Middleware (auth, errors, validation)
 └── utils/             # Utilities
@@ -293,6 +337,54 @@ Phase 3 implements an interactive binary tree visualization using React Flow (@x
 - CORS validation with allowed origins
 - Helmet security headers
 - Input validation with express-validator
+- **SSRF Protection**: URL validation blocks private IPs, loopback, cloud metadata endpoints
+- **XSS Sanitization**: HTML inputs sanitized before storage and rendering
+- **Secure Logging**: pino-http with redacted sensitive headers (authorization, cookie, x-api-key)
+- **Docker Hardening**: non-root user, read-only filesystem, no-new-privileges, health checks
+
+---
+
+## Sprint 3: Multi-vendor, Products, Delivery, Contracts
+
+### New Models (Sprint 3)
+
+```map
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│  Category   │────▶│   Product   │────▶│  Inventory  │
+└─────────────┘     └─────────────┘     └─────────────┘
+                           │
+                           ▼
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│   Vendor    │────▶│VendorProduct│     │ VendorOrder │
+└─────────────┘     └─────────────┘     └─────────────┘
+       │
+       ▼
+┌─────────────────┐   ┌─────────────────┐   ┌───────────────────┐
+│ ShippingAddress │   │ DeliveryProvider│   │ ShipmentTracking  │
+└─────────────────┘   └─────────────────┘   └───────────────────┘
+
+┌──────────────────┐     ┌─────────────────┐
+│ ContractTemplate │────▶│AffiliateContract│
+└──────────────────┘     └─────────────────┘
+```
+
+### 3-way Commission Split (Multi-vendor)
+
+| Party     | Description                        |
+| --------- | ---------------------------------- |
+| Platform  | Base platform fee                  |
+| Vendor    | Vendor commission (configurable %) |
+| Affiliate | MLM commission chain (5 levels)    |
+
+### Affiliate Contracts
+
+| Field     | Description                                       |
+| --------- | ------------------------------------------------- |
+| version   | Semver (e.g. 1.0.0), auto-incremented on updates  |
+| hash      | SHA-256 of contract content at time of acceptance |
+| ip        | User's IP address at acceptance time              |
+| userAgent | Browser user agent at acceptance time             |
+| status    | accepted / declined / revoked                     |
 
 ---
 
@@ -511,25 +603,29 @@ frontend/src/components/layout/
 
 ### Test Coverage / Cobertura de Tests
 
-| Suite               | Tests   | Purpose                   |
-| ------------------- | ------- | ------------------------- |
-| auth.test.ts        | 15      | Authentication flows      |
-| tree.test.ts        | 10      | Binary tree operations    |
-| tree-visual.test.ts | 17      | Visual tree integration   |
-| tree-api.test.ts    | 10      | Tree API endpoints        |
-| performance.test.ts | 3       | N+1 query resolution      |
-| commissions.test.ts | 17      | Commission calculations   |
-| rbac.test.ts        | 20      | Role-based access control |
-| crm.test.ts         | 17      | Lead management           |
-| wallet.test.ts      | 15      | Wallet operations         |
-| pagination.test.ts  | 6       | Pagination                |
-| validation.test.ts  | 24      | Input validation          |
-| auth.spec.ts        | 6       | E2E auth flows            |
-| admin.spec.ts       | 10      | E2E admin flows           |
-| dashboard.spec.ts   | 8       | E2E dashboard flows       |
-| tree.spec.ts        | 13      | E2E tree visualization    |
-| **Integration**     | **158** | **Backend tests**         |
-| **E2E**             | **37**  | **Playwright tests**      |
-| **TOTAL**           | **195** | **All passing**           |
+| Suite               | Tests   | Purpose                         |
+| ------------------- | ------- | ------------------------------- |
+| auth.test.ts        | 15      | Authentication flows            |
+| tree.test.ts        | 10      | Binary tree operations          |
+| tree-visual.test.ts | 17      | Visual tree integration         |
+| tree-api.test.ts    | 10      | Tree API endpoints              |
+| performance.test.ts | 3       | N+1 query resolution            |
+| commissions.test.ts | 17      | Commission calculations         |
+| rbac.test.ts        | 20      | Role-based access control       |
+| crm.test.ts         | 17      | Lead management                 |
+| wallet.test.ts      | 15      | Wallet operations               |
+| pagination.test.ts  | 6       | Pagination                      |
+| validation.test.ts  | 24      | Input validation                |
+| products.test.ts    | ~25     | Products + Inventory (Sprint 3) |
+| vendors.test.ts     | ~20     | Marketplace multi-vendor (S3)   |
+| contracts.test.ts   | ~20     | Affiliate contracts (Sprint 3)  |
+| addresses.test.ts   | ~15     | Shipping addresses (Sprint 3)   |
+| auth.spec.ts        | 6       | E2E auth flows                  |
+| admin.spec.ts       | 10      | E2E admin flows                 |
+| dashboard.spec.ts   | 8       | E2E dashboard flows             |
+| tree.spec.ts        | 13      | E2E tree visualization          |
+| **Integration**     | **270** | **Backend tests**               |
+| **E2E**             | **37**  | **Playwright tests**            |
+| **TOTAL**           | **307** | **All passing**                 |
 
-> Note: CRM.tsx fully translated to bilingual (ES/EN), E2E tests updated with new selectors.
+> Note: Test count increased from 195 (pre-Sprint 3) to 307 with new integration tests for all Sprint 3 phases.

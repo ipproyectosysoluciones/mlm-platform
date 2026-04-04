@@ -29,6 +29,13 @@ const contractService = new ContractService();
  *       200:
  *         description: List of all contract templates
  */
+/**
+ * @description Get all contract templates including inactive ones (admin only)
+ * @description_es Obtiene todas las plantillas de contrato incluyendo las inactivas (solo admin)
+ * @param {AuthenticatedRequest} req - Authenticated admin request / Request autenticado de admin
+ * @param {Response} res - Express response / Respuesta de Express
+ * @returns {Promise<void>} JSON list of all templates / Lista JSON de todas las plantillas
+ */
 export async function getTemplates(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
     const contracts = await contractService.getTemplates();
@@ -86,6 +93,13 @@ export async function getTemplates(req: AuthenticatedRequest, res: Response): Pr
  *     responses:
  *       201:
  *         description: Contract template created
+ */
+/**
+ * @description Create a new contract template with versioning support
+ * @description_es Crea una nueva plantilla de contrato con soporte de versionado
+ * @param {AuthenticatedRequest} req - Authenticated admin request with body `{type, version, title, content, effectiveFrom}` / Request autenticado de admin con body `{type, version, title, content, effectiveFrom}`
+ * @param {Response} res - Express response / Respuesta de Express
+ * @returns {Promise<void>} JSON created template / Plantilla creada en JSON
  */
 export async function createTemplate(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
@@ -151,6 +165,13 @@ export async function createTemplate(req: AuthenticatedRequest, res: Response): 
  *       200:
  *         description: New contract version created
  */
+/**
+ * @description Update a contract template by creating a new version (immutable history)
+ * @description_es Actualiza una plantilla creando una nueva versión (historial inmutable)
+ * @param {AuthenticatedRequest} req - Authenticated admin request with `id` param and optional body `{title, content, effectiveFrom}` / Request autenticado con parámetro `id` y body opcional
+ * @param {Response} res - Express response / Respuesta de Express
+ * @returns {Promise<void>} JSON new template version / Nueva versión de plantilla en JSON
+ */
 export async function updateTemplate(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
     const { id } = req.params;
@@ -212,6 +233,13 @@ export async function updateTemplate(req: AuthenticatedRequest, res: Response): 
  *       200:
  *         description: User's contract acceptances
  */
+/**
+ * @description Get all contract acceptances for a specific user (admin view)
+ * @description_es Obtiene todos los contratos aceptados/rechazados de un usuario específico (vista admin)
+ * @param {AuthenticatedRequest} req - Authenticated admin request with `userId` param / Request autenticado con parámetro `userId`
+ * @param {Response} res - Express response / Respuesta de Express
+ * @returns {Promise<void>} JSON list of user contracts / Lista JSON de contratos del usuario
+ */
 export async function getUserContracts(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
     const { userId } = req.params;
@@ -258,6 +286,13 @@ export async function getUserContracts(req: AuthenticatedRequest, res: Response)
  *     responses:
  *       200:
  *         description: Contract revoked successfully
+ */
+/**
+ * @description Revoke a user's contract acceptance (admin action with audit trail)
+ * @description_es Revoca la aceptación de contrato de un usuario (acción admin con registro de auditoría)
+ * @param {AuthenticatedRequest} req - Authenticated admin request with `id` (templateId) and `userId` params / Request autenticado con parámetros `id` (templateId) y `userId`
+ * @param {Response} res - Express response / Respuesta de Express
+ * @returns {Promise<void>} JSON revocation result / Resultado de revocación en JSON
  */
 export async function revokeUserContract(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {

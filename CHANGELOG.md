@@ -4,6 +4,68 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
+## [1.11.0] - 2026-04-04
+
+### Added
+
+- **Phase 0: Security Hardening**
+  - SSRF protection: validación de URLs en todas las integraciones externas (no permite IPs privadas, loopback ni metadatos cloud)
+  - XSS sanitization: sanitización de inputs HTML en templates de email y landing pages
+  - `pino-http` logging: request/response logging seguro sin exponer tokens ni datos sensibles
+  - Docker hardening: imágenes non-root, read-only filesystems, `no-new-privileges`, health checks con timeouts
+
+- **Phase 1: Generic Products + Inventory**
+  - Modelo `Category` (Sequelize): nombre, slug único, descripción, imagen, parent_id para categorías jerárquicas, soft-delete
+  - Modelo `Product` (Sequelize): SKU, nombre, precio, tipo (digital/physical/service/membership), categoría, metadatos JSON, stock tracking, soft-delete
+  - Modelo `Inventory` (Sequelize): stock actual, stock mínimo, historial de movimientos (movements JSONB), vinculado 1:1 con Product
+  - `CategoryController` / `AdminCategoryController`: CRUD completo para categorías (público: listado activo; admin: gestión completa)
+  - `ProductController` / `AdminProductController`: CRUD completo para productos + gestión de inventario por admin
+  - Endpoints públicos: `GET /api/products`, `GET /api/products/:id`, `GET /api/categories`
+  - Endpoints admin: `GET|POST /api/admin/categories`, `PUT|DELETE /api/admin/categories/:id`
+  - Endpoints admin productos: `GET|POST /api/admin/products`, `PUT|DELETE /api/admin/products/:id`
+  - Endpoints admin inventario: `GET|POST /api/admin/products/:id/inventory`, `GET|POST /api/admin/products/:id/inventory/movements`
+
+- **Phase 1 Follow-up: Integration Tests + Swagger**
+  - 307 tests de integración en total (eran 195 antes del Sprint 3)
+  - Swagger docs actualizados con todos los nuevos endpoints de productos, inventario, vendors y contratos
+
+- **Phase 2: Marketplace Multi-vendor**
+  - Modelo `Vendor` (Sequelize): perfil de vendedor vinculado a User, commission_rate configurable, estado (pending/approved/rejected/suspended)
+  - Modelo `VendorProduct` (Sequelize): asociación vendor–product con precio override opcional
+  - Modelo `VendorOrder` (Sequelize): tracking de pedidos por vendor
+  - `VendorController`: dashboard de vendor (`GET /api/vendor/dashboard`) y listado de productos propios (`GET /api/vendor/products`)
+  - `AdminVendorController`: CRUD admin de vendors, actualización de commission rate
+  - Split de comisiones 3-way: plataforma / vendor / afiliado en cada venta
+
+- **Phase 3: Delivery Integration**
+  - Modelo `ShippingAddress` (Sequelize): dirección postal completa, soporte multi-dirección por usuario, flag `is_default`
+  - Modelo `DeliveryProvider` (Sequelize): proveedores de envío (nombre, tipo, config JSON, activo/inactivo)
+  - Modelo `ShipmentTracking` (Sequelize): tracking_number, provider_id, status, estimated_delivery, eventos de tracking
+  - Endpoints de direcciones (montados en `/api/addresses`): `GET|POST /api/addresses`, `GET|PUT|DELETE /api/addresses/:id`, `PATCH /api/addresses/:id/default`
+  - Endpoints de shipping en contexto de órdenes: `PUT /api/orders/:id/shipping`, `GET /api/orders/:id/tracking`
+  - Webhook para actualizaciones del proveedor de delivery: `POST /api/webhooks/shipping/:providerId`
+
+- **Phase 3.5: Affiliate Contracts MVP**
+  - Modelo `ContractTemplate` (Sequelize): título, cuerpo Markdown, versión semver, activo/inactivo, admin CRUD con versionado automático
+  - Modelo `AffiliateContract` (Sequelize): aceptación/declinación de usuario, IP, userAgent, SHA-256 hash del contenido, timestamp
+  - `ContractController`: listado de contratos con estado de aceptación del usuario logueado, aceptar y declinar
+  - `AdminContractController`: CRUD completo de templates, ver aceptaciones por usuario, revocar contrato
+  - `ContractService`: lógica de negocio para creación de versiones, validación de hash, consulta de estado
+  - Migración: `20260412000000-create-contract-tables.js`
+
+### Fixed
+
+- **ContractService ORDER BY snake_case**: Sequelize `underscored: true` genera columnas `snake_case` pero el ORDER BY en raw queries usaba `camelCase`, causando error `column "createdAt" does not exist` en PostgreSQL. Corregido usando `order: [['created_at', 'DESC']]` con el nombre de columna real.
+
+### Security
+
+- SSRF Protection: validación estricta de URLs para prevenir Server-Side Request Forgery en integraciones externas
+- XSS Sanitization: sanitización de todos los inputs que se renderizan como HTML
+- Secure Logging: `pino-http` configurado para redactar headers sensibles (`authorization`, `cookie`, `x-api-key`) en logs
+- Docker Hardening: contenedores ejecutando como usuario non-root con capacidades mínimas
+
+---
+
 ## [1.6.0] - 2026-04-01
 
 ### Added

@@ -21,10 +21,15 @@
 | Wallet                        | Balance tracking, deposits, withdrawals with fee calculation (5%, $20 min)                 |
 | Currency Conversion           | Frankfurter API integration                                                                |
 | CommissionConfig API          | Admin CRUD for configurable commission rates                                               |
-| Tests                         | 271 total (93 unit + 178 integration) + 37 E2E = 308 tests passing                         |
-| **2FA (TOTP)**                | **Two-Factor Authentication with TOTP, recovery codes, AES-256-GCM encryption** ⭐ NEW     |
-| **Playwright Visual Testing** | **E2E tests with headed mode, video recording, UI mode** ⭐ NEW                            |
-| **Frontend 2FA UI**           | **React UI for 2FA setup, QR code display, enable/disable, recovery codes** ⭐ NEW         |
+| **2FA (TOTP)**                | **Two-Factor Authentication with TOTP, recovery codes, AES-256-GCM encryption** ⭐         |
+| **Playwright Visual Testing** | **E2E tests with headed mode, video recording, UI mode**                                   |
+| **Frontend 2FA UI**           | **React UI for 2FA setup, QR code display, enable/disable, recovery codes**                |
+| **Security Hardening**        | **SSRF protection, XSS sanitization, pino-http logging, Docker hardening** ⭐ Sprint 3     |
+| **Generic Products**          | **Category + Product + Inventory models, CRUD, SKU, stock tracking** ⭐ Sprint 3           |
+| **Marketplace Multi-vendor**  | **Vendor model, 3-way commission split, vendor dashboard** ⭐ Sprint 3                     |
+| **Delivery Integration**      | **ShippingAddress, DeliveryProvider, ShipmentTracking, webhooks** ⭐ Sprint 3              |
+| **Affiliate Contracts MVP**   | **ContractTemplate + AffiliateContract, versioning, IP/hash audit trail** ⭐ Sprint 3      |
+| Tests                         | 307 total (integration + E2E) — all passing                                                |
 
 ### ⏳ IN PROGRESS
 
@@ -34,20 +39,24 @@
 
 ### 📋 TODO - Future Features
 
-| Feature                                | Status               |
-| -------------------------------------- | -------------------- |
-| Email/SMS Notifications                | Not planned for v1.x |
-| Push Notifications                     | Not planned for v1.x |
-| KYC (Identity Verification)            | Not planned for v1.x |
-| Audit Logs                             | Not planned for v1.x |
-| Multi-gateway Payments (Stripe/PayPal) | Not planned for v1.x |
-| Team Chat                              | Not planned for v1.x |
+| Feature                                             | Status               |
+| --------------------------------------------------- | -------------------- |
+| Email/SMS Notifications                             | Not planned for v1.x |
+| Push Notifications                                  | Not planned for v1.x |
+| KYC (Identity Verification)                         | Not planned for v1.x |
+| Audit Logs                                          | Not planned for v1.x |
+| Multi-gateway Payments (Stripe/PayPal)              | Not planned for v1.x |
+| Team Chat                                           | Not planned for v1.x |
+| Delivery Provider Integrations (DiDi/Uber/InDriver) | Sprint 4             |
+| Test Coverage Expansion (90%+)                      | Sprint 4             |
 
 ---
 
 ## Overview / Visión General
 
-Binary MLM (Multi-Level Marketing) platform with automatic commission distribution, referral tracking, and tree visualization.
+Binary MLM (Multi-Level Marketing) platform with automatic commission distribution, referral tracking, tree visualization, marketplace multi-vendor support, generic product catalog with inventory, delivery integration, and affiliate contracts.
+
+**Current Version**: v1.11.0 (Sprint 3 completed — 2026-04-04)
 
 ## Tech Stack
 
@@ -125,6 +134,110 @@ CREATE TABLE purchases (
   description TEXT NULL,
   status ENUM('pending', 'completed', 'cancelled') DEFAULT 'completed',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+```
+
+### Sprint 3 Models (New)
+
+```sql
+-- Categories
+CREATE TABLE categories (
+  id VARCHAR(36) PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  slug VARCHAR(255) UNIQUE NOT NULL,
+  description TEXT,
+  image_url TEXT,
+  parent_id VARCHAR(36) NULL,
+  is_active BOOLEAN DEFAULT TRUE,
+  deleted_at TIMESTAMP NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (parent_id) REFERENCES categories(id)
+);
+
+-- Products
+CREATE TABLE products (
+  id VARCHAR(36) PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  sku VARCHAR(100) UNIQUE NOT NULL,
+  description TEXT,
+  price DECIMAL(15,2) NOT NULL,
+  type ENUM('digital','physical','service','membership') NOT NULL,
+  category_id VARCHAR(36) NULL,
+  metadata JSONB,
+  is_active BOOLEAN DEFAULT TRUE,
+  deleted_at TIMESTAMP NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (category_id) REFERENCES categories(id)
+);
+
+-- Inventory
+CREATE TABLE inventories (
+  id VARCHAR(36) PRIMARY KEY,
+  product_id VARCHAR(36) UNIQUE NOT NULL,
+  stock INTEGER NOT NULL DEFAULT 0,
+  min_stock INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (product_id) REFERENCES products(id)
+);
+
+-- Vendors
+CREATE TABLE vendors (
+  id VARCHAR(36) PRIMARY KEY,
+  user_id VARCHAR(36) UNIQUE NOT NULL,
+  business_name VARCHAR(255) NOT NULL,
+  commission_rate DECIMAL(5,4) NOT NULL DEFAULT 0.15,
+  status ENUM('pending','approved','rejected','suspended') DEFAULT 'pending',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+-- Shipping Addresses
+CREATE TABLE shipping_addresses (
+  id VARCHAR(36) PRIMARY KEY,
+  user_id VARCHAR(36) NOT NULL,
+  full_name VARCHAR(255) NOT NULL,
+  street VARCHAR(500) NOT NULL,
+  city VARCHAR(255) NOT NULL,
+  state VARCHAR(255),
+  country VARCHAR(10) NOT NULL,
+  postal_code VARCHAR(20),
+  phone VARCHAR(50),
+  is_default BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+-- Contract Templates
+CREATE TABLE contract_templates (
+  id VARCHAR(36) PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  content TEXT NOT NULL,
+  version VARCHAR(20) NOT NULL DEFAULT '1.0.0',
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Affiliate Contracts (acceptances)
+CREATE TABLE affiliate_contracts (
+  id VARCHAR(36) PRIMARY KEY,
+  contract_template_id VARCHAR(36) NOT NULL,
+  user_id VARCHAR(36) NOT NULL,
+  status ENUM('accepted','declined','revoked') NOT NULL,
+  ip VARCHAR(50),
+  user_agent TEXT,
+  hash VARCHAR(64),
+  accepted_at TIMESTAMP,
+  revoked_at TIMESTAMP,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (contract_template_id) REFERENCES contract_templates(id),
   FOREIGN KEY (user_id) REFERENCES users(id)
 );
 ```
