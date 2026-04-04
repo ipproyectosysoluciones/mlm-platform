@@ -31,6 +31,7 @@
     "test:integration:commissions": "TEST_DB_NAME=mlm_test SKIP_COMMISSION_CALCULATION=true jest --config=jest.integration.config.cjs --runInBand --testPathPattern=integration/commissions.test.ts",
     "test:integration:tree-visual": "TEST_DB_NAME=mlm_test SKIP_COMMISSION_CALCULATION=true jest --config=jest.integration.config.cjs --runInBand --testPathPattern=integration/tree-visual.test.ts",
     "test:integration:performance": "TEST_DB_NAME=mlm_test SKIP_COMMISSION_CALCULATION=true jest --config=jest.integration.config.cjs --runInBand --testPathPattern=integration/performance.test.ts",
+    "test:integration:gift-cards": "TEST_DB_NAME=mlm_test SKIP_COMMISSION_CALCULATION=true jest --config=jest.integration.config.cjs --runInBand --testPathPattern=integration/gift-cards.integration.test.ts",
     "test:unit": "NODE_ENV=test jest --testPathIgnorePatterns=integration",
     "test:coverage": "NODE_ENV=test jest --coverage",
     "seed": "ts-node src/seed.ts"
