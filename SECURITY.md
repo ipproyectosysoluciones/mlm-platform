@@ -6,9 +6,10 @@ We currently support the following versions with security updates:
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 1.5.x   | :white_check_mark: |
+| 1.8.x   | :white_check_mark: |
+| 1.7.x   | :white_check_mark: |
 | 1.6.x   | :white_check_mark: |
-| < 1.0   | :x:                |
+| < 1.6   | :x:                |
 
 ## Reporting a Vulnerability
 
@@ -77,6 +78,24 @@ To prevent brute-force attacks:
 
 ---
 
+## Payment Security
+
+### PayPal Integration
+
+| Feature                        | Implementation                                                                                                 |
+| ------------------------------ | -------------------------------------------------------------------------------------------------------------- |
+| Webhook Signature Verification | PayPal-provided signature headers validated on every incoming webhook event                                    |
+| Idempotency Keys               | Unique keys per request prevent duplicate payment captures and refunds                                         |
+| SSRF Prevention (CWE-918)      | Certificate URL reconstructed from validated hostname — user-supplied URL never passed directly to HTTP client |
+
+### MercadoPago Integration
+
+| Feature                         | Implementation                                                 |
+| ------------------------------- | -------------------------------------------------------------- |
+| Webhook Notification Validation | Incoming MercadoPago notifications validated before processing |
+
+---
+
 ## Dependencies Security
 
 We use Dependabot for automated security updates:
@@ -98,5 +117,5 @@ When contributing to this project:
 
 ---
 
-_Last updated: 2026-04-01_
-_Version: 1.6.0_
+_Last updated: 2026-04-03_
+_Version: 1.8.0_
