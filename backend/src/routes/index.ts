@@ -10,6 +10,7 @@ import twoFactorRoutes from './twoFactor.routes';
 import pushRoutes from './push.routes';
 import publicRoutes from './public.routes';
 import landingPublicRoutes from './landing-public.routes';
+import giftCardRoutes from './gift-cards.routes';
 
 const router: ExpressRouter = Router();
 
@@ -23,6 +24,7 @@ router.use('/orders', orderRoutes);
 router.use('/wallet', walletRoutes);
 router.use('/wallets', walletRoutes); // Alias for test compatibility
 router.use('/push', pushRoutes);
+router.use('/gift-cards', giftCardRoutes);
 
 // Profile public routes (MUST be before publicRoutes to avoid /profile/:code conflict)
 import profilePublicRoutes from './profile-public.routes';

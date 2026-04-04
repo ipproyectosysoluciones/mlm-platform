@@ -14,6 +14,9 @@ import { WalletTransaction } from './WalletTransaction';
 import { WithdrawalRequest } from './WithdrawalRequest';
 import { CommissionConfig } from './CommissionConfig';
 import { PushSubscription } from './PushSubscription';
+import { GiftCard } from './GiftCard';
+import { QrMapping } from './QrMapping';
+import { GiftCardTransaction } from './GiftCardTransaction';
 
 // User relationships
 User.hasMany(User, { as: 'children', foreignKey: 'sponsorId', sourceKey: 'id' });
@@ -75,6 +78,38 @@ WithdrawalRequest.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey:
 User.hasMany(PushSubscription, { foreignKey: 'userId', sourceKey: 'id' });
 PushSubscription.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
 
+// Gift Card relationships
+User.hasMany(GiftCard, { as: 'createdGiftCards', foreignKey: 'createdByUserId', sourceKey: 'id' });
+GiftCard.belongsTo(User, { as: 'createdByUser', foreignKey: 'createdByUserId', targetKey: 'id' });
+
+User.hasMany(GiftCard, {
+  as: 'redeemedGiftCards',
+  foreignKey: 'redeemedByUserId',
+  sourceKey: 'id',
+});
+GiftCard.belongsTo(User, {
+  as: 'redeemedByUser',
+  foreignKey: 'redeemedByUserId',
+  targetKey: 'id',
+});
+
+GiftCard.hasOne(QrMapping, { foreignKey: 'giftCardId', sourceKey: 'id' });
+QrMapping.belongsTo(GiftCard, { as: 'giftCard', foreignKey: 'giftCardId', targetKey: 'id' });
+
+GiftCard.hasMany(GiftCardTransaction, { foreignKey: 'giftCardId', sourceKey: 'id' });
+GiftCardTransaction.belongsTo(GiftCard, {
+  as: 'giftCard',
+  foreignKey: 'giftCardId',
+  targetKey: 'id',
+});
+
+User.hasMany(GiftCardTransaction, { foreignKey: 'redeemedByUserId', sourceKey: 'id' });
+GiftCardTransaction.belongsTo(User, {
+  as: 'redeemedByUser',
+  foreignKey: 'redeemedByUserId',
+  targetKey: 'id',
+});
+
 export {
   sequelize,
   User,
@@ -92,6 +127,9 @@ export {
   WithdrawalRequest,
   CommissionConfig,
   PushSubscription,
+  GiftCard,
+  QrMapping,
+  GiftCardTransaction,
 };
 
 export function initModels(): void {

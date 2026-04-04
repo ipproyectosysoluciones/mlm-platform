@@ -532,3 +532,148 @@ export interface PushNotificationPayload {
     icon?: string;
   }>;
 }
+
+// ============================================
+// Gift Card Types - Tipos de Gift Card
+// ============================================
+
+/**
+ * Gift card status
+ * Estado de gift card
+ */
+export const GIFT_CARD_STATUS = {
+  ACTIVE: 'active',
+  REDEEMED: 'redeemed',
+  EXPIRED: 'expired',
+} as const;
+
+export type GiftCardStatus = (typeof GIFT_CARD_STATUS)[keyof typeof GIFT_CARD_STATUS];
+
+/**
+ * Gift card transaction type
+ * Tipo de transacción de gift card
+ */
+export const GIFT_CARD_TRANSACTION_TYPE = {
+  REDEMPTION: 'redemption',
+  REFUND: 'refund',
+  ADJUSTMENT: 'adjustment',
+} as const;
+
+export type GiftCardTransactionType =
+  (typeof GIFT_CARD_TRANSACTION_TYPE)[keyof typeof GIFT_CARD_TRANSACTION_TYPE];
+
+/**
+ * Gift card transaction status
+ * Estado de transacción de gift card
+ */
+export const GIFT_CARD_TRANSACTION_STATUS = {
+  COMPLETED: 'completed',
+  REFUNDED: 'refunded',
+  FAILED: 'failed',
+} as const;
+
+export type GiftCardTransactionStatus =
+  (typeof GIFT_CARD_TRANSACTION_STATUS)[keyof typeof GIFT_CARD_TRANSACTION_STATUS];
+
+/**
+ * Gift card attributes
+ * Atributos de gift card
+ */
+export interface GiftCardAttributes {
+  id: string;
+  code: string;
+  qrCodeData: string | null;
+  balance: number; // DECIMAL(10,2)
+  status: GiftCardStatus;
+  isActive: boolean;
+  createdByUserId: string;
+  redeemedByUserId: string | null;
+  expiresAt: Date;
+  redeemedAt: Date | null;
+  deletedAt: Date | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+/**
+ * Gift card creation attributes
+ * Atributos para crear gift card
+ */
+export interface GiftCardCreationAttributes {
+  code: string;
+  qrCodeData?: string | null;
+  balance: number;
+  status?: GiftCardStatus;
+  isActive?: boolean;
+  createdByUserId: string;
+  redeemedByUserId?: string | null;
+  expiresAt: Date;
+  redeemedAt?: Date | null;
+  deletedAt?: Date | null;
+}
+
+/**
+ * QR mapping attributes
+ * Atributos de mapeo QR
+ */
+export interface QrMappingAttributes {
+  id: string;
+  shortCode: string;
+  giftCardId: string;
+  scanCount: number;
+  lastScannedAt: Date | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+/**
+ * QR mapping creation attributes
+ * Atributos para crear mapeo QR
+ */
+export interface QrMappingCreationAttributes {
+  shortCode: string;
+  giftCardId: string;
+  scanCount?: number;
+  lastScannedAt?: Date | null;
+}
+
+/**
+ * Gift card transaction attributes
+ * Atributos de transacción de gift card
+ */
+export interface GiftCardTransactionAttributes {
+  id: string;
+  giftCardId: string;
+  orderId: string | null;
+  redeemedByUserId: string;
+  amountRedeemed: number; // DECIMAL(10,2)
+  transactionType: GiftCardTransactionType;
+  status: GiftCardTransactionStatus;
+  metadata: Record<string, unknown> | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+/**
+ * Gift card transaction creation attributes
+ * Atributos para crear transacción de gift card
+ */
+export interface GiftCardTransactionCreationAttributes {
+  giftCardId: string;
+  orderId?: string | null;
+  redeemedByUserId: string;
+  amountRedeemed: number;
+  transactionType: GiftCardTransactionType;
+  status?: GiftCardTransactionStatus;
+  metadata?: Record<string, unknown> | null;
+}
+
+/**
+ * Gift card validation result
+ * Resultado de validación de gift card
+ */
+export interface GiftCardValidationResult {
+  isValid: boolean;
+  reason?: 'NOT_FOUND' | 'ALREADY_REDEEMED' | 'EXPIRED' | 'INACTIVE';
+  card?: GiftCardAttributes;
+}
