@@ -5,20 +5,20 @@
  * @author MLM Development Team
  */
 
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import {
   ContractService,
   CreateTemplateData,
   UpdateTemplateData,
 } from '../services/ContractService';
-import { requireAdmin } from '../middleware/auth.middleware';
+import { requireAdmin, type AuthenticatedRequest } from '../middleware/auth.middleware';
 import type { ContractType } from '../types';
 
 const contractService = new ContractService();
 
 /**
  * @swagger
- * /api/admin/contracts:
+ * /admin/contracts:
  *   get:
  *     summary: Get all contract templates
  *     description: Returns all contract templates (admin)
@@ -29,7 +29,7 @@ const contractService = new ContractService();
  *       200:
  *         description: List of all contract templates
  */
-export async function getTemplates(req: Request, res: Response): Promise<void> {
+export async function getTemplates(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
     const contracts = await contractService.getTemplates();
 
@@ -51,7 +51,7 @@ export async function getTemplates(req: Request, res: Response): Promise<void> {
 
 /**
  * @swagger
- * /api/admin/contracts:
+ * /admin/contracts:
  *   post:
  *     summary: Create a new contract template
  *     description: Creates a new contract template (creates new version)
@@ -87,7 +87,7 @@ export async function getTemplates(req: Request, res: Response): Promise<void> {
  *       201:
  *         description: Contract template created
  */
-export async function createTemplate(req: Request, res: Response): Promise<void> {
+export async function createTemplate(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
     const { type, version, title, content, effectiveFrom } = req.body;
 
@@ -120,7 +120,7 @@ export async function createTemplate(req: Request, res: Response): Promise<void>
 
 /**
  * @swagger
- * /api/admin/contracts/{id}:
+ * /admin/contracts/{id}:
  *   put:
  *     summary: Update a contract template
  *     description: Updates a template by creating a NEW version (does not modify existing)
@@ -151,7 +151,7 @@ export async function createTemplate(req: Request, res: Response): Promise<void>
  *       200:
  *         description: New contract version created
  */
-export async function updateTemplate(req: Request, res: Response): Promise<void> {
+export async function updateTemplate(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
     const { id } = req.params;
     const { title, content, effectiveFrom } = req.body;
@@ -194,7 +194,7 @@ export async function updateTemplate(req: Request, res: Response): Promise<void>
 
 /**
  * @swagger
- * /api/admin/contracts/users/{userId}:
+ * /admin/contracts/users/{userId}:
  *   get:
  *     summary: Get all contract acceptances for a user
  *     description: Returns all contracts with acceptance status for a specific user
@@ -212,7 +212,7 @@ export async function updateTemplate(req: Request, res: Response): Promise<void>
  *       200:
  *         description: User's contract acceptances
  */
-export async function getUserContracts(req: Request, res: Response): Promise<void> {
+export async function getUserContracts(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
     const { userId } = req.params;
     const contracts = await contractService.getUserContracts(userId);
@@ -235,7 +235,7 @@ export async function getUserContracts(req: Request, res: Response): Promise<voi
 
 /**
  * @swagger
- * /api/admin/contracts/{id}/revoke/{userId}:
+ * /admin/contracts/{id}/revoke/{userId}:
  *   post:
  *     summary: Revoke a user's contract acceptance
  *     description: Revokes a user's accepted contract
@@ -259,12 +259,12 @@ export async function getUserContracts(req: Request, res: Response): Promise<voi
  *       200:
  *         description: Contract revoked successfully
  */
-export async function revokeUserContract(req: Request, res: Response): Promise<void> {
+export async function revokeUserContract(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
-    const { userId } = req.params;
-    const adminId = (req as any).user.userId;
+    const { id: templateId, userId } = req.params;
+    const adminId = req.user!.id;
 
-    const result = await contractService.revokeContract(userId, adminId);
+    const result = await contractService.revokeContract(userId, adminId, templateId);
 
     res.json({
       success: true,

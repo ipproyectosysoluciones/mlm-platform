@@ -326,9 +326,17 @@ export class ContractService {
    *
    * @param {string} userId - User ID / ID del usuario
    * @param {string} templateId - Template ID / ID del template
+   * @param {Object} req - Express request for IP and userAgent / Request de Express para IP y userAgent
    * @returns {Promise<AffiliateContract>} Declination record / Registro de rechazo
    */
-  async declineContract(userId: string, templateId: string): Promise<AffiliateContractAttributes> {
+  async declineContract(
+    userId: string,
+    templateId: string,
+    req: Express.Request
+  ): Promise<AffiliateContractAttributes> {
+    // Validate template exists
+    await this.getTemplate(templateId);
+
     // Check existing record
     const existing = await AffiliateContract.findOne({
       where: {
@@ -337,10 +345,22 @@ export class ContractService {
       },
     });
 
+    // Get IP and userAgent
+    const ipAddress =
+      (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() ||
+      req.socket.remoteAddress ||
+      '0.0.0.0';
+    const userAgent = req.headers['user-agent'] || null;
+    const template = await this.getTemplate(templateId);
+    const contentHash = ContractTemplate.computeContentHash(template.content);
+
     if (existing) {
       // Update existing record
       await existing.update({
         status: 'DECLINED',
+        ipAddress,
+        userAgent,
+        contentHash,
       });
       return existing;
     }
@@ -351,29 +371,35 @@ export class ContractService {
       userId,
       templateId,
       status: 'DECLINED',
-      ipAddress: '0.0.0.0', // Required field
-      contentHash: '', // Required field
+      ipAddress,
+      userAgent,
+      contentHash,
     });
 
     return decline;
   }
 
   /**
-   * Revoke a user's contract acceptance
-   * Revocar la aceptación de contrato de un usuario
+   * Revoke a user's contract acceptance for a specific template
+   * Revocar la aceptación de contrato de un usuario para un template específico
    *
    * @param {string} userId - User ID whose contract to revoke / ID del usuario cuyo contrato se revoca
    * @param {string} adminId - Admin user performing revocation / ID del admin que revoca
+   * @param {string} templateId - Template ID to revoke / ID del template a revocar
    * @returns {Promise<AffiliateContract>} Updated record / Registro actualizado
    * @throws {AppError} 404 if no accepted contract found / Si no se encuentra contrato aceptado
    */
-  async revokeContract(userId: string, adminId: string): Promise<AffiliateContractAttributes> {
+  async revokeContract(
+    userId: string,
+    adminId: string,
+    templateId: string
+  ): Promise<AffiliateContractAttributes> {
     const acceptance = await AffiliateContract.findOne({
       where: {
         userId,
+        templateId,
         status: 'ACCEPTED',
       },
-      order: [['signedAt', 'DESC']],
     });
 
     if (!acceptance) {

@@ -13,7 +13,7 @@ import {
   getUserContracts,
   revokeUserContract,
 } from '../controllers/AdminContractController';
-import { requireAdmin } from '../middleware/auth.middleware';
+import { requireAdmin, authenticate } from '../middleware/auth.middleware';
 
 const router = Router();
 
@@ -30,7 +30,7 @@ const router = Router();
  *       200:
  *         description: List of all templates
  */
-router.get('/', requireAdmin, getTemplates);
+router.get('/', authenticate, requireAdmin, getTemplates);
 
 /**
  * @swagger
@@ -70,7 +70,7 @@ router.get('/', requireAdmin, getTemplates);
  *       201:
  *         description: Template created
  */
-router.post('/', requireAdmin, createTemplate);
+router.post('/', authenticate, requireAdmin, createTemplate);
 
 /**
  * @swagger
@@ -91,53 +91,8 @@ router.post('/', requireAdmin, createTemplate);
  *       200:
  *         description: New version created
  */
-router.put('/:id', requireAdmin, updateTemplate);
-
-/**
- * @swagger
- * /admin/contracts/users/{userId}:
- *   get:
- *     summary: Get user's contracts
- *     description: Get all contract acceptances for a user
- *     tags: [admin/contracts]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: userId
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: User contracts
- */
-router.get('/users/:userId', requireAdmin, getUserContracts);
-
-/**
- * @swagger
- * /admin/contracts/{id}/revoke/{userId}:
- *   post:
- *     summary: Revoke user's contract
- *     description: Revoke a user's contract acceptance
- *     tags: [admin/contracts]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *       - in: path
- *         name: userId
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Contract revoked
- */
-router.post('/:id/revoke/:userId', requireAdmin, revokeUserContract);
+router.put('/:id', authenticate, requireAdmin, updateTemplate);
+router.get('/users/:userId', authenticate, requireAdmin, getUserContracts);
+router.post('/:id/revoke/:userId', authenticate, requireAdmin, revokeUserContract);
 
 export default router;

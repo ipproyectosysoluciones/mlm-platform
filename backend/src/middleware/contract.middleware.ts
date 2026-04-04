@@ -7,6 +7,7 @@
 
 import { Request, Response, NextFunction } from 'express';
 import { ContractService } from '../services/ContractService';
+import type { AuthenticatedRequest } from './auth.middleware';
 import type { ContractType } from '../types';
 
 const contractService = new ContractService();
@@ -20,15 +21,15 @@ const contractService = new ContractService();
  *
  * @example
  * // English: Require affiliate and compensation plan acceptance
- * router.get('/api/commissions', requireAuth, requireContractAccepted(['AFFILIATE_AGREEMENT', 'COMPENSATION_PLAN']), getCommissions);
+ * router.get('/commissions', authenticate, requireContractAccepted(['AFFILIATE_AGREEMENT', 'COMPENSATION_PLAN']), getCommissions);
  *
  * // Español: Requerir aceptación de acuerdo de afiliado y plan de compensación
- * router.get('/api/commissions', requireAuth, requireContractAccepted(['AFFILIATE_AGREEMENT', 'COMPENSATION_PLAN']), getCommissions);
+ * router.get('/commissions', authenticate, requireContractAccepted(['AFFILIATE_AGREEMENT', 'COMPENSATION_PLAN']), getCommissions);
  */
 export function requireContractAccepted(contractTypes: ContractType[]) {
-  return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  return async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const userId = (req as any).user?.userId;
+      const userId = req.user?.id;
 
       if (!userId) {
         res.status(401).json({

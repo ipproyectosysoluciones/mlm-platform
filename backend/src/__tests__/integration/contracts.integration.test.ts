@@ -4,10 +4,11 @@
  * @module __tests__/integration/contracts
  */
 
-import { testAgent } from './setup';
-import { User, ContractTemplate, AffiliateContract } from '../models';
-import { generateUniqueReferralCode, generateUUID } from '../utils/codeGenerator';
+import { testAgent } from '../setup';
+import { User, ContractTemplate, AffiliateContract } from '../../models';
+import { generateUniqueReferralCode, generateUUID } from '../../utils/codeGenerator';
 import crypto from 'crypto';
+import bcrypt from 'bcryptjs';
 
 describe('Contracts Integration', () => {
   let userToken: string;
@@ -16,11 +17,13 @@ describe('Contracts Integration', () => {
   let adminId: string;
 
   beforeEach(async () => {
+    const passwordHash = await bcrypt.hash('password123', 12);
+
     // Create test users
     const user = await User.create({
       id: generateUUID(),
       email: 'user@test.com',
-      passwordHash: '$2b$12$testhashfortesting1234567890',
+      passwordHash,
       referralCode: await generateUniqueReferralCode(),
       role: 'user',
     });
@@ -29,7 +32,7 @@ describe('Contracts Integration', () => {
     const admin = await User.create({
       id: generateUUID(),
       email: 'admin@test.com',
-      passwordHash: '$2b$12$testhashfortesting1234567890',
+      passwordHash,
       referralCode: await generateUniqueReferralCode(),
       role: 'admin',
     });
@@ -40,13 +43,13 @@ describe('Contracts Integration', () => {
       email: 'user@test.com',
       password: 'password123',
     });
-    userToken = userAuth.body.token;
+    userToken = userAuth.body.data.token;
 
     const adminAuth = await testAgent.post('/api/auth/login').send({
       email: 'admin@test.com',
       password: 'password123',
     });
-    adminToken = adminAuth.body.token;
+    adminToken = adminAuth.body.data.token;
   });
 
   describe('Admin Contract Management', () => {

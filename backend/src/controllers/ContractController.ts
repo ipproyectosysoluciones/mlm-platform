@@ -7,14 +7,14 @@
 
 import { Request, Response } from 'express';
 import { ContractService } from '../services/ContractService';
-import { authenticate } from '../middleware/auth.middleware';
+import { authenticate, type AuthenticatedRequest } from '../middleware/auth.middleware';
 import type { ContractType } from '../types';
 
 const contractService = new ContractService();
 
 /**
  * @swagger
- * /api/contracts:
+ * /contracts:
  *   get:
  *     summary: Get all active contracts with user's acceptance status
  *     description: Returns all active contract templates with the user's acceptance status
@@ -36,9 +36,9 @@ const contractService = new ContractService();
  *                   items:
  *                     $ref: '#/components/schemas/Contract'
  */
-export async function getContracts(req: Request, res: Response): Promise<void> {
+export async function getContracts(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
-    const userId = (req as any).user.userId;
+    const userId = req.user!.id;
     const contracts = await contractService.getTemplates(userId);
 
     res.json({
@@ -59,7 +59,7 @@ export async function getContracts(req: Request, res: Response): Promise<void> {
 
 /**
  * @swagger
- * /api/contracts/{id}:
+ * /contracts/{id}:
  *   get:
  *     summary: Get a specific contract template
  *     description: Returns a contract template by ID
@@ -120,7 +120,7 @@ export async function getContract(req: Request, res: Response): Promise<void> {
 
 /**
  * @swagger
- * /api/contracts/{id}/accept:
+ * /contracts/{id}/accept:
  *   post:
  *     summary: Accept a contract
  *     description: Accepts a contract, recording IP, userAgent, and content hash
@@ -149,9 +149,9 @@ export async function getContract(req: Request, res: Response): Promise<void> {
  *       400:
  *         description: Contract already accepted
  */
-export async function acceptContract(req: Request, res: Response): Promise<void> {
+export async function acceptContract(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
-    const userId = (req as any).user.userId;
+    const userId = req.user!.id;
     const { id } = req.params;
 
     const acceptance = await contractService.acceptContract(userId, id, req);
@@ -197,7 +197,7 @@ export async function acceptContract(req: Request, res: Response): Promise<void>
 
 /**
  * @swagger
- * /api/contracts/{id}/decline:
+ * /contracts/{id}/decline:
  *   post:
  *     summary: Decline a contract
  *     description: Declines a contract
@@ -215,12 +215,12 @@ export async function acceptContract(req: Request, res: Response): Promise<void>
  *       200:
  *         description: Contract declined successfully
  */
-export async function declineContract(req: Request, res: Response): Promise<void> {
+export async function declineContract(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
-    const userId = (req as any).user.userId;
+    const userId = req.user!.id;
     const { id } = req.params;
 
-    const decline = await contractService.declineContract(userId, id);
+    const decline = await contractService.declineContract(userId, id, req);
 
     res.json({
       success: true,
@@ -250,5 +250,4 @@ export async function declineContract(req: Request, res: Response): Promise<void
   }
 }
 
-// Apply auth middleware to all routes
-export default [requireAuth, getContracts, getContract, acceptContract, declineContract];
+// Apply auth middleware to all routes (authenticate is applied per-route in contract.routes.ts)

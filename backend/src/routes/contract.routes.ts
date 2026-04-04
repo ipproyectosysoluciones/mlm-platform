@@ -29,7 +29,7 @@ const router = Router();
  *       200:
  *         description: List of contracts
  */
-router.get('/', requireAuth, getContracts);
+router.get('/', authenticate, getContracts);
 
 /**
  * @swagger
@@ -50,7 +50,7 @@ router.get('/', requireAuth, getContracts);
  *       200:
  *         description: Contract details
  */
-router.get('/:id', requireAuth, getContract);
+router.get('/:id', authenticate, getContract);
 
 /**
  * @swagger
@@ -71,7 +71,7 @@ router.get('/:id', requireAuth, getContract);
  *       200:
  *         description: Contract accepted
  */
-router.post('/:id/accept', requireAuth, acceptContract);
+router.post('/:id/accept', authenticate, acceptContract);
 
 /**
  * @swagger
@@ -92,6 +92,6 @@ router.post('/:id/accept', requireAuth, acceptContract);
  *       200:
  *         description: Contract declined
  */
-router.post('/:id/decline', requireAuth, declineContract);
+router.post('/:id/decline', authenticate, declineContract);
 
 export default router;
