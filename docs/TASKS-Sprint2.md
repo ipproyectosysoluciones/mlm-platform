@@ -27,11 +27,11 @@
 
 **Acceptance Criteria**:
 
-- [ ] `gift_cards` table created with UUID PK, balance, status, is_active, created_at, redeemed_at, expires_at, deleted_at
-- [ ] Constraints: balance > 0, redemption_consistency (both or neither of redeemed_at/redeemed_by_user_id)
-- [ ] Indexes created: `idx_gift_cards_status_expires`, `idx_gift_cards_created_by`, `idx_gift_cards_redeemed_by`
-- [ ] Migration reversible (rollback tested)
-- [ ] DDL reviewed and approved
+- [x] `gift_cards` table created with UUID PK, balance, status, is_active, created_at, redeemed_at, expires_at, deleted_at
+- [x] Constraints: balance > 0, redemption_consistency (both or neither of redeemed_at/redeemed_by_user_id)
+- [x] Indexes created: `idx_gift_cards_status_expires`, `idx_gift_cards_created_by`, `idx_gift_cards_redeemed_by`
+- [x] Migration reversible (rollback tested)
+- [x] DDL reviewed and approved
 
 **Story Points**: S (1)
 
@@ -49,10 +49,10 @@
 
 **Acceptance Criteria**:
 
-- [ ] `qr_mappings` table created: id, short_code (UNIQUE), gift_card_id (FK), created_at, scan_count, last_scanned_at
-- [ ] Indexes: `idx_qr_mappings_short_code`, `idx_qr_mappings_gift_card`
-- [ ] Cascade delete on gift_card deletion
-- [ ] Migration reversible
+- [x] `qr_mappings` table created: id, short_code (UNIQUE), gift_card_id (FK), created_at, scan_count, last_scanned_at
+- [x] Indexes: `idx_qr_mappings_short_code`, `idx_qr_mappings_gift_card`
+- [x] Cascade delete on gift_card deletion
+- [x] Migration reversible
 
 **Story Points**: XS (0.5)
 
@@ -68,10 +68,10 @@
 
 **Acceptance Criteria**:
 
-- [ ] `gift_card_transactions` table: id, gift_card_id (FK), order_id (FK), redeemed_by_user_id (FK), amount_redeemed, transaction_type, status, created_at, metadata
-- [ ] Indexes: `idx_gift_card_transactions_gift_card`, `idx_gift_card_transactions_order`
-- [ ] All FK constraints active
-- [ ] Migration reversible
+- [x] `gift_card_transactions` table: id, gift_card_id (FK), order_id (FK), redeemed_by_user_id (FK), amount_redeemed, transaction_type, status, created_at, metadata
+- [x] Indexes: `idx_gift_card_transactions_gift_card`, `idx_gift_card_transactions_order`
+- [x] All FK constraints active
+- [x] Migration reversible
 
 **Story Points**: XS (0.5)
 
@@ -89,14 +89,14 @@
 
 **Acceptance Criteria**:
 
-- [ ] Method signature: `async createGiftCard(amount: number, createdByUserId: string, expiresIn?: number): Promise<GiftCard>`
-- [ ] Generates UUID for gift card ID
-- [ ] Calls QRService.generateQR(uuid) → base64 data URL
-- [ ] Generates short code (10 chars, URL-safe)
-- [ ] Inserts into gift_cards & qr_mappings in transaction
-- [ ] Returns GiftCard object with id, shortCode, balance, status, expiresAt, qrDataUrl
-- [ ] Error handling: QR generation failure (fallback to placeholder), DB errors (throw 500)
-- [ ] Unit tests: 4 tests (happy path, invalid amount, QR failure, DB failure)
+- [x] Method signature: `async createGiftCard(amount: number, createdByUserId: string, expiresIn?: number): Promise<GiftCard>`
+- [x] Generates UUID for gift card ID
+- [x] Calls QRService.generateQR(uuid) → base64 data URL
+- [x] Generates short code (10 chars, URL-safe)
+- [x] Inserts into gift_cards & qr_mappings in transaction
+- [x] Returns GiftCard object with id, shortCode, balance, status, expiresAt, qrDataUrl
+- [x] Error handling: QR generation failure (fallback to placeholder), DB errors (throw 500)
+- [x] Unit tests: 4 tests (happy path, invalid amount, QR failure, DB failure)
 
 **Story Points**: M (2)
 
@@ -117,12 +117,12 @@
 
 **Acceptance Criteria**:
 
-- [ ] Method: `async validateGiftCard(giftCardId: string): Promise<ValidationResult>`
-- [ ] Checks: exists, status != 'redeemed', expires_at > NOW()
-- [ ] Returns: `{ isValid: boolean, reason?: string, card?: GiftCard }`
-- [ ] Reasons: NOT_FOUND, ALREADY_REDEEMED, EXPIRED
-- [ ] Performance: <100ms (index on status, expires_at)
-- [ ] Unit tests: 4 tests (valid, not found, already redeemed, expired)
+- [x] Method: `async validateGiftCard(giftCardId: string): Promise<ValidationResult>`
+- [x] Checks: exists, status != 'redeemed', expires_at > NOW()
+- [x] Returns: `{ isValid: boolean, reason?: string, card?: GiftCard }`
+- [x] Reasons: NOT_FOUND, ALREADY_REDEEMED, EXPIRED
+- [x] Performance: <100ms (index on status, expires_at)
+- [x] Unit tests: 4 tests (valid, not found, already redeemed, expired)
 
 **Story Points**: S (1)
 
@@ -138,15 +138,15 @@
 
 **Acceptance Criteria**:
 
-- [ ] Method: `async redeemGiftCard(giftCardId: string, redeemedByUserId: string, orderId: string, amount: number): Promise<Transaction>`
-- [ ] Uses `SELECT...FOR UPDATE` to acquire lock
-- [ ] Validates: exists, not already redeemed, not expired, sufficient balance (all-or-nothing)
-- [ ] Marks: redeemed_at = NOW(), redeemed_by_user_id, status = 'redeemed', is_active = false
-- [ ] Creates transaction log entry in gift_card_transactions
-- [ ] Returns transaction with id, amount, transactionId, redeemedAt
-- [ ] Error handling: 409 Conflict on race condition (another user already redeemed), 400 on expired/already used, 500 on lock timeout
-- [ ] Unit tests: 5 tests (happy path, already redeemed, expired, insufficient balance, race condition)
-- [ ] Load test: Simulate 100 concurrent redemption attempts on same card → only 1 succeeds, others fail gracefully
+- [x] Method: `async redeemGiftCard(giftCardId: string, redeemedByUserId: string, orderId: string, amount: number): Promise<Transaction>`
+- [x] Uses `SELECT...FOR UPDATE` to acquire lock
+- [x] Validates: exists, not already redeemed, not expired, sufficient balance (all-or-nothing)
+- [x] Marks: redeemed_at = NOW(), redeemed_by_user_id, status = 'redeemed', is_active = false
+- [x] Creates transaction log entry in gift_card_transactions
+- [x] Returns transaction with id, amount, transactionId, redeemedAt
+- [x] Error handling: 409 Conflict on race condition (another user already redeemed), 400 on expired/already used, 500 on lock timeout
+- [x] Unit tests: 5 tests (happy path, already redeemed, expired, insufficient balance, race condition)
+- [x] Load test: Simulate 100 concurrent redemption attempts on same card → only 1 succeeds, others fail gracefully
 
 **Story Points**: L (3)
 
@@ -164,18 +164,18 @@
 
 **Acceptance Criteria**:
 
-- [ ] Routes implemented:
+- [x] Routes implemented:
   - `POST /api/v1/gift-cards` (admin) → createGiftCard
   - `GET /q/{shortCode}` (public) → resolve short code → redirect or return card UUID
   - `GET /api/v1/gift-cards/{giftCardId}/validate` (user) → validateGiftCard
   - `POST /api/v1/gift-cards/{giftCardId}/redeem` (user) → redeemGiftCard
   - `GET /api/v1/gift-cards` (admin) → list all cards with filters
   - `GET /api/v1/gift-cards/{giftCardId}` (admin/owner) → get details + audit log
-- [ ] Request validation: Zod schemas for each endpoint
-- [ ] Auth middleware: verify JWT, check admin role where needed
-- [ ] Response formatting: All 2xx as JSON, errors as RFC 7807 Problem Details
-- [ ] Rate limiting: 100 req/min for public endpoints, 10 req/min for admin creation
-- [ ] Unit tests: 12 tests (happy path + error paths for each route)
+- [x] Request validation: Zod schemas for each endpoint
+- [x] Auth middleware: verify JWT, check admin role where needed
+- [x] Response formatting: All 2xx as JSON, errors as RFC 7807 Problem Details
+- [x] Rate limiting: 100 req/min for public endpoints, 10 req/min for admin creation
+- [x] Unit tests: 12 tests (happy path + error paths for each route)
 
 **Story Points**: M (2)
 
@@ -197,13 +197,13 @@
 
 **Acceptance Criteria**:
 
-- [ ] Method: `async generateQR(uuid: string, options?: QROptions): Promise<string>`
-- [ ] Uses `qrcode` library to generate PNG
-- [ ] Returns data URL: `data:image/png;base64,...`
-- [ ] Options: width (300px default), margin (10px default), color (black/white)
-- [ ] Error handling: Graceful fallback if generation fails
-- [ ] Performance: <50ms per QR
-- [ ] Unit tests: 3 tests (happy path, invalid UUID, timeout)
+- [x] Method: `async generateQR(uuid: string, options?: QROptions): Promise<string>`
+- [x] Uses `qrcode` library to generate PNG
+- [x] Returns data URL: `data:image/png;base64,...`
+- [x] Options: width (300px default), margin (10px default), color (black/white)
+- [x] Error handling: Graceful fallback if generation fails
+- [x] Performance: <50ms per QR
+- [x] Unit tests: 3 tests (happy path, invalid UUID, timeout)
 
 **Story Points**: S (1)
 
