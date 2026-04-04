@@ -47,6 +47,21 @@
 | ------------------------------ | ------------------------------- |
 | [specs/SPEC.md](specs/SPEC.md) | Especificación técnica completa |
 
+## 🚀 Sprint 2 (v1.10.0)
+
+| Documento                                                          | Descripción                                   |
+| ------------------------------------------------------------------ | --------------------------------------------- |
+| [TASKS-Sprint2.md](TASKS-Sprint2.md)                               | Sprint 2 task breakdown & acceptance criteria |
+| [DESIGN-GiftCards.md](DESIGN-GiftCards.md)                         | Gift Cards technical design                   |
+| [DESIGN-AbandonedCart.md](DESIGN-AbandonedCart.md)                 | Abandoned Cart Recovery technical design      |
+| [DESIGN-EmailAutomation.md](DESIGN-EmailAutomation.md)             | Email Automation technical design             |
+| [ARCHITECTURE-GiftCards.md](ARCHITECTURE-GiftCards.md)             | Gift Cards architecture decisions             |
+| [ARCHITECTURE-AbandonedCart.md](ARCHITECTURE-AbandonedCart.md)     | Abandoned Cart architecture decisions         |
+| [ARCHITECTURE-EmailAutomation.md](ARCHITECTURE-EmailAutomation.md) | Email Automation architecture decisions       |
+| [EMAIL-AUTOMATION-GUIDE.md](EMAIL-AUTOMATION-GUIDE.md)             | Admin guide for email campaigns               |
+| [BREVO-INTEGRATION.md](BREVO-INTEGRATION.md)                       | Brevo email service integration               |
+| [ABANDONED-CART-WORKFLOW.md](ABANDONED-CART-WORKFLOW.md)           | Abandoned cart recovery workflow              |
+
 ## 🗂️ SDD (Spec-Driven Development)
 
 | Estado    | Ubicación        | Contenido           |
@@ -56,17 +71,18 @@
 
 ### Cambios Archivados
 
-| Cambio                            | Descripción              | Fecha      |
-| --------------------------------- | ------------------------ | ---------- |
-| wallet-digital                    | Billetera digital        | 2026-03-27 |
-| streaming-subscriptions-ecommerce | Sistema de suscripciones | 2026-03-27 |
-| sdd-i18n-bilingual                | Internacionalización     | 2026-03-27 |
-| phase-3-visual-tree               | Visual Tree UI           | 2026-03-27 |
-| sdd-horizontal-navbar             | Layout horizontal        | 2026-03-27 |
-| backend-refactoring               | Controllers modulares    | 2026-04-01 |
-| pwa-offline-pages                 | Páginas 404 y Offline    | 2026-04-01 |
-| pwa-improvements                  | Iconos, OfflineBanner    | 2026-04-01 |
-| notifications-integration         | Email notifications      | 2026-04-01 |
+| Cambio                            | Descripción                                  | Fecha      |
+| --------------------------------- | -------------------------------------------- | ---------- |
+| wallet-digital                    | Billetera digital                            | 2026-03-27 |
+| streaming-subscriptions-ecommerce | Sistema de suscripciones                     | 2026-03-27 |
+| sdd-i18n-bilingual                | Internacionalización                         | 2026-03-27 |
+| phase-3-visual-tree               | Visual Tree UI                               | 2026-03-27 |
+| sdd-horizontal-navbar             | Layout horizontal                            | 2026-03-27 |
+| backend-refactoring               | Controllers modulares                        | 2026-04-01 |
+| pwa-offline-pages                 | Páginas 404 y Offline                        | 2026-04-01 |
+| pwa-improvements                  | Iconos, OfflineBanner                        | 2026-04-01 |
+| notifications-integration         | Email notifications                          | 2026-04-01 |
+| sprint2 (v1.10.0)                 | Gift Cards, Abandoned Cart, Email Automation | 2026-04-04 |
 
 ## 🔗 Enlaces Útiles
 
@@ -87,4 +103,4 @@
 
 ---
 
-_Última actualización: 2026-04-01_
+_Última actualización: 2026-04-04_

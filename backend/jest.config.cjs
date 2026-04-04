@@ -18,7 +18,7 @@ module.exports = {
   forceExit: true,
   detectOpenHandles: false,
   // Mock Sentry to prevent hanging
-  // Map .js imports to .ts files (ESM-style imports used in source with ts-jest)
+  // Rewrite .js extensions to .ts for ts-jest compatibility with NodeNext imports
   moduleNameMapper: {
     '^@sentry/node$': '<rootDir>/src/__tests__/__mocks__/sentry.ts',
     '^(\\.{1,2}/.*)\\.js$': '$1',

@@ -31,6 +31,8 @@ const OrderSuccess = lazy(() => import('./pages/OrderSuccess'));
 const OrderProcessing = lazy(() => import('./pages/OrderProcessing'));
 const WalletPage = lazy(() => import('./pages/WalletPage'));
 const ProductLanding = lazy(() => import('./pages/ProductLanding'));
+const RecoverCartPage = lazy(() => import('./pages/RecoverCartPage'));
+const EmailCampaignPage = lazy(() => import('./pages/EmailCampaignPage'));
 
 /**
  * Loading fallback component for lazy loaded routes
@@ -249,6 +251,28 @@ function App() {
                   <WalletPage />
                 </Suspense>
               </ProtectedRoute>
+            }
+          />
+
+          {/* Cart Recovery Route - Public (no auth, uses one-time token) */}
+          <Route
+            path="/recover-cart"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <RecoverCartPage />
+              </Suspense>
+            }
+          />
+
+          {/* Email Campaign Management - Admin */}
+          <Route
+            path="/admin/email-campaigns"
+            element={
+              <AdminRoute>
+                <Suspense fallback={<PageLoader />}>
+                  <EmailCampaignPage />
+                </Suspense>
+              </AdminRoute>
             }
           />
 

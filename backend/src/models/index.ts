@@ -14,9 +14,17 @@ import { WalletTransaction } from './WalletTransaction';
 import { WithdrawalRequest } from './WithdrawalRequest';
 import { CommissionConfig } from './CommissionConfig';
 import { PushSubscription } from './PushSubscription';
-import { Achievement } from './Achievement';
-import { Badge } from './Badge';
-import { UserAchievement } from './UserAchievement';
+import { GiftCard } from './GiftCard';
+import { QrMapping } from './QrMapping';
+import { GiftCardTransaction } from './GiftCardTransaction';
+import { Cart } from './Cart';
+import { CartItem } from './CartItem';
+import { CartRecoveryToken } from './CartRecoveryToken';
+import { EmailTemplate } from './EmailTemplate';
+import { EmailCampaign } from './EmailCampaign';
+import { CampaignRecipient } from './CampaignRecipient';
+import { EmailQueue } from './EmailQueue';
+import { EmailCampaignLog } from './EmailCampaignLog';
 
 // User relationships
 User.hasMany(User, { as: 'children', foreignKey: 'sponsorId', sourceKey: 'id' });
@@ -78,17 +86,154 @@ WithdrawalRequest.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey:
 User.hasMany(PushSubscription, { foreignKey: 'userId' });
 PushSubscription.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
 
-// Achievement relationships
-Achievement.hasOne(Badge, { foreignKey: 'achievementId', as: 'badge' });
-Badge.belongsTo(Achievement, { foreignKey: 'achievementId', as: 'achievement' });
+// Gift Card relationships
+User.hasMany(GiftCard, { as: 'createdGiftCards', foreignKey: 'createdByUserId', sourceKey: 'id' });
+GiftCard.belongsTo(User, { as: 'createdByUser', foreignKey: 'createdByUserId', targetKey: 'id' });
 
-User.hasMany(UserAchievement, { foreignKey: 'userId', as: 'userAchievements' });
-UserAchievement.belongsTo(User, { foreignKey: 'userId', as: 'user', targetKey: 'id' });
+User.hasMany(GiftCard, {
+  as: 'redeemedGiftCards',
+  foreignKey: 'redeemedByUserId',
+  sourceKey: 'id',
+});
+GiftCard.belongsTo(User, {
+  as: 'redeemedByUser',
+  foreignKey: 'redeemedByUserId',
+  targetKey: 'id',
+});
 
-Achievement.hasMany(UserAchievement, { foreignKey: 'achievementId', as: 'userAchievements' });
-UserAchievement.belongsTo(Achievement, {
-  foreignKey: 'achievementId',
-  as: 'achievement',
+GiftCard.hasOne(QrMapping, { foreignKey: 'giftCardId', sourceKey: 'id' });
+QrMapping.belongsTo(GiftCard, { as: 'giftCard', foreignKey: 'giftCardId', targetKey: 'id' });
+
+GiftCard.hasMany(GiftCardTransaction, { foreignKey: 'giftCardId', sourceKey: 'id' });
+GiftCardTransaction.belongsTo(GiftCard, {
+  as: 'giftCard',
+  foreignKey: 'giftCardId',
+  targetKey: 'id',
+});
+
+User.hasMany(GiftCardTransaction, { foreignKey: 'redeemedByUserId', sourceKey: 'id' });
+GiftCardTransaction.belongsTo(User, {
+  as: 'redeemedByUser',
+  foreignKey: 'redeemedByUserId',
+  targetKey: 'id',
+});
+
+// Cart relationships (Abandoned Cart Recovery #21)
+User.hasMany(Cart, { as: 'carts', foreignKey: 'userId', sourceKey: 'id' });
+Cart.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
+
+Cart.hasMany(CartItem, { as: 'items', foreignKey: 'cartId', sourceKey: 'id', onDelete: 'CASCADE' });
+CartItem.belongsTo(Cart, { as: 'cart', foreignKey: 'cartId', targetKey: 'id' });
+
+Product.hasMany(CartItem, { foreignKey: 'productId', sourceKey: 'id' });
+CartItem.belongsTo(Product, { as: 'product', foreignKey: 'productId', targetKey: 'id' });
+
+Cart.hasMany(CartRecoveryToken, {
+  as: 'recoveryTokens',
+  foreignKey: 'cartId',
+  sourceKey: 'id',
+  onDelete: 'CASCADE',
+});
+CartRecoveryToken.belongsTo(Cart, { as: 'cart', foreignKey: 'cartId', targetKey: 'id' });
+
+User.hasMany(CartRecoveryToken, { foreignKey: 'userId', sourceKey: 'id' });
+CartRecoveryToken.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
+
+// Email Automation relationships (#22)
+User.hasMany(EmailTemplate, {
+  as: 'emailTemplates',
+  foreignKey: 'createdByUserId',
+  sourceKey: 'id',
+});
+EmailTemplate.belongsTo(User, {
+  as: 'createdByUser',
+  foreignKey: 'createdByUserId',
+  targetKey: 'id',
+});
+
+User.hasMany(EmailCampaign, {
+  as: 'emailCampaigns',
+  foreignKey: 'createdByUserId',
+  sourceKey: 'id',
+});
+EmailCampaign.belongsTo(User, {
+  as: 'createdByUser',
+  foreignKey: 'createdByUserId',
+  targetKey: 'id',
+});
+
+EmailTemplate.hasMany(EmailCampaign, {
+  as: 'campaigns',
+  foreignKey: 'emailTemplateId',
+  sourceKey: 'id',
+});
+EmailCampaign.belongsTo(EmailTemplate, {
+  as: 'emailTemplate',
+  foreignKey: 'emailTemplateId',
+  targetKey: 'id',
+});
+
+EmailCampaign.hasMany(CampaignRecipient, {
+  as: 'recipients',
+  foreignKey: 'campaignId',
+  sourceKey: 'id',
+  onDelete: 'CASCADE',
+});
+CampaignRecipient.belongsTo(EmailCampaign, {
+  as: 'campaign',
+  foreignKey: 'campaignId',
+  targetKey: 'id',
+});
+
+User.hasMany(CampaignRecipient, { foreignKey: 'userId', sourceKey: 'id' });
+CampaignRecipient.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
+
+EmailCampaign.hasMany(EmailQueue, {
+  as: 'queueItems',
+  foreignKey: 'campaignId',
+  sourceKey: 'id',
+  onDelete: 'CASCADE',
+});
+EmailQueue.belongsTo(EmailCampaign, {
+  as: 'campaign',
+  foreignKey: 'campaignId',
+  targetKey: 'id',
+});
+
+CampaignRecipient.hasMany(EmailQueue, {
+  as: 'queueItems',
+  foreignKey: 'campaignRecipientId',
+  sourceKey: 'id',
+});
+EmailQueue.belongsTo(CampaignRecipient, {
+  as: 'campaignRecipient',
+  foreignKey: 'campaignRecipientId',
+  targetKey: 'id',
+});
+
+User.hasMany(EmailQueue, { foreignKey: 'userId', sourceKey: 'id' });
+EmailQueue.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
+
+EmailCampaign.hasMany(EmailCampaignLog, {
+  as: 'logs',
+  foreignKey: 'campaignId',
+  sourceKey: 'id',
+  onDelete: 'CASCADE',
+});
+EmailCampaignLog.belongsTo(EmailCampaign, {
+  as: 'campaign',
+  foreignKey: 'campaignId',
+  targetKey: 'id',
+});
+
+CampaignRecipient.hasMany(EmailCampaignLog, {
+  as: 'logs',
+  foreignKey: 'campaignRecipientId',
+  sourceKey: 'id',
+});
+EmailCampaignLog.belongsTo(CampaignRecipient, {
+  as: 'campaignRecipient',
+  foreignKey: 'campaignRecipientId',
   targetKey: 'id',
 });
 
@@ -109,9 +254,17 @@ export {
   WithdrawalRequest,
   CommissionConfig,
   PushSubscription,
-  Achievement,
-  Badge,
-  UserAchievement,
+  GiftCard,
+  QrMapping,
+  GiftCardTransaction,
+  Cart,
+  CartItem,
+  CartRecoveryToken,
+  EmailTemplate,
+  EmailCampaign,
+  CampaignRecipient,
+  EmailQueue,
+  EmailCampaignLog,
 };
 
 export function initModels(): void {
