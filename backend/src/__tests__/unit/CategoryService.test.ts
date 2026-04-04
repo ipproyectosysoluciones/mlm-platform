@@ -102,6 +102,13 @@ describe('CategoryService', () => {
     });
 
     it('should create a child category when parentId is provided', async () => {
+      const mockParent = {
+        id: 'parent-1',
+        name: 'Parent',
+        slug: 'parent',
+        isActive: true,
+      };
+
       const mockChild = {
         id: 'child-1',
         parentId: 'parent-1',
@@ -110,6 +117,9 @@ describe('CategoryService', () => {
         isActive: true,
         sortOrder: 0,
       };
+
+      // Mock parent lookup to return existing parent
+      (Category.findByPk as jest.Mock).mockResolvedValue(mockParent);
 
       // Mock getDepth to return 0 for root (depth starts at 0)
       getDepthSpy = jest.spyOn(categoryService, 'getDepth').mockResolvedValue(0);
