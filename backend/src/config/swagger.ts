@@ -4,7 +4,9 @@ import swaggerJsdoc from 'swagger-jsdoc';
  * Swagger/OpenAPI Configuration for MLM Binary Affiliations API
  * Configuración Swagger/OpenAPI para la API MLM de Afiliaciones Binarias
  *
- * v1.8.0: PayPal + MercadoPago payment integrations
+ * v1.10.0: Sprint 2 - Gift Cards, Abandoned Cart Recovery, Email Automation
+ * v1.9.0: Gamification + Dynamic Commissions
+ * v1.8.0: PayPal + MercadoPago Payment Gateways
  * v1.7.0: PWA Landing Pages + Push Notifications
  * v1.6.0: PWA + Offline pages, icons multi-size
  * v1.5.0: Backend controllers refactoring (modular structure)
@@ -16,7 +18,7 @@ const options: swaggerJsdoc.Options = {
     openapi: '3.0.0',
     info: {
       title: 'MLM Binary Affiliations API',
-      version: '1.8.0',
+      version: '1.10.0',
       description: `
 ## API REST para plataforma MLM de Afiliaciones Binarias
 
@@ -36,7 +38,9 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
 | 429 | Rate limit excedido / Rate Limit Exceeded |
 
 ### Versiones / Versions
-- **v1.8.0** (2026-04-03): PayPal + MercadoPago payment integrations
+- **v1.10.0** (2026-04-04): Sprint 2 - Gift Cards, Abandoned Cart Recovery, Email Automation
+- **v1.9.0** (2026-04-03): Gamification + Dynamic Commissions
+- **v1.8.0** (2026-04-03): PayPal + MercadoPago Payment Gateways
 - **v1.7.0** (2026-04-02): PWA Landing Pages + Push Notifications
 - **v1.6.0** (2026-04-01): PWA, Offline pages, Backend refactoring completo
 - **v1.5.0** (2026-03-31): Controllers modulares, Notificaciones Email
@@ -1209,93 +1213,977 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
         },
 
         // ============================================================
-        // PAYPAL PAYMENTS (Phase 7 / v1.8.0)
+        // GIFT CARDS (Sprint 2)
         // ============================================================
-        PayPalCreateOrderRequest: {
+        GiftCard: {
           type: 'object',
-          required: ['amount', 'currency', 'orderReference'],
+          description: 'Gift card digital / Digital gift card',
           properties: {
-            amount: { type: 'string', example: '10.00', description: 'Payment amount as string' },
-            currency: { type: 'string', example: 'USD', description: 'ISO 4217 currency code' },
-            orderReference: {
+            id: {
               type: 'string',
-              example: 'ORDER-123',
-              description: 'Internal order reference',
+              format: 'uuid',
+              description: 'ID único de la gift card / Unique gift card ID',
+            },
+            code: {
+              type: 'string',
+              description: 'Código único de la gift card / Unique gift card code',
+            },
+            qrCodeData: {
+              type: 'string',
+              nullable: true,
+              description: 'Datos del código QR / QR code data',
+            },
+            balance: {
+              type: 'number',
+              format: 'float',
+              description: 'Balance de la gift card / Gift card balance',
+            },
+            status: {
+              type: 'string',
+              enum: ['active', 'redeemed', 'expired'],
+              description: 'Estado de la gift card / Gift card status',
+            },
+            isActive: {
+              type: 'boolean',
+              description: 'Indica si está activa / Indicates if active',
+            },
+            createdByUserId: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID del usuario que la creó / Creator user ID',
+            },
+            redeemedByUserId: {
+              type: 'string',
+              format: 'uuid',
+              nullable: true,
+              description: 'ID del usuario que la canjeó / Redeemer user ID',
+            },
+            expiresAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Fecha de expiración / Expiration date',
+            },
+            redeemedAt: {
+              type: 'string',
+              format: 'date-time',
+              nullable: true,
+              description: 'Fecha de canje / Redemption date',
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Fecha de creación / Creation date',
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Última actualización / Last update',
             },
           },
         },
 
-        PayPalCaptureOrderRequest: {
+        GiftCardCreateRequest: {
           type: 'object',
-          required: ['orderId'],
+          required: ['amount'],
+          description: 'Solicitud para crear gift card / Gift card creation request',
+          properties: {
+            amount: {
+              type: 'number',
+              minimum: 0.01,
+              description: 'Monto del balance / Balance amount',
+            },
+            expiresInDays: {
+              type: 'integer',
+              minimum: 1,
+              maximum: 365,
+              default: 30,
+              description: 'Días hasta expiración / Days until expiration',
+            },
+          },
+        },
+
+        GiftCardRedeemRequest: {
+          type: 'object',
+          description: 'Solicitud para canjear gift card / Gift card redeem request',
           properties: {
             orderId: {
               type: 'string',
-              example: 'PAYPAL_ORDER_ID',
-              description: 'PayPal order ID to capture',
+              format: 'uuid',
+              description: 'ID de orden opcional a asociar / Optional order ID to associate',
             },
           },
         },
 
-        PayPalRefundRequest: {
+        GiftCardValidationResult: {
           type: 'object',
-          required: ['amount', 'currency'],
+          description: 'Resultado de validación de gift card / Gift card validation result',
           properties: {
-            amount: { type: 'string', example: '10.00' },
-            currency: { type: 'string', example: 'USD' },
-            note: {
+            valid: {
+              type: 'boolean',
+              description: 'Indica si la gift card es válida / Indicates if gift card is valid',
+            },
+            balance: {
+              type: 'number',
+              format: 'float',
+              description: 'Balance disponible / Available balance',
+            },
+            status: {
               type: 'string',
-              example: 'Customer refund',
-              description: 'Optional refund reason',
+              enum: ['active', 'redeemed', 'expired'],
+              description: 'Estado actual / Current status',
+            },
+            expiresAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Fecha de expiración / Expiration date',
+            },
+          },
+        },
+
+        GiftCardRedeemResponse: {
+          type: 'object',
+          description: 'Respuesta de canje de gift card / Gift card redeem response',
+          properties: {
+            id: { type: 'string', format: 'uuid' },
+            giftCardId: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID de la gift card canjeada / Redeemed gift card ID',
+            },
+            amountRedeemed: {
+              type: 'number',
+              format: 'float',
+              description: 'Monto canjeado / Redeemed amount',
+            },
+            transactionType: {
+              type: 'string',
+              description: 'Tipo de transacción / Transaction type',
+            },
+            status: {
+              type: 'string',
+              description: 'Estado de la transacción / Transaction status',
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Fecha de la transacción / Transaction date',
+            },
+          },
+        },
+
+        PaginatedGiftCards: {
+          type: 'object',
+          description: 'Gift cards paginadas / Paginated gift cards',
+          properties: {
+            rows: {
+              type: 'array',
+              items: { $ref: '#/components/schemas/GiftCard' },
+            },
+            count: { type: 'integer', description: 'Total de gift cards / Total gift cards' },
+          },
+        },
+
+        GiftCardQuery: {
+          type: 'object',
+          description: 'Parámetros de consulta de gift cards / Gift card query parameters',
+          properties: {
+            page: { type: 'integer', minimum: 1, default: 1 },
+            limit: { type: 'integer', minimum: 1, maximum: 100, default: 20 },
+            status: {
+              type: 'string',
+              enum: ['active', 'redeemed', 'expired', 'cancelled'],
+              description: 'Filtrar por estado / Filter by status',
             },
           },
         },
 
         // ============================================================
-        // MERCADOPAGO PAYMENTS (Phase 7 / v1.8.0)
+        // CARTS & ABANDONED CART RECOVERY (Sprint 2)
         // ============================================================
-        MercadoPagoCreatePreferenceRequest: {
+        Cart: {
           type: 'object',
-          required: ['items', 'payer'],
+          description:
+            'Carrito de compras con seguimiento de ciclo de vida / Shopping cart with lifecycle tracking',
           properties: {
+            id: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID único del carrito / Unique cart ID',
+            },
+            userId: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID del usuario propietario / Owner user ID',
+            },
+            status: {
+              type: 'string',
+              enum: ['active', 'abandoned', 'recovered', 'checked_out', 'expired'],
+              description: 'Estado del carrito / Cart status',
+            },
+            lastActivityAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Última actividad / Last activity',
+            },
+            abandonedAt: {
+              type: 'string',
+              format: 'date-time',
+              nullable: true,
+              description: 'Fecha de abandono / Abandonment date',
+            },
+            recoveredAt: {
+              type: 'string',
+              format: 'date-time',
+              nullable: true,
+              description: 'Fecha de recuperación / Recovery date',
+            },
+            checkedOutAt: {
+              type: 'string',
+              format: 'date-time',
+              nullable: true,
+              description: 'Fecha de checkout / Checkout date',
+            },
+            totalAmount: {
+              type: 'number',
+              format: 'float',
+              description: 'Monto total del carrito / Cart total amount',
+            },
+            itemCount: {
+              type: 'integer',
+              description: 'Cantidad de items / Item count',
+            },
+            metadata: {
+              type: 'object',
+              description: 'Metadatos adicionales / Additional metadata',
+            },
             items: {
               type: 'array',
-              items: {
-                type: 'object',
-                properties: {
-                  title: { type: 'string', example: 'Product name' },
-                  quantity: { type: 'integer', example: 1 },
-                  unit_price: {
-                    type: 'number',
-                    example: 50000,
-                    description: 'Price in Colombian pesos (COP)',
-                  },
+              items: { $ref: '#/components/schemas/CartItem' },
+              description: 'Items del carrito / Cart items',
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Fecha de creación / Creation date',
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Última actualización / Last update',
+            },
+          },
+        },
+
+        CartItem: {
+          type: 'object',
+          description: 'Item del carrito / Cart item',
+          properties: {
+            id: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID único del item / Unique item ID',
+            },
+            cartId: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID del carrito / Cart ID',
+            },
+            productId: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID del producto / Product ID',
+            },
+            quantity: {
+              type: 'integer',
+              minimum: 1,
+              description: 'Cantidad / Quantity',
+            },
+            unitPrice: {
+              type: 'number',
+              format: 'float',
+              description: 'Precio unitario / Unit price',
+            },
+            subtotal: {
+              type: 'number',
+              format: 'float',
+              description: 'Subtotal del item / Item subtotal',
+            },
+            addedAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Fecha en que se agregó / Date added',
+            },
+            metadata: {
+              type: 'object',
+              description: 'Metadatos adicionales / Additional metadata',
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Fecha de creación / Creation date',
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Última actualización / Last update',
+            },
+          },
+        },
+
+        CartAddItemRequest: {
+          type: 'object',
+          required: ['productId', 'quantity'],
+          description: 'Solicitud para agregar item al carrito / Add item to cart request',
+          properties: {
+            productId: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID del producto / Product ID',
+            },
+            quantity: {
+              type: 'integer',
+              minimum: 1,
+              description: 'Cantidad a agregar / Quantity to add',
+            },
+          },
+        },
+
+        CartUpdateQuantityRequest: {
+          type: 'object',
+          required: ['quantity'],
+          description: 'Solicitud para actualizar cantidad / Update quantity request',
+          properties: {
+            quantity: {
+              type: 'integer',
+              minimum: 1,
+              description: 'Nueva cantidad / New quantity',
+            },
+          },
+        },
+
+        CartRecoveryToken: {
+          type: 'object',
+          description:
+            'Token de recuperación de carrito abandonado / Abandoned cart recovery token',
+          properties: {
+            id: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID único del token / Unique token ID',
+            },
+            cartId: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID del carrito asociado / Associated cart ID',
+            },
+            userId: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID del usuario / User ID',
+            },
+            tokenHash: {
+              type: 'string',
+              description: 'Hash bcrypt del token / Bcrypt hash of token',
+            },
+            status: {
+              type: 'string',
+              enum: ['pending', 'used', 'expired'],
+              description: 'Estado del token / Token status',
+            },
+            expiresAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Fecha de expiración / Expiration date',
+            },
+            usedAt: {
+              type: 'string',
+              format: 'date-time',
+              nullable: true,
+              description: 'Fecha de uso / Usage date',
+            },
+            emailSentAt: {
+              type: 'string',
+              format: 'date-time',
+              nullable: true,
+              description: 'Fecha de envío de email / Email sent date',
+            },
+            clickCount: {
+              type: 'integer',
+              description: 'Cantidad de clics / Click count',
+            },
+            lastClickedAt: {
+              type: 'string',
+              format: 'date-time',
+              nullable: true,
+              description: 'Último clic / Last click',
+            },
+            metadata: {
+              type: 'object',
+              description: 'Metadatos adicionales / Additional metadata',
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Fecha de creación / Creation date',
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Última actualización / Last update',
+            },
+          },
+        },
+
+        AbandonedCartsResponse: {
+          type: 'object',
+          description:
+            'Respuesta de carritos abandonados con estadísticas / Abandoned carts response with stats',
+          properties: {
+            carts: {
+              type: 'array',
+              items: { $ref: '#/components/schemas/Cart' },
+              description: 'Lista de carritos abandonados / Abandoned carts list',
+            },
+            stats: {
+              type: 'object',
+              properties: {
+                totalAbandoned: {
+                  type: 'integer',
+                  description: 'Total de carritos abandonados / Total abandoned carts',
+                },
+                totalRecovered: {
+                  type: 'integer',
+                  description: 'Total de carritos recuperados / Total recovered carts',
+                },
+                recoveryRate: {
+                  type: 'string',
+                  description: 'Tasa de recuperación / Recovery rate',
                 },
               },
             },
-            payer: {
+            pagination: {
               type: 'object',
               properties: {
-                email: { type: 'string', format: 'email', example: 'customer@example.com' },
+                total: { type: 'integer' },
+                limit: { type: 'integer' },
+                offset: { type: 'integer' },
               },
             },
           },
         },
 
-        MercadoPagoProcessPaymentRequest: {
+        // ============================================================
+        // EMAIL TEMPLATES (Sprint 2)
+        // ============================================================
+        EmailTemplate: {
           type: 'object',
-          required: ['token', 'payment_method_id', 'installments', 'transaction_amount', 'payer'],
+          description:
+            'Template de email con soporte WYSIWYG / Email template with WYSIWYG support',
           properties: {
-            token: { type: 'string', description: 'Card token from MercadoPago.js' },
-            payment_method_id: { type: 'string', example: 'visa' },
-            installments: { type: 'integer', example: 1, minimum: 1 },
-            transaction_amount: { type: 'number', example: 50000 },
-            payer: {
+            id: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID único del template / Unique template ID',
+            },
+            createdByUserId: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID del usuario creador / Creator user ID',
+            },
+            name: {
+              type: 'string',
+              description: 'Nombre del template / Template name',
+            },
+            subjectLine: {
+              type: 'string',
+              description: 'Línea de asunto / Subject line',
+            },
+            htmlContent: {
+              type: 'string',
+              description: 'Contenido HTML / HTML content',
+            },
+            wysiwygState: {
+              type: 'object',
+              description: 'Estado del editor WYSIWYG / WYSIWYG editor state',
+            },
+            variablesUsed: {
+              type: 'array',
+              items: { type: 'string' },
+              description: 'Variables utilizadas en el template / Variables used in template',
+            },
+            deletedAt: {
+              type: 'string',
+              format: 'date-time',
+              nullable: true,
+              description: 'Fecha de borrado suave / Soft delete date',
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Fecha de creación / Creation date',
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Última actualización / Last update',
+            },
+          },
+        },
+
+        EmailTemplateCreateRequest: {
+          type: 'object',
+          required: ['name', 'subjectLine', 'htmlContent'],
+          description: 'Solicitud para crear template de email / Email template creation request',
+          properties: {
+            name: {
+              type: 'string',
+              minLength: 1,
+              maxLength: 255,
+              description: 'Nombre del template / Template name',
+            },
+            subjectLine: {
+              type: 'string',
+              minLength: 1,
+              maxLength: 500,
+              description: 'Línea de asunto / Subject line',
+            },
+            htmlContent: {
+              type: 'string',
+              minLength: 1,
+              description: 'Contenido HTML / HTML content',
+            },
+            wysiwygState: {
+              type: 'object',
+              description: 'Estado del editor WYSIWYG (opcional) / WYSIWYG editor state (optional)',
+            },
+          },
+        },
+
+        PaginatedEmailTemplates: {
+          type: 'object',
+          description: 'Templates de email paginados / Paginated email templates',
+          properties: {
+            rows: {
+              type: 'array',
+              items: { $ref: '#/components/schemas/EmailTemplate' },
+            },
+            count: { type: 'integer', description: 'Total de templates / Total templates' },
+          },
+        },
+
+        // ============================================================
+        // EMAIL CAMPAIGNS (Sprint 2)
+        // ============================================================
+        EmailCampaign: {
+          type: 'object',
+          description:
+            'Campaña de email con seguimiento de ciclo de vida / Email campaign with lifecycle tracking',
+          properties: {
+            id: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID único de la campaña / Unique campaign ID',
+            },
+            createdByUserId: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID del usuario creador / Creator user ID',
+            },
+            emailTemplateId: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID del template de email / Email template ID',
+            },
+            name: {
+              type: 'string',
+              description: 'Nombre de la campaña / Campaign name',
+            },
+            status: {
+              type: 'string',
+              enum: ['draft', 'scheduled', 'sending', 'paused', 'completed', 'cancelled'],
+              description: 'Estado de la campaña / Campaign status',
+            },
+            scheduledFor: {
+              type: 'string',
+              format: 'date-time',
+              nullable: true,
+              description: 'Fecha programada de envío / Scheduled send date',
+            },
+            startedAt: {
+              type: 'string',
+              format: 'date-time',
+              nullable: true,
+              description: 'Fecha de inicio de envío / Send start date',
+            },
+            completedAt: {
+              type: 'string',
+              format: 'date-time',
+              nullable: true,
+              description: 'Fecha de completado / Completion date',
+            },
+            recipientSegment: {
+              type: 'object',
+              nullable: true,
+              description: 'Segmento de destinatarios / Recipient segment filter',
+            },
+            recipientCount: {
+              type: 'integer',
+              description: 'Total de destinatarios / Total recipients',
+            },
+            sentCount: {
+              type: 'integer',
+              description: 'Emails enviados / Emails sent',
+            },
+            failedCount: {
+              type: 'integer',
+              description: 'Emails fallidos / Failed emails',
+            },
+            deferredCount: {
+              type: 'integer',
+              description: 'Emails diferidos / Deferred emails',
+            },
+            bounceCount: {
+              type: 'integer',
+              description: 'Emails rebotados / Bounced emails',
+            },
+            openCount: {
+              type: 'integer',
+              description: 'Aperturas / Opens',
+            },
+            clickCount: {
+              type: 'integer',
+              description: 'Clics / Clicks',
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Fecha de creación / Creation date',
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Última actualización / Last update',
+            },
+          },
+        },
+
+        EmailCampaignCreateRequest: {
+          type: 'object',
+          required: ['name', 'emailTemplateId'],
+          description: 'Solicitud para crear campaña de email / Email campaign creation request',
+          properties: {
+            name: {
+              type: 'string',
+              minLength: 1,
+              maxLength: 255,
+              description: 'Nombre de la campaña / Campaign name',
+            },
+            emailTemplateId: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID del template de email / Email template ID',
+            },
+            recipientSegment: {
+              type: 'object',
+              description: 'Filtro de destinatarios (opcional) / Recipient filter (optional)',
+            },
+            scheduledFor: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Fecha de programación (opcional) / Schedule date (optional)',
+            },
+          },
+        },
+
+        EmailCampaignScheduleRequest: {
+          type: 'object',
+          required: ['scheduledFor'],
+          description: 'Solicitud para programar campaña / Campaign schedule request',
+          properties: {
+            scheduledFor: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Fecha futura para envío / Future date for sending',
+            },
+          },
+        },
+
+        EmailCampaignWithStats: {
+          type: 'object',
+          description:
+            'Campaña de email con estadísticas de entrega / Email campaign with delivery stats',
+          properties: {
+            id: { type: 'string', format: 'uuid' },
+            name: { type: 'string' },
+            status: {
+              type: 'string',
+              enum: ['draft', 'scheduled', 'sending', 'paused', 'completed', 'cancelled'],
+            },
+            recipientCount: { type: 'integer' },
+            stats: {
               type: 'object',
               properties: {
-                email: { type: 'string', format: 'email', example: 'customer@example.com' },
+                sentCount: { type: 'integer' },
+                failedCount: { type: 'integer' },
+                deferredCount: { type: 'integer' },
+                bounceCount: { type: 'integer' },
+                openCount: { type: 'integer' },
+                clickCount: { type: 'integer' },
+                deliveryRate: {
+                  type: 'string',
+                  description: 'Tasa de entrega / Delivery rate',
+                },
+                openRate: {
+                  type: 'string',
+                  description: 'Tasa de apertura / Open rate',
+                },
+                clickRate: {
+                  type: 'string',
+                  description: 'Tasa de clics / Click rate',
+                },
               },
             },
+            scheduledFor: { type: 'string', format: 'date-time', nullable: true },
+            startedAt: { type: 'string', format: 'date-time', nullable: true },
+            completedAt: { type: 'string', format: 'date-time', nullable: true },
+            createdAt: { type: 'string', format: 'date-time' },
+          },
+        },
+
+        EmailCampaignPreview: {
+          type: 'object',
+          description: 'Preview de email renderizado / Rendered email preview',
+          properties: {
+            subjectLine: {
+              type: 'string',
+              description: 'Asunto renderizado / Rendered subject',
+            },
+            htmlContent: {
+              type: 'string',
+              description: 'HTML renderizado / Rendered HTML',
+            },
+            previewFor: {
+              type: 'object',
+              properties: {
+                userId: {
+                  type: 'string',
+                  format: 'uuid',
+                  description: 'ID del usuario del preview / Preview user ID',
+                },
+              },
+            },
+          },
+        },
+
+        PaginatedEmailCampaigns: {
+          type: 'object',
+          description: 'Campañas de email paginadas / Paginated email campaigns',
+          properties: {
+            rows: {
+              type: 'array',
+              items: { $ref: '#/components/schemas/EmailCampaign' },
+            },
+            count: { type: 'integer', description: 'Total de campañas / Total campaigns' },
+          },
+        },
+
+        CampaignRecipient: {
+          type: 'object',
+          description:
+            'Destinatario de campaña con seguimiento individual / Campaign recipient with individual tracking',
+          properties: {
+            id: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID único del destinatario / Unique recipient ID',
+            },
+            campaignId: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID de la campaña / Campaign ID',
+            },
+            userId: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID del usuario / User ID',
+            },
+            emailAddress: {
+              type: 'string',
+              format: 'email',
+              description: 'Dirección de email / Email address',
+            },
+            status: {
+              type: 'string',
+              enum: ['pending', 'sent', 'delivered', 'opened', 'clicked', 'bounced', 'failed'],
+              description: 'Estado de entrega / Delivery status',
+            },
+            openedAt: {
+              type: 'string',
+              format: 'date-time',
+              nullable: true,
+              description: 'Fecha de apertura / Open date',
+            },
+            firstClickAt: {
+              type: 'string',
+              format: 'date-time',
+              nullable: true,
+              description: 'Fecha del primer clic / First click date',
+            },
+            clickCount: {
+              type: 'integer',
+              description: 'Cantidad de clics / Click count',
+            },
+            sentAt: {
+              type: 'string',
+              format: 'date-time',
+              nullable: true,
+              description: 'Fecha de envío / Send date',
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Fecha de creación / Creation date',
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Última actualización / Last update',
+            },
+          },
+        },
+
+        EmailQueue: {
+          type: 'object',
+          description:
+            'Cola de envío de email con reintento exponencial / Email delivery queue with exponential backoff',
+          properties: {
+            id: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID único del item / Unique queue item ID',
+            },
+            campaignId: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID de la campaña / Campaign ID',
+            },
+            campaignRecipientId: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID del destinatario de campaña / Campaign recipient ID',
+            },
+            userId: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID del usuario / User ID',
+            },
+            emailAddress: {
+              type: 'string',
+              format: 'email',
+              description: 'Dirección de email / Email address',
+            },
+            subjectLine: {
+              type: 'string',
+              description: 'Línea de asunto / Subject line',
+            },
+            htmlContent: {
+              type: 'string',
+              description: 'Contenido HTML / HTML content',
+            },
+            status: {
+              type: 'string',
+              enum: ['pending', 'processing', 'sent', 'deferred', 'failed'],
+              description: 'Estado del envío / Send status',
+            },
+            retryCount: {
+              type: 'integer',
+              description: 'Cantidad de reintentos / Retry count',
+            },
+            nextRetryAt: {
+              type: 'string',
+              format: 'date-time',
+              nullable: true,
+              description: 'Próximo reintento / Next retry',
+            },
+            lastError: {
+              type: 'string',
+              nullable: true,
+              description: 'Último error / Last error',
+            },
+            brevoMessageId: {
+              type: 'string',
+              nullable: true,
+              description: 'ID de mensaje Brevo / Brevo message ID',
+            },
+            brevoResponse: {
+              type: 'object',
+              nullable: true,
+              description: 'Respuesta de Brevo / Brevo response',
+            },
+            processedAt: {
+              type: 'string',
+              format: 'date-time',
+              nullable: true,
+              description: 'Fecha de procesamiento / Processing date',
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Fecha de creación / Creation date',
+            },
+          },
+        },
+
+        EmailCampaignLog: {
+          type: 'object',
+          description: 'Log de auditoría de campaña / Campaign audit log entry',
+          properties: {
+            id: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID único del log / Unique log ID',
+            },
+            campaignId: {
+              type: 'string',
+              format: 'uuid',
+              description: 'ID de la campaña / Campaign ID',
+            },
+            campaignRecipientId: {
+              type: 'string',
+              format: 'uuid',
+              nullable: true,
+              description: 'ID del destinatario (opcional) / Recipient ID (optional)',
+            },
+            eventType: {
+              type: 'string',
+              description: 'Tipo de evento / Event type',
+            },
+            eventTimestamp: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Timestamp del evento / Event timestamp',
+            },
+            details: {
+              type: 'object',
+              description: 'Detalles del evento / Event details',
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Fecha de creación / Creation date',
+            },
+          },
+        },
+
+        PaginatedCampaignLogs: {
+          type: 'object',
+          description: 'Logs de campaña paginados / Paginated campaign logs',
+          properties: {
+            rows: {
+              type: 'array',
+              items: { $ref: '#/components/schemas/EmailCampaignLog' },
+            },
+            count: { type: 'integer', description: 'Total de logs / Total logs' },
           },
         },
       },
@@ -1342,10 +2230,24 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
         name: 'public',
         description: 'Public Endpoints / Endpoints Públicos - Landing pages, profiles (Phase 6)',
       },
-      { name: 'PayPal', description: 'PayPal payment processing endpoints' },
       {
-        name: 'MercadoPago',
-        description: 'MercadoPago payment processing endpoints (Colombian market)',
+        name: 'gift-cards',
+        description:
+          'Gift Cards / Tarjetas de Regalo - CRUD, validación, canje, balance (Sprint 2)',
+      },
+      {
+        name: 'carts',
+        description: 'Carritos / Shopping Carts - Cart CRUD, abandoned cart recovery (Sprint 2)',
+      },
+      {
+        name: 'email-templates',
+        description:
+          'Templates de Email / Email Templates - CRUD de templates con soporte WYSIWYG (Sprint 2)',
+      },
+      {
+        name: 'email-campaigns',
+        description:
+          'Campañas de Email / Email Campaigns - Envío, programación, estadísticas, logs (Sprint 2)',
       },
     ],
   },

@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "MLM Platform API",
-    "description": "Complete API collection for MLM Binary Affiliations Platform - v1.9.0 (Gamification + Leaderboards + Achievements)",
+    "description": "Complete API collection for MLM Binary Affiliations Platform - v1.10.0 (Sprint 2: Gift Cards, Carts, Email Campaigns)",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -36,13 +36,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/register",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "register"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
             }
           },
           "response": []
@@ -78,13 +73,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/login",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "login"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
             }
           },
           "response": []
@@ -101,13 +91,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/auth/me",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "me"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "me"]
             }
           },
           "response": []
@@ -129,12 +114,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/dashboard",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "dashboard"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard"]
             }
           },
           "response": []
@@ -156,12 +137,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "crm"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["crm"]
             }
           },
           "response": []
@@ -178,13 +155,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm/{{leadId}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "crm",
-                "{{leadId}}"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["crm", "{{leadId}}"]
             }
           },
           "response": []
@@ -209,12 +181,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/crm",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "crm"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["crm"]
             }
           },
           "response": []
@@ -239,13 +207,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/crm/{{leadId}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "crm",
-                "{{leadId}}"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["crm", "{{leadId}}"]
             }
           },
           "response": []
@@ -262,13 +225,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm/{{leadId}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "crm",
-                "{{leadId}}"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["crm", "{{leadId}}"]
             }
           },
           "response": []
@@ -293,13 +251,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/crm/import",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "crm",
-                "import"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["crm", "import"]
             }
           },
           "response": []
@@ -316,13 +269,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm/export",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "crm",
-                "export"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["crm", "export"]
             }
           },
           "response": []
@@ -339,14 +287,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm/{{leadId}}/tasks",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "crm",
-                "{{leadId}}",
-                "tasks"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["crm", "{{leadId}}", "tasks"]
             }
           },
           "response": []
@@ -371,14 +313,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/crm/{{leadId}}/tasks",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "crm",
-                "{{leadId}}",
-                "tasks"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["crm", "{{leadId}}", "tasks"]
             }
           },
           "response": []
@@ -395,15 +331,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm/tasks/{{taskId}}/complete",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "crm",
-                "tasks",
-                "{{taskId}}",
-                "complete"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["crm", "tasks", "{{taskId}}", "complete"]
             }
           },
           "response": []
@@ -428,14 +357,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/crm/{{leadId}}/communications",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "crm",
-                "{{leadId}}",
-                "communications"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["crm", "{{leadId}}", "communications"]
             }
           },
           "response": []
@@ -452,14 +375,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm/{{leadId}}/communications",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "crm",
-                "{{leadId}}",
-                "communications"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["crm", "{{leadId}}", "communications"]
             }
           },
           "response": []
@@ -476,13 +393,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm/stats",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "crm",
-                "stats"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["crm", "stats"]
             }
           },
           "response": []
@@ -499,13 +411,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm/tasks",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "crm",
-                "tasks"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["crm", "tasks"]
             }
           },
           "response": []
@@ -522,14 +429,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm/analytics/report?period=month",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "crm",
-                "analytics",
-                "report"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["crm", "analytics", "report"]
             }
           },
           "response": []
@@ -546,13 +447,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm/alerts?daysInactive=7",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "crm",
-                "alerts"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["crm", "alerts"]
             }
           },
           "response": []
@@ -569,14 +465,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm/analytics/export?period=month",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "crm",
-                "analytics",
-                "export"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["crm", "analytics", "export"]
             }
           },
           "response": []
@@ -598,13 +488,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/users/me",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "users",
-                "me"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "me"]
             }
           },
           "response": []
@@ -621,14 +506,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/users/me/tree",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "users",
-                "me",
-                "tree"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "me", "tree"]
             }
           },
           "response": []
@@ -645,14 +524,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/users/me/qr-url",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "users",
-                "me",
-                "qr-url"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "me", "qr-url"]
             }
           },
           "response": []
@@ -677,13 +550,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/users/me",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "users",
-                "me"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "me"]
             }
           },
           "response": []
@@ -708,14 +576,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/users/me/change-password",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "users",
-                "me",
-                "change-password"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "me", "change-password"]
             }
           },
           "response": []
@@ -737,12 +599,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/commissions",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "commissions"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["commissions"]
             }
           },
           "response": []
@@ -759,13 +617,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/commissions/stats",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "commissions",
-                "stats"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["commissions", "stats"]
             }
           },
           "response": []
@@ -790,12 +643,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/commissions",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "commissions"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["commissions"]
             }
           },
           "response": []
@@ -817,13 +666,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/admin/stats",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "admin",
-                "stats"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "stats"]
             }
           },
           "response": []
@@ -840,22 +684,11 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/admin/users?page=1&limit=20",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "admin",
-                "users"
-              ],
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "users"],
               "query": [
-                {
-                  "key": "page",
-                  "value": "1"
-                },
-                {
-                  "key": "limit",
-                  "value": "20"
-                }
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" }
               ]
             }
           },
@@ -873,14 +706,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/admin/users/{{userId}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "admin",
-                "users",
-                "{{userId}}"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "users", "{{userId}}"]
             }
           },
           "response": []
@@ -905,15 +732,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/admin/users/{{userId}}/status",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "admin",
-                "users",
-                "{{userId}}",
-                "status"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "users", "{{userId}}", "status"]
             }
           },
           "response": []
@@ -930,15 +750,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/admin/users/{{userId}}/promote",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "admin",
-                "users",
-                "{{userId}}",
-                "promote"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "users", "{{userId}}", "promote"]
             }
           },
           "response": []
@@ -955,14 +768,8 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/admin/reports/commissions",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "admin",
-                "reports",
-                "commissions"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "reports", "commissions"]
             }
           },
           "response": []
@@ -978,13 +785,8 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/push/vapid-public-key",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "push",
-                "vapid-public-key"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["push", "vapid-public-key"]
             }
           },
           "response": []
@@ -1009,13 +811,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/push/subscribe",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "push",
-                "subscribe"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["push", "subscribe"]
             }
           },
           "response": []
@@ -1040,13 +837,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/push/unsubscribe",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "push",
-                "unsubscribe"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["push", "unsubscribe"]
             }
           },
           "response": []
@@ -1062,15 +854,8 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/public/landing/product/{{productId}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "public",
-                "landing",
-                "product",
-                "{{productId}}"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["public", "landing", "product", "{{productId}}"]
             }
           },
           "response": []
@@ -1081,20 +866,10 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/public/landing/product/{{productId}}?ref={{referralCode}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "public",
-                "landing",
-                "product",
-                "{{productId}}"
-              ],
+              "host": ["{{baseUrl}}"],
+              "path": ["public", "landing", "product", "{{productId}}"],
               "query": [
-                {
-                  "key": "ref",
-                  "value": "{{referralCode}}"
-                }
+                { "key": "ref", "value": "{{referralCode}}" }
               ]
             }
           },
@@ -1106,14 +881,548 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/public/profile/{{referralCode}}/products",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "public",
-                "profile",
-                "{{referralCode}}",
-                "products"
+              "host": ["{{baseUrl}}"],
+              "path": ["public", "profile", "{{referralCode}}", "products"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Gift Cards",
+      "item": [
+        {
+          "name": "List Gift Cards (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/gift-cards?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["gift-cards"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" },
+                { "key": "status", "value": "active", "disabled": true }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Gift Card (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 50.00,\n  \"expiresInDays\": 90\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/gift-cards",
+              "host": ["{{baseUrl}}"],
+              "path": ["gift-cards"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Gift Card Details (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/gift-cards/{{giftCardId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["gift-cards", "{{giftCardId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Validate Gift Card",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/gift-cards/{{giftCardId}}/validate",
+              "host": ["{{baseUrl}}"],
+              "path": ["gift-cards", "{{giftCardId}}", "validate"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Redeem Gift Card",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000000\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/gift-cards/{{giftCardId}}/redeem",
+              "host": ["{{baseUrl}}"],
+              "path": ["gift-cards", "{{giftCardId}}", "redeem"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Carts",
+      "item": [
+        {
+          "name": "Get My Cart",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/carts/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["carts", "me"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Item to Cart",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"00000000-0000-0000-0000-000000000001\",\n  \"quantity\": 2\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/carts/me/items",
+              "host": ["{{baseUrl}}"],
+              "path": ["carts", "me", "items"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Cart Item Quantity",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 3\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/carts/me/items/{{cartItemId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["carts", "me", "items", "{{cartItemId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Remove Item from Cart",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/carts/me/items/{{cartItemId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["carts", "me", "items", "{{cartItemId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Preview Cart by Recovery Token",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/carts/recover/{{recoveryToken}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["carts", "recover", "{{recoveryToken}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Complete Cart Recovery",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/carts/recover/{{recoveryToken}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["carts", "recover", "{{recoveryToken}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Abandoned Carts (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/carts/abandoned?limit=50&offset=0&days=30",
+              "host": ["{{baseUrl}}"],
+              "path": ["carts", "abandoned"],
+              "query": [
+                { "key": "limit", "value": "50" },
+                { "key": "offset", "value": "0" },
+                { "key": "days", "value": "30" }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Email Templates",
+      "item": [
+        {
+          "name": "List Email Templates (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/email-templates?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["email-templates"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Email Template (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Welcome Email\",\n  \"subjectLine\": \"Welcome to MLM Platform, {{firstName}}!\",\n  \"htmlContent\": \"<h1>Hello {{firstName}}!</h1><p>Welcome to our platform. Your referral code is <strong>{{referralCode}}</strong>.</p>\",\n  \"wysiwygState\": {}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/email-templates",
+              "host": ["{{baseUrl}}"],
+              "path": ["email-templates"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Email Template By ID (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/email-templates/{{emailTemplateId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["email-templates", "{{emailTemplateId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Email Template (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/email-templates/{{emailTemplateId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["email-templates", "{{emailTemplateId}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Email Campaigns",
+      "item": [
+        {
+          "name": "List Email Campaigns (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/email-campaigns?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["email-campaigns"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" },
+                { "key": "status", "value": "draft", "disabled": true }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Email Campaign (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Spring Promotion 2026\",\n  \"emailTemplateId\": \"{{emailTemplateId}}\",\n  \"recipientSegment\": {\n    \"status\": \"active\",\n    \"role\": \"affiliate\"\n  },\n  \"scheduledFor\": \"2026-04-15T09:00:00Z\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/email-campaigns",
+              "host": ["{{baseUrl}}"],
+              "path": ["email-campaigns"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Campaign Details (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/email-campaigns/{{campaignId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["email-campaigns", "{{campaignId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Preview Campaign Email (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/email-campaigns/{{campaignId}}/preview?userId={{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["email-campaigns", "{{campaignId}}", "preview"],
+              "query": [
+                { "key": "userId", "value": "{{userId}}" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send Campaign (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/email-campaigns/{{campaignId}}/send",
+              "host": ["{{baseUrl}}"],
+              "path": ["email-campaigns", "{{campaignId}}", "send"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Schedule Campaign (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"scheduledFor\": \"2026-05-01T10:00:00Z\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/email-campaigns/{{campaignId}}/schedule",
+              "host": ["{{baseUrl}}"],
+              "path": ["email-campaigns", "{{campaignId}}", "schedule"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Pause Campaign (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/email-campaigns/{{campaignId}}/pause",
+              "host": ["{{baseUrl}}"],
+              "path": ["email-campaigns", "{{campaignId}}", "pause"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Retry Failed Emails (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/email-campaigns/{{campaignId}}/retry-failed",
+              "host": ["{{baseUrl}}"],
+              "path": ["email-campaigns", "{{campaignId}}", "retry-failed"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Campaign Logs (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/email-campaigns/{{campaignId}}/logs?limit=50&offset=0",
+              "host": ["{{baseUrl}}"],
+              "path": ["email-campaigns", "{{campaignId}}", "logs"],
+              "query": [
+                { "key": "limit", "value": "50" },
+                { "key": "offset", "value": "0" },
+                { "key": "eventType", "value": "failed", "disabled": true }
               ]
             }
           },
@@ -1130,86 +1439,8 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/health",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "health"
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Achievements",
-      "item": [
-        {
-          "name": "Get All Achievements",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/achievements",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "achievements"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get My Achievements",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/achievements/me",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "achievements",
-                "me"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Achievement Summary",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/achievements/me/summary",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "achievements",
-                "me",
-                "summary"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
             }
           },
           "response": []
