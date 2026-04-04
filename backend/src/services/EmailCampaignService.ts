@@ -357,6 +357,30 @@ export class EmailCampaignService {
       // Get recipients by segment (simplified: all active users for now)
       const recipients = await this.getRecipientsBySegment(campaign.recipientSegment, t);
 
+      // Guard: 0 recipients → mark completed immediately to avoid stuck SENDING state
+      if (recipients.length === 0) {
+        await campaign.update(
+          {
+            status: EMAIL_CAMPAIGN_STATUS.COMPLETED,
+            recipientCount: 0,
+            completedAt: new Date(),
+          },
+          { transaction: t }
+        );
+
+        await EmailCampaignLog.create(
+          {
+            campaignId: campaign.id,
+            eventType: 'completed_no_recipients',
+            eventTimestamp: new Date(),
+            details: { recipientCount: 0, reason: 'No recipients matched segment' },
+          },
+          { transaction: t }
+        );
+
+        return;
+      }
+
       // Batch create campaign_recipients
       const recipientRecords = await CampaignRecipient.bulkCreate(
         recipients.map((r) => ({

@@ -259,4 +259,97 @@ describe('EmailBuilder', () => {
     const builder = screen.getByTestId('email-builder');
     expect(builder.className).toContain('grid');
   });
+
+  // ============================================
+  // DOMPurify sanitization tests
+  // Tests de sanitización DOMPurify
+  // ============================================
+
+  describe('DOMPurify sanitization', () => {
+    it('should strip <script> tags from HTML content in WYSIWYG mode', () => {
+      render(
+        <TestWrapper>
+          <EmailBuilder />
+        </TestWrapper>
+      );
+
+      // Switch to HTML mode
+      fireEvent.click(screen.getByTestId('mode-toggle'));
+      expect(screen.getByTestId('html-editor')).toBeInTheDocument();
+
+      // Input HTML with a script tag (XSS attack vector)
+      const htmlEditor = screen.getByTestId('html-editor');
+      fireEvent.change(htmlEditor, {
+        target: { value: "<p>Hello</p><script>alert('xss')</script>" },
+      });
+
+      // Switch back to WYSIWYG — content passes through sanitizeHtml()
+      fireEvent.click(screen.getByTestId('mode-toggle'));
+
+      // The WYSIWYG editor should render sanitized HTML — no <script> tags
+      const wysiwygEditor = screen.getByTestId('wysiwyg-editor');
+      expect(wysiwygEditor.innerHTML).not.toContain('<script>');
+      expect(wysiwygEditor.innerHTML).not.toContain('</script>');
+      // The safe part should be preserved
+      expect(wysiwygEditor.innerHTML).toContain('<p>Hello</p>');
+    });
+
+    it('should strip event handler attributes (onerror, onclick, etc.)', () => {
+      render(
+        <TestWrapper>
+          <EmailBuilder />
+        </TestWrapper>
+      );
+
+      // Switch to HTML mode
+      fireEvent.click(screen.getByTestId('mode-toggle'));
+
+      // Input HTML with an onerror event handler (XSS attack vector)
+      const htmlEditor = screen.getByTestId('html-editor');
+      fireEvent.change(htmlEditor, {
+        target: { value: '<img src=x onerror="alert(\'xss\')">' },
+      });
+
+      // Switch back to WYSIWYG — content passes through sanitizeHtml()
+      fireEvent.click(screen.getByTestId('mode-toggle'));
+
+      // The WYSIWYG editor should NOT contain onerror attribute
+      const wysiwygEditor = screen.getByTestId('wysiwyg-editor');
+      expect(wysiwygEditor.innerHTML).not.toContain('onerror');
+      // The <img> tag itself may or may not survive (DOMPurify keeps it without the handler)
+      // but the dangerous attribute MUST be gone
+      expect(wysiwygEditor.innerHTML).not.toContain('alert');
+    });
+
+    it('should preserve safe HTML elements after sanitization', () => {
+      render(
+        <TestWrapper>
+          <EmailBuilder />
+        </TestWrapper>
+      );
+
+      // Switch to HTML mode
+      fireEvent.click(screen.getByTestId('mode-toggle'));
+
+      // Input safe, valid HTML
+      const safeHtml = '<h1>Title</h1><p>Text</p><a href="https://example.com">Link</a>';
+      const htmlEditor = screen.getByTestId('html-editor');
+      fireEvent.change(htmlEditor, {
+        target: { value: safeHtml },
+      });
+
+      // Switch back to WYSIWYG — content passes through sanitizeHtml()
+      fireEvent.click(screen.getByTestId('mode-toggle'));
+
+      // All safe elements should be preserved
+      const wysiwygEditor = screen.getByTestId('wysiwyg-editor');
+      expect(wysiwygEditor.querySelector('h1')).toBeTruthy();
+      expect(wysiwygEditor.querySelector('h1')?.textContent).toBe('Title');
+      expect(wysiwygEditor.querySelector('p')).toBeTruthy();
+      expect(wysiwygEditor.querySelector('p')?.textContent).toBe('Text');
+      expect(wysiwygEditor.querySelector('a')).toBeTruthy();
+      expect(wysiwygEditor.querySelector('a')?.getAttribute('href')).toBe('https://example.com');
+      expect(wysiwygEditor.querySelector('a')?.textContent).toBe('Link');
+    });
+  });
 });

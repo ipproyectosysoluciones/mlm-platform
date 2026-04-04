@@ -8,6 +8,7 @@
 
 import { useMemo } from 'react';
 import { Eye } from 'lucide-react';
+import DOMPurify from 'dompurify';
 import { cn } from '../../utils/cn';
 
 /**
@@ -46,6 +47,12 @@ function renderWithSampleData(content: string): string {
   });
   return rendered;
 }
+
+/**
+ * Sanitize HTML to prevent DOM XSS attacks
+ * Sanitizar HTML para prevenir ataques DOM XSS
+ */
+const sanitizeHtml = (html: string): string => DOMPurify.sanitize(html);
 
 /**
  * PreviewPane - Real-time rendered HTML preview with sample data
@@ -93,7 +100,7 @@ export function PreviewPane({ htmlContent, subjectLine, className }: PreviewPane
                     img { max-width: 100%; height: auto; }
                   </style>
                 </head>
-                <body>${renderedHtml}</body>
+                <body>${sanitizeHtml(renderedHtml)}</body>
               </html>
             `}
             className="w-full min-h-[300px] rounded border-0 bg-white"
