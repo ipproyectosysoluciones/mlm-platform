@@ -245,6 +245,10 @@ export interface OrderAttributes {
   status: 'pending' | 'completed' | 'failed';
   paymentMethod: 'manual' | 'simulated'; // MVP: only simulated
   notes: string | null; // Optional internal notes
+  // Shipping fields (Phase 3 - Delivery Integration)
+  shippingAddressId: string | null;
+  shippingCost: number | null;
+  shippingStatus: ShippingStatus;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -1385,4 +1389,146 @@ export interface VendorDashboardData {
     status: VendorOrderStatus;
     createdAt: Date;
   }>;
+}
+
+// ============================================
+// DELIVERY INTEGRATION — Phase 3 (#26)
+// ENVÍOS — Fase 3 (#26)
+// ============================================
+
+/**
+ * Shipping status for orders
+ * Estado de envío para pedidos
+ */
+export const SHIPPING_STATUS = {
+  NOT_REQUIRED: 'not_required',
+  PENDING_SHIPMENT: 'pending_shipment',
+  SHIPPED: 'shipped',
+  IN_TRANSIT: 'in_transit',
+  DELIVERED: 'delivered',
+} as const;
+
+export type ShippingStatus = (typeof SHIPPING_STATUS)[keyof typeof SHIPPING_STATUS];
+
+/**
+ * Shipment tracking status
+ * Estado de seguimiento de envío
+ */
+export const SHIPMENT_TRACKING_STATUS = {
+  PENDING: 'pending',
+  PICKED_UP: 'picked_up',
+  IN_TRANSIT: 'in_transit',
+  OUT_FOR_DELIVERY: 'out_for_delivery',
+  DELIVERED: 'delivered',
+  FAILED: 'failed',
+  RETURNED: 'returned',
+} as const;
+
+export type ShipmentTrackingStatus =
+  (typeof SHIPMENT_TRACKING_STATUS)[keyof typeof SHIPMENT_TRACKING_STATUS];
+
+/**
+ * Status history entry for shipment tracking
+ * Entrada de historial de estado para seguimiento de envío
+ */
+export interface ShipmentStatusHistoryEntry {
+  status: ShipmentTrackingStatus;
+  timestamp: Date;
+  details?: string;
+}
+
+/**
+ * Shipping address attributes
+ * Atributos de dirección de envío
+ */
+export interface ShippingAddressAttributes {
+  id: string;
+  userId: string;
+  label: string | null;
+  recipientName: string;
+  street: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+  phone: string | null;
+  isDefault: boolean;
+  instructions: string | null;
+  deletedAt: Date | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface ShippingAddressCreationAttributes {
+  userId: string;
+  label?: string | null;
+  recipientName: string;
+  street: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+  phone?: string | null;
+  isDefault?: boolean;
+  instructions?: string | null;
+}
+
+/**
+ * Delivery provider attributes
+ * Atributos del proveedor de envíos
+ */
+export interface DeliveryProviderAttributes {
+  id: string;
+  name: string;
+  slug: string;
+  trackingUrlTemplate: string | null;
+  webhookSecret: string | null;
+  isActive: boolean;
+  metadata: Record<string, unknown> | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface DeliveryProviderCreationAttributes {
+  name: string;
+  slug: string;
+  trackingUrlTemplate?: string | null;
+  webhookSecret?: string | null;
+  isActive?: boolean;
+  metadata?: Record<string, unknown> | null;
+}
+
+/**
+ * Shipment tracking attributes
+ * Atributos de seguimiento de envío
+ */
+export interface ShipmentTrackingAttributes {
+  id: string;
+  orderId: string | null;
+  vendorOrderId: string | null;
+  providerId: string | null;
+  trackingNumber: string;
+  status: ShipmentTrackingStatus;
+  statusHistory: ShipmentStatusHistoryEntry[];
+  estimatedDelivery: Date | null;
+  actualDelivery: Date | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface ShipmentTrackingCreationAttributes {
+  orderId?: string | null;
+  vendorOrderId?: string | null;
+  providerId?: string | null;
+  trackingNumber: string;
+  status?: ShipmentTrackingStatus;
+  statusHistory?: ShipmentStatusHistoryEntry[];
+  estimatedDelivery?: Date | null;
+  actualDelivery?: Date | null;
+}
+
+export interface AddTrackingDto {
+  trackingNumber: string;
+  providerId?: string;
+  estimatedDelivery?: string;
 }

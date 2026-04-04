@@ -13,11 +13,11 @@
  * const order = await orderService.createOrder(userId, { productId, paymentMethod });
  */
 import { sequelize } from '../config/database';
-import { Order, Product, Purchase, User, VendorOrder } from '../models';
+import { Order, Product, Purchase, User, VendorOrder, ShippingAddress } from '../models';
 import { AppError } from '../middleware/error.middleware';
 import { CommissionService } from './CommissionService';
 import { body } from 'express-validator';
-import type { OrderAttributes } from '../types';
+import type { OrderAttributes, ProductType, ShippingStatus } from '../types';
 
 // Express-validator validation chains (reusable in controllers)
 export const orderValidationRules = {
@@ -38,6 +38,7 @@ export type CreateOrderData = {
   productId: string;
   paymentMethod?: 'manual' | 'simulated';
   notes?: string;
+  shippingAddressId?: string;
 };
 
 const commissionService = new CommissionService();
@@ -110,6 +111,32 @@ export class OrderService {
       throw new AppError(400, 'PRODUCT_INACTIVE', 'Product is not available for purchase');
     }
 
+    // Validate shipping address for physical products
+    const productType = (product as any).type as ProductType | undefined;
+    const isPhysical = productType === 'physical';
+
+    if (isPhysical && !data.shippingAddressId) {
+      throw new AppError(
+        400,
+        'SHIPPING_ADDRESS_REQUIRED',
+        'Shipping address is required for physical products'
+      );
+    }
+
+    // Validate shipping address exists and belongs to user
+    if (data.shippingAddressId) {
+      const address = await ShippingAddress.findOne({
+        where: { id: data.shippingAddressId, userId },
+      });
+      if (!address) {
+        throw new AppError(
+          400,
+          'INVALID_SHIPPING_ADDRESS',
+          'Shipping address not found or does not belong to user'
+        );
+      }
+    }
+
     const totalAmount = Number(product.price);
     const orderNumber = this.generateOrderNumber();
 
@@ -132,6 +159,12 @@ export class OrderService {
       );
 
       // Create Order record
+      // Set shippingStatus based on product type
+      let shippingStatusValue: ShippingStatus = 'not_required';
+      if (isPhysical) {
+        shippingStatusValue = 'pending_shipment';
+      }
+
       const order = await Order.create(
         {
           orderNumber,
@@ -143,6 +176,9 @@ export class OrderService {
           status: 'completed',
           paymentMethod: data.paymentMethod || 'simulated',
           notes: data.notes || null,
+          shippingAddressId: data.shippingAddressId ?? null,
+          shippingCost: null,
+          shippingStatus: shippingStatusValue,
         },
         { transaction }
       );

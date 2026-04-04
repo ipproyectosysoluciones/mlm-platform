@@ -21,6 +21,8 @@ import adminCategoryRoutes from './admin-category.routes';
 import categoryRoutes from './category.routes';
 import vendorRoutes from './vendor.routes';
 import adminVendorRoutes from './admin-vendor.routes';
+import addressRoutes from './address.routes';
+import shippingRoutes from './shipping.routes';
 
 const router: ExpressRouter = Router();
 
@@ -53,6 +55,12 @@ router.use('/vendors', vendorRoutes);
 
 // Admin vendor routes
 router.use('/admin/vendors', adminVendorRoutes);
+
+// Shipping address routes (user)
+router.use('/addresses', addressRoutes);
+
+// Shipping and tracking routes
+router.use('/', shippingRoutes);
 
 // Profile public routes (MUST be before publicRoutes to avoid /profile/:code conflict)
 import profilePublicRoutes from './profile-public.routes';

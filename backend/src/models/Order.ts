@@ -23,7 +23,7 @@ import { sequelize } from '../config/database';
 import { User } from './User';
 import { Product } from './Product';
 import { Purchase } from './Purchase';
-import type { OrderAttributes, OrderCreationAttributes } from '../types';
+import type { OrderAttributes, OrderCreationAttributes, ShippingStatus } from '../types';
 
 type OrderCreation = Optional<OrderAttributes, 'id' | 'createdAt' | 'updatedAt'>;
 
@@ -42,6 +42,10 @@ export class Order extends Model<OrderAttributes, OrderCreation> {
   declare status: 'pending' | 'completed' | 'failed';
   declare paymentMethod: 'manual' | 'simulated';
   declare notes: string | null;
+  // Shipping fields (Phase 3)
+  declare shippingAddressId: string | null;
+  declare shippingCost: number | null;
+  declare shippingStatus: ShippingStatus;
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
 
@@ -103,6 +107,32 @@ Order.init(
       type: DataTypes.TEXT,
       allowNull: true,
     },
+    // Shipping fields (Phase 3 - Delivery Integration)
+    shippingAddressId: {
+      type: DataTypes.UUID,
+      allowNull: true,
+      field: 'shipping_address_id',
+      comment: 'FK to shipping_addresses table',
+    },
+    shippingCost: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: true,
+      field: 'shipping_cost',
+      comment: 'Cost of shipping',
+    },
+    shippingStatus: {
+      type: DataTypes.ENUM(
+        'not_required',
+        'pending_shipment',
+        'shipped',
+        'in_transit',
+        'delivered'
+      ),
+      allowNull: true,
+      defaultValue: 'not_required',
+      field: 'shipping_status',
+      comment: 'Shipping status for the order',
+    },
   },
   {
     sequelize,
@@ -115,6 +145,8 @@ Order.init(
       { fields: ['product_id'] },
       { fields: ['purchase_id'] },
       { fields: ['status'] },
+      { fields: ['shipping_address_id'] },
+      { fields: ['shipping_status'] },
     ],
   }
 );
