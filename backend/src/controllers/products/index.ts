@@ -13,3 +13,22 @@
 
 // Product read controller (retrieval operations)
 export { getProducts, getProductById } from './ProductReadController';
+
+// Product write controller (admin CRUD)
+export {
+  createProduct,
+  updateProduct,
+  deleteProduct,
+  getProductAdmin,
+  listProductsAdmin,
+} from './ProductWriteController';
+
+// Product inventory controller (stock management)
+export {
+  reserveStock,
+  releaseStock,
+  adjustStock,
+  setInitialStock,
+  recordReturn,
+  getInventoryMovements,
+} from './ProductInventoryController';

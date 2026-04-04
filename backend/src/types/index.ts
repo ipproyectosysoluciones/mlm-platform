@@ -679,6 +679,127 @@ export interface GiftCardValidationResult {
 }
 
 // ============================================
+// GENERIC PRODUCTS — Multi-type Product System (#27)
+// PRODUCTOS GENÉRICOS — Sistema de productos multi-tipo (#27)
+// ============================================
+
+/**
+ * Product types for generic product catalog
+ * Tipos de productos para catálogo genérico
+ */
+export const PRODUCT_TYPE = {
+  PHYSICAL: 'physical',
+  DIGITAL: 'digital',
+  SUBSCRIPTION: 'subscription',
+  SERVICE: 'service',
+} as const;
+
+export type ProductType = (typeof PRODUCT_TYPE)[keyof typeof PRODUCT_TYPE];
+
+/**
+ * Inventory movement types for stock audit trail
+ * Tipos de movimiento de inventario para trazabilidad de stock
+ */
+export const INVENTORY_MOVEMENT_TYPE = {
+  INITIAL: 'initial',
+  RESERVE: 'reserve',
+  RELEASE: 'release',
+  ADJUST: 'adjust',
+  RETURN: 'return',
+} as const;
+
+export type InventoryMovementType =
+  (typeof INVENTORY_MOVEMENT_TYPE)[keyof typeof INVENTORY_MOVEMENT_TYPE];
+
+/**
+ * Category attributes for hierarchical categories
+ * Atributos de categoría para categorías jerárquicas
+ */
+export interface CategoryAttributes {
+  id: string;
+  parentId: string | null;
+  name: string;
+  slug: string;
+  description: string | null;
+  isActive: boolean;
+  sortOrder: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface CategoryCreationAttributes {
+  parentId?: string | null;
+  name: string;
+  slug: string;
+  description?: string | null;
+  isActive?: boolean;
+  sortOrder?: number;
+}
+
+/**
+ * Extended Product attributes for generic products
+ * Atributos extendidos de producto para productos genéricos
+ */
+export interface GenericProductAttributes extends ProductAttributes {
+  type: ProductType;
+  sku: string | null;
+  categoryId: string | null;
+  stock: number;
+  isDigital: boolean;
+  maxQuantityPerUser: number | null;
+  metadata: Record<string, unknown> | null;
+  images: string[];
+}
+
+export interface GenericProductCreationAttributes extends ProductCreationAttributes {
+  type?: ProductType;
+  sku?: string | null;
+  categoryId?: string | null;
+  stock?: number;
+  isDigital?: boolean;
+  maxQuantityPerUser?: number | null;
+  metadata?: Record<string, unknown> | null;
+  images?: string[];
+}
+
+/**
+ * Inventory movement attributes for audit trail
+ * Atributos de movimiento de inventario para trazabilidad
+ */
+export interface InventoryMovementAttributes {
+  id: string;
+  productId: string;
+  type: InventoryMovementType;
+  quantity: number;
+  reason: string;
+  referenceId: string | null;
+  performedBy: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface InventoryMovementCreationAttributes {
+  productId: string;
+  type: InventoryMovementType;
+  quantity: number;
+  reason: string;
+  referenceId?: string | null;
+  performedBy: string;
+}
+
+/**
+ * Product list options for filtering
+ * Opciones de listado de productos para filtrado
+ */
+export interface GenericProductListOptions extends ProductListOptions {
+  type?: ProductType;
+  categoryId?: string;
+  minStock?: number;
+  maxStock?: number;
+  search?: string;
+}
+
+// ============================================
 // CART — Abandoned Cart Recovery (#21)
 // CARRITO — Recuperación de carritos abandonados (#21)
 // ============================================

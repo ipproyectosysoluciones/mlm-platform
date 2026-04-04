@@ -16,6 +16,9 @@ import {
   campaignRouter as emailCampaignRoutes,
 } from './email-campaigns.routes';
 import cartRoutes from './carts.routes';
+import adminProductRoutes from './admin-product.routes';
+import adminCategoryRoutes from './admin-category.routes';
+import categoryRoutes from './category.routes';
 
 const router: ExpressRouter = Router();
 
@@ -33,6 +36,15 @@ router.use('/gift-cards', giftCardRoutes);
 router.use('/email-templates', emailTemplateRoutes);
 router.use('/email-campaigns', emailCampaignRoutes);
 router.use('/carts', cartRoutes);
+
+// Category routes (public read, admin write)
+router.use('/categories', categoryRoutes);
+
+// Admin category routes (full CRUD)
+router.use('/admin/categories', adminCategoryRoutes);
+
+// Admin product routes (full CRUD + inventory)
+router.use('/admin/products', adminProductRoutes);
 
 // Profile public routes (MUST be before publicRoutes to avoid /profile/:code conflict)
 import profilePublicRoutes from './profile-public.routes';
