@@ -33,6 +33,8 @@ import { VendorPayout } from './VendorPayout';
 import { ShippingAddress } from './ShippingAddress';
 import { DeliveryProvider } from './DeliveryProvider';
 import { ShipmentTracking } from './ShipmentTracking';
+import { ContractTemplate } from './ContractTemplate';
+import { AffiliateContract } from './AffiliateContract';
 
 // User relationships
 User.hasMany(User, { as: 'children', foreignKey: 'sponsorId', sourceKey: 'id' });
@@ -374,6 +376,34 @@ Order.belongsTo(ShippingAddress, {
   targetKey: 'id',
 });
 
+// ============================================
+// AFFILIATE CONTRACTS — Contract Relations
+// ============================================
+
+// User - AffiliateContract (user acceptance records)
+User.hasMany(AffiliateContract, { foreignKey: 'userId', sourceKey: 'id' });
+AffiliateContract.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
+
+// ContractTemplate - AffiliateContract
+ContractTemplate.hasMany(AffiliateContract, { foreignKey: 'templateId', sourceKey: 'id' });
+AffiliateContract.belongsTo(ContractTemplate, {
+  as: 'template',
+  foreignKey: 'templateId',
+  targetKey: 'id',
+});
+
+// User - AffiliateContract (for revokedBy)
+User.hasMany(AffiliateContract, {
+  as: 'revokedContracts',
+  foreignKey: 'revokedBy',
+  sourceKey: 'id',
+});
+AffiliateContract.belongsTo(User, {
+  as: 'revokedByUser',
+  foreignKey: 'revokedBy',
+  targetKey: 'id',
+});
+
 export {
   sequelize,
   User,
@@ -411,6 +441,8 @@ export {
   ShippingAddress,
   DeliveryProvider,
   ShipmentTracking,
+  ContractTemplate,
+  AffiliateContract,
 };
 
 export function initModels(): void {

@@ -60,6 +60,8 @@ beforeAll(async () => {
     EmailCampaignLog,
     Category,
     InventoryMovement,
+    ContractTemplate,
+    AffiliateContract,
   } = await import('../models');
 
   importedModels = {
@@ -90,6 +92,8 @@ beforeAll(async () => {
     EmailCampaignLog,
     Category,
     InventoryMovement,
+    ContractTemplate,
+    AffiliateContract,
   };
 
   console.log('Models registered');
@@ -164,6 +168,8 @@ afterAll(async () => {
 // Clean tables before each test
 beforeEach(async () => {
   const tables = [
+    'affiliate_contracts',
+    'contract_templates',
     'cart_recovery_tokens',
     'cart_items',
     'carts',

@@ -1450,7 +1450,7 @@ export interface ShippingAddressAttributes {
   city: string;
   state: string;
   postalCode: string;
-  country: string;
+  country: string; // ISO 3166-1 alpha-3
   phone: string | null;
   isDefault: boolean;
   instructions: string | null;
@@ -1459,6 +1459,10 @@ export interface ShippingAddressAttributes {
   updatedAt?: Date;
 }
 
+/**
+ * Shipping address creation attributes
+ * Atributos para crear dirección de envío
+ */
 export interface ShippingAddressCreationAttributes {
   userId: string;
   label?: string | null;
@@ -1489,6 +1493,10 @@ export interface DeliveryProviderAttributes {
   updatedAt?: Date;
 }
 
+/**
+ * Delivery provider creation attributes
+ * Atributos para crear proveedor de envíos
+ */
 export interface DeliveryProviderCreationAttributes {
   name: string;
   slug: string;
@@ -1516,6 +1524,10 @@ export interface ShipmentTrackingAttributes {
   updatedAt?: Date;
 }
 
+/**
+ * Shipment tracking creation attributes
+ * Atributos para crear seguimiento de envío
+ */
 export interface ShipmentTrackingCreationAttributes {
   orderId?: string | null;
   vendorOrderId?: string | null;
@@ -1527,8 +1539,111 @@ export interface ShipmentTrackingCreationAttributes {
   actualDelivery?: Date | null;
 }
 
+/**
+ * Add tracking data DTO
+ * DTO para agregar seguimiento
+ */
 export interface AddTrackingDto {
   trackingNumber: string;
   providerId?: string;
   estimatedDelivery?: string;
+}
+
+// ============================================
+// AFFILIATE CONTRACTS — Phase 3.5 (#44)
+// CONTRATOS DE AFILIADO — Fase 3.5 (#44)
+// ============================================
+
+/**
+ * Contract types for legal compliance
+ * Tipos de contrato para cumplimiento legal
+ */
+export const CONTRACT_TYPE = {
+  AFFILIATE_AGREEMENT: 'AFFILIATE_AGREEMENT',
+  COMPENSATION_PLAN: 'COMPENSATION_PLAN',
+  PRIVACY_POLICY: 'PRIVACY_POLICY',
+  TERMS_OF_SERVICE: 'TERMS_OF_SERVICE',
+} as const;
+
+export type ContractType = (typeof CONTRACT_TYPE)[keyof typeof CONTRACT_TYPE];
+
+/**
+ * Contract acceptance status
+ * Estado de aceptación del contrato
+ */
+export const CONTRACT_STATUS = {
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED',
+  DECLINED: 'DECLINED',
+  REVOKED: 'REVOKED',
+} as const;
+
+export type ContractStatus = (typeof CONTRACT_STATUS)[keyof typeof CONTRACT_STATUS];
+
+/**
+ * Contract template attributes
+ * Atributos de template de contrato
+ */
+export interface ContractTemplateAttributes {
+  id: string;
+  type: ContractType;
+  version: string; // e.g., "1.0.0"
+  title: string;
+  content: string; // Full contract HTML
+  contentHash: string; // SHA256 of content at creation time
+  effectiveFrom: Date;
+  effectiveTo: Date | null; // NULL = current active version
+  isActive: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+/**
+ * Contract template creation attributes
+ * Atributos para crear template de contrato
+ */
+export interface ContractTemplateCreationAttributes {
+  type: ContractType;
+  version: string;
+  title: string;
+  content: string;
+  contentHash?: string;
+  effectiveFrom: Date;
+  effectiveTo?: Date | null;
+  isActive?: boolean;
+}
+
+/**
+ * Affiliate contract (user acceptance record)
+ * Registro de aceptación del usuario
+ */
+export interface AffiliateContractAttributes {
+  id: string;
+  userId: string;
+  templateId: string;
+  status: ContractStatus;
+  signedAt: Date | null; // When accepted
+  ipAddress: string; // IPv4/IPv6
+  userAgent: string | null;
+  contentHash: string; // Hash of content at time of signing
+  revokedAt: Date | null;
+  revokedBy: string | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+/**
+ * Affiliate contract creation attributes
+ * Atributos para crear registro de aceptación
+ */
+export interface AffiliateContractCreationAttributes {
+  userId: string;
+  templateId: string;
+  status: ContractStatus;
+  signedAt?: Date | null;
+  ipAddress: string;
+  userAgent?: string | null;
+  contentHash: string;
+  revokedAt?: Date | null;
+  revokedBy?: string | null;
 }
