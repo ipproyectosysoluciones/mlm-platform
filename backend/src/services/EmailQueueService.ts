@@ -90,6 +90,14 @@ export class EmailQueueService {
 
     // Process each email individually (graceful degradation)
     for (const emailItem of pendingEmails) {
+      // Skip emails for paused campaigns (Sentry fix: prevent sending after pause)
+      const campaign = await EmailCampaign.findByPk(emailItem.campaignId, {
+        attributes: ['id', 'status'],
+      });
+      if (campaign && campaign.status === EMAIL_CAMPAIGN_STATUS.PAUSED) {
+        continue;
+      }
+
       stats.processed++;
 
       try {

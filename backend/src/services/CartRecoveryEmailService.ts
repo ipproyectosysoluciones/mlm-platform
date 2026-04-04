@@ -92,7 +92,6 @@ export class CartRecoveryEmailService {
         subtotal: (item.quantity * Number(item.unitPrice)).toFixed(2),
       })),
       recoveryLink,
-      recoveryCode: tokenPlain.slice(0, 8).toUpperCase(),
       expiresDisplay,
     });
 
@@ -126,7 +125,6 @@ export class CartRecoveryEmailService {
     totalAmount: string;
     items: Array<{ productName: string; quantity: number; subtotal: string }>;
     recoveryLink: string;
-    recoveryCode: string;
     expiresDisplay: string;
   }): string {
     const itemRows = data.items
@@ -187,11 +185,6 @@ export class CartRecoveryEmailService {
     </p>
 
     <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 24px 0;" />
-
-    <p style="font-size: 12px; color: #9ca3af; text-align: center;">
-      Can't click the button? Enter this code manually:
-      <code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 14px; letter-spacing: 1px;">${data.recoveryCode}</code>
-    </p>
 
     <p style="font-size: 11px; color: #d1d5db; text-align: center; margin-top: 16px;">
       MLM Platform &bull; You received this email because you have items in your cart.
