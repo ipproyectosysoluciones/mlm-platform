@@ -186,6 +186,7 @@ export const listProductsAdmin = asyncHandler(
       search,
     });
 
+    // Response format: ApiResponse<Product[]> with top-level pagination (matches ProductReadController)
     const response: ApiResponse<Product[]> = {
       success: true,
       data: result.rows.map((p) => p.toJSON() as Product),

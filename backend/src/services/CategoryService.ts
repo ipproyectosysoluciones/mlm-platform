@@ -92,11 +92,24 @@ export class CategoryService {
    * Create a new category
    * @param {CreateCategoryDto} data - Category data
    * @returns {Promise<Category>} Created category
-   * @throws {AppError} 400 if parent chain exceeds max depth
+   * @throws {AppError} 400 if parent chain exceeds max depth or parent not found
    */
   async create(data: CreateCategoryDto): Promise<Category> {
     // Validate parent chain depth if parentId provided
     if (data.parentId) {
+      // Validate parent exists AND is active
+      const parent = await Category.findByPk(data.parentId);
+      if (!parent) {
+        throw new AppError(400, 'CATEGORY_PARENT_NOT_FOUND', 'Parent category not found');
+      }
+      if (!parent.isActive) {
+        throw new AppError(
+          400,
+          'CATEGORY_PARENT_INACTIVE',
+          'Cannot create child of inactive category'
+        );
+      }
+
       const depth = await this.getDepth(data.parentId);
       if (depth >= MAX_CATEGORY_DEPTH) {
         throw new AppError(
@@ -353,9 +366,13 @@ export class CategoryService {
    * @returns {Promise<Category>} Category with associations
    */
   async getWithRelations(id: string): Promise<Category> {
-    const category = await Category.findByPk(id, {
+    // Use findOne with paranoid:false to find soft-deleted records,
+    // then manually filter by isActive so deleted categories return 404
+    const category = await Category.findOne({
+      where: { id, isActive: true },
+      paranoid: false,
       include: [
-        { model: Category, as: 'parent' },
+        { model: Category, as: 'parent', where: { isActive: true }, required: false },
         { model: Category, as: 'children', where: { isActive: true }, required: false },
       ],
     });
