@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "MLM Platform API",
-    "description": "Complete API collection for MLM Binary Affiliations Platform - v1.7.0 (PWA + Push Notifications)",
+    "description": "Complete API collection for MLM Binary Affiliations Platform - v1.10.0 (Sprint 2: Gift Cards, Carts, Email Campaigns)",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -883,6 +883,547 @@
               "raw": "{{baseUrl}}/public/profile/{{referralCode}}/products",
               "host": ["{{baseUrl}}"],
               "path": ["public", "profile", "{{referralCode}}", "products"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Gift Cards",
+      "item": [
+        {
+          "name": "List Gift Cards (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/gift-cards?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["gift-cards"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" },
+                { "key": "status", "value": "active", "disabled": true }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Gift Card (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 50.00,\n  \"expiresInDays\": 90\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/gift-cards",
+              "host": ["{{baseUrl}}"],
+              "path": ["gift-cards"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Gift Card Details (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/gift-cards/{{giftCardId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["gift-cards", "{{giftCardId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Validate Gift Card",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/gift-cards/{{giftCardId}}/validate",
+              "host": ["{{baseUrl}}"],
+              "path": ["gift-cards", "{{giftCardId}}", "validate"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Redeem Gift Card",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderId\": \"00000000-0000-0000-0000-000000000000\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/gift-cards/{{giftCardId}}/redeem",
+              "host": ["{{baseUrl}}"],
+              "path": ["gift-cards", "{{giftCardId}}", "redeem"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Carts",
+      "item": [
+        {
+          "name": "Get My Cart",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/carts/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["carts", "me"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Item to Cart",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"00000000-0000-0000-0000-000000000001\",\n  \"quantity\": 2\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/carts/me/items",
+              "host": ["{{baseUrl}}"],
+              "path": ["carts", "me", "items"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Cart Item Quantity",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 3\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/carts/me/items/{{cartItemId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["carts", "me", "items", "{{cartItemId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Remove Item from Cart",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/carts/me/items/{{cartItemId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["carts", "me", "items", "{{cartItemId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Preview Cart by Recovery Token",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/carts/recover/{{recoveryToken}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["carts", "recover", "{{recoveryToken}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Complete Cart Recovery",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/carts/recover/{{recoveryToken}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["carts", "recover", "{{recoveryToken}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Abandoned Carts (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/carts/abandoned?limit=50&offset=0&days=30",
+              "host": ["{{baseUrl}}"],
+              "path": ["carts", "abandoned"],
+              "query": [
+                { "key": "limit", "value": "50" },
+                { "key": "offset", "value": "0" },
+                { "key": "days", "value": "30" }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Email Templates",
+      "item": [
+        {
+          "name": "List Email Templates (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/email-templates?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["email-templates"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Email Template (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Welcome Email\",\n  \"subjectLine\": \"Welcome to MLM Platform, {{firstName}}!\",\n  \"htmlContent\": \"<h1>Hello {{firstName}}!</h1><p>Welcome to our platform. Your referral code is <strong>{{referralCode}}</strong>.</p>\",\n  \"wysiwygState\": {}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/email-templates",
+              "host": ["{{baseUrl}}"],
+              "path": ["email-templates"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Email Template By ID (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/email-templates/{{emailTemplateId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["email-templates", "{{emailTemplateId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Email Template (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/email-templates/{{emailTemplateId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["email-templates", "{{emailTemplateId}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Email Campaigns",
+      "item": [
+        {
+          "name": "List Email Campaigns (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/email-campaigns?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["email-campaigns"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" },
+                { "key": "status", "value": "draft", "disabled": true }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Email Campaign (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Spring Promotion 2026\",\n  \"emailTemplateId\": \"{{emailTemplateId}}\",\n  \"recipientSegment\": {\n    \"status\": \"active\",\n    \"role\": \"affiliate\"\n  },\n  \"scheduledFor\": \"2026-04-15T09:00:00Z\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/email-campaigns",
+              "host": ["{{baseUrl}}"],
+              "path": ["email-campaigns"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Campaign Details (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/email-campaigns/{{campaignId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["email-campaigns", "{{campaignId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Preview Campaign Email (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/email-campaigns/{{campaignId}}/preview?userId={{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["email-campaigns", "{{campaignId}}", "preview"],
+              "query": [
+                { "key": "userId", "value": "{{userId}}" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send Campaign (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/email-campaigns/{{campaignId}}/send",
+              "host": ["{{baseUrl}}"],
+              "path": ["email-campaigns", "{{campaignId}}", "send"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Schedule Campaign (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"scheduledFor\": \"2026-05-01T10:00:00Z\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/email-campaigns/{{campaignId}}/schedule",
+              "host": ["{{baseUrl}}"],
+              "path": ["email-campaigns", "{{campaignId}}", "schedule"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Pause Campaign (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/email-campaigns/{{campaignId}}/pause",
+              "host": ["{{baseUrl}}"],
+              "path": ["email-campaigns", "{{campaignId}}", "pause"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Retry Failed Emails (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/email-campaigns/{{campaignId}}/retry-failed",
+              "host": ["{{baseUrl}}"],
+              "path": ["email-campaigns", "{{campaignId}}", "retry-failed"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Campaign Logs (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/email-campaigns/{{campaignId}}/logs?limit=50&offset=0",
+              "host": ["{{baseUrl}}"],
+              "path": ["email-campaigns", "{{campaignId}}", "logs"],
+              "query": [
+                { "key": "limit", "value": "50" },
+                { "key": "offset", "value": "0" },
+                { "key": "eventType", "value": "failed", "disabled": true }
+              ]
             }
           },
           "response": []
