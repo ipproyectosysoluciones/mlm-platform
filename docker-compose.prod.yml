@@ -1,7 +1,12 @@
 # ============================================
 # MLM Platform - Production
 # ============================================
-# Usage: VERSION=v1.0.0 docker compose -f docker-compose.prod.yml up -d
+# Usage: VERSION=v1.11.0 docker compose -f docker-compose.prod.yml up -d
+# Requires: .env.production at project root
+#
+# Pull pre-built images from DockerHub (no source code needed on server):
+#   VERSION=v1.11.0 docker compose -f docker-compose.prod.yml pull
+#   VERSION=v1.11.0 docker compose -f docker-compose.prod.yml up -d
 
 services:
   postgres:
@@ -10,7 +15,7 @@ services:
     environment:
       POSTGRES_DB: ${DB_NAME:-mlm_db}
       POSTGRES_USER: ${DB_USER:-mlm}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-mlm123}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -35,26 +40,79 @@ services:
       - mlm-network
 
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    image: ipproyectos/mlm-backend:${VERSION:-latest}
     restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
+      # ── Core ──────────────────────────────────────────────────────────
       NODE_ENV: production
       PORT: 3000
+
+      # ── Database ──────────────────────────────────────────────────────
       DB_DIALECT: postgres
       DB_HOST: postgres
       DB_PORT: 5432
       DB_NAME: ${DB_NAME:-mlm_db}
       DB_USER: ${DB_USER:-mlm}
-      DB_PASSWORD: ${DB_PASSWORD:-mlm123}
+      DB_PASSWORD: ${DB_PASSWORD}
+
+      # ── JWT ───────────────────────────────────────────────────────────
       JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
+
+      # ── 2FA ───────────────────────────────────────────────────────────
+      TWO_FACTOR_SECRET_KEY: ${TWO_FACTOR_SECRET_KEY}
+
+      # ── App URLs ──────────────────────────────────────────────────────
+      APP_URL: ${APP_URL}
+      FRONTEND_URL: ${FRONTEND_URL}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
+
+      # ── Redis ─────────────────────────────────────────────────────────
+      REDIS_ENABLED: ${REDIS_ENABLED:-true}
       REDIS_HOST: redis
       REDIS_PORT: 6379
-      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost}
+
+      # ── Email / Brevo ─────────────────────────────────────────────────
+      BREVO_SMTP_HOST: ${BREVO_SMTP_HOST:-smtp-relay.brevo.com}
+      BREVO_SMTP_PORT: ${BREVO_SMTP_PORT:-587}
+      BREVO_SMTP_USER: ${BREVO_SMTP_USER}
+      BREVO_SMTP_PASS: ${BREVO_SMTP_PASS}
+      BREVO_SENDER_EMAIL: ${BREVO_SENDER_EMAIL:-noreply@mlmplatform.com}
+      BREVO_SENDER_NAME: ${BREVO_SENDER_NAME:-MLM Platform}
+      BREVO_API_KEY: ${BREVO_API_KEY}
+      BREVO_SMS_SENDER: ${BREVO_SMS_SENDER:-MLMPlatform}
+
+      # ── Wallet ────────────────────────────────────────────────────────
+      WALLET_MIN_WITHDRAWAL: ${WALLET_MIN_WITHDRAWAL:-20}
+      WALLET_FEE_PERCENTAGE: ${WALLET_FEE_PERCENTAGE:-5}
+      WALLET_CRON_TIME: ${WALLET_CRON_TIME:-0 0 * * *}
+
+      # ── Push Notifications (VAPID) ────────────────────────────────────
+      VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY}
+      VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY}
+      VAPID_SUBJECT: ${VAPID_SUBJECT:-mailto:admin@mlm-platform.com}
+
+      # ── PayPal ────────────────────────────────────────────────────────
+      PAYPAL_MODE: ${PAYPAL_MODE:-sandbox}
+      PAYPAL_CLIENT_ID: ${PAYPAL_CLIENT_ID:-}
+      PAYPAL_CLIENT_SECRET: ${PAYPAL_CLIENT_SECRET:-}
+      PAYPAL_WEBHOOK_ID: ${PAYPAL_WEBHOOK_ID:-}
+
+      # ── MercadoPago ───────────────────────────────────────────────────
+      MERCADOPAGO_ACCESS_TOKEN: ${MERCADOPAGO_ACCESS_TOKEN:-}
+      MERCADOPAGO_PUBLIC_KEY: ${MERCADOPAGO_PUBLIC_KEY:-}
+      MERCADOPAGO_WEBHOOK_ID: ${MERCADOPAGO_WEBHOOK_ID:-}
+      MERCADOPAGO_INTEGRATION_TYPE: ${MERCADOPAGO_INTEGRATION_TYPE:-checkout}
+      MERCADOPAGO_WEBHOOK_SECRET: ${MERCADOPAGO_WEBHOOK_SECRET:-}
+
+      # ── Monitoring ────────────────────────────────────────────────────
       SENTRY_DSN: ${SENTRY_DSN:-}
+
+      # ── Feature flags ─────────────────────────────────────────────────
+      SKIP_COMMISSION_CALCULATION: ${SKIP_COMMISSION_CALCULATION:-false}
+
     depends_on:
       postgres:
         condition: service_healthy
@@ -64,9 +122,7 @@ services:
       - mlm-network
 
   frontend:
-    build:
-      context: .
-      dockerfile: frontend/Dockerfile
+    image: ipproyectos/mlm-frontend:${VERSION:-latest}
     restart: unless-stopped
     ports:
       - "3001:80"

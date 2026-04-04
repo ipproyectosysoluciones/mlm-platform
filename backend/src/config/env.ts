@@ -54,11 +54,11 @@ export const config = {
     /** Database host / Host de base de datos */
     host: process.env.DB_HOST || 'localhost',
     /** Database port / Puerto de base de datos */
-    port: parseInt(process.env.DB_PORT || '3306', 10),
+    port: parseInt(process.env.DB_PORT || '5432', 10),
     /** Database name / Nombre de base de datos */
     name: process.env.DB_NAME || 'mlm_db',
     /** Database user / Usuario de base de datos */
-    user: process.env.DB_USER || 'root',
+    user: process.env.DB_USER || 'mlm',
     /** Database password / Contraseña de base de datos */
     password: process.env.DB_PASSWORD || '',
   },
