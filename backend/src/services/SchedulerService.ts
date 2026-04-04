@@ -26,6 +26,11 @@ import { walletService } from './WalletService';
 import { notificationService } from './NotificationService';
 import { cartRecoveryEmailService } from './CartRecoveryEmailService';
 import { cartService } from './CartService';
+import { emailQueueService } from './EmailQueueService';
+import { emailCampaignService } from './EmailCampaignService';
+import { EmailCampaign } from '../models';
+import { Op } from 'sequelize';
+import { EMAIL_CAMPAIGN_STATUS } from '../types';
 import { config } from '../config/env';
 
 /**
@@ -34,9 +39,23 @@ import { config } from '../config/env';
  */
 const ABANDONED_CART_CRON = '*/15 * * * *';
 
+/**
+ * Email campaign scheduler cron: every 1 minute
+ * Cron del scheduler de campañas de email: cada 1 minuto
+ */
+const EMAIL_CAMPAIGN_CRON = '* * * * *';
+
+/**
+ * Email queue processor cron: every 1 minute
+ * Cron del procesador de cola de email: cada 1 minuto
+ */
+const EMAIL_QUEUE_CRON = '* * * * *';
+
 export class SchedulerService {
   private job: unknown | null = null;
   private abandonedCartJob: unknown | null = null;
+  private emailCampaignJob: unknown | null = null;
+  private emailQueueJob: unknown | null = null;
   private isRunning: boolean = false;
 
   /**
@@ -78,9 +97,29 @@ export class SchedulerService {
     // Start weekly digest notification job
     notificationService.startWeeklyDigest();
 
+    // Email campaign scheduler: check for scheduled campaigns every minute
+    this.emailCampaignJob = cron.schedule(EMAIL_CAMPAIGN_CRON, async () => {
+      try {
+        await this.emailCampaignSchedulerJob();
+      } catch (error) {
+        console.error('❌ Error running email campaign scheduler job:', error);
+      }
+    });
+
+    // Email queue processor: process pending emails every minute
+    this.emailQueueJob = cron.schedule(EMAIL_QUEUE_CRON, async () => {
+      try {
+        await this.emailQueueProcessorJob();
+      } catch (error) {
+        console.error('❌ Error running email queue processor job:', error);
+      }
+    });
+
     console.log('📋 Scheduler initialized');
     console.log(`   Daily payout: ${config.wallet.cronTime}`);
     console.log(`   Abandoned cart detection: ${ABANDONED_CART_CRON}`);
+    console.log(`   Email campaign scheduler: ${EMAIL_CAMPAIGN_CRON}`);
+    console.log(`   Email queue processor: ${EMAIL_QUEUE_CRON}`);
     console.log(`   Weekly digest: Every Sunday at 9:00 AM UTC`);
 
     this.isRunning = true;
@@ -92,12 +131,20 @@ export class SchedulerService {
    */
   stop(): void {
     if (this.job) {
-      (this.job as cron.ScheduledTask).stop();
+      (this.job as { stop(): void }).stop();
       this.job = null;
     }
     if (this.abandonedCartJob) {
-      (this.abandonedCartJob as cron.ScheduledTask).stop();
+      (this.abandonedCartJob as { stop(): void }).stop();
       this.abandonedCartJob = null;
+    }
+    if (this.emailCampaignJob) {
+      (this.emailCampaignJob as { stop(): void }).stop();
+      this.emailCampaignJob = null;
+    }
+    if (this.emailQueueJob) {
+      (this.emailQueueJob as { stop(): void }).stop();
+      this.emailQueueJob = null;
     }
     // Stop weekly digest job
     notificationService.stopWeeklyDigest();
@@ -207,6 +254,70 @@ export class SchedulerService {
    */
   getStatus(): boolean {
     return this.isRunning;
+  }
+
+  // ============================================
+  // EMAIL CAMPAIGN JOBS — Jobs de Campañas de Email
+  // ============================================
+
+  /**
+   * Email campaign scheduler job: find scheduled campaigns whose scheduledFor <= NOW and send them
+   * Job de scheduler de campañas: encontrar campañas programadas cuyo scheduledFor <= AHORA y enviarlas
+   *
+   * Idempotent: sendCampaign uses SELECT FOR UPDATE locking, so re-running
+   * will not double-process campaigns already in 'sending' status.
+   *
+   * @returns Number of campaigns triggered / Número de campañas disparadas
+   */
+  async emailCampaignSchedulerJob(): Promise<number> {
+    const scheduledCampaigns = await EmailCampaign.findAll({
+      where: {
+        status: EMAIL_CAMPAIGN_STATUS.SCHEDULED,
+        scheduledFor: { [Op.lte]: new Date() },
+      },
+    });
+
+    if (scheduledCampaigns.length === 0) {
+      return 0;
+    }
+
+    console.log(
+      `[EmailCampaignScheduler] Found ${scheduledCampaigns.length} scheduled campaigns to send`
+    );
+
+    let triggered = 0;
+    for (const campaign of scheduledCampaigns) {
+      try {
+        await emailCampaignService.sendCampaign(campaign.id);
+        triggered++;
+        console.log(
+          `[EmailCampaignScheduler] Triggered campaign ${campaign.id} (${campaign.name})`
+        );
+      } catch (error) {
+        console.error(`[EmailCampaignScheduler] Error triggering campaign ${campaign.id}:`, error);
+        // Graceful degradation: continue with next campaign
+      }
+    }
+
+    return triggered;
+  }
+
+  /**
+   * Email queue processor job: delegate to EmailQueueService.processPendingEmails()
+   * Job del procesador de cola de email: delegar a EmailQueueService.processPendingEmails()
+   *
+   * Idempotent: EmailQueueService marks items as 'processing' before sending,
+   * preventing double-processing on concurrent runs.
+   *
+   * @returns Processing stats / Estadísticas de procesamiento
+   */
+  async emailQueueProcessorJob(): Promise<{
+    processed: number;
+    sent: number;
+    deferred: number;
+    failed: number;
+  }> {
+    return emailQueueService.processPendingEmails();
   }
 }
 

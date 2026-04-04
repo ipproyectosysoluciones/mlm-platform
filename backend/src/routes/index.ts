@@ -11,6 +11,10 @@ import pushRoutes from './push.routes';
 import publicRoutes from './public.routes';
 import landingPublicRoutes from './landing-public.routes';
 import giftCardRoutes from './gift-cards.routes';
+import {
+  templateRouter as emailTemplateRoutes,
+  campaignRouter as emailCampaignRoutes,
+} from './email-campaigns.routes';
 import cartRoutes from './carts.routes';
 
 const router: ExpressRouter = Router();
@@ -26,6 +30,8 @@ router.use('/wallet', walletRoutes);
 router.use('/wallets', walletRoutes); // Alias for test compatibility
 router.use('/push', pushRoutes);
 router.use('/gift-cards', giftCardRoutes);
+router.use('/email-templates', emailTemplateRoutes);
+router.use('/email-campaigns', emailCampaignRoutes);
 router.use('/carts', cartRoutes);
 
 // Profile public routes (MUST be before publicRoutes to avoid /profile/:code conflict)
