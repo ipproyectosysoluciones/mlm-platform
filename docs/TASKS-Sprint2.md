@@ -605,16 +605,16 @@
 
 **Acceptance Criteria**:
 
-- [ ] Tables:
+- [x] Tables:
   - `email_templates`: id, created_by_user_id, name, subject_line, html_content, wysiwyg_state, variables_used, created_at, updated_at, deleted_at
   - `email_campaigns`: id, created_by_user_id, email_template_id, name, status, scheduled_for, started_at, completed_at, recipient_segment, recipient_count, sent_count, failed_count, deferred_count, bounce_count, open_count, click_count
   - `campaign_recipients`: id, campaign_id, user_id, email_address, status, opened_at, first_click_at, click_count, sent_at
   - `email_queue`: id, campaign_id, campaign_recipient_id, user_id, email_address, subject_line, html_content, status, retry_count, next_retry_at, last_error, brevo_message_id, brevo_response, created_at, processed_at
   - `email_campaign_logs`: id, campaign_id, campaign_recipient_id, event_type, event_timestamp, details
-- [ ] Constraints: status IN (valid values), timestamps logical
-- [ ] Indexes: `idx_email_campaigns_status`, `idx_email_campaigns_scheduled`, `idx_email_queue_status_retry`, `idx_email_campaign_logs_campaign`
-- [ ] FK relationships: proper CASCADE policies
-- [ ] Migrations reversible
+- [x] Constraints: status IN (valid values), timestamps logical
+- [x] Indexes: `idx_email_campaigns_status`, `idx_email_campaigns_scheduled`, `idx_email_queue_status_retry`, `idx_email_campaign_logs_campaign`
+- [x] FK relationships: proper CASCADE policies
+- [x] Migrations reversible
 
 **Story Points**: M (2)
 
@@ -630,18 +630,18 @@
 
 **Acceptance Criteria**:
 
-- [ ] Methods:
+- [x] Methods:
   - `async validateTemplate(htmlContent: string): Promise<ValidationResult>`
   - `async renderTemplate(htmlContent: string, variables: Record<string, string>): Promise<string>`
   - `async createTemplate(name: string, subjectLine: string, htmlContent: string): Promise<EmailTemplate>`
   - `async createCampaign(params: CreateCampaignDto): Promise<EmailCampaign>`
   - `async getCampaign(campaignId: string): Promise<EmailCampaign>`
-- [ ] validateTemplate: Regex to find `{{var}}`, check against allowlist (firstName, lastName, email, referralCode, discountCode, expiresAt), reject unknowns
-- [ ] renderTemplate: Replace `{{var}}` with values, escape HTML to prevent injection
-- [ ] createTemplate: Validate HTML, save WYSIWYG state, extract variables_used
-- [ ] createCampaign: Validate template exists, segment valid, save with status='draft'
-- [ ] Error handling: Invalid HTML (400), unknown variables (400), template not found (404)
-- [ ] Unit tests: 8 tests (validation, rendering, injection prevention, CRUD)
+- [x] validateTemplate: Regex to find `{{var}}`, check against allowlist (firstName, lastName, email, referralCode, discountCode, expiresAt), reject unknowns
+- [x] renderTemplate: Replace `{{var}}` with values, escape HTML to prevent injection
+- [x] createTemplate: Validate HTML, save WYSIWYG state, extract variables_used
+- [x] createCampaign: Validate template exists, segment valid, save with status='draft'
+- [x] Error handling: Invalid HTML (400), unknown variables (400), template not found (404)
+- [x] Unit tests: 8 tests (validation, rendering, injection prevention, CRUD)
 
 **Story Points**: M (2)
 
@@ -658,18 +658,18 @@
 
 **Acceptance Criteria**:
 
-- [ ] Methods:
+- [x] Methods:
   - `async sendCampaign(campaignId: string): Promise<void>`
   - `async scheduleCampaign(campaignId: string, scheduledFor: Date): Promise<void>`
   - `async pauseCampaign(campaignId: string): Promise<void>`
   - `async retryFailedEmails(campaignId: string): Promise<number>`
-- [ ] sendCampaign: Fetch campaign (SELECT...FOR UPDATE lock), validate status != 'sending', get recipients, batch INSERT into email_queue, update status='sending'
-- [ ] scheduleCampaign: Set scheduled_for, status='scheduled', let SchedulerService trigger at time
-- [ ] pauseCampaign: Set status='paused', stop new emails
-- [ ] retryFailedEmails: Find status='failed', reset retry_count=0, set status='pending', re-queue
-- [ ] Performance: <2s for 5000 recipients (batch INSERT)
-- [ ] Error handling: Campaign already sending (409), invalid state (400)
-- [ ] Unit tests: 6 tests (send flow, scheduling, pause, retry)
+- [x] sendCampaign: Fetch campaign (SELECT...FOR UPDATE lock), validate status != 'sending', get recipients, batch INSERT into email_queue, update status='sending'
+- [x] scheduleCampaign: Set scheduled_for, status='scheduled', let SchedulerService trigger at time
+- [x] pauseCampaign: Set status='paused', stop new emails
+- [x] retryFailedEmails: Find status='failed', reset retry_count=0, set status='pending', re-queue
+- [x] Performance: <2s for 5000 recipients (batch INSERT)
+- [x] Error handling: Campaign already sending (409), invalid state (400)
+- [x] Unit tests: 6 tests (send flow, scheduling, pause, retry)
 
 **Story Points**: M (2)
 
@@ -686,16 +686,16 @@
 
 **Acceptance Criteria**:
 
-- [ ] Methods:
+- [x] Methods:
   - `async sendEmail(params: { to: string; subject: string; htmlContent: string }): Promise<{ messageId: string }>`
-- [ ] Flow:
+- [x] Flow:
   1. Try Brevo REST API: POST https://api.brevo.com/v3/smtp/email
   2. On success: Return messageId, reset circuit breaker failures
   3. On timeout (>5s) or 5xx error: Increment circuit breaker, fallback to SMTP
   4. Circuit breaker threshold: 10 consecutive failures → switch to SMTP permanently (until reset)
-- [ ] SMTP fallback: nodemailer + smtp-relay.brevo.com
-- [ ] Error logging: Log all API calls, failures, retries
-- [ ] Unit tests: 6 tests (REST success, REST timeout, REST 5xx, SMTP fallback, circuit breaker, idempotency)
+- [x] SMTP fallback: nodemailer + smtp-relay.brevo.com
+- [x] Error logging: Log all API calls, failures, retries
+- [x] Unit tests: 6 tests (REST success, REST timeout, REST 5xx, SMTP fallback, circuit breaker, idempotency)
 
 **Story Points**: L (3)
 
@@ -714,7 +714,7 @@
 
 **Acceptance Criteria**:
 
-- [ ] Routes:
+- [x] Routes:
   - `POST /api/v1/email-templates` (auth) → create template
   - `GET /api/v1/email-templates/{id}` (auth) → get template
   - `POST /api/v1/email-campaigns` (auth) → create campaign
@@ -725,11 +725,11 @@
   - `POST /api/v1/email-campaigns/{id}/retry-failed` (admin) → retry failed emails
   - `GET /api/v1/email-campaigns/{id}/logs` (admin) → get delivery logs
   - `GET /api/v1/email-campaigns` (admin) → list campaigns
-- [ ] Validation: Zod schemas for all requests
-- [ ] Auth: JWT required for most endpoints, admin for sensitive ops (retry, logs)
-- [ ] Rate limiting: 10 req/min for campaign creation (prevent spam)
-- [ ] Error handling: 400, 404, 409, 500
-- [ ] Unit tests: 12 tests (happy paths + error cases)
+- [x] Validation: Zod schemas for all requests
+- [x] Auth: JWT required for most endpoints, admin for sensitive ops (retry, logs)
+- [x] Rate limiting: 10 req/min for campaign creation (prevent spam)
+- [x] Error handling: 400, 404, 409, 500
+- [x] Unit tests: 12 tests (happy paths + error cases)
 
 **Story Points**: M (2)
 
@@ -751,20 +751,20 @@
 
 **Acceptance Criteria**:
 
-- [ ] Method: `async processPendingEmails(): Promise<void>`
-- [ ] Query: SELECT FROM email_queue WHERE status IN ('pending', 'deferred') AND (next_retry_at IS NULL OR next_retry_at <= NOW()) LIMIT 100
-- [ ] For each email:
+- [x] Method: `async processPendingEmails(): Promise<void>`
+- [x] Query: SELECT FROM email_queue WHERE status IN ('pending', 'deferred') AND (next_retry_at IS NULL OR next_retry_at <= NOW()) LIMIT 100
+- [x] For each email:
   - Try send via BrevoEmailService
   - Success: status='sent', brevo_message_id=id, processed_at=NOW()
   - Failure (retryable):
     - retryCount++
     - IF retryCount >= 5: status='failed', log final error
     - ELSE: backoff = 2^(retryCount-1) seconds, next_retry_at = NOW() + backoff, status='deferred'
-- [ ] Update campaign summary: sentCount++, failedCount++, deferredCount=COUNT(deferred)
-- [ ] Logging: All send attempts logged to email_campaign_logs
-- [ ] Scheduler: SchedulerService calls processPendingEmails() every 1 minute
-- [ ] Performance: ~100 emails/min (1–2s per email via Brevo)
-- [ ] Unit tests: 6 tests (happy path, retries, backoff calculation, max retries, campaign stats, logging)
+- [x] Update campaign summary: sentCount++, failedCount++, deferredCount=COUNT(deferred)
+- [x] Logging: All send attempts logged to email_campaign_logs
+- [x] Scheduler: SchedulerService calls processPendingEmails() every 1 minute
+- [x] Performance: ~100 emails/min (1–2s per email via Brevo)
+- [x] Unit tests: 6 tests (happy path, retries, backoff calculation, max retries, campaign stats, logging)
 
 **Story Points**: M (2)
 
@@ -781,17 +781,17 @@
 
 **Acceptance Criteria**:
 
-- [ ] Methods:
+- [x] Methods:
   - `async emailCampaignSchedulerJob(): Promise<void>`
   - `async emailQueueProcessorJob(): Promise<void>`
-- [ ] emailCampaignSchedulerJob: Query campaigns WHERE status='scheduled' AND scheduled_for <= NOW(), call sendCampaign()
-- [ ] emailQueueProcessorJob: Call EmailQueueService.processPendingEmails()
-- [ ] Both jobs run on cron schedule:
+- [x] emailCampaignSchedulerJob: Query campaigns WHERE status='scheduled' AND scheduled_for <= NOW(), call sendCampaign()
+- [x] emailQueueProcessorJob: Call EmailQueueService.processPendingEmails()
+- [x] Both jobs run on cron schedule:
   - Campaign scheduler: Every 1 minute
   - Queue processor: Every 1 minute
-- [ ] Idempotency: Re-running should not double-process
-- [ ] Error handling: Graceful degradation (if job fails, next run retries)
-- [ ] Unit tests: 4 tests (scheduler triggering, queue processing, idempotency, error recovery)
+- [x] Idempotency: Re-running should not double-process
+- [x] Error handling: Graceful degradation (if job fails, next run retries)
+- [x] Unit tests: 4 tests (scheduler triggering, queue processing, idempotency, error recovery)
 
 **Story Points**: S (1)
 
@@ -810,20 +810,20 @@
 
 **Acceptance Criteria**:
 
-- [ ] Component: `EmailBuilder`
+- [x] Component: `EmailBuilder`
   - WYSIWYG mode: TinyMCE editor with toolbar (bold, italic, links, images, blocks)
   - HTML mode: Raw code editor with syntax highlighting
   - Variable picker: Dropdown to insert {{firstName}}, {{discountCode}}, etc. (with autocomplete)
   - Preview pane: Real-time rendering (right pane)
   - Mode toggle: Switch between WYSIWYG ↔ HTML
-- [ ] Features:
+- [x] Features:
   - Drag-drop text/image blocks (TinyMCE)
   - Template library (pre-built templates)
   - Variable validation: Show error if unknown variable used
   - Undo/redo history
   - Auto-save every 30s
-- [ ] Accessibility: ARIA labels, keyboard navigation, screen reader support
-- [ ] Unit tests: 6 tests (WYSIWYG editing, HTML editing, variable insertion, preview, mode toggle, validation)
+- [x] Accessibility: ARIA labels, keyboard navigation, screen reader support
+- [x] Unit tests: 6 tests (WYSIWYG editing, HTML editing, variable insertion, preview, mode toggle, validation)
 
 **Story Points**: L (3)
 
@@ -842,19 +842,19 @@
 
 **Acceptance Criteria**:
 
-- [ ] Pages/Components:
+- [x] Pages/Components:
   - `CampaignDashboard`: List campaigns, tabs (Draft, Scheduled, Active, Completed)
   - `CampaignCreatePage`: Form to create campaign (select template, recipients, schedule)
   - `CampaignMonitor`: Real-time stats (progress bar, sent/failed counts, open rate, CTR)
   - `CampaignLogsTable`: Detailed delivery logs (recipient, status, sent time, error)
-- [ ] Features:
+- [x] Features:
   - Create campaign: Select template, choose recipient segment, set schedule (now or future date)
   - Send now vs schedule: Toggle + date picker
   - Live updates: Stats refresh every 10s (via polling or WebSocket)
   - Error display: Hover on failed row to see error reason
   - Retry UI: "Retry Failed" button with confirmation
-- [ ] Accessibility: All interactive elements keyboard accessible
-- [ ] Unit tests: 8 tests (CRUD, scheduling, monitoring, error display, retry)
+- [x] Accessibility: All interactive elements keyboard accessible
+- [x] Unit tests: 8 tests (CRUD, scheduling, monitoring, error display, retry)
 
 **Story Points**: L (3)
 
@@ -877,7 +877,7 @@
 
 **Acceptance Criteria**:
 
-- [ ] Integration tests: 10 tests
+- [x] Integration tests: 10 tests
   - Create template & validate variables
   - Create campaign & select recipients
   - Send immediately (queue created)
@@ -888,22 +888,22 @@
   - Campaign stats update (sentCount, failedCount, openCount, clickCount)
   - Brevo fallback to SMTP (circuit breaker triggered)
   - Hard delete completed campaigns (archive after 90 days)
-- [ ] E2E tests (Playwright): 5 tests
+- [x] E2E tests (Playwright): 5 tests
   - Admin creates campaign (WYSIWYG builder)
   - Preview rendered email (with variables)
   - Send immediately, monitor progress
   - Email delivered to test recipient
   - Click tracking (open, link click)
   - Error flow: Brevo API down, fallback to SMTP
-- [ ] Documentation: Campaign creation workflow, troubleshooting
-- [ ] Performance:
+- [x] Documentation: Campaign creation workflow, troubleshooting
+- [x] Performance:
   - Template validation: <100ms
   - Email rendering: <50ms per email
   - Queue processing: 100 emails/min (1–2s per email)
   - Campaign send (5000 recipients): <2s
   - Dashboard stats update: <500ms
-- [ ] Coverage: >85% for services, controllers, components
-- [ ] Load testing: 10,000 concurrent queue items, verify no queue overflow
+- [x] Coverage: >85% for services, controllers, components
+- [x] Load testing: 10,000 concurrent queue items, verify no queue overflow
 
 **Story Points**: XXL (8)
 

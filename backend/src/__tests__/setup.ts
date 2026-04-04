@@ -53,6 +53,11 @@ beforeAll(async () => {
     Cart,
     CartItem,
     CartRecoveryToken,
+    EmailTemplate,
+    EmailCampaign,
+    CampaignRecipient,
+    EmailQueue,
+    EmailCampaignLog,
   } = await import('../models');
 
   importedModels = {
@@ -76,6 +81,11 @@ beforeAll(async () => {
     Cart,
     CartItem,
     CartRecoveryToken,
+    EmailTemplate,
+    EmailCampaign,
+    CampaignRecipient,
+    EmailQueue,
+    EmailCampaignLog,
   };
 
   console.log('Models registered');
