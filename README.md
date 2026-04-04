@@ -278,6 +278,17 @@ MLM/
 └── deploy.sh               # Script de deployment
 ```
 
+## 💜 Apoyar el Proyecto / Support
+
+Si este proyecto te resulta útil, podés apoyarlo con una donación:
+
+<a href="https://www.paypal.com/donate/?hosted_button_id=EHHNLEUMEMK6L">
+  <img src=".github/assets/paypal-qr.png" alt="Donar con PayPal" width="200">
+</a>
+
+[![GitHub Sponsors](https://img.shields.io/badge/Sponsor-❤️-ea4aaa?style=for-the-badge&logo=github)](https://github.com/sponsors/ipproyectosysoluciones)
+[![PayPal](https://img.shields.io/badge/PayPal-Donar-00457C?style=for-the-badge&logo=paypal)](https://www.paypal.com/donate/?hosted_button_id=EHHNLEUMEMK6L)
+
 ## 📞 Contacto
 
 - **Proyecto**: MLM Binary Affiliations Platform
