@@ -601,6 +601,7 @@ export class ProductService {
       where: { productId: product.id },
       order: [['created_at', 'DESC']],
       limit,
+      include: [{ model: User, as: 'performedByUser', attributes: ['id', 'email'] }],
     });
   }
 }
