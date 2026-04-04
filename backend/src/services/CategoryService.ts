@@ -97,10 +97,17 @@ export class CategoryService {
   async create(data: CreateCategoryDto): Promise<Category> {
     // Validate parent chain depth if parentId provided
     if (data.parentId) {
-      // Validate parent exists first
+      // Validate parent exists AND is active
       const parent = await Category.findByPk(data.parentId);
       if (!parent) {
         throw new AppError(400, 'CATEGORY_PARENT_NOT_FOUND', 'Parent category not found');
+      }
+      if (!parent.isActive) {
+        throw new AppError(
+          400,
+          'CATEGORY_PARENT_INACTIVE',
+          'Cannot create child of inactive category'
+        );
       }
 
       const depth = await this.getDepth(data.parentId);

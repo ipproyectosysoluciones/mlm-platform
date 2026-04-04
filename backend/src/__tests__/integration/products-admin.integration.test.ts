@@ -136,10 +136,9 @@ describe('Products Admin Integration Tests', () => {
       const res = await testAgent.get('/api/admin/products').set(adminHeaders).expect(200);
 
       expect(res.body.success).toBe(true);
-      expect(res.body.data).toBeTruthy();
-      expect(res.body.data.data).toBeInstanceOf(Array);
-      expect(res.body.data.data.length).toBeGreaterThanOrEqual(3);
-      expect(res.body.data.pagination).toBeTruthy();
+      expect(res.body.data).toBeInstanceOf(Array);
+      expect(res.body.data.length).toBeGreaterThanOrEqual(3);
+      expect(res.body.pagination).toBeTruthy();
     });
 
     it('should filter products by type', async () => {
@@ -172,9 +171,9 @@ describe('Products Admin Integration Tests', () => {
         .expect(200);
 
       expect(res.body.success).toBe(true);
-      expect(res.body.data.data).toBeInstanceOf(Array);
+      expect(res.body.data).toBeInstanceOf(Array);
       // All returned should be physical
-      for (const product of res.body.data.data) {
+      for (const product of res.body.data) {
         expect(product.type).toBe('physical');
       }
     });
@@ -196,9 +195,9 @@ describe('Products Admin Integration Tests', () => {
         .expect(200);
 
       expect(res.body.success).toBe(true);
-      expect(res.body.data.data).toBeInstanceOf(Array);
+      expect(res.body.data).toBeInstanceOf(Array);
       // All returned should have the specified category
-      for (const product of res.body.data.data) {
+      for (const product of res.body.data) {
         expect(product.categoryId).toBe(testCategory.id);
       }
     });

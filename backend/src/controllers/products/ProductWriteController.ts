@@ -186,17 +186,15 @@ export const listProductsAdmin = asyncHandler(
       search,
     });
 
-    // Response format matches test expectations: { success, data: { data: [], pagination: {} } }
-    const response = {
+    // Response format: ApiResponse<Product[]> with top-level pagination (matches ProductReadController)
+    const response: ApiResponse<Product[]> = {
       success: true,
-      data: {
-        data: result.rows.map((p) => p.toJSON() as Product),
-        pagination: {
-          total: result.count,
-          page: result.page,
-          limit: result.limit,
-          totalPages: result.totalPages,
-        },
+      data: result.rows.map((p) => p.toJSON() as Product),
+      pagination: {
+        total: result.count,
+        page: result.page,
+        limit: result.limit,
+        totalPages: result.totalPages,
       },
     };
 
