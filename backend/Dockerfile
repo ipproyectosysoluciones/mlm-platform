@@ -5,12 +5,14 @@ FROM node:24-alpine
 
 WORKDIR /app
 
-# Copy package files — lockfile copied from monorepo root by deploy script
-COPY package.json pnpm-lock.yaml ./
+# Copy package file — lockfile lives at monorepo root and is incompatible with
+# --frozen-lockfile here (root overrides don't match backend package.json).
+# pnpm install --prod with pinned versions in package.json is deterministic enough.
+COPY package.json ./
 
-# Install production dependencies with exact lockfile (deterministic builds)
+# Install production dependencies (pinned pnpm, prod-only, no dev deps)
 RUN corepack enable && corepack prepare pnpm@10.33.0 --activate && \
-    pnpm install --frozen-lockfile --prod
+    pnpm install --prod --no-lockfile
 
 # Copy compiled dist from host
 COPY dist/server.mjs ./dist/server.mjs

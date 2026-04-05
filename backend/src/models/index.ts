@@ -35,6 +35,9 @@ import { DeliveryProvider } from './DeliveryProvider';
 import { ShipmentTracking } from './ShipmentTracking';
 import { ContractTemplate } from './ContractTemplate';
 import { AffiliateContract } from './AffiliateContract';
+import { Achievement } from './Achievement';
+import { Badge } from './Badge';
+import { UserAchievement } from './UserAchievement';
 
 // User relationships
 User.hasMany(User, { as: 'children', foreignKey: 'sponsorId', sourceKey: 'id' });
@@ -443,6 +446,9 @@ export {
   ShipmentTracking,
   ContractTemplate,
   AffiliateContract,
+  Achievement,
+  Badge,
+  UserAchievement,
 };
 
 export function initModels(): void {
