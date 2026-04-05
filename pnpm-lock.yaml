@@ -66,6 +66,9 @@ importers:
       jsonwebtoken:
         specifier: ^9.0.3
         version: 9.0.3
+      mercadopago:
+        specifier: ^2.12.0
+        version: 2.12.0
       mysql2:
         specifier: ^3.20.0
         version: 3.20.0(@types/node@20.19.37)
