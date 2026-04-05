@@ -1,5 +1,6 @@
 import { Router, Router as ExpressRouter } from 'express';
 import authRoutes from './auth.routes';
+import botRoutes from './bot.routes';
 import userRoutes from './user.routes';
 import commissionRoutes from './commission.routes';
 import dashboardRoutes from './dashboard.routes';
@@ -30,6 +31,7 @@ const router: ExpressRouter = Router();
 
 router.use('/auth', authRoutes);
 router.use('/auth/2fa', twoFactorRoutes); // 2FA routes
+router.use('/bot', botRoutes); // WhatsApp bot internal API
 router.use('/users', userRoutes);
 router.use('/commissions', commissionRoutes);
 router.use('/dashboard', dashboardRoutes);

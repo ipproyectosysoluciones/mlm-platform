@@ -122,9 +122,45 @@ services:
       - mlm-network
 
 
+  bot:
+    build:
+      context: ./bot
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    # SYS_ADMIN is required by Baileys (chromium/sandboxing)
+    cap_add:
+      - SYS_ADMIN
+    environment:
+      NODE_ENV: production
+      BOT_PORT: 3002
+      PHONE_NUMBER: ${PHONE_NUMBER}
+      BOT_SECRET: ${BOT_SECRET}
+      MLM_BACKEND_URL: http://backend:3000/api
+
+      # PostgreSQL — shared with backend
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-mlm_db}
+      DB_USER: ${DB_USER:-mlm}
+      DB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      # Persist WhatsApp session — without this, re-pairing needed on every restart
+      - bot_sessions:/app/bot_sessions
+    depends_on:
+      backend:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+    networks:
+      - mlm-network
+
+
 volumes:
   postgres_data:
   redis_data:
+  bot_sessions:
 
 networks:
   mlm-network:
