@@ -139,6 +139,10 @@ services:
       BOT_SECRET: ${BOT_SECRET}
       MLM_BACKEND_URL: http://backend:3000/api
 
+      # OpenAI — Nexo Bot AI (Sophia + Max)
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
+
       # PostgreSQL — shared with backend
       DB_HOST: postgres
       DB_PORT: 5432
@@ -148,6 +152,8 @@ services:
     volumes:
       # Persist WhatsApp session — without this, re-pairing needed on every restart
       - bot_sessions:/app/bot_sessions
+      # prompt_kb is private (gitignored) — mounted from host at runtime, never baked into image
+      - ./prompt_kb:/app/prompt_kb:ro
     depends_on:
       backend:
         condition: service_started

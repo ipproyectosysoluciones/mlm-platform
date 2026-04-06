@@ -1,40 +1,119 @@
 import { addKeyword, EVENTS } from '@builderbot/bot';
-import { mlmApi } from '../services/mlm-api.service';
+import { aiService, type AgentName, type Language } from '../services/ai.service.js';
+import { resolveLanguageFromInput } from './language.flow.js';
+import { assignAgent, getAgentIntro, getAgentTransitionMessage } from './agent.flow.js';
 
 /**
- * Welcome flow — triggered when a new message arrives from an unknown number.
- * Looks up the phone number in the MLM backend.
- * - If found: greets the affiliate by name with a menu
- * - If not found: prompts them to register on the web platform
+ * Welcome flow — Nexo Real AI Bot
+ *
+ * Conversation lifecycle:
+ *   1. New message arrives → check state
+ *   2. No lang set → ask for language (ES/EN)
+ *   3. Lang set, no agent → ask for name → assign Sophia or Max
+ *   4. Agent assigned → forward all messages to AI service
  */
 export const welcomeFlow = addKeyword(EVENTS.WELCOME).addAction(
-  async (ctx, { state, flowDynamic, gotoFlow }) => {
-    const phone = ctx.from;
+  async (ctx: any, { state, flowDynamic }: any) => {
+    const phone: string = ctx.from;
+    const incomingText: string = (ctx.body || '').trim();
 
-    // Try to identify the user in the MLM platform
-    const user = await mlmApi.getUserByPhone(phone);
-    await state.update({ user });
+    const currentState = state.getMyState() as {
+      lang?: Language;
+      agent?: AgentName;
+      awaitingLanguage?: boolean;
+      awaitingName?: boolean;
+      userName?: string;
+    };
 
-    if (!user) {
-      await flowDynamic([
-        {
-          body: `¡Hola! 👋 Soy el asistente de *MLM Platform*.\n\nNo encontré una cuenta asociada a tu número.\n\n🌐 Podés registrarte en:\nhttps://mlm-platform-ip-proyectosysoluciones.vercel.app/register`,
-        },
-      ]);
+    // ── STEP 1: Language not set yet ─────────────────────────────────────────
+    if (!currentState?.lang) {
+      // If this is a first message (no awaitingLanguage flag), ask for language
+      if (!currentState?.awaitingLanguage) {
+        await flowDynamic([
+          {
+            body:
+              '🌎 *Nexo Real* — Bienvenido / Welcome!\n\n' +
+              'Por favor elegí tu idioma / Please choose your language:\n\n' +
+              '1️⃣  Español\n' +
+              '2️⃣  English',
+          },
+        ]);
+        await state.update({ awaitingLanguage: true });
+        return;
+      }
+
+      // Try to resolve language from their response
+      const lang = await resolveLanguageFromInput(incomingText, state, flowDynamic);
+
+      if (!lang) {
+        // Could not detect language — ask again
+        await flowDynamic([
+          {
+            body:
+              'No entendí tu elección. Por favor escribí *1* para Español o *2* para English.\n' +
+              "I didn't catch that. Please type *1* for Spanish or *2* for English.",
+          },
+        ]);
+        return;
+      }
+
+      // Language confirmed — now ask for name
+      const askName =
+        lang === 'es'
+          ? '¡Perfecto! 😊 Antes de empezar, ¿me decís tu nombre?'
+          : 'Perfect! 😊 Before we start, could you tell me your name?';
+
+      await flowDynamic([{ body: askName }]);
+      await state.update({ awaitingName: true });
       return;
     }
 
-    await flowDynamic([
-      {
-        body:
-          `¡Hola, *${user.firstName}*! 👋 Bienvenido al asistente de *MLM Platform*.\n\n` +
-          `¿Qué querés consultar hoy?\n\n` +
-          `💰 *saldo* — Ver tu balance de wallet\n` +
-          `🌐 *mi red* — Ver resumen de tu red\n` +
-          `📋 *comisiones* — Ver tus últimas comisiones\n` +
-          `❓ *ayuda* — Ver todas las opciones\n\n` +
-          `Escribí cualquiera de esas palabras para comenzar.`,
-      },
-    ]);
+    const lang: Language = currentState.lang;
+
+    // ── STEP 2: Language set, waiting for name ───────────────────────────────
+    if (!currentState?.agent) {
+      if (!currentState?.awaitingName) {
+        // Shouldn't happen, but recover gracefully
+        const askName =
+          lang === 'es' ? '¿Me decís tu nombre para presentarme?' : 'Could you tell me your name?';
+        await flowDynamic([{ body: askName }]);
+        await state.update({ awaitingName: true });
+        return;
+      }
+
+      // Capture name and assign agent
+      const userName = incomingText.length > 0 ? incomingText : 'amigo';
+      const agent = await assignAgent(userName, state, flowDynamic, lang);
+
+      await state.update({ userName, awaitingName: false });
+
+      // Send agent intro
+      const intro = getAgentIntro(agent, lang);
+      await flowDynamic([{ body: intro }]);
+      return;
+    }
+
+    const agent: AgentName = currentState.agent;
+    const userName: string = currentState.userName || '';
+
+    // ── STEP 3: Full AI conversation ─────────────────────────────────────────
+    if (!incomingText) return;
+
+    try {
+      const response = await aiService.chat(phone, incomingText, agent, lang);
+
+      // Check if agent should switch based on name mention mid-conversation
+      // (e.g. user says "mi nombre es María" later)
+      // For now we keep the assigned agent — can be enhanced later
+
+      await flowDynamic([{ body: response.text }]);
+    } catch (error) {
+      console.error('[welcomeFlow] AI error:', error);
+      const errorMsg =
+        lang === 'es'
+          ? 'Tuve un problema técnico. ¿Podés repetir tu mensaje? Si el problema persiste, escribí *ayuda*. 🙏'
+          : 'I had a technical issue. Could you repeat your message? If the problem persists, type *help*. 🙏';
+      await flowDynamic([{ body: errorMsg }]);
+    }
   }
 );

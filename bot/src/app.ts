@@ -1,45 +1,45 @@
 import 'dotenv/config';
-import { createBot, createProvider, createFlow, addKeyword, EVENTS } from '@builderbot/bot';
+import {
+  createBot,
+  createProvider,
+  createFlow,
+  addKeyword,
+  EVENTS,
+  MemoryDB,
+} from '@builderbot/bot';
+// @ts-ignore — BaileysProvider is exported at runtime but TS NodeNext resolver
+// fails to resolve the re-export chain in provider-baileys' .d.ts files.
 import { BaileysProvider } from '@builderbot/provider-baileys';
-import { PostgreSQLDB } from '@builderbot/database-postgres';
 
-import { welcomeFlow } from './flows/welcome.flow';
-import { balanceFlow } from './flows/balance.flow';
-import { networkFlow } from './flows/network.flow';
-import { supportFlow } from './flows/support.flow';
+import { welcomeFlow } from './flows/welcome.flow.js';
+import { balanceFlow } from './flows/balance.flow.js';
+import { networkFlow } from './flows/network.flow.js';
+import { supportFlow } from './flows/support.flow.js';
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
 const PORT = Number(process.env.BOT_PORT ?? 3002);
-const PHONE_NUMBER = process.env.PHONE_NUMBER ?? '';
-
-if (!PHONE_NUMBER) {
-  console.error('[bot] ❌ PHONE_NUMBER env var is required (e.g. 5491122334455)');
-  process.exit(1);
-}
 
 // ── Provider ──────────────────────────────────────────────────────────────────
 
 const provider = createProvider(BaileysProvider, {
-  usePairingCode: true,
-  phoneNumber: PHONE_NUMBER,
   /**
-   * experimentalStore + timeRelease: best-practice for production Baileys.
-   * timeRelease = 3h — keeps the store in memory and flushes stale entries.
+   * QR mode — more reliable than pairing code for initial setup.
+   * Scan the QR printed in logs with WhatsApp > Linked Devices > Link a Device.
+   * Once connected the session is persisted in the bot_sessions volume.
+   *
+   * browser: spoof as WhatsApp Desktop to avoid 405 connection rejections.
    */
   experimentalStore: true,
   timeRelease: 10800000,
+  browser: ['Nexo Bot', 'Desktop', '3.0.0'],
 });
 
 // ── Database ──────────────────────────────────────────────────────────────────
+// Using MemoryDB for MVP — conversation state is managed in ai.service.ts.
+// Can be upgraded to PostgreSQLDB in a future sprint for persistence across restarts.
 
-const database = new PostgreSQLDB({
-  host: process.env.DB_HOST ?? 'postgres',
-  user: process.env.DB_USER ?? 'postgres',
-  password: process.env.DB_PASSWORD ?? 'postgres',
-  database: process.env.DB_NAME ?? 'mlm_platform',
-  port: Number(process.env.DB_PORT ?? 5432),
-});
+const database = new MemoryDB();
 
 // ── Flows ─────────────────────────────────────────────────────────────────────
 
@@ -47,11 +47,10 @@ const database = new PostgreSQLDB({
  * "comisiones" keyword — re-uses networkFlow logic (shows last commissions inline).
  * We create a thin alias flow here rather than duplicating network.flow.ts.
  */
-const commissionsKeywordFlow = addKeyword([
-  'comisiones',
-  'mis comisiones',
-  'ver comisiones',
-]).addAction(async (ctx, utils) => {
+const commissionsKeywordFlow = addKeyword(['comisiones', 'mis comisiones', 'ver comisiones'] as [
+  string,
+  ...string[],
+]).addAction(async (ctx: any, utils: any) => {
   // Delegate to networkFlow which already includes commissions in its response
   await utils.gotoFlow(networkFlow);
 });
@@ -90,7 +89,7 @@ const main = async () => {
   httpServer(PORT);
 
   console.log(`[bot] ✅ WhatsApp bot running on port ${PORT}`);
-  console.log(`[bot] 📱 Paired to phone: ${PHONE_NUMBER}`);
+  console.log(`[bot] 📱 Scan the QR code above with WhatsApp > Linked Devices > Link a Device`);
 };
 
 main().catch((err) => {

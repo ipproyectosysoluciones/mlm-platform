@@ -2,7 +2,7 @@
   "name": "mlm-bot",
   "version": "1.0.0",
   "description": "MLM Platform - WhatsApp Bot powered by BuilderBot",
-  "type": "commonjs",
+  "type": "module",
   "main": "dist/app.js",
   "engines": {
     "node": ">=20.0.0",
@@ -19,7 +19,8 @@
     "@builderbot/bot": "latest",
     "@builderbot/provider-baileys": "latest",
     "axios": "^1.13.6",
-    "dotenv": "^16.6.1"
+    "dotenv": "^16.6.1",
+    "openai": "^4.91.1"
   },
   "devDependencies": {
     "@types/node": "^20.19.37",

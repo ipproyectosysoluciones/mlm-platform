@@ -1,14 +1,21 @@
 import { addKeyword } from '@builderbot/bot';
-import { mlmApi } from '../services/mlm-api.service';
+import { mlmApi } from '../services/mlm-api.service.js';
 
-const BALANCE_KEYWORDS = ['saldo', 'balance', 'mi saldo', 'ver saldo', 'billetera', 'wallet'];
+const BALANCE_KEYWORDS: [string, ...string[]] = [
+  'saldo',
+  'balance',
+  'mi saldo',
+  'ver saldo',
+  'billetera',
+  'wallet',
+];
 
 /**
  * Balance flow — responds with wallet balance + pending withdrawals.
  * Requires the user to be identified (stored in state by welcomeFlow).
  */
 export const balanceFlow = addKeyword(BALANCE_KEYWORDS).addAction(
-  async (ctx, { state, flowDynamic }) => {
+  async (ctx: any, { state, flowDynamic }: any) => {
     const user =
       state.get('user') ??
       (await (async () => {

@@ -1,6 +1,6 @@
 import { addKeyword } from '@builderbot/bot';
 
-const SUPPORT_KEYWORDS = [
+const SUPPORT_KEYWORDS: [string, ...string[]] = [
   'ayuda',
   'help',
   'soporte',

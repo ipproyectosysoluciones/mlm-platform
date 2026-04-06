@@ -1,7 +1,7 @@
 import { addKeyword } from '@builderbot/bot';
-import { mlmApi } from '../services/mlm-api.service';
+import { mlmApi } from '../services/mlm-api.service.js';
 
-const NETWORK_KEYWORDS = [
+const NETWORK_KEYWORDS: [string, ...string[]] = [
   'mi red',
   'red',
   'referidos',
@@ -16,7 +16,7 @@ const NETWORK_KEYWORDS = [
  * active members, binary legs (left/right), and current level.
  */
 export const networkFlow = addKeyword(NETWORK_KEYWORDS).addAction(
-  async (ctx, { state, flowDynamic }) => {
+  async (ctx: any, { state, flowDynamic }: any) => {
     const user =
       state.get('user') ??
       (await (async () => {
@@ -50,7 +50,7 @@ export const networkFlow = addKeyword(NETWORK_KEYWORDS).addAction(
       commissionsText =
         '\n\n📋 *Últimas comisiones:*\n' +
         commissions
-          .map((c) => {
+          .map((c: any) => {
             const date = new Date(c.createdAt).toLocaleDateString('es-AR');
             const amount = c.amount.toLocaleString('es-AR', { minimumFractionDigits: 2 });
             return `• ${date} — $${amount} (${c.type})`;
