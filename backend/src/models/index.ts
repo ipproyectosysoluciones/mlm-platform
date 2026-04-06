@@ -39,6 +39,7 @@ import { Achievement } from './Achievement';
 import { Badge } from './Badge';
 import { UserAchievement } from './UserAchievement';
 import { WebhookEvent } from './WebhookEvent';
+import { Property } from './Property';
 
 // User relationships
 User.hasMany(User, { as: 'children', foreignKey: 'sponsorId', sourceKey: 'id' });
@@ -422,6 +423,14 @@ UserAchievement.belongsTo(Achievement, { foreignKey: 'achievementId', targetKey:
 User.hasMany(UserAchievement, { as: 'userAchievements', foreignKey: 'userId', sourceKey: 'id' });
 UserAchievement.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
 
+// ============================================
+// NEXO REAL — Property Listings (#59)
+// ============================================
+
+// Vendor - Property (one vendor, many properties)
+Vendor.hasMany(Property, { foreignKey: 'vendorId', sourceKey: 'id' });
+Property.belongsTo(Vendor, { as: 'vendor', foreignKey: 'vendorId', targetKey: 'id' });
+
 export {
   sequelize,
   User,
@@ -465,6 +474,7 @@ export {
   Badge,
   UserAchievement,
   WebhookEvent,
+  Property,
 };
 
 export function initModels(): void {
