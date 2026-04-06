@@ -47,6 +47,12 @@
 | ------------------------------ | ------------------------------- |
 | [specs/SPEC.md](specs/SPEC.md) | Especificación técnica completa |
 
+## 🤖 Nexo Bot + n8n (Sprint 4 — v2.0.0)
+
+| Documento                    | Descripción                                                           |
+| ---------------------------- | --------------------------------------------------------------------- |
+| [N8N-SETUP.md](N8N-SETUP.md) | Guía completa de setup de n8n: Google Calendar, Notion CRM, workflows |
+
 ## 🚀 Sprint 2 (v1.10.0)
 
 | Documento                                                          | Descripción                                   |
