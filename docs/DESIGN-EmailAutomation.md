@@ -708,8 +708,8 @@ class BrevoEmailService {
         body: JSON.stringify({
           to: [{ email: params.to }],
           sender: {
-            name: params.fromName || 'MLM Platform',
-            email: 'noreply@mlm-platform.com',
+            name: params.fromName || 'Nexo Real',
+            email: 'noreply@nexoreal.com', // TODO: domain pending
           },
           replyTo: params.replyTo ? { email: params.replyTo } : undefined,
           subject: params.subject,
@@ -744,7 +744,7 @@ class BrevoEmailService {
     });
 
     await transporter.sendMail({
-      from: `MLM Platform <noreply@mlm-platform.com>`,
+      from: `Nexo Real <noreply@nexoreal.com>`, // TODO: domain pending
       to: params.to,
       subject: params.subject,
       html: params.htmlContent,

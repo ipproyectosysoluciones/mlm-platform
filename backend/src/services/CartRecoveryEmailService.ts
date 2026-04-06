@@ -187,7 +187,7 @@ export class CartRecoveryEmailService {
     <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 24px 0;" />
 
     <p style="font-size: 11px; color: #d1d5db; text-align: center; margin-top: 16px;">
-      MLM Platform &bull; You received this email because you have items in your cart.
+      Nexo Real &bull; You received this email because you have items in your cart.
     </p>
   </div>
 </body>

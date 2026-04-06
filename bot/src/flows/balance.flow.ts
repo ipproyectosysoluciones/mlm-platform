@@ -27,7 +27,7 @@ export const balanceFlow = addKeyword(BALANCE_KEYWORDS).addAction(
     if (!user) {
       await flowDynamic([
         {
-          body: '❌ No encontré una cuenta asociada a tu número.\n\n🌐 Registrate en:\nhttps://mlm-platform-ip-proyectosysoluciones.vercel.app/register',
+          body: '❌ No encontré una cuenta asociada a tu número.\n\n🌐 Registrate en:\nhttps://nexoreal.com/register', // TODO: domain pending
         },
       ]);
       return;
@@ -49,12 +49,12 @@ export const balanceFlow = addKeyword(BALANCE_KEYWORDS).addAction(
     await flowDynamic([
       {
         body:
-          `💰 *Tu Wallet — MLM Platform*\n\n` +
+          `💰 *Tu Wallet — Nexo Real*\n\n` +
           `✅ Saldo disponible: *${currency} ${fmt(wallet.balance)}*\n` +
           `⏳ Retiros pendientes: ${currency} ${fmt(wallet.pendingWithdrawals)}\n` +
           `📈 Total ganado: ${currency} ${fmt(wallet.totalEarned)}\n\n` +
           `Para retirar fondos, ingresá a la plataforma web.\n` +
-          `🌐 https://mlm-platform-ip-proyectosysoluciones.vercel.app`,
+          `🌐 https://nexoreal.com`, // TODO: domain pending
       },
     ]);
   }

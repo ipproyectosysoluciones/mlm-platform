@@ -1,4 +1,4 @@
-# Branching Strategy - MLM Platform
+# Branching Strategy - Nexo Real
 
 ## Estructura de Branches
 

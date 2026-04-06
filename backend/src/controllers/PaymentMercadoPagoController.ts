@@ -30,7 +30,7 @@ export class PaymentMercadoPagoController {
       items: items.map((item: any) => ({
         id: item.id || item.productId,
         title: item.title || item.name,
-        description: item.description || description || 'MLM Platform Purchase',
+        description: item.description || description || 'Nexo Real - Compra',
         quantity: item.quantity || 1,
         currency_id: item.currency_id || 'COP',
         unit_price: parseFloat(item.unit_price || item.price),
@@ -91,7 +91,7 @@ export class PaymentMercadoPagoController {
       paymentMethodId,
       transactionAmount,
       installments: installments || 1,
-      description: description || 'MLM Platform Purchase',
+      description: description || 'Nexo Real - Compra',
       externalReference: externalReference || '',
       payer: {
         email: payer.email,

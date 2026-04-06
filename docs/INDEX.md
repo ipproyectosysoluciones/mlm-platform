@@ -1,6 +1,6 @@
 # 📚 Documentación del Proyecto - Directorio
 
-> Índice completo de toda la documentación del proyecto MLM Platform.
+> Índice completo de toda la documentación del proyecto Nexo Real.
 
 ## 📋 Documentación Principal
 
@@ -86,13 +86,13 @@
 
 ## 🔗 Enlaces Útiles
 
-| Recurso            | URL                                                    |
-| ------------------ | ------------------------------------------------------ |
-| GitHub Repository  | https://github.com/ipproyectosysoluciones/mlm-platform |
-| Docker Hub         | https://hub.docker.com/u/ipproyectos                   |
-| API Docs (Swagger) | http://localhost:3000/api-docs                         |
-| Frontend (Dev)     | http://localhost:5173                                  |
-| Backend (Dev)      | http://localhost:3000                                  |
+| Recurso            | URL                                                                                    |
+| ------------------ | -------------------------------------------------------------------------------------- |
+| GitHub Repository  | https://github.com/ipproyectosysoluciones/mlm-platform _(será renombrado a nexo-real)_ |
+| Docker Hub         | https://hub.docker.com/u/ipproyectos                                                   |
+| API Docs (Swagger) | http://localhost:3000/api-docs                                                         |
+| Frontend (Dev)     | http://localhost:5173                                                                  |
+| Backend (Dev)      | http://localhost:3000                                                                  |
 
 ## 📝 Convenciones de Documentación
 

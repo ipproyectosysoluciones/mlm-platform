@@ -28,7 +28,7 @@ export const networkFlow = addKeyword(NETWORK_KEYWORDS).addAction(
     if (!user) {
       await flowDynamic([
         {
-          body: '❌ No encontré una cuenta asociada a tu número.\n\n🌐 Registrate en:\nhttps://mlm-platform-ip-proyectosysoluciones.vercel.app/register',
+          body: '❌ No encontré una cuenta asociada a tu número.\n\n🌐 Registrate en:\nhttps://nexoreal.com/register', // TODO: domain pending
         },
       ]);
       return;
@@ -61,14 +61,14 @@ export const networkFlow = addKeyword(NETWORK_KEYWORDS).addAction(
     await flowDynamic([
       {
         body:
-          `🌐 *Tu Red — MLM Platform*\n\n` +
+          `🌐 *Tu Red — Nexo Real*\n\n` +
           `👥 Total referidos: *${network.totalReferrals}*\n` +
           `✅ Referidos activos: *${network.activeReferrals}*\n` +
           `⬅️ Pierna izquierda: ${network.leftLeg}\n` +
           `➡️ Pierna derecha: ${network.rightLeg}\n` +
           `🏆 Nivel actual: *${network.level}*` +
           commissionsText +
-          `\n\n🌐 Ver árbol completo:\nhttps://mlm-platform-ip-proyectosysoluciones.vercel.app/tree`,
+          `\n\n🌐 Ver árbol completo:\nhttps://nexoreal.com/tree`, // TODO: domain pending
       },
     ]);
   }

@@ -1,5 +1,5 @@
 # ============================================
-# MLM Platform - Production
+# Nexo Real - Production
 # ============================================
 # Usage: VERSION=v1.11.0 docker compose -f docker-compose.prod.yml up -d
 # Requires: .env.production at project root
@@ -79,10 +79,10 @@ services:
       BREVO_SMTP_PORT: ${BREVO_SMTP_PORT:-587}
       BREVO_SMTP_USER: ${BREVO_SMTP_USER}
       BREVO_SMTP_PASS: ${BREVO_SMTP_PASS}
-      BREVO_SENDER_EMAIL: ${BREVO_SENDER_EMAIL:-noreply@mlmplatform.com}
-      BREVO_SENDER_NAME: ${BREVO_SENDER_NAME:-MLM Platform}
+      BREVO_SENDER_EMAIL: ${BREVO_SENDER_EMAIL:-noreply@nexoreal.com} # TODO: domain pending
+      BREVO_SENDER_NAME: ${BREVO_SENDER_NAME:-Nexo Real}
       BREVO_API_KEY: ${BREVO_API_KEY}
-      BREVO_SMS_SENDER: ${BREVO_SMS_SENDER:-MLMPlatform}
+      BREVO_SMS_SENDER: ${BREVO_SMS_SENDER:-NexoReal}
 
       # ── Wallet ────────────────────────────────────────────────────────
       WALLET_MIN_WITHDRAWAL: ${WALLET_MIN_WITHDRAWAL:-20}
@@ -92,7 +92,7 @@ services:
       # ── Push Notifications (VAPID) ────────────────────────────────────
       VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY}
       VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY}
-      VAPID_SUBJECT: ${VAPID_SUBJECT:-mailto:admin@mlm-platform.com}
+      VAPID_SUBJECT: ${VAPID_SUBJECT:-mailto:admin@nexoreal.com} # TODO: domain pending
 
       # ── PayPal ────────────────────────────────────────────────────────
       PAYPAL_MODE: ${PAYPAL_MODE:-sandbox}

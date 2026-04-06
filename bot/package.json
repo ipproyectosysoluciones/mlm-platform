@@ -1,7 +1,7 @@
 {
   "name": "mlm-bot",
   "version": "1.0.0",
-  "description": "MLM Platform - WhatsApp Bot powered by BuilderBot",
+  "description": "Nexo Real - WhatsApp Bot powered by BuilderBot",
   "type": "module",
   "main": "dist/app.js",
   "engines": {

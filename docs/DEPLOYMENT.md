@@ -1,7 +1,7 @@
 # Deployment Guide / Guía de Despliegue
 
-> Complete guide for deploying the MLM Platform to production.
-> Guía completa para desplegar la MLM Platform a producción.
+> Complete guide for deploying the Nexo Real platform to production.
+> Guía completa para desplegar la plataforma Nexo Real a producción.
 
 ## 🏗️ Architecture / Arquitectura
 
@@ -21,11 +21,11 @@ The platform uses a **hybrid deployment model**:
 
 ## 🔗 Production URLs / URLs de Producción
 
-| Service  | URL                                                     | Purpose                |
-| -------- | ------------------------------------------------------- | ---------------------- |
-| Frontend | https://mlm-platform-ip-proyectosysoluciones.vercel.app | Production (principal) |
-| Backend  | https://backend.lordastaroth77.cloudflareaccess.com     | API Backend            |
-| Docker   | https://hub.docker.com/r/ipproyectos/mlm-backend        | Container Registry     |
+| Service  | URL                                                                   | Purpose                |
+| -------- | --------------------------------------------------------------------- | ---------------------- |
+| Frontend | https://nexoreal.com _(TODO: domain pending — actualmente en Vercel)_ | Production (principal) |
+| Backend  | https://backend.lordastaroth77.cloudflareaccess.com                   | API Backend            |
+| Docker   | https://hub.docker.com/r/ipproyectos/mlm-backend                      | Container Registry     |
 
 > **Note**: Backup/internal URL: `https://frontend-beta-rosy-89.vercel.app`
 
@@ -69,7 +69,7 @@ chmod +x deploy-backend.sh
 ```bash
 # Clone repository
 git clone https://github.com/ipproyectosysoluciones/mlm-platform.git
-cd mlm-platform
+cd nexo-real
 
 # Create production environment file
 cp .env.example .env.production
@@ -153,7 +153,7 @@ ALLOWED_ORIGINS=https://yourdomain.com,https://www.yourdomain.com
 # Email (Brevo/Sendinblue)
 BREVO_API_KEY=your-brevo-api-key
 BREVO_FROM_EMAIL=noreply@yourdomain.com
-BREVO_FROM_NAME=MLM Platform
+BREVO_FROM_NAME=Nexo Real
 
 # Monitoring
 SENTRY_DSN=https://example@sentry.io/project

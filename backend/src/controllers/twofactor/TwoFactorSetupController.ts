@@ -58,7 +58,7 @@ export const setup2FA = asyncHandler(
     }
 
     // Generate new secret
-    const setup = await TwoFactorService.generateSecret(userEmail, 'MLM Platform');
+    const setup = await TwoFactorService.generateSecret(userEmail, 'Nexo Real');
 
     // Store pending setup with expiry
     const expiresAt = new Date(Date.now() + SETUP_EXPIRY_MINUTES * 60 * 1000);

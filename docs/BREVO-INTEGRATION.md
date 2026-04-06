@@ -67,8 +67,8 @@ POST https://api.brevo.com/v3/smtp/email
 {
   "to": [{ "email": "user@example.com" }],
   "sender": {
-    "email": "noreply@mlm.com",
-    "name": "MLM Platform"
+    "email": "noreply@nexoreal.com",
+    "name": "Nexo Real"
   },
   "subject": "Hello John!",
   "htmlContent": "<h1>Welcome John</h1><p>Your code: ABC123</p>",
@@ -262,8 +262,8 @@ BREVO_SMTP_USER=xxx@smtp-brevo.com         # SMTP login
 BREVO_SMTP_PASS=xxx                        # SMTP password
 
 # Sender Identity
-BREVO_SENDER_EMAIL=noreply@mlm.com         # From email
-BREVO_SENDER_NAME=MLM Platform             # From name
+BREVO_SENDER_EMAIL=noreply@nexoreal.com     # From email (TODO: domain pending)
+BREVO_SENDER_NAME=Nexo Real                # From name
 ```
 
 ### Required Setup / Configuración Requerida

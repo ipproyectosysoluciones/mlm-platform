@@ -28,10 +28,10 @@ const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12
  * Información de la empresa para generación de PDF
  */
 const COMPANY_INFO = {
-  name: 'MLM Platform',
+  name: 'Nexo Real',
   address: '123 Business Street, City, Country',
   phone: '+1 (555) 123-4567',
-  email: 'billing@mlmplatform.com',
+  email: 'billing@nexoreal.com', // TODO: domain pending
   taxId: 'TAX-12345678',
 };
 

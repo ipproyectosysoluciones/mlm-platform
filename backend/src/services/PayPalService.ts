@@ -163,7 +163,7 @@ class PayPalService {
           paypal: {
             experience_context: {
               payment_method_preference: 'IMMEDIATE_PAYMENT_REQUIRED',
-              brand_name: 'MLM Platform',
+              brand_name: 'Nexo Real',
               landing_page: 'LOGIN',
               user_action: 'PAY_NOW',
               return_url: `${config.app.frontendUrl}/checkout/success`,

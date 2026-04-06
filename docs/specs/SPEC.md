@@ -1,4 +1,4 @@
-# MLM Platform - Technical Specification
+# Nexo Real - Technical Specification
 
 ## Feature Status / Estado de Funcionalidades
 
