@@ -38,6 +38,7 @@ import { AffiliateContract } from './AffiliateContract';
 import { Achievement } from './Achievement';
 import { Badge } from './Badge';
 import { UserAchievement } from './UserAchievement';
+import { WebhookEvent } from './WebhookEvent';
 
 // User relationships
 User.hasMany(User, { as: 'children', foreignKey: 'sponsorId', sourceKey: 'id' });
@@ -463,6 +464,7 @@ export {
   Achievement,
   Badge,
   UserAchievement,
+  WebhookEvent,
 };
 
 export function initModels(): void {

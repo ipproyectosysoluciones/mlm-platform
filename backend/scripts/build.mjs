@@ -28,6 +28,7 @@ const buildOptions = {
   minifyIdentifiers: isProduction,
   minifySyntax: isProduction,
   treeShaking: true,
+  legalComments: 'none',
   metafile: true,
   logLevel: 'info',
 };
