@@ -3,7 +3,7 @@
  * @description Shows rendered HTML with sample data, updates in real-time as user types
  *              Muestra HTML renderizado con datos de ejemplo, se actualiza en tiempo real
  * @module components/EmailBuilder/PreviewPane
- * @author MLM Platform
+ * @author Nexo Real Development Team
  */
 
 import { useMemo } from 'react';

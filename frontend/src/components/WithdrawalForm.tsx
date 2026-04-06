@@ -3,7 +3,7 @@
  * @description Form with amount input, fee preview, and validation
  *              Formulario con input de monto, preview de comisión y validación
  * @module components/WithdrawalForm
- * @author MLM Development Team
+ * @author Nexo Real Development Team
  */
 
 import { useState, useEffect } from 'react';

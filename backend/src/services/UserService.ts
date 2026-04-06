@@ -10,6 +10,8 @@ import { User } from '../models';
 import { generateUniqueReferralCode, generateUUID } from '../utils/codeGenerator';
 import { TreeService } from './TreeService';
 import { AppError } from '../middleware/error.middleware';
+import { leaderboardService } from './LeaderboardService';
+import { achievementService } from './AchievementService';
 
 const treeService = new TreeService();
 
@@ -94,6 +96,16 @@ export class UserService {
     });
 
     await treeService.insertWithClosure(userId, sponsorId);
+
+    // Invalidate leaderboard referrers cache when a new user is registered (fire and forget)
+    leaderboardService.invalidateCache('referrers');
+
+    // Fire-and-forget: check referral achievements for the sponsor (if any)
+    if (sponsorId) {
+      achievementService
+        .checkAndUnlock(sponsorId, 'referral_added')
+        .catch((err: unknown) => console.error('[Achievements]', err));
+    }
 
     return user;
   }

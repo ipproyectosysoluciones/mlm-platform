@@ -31,5 +31,13 @@
     }
   },
   "include": ["src"],
-  "exclude": ["src/__tests__", "src/i18n/__tests__", "src/test"]
+  "exclude": [
+    "src/__tests__",
+    "src/i18n/__tests__",
+    "src/test",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx"
+  ]
 }

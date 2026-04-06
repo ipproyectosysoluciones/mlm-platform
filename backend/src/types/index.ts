@@ -243,7 +243,7 @@ export interface OrderAttributes {
   totalAmount: number; // Order total (matches product price)
   currency: string; // Default: 'USD'
   status: 'pending' | 'completed' | 'failed';
-  paymentMethod: 'manual' | 'simulated'; // MVP: only simulated
+  paymentMethod: 'manual' | 'simulated' | 'paypal' | 'mercadopago'; // Payment methods
   notes: string | null; // Optional internal notes
   // Shipping fields (Phase 3 - Delivery Integration)
   shippingAddressId: string | null;
@@ -260,7 +260,7 @@ export interface OrderCreationAttributes {
   totalAmount: number;
   currency?: string;
   status?: 'pending' | 'completed' | 'failed';
-  paymentMethod?: 'manual' | 'simulated';
+  paymentMethod?: 'manual' | 'simulated' | 'paypal' | 'mercadopago';
   notes?: string | null;
 }
 

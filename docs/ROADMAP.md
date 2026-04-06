@@ -1,9 +1,10 @@
-# Roadmap del Proyecto MLM Platform
+# Roadmap — Nexo Real
 
-> Hoja de ruta completa para la plataforma MLM de Afiliaciones Binarias.
+> Hoja de ruta completa para la plataforma **Nexo Real** — Servicios Inmobiliarios, Turismo/Hospitalidad y Afiliaciones.  
+> _"Conectamos tu negocio con el mundo."_
 
 **Versión actual**: v1.11.0 — Sprint 3 Completado ✅  
-**Última actualización**: 2026-04-04  
+**Última actualización**: 2026-04-05  
 **Estado**: Activo - Desarrollo intensivo  
 **Meta**: v2.0.0 en ~1 mes
 
@@ -42,33 +43,39 @@
 
 ## 🎯 Visión del Proyecto
 
-### Modelo de Negocio
+### Modelo de Negocio — Nexo Real
 
-- **Multi-vendor Marketplace**: Los afiliados pueden vender
-- **Productos Genéricos**: Adaptable a cualquier negocio
-- **Delivery Integrado**: Pickup + DiDi + Uber + InDriver
+Plataforma SaaS multi-tenant para agencias inmobiliarias, hoteles, hosterías y operadores turísticos en LATAM, con sistema MLM Unilevel y agente AI por WhatsApp.
 
-### Tipos de Negocio Soportados
+### Servicios Principales
 
 ```
-□ Streaming (Netflix, Spotify, etc.) ← MVP actual
-□ SaaS / Software
-□ Servicios Locales (limpieza, jardinería, plomería)
-□ Productos Físicos (tienda, dropshipping)
-□ Cursos / Educación
-□ Membresías / Club
-□ Comida / Delivery ( Rappi, PedidosYa, etc.)
-□ Travel
-□ Health & Wellness
+Real Estate (Bienes Raíces)
+├── Rentals (arrendamiento de aptos, casas, fincas)
+├── Sales (venta de inmuebles)
+└── Property Management (administración y mantenimiento)
+
+Tourism & Hospitality
+├── Hospitality (hoteles, hosterías, posadas)
+└── Travel Packages (paquetes turísticos)
 ```
 
-### Delivery Methods
+### Nexo Bot — AI WhatsApp Agent
 
 ```
-✅ Pickup - Cliente recoge en punto designado
-✅ DiDi Envíos - Integración con DiDi
-✅ Uber Flash/Rush - Integración con Uber
-✅ InDriver - Integración con InDriver
+Stack: BuilderBot + Baileys + OpenAI GPT-4o
+Agentes: Sophia (♀ atiende hombres) + Max (♂ atiende mujeres)
+Idiomas: Español + Inglés (detección automática)
+Integraciones: n8n → Google Calendar + Notion + Notificación humana
+```
+
+### Mercados Objetivo
+
+```
+🟢 Colombia  — base actual (Bogotá, Medellín, Cartagena)
+🟡 México    — próximo (CDMX, Cancún, Guadalajara)
+🟡 Argentina — próximo (Buenos Aires, Córdoba, Mendoza)
+🔲 LATAM     — expansión Fase 3
 ```
 
 ---
@@ -293,7 +300,7 @@ Features implementados:
 
 ---
 
-### 🟢 SPRINT 4: QA + Release (Semana 4)
+### 🟢 SPRINT 4: QA + Release + Nexo Bot MVP (Semana 4) — v2.0.0
 
 #### 4.1 Test Coverage Expansion
 
@@ -311,14 +318,61 @@ Flujos críticos a testear:
 └── Delivery flow
 ```
 
-#### 4.2 Documentation
+#### 4.2 Nexo Bot MVP
 
 ```
-□ API.md - nuevos endpoints
-□ ARCHITECTURE.md - multi-vendor
-□ DEPLOYMENT.md - servicios externos
-□ ROADMAP.md - marcar v2.0.0
-└□ README.md - features nuevos
+□ OpenAI GPT-4o integration (bot/src/services/ai.service.ts)
+□ Language detection ES/EN flow
+□ Gender detection → Sophia or Max assignment
+□ Knowledge Base loaded into system prompt
+□ n8n: Google Calendar webhook (schedule visits)
+□ n8n: Notion CRM (capture leads)
+□ n8n: Human agent notification
+□ First bot startup + WhatsApp pairing code
+□ Demo ready for first pilot client
+```
+
+#### 4.3 Documentation
+
+```
+□ PRD.md ✅ — actualizado a Nexo Real v2.0.0
+□ ROADMAP.md ✅ — actualizado a Nexo Real
+□ API.md - nuevos endpoints (bot, contratos)
+□ ARCHITECTURE.md - Nexo Bot + n8n
+□ DEPLOYMENT.md - bot service + n8n Docker
+└□ README.md - rebranding Nexo Real
+```
+
+---
+
+## 🗺️ Fases del Producto
+
+### Fase 1 — Demo MVP (NOW → Mayo 2026)
+
+```
+Target: Demo funcional para primer cliente piloto
+Stack:  Plataforma core + Nexo Bot single-tenant
+```
+
+### Fase 2 — Multi-Tenant (1–2 meses post v2.0.0)
+
+```
+□ Multi-tenant architecture
+□ Per-tenant Knowledge Base management
+□ Per-tenant WhatsApp number (Nexo Line 1 & 2)
+□ Tenant admin dashboard
+□ Billing & subscription (Free / Starter / Managed)
+```
+
+### Fase 3 — Full Contact Center SaaS (3–6 meses)
+
+```
+□ Self-service onboarding
+□ White-label bot
+□ Advanced analytics per tenant
+□ Multi-channel (Instagram DM, Messenger)
+□ Proactive WhatsApp campaigns
+□ Enterprise SLA tiers
 ```
 
 ---
@@ -388,6 +442,6 @@ sprint:4             - Sprint 4
 
 ---
 
-**Última actualización**: 2026-04-04  
+**Última actualización**: 2026-04-05  
 **Proyecto**: https://github.com/users/ipproyectosysoluciones/projects/4  
-**Desarrollador**: MLM Platform Team
+**Producto**: Nexo Real — _"Conectamos tu negocio con el mundo."_

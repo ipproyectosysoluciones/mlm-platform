@@ -1,6 +1,7 @@
 packages:
   - 'frontend'
   - 'backend'
+  - 'bot'
 
 pnpm:
   onlyBuiltDependencies:

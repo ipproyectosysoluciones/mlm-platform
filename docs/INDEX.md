@@ -1,6 +1,6 @@
 # 📚 Documentación del Proyecto - Directorio
 
-> Índice completo de toda la documentación del proyecto MLM Platform.
+> Índice completo de toda la documentación del proyecto Nexo Real.
 
 ## 📋 Documentación Principal
 
@@ -47,6 +47,12 @@
 | ------------------------------ | ------------------------------- |
 | [specs/SPEC.md](specs/SPEC.md) | Especificación técnica completa |
 
+## 🤖 Nexo Bot + n8n (Sprint 4 — v2.0.0)
+
+| Documento                    | Descripción                                                           |
+| ---------------------------- | --------------------------------------------------------------------- |
+| [N8N-SETUP.md](N8N-SETUP.md) | Guía completa de setup de n8n: Google Calendar, Notion CRM, workflows |
+
 ## 🚀 Sprint 2 (v1.10.0)
 
 | Documento                                                          | Descripción                                   |
@@ -86,13 +92,13 @@
 
 ## 🔗 Enlaces Útiles
 
-| Recurso            | URL                                                    |
-| ------------------ | ------------------------------------------------------ |
-| GitHub Repository  | https://github.com/ipproyectosysoluciones/mlm-platform |
-| Docker Hub         | https://hub.docker.com/u/ipproyectos                   |
-| API Docs (Swagger) | http://localhost:3000/api-docs                         |
-| Frontend (Dev)     | http://localhost:5173                                  |
-| Backend (Dev)      | http://localhost:3000                                  |
+| Recurso            | URL                                                                                    |
+| ------------------ | -------------------------------------------------------------------------------------- |
+| GitHub Repository  | https://github.com/ipproyectosysoluciones/mlm-platform _(será renombrado a nexo-real)_ |
+| Docker Hub         | https://hub.docker.com/u/ipproyectos                                                   |
+| API Docs (Swagger) | http://localhost:3000/api-docs                                                         |
+| Frontend (Dev)     | http://localhost:5173                                                                  |
+| Backend (Dev)      | http://localhost:3000                                                                  |
 
 ## 📝 Convenciones de Documentación
 

@@ -25,7 +25,7 @@ jest.mock('../config/env', () => ({
       smtpUser: 'test@test.com',
       smtpPass: 'testpass',
       senderEmail: 'noreply@test.com',
-      senderName: 'MLM Platform',
+      senderName: 'Nexo Real',
       apiKey: 'test-api-key',
       smsSender: 'MLM',
     },

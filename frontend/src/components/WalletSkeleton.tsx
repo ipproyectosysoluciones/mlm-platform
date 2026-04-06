@@ -3,7 +3,7 @@
  * @description Loading placeholder while wallet data loads
  *              Placeholder de carga mientras los datos del wallet cargan
  * @module components/WalletSkeleton
- * @author MLM Development Team
+ * @author Nexo Real Development Team
  */
 
 interface WalletSkeletonProps {

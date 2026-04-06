@@ -50,14 +50,14 @@ export interface VapidKeys {
  * // Add to .env:
  * // VAPID_PUBLIC_KEY=<publicKey>
  * // VAPID_PRIVATE_KEY=<privateKey>
- * // VAPID_SUBJECT=mailto:admin@mlm-platform.com
+ * // VAPID_SUBJECT=mailto:admin@nexoreal.com
  *
  * // Español: Generar claves y guardar en .env
  * const keys = generateKeys();
  * // Agregar a .env:
  * // VAPID_PUBLIC_KEY=<publicKey>
  * // VAPID_PRIVATE_KEY=<privateKey>
- * // VAPID_SUBJECT=mailto:admin@mlm-platform.com
+ * // VAPID_SUBJECT=mailto:admin@nexoreal.com
  */
 export function generateKeys(): VapidKeys {
   const keys = webpush.generateVAPIDKeys();
@@ -88,7 +88,7 @@ export const vapidConfig = {
   /** Private key for server-side push / Clave privada para push del servidor */
   privateKey: process.env.VAPID_PRIVATE_KEY || '',
   /** Subject for VAPID (mailto or URL) / Asunto para VAPID (mailto o URL) */
-  subject: process.env.VAPID_SUBJECT || 'mailto:admin@mlm-platform.com',
+  subject: process.env.VAPID_SUBJECT || 'mailto:admin@nexoreal.com', // TODO: domain pending
 };
 
 /**

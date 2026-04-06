@@ -3,7 +3,7 @@
  * @description Dropdown showing allowlisted template variables, onClick inserts at cursor
  *              Dropdown que muestra variables permitidas, al hacer clic inserta en el cursor
  * @module components/EmailBuilder/VariablePicker
- * @author MLM Platform
+ * @author Nexo Real Development Team
  */
 
 import { useState } from 'react';

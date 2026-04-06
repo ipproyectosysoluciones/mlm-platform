@@ -19,7 +19,7 @@ We take security vulnerabilities seriously. If you discover a security issue, pl
 **Please report security vulnerabilities by:**
 
 - Opening a private security advisory on GitHub
-- Emailing us directly at **security@mlm-platform.com**
+- Emailing us directly at **security@nexoreal.com** <!-- TODO: domain pending -->
 
 ### Response Timeline
 
@@ -116,6 +116,47 @@ To prevent brute-force attacks:
 
 - Secret scanning is enabled on all pushes
 - Push protection blocks commits containing secrets
+
+---
+
+## Payment Security
+
+### PayPal Integration
+
+| Feature                        | Implementation                                                                                                 |
+| ------------------------------ | -------------------------------------------------------------------------------------------------------------- |
+| Webhook Signature Verification | PayPal-provided signature headers validated on every incoming webhook event                                    |
+| Idempotency Keys               | Unique keys per request prevent duplicate payment captures and refunds                                         |
+| SSRF Prevention (CWE-918)      | Certificate URL reconstructed from validated hostname — user-supplied URL never passed directly to HTTP client |
+
+### MercadoPago Integration
+
+| Feature                         | Implementation                                                                                                     |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| Webhook Notification Validation | HMAC-SHA256 signature verification using `MERCADOPAGO_WEBHOOK_SECRET` environment variable                         |
+| Signature Verification          | Incoming webhook signature header (`X-Signature`) validated against computed hash before processing payment events |
+| Idempotency Keys                | Webhook processing idempotent — duplicate notifications do NOT create multiple transactions                        |
+| Request Validation              | Webhook URL only accepts POST requests; GET/HEAD requests rejected to prevent information disclosure               |
+
+---
+
+## Gamification & Leaderboards Security (v1.9.0)
+
+### Redis Cache
+
+| Feature         | Implementation                                                  |
+| --------------- | --------------------------------------------------------------- |
+| Data Caching    | Leaderboards cached in Redis with TTL (1 hour)                  |
+| Cache Isolation | Each period (weekly/monthly/all-time) cached separately         |
+| No PII Storage  | Only rank, revenue, referral count — no sensitive data in cache |
+
+### Achievement & Badge System
+
+| Feature           | Implementation                                      |
+| ----------------- | --------------------------------------------------- |
+| User Progress     | Achievement unlock events logged and timestamped    |
+| Tamper Prevention | Achievement status stored server-side, not client   |
+| Integrity Check   | Unlock requirements verified server-side on request |
 
 ---
 

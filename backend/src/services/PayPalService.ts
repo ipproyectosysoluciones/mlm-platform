@@ -5,8 +5,25 @@
  */
 
 import axios from 'axios';
+import crypto from 'crypto';
 import { config } from '../config/env.js';
 import { AppError } from '../middleware/error.middleware.js';
+
+/**
+ * CRC32 implementation required by PayPal webhook signature spec.
+ * PayPal uses CRC32 of the raw body, not SHA256.
+ */
+function crc32(data: string): number {
+  let crc = 0xffffffff;
+  const buf = Buffer.from(data, 'utf8');
+  for (let i = 0; i < buf.length; i++) {
+    crc ^= buf[i];
+    for (let j = 0; j < 8; j++) {
+      crc = crc & 1 ? (crc >>> 1) ^ 0xedb88320 : crc >>> 1;
+    }
+  }
+  return (crc ^ 0xffffffff) >>> 0;
+}
 
 const PAYPAL_API_BASE =
   config.paypal.mode === 'sandbox'
@@ -146,7 +163,7 @@ class PayPalService {
           paypal: {
             experience_context: {
               payment_method_preference: 'IMMEDIATE_PAYMENT_REQUIRED',
-              brand_name: 'MLM Platform',
+              brand_name: 'Nexo Real',
               landing_page: 'LOGIN',
               user_action: 'PAY_NOW',
               return_url: `${config.app.frontendUrl}/checkout/success`,

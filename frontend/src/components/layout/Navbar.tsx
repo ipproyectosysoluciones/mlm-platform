@@ -19,6 +19,8 @@ import {
   X,
   LogIn,
   Sparkles,
+  Trophy,
+  Medal,
 } from 'lucide-react';
 import { LanguageSelector } from './LanguageSelector';
 import { UserMenu } from './UserMenu';
@@ -28,6 +30,8 @@ const NAV_ITEMS = [
   { path: '/dashboard', labelKey: 'nav.dashboard', icon: LayoutDashboard },
   { path: '/tree', labelKey: 'nav.tree', icon: TreeDeciduous },
   { path: '/crm', labelKey: 'nav.crm', icon: Users },
+  { path: '/leaderboard', labelKey: 'nav.leaderboard', icon: Trophy },
+  { path: '/achievements', labelKey: 'nav.achievements', icon: Medal },
   { path: '/landing-pages', labelKey: 'nav.landingPages', icon: FileText },
   { path: '/wallet', labelKey: 'nav.wallet', icon: Wallet },
   { path: '/profile', labelKey: 'nav.profile', icon: User },
@@ -65,7 +69,7 @@ export function Navbar({ onMobileMenuToggle, mobileMenuOpen }: NavbarProps) {
             </div>
             <div className="hidden sm:block">
               <span className="font-bold text-xl bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
-                MLM Pro
+                Nexo Real
               </span>
               <div className="text-xs text-slate-400 -mt-1">Premium Streaming</div>
             </div>

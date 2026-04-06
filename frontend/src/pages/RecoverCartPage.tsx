@@ -5,7 +5,7 @@
  *              Maneja el flujo completo de recuperación: parsear token de URL, vista previa,
  *              confirmar recuperación y redirigir al checkout.
  * @module pages/RecoverCartPage
- * @author MLM Platform
+ * @author Nexo Real Development Team
  */
 
 import { useEffect } from 'react';

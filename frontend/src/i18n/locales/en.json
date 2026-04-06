@@ -94,6 +94,8 @@
     "dashboard": "Dashboard",
     "tree": "Tree",
     "crm": "CRM",
+    "leaderboard": "Leaderboard",
+    "achievements": "Achievements",
     "landingPages": "Landing Pages",
     "wallet": "Wallet",
     "profile": "Profile",
@@ -430,7 +432,8 @@
       "credit_card": "Credit Card",
       "debit_card": "Debit Card",
       "simulated": "Simulated Payment",
-      "paypal": "PayPal"
+      "paypal": "PayPal",
+      "mercadopago": "MercadoPago"
     },
     "selectPayment": "Select payment method",
     "terms": "I agree to the terms and conditions",
@@ -438,6 +441,9 @@
     "confirmPurchase": "Confirm Purchase",
     "processing": "Processing...",
     "simulatedWarning": "This is a simulated payment. No real charge will be made.",
+    "mpRedirectInfo": "You will be redirected to MercadoPago to complete your payment securely.",
+    "payWithMercadoPago": "Pay with MercadoPago",
+    "mpError": "Could not create payment preference. Please try again.",
     "success": "Payment Successful",
     "error": "Payment Failed",
     "tryAgain": "Try Again",
@@ -446,7 +452,7 @@
     "productNotFound": "The product you are looking for could not be found",
     "commissionBreakdown": "Commission Breakdown",
     "totalCommission": "Total Commission",
-    "paypalDescription": "MLM Platform Purchase",
+    "paypalDescription": "Nexo Real Purchase",
     "paypalNotConfigured": "PayPal is not configured. Please contact support or use simulated payment.",
     "paypalError": "PayPal payment failed. Please try again.",
     "paypalCaptureError": "Failed to complete PayPal payment. Please try again."

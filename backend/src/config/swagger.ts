@@ -1,8 +1,8 @@
 import swaggerJsdoc from 'swagger-jsdoc';
 
 /**
- * Swagger/OpenAPI Configuration for MLM Binary Affiliations API
- * Configuración Swagger/OpenAPI para la API MLM de Afiliaciones Binarias
+ * Swagger/OpenAPI Configuration for Nexo Real API
+ * Configuración Swagger/OpenAPI para la API de Nexo Real
  *
  * v1.10.0: Sprint 2 - Gift Cards, Abandoned Cart Recovery, Email Automation
  * v1.9.0: Gamification + Dynamic Commissions
@@ -17,7 +17,7 @@ const options: swaggerJsdoc.Options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'MLM Binary Affiliations API',
+      title: 'Nexo Real API',
       version: '1.10.0',
       description: `
 ## API REST para plataforma MLM de Afiliaciones Binarias
@@ -48,8 +48,8 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
 - **v1.0.0** (2026-03-15): MVP - Auth, Tree, Commissions, CRM, RBAC
       `,
       contact: {
-        name: 'MLM Support',
-        email: 'support@mlm-platform.com',
+        name: 'Nexo Real Support',
+        email: 'support@nexoreal.com', // TODO: domain pending
       },
     },
     servers: [

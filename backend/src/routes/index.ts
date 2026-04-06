@@ -1,5 +1,6 @@
 import { Router, Router as ExpressRouter } from 'express';
 import authRoutes from './auth.routes';
+import botRoutes from './bot.routes';
 import userRoutes from './user.routes';
 import commissionRoutes from './commission.routes';
 import dashboardRoutes from './dashboard.routes';
@@ -25,11 +26,14 @@ import contractRoutes from './contract.routes';
 import adminContractRoutes from './admin-contract.routes';
 import addressRoutes from './address.routes';
 import shippingRoutes from './shipping.routes';
+import achievementRoutes from './achievement.routes';
+import leaderboardRoutes from './leaderboard.routes';
 
 const router: ExpressRouter = Router();
 
 router.use('/auth', authRoutes);
 router.use('/auth/2fa', twoFactorRoutes); // 2FA routes
+router.use('/bot', botRoutes); // WhatsApp bot internal API
 router.use('/users', userRoutes);
 router.use('/commissions', commissionRoutes);
 router.use('/dashboard', dashboardRoutes);
@@ -69,6 +73,12 @@ router.use('/addresses', addressRoutes);
 
 // Shipping and tracking routes
 router.use('/', shippingRoutes);
+
+// Achievement routes
+router.use('/achievements', achievementRoutes);
+
+// Leaderboard routes
+router.use('/leaderboard', leaderboardRoutes);
 
 // Profile public routes (MUST be before publicRoutes to avoid /profile/:code conflict)
 import profilePublicRoutes from './profile-public.routes';

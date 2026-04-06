@@ -3,7 +3,7 @@
  * @description Shows current balance with currency formatting and last updated time
  *              Muestra balance actual con formato de moneda y última actualización
  * @module components/WalletBalance
- * @author MLM Development Team
+ * @author Nexo Real Development Team
  */
 
 import { useTranslation } from 'react-i18next';

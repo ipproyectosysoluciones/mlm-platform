@@ -3,7 +3,7 @@
  * @description Service for handling gift card creation, validation, and redemption
  *              Servicio para gestionar creación, validación y canje de gift cards
  * @module services/giftCardService
- * @author MLM Platform
+ * @author Nexo Real Development Team
  */
 
 import api from './api';

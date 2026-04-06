@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 
-/* Custom Design System for MLM Platform */
+/* Custom Design System for Nexo Real */
 @theme {
   /* Brand Colors - Premium Dark Palette with OKLCH */
   --color-brand-50: oklch(98% 0.02 260);

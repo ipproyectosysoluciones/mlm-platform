@@ -1,10 +1,10 @@
 /**
- * @fileoverview AuthController - Authentication controller for MLM binary affiliations
- * @description Controlador de autenticación para afiliaciones binarias MLM
+ * @fileoverview AuthController - Authentication controller for Nexo Real binary affiliations
+ * @description Controlador de autenticación para afiliaciones binarias de Nexo Real
  *              Handles user registration, login, and profile management
  *              Gestiona registro de usuarios, inicio de sesión y gestión de perfil
  * @module controllers/AuthController
- * @author MLM Development Team
+ * @author Nexo Real Development Team
  * @version 3.0.0
  *
  * @example
@@ -30,6 +30,7 @@ import { body } from 'express-validator';
 import { userService } from '../services/UserService';
 import { hashPassword, verifyPassword, generateToken } from '../services/AuthService';
 import { emailService } from '../services/EmailService';
+import { achievementService } from '../services/AchievementService';
 import { config } from '../config/env';
 import type { ApiResponse, UserAttributes } from '../types';
 import { AppError } from '../middleware/error.middleware';
@@ -91,7 +92,7 @@ export const register: RequestHandler = asyncHandler(
     const token = generateToken(user);
 
     // Send welcome email / Enviar email de bienvenida
-    const referralLink = `${config.app.frontendUrl || 'https://mlm-platform.com'}/register?ref=${user.referralCode}`;
+    const referralLink = `${config.app.frontendUrl || 'https://nexoreal.com'}/register?ref=${user.referralCode}`; // TODO: domain pending
     const firstName = user.email.split('@')[0];
 
     // Fire and forget - don't block registration response
@@ -189,6 +190,11 @@ export const login: RequestHandler = asyncHandler(
 
     // Normal login without 2FA
     const token = generateToken(user);
+
+    // Fire-and-forget: check login achievements (future-ready for consistency_30)
+    achievementService
+      .checkAndUnlock(user.id, 'login')
+      .catch((err) => console.error('[Achievements]', err));
 
     const response: ApiResponse<{
       user: Partial<UserAttributes>;

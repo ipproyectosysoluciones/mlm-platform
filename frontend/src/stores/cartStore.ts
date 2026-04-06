@@ -5,7 +5,7 @@
  *              Gestiona CRUD del carrito, persistencia en localStorage (debounced 30s),
  *              recuperación desde localStorage al cargar (<24hrs), y limpieza al checkout
  * @module stores/cartStore
- * @author MLM Platform
+ * @author Nexo Real Development Team
  */
 import { create } from 'zustand';
 import { useShallow } from 'zustand/react/shallow';

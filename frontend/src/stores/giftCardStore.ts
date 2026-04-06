@@ -3,7 +3,7 @@
  * @description Manages gift card creation, validation, redemption, and listing
  *              Gestiona creación, validación, canje y listado de gift cards
  * @module stores/giftCardStore
- * @author MLM Platform
+ * @author Nexo Real Development Team
  */
 import { create } from 'zustand';
 import { useShallow } from 'zustand/react/shallow';

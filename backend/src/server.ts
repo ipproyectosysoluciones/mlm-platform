@@ -4,14 +4,13 @@ import './instrument';
 import app from './app';
 import { connectDatabase, syncDatabase } from './config/database';
 import { config } from './config/env';
-import { initModels } from './models';
+import { initModels, User, Product, CommissionConfig, UserClosure } from './models';
+import { achievementService } from './services/AchievementService';
+import bcrypt from 'bcryptjs';
 
 // Auto-seed function
 async function autoSeed(): Promise<void> {
   try {
-    const { User, Product, CommissionConfig, UserClosure } = require('./models');
-    const bcrypt = require('bcryptjs');
-
     // Check if users exist
     const userCount = await User.count();
     if (userCount > 0) {
@@ -205,6 +204,9 @@ async function startServer(): Promise<void> {
 
     // Auto-seed if database is empty
     await autoSeed();
+
+    // Seed achievements (idempotent — safe on every restart)
+    achievementService.seedAchievements().catch((err) => console.error('[Achievements seed]', err));
 
     app.listen(config.port, () => {
       console.log(`

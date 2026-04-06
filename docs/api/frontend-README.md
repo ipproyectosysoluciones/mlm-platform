@@ -1,6 +1,6 @@
-# MLM Binary Affiliations - Frontend
+# Nexo Real - Frontend
 
-Frontend de la plataforma MLM para sistema de membresía binaria con affiliates.
+Frontend de la plataforma Nexo Real para sistema de membresía binaria con affiliates.
 
 ## Stack Tecnológico
 

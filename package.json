@@ -1,8 +1,8 @@
 {
-  "name": "mlm-platform",
+  "name": "nexo-real",
   "private": true,
   "version": "1.0.0",
-  "description": "MLM Binary Affiliations Platform",
+  "description": "Nexo Real - Plataforma de Afiliaciones",
   "scripts": {
     "prepare": "husky",
     "lint": "npm run lint --workspaces --if-present",

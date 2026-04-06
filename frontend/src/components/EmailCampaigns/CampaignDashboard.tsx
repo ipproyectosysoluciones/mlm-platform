@@ -5,7 +5,7 @@
  *              Lista todas las campañas de email con filtros de estado por tabs,
  *              resumen de estadísticas y acciones rápidas.
  * @module components/EmailCampaigns/CampaignDashboard
- * @author MLM Platform
+ * @author Nexo Real Development Team
  */
 
 import { useEffect, useState } from 'react';

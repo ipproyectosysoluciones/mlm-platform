@@ -77,10 +77,10 @@ export class EmailService {
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Bienvenido a MLM Platform</title>
+        <title>Bienvenido a Nexo Real</title>
       </head>
       <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-        <h1 style="color: #2563eb;">¡Bienvenido a MLM Platform, ${data.firstName}!</h1>
+        <h1 style="color: #2563eb;">¡Bienvenido a Nexo Real, ${data.firstName}!</h1>
         <p>Gracias por registrarte en nuestra plataforma.</p>
         <div style="background: #f3f4f6; padding: 16px; border-radius: 8px; margin: 20px 0;">
           <p style="margin: 0;"><strong>Tu código de referido:</strong></p>
@@ -91,7 +91,7 @@ export class EmailService {
       </body>
       </html>
     `;
-    return this.send(data.email, 'Bienvenido a MLM Platform', html);
+    return this.send(data.email, 'Bienvenido a Nexo Real', html);
   }
 
   /**
@@ -123,7 +123,7 @@ export class EmailService {
       </body>
       </html>
     `;
-    return this.send(data.email, 'Nueva comisión ganada - MLM Platform', html);
+    return this.send(data.email, 'Nueva comisión ganada - Nexo Real', html);
   }
 
   /**
@@ -175,7 +175,7 @@ export class EmailService {
       </body>
       </html>
     `;
-    return this.send(data.email, 'Restablecimiento de contraseña - MLM Platform', html);
+    return this.send(data.email, 'Restablecimiento de contraseña - Nexo Real', html);
   }
 
   /**
@@ -210,7 +210,7 @@ export class EmailService {
       </body>
       </html>
     `;
-    return this.send(data.email, '📊 Tu resumen semanal de MLM Platform', html);
+    return this.send(data.email, '📊 Tu resumen semanal de Nexo Real', html);
   }
 
   /**
@@ -242,7 +242,7 @@ export class EmailService {
       </body>
       </html>
     `;
-    return this.send(data.email, 'Retiro aprobado - MLM Platform', html);
+    return this.send(data.email, 'Retiro aprobado - Nexo Real', html);
   }
 
   /**
@@ -279,7 +279,7 @@ export class EmailService {
       </body>
       </html>
     `;
-    return this.send(data.email, 'Retiro rechazado - MLM Platform', html);
+    return this.send(data.email, 'Retiro rechazado - Nexo Real', html);
   }
 
   /**
@@ -302,7 +302,7 @@ export class EmailService {
       <head><meta charset="utf-8"><title>Nivel Alcanzado</title></head>
       <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <h1 style="color: #7c3aed;">¡Felicitaciones, ${data.firstName}!</h1>
-        <p>Has alcanzado un nuevo nivel en MLM Platform.</p>
+        <p>Has alcanzado un nuevo nivel en Nexo Real.</p>
         <div style="background: #ede9fe; padding: 24px; border-radius: 8px; margin: 20px 0; text-align: center;">
           <p style="margin: 0; color: #6b7280;">Nuevo nivel</p>
           <p style="font-size: 36px; font-weight: bold; color: #7c3aed; margin: 10px 0;">Nivel ${data.newLevel}</p>

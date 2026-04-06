@@ -40,7 +40,7 @@ export class Order extends Model<OrderAttributes, OrderCreation> {
   declare totalAmount: number;
   declare currency: string;
   declare status: 'pending' | 'completed' | 'failed';
-  declare paymentMethod: 'manual' | 'simulated';
+  declare paymentMethod: 'manual' | 'simulated' | 'paypal' | 'mercadopago';
   declare notes: string | null;
   // Shipping fields (Phase 3)
   declare shippingAddressId: string | null;
@@ -98,7 +98,7 @@ Order.init(
       defaultValue: 'pending',
     },
     paymentMethod: {
-      type: DataTypes.ENUM('manual', 'simulated'),
+      type: DataTypes.ENUM('manual', 'simulated', 'paypal', 'mercadopago'),
       allowNull: false,
       defaultValue: 'simulated',
       field: 'payment_method',

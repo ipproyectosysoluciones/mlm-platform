@@ -1,9 +1,18 @@
 import * as esbuild from 'esbuild';
-import { rm } from 'fs/promises';
+import { rm, readFile } from 'fs/promises';
 import { existsSync } from 'fs';
 
 const isProduction = process.env.NODE_ENV === 'production';
 const isWatch = process.argv.includes('--watch');
+
+// Mark ALL node_modules as external — avoids CJS/ESM dynamic require() issues
+// with SDKs like pino, mercadopago, nodemailer that use require() internally.
+// Node resolves them at runtime from node_modules, not bundled.
+const pkg = JSON.parse(await readFile('./package.json', 'utf8'));
+const externalDeps = [
+  ...Object.keys(pkg.dependencies ?? {}),
+  ...Object.keys(pkg.devDependencies ?? {}),
+];
 
 const buildOptions = {
   entryPoints: ['src/server.ts'],
@@ -11,30 +20,7 @@ const buildOptions = {
   platform: 'node',
   target: 'node24',
   outfile: 'dist/server.mjs',
-  external: [
-    'mysql2',
-    'bcryptjs',
-    'jsonwebtoken',
-    'ioredis',
-    'dotenv',
-    'express',
-    'cors',
-    'helmet',
-    'express-rate-limit',
-    'swagger-jsdoc',
-    'swagger-ui-express',
-    'qrcode',
-    'sequelize',
-    'pg',
-    'pg-hstore',
-    // Dependencias que faltaban - se estaban bundeleando innecesariamente
-    'axios',
-    'csv-parse',
-    'node-cron',
-    'uuid',
-    '@sentry/node',
-    // NOT using external for nodemailer - needs types and should be bundled
-  ],
+  external: externalDeps,
   format: 'esm',
   sourcemap: !isProduction,
   minify: isProduction,

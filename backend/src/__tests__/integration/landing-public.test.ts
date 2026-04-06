@@ -126,6 +126,9 @@ describe('Public Landing Integration Tests', () => {
   });
 
   describe('GET /api/public/profile/:code/products', () => {
+    // Note: PUSHTEST user is already created in the outer beforeEach.
+    // No inner beforeEach needed — avoids unique constraint violation on referralCode.
+
     it('should return products for valid referral code', async () => {
       const res = await testAgent.get('/api/public/profile/PUSHTEST/products').expect(200);
 

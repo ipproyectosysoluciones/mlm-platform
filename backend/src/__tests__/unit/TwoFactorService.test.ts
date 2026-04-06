@@ -88,7 +88,7 @@ describe('TwoFactorService', () => {
       const mockSecret = {
         base32: 'JBSWY3DPEHPK3PXP',
         otpauth_url:
-          'otpauth://totp/MLM%20Platform%20(test@example.com)?secret=JBSWY3DPEHPK3PXP&issuer=MLM%20Platform',
+          'otpauth://totp/Nexo%20Real%20(test@example.com)?secret=JBSWY3DPEHPK3PXP&issuer=Nexo%20Real',
       };
       (speakeasy.generateSecret as jest.Mock).mockReturnValue(mockSecret);
 
@@ -97,7 +97,7 @@ describe('TwoFactorService', () => {
 
       const result: TwoFactorSetup = await TwoFactorService.generateSecret(
         'test@example.com',
-        'MLM Platform'
+        'Nexo Real'
       );
 
       expect(result).toHaveProperty('secret');
@@ -112,7 +112,7 @@ describe('TwoFactorService', () => {
     it('should use default issuer when not provided', async () => {
       const mockSecret = {
         base32: 'JBSWY3DPEHPK3PXP',
-        otpauth_url: 'otpauth://totp/MLM%20Platform%20(test@example.com)?secret=JBSWY3DPEHPK3PXP',
+        otpauth_url: 'otpauth://totp/Nexo%20Real%20(test@example.com)?secret=JBSWY3DPEHPK3PXP',
       };
       (speakeasy.generateSecret as jest.Mock).mockReturnValue(mockSecret);
       (QRCode.toDataURL as jest.Mock).mockResolvedValue('data:image/png;base64,mock');
@@ -121,7 +121,7 @@ describe('TwoFactorService', () => {
 
       expect(speakeasy.generateSecret).toHaveBeenCalledWith(
         expect.objectContaining({
-          issuer: 'MLM Platform',
+          issuer: 'Nexo Real',
         })
       );
     });

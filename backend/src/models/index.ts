@@ -35,6 +35,9 @@ import { DeliveryProvider } from './DeliveryProvider';
 import { ShipmentTracking } from './ShipmentTracking';
 import { ContractTemplate } from './ContractTemplate';
 import { AffiliateContract } from './AffiliateContract';
+import { Achievement } from './Achievement';
+import { Badge } from './Badge';
+import { UserAchievement } from './UserAchievement';
 
 // User relationships
 User.hasMany(User, { as: 'children', foreignKey: 'sponsorId', sourceKey: 'id' });
@@ -93,7 +96,7 @@ User.hasMany(WithdrawalRequest, { foreignKey: 'userId', sourceKey: 'id' });
 WithdrawalRequest.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
 
 // Push Subscription relationships
-User.hasMany(PushSubscription, { foreignKey: 'userId', sourceKey: 'id' });
+User.hasMany(PushSubscription, { foreignKey: 'userId' });
 PushSubscription.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
 
 // Gift Card relationships
@@ -404,6 +407,20 @@ AffiliateContract.belongsTo(User, {
   targetKey: 'id',
 });
 
+// ── Achievement / Badge / UserAchievement associations ────────────────────────
+Achievement.hasOne(Badge, { as: 'badge', foreignKey: 'achievementId', sourceKey: 'id' });
+Badge.belongsTo(Achievement, { foreignKey: 'achievementId', targetKey: 'id' });
+
+Achievement.hasMany(UserAchievement, {
+  as: 'userAchievements',
+  foreignKey: 'achievementId',
+  sourceKey: 'id',
+});
+UserAchievement.belongsTo(Achievement, { foreignKey: 'achievementId', targetKey: 'id' });
+
+User.hasMany(UserAchievement, { as: 'userAchievements', foreignKey: 'userId', sourceKey: 'id' });
+UserAchievement.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
+
 export {
   sequelize,
   User,
@@ -443,6 +460,9 @@ export {
   ShipmentTracking,
   ContractTemplate,
   AffiliateContract,
+  Achievement,
+  Badge,
+  UserAchievement,
 };
 
 export function initModels(): void {

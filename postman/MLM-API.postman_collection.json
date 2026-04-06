@@ -1,7 +1,7 @@
 {
   "info": {
-    "name": "MLM Platform API",
-    "description": "Complete API collection for MLM Binary Affiliations Platform - v1.11.0 (Sprint 3: Categories, Products, Inventory, Vendors, Contracts, Shipping)",
+    "name": "Nexo Real API",
+    "description": "Complete API collection for Nexo Real Platform - v1.11.0 (Sprint 3: Categories, Products, Inventory, Vendors, Contracts, Shipping)",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -1186,7 +1186,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Welcome Email\",\n  \"subjectLine\": \"Welcome to MLM Platform, {{firstName}}!\",\n  \"htmlContent\": \"<h1>Hello {{firstName}}!</h1><p>Welcome to our platform. Your referral code is <strong>{{referralCode}}</strong>.</p>\",\n  \"wysiwygState\": {}\n}"
+              "raw": "{\n  \"name\": \"Welcome Email\",\n  \"subjectLine\": \"Welcome to Nexo Real, {{firstName}}!\",\n  \"htmlContent\": \"<h1>Hello {{firstName}}!</h1><p>Welcome to our platform. Your referral code is <strong>{{referralCode}}</strong>.</p>\",\n  \"wysiwygState\": {}\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/email-templates",

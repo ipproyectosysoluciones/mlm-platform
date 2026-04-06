@@ -1,6 +1,6 @@
 /**
- * i18n - Internationalization configuration for MLM Platform
- * Configuración de internacionalización para MLM Platform
+ * i18n - Internationalization configuration for Nexo Real
+ * Configuración de internacionalización para Nexo Real
  *
  * @module i18n
  */

@@ -5,7 +5,7 @@
  *              Página principal con tabs para Dashboard de campañas, Crear campaña,
  *              Email Builder, Monitor de campaña y Logs de entrega.
  * @module pages/EmailCampaignPage
- * @author MLM Platform
+ * @author Nexo Real Development Team
  */
 
 import { useState } from 'react';

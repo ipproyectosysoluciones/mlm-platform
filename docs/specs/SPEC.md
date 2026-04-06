@@ -1,4 +1,4 @@
-# MLM Platform - Technical Specification
+# Nexo Real - Technical Specification
 
 ## Feature Status / Estado de Funcionalidades
 
@@ -759,6 +759,30 @@ Get commissions report with breakdown by type.
 
 ---
 
+### Payment Endpoints
+
+#### PayPal
+
+| Method | Endpoint                                | Auth     | Description                                        |
+| ------ | --------------------------------------- | -------- | -------------------------------------------------- |
+| POST   | `/api/payment/paypal/create-order`      | Required | Create a PayPal order for checkout                 |
+| POST   | `/api/payment/paypal/capture-order`     | Required | Capture (complete) an approved PayPal order        |
+| GET    | `/api/payment/paypal/order/:orderId`    | Required | Retrieve details of a PayPal order                 |
+| POST   | `/api/payment/paypal/refund/:captureId` | Required | Issue a refund for a captured PayPal payment       |
+| POST   | `/api/payment/paypal/webhook`           | None     | Receive PayPal webhook events (signature-verified) |
+
+#### MercadoPago
+
+| Method | Endpoint                                      | Auth     | Description                                             |
+| ------ | --------------------------------------------- | -------- | ------------------------------------------------------- |
+| POST   | `/api/payment/mercadopago/create-preference`  | Required | Create a MercadoPago checkout preference                |
+| POST   | `/api/payment/mercadopago/process`            | Required | Process a direct card payment via MercadoPago           |
+| GET    | `/api/payment/mercadopago/payment/:paymentId` | Required | Retrieve details of a MercadoPago payment               |
+| GET    | `/api/payment/mercadopago/payment-methods`    | Required | List available payment methods in Colombia              |
+| POST   | `/api/payment/mercadopago/webhook`            | None     | Receive MercadoPago webhook events (signature-verified) |
+
+---
+
 ## Commission Distribution
 
 ### Rates by Level
@@ -934,6 +958,24 @@ pnpm test:all
 | `TEST_DB_PASSWORD` | Test database password | mlm_test  |
 | `TEST_DB_DIALECT`  | Test database dialect  | postgres  |
 
+### Payment Gateways
+
+#### PayPal
+
+| Variable               | Description                              | Example          |
+| ---------------------- | ---------------------------------------- | ---------------- |
+| `PAYPAL_CLIENT_ID`     | PayPal app client ID                     | -                |
+| `PAYPAL_CLIENT_SECRET` | PayPal app client secret                 | -                |
+| `PAYPAL_WEBHOOK_ID`    | PayPal webhook ID for event verification | -                |
+| `PAYPAL_MODE`          | API environment                          | `sandbox`/`live` |
+
+#### MercadoPago
+
+| Variable                     | Description                                    | Example |
+| ---------------------------- | ---------------------------------------------- | ------- |
+| `MERCADOPAGO_ACCESS_TOKEN`   | MercadoPago API access token (Colombia)        | -       |
+| `MERCADOPAGO_WEBHOOK_SECRET` | Secret for MercadoPago webhook signature check | -       |
+
 ---
 
 ## Version History
@@ -952,3 +994,17 @@ pnpm test:all
   - CommissionConfig API for admin rate management
   - Landing Pages builder with tracking
   - Two-Factor Authentication (2FA) with TOTP
+- **v1.8.0** - Payment Gateway Integration
+  - PayPal SDK: order creation, capture, refunds, webhooks, duplicate prevention, idempotency
+  - MercadoPago SDK v2: Colombian market — preferences, payments, refunds, webhooks
+  - SSRF fix in PayPalService: validates certificate URLs before fetching
+- **v1.9.0** - Gamification & Leaderboards System (Sprint 1 Complete)
+  - Leaderboards: Weekly/monthly/all-time rankings with Redis cache
+    - Top sellers by revenue
+    - Top referrers by count
+    - User rank & percentile
+  - Achievements & Badges: Auto-unlock system with 8 achievements
+    - First login, first order, referral milestones, sales targets
+    - User progress tracking & achievement summary
+    - Badge tier progression
+  - Total: 308 tests + 30 new tests for gamification (v1.9.0)

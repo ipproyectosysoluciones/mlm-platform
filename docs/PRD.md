@@ -1,11 +1,12 @@
 # Product Requirements Document (PRD)
 
-## MLM Platform - Multi-Vendor Marketplace con Sistema de Afiliaciones
+## Nexo Real — Plataforma SaaS de Servicios Inmobiliarios, Turismo y Afiliaciones
 
-**Version**: 1.8.0  
+**Version**: 2.0.0  
 **Status**: 🚀 IN DEVELOPMENT  
-**Last Updated**: 2026-04-03  
-**Document Owner**: MLM Development Team
+**Last Updated**: 2026-04-05  
+**Document Owner**: Nexo Real Development Team  
+**Tagline**: _"Conectamos tu negocio con el mundo."_
 
 ---
 
@@ -13,494 +14,511 @@
 
 ## Problem Statement
 
-Las empresas MLM y e-commerce tradicionales enfrentan múltiples desafíos:
+Las agencias inmobiliarias, hoteles, hosterías y operadores turísticos en LATAM enfrentan barreras tecnológicas críticas:
 
-- Sistemas obsoletos con tecnología de hace décadas
-- Comisiones manuales propensas a errores
-- Falta de flexibilidad para diferentes modelos de negocio
-- Plataformas que no escalan con el crecimiento
-- Pagos complicados en mercados emergentes (Latinoamérica)
+- Gestionan su negocio en Excel o WhatsApp manual sin automatización
+- No tienen acceso a herramientas de CRM o captación digital asequibles
+- No pueden escalar su cartera de clientes sin contratar más vendedores
+- Carecen de sistemas de afiliación para multiplicar su red de referidos
+- La atención al cliente es 100% manual, sin disponibilidad 24/7
 
-**Traditional Challenge**: MLM companies face outdated tech, manual commissions, and inflexible platforms that don't scale or support modern payment methods.
+**The core gap**: Existe tecnología de clase mundial para grandes empresas, pero el dueño de una hostería en Medellín o una agencia inmobiliaria en Bogotá no puede pagarla ni usarla.
 
 ## Proposed Solution
 
-**Plataforma SaaS Multi-Vendor con Sistema de Afiliaciones Binarias/Unilevel** que permite:
+**Nexo Real** es una plataforma SaaS multi-tenant que combina:
 
-- Vendedores independientes (afiliados) que pueden vender productos
-- Red de distribuidores con comisiones automáticas
-- Productos genéricos (cualquier tipo de negocio)
-- Entrega flexible: pickup + delivery (DiDi, Uber, InDriver)
-- Pagos locales: PayPal + MercadoPago (optimizado para Colombia)
+1. **Sistema MLM Unilevel** — Red de afiliados con comisiones automáticas por venta de servicios inmobiliarios y turísticos
+2. **Nexo Bot** — Agente AI conversacional por WhatsApp (BuilderBot + Baileys + OpenAI GPT-4o) con agentes Sophia y Max
+3. **CRM integrado** — Gestión de leads, tareas, comunicaciones, y agendamiento
+4. **Integraciones n8n** — Google Calendar, Notion, notificación a agente humano
 
-> **Status**: v1.8.0 IN DEVELOPMENT (target: Mayo 2026)
+> **Status**: v2.0.0 IN DEVELOPMENT (target: Mayo 2026)
 
 ---
 
-# 2. Vision del Producto
+# 2. Visión del Producto
 
 ## Modelo de Negocio
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    MLM PLATFORM - CORE                             │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│  MULTI-VENDOR MARKETPLACE                                          │
-│  ├── Afiliados pueden VENDER (no solo referir)                    │
-│  ├── Admin puede crear vendedores approved                        │
-│  └── Split payments (plataforma + vendor)                         │
-│                                                                     │
-│  SISTEMAS MLM SOPORTADOS                                          │
-│  ├── Binario (original): Left/Right placement + binary spillover │
-│  └── Unilevel (nuevo): Profundidad hasta nivel 10               │
-│                                                                     │
-│  TIPOS DE NEGOCIO SOPORTADOS                                      │
-│  ├── Streaming (Netflix, Spotify, HBO)                           │
-│  ├── SaaS / Software (herramientas, cursos)                       │
-│  ├── Servicios Locales (limpieza, plomería)                      │
-│  ├── Productos Físicos (tienda, dropshipping)                    │
-│  ├── Comida / Delivery ( Rappi-like)                            │
-│  ├── Cursos / Educación (membresías)                            │
-│  └── Travel (hoteles, tours)                                     │
-│                                                                     │
-│  DELIVERY METHODS                                                 │
-│  ├── Pickup - Cliente recoge en punto                            │
-│  ├── DiDi Envíos - Integración con DiDi                         │
-│  ├── Uber Flash/Rush - Integración con Uber                      │
-│  └── InDriver - Integración con InDriver                        │
-│                                                                     │
-│  PAGOS (Colombia-Friendly)                                        │
-│  ├── PayPal - Funciona en Colombia ✅                            │
-│  ├── MercadoPago - Funciona en Colombia ✅                        │
-│  └── Wallet interno - Balance de comisiones                       │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────┐
+│                        NEXO REAL — CORE                              │
+├──────────────────────────────────────────────────────────────────────┤
+│                                                                      │
+│  SERVICIOS PRINCIPALES                                               │
+│  ├── Real Estate (Bienes Raíces)                                    │
+│  │   ├── Rentals (arrendamiento de aptos, casas, fincas)           │
+│  │   ├── Sales (venta de inmuebles)                                 │
+│  │   └── Property Management (administración y mantenimiento)       │
+│  └── Tourism & Hospitality                                          │
+│      ├── Hospitality (hoteles, hosterías, posadas)                  │
+│      └── Travel Packages (paquetes turísticos)                      │
+│                                                                      │
+│  SISTEMA MLM                                                         │
+│  └── Unilevel con bonos estructurados                               │
+│      ├── Comisiones por cierre de servicio (directo)                │
+│      ├── Bonos por equipo (niveles 1-10)                            │
+│      └── Bonos por desempeño (rendimiento de red)                   │
+│                                                                      │
+│  NEXO BOT (AI WhatsApp)                                             │
+│  ├── Agente Sophia (atiende hombres)                                │
+│  ├── Agente Max (atiende mujeres)                                   │
+│  ├── Detección de idioma ES/EN                                      │
+│  ├── Knowledge Base configurable por tenant                         │
+│  └── Escalación a agente humano siempre disponible                  │
+│                                                                      │
+│  PLATAFORMA MULTI-TENANT (Fase 2)                                   │
+│  ├── Nexo Line 1 (Free/Demo): número compartido, KB genérica       │
+│  ├── Nexo Line 2 (Managed): número propio, KB personalizada        │
+│  └── Enterprise: onboarding self-service, API propia               │
+│                                                                      │
+│  PAGOS (LATAM-Friendly)                                             │
+│  ├── PayPal ✅ (Colombia, México, Argentina)                        │
+│  └── MercadoPago ✅ (optimizado para LATAM)                        │
+│                                                                      │
+└──────────────────────────────────────────────────────────────────────┘
 ```
 
-## User Personas
+## Mercados Objetivo
 
-### 1. Afiliado-Vendedor (Dual Role)
-
-**Profile**:
-
-- Age: 25-55
-- Tech Savviness: Medium-High
-- Primary Goal: Generar ingresos por ventas Y construir red de referidos
-
-**Needs**:
-
-- Dashboard con ventas, comisiones y red
-- Catálogo de productos para vender
-- Herramientas de marketing (links de referido)
-- Gestión de pedidos y delivery
-- Notificaciones de nuevas ventas/comisiones
-
-### 2. Comprador/Cliente
-
-**Profile**:
-
-- Age: 18-65
-- Tech Savviness: Variable
-- Primary Goal: Comprar productos de forma rápida y segura
-
-**Needs**:
-
-- Checkout rápido
-- Múltiples métodos de pago
-- Opciones de delivery flexibles
-- Seguimiento de pedido en tiempo real
-
-### 3. Admin Corporativo
-
-**Profile**:
-
-- Role: Operations Manager
-- Primary Goal: Gestión de plataforma y vendedores
-
-**Needs**:
-
-- Panel de control con métricas globales
-- Gestión de vendedores (approve/reject)
-- Reportes de ventas y comisiones
-- CRM para leads
+| Mercado     | Estado                  | Foco                           |
+| ----------- | ----------------------- | ------------------------------ |
+| Colombia    | 🟢 Activo (base actual) | Bogotá, Medellín, Cartagena    |
+| México      | 🟡 Próximo              | CDMX, Cancún, Guadalajara      |
+| Argentina   | 🟡 Próximo              | Buenos Aires, Córdoba, Mendoza |
+| Resto LATAM | 🔲 Fase 3               | Expansión gradual              |
 
 ---
 
-# 3. Funcionalidades Core
+# 3. User Personas
 
-## 3.1 Sistema de Autenticación
+### 1. Afiliado / Asesor Comercial
 
-| Feature                   | Descripción                          | Prioridad |
-| ------------------------- | ------------------------------------ | --------- |
-| Registro con sponsor code | Usuario se registra bajo un afiliado | 🔴 Alta   |
-| Login JWT                 | Autenticación con tokens             | 🔴 Alta   |
-| 2FA                       | Códigos TOTP                         | 🟡 Media  |
-| KYC (futuro)              | Verificación de identidad            | 🟢 Baja   |
+**Perfil**:
 
-## 3.2 Sistema MLM
+- Edad: 25–55 años
+- Ciudades con alto flujo inmobiliario o turístico
+- Agentes inmobiliarios, brokers, promotores de turismo, profesionales con redes amplias
+- Objetivo: generar ingresos por comisiones sin inventario ni inversión inicial alta
 
-### Binario (Original)
+**Necesidades**:
+
+- Dashboard con balance, red, comisiones y historial
+- Links de referido y herramientas de marketing digital
+- Notificaciones de nuevas comisiones
+- Acceso a KB del producto para presentar servicios
+- Contratos de afiliación digitales
+
+### 2. Cliente Final (Comprador / Viajero)
+
+**Perfil**:
+
+- Edad: 18–65 años
+- Busca servicios inmobiliarios (arrendar/comprar) o paquetes turísticos
+- Primer contacto generalmente vía WhatsApp (Nexo Bot)
+
+**Necesidades**:
+
+- Atención rápida, 24/7 via WhatsApp
+- Información clara sobre servicios y precios
+- Agendamiento de visitas o consultas
+- Escalación fácil a un asesor humano cuando lo requiera
+
+### 3. Agencia / Propietario (Tenant en Fase 2)
+
+**Perfil**:
+
+- Dueño de hostería, hotel boutique, agencia inmobiliaria
+- Actualmente usa Excel o WhatsApp manual
+- No tiene acceso a CRM ni herramientas de automatización asequibles
+
+**Necesidades**:
+
+- Su propio bot de WhatsApp con su número
+- Knowledge Base con info de su negocio
+- Panel de administración simple
+- Notificaciones de leads a su equipo
+
+### 4. Admin Corporativo (Nexo Real Interno)
+
+**Perfil**:
+
+- Rol: Operations Manager / Tech Lead
+- Objetivo: gestión de la plataforma, tenants, afiliados, comisiones
+
+**Necesidades**:
+
+- Panel de control con métricas globales
+- Gestión de afiliados (aprobación, suspensión)
+- Reportes de ventas y comisiones
+- CRM de leads global
+- Configuración de planes de comisión
+
+---
+
+# 4. Funcionalidades Core
+
+## 4.1 Sistema de Autenticación
+
+| Feature                   | Descripción                          | Prioridad | Estado |
+| ------------------------- | ------------------------------------ | --------- | ------ |
+| Registro con sponsor code | Usuario se registra bajo un afiliado | 🔴 Alta   | ✅     |
+| Login JWT                 | Autenticación con tokens             | 🔴 Alta   | ✅     |
+| 2FA                       | Códigos TOTP                         | 🟡 Media  | ✅     |
+| KYC (futuro)              | Verificación de identidad            | 🟢 Baja   | 🔲     |
+
+## 4.2 Sistema MLM — Unilevel con Bonos Estructurados
+
+### ¿Por qué Unilevel y no Binario?
+
+Los servicios inmobiliarios y turísticos tienen:
+
+- **Ticket alto** — no hay compras recurrentes frecuentes
+- **Ciclos de venta largos** — no es compra impulsiva
+- **Comisiones altas pero esporádicas**
+
+El modelo Binario genera desbalance estructural en este contexto. El **Unilevel con bonos** es más predecible y más justo.
+
+### Estructura de Comisiones
 
 ```
-Estructura:
-├── Left/Right placement automático
-├── Binary commissions (10% directo, niveles 1-5)
-├── Spillover cuando un lado está vacío
-└── Closure Table para queries eficientes
+Comisión directa (cierre de servicio):
+├── Nivel 0 (venta propia):     hasta configurable por tipo de servicio
+
+Bonos de equipo (Unilevel, hasta nivel 10):
+├── Nivel 1: 10%
+├── Nivel 2:  8%
+├── Nivel 3:  5%
+├── Nivel 4:  3%
+├── Nivel 5:  2%
+└── Niveles 6-10: configurable
+
+Bonos adicionales:
+├── Bono por cierre (cierre de negocio de alto valor)
+├── Bono por referido directo
+└── Bono por desempeño de equipo
 ```
 
-### Unilevel (Nuevo)
+### Tipos de Servicio y Comisión Base
+
+| Servicio            | Comisión sugerida                 |
+| ------------------- | --------------------------------- |
+| Arrendamiento       | % del primer mes o valor acordado |
+| Venta de inmueble   | % sobre valor de la transacción   |
+| Property Management | % mensual sobre contrato          |
+| Paquete turístico   | % sobre valor del paquete         |
+| Hospitalidad        | % sobre reserva confirmada        |
+
+> ⚠️ **DISCLAIMER**: Las comisiones son referenciales. Los ingresos dependen del esfuerzo, la red y el mercado. No se garantizan ganancias.
+
+## 4.3 Nexo Bot — AI WhatsApp Agent
+
+### Agentes
+
+| Agente     | Género    | Atiende a         | Personalidad                 |
+| ---------- | --------- | ----------------- | ---------------------------- |
+| **Sophia** | Femenino  | Hombres (default) | Cálida, carismática, directa |
+| **Max**    | Masculino | Mujeres           | Empático, confiable, claro   |
+
+### Capacidades del Bot
+
+| Feature                     | Descripción                                       | Prioridad | Estado |
+| --------------------------- | ------------------------------------------------- | --------- | ------ |
+| Detección de idioma ES/EN   | Pregunta al inicio, mantiene toda la conversación | 🔴 Alta   | 🔲     |
+| Detección de género         | Por nombre / preferencia, asigna Sophia o Max     | 🔴 Alta   | 🔲     |
+| Captación de leads          | Nombre, teléfono, email, área de interés          | 🔴 Alta   | 🔲     |
+| Onboarding de afiliados     | Guía paso a paso para registrarse                 | 🔴 Alta   | 🔲     |
+| Soporte a afiliados activos | Saldo, red, comisiones por WhatsApp               | 🔴 Alta   | ✅     |
+| FAQ del negocio             | Responde con Knowledge Base, nunca inventa        | 🔴 Alta   | 🔲     |
+| Agendamiento de citas       | Google Calendar vía n8n                           | 🟡 Media  | 🔲     |
+| Escalación a humano         | Siempre disponible, sin excusas                   | 🔴 Alta   | 🔲     |
+| Manejo de objeciones        | Pyramid, time, network, trust                     | 🟡 Media  | 🔲     |
+
+### Reglas Duras del Bot (Non-Negotiable)
+
+1. **NUNCA ALUCINAR** — Si no está en la KB, escalar a humano
+2. **NUNCA GARANTIZAR GANANCIAS** — Siempre incluir disclaimer
+3. **SIEMPRE OFRECER ESCALACIÓN HUMANA** — En cualquier punto de la conversación
+4. **NUNCA MENCIONAR LA EMPRESA DEV** — Solo Nexo Real
+5. **NUNCA PRESIONAR** — Cálido y profesional, jamás manipulador
+
+### Stack Técnico del Bot
 
 ```
-Estructura:
-├── Profundidad hasta nivel 10
-├── Porcentaje plano configurable por nivel
-└── Sin limitación izquierda/derecha
+Runtime:     Node.js (CommonJS)
+Framework:   BuilderBot + Baileys (WhatsApp Web API)
+AI:          OpenAI GPT-4o
+Prompts:     Sophia / Max + Knowledge Base dinámica
+Automations: n8n (Docker local → producción cloud)
+Integrations:
+  ├── Google Calendar (agendamiento de visitas)
+  ├── Notion (CRM de leads)
+  └── Notificación a agente humano
+Auth:        x-bot-secret header
+Transport:   HTTP server puerto 3002
+Session:     experimentalStore: true, timeRelease: 10800000
 ```
 
-### Configuración de Comisiones
+## 4.4 CRM Integrado
 
-```typescript
-// Ejemplo: Binary
-{
-  type: 'binary',
-  direct: 0.10,      // 10%
-  level_1: 0.05,    // 5%
-  level_2: 0.03,    // 3%
-  level_3: 0.02,    // 2%
-  level_4: 0.01     // 1%
-}
+| Feature        | Descripción                        | Estado |
+| -------------- | ---------------------------------- | ------ |
+| Leads          | Captura, seguimiento, estado       | ✅     |
+| Tasks          | Tareas asignadas a leads/afiliados | ✅     |
+| Communications | Historial de contactos             | ✅     |
+| Agendamiento   | Google Calendar sync (vía n8n)     | 🔲     |
+| Notion sync    | Leads exportados a Notion          | 🔲     |
 
-// Ejemplo: Unilevel
-{
-  type: 'unilevel',
-  level_1: 0.10,    // 10%
-  level_2: 0.08,     // 8%
-  level_3: 0.05,     // 5%
-  level_4: 0.03,     // 3%
-  level_5: 0.02,     // 2%
-  // ... hasta level 10
-}
-```
+## 4.5 Sistema de Wallet y Pagos
 
-## 3.3 Multi-Vendor Marketplace
+| Feature                    | Descripción                               | Estado |
+| -------------------------- | ----------------------------------------- | ------ |
+| Wallet balance             | Balance en USD                            | ✅     |
+| Comisiones automáticas     | Calculadas por cierre de servicio         | ✅     |
+| Historial de transacciones | Completo con paginación                   | ✅     |
+| Solicitud de retiro        | Manual con aprobación admin               | ✅     |
+| PayPal                     | Disponible en Colombia, México, Argentina | ✅     |
+| MercadoPago                | Optimizado para LATAM                     | ✅     |
 
-| Feature            | Descripción                                        | Prioridad |
-| ------------------ | -------------------------------------------------- | --------- |
-| Vendor申请         | Afiliados pueden aplicar para ser vendedores       | 🔴 Alta   |
-| Admin approval     | Admin approves/rejects vendors                     | 🔴 Alta   |
-| Vendor dashboard   | Dashboard para gestionar productos y pedidos       | 🔴 Alta   |
-| Split payments     | % configurable para plataforma y vendor            | 🔴 Alta   |
-| Vendor commissions | Los vendors también ganan comisiones por referrals | 🟡 Media  |
+## 4.6 Contratos de Afiliación Digitales
 
-## 3.4 Productos Genéricos
+| Feature                  | Descripción                   | Estado |
+| ------------------------ | ----------------------------- | ------ |
+| Templates versionados    | Markdown, semver              | ✅     |
+| Aceptación con IP + hash | SHA-256, timestamp, userAgent | ✅     |
+| Registro legal           | Auditable y exportable        | ✅     |
 
-| Feature             | Descripción                            | Prioridad |
-| ------------------- | -------------------------------------- | --------- |
-| CRUD productos      | Crear/editar/eliminar productos        | 🔴 Alta   |
-| Tipos de producto   | digital, physical, service, membership | 🔴 Alta   |
-| Inventory tracking  | Stock opcional con alertas             | 🟡 Media  |
-| Categorías          | Jerárquicas (parent-child)             | 🔴 Alta   |
-| SKU generable       | Auto-generado o manual                 | 🟡 Media  |
-| Metadatos flexibles | JSON para atributos extra              | 🟢 Baja   |
-
-## 3.5 Delivery Integration
-
-| Provider        | Status             | Description              |
-| --------------- | ------------------ | ------------------------ |
-| Pickup Points   | 🚀 Por implementar | Puntos de recogida       |
-| DiDi Envíos     | 🚀 Por implementar | Integración DiDi API     |
-| Uber Flash/Rush | 🚀 Por implementar | Integración Uber API     |
-| InDriver        | 🚀 Por implementar | Integración InDriver API |
-
-## 3.6 Gamificación
+## 4.7 Gamificación
 
 ### Leaderboards
 
-| Type     | Reset       | Metrics           |
-| -------- | ----------- | ----------------- |
-| Semanal  | Lunes 00:00 | Ventas, Referidos |
-| Mensual  | Día 1 00:00 | Ventas, Referidos |
-| All-time | Nunca       | Ventas, Referidos |
+| Tipo     | Reset       | Métricas              |
+| -------- | ----------- | --------------------- |
+| Semanal  | Lunes 00:00 | Ventas ($), Referidos |
+| Mensual  | Día 1 00:00 | Ventas ($), Referidos |
+| All-time | Nunca       | Ventas ($), Referidos |
 
-### Achievements (15+)
+### Achievements
 
-| ID              | Nombre                | Condición       | Reward |
-| --------------- | --------------------- | --------------- | ------ |
-| first_referral  | Primer Paso           | 1 referral      | Badge  |
-| team_10         | Equipo en Crecimiento | 10 referrals    | Badge  |
-| team_50         | Líder                 | 50 referrals    | Badge  |
-| first_sale      | Primera Venta         | 1 order         | Badge  |
-| sales_1000      | Vendedor              | $1000 total     | Badge  |
-| sales_10000     | Top Seller            | $10000 total    | Badge  |
-| consistency_30  | Constante             | 30 días login   | Badge  |
-| binary_balanced | Equilibrado           | 10 izq + 10 der | Badge  |
-
-## 3.7 Email Automation (Brevo)
-
-| Secuencia          | Trigger                | Emails           | Prioridad |
-| ------------------ | ---------------------- | ---------------- | --------- |
-| Welcome Series     | Registro               | 4 (Días 0-7)     | 🔴 Alta   |
-| Onboarding         | Registro               | 7 (Días 1-7)     | 🔴 Alta   |
-| Birthday           | Fecha nacimiento       | 2 (anual)        | 🟡 Media  |
-| Carrito Abandonado | Carrito sin checkout   | 3 (1h, 24h, 72h) | 🔴 Alta   |
-| Inactividad        | Sin login 7/14/30 días | 3                | 🟡 Media  |
-| Commission Alert   | Nueva comisión         | 1 (inmediato)    | 🔴 Alta   |
+| ID             | Nombre                | Condición             |
+| -------------- | --------------------- | --------------------- |
+| first_referral | Primer Paso           | 1 referido            |
+| team_10        | Equipo en Crecimiento | 10 referidos          |
+| team_50        | Líder                 | 50 referidos          |
+| first_sale     | Primera Venta         | 1 cierre              |
+| sales_1000     | Vendedor              | $1,000 en comisiones  |
+| sales_10000    | Top Seller            | $10,000 en comisiones |
+| consistency_30 | Constante             | 30 días de login      |
 
 ---
 
-# 4. Tech Stack
+# 5. Tech Stack
 
 ## Backend
 
 ```
-Runtime: Node 24+ (ESM)
-Framework: Express 5
-Database: PostgreSQL + Redis
-ORM: Sequelize 6
-Email: Brevo (SMTP + API)
-SMS: Brevo SMS
-Payments: PayPal SDK + MercadoPago SDK
-Delivery: DiDi + Uber + InDriver APIs
-Testing: Jest (123+ tests)
+Runtime:    Node 24+ (ESM)
+Framework:  Express 5
+Database:   PostgreSQL + Redis
+ORM:        Sequelize 6
+Email:      Brevo (SMTP + API)
+SMS:        Brevo SMS
+Payments:   PayPal SDK + MercadoPago SDK
+Testing:    Jest (307+ tests)
 ```
 
 ## Frontend
 
 ```
-Framework: React 19 + Vite
-Styling: Tailwind CSS 4 + shadcn/ui
-State: Zustand 5
-Routing: React Router 7
-i18n: i18next
-PWA: Workbox
-Testing: Vitest (102+ tests)
-E2E: Playwright
+Framework:  React 19 + Vite
+Styling:    Tailwind CSS 4 + shadcn/ui
+State:      Zustand 5
+Routing:    React Router 7
+i18n:       i18next (ES + EN)
+PWA:        Workbox
+Testing:    Vitest + Playwright
+```
+
+## Nexo Bot
+
+```
+Runtime:    Node.js (CommonJS)
+Bot:        BuilderBot + Baileys
+AI:         OpenAI GPT-4o
+Automation: n8n (Docker)
+Port:       3002
 ```
 
 ---
 
-# 5. API Endpoints
+# 6. API Endpoints
 
-## Payments
-
-```
-POST /api/payment/paypal/create      - Crear orden PayPal
-POST /api/payment/paypal/capture     - Capturar pago PayPal
-POST /api/payment/paypal/webhook     - Webhook PayPal
-POST /api/payment/mercadopago/preference - Crear preferencia MP
-POST /api/payment/mercadopago/webhook    - Webhook MP
-```
-
-## Gamificación
+## Bot API (autenticado con x-bot-secret)
 
 ```
-GET  /api/leaderboard              - Obtener rankings
-GET  /api/achievements             - Obtener achievements
-POST /api/achievements/claim       - Reclamar reward
+GET  /api/bot/user-by-phone    - Buscar usuario por teléfono
+GET  /api/bot/wallet           - Info de wallet del usuario
+GET  /api/bot/network          - Resumen de red MLM
+GET  /api/bot/commissions      - Comisiones recientes
 ```
 
-## Marketplace
+## Afiliados
 
 ```
-POST /api/vendors                  - Solicitar ser vendor
-GET  /api/vendors                  - Listar vendors
-PATCH /api/vendors/:id/approve     - Aprobar vendor
-PATCH /api/vendors/:id/reject      - Rechazar vendor
+GET  /api/network              - Red del afiliado
+GET  /api/commissions          - Historial de comisiones
+GET  /api/wallet               - Balance y transacciones
+POST /api/withdrawals          - Solicitar retiro
 ```
 
-## Delivery
+## Contratos
 
 ```
-POST /api/delivery/quote           - Cotizar envío
-POST /api/delivery/create          - Crear envío
-GET  /api/delivery/track/:id      - Tracking de envío
+GET  /api/contracts            - Listar contratos
+POST /api/contracts/:id/accept - Aceptar contrato (graba IP/hash)
+POST /api/contracts/:id/decline
 ```
 
-## Productos
+## Pagos
 
 ```
-GET  /api/products                 - Listar productos
-POST /api/products                 - Crear producto (vendor)
-PATCH /api/products/:id            - Editar producto
-DELETE /api/products/:id           - Eliminar producto
+POST /api/payment/paypal/create
+POST /api/payment/paypal/capture
+POST /api/payment/paypal/webhook
+POST /api/payment/mercadopago/preference
+POST /api/payment/mercadopago/webhook
 ```
 
----
+## Admin
 
-# 6. Database Schema
-
-## Nuevas Tablas
-
-### Vendors
-
-```sql
-CREATE TABLE vendors (
-  id UUID PRIMARY KEY,
-  user_id UUID REFERENCES users(id),
-  business_name VARCHAR(255),
-  status ENUM('pending', 'approved', 'rejected'),
-  commission_rate DECIMAL(5,2),  -- % para vendor
-  platform_fee DECIMAL(5,2),      -- % para plataforma
-  approved_at TIMESTAMP,
-  approved_by UUID REFERENCES users(id),
-  created_at TIMESTAMP DEFAULT NOW()
-);
 ```
-
-### Products (Refactorizado)
-
-```sql
-CREATE TABLE products (
-  id UUID PRIMARY KEY,
-  vendor_id UUID REFERENCES vendors(id),  -- NULL = admin
-  name VARCHAR(255) NOT NULL,
-  description TEXT,
-  price DECIMAL(10,2) NOT NULL,
-  currency VARCHAR(3) DEFAULT 'USD',
-  type ENUM('digital', 'physical', 'service', 'membership'),
-  delivery_method ENUM('automatic', 'shipping', 'pickup', 'appointment'),
-  inventory_tracked BOOLEAN DEFAULT false,
-  inventory_quantity INTEGER,
-  sku VARCHAR(100),
-  metadata JSONB,
-  status ENUM('active', 'inactive'),
-  created_at TIMESTAMP DEFAULT NOW()
-);
-```
-
-### Achievements
-
-```sql
-CREATE TABLE achievements (
-  id UUID PRIMARY KEY,
-  code VARCHAR(50) UNIQUE NOT NULL,
-  name VARCHAR(100) NOT NULL,
-  description TEXT,
-  icon_url VARCHAR(500),
-  points INTEGER DEFAULT 0,
-  created_at TIMESTAMP DEFAULT NOW()
-);
-
-CREATE TABLE user_achievements (
-  id UUID PRIMARY KEY,
-  user_id UUID REFERENCES users(id),
-  achievement_id UUID REFERENCES achievements(id),
-  unlocked_at TIMESTAMP DEFAULT NOW(),
-  UNIQUE(user_id, achievement_id)
-);
-```
-
-### Leaderboards
-
-```sql
-CREATE TABLE leaderboard_entries (
-  id UUID PRIMARY KEY,
-  user_id UUID REFERENCES users(id),
-  period ENUM('weekly', 'monthly', 'all_time'),
-  metric VARCHAR(50),           -- 'sales', 'referrals'
-  value DECIMAL(15,2),
-  rank INTEGER,
-  period_start DATE,
-  period_end DATE,
-  created_at TIMESTAMP DEFAULT NOW(),
-  UNIQUE(user_id, period, metric, period_start)
-);
-```
-
-### GiftCards
-
-```sql
-CREATE TABLE gift_cards (
-  id UUID PRIMARY KEY,
-  code VARCHAR(50) UNIQUE NOT NULL,
-  amount DECIMAL(10,2) NOT NULL,
-  currency VARCHAR(3) DEFAULT 'USD',
-  balance DECIMAL(10,2) NOT NULL,
-  purchaser_id UUID REFERENCES users(id),
-  recipient_email VARCHAR(255),
-  status ENUM('active', 'redeemed', 'expired'),
-  expires_at TIMESTAMP,
-  redeemed_at TIMESTAMP,
-  created_at TIMESTAMP DEFAULT NOW()
-);
+GET    /api/admin/users
+PATCH  /api/admin/users/:id
+GET    /api/admin/commissions
+POST   /api/admin/commissions/pay
+GET    /api/admin/vendors
+PATCH  /api/admin/vendors/:id/commission-rate
 ```
 
 ---
 
-# 7. Roadmap v1.8.0
+# 7. Arquitectura Multi-Tenant (Fase 2)
 
-### Sprint 1: Monetización (Semanas 1-2)
+## Planes de Servicio
 
-- [ ] #17 PayPal SDK Integration
-- [ ] #18 MercadoPago SDK Integration
-- [ ] #19 Leaderboards
-- [ ] #20 Achievements + Badges
+| Plan        | Precio est. | WhatsApp                            | Knowledge Base        | Soporte   |
+| ----------- | ----------- | ----------------------------------- | --------------------- | --------- |
+| Free / Demo | $0          | Número compartido Nexo Real         | KB genérica Nexo Real | Community |
+| Starter     | $29–49/mes  | Número propio (API key del cliente) | KB personalizada      | Email     |
+| Managed     | $99–199/mes | Número propio + gestión Nexo Real   | KB full personalizada | Dedicado  |
+| Enterprise  | Custom      | Full white-label                    | Multi-KB              | SLA       |
 
-### Sprint 2: E-commerce + Automation (Semana 3)
+## Arquitectura del Bot Multi-Tenant (Fase 2)
 
-- [ ] #21 Carrito Abandonado
-- [ ] #22 Email Automation (Brevo)
-- [ ] #23 Gift Cards
-
-### Sprint 3: Multi-vendor + Delivery (Semana 3)
-
-- [ ] #25 Multi-vendor Support
-- [ ] #26 Delivery: Pickup + DiDi/Uber/InDriver
-- [ ] #27 Productos Genéricos + Inventory
-
-### Sprint 4: QA + Release (Semana 4)
-
-- [ ] #28 Test Coverage Expansion (90%+)
-- [ ] #29 v1.8.0 Production Release
-- [ ] #30 Documentation Update
-
-**GitHub Project**: https://github.com/users/ipproyectosysoluciones/projects/4
+```
+               ┌─────────────────────────────────┐
+               │         Nexo Real Core           │
+               │   (Orchestrator + KB Manager)   │
+               └───────┬─────────────┬───────────┘
+                       │             │
+           ┌───────────▼──┐   ┌──────▼──────────┐
+           │  Agencia A   │   │   Hostería B     │
+           │  (WA #001)   │   │   (WA #002)      │
+           │  KB: Inmob.  │   │   KB: Turismo    │
+           └──────────────┘   └─────────────────┘
+```
 
 ---
 
-# 8. Success Metrics
+# 8. Roadmap
 
-| KPI                  | Target        | Current |
-| -------------------- | ------------- | ------- |
-| Test Coverage        | >= 90%        | ~60%    |
-| API Response Time    | < 200ms (p95) | TBD     |
-| System Uptime        | >= 99.5%      | TBD     |
-| Payment Success Rate | >= 95%        | N/A     |
-| Email Open Rate      | >= 20%        | N/A     |
+## Fase 1 — Demo MVP (NOW → Mayo 2026)
+
+```
+✅ SPRINT 1 (Completado): Monetización — v1.9.0
+✅ SPRINT 2 (Completado): E-Commerce + Automation — v1.10.0
+✅ SPRINT 3 (Completado): Multi-vendor + Delivery + Security — v1.11.0
+🟢 SPRINT 4 (En curso): QA + Release + Nexo Bot MVP — v2.0.0
+   ├── Test Coverage 90%+
+   ├── Nexo Bot: OpenAI integration + Sophia/Max
+   ├── Nexo Bot: Language detection ES/EN
+   ├── Nexo Bot: Gender detection → agent assignment
+   ├── n8n: Google Calendar integration
+   ├── n8n: Notion CRM integration
+   └── First bot startup + WhatsApp pairing
+```
+
+## Fase 2 — Multi-Tenant (1–2 meses post v2.0.0)
+
+```
+□ Multi-tenant architecture
+□ Tenant onboarding flow
+□ Per-tenant Knowledge Base management
+□ Per-tenant WhatsApp number (customer API key)
+□ Tenant admin dashboard
+□ Billing & subscription management
+```
+
+## Fase 3 — Full Contact Center SaaS (3–6 meses)
+
+```
+□ Self-service onboarding
+□ White-label bot
+□ Advanced analytics per tenant
+□ Multi-channel (Instagram DM, Messenger)
+□ Proactive campaigns via WhatsApp
+□ Full SLA tiers
+```
 
 ---
 
-# 9. Risks & Mitigations
+# 9. Success Metrics
 
-| Risk                          | Probability | Impact   | Mitigation                         |
-| ----------------------------- | ----------- | -------- | ---------------------------------- |
-| Payment gateway downtime      | Medium      | High     | Multiple providers (PayPal + MP)   |
-| Delivery API changes          | Medium      | Medium   | Abstract provider behind interface |
-| Commission calculation errors | Low         | Critical | 100% test coverage                 |
-| Vendor fraud                  | Medium      | High     | Admin approval + KYC (future)      |
+| KPI                       | Target        | Actual |
+| ------------------------- | ------------- | ------ |
+| Test Coverage             | >= 90%        | ~70%   |
+| Tests Totales             | ~550          | 307    |
+| API Response Time         | < 200ms (p95) | TBD    |
+| System Uptime             | >= 99.5%      | TBD    |
+| Payment Success Rate      | >= 95%        | N/A    |
+| Bot Response Time         | < 3s          | TBD    |
+| Bot Escalation Rate       | < 30%         | TBD    |
+| Lead Capture Rate via Bot | >= 60%        | TBD    |
 
 ---
 
-# 10. Document History
+# 10. Risks & Mitigations
 
-| Version | Date       | Author   | Changes                                  |
-| ------- | ---------- | -------- | ---------------------------------------- |
-| 1.8.0   | 2026-04-03 | MLM Team | Updated to multi-vendor + delivery scope |
-| 1.3.0   | 2026-03-30 | MLM Team | MVP streaming e-commerce                 |
-| 1.0.0   | 2026-03-21 | MLM Team | Initial PRD                              |
+| Risk                                  | Probability | Impact   | Mitigation                                                       |
+| ------------------------------------- | ----------- | -------- | ---------------------------------------------------------------- |
+| Bot hallucina y genera desinformación | Medium      | Critical | Prompts estrictos, KB única fuente de verdad, escalación forzada |
+| WhatsApp ban por uso de Baileys       | Medium      | High     | Números dedicados, comportamiento natural, no spam               |
+| Comisiones calculadas incorrectamente | Low         | Critical | 100% test coverage en módulo MLM                                 |
+| Regulación inmobiliaria por país      | Medium      | High     | Contratos digitales + KYC futuro + asesoría legal local          |
+| Cliente piloto rechaza el producto    | Medium      | High     | Demo funcional antes de pitch, escuchar necesidades reales       |
+
+---
+
+# 11. Document History
+
+| Version | Date       | Author         | Changes                                                                                                                                                                                                                                                                          |
+| ------- | ---------- | -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2.0.0   | 2026-04-05 | Nexo Real Team | Reescritura completa. Proyecto renombrado de `mlm-platform` a **Nexo Real**. Foco en servicios inmobiliarios + turismo/hospitalidad. Nexo Bot documentado. Modelo MLM definido como Unilevel con bonos. Eliminado: streaming, delivery DiDi/Uber, productos genéricos como foco. |
+| 1.8.0   | 2026-04-03 | MLM Team       | Multi-vendor + delivery scope                                                                                                                                                                                                                                                    |
+| 1.3.0   | 2026-03-30 | MLM Team       | MVP streaming e-commerce                                                                                                                                                                                                                                                         |
+| 1.0.0   | 2026-03-21 | MLM Team       | Initial PRD                                                                                                                                                                                                                                                                      |
 
 ---
 
 **Approval**
 
-| Role          | Name | Date | Signature |
-| ------------- | ---- | ---- | --------- |
-| Product Owner | TBD  | -    |           |
-| Tech Lead     | TBD  | -    |           |
-| QA Lead       | TBD  | -    |           |
+| Role          | Name | Date |
+| ------------- | ---- | ---- |
+| Product Owner | TBD  | —    |
+| Tech Lead     | TBD  | —    |
 
 ---
 
-_This PRD is a living document. Update status and scope as the project evolves._
+_This PRD is a living document. Update as the project evolves._  
+_Nexo Real — "Conectamos tu negocio con el mundo."_

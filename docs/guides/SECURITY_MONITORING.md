@@ -71,5 +71,5 @@
 
 ## Resources
 
-- [Dependabot Alerts](https://github.com/ipproyectosysoluciones/mlm-platform/security/dependabot)
+- [Dependabot Alerts](https://github.com/ipproyectosysoluciones/mlm-platform/security/dependabot) _(repo será renombrado a nexo-real próximamente)_
 - [GitHub Security Advisories](https://github.com/advisories?query=ecosystem%3Anpm)

@@ -3,7 +3,7 @@
  * @description Code input, validation preview, and redeem flow for gift cards
  *              Input de código, preview de validación y flujo de canje de gift cards
  * @module components/Checkout/GiftCardRedeem
- * @author MLM Platform
+ * @author Nexo Real Development Team
  */
 
 import { useState } from 'react';

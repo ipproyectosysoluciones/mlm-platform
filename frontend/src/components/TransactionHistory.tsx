@@ -3,7 +3,7 @@
  * @description Displays paginated list of wallet transactions with filters
  *              Muestra lista paginada de transacciones del wallet con filtros
  * @module components/TransactionHistory
- * @author MLM Development Team
+ * @author Nexo Real Development Team
  */
 
 import { useEffect } from 'react';

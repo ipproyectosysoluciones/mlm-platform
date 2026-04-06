@@ -3,7 +3,7 @@
  * @description Service for handling cart CRUD, recovery token validation, and admin listing
  *              Servicio para gestionar CRUD de carrito, validación de tokens de recuperación, y listado admin
  * @module services/cartService
- * @author MLM Platform
+ * @author Nexo Real Development Team
  */
 
 import api from './api';
