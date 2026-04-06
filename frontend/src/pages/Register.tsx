@@ -70,7 +70,7 @@ export default function Register() {
         {/* Logo */}
         <Link to="/" className="relative z-20 flex items-center text-lg font-medium">
           <TreeDeciduous className="mr-2 h-6 w-6" />
-          MLM Pro
+          Nexo Real
         </Link>
 
         {/* Quote */}

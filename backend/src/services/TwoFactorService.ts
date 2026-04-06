@@ -92,7 +92,7 @@ export class TwoFactorService {
    */
   static async generateSecret(
     userEmail: string,
-    issuer: string = 'MLM Platform'
+    issuer: string = 'Nexo Real'
   ): Promise<TwoFactorSetup> {
     // Generate TOTP secret
     const secret = speakeasy.generateSecret({

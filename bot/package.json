@@ -1,0 +1,36 @@
+{
+  "name": "mlm-bot",
+  "version": "1.0.0",
+  "description": "Nexo Real - WhatsApp Bot powered by BuilderBot",
+  "type": "module",
+  "main": "dist/app.js",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=10.0.0"
+  },
+  "scripts": {
+    "dev": "tsx watch src/app.ts",
+    "build": "tsc",
+    "start": "node dist/app.js",
+    "lint": "eslint \"src/**/*.ts\"",
+    "format": "prettier --write \"src/**/*.ts\""
+  },
+  "dependencies": {
+    "@builderbot/bot": "latest",
+    "@builderbot/provider-baileys": "latest",
+    "axios": "^1.13.6",
+    "dotenv": "^16.6.1",
+    "openai": "^4.91.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.37",
+    "prettier": "^3.8.1",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  },
+  "pnpm": {
+    "ignoredBuiltDependencies": [
+      "@scarf/scarf"
+    ]
+  }
+}

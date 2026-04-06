@@ -5,7 +5,7 @@
  *              Muestra items del carrito, cantidades y totales en formato de solo lectura.
  *              Usado durante la recuperación para mostrar al usuario qué va a restaurar.
  * @module components/Cart/CartPreview
- * @author MLM Platform
+ * @author Nexo Real Development Team
  */
 
 import { ShoppingCart, Package } from 'lucide-react';

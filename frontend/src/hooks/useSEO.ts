@@ -11,21 +11,21 @@ interface SEOProps {
 }
 
 const DEFAULT_SEO: SEOProps = {
-  title: 'MLM Platform - Afiliaciones Binarias',
+  title: 'Nexo Real - Plataforma de Afiliaciones',
   description:
-    'Plataforma MLM con sistema de afiliaciones binarias, comisiones automáticas y árbol genealógico.',
+    'Nexo Real — Conectamos tu negocio con el mundo. Sistema de afiliaciones binarias, comisiones automáticas y árbol genealógico.',
   image: '/og-image.png',
   type: 'website',
-  siteName: 'MLM Platform',
+  siteName: 'Nexo Real',
 };
 
 export function useSEO(props: SEOProps = {}) {
   const location = useLocation();
   const seo = { ...DEFAULT_SEO, ...props };
-  const url = seo.url || `https://mlm-platform.com${location.pathname}`;
+  const url = seo.url || `https://nexoreal.com${location.pathname}`; // TODO: domain pending
 
   useEffect(() => {
-    document.title = seo.title || DEFAULT_SEO.title || 'MLM Platform';
+    document.title = seo.title || DEFAULT_SEO.title || 'Nexo Real';
 
     const metaTags = [
       { name: 'description', content: seo.description },
@@ -73,7 +73,7 @@ export function useSEO(props: SEOProps = {}) {
 
 export function useProfileSEO(user: { referralCode: string; level?: number; levelName?: string }) {
   useSEO({
-    title: `${user.referralCode} - MLM Affiliate`,
+    title: `${user.referralCode} - Nexo Real Affiliate`,
     description: `Únete al equipo de ${user.referralCode}. Nivel ${user.level || 1} - ${user.levelName || 'Starter'}. Afiliaciones binarias con comisiones automáticas.`,
     type: 'profile',
   });

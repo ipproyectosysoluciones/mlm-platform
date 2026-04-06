@@ -1,30 +1,86 @@
 schema: spec-driven
 
 context: |
-  Tech stack: Node.js monorepo (pnpm workspaces), Express.js backend, React 19 frontend
-  Architecture: REST API with JWT authentication, MySQL database with Sequelize ORM
-  Testing: Backend (Jest + Supertest), Frontend (Vitest + Playwright)
-  Style: ESLint + Prettier + Husky git hooks
+  Proyecto: Nexo Real — Plataforma SaaS de Servicios Inmobiliarios, Turismo y Afiliaciones
+  Tagline: "Conectamos tu negocio con el mundo."
+  Empresa dev: IP Proyectos y Soluciones (NO mencionar en el producto)
+
+  Tech Stack — Plataforma Core:
+    Runtime: Node.js monorepo (pnpm workspaces v10.33.0)
+    Backend: Node 24+ ESM, Express 5, PostgreSQL + Redis, Sequelize 6
+    Frontend: React 19 + Vite, Tailwind CSS 4, shadcn/ui, Zustand 5, React Router 7
+    Auth: JWT + 2FA (TOTP)
+    Pagos: PayPal SDK + MercadoPago SDK (LATAM-friendly)
+    Email: Brevo (SMTP + API)
+    Testing: Jest 307+ tests (backend) + Vitest + Playwright (frontend)
+    i18n: i18next (ES + EN)
+    PWA: Workbox
+
+  Tech Stack — Nexo Bot:
+    Runtime: Node.js CommonJS
+    Bot Framework: BuilderBot + Baileys (WhatsApp Web API)
+    AI: OpenAI GPT-4o
+    Agentes: Sophia (femenino, atiende hombres) + Max (masculino, atiende mujeres)
+    Idiomas: Español + Inglés (detección al inicio de conversación)
+    Automation: n8n (Docker local, migrar a cloud en producción)
+    Integraciones n8n: Google Calendar, Notion CRM, notificación agente humano
+    Puerto: 3002
+    Auth: x-bot-secret header
+    Session: experimentalStore=true, timeRelease=10800000
+
+  Modelo de Negocio:
+    Servicios principales:
+      - Real Estate: Rentals, Sales, Property Management
+      - Tourism & Hospitality: Hospitality, Travel Packages
+    MLM: Unilevel con bonos estructurados (NO binario)
+      - Comision directa por cierre de servicio
+      - Bonos de equipo hasta nivel 10
+      - Bonos adicionales: cierre alto valor, referido activo, desempenio equipo
+    Mercados: Colombia (base), Mexico, Argentina (expansion), LATAM (Fase 3)
+
+  Planes de Servicio (Fase 2 Multi-Tenant):
+    - Free/Demo: numero compartido Nexo Real, KB generica
+    - Starter: $29-49/mes, numero propio (API key cliente), KB personalizada
+    - Managed: $99-199/mes, numero propio gestionado por Nexo Real
+    - Enterprise: custom, white-label
+
+  Archivos privados (gitignored en prompt_kb/):
+    - base-system-prompt.md  - sistema prompt base con placeholder {KNOWLEDGE_BASE}
+    - sophia.prompt.md       - personalidad agente Sophia
+    - max.prompt.md          - personalidad agente Max
+    - knowledge-base.md      - KB completa bilingue (ES/EN), 7 secciones
+
+  Estado actual: v1.11.0, Sprint 3 completado, en Sprint 4 (QA + Nexo Bot MVP)
+  Branch activo: release
+  GPG signing: EXPIRADO - usar --no-gpg-sign en todos los commits
+  Repo GitHub Project: https://github.com/users/ipproyectosysoluciones/projects/4
 
 rules:
   proposal:
     - Include rollback plan for risky changes
     - Identify affected modules/packages
+    - Always reference Nexo Real branding (never mlm-platform or IP Proyectos)
   specs:
     - Use Given/When/Then format for scenarios
     - Use RFC 2119 keywords (MUST, SHALL, SHOULD, MAY)
+    - Bot specs MUST include ES and EN behavior
   design:
     - Include sequence diagrams for complex flows
     - Document architecture decisions with rationale
+    - Bot design MUST include escalation flow to human agent
   tasks:
     - Group tasks by phase (infrastructure, implementation, testing)
     - Use hierarchical numbering (1.1, 1.2, etc.)
     - Keep tasks small enough to complete in one session
   apply:
     - Follow existing code patterns and conventions
+    - Bot code MUST be CommonJS only (not ESM)
+    - Bot MUST never hallucinate - KB is the only source of truth
     - Load relevant coding skills for the project stack
   verify:
     - Run tests if test infrastructure exists
     - Compare implementation against every spec scenario
+    - Bot: verify escalation to human always works
   archive:
     - Warn before merging destructive deltas (large removals)
+    - Update prompt_kb/ files when KB content changes

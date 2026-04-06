@@ -69,7 +69,7 @@ export function Navbar({ onMobileMenuToggle, mobileMenuOpen }: NavbarProps) {
             </div>
             <div className="hidden sm:block">
               <span className="font-bold text-xl bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
-                MLM Pro
+                Nexo Real
               </span>
               <div className="text-xs text-slate-400 -mt-1">Premium Streaming</div>
             </div>

@@ -3,7 +3,7 @@
  * @description Modal that shows withdrawal details for user confirmation
  *              Modal que muestra detalles del retiro para confirmación del usuario
  * @module components/WithdrawalModal
- * @author MLM Development Team
+ * @author Nexo Real Development Team
  */
 
 import { useTranslation } from 'react-i18next';

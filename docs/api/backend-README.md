@@ -1,6 +1,6 @@
-# MLM Binary Affiliations - Backend
+# Nexo Real - Backend
 
-Backend API para sistema de membresía binaria MLM.
+Backend API para la plataforma Nexo Real de membresía binaria.
 
 ## Stack Tecnológico
 

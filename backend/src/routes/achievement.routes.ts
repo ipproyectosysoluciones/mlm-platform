@@ -11,11 +11,26 @@
  * // GET /api/achievements/me/summary — aggregate stats
  */
 import { Router, Router as ExpressRouter } from 'express';
+import rateLimit from 'express-rate-limit';
 import { authenticateToken } from '../middleware/auth.middleware';
 import { achievementController } from '../controllers/AchievementController';
 import { asyncHandler } from '../middleware/asyncHandler';
 
 const router: ExpressRouter = Router();
+
+// Rate limiting — guards the auth middleware against brute-force / enumeration
+const achievementLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: process.env.NODE_ENV === 'test' ? 1000 : 200,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    error: { code: 'RATE_LIMIT', message: 'Too many requests. Please try again later.' },
+  },
+});
+
+router.use(achievementLimiter);
 
 // All achievement routes require authentication
 router.use(authenticateToken);

@@ -1,11 +1,11 @@
 # API Reference
 
-> Complete API documentation for the MLM Binary Affiliations Platform.
+> Complete API documentation for the Nexo Real Platform.
 
 ## Base URL
 
 ```
-Production: https://api.mlm-platform.com
+Production: https://api.nexoreal.com # TODO: domain pending
 Development: http://localhost:3000
 ```
 
@@ -256,7 +256,7 @@ Authorization: Bearer <token>
       "totalEarnings": 1250.00,
       "pendingEarnings": 150.00
     },
-    "referralLink": "https://mlm-platform.com/register?ref=MLM-ABCD-1234",
+    "referralLink": "https://nexoreal.com/register?ref=NXR-ABCD-1234", // TODO: domain pending
     "recentCommissions": [ ... ],
     "recentReferrals": [ ... ],
     "referralsChart": [

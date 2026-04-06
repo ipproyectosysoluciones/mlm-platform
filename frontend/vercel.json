@@ -7,7 +7,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://backend.lordastaroth77.cloudflareaccess.com/api/$1"
+      "destination": "https://promoted-grey-distributors-smallest.trycloudflare.com/api/$1"
     },
     {
       "source": "/(.*)",

@@ -383,7 +383,7 @@ export default function ProductLanding() {
 
         {/* Footer */}
         <div className="mt-8 text-center text-gray-500 text-sm pb-8">
-          <p>© 2026 MLM Platform. Todos los derechos reservados.</p>
+          <p>© 2026 Nexo Real. Todos los derechos reservados.</p>
         </div>
       </div>
     </div>

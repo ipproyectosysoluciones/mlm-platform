@@ -4,9 +4,9 @@ import { config } from './env';
 // Allow test override
 let _sequelize: Sequelize | null = null;
 
-// Support both MySQL and PostgreSQL
-// Set DB_DIALECT=postgres to use PostgreSQL, otherwise defaults to MySQL
-const dbDialect = (process.env.DB_DIALECT || 'mysql') as 'mysql' | 'postgres';
+// PostgreSQL-only project
+// DB_DIALECT env var kept for backwards compatibility but defaults to postgres
+const dbDialect = (process.env.DB_DIALECT || 'postgres') as 'mysql' | 'postgres';
 
 export function createSequelize(): Sequelize {
   if (_sequelize) return _sequelize;

@@ -33,7 +33,7 @@ export class PaymentPayPalController {
     const order = await paypalService.createOrder({
       amount,
       currency,
-      description: description || 'MLM Platform Purchase',
+      description: description || 'Nexo Real - Compra',
       orderId,
       userId,
     });

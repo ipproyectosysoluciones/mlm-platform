@@ -3,7 +3,7 @@
  * @description Service for handling email templates, campaigns, sending, and monitoring
  *              Servicio para gestionar plantillas de email, campañas, envíos y monitoreo
  * @module services/emailCampaignService
- * @author MLM Platform
+ * @author Nexo Real Development Team
  */
 
 import api from './api';

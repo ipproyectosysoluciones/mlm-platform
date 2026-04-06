@@ -54,11 +54,11 @@ export const config = {
     /** Database host / Host de base de datos */
     host: process.env.DB_HOST || 'localhost',
     /** Database port / Puerto de base de datos */
-    port: parseInt(process.env.DB_PORT || '3306', 10),
+    port: parseInt(process.env.DB_PORT || '5432', 10),
     /** Database name / Nombre de base de datos */
     name: process.env.DB_NAME || 'mlm_db',
     /** Database user / Usuario de base de datos */
-    user: process.env.DB_USER || 'root',
+    user: process.env.DB_USER || 'mlm',
     /** Database password / Contraseña de base de datos */
     password: process.env.DB_PASSWORD || '',
   },
@@ -118,9 +118,9 @@ export const config = {
     /** Brevo API key for transactional emails / Clave API de Brevo para correos transaccionales */
     apiKey: process.env.BREVO_API_KEY || '',
     /** Sender email address / Correo del remitente */
-    senderEmail: process.env.BREVO_SENDER_EMAIL || 'noreply@mlm-platform.com',
+    senderEmail: process.env.BREVO_SENDER_EMAIL || 'noreply@nexoreal.com', // TODO: domain pending
     /** Sender display name / Nombre del remitente */
-    senderName: process.env.BREVO_SENDER_NAME || 'MLM Platform',
+    senderName: process.env.BREVO_SENDER_NAME || 'Nexo Real',
     /** SMS sender ID / ID del remitente SMS */
     smsSender: process.env.BREVO_SMS_SENDER || 'MLM',
   },
@@ -142,7 +142,7 @@ export const config = {
     /** VAPID private key / Clave privada VAPID */
     privateKey: process.env.VAPID_PRIVATE_KEY || '',
     /** VAPID subject (mailto or URL) / Asunto VAPID (mailto o URL) */
-    subject: process.env.VAPID_SUBJECT || 'mailto:admin@mlm-platform.com',
+    subject: process.env.VAPID_SUBJECT || 'mailto:admin@nexoreal.com', // TODO: domain pending
   },
 
   /** PayPal configuration / Configuración de PayPal */

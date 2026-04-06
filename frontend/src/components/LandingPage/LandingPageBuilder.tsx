@@ -388,7 +388,7 @@ function LandingPagePreview({ template, content, slug }: LandingPagePreviewProps
 
           {content.showReferralCode && (
             <div className="mt-6 text-sm opacity-70">
-              Código de referido: <span className="font-mono font-bold">MLM-XXXX</span>
+              Código de referido: <span className="font-mono font-bold">NEXO-XXXX</span>
             </div>
           )}
         </div>

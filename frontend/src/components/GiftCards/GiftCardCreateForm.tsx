@@ -3,7 +3,7 @@
  * @description Form with amount, expiry days, and QR code display on success
  *              Formulario con monto, días de expiración y visualización de QR al crear
  * @module components/GiftCards/GiftCardCreateForm
- * @author MLM Platform
+ * @author Nexo Real Development Team
  */
 
 import { useState } from 'react';

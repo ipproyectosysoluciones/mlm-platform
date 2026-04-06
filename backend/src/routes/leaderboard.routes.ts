@@ -6,11 +6,26 @@
  * @author MLM Development Team
  */
 import { Router, Router as ExpressRouter } from 'express';
+import rateLimit from 'express-rate-limit';
 import { authenticateToken } from '../middleware/auth.middleware';
 import { leaderboardController } from '../controllers/LeaderboardController';
 import { asyncHandler } from '../middleware/asyncHandler';
 
 const router: ExpressRouter = Router();
+
+// Rate limiting — guards the auth middleware against brute-force / enumeration
+const leaderboardLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: process.env.NODE_ENV === 'test' ? 1000 : 200,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    error: { code: 'RATE_LIMIT', message: 'Too many requests. Please try again later.' },
+  },
+});
+
+router.use(leaderboardLimiter);
 
 // All leaderboard routes require authentication
 router.use(authenticateToken);

@@ -1,8 +1,8 @@
-# MLM Platform - Documentación General / General Documentation
+# Nexo Real - Documentación General / General Documentation
 
 ## Español
 
-Bienvenido a la documentación de la plataforma MLM (Marketing Multinivel). Esta plataforma incluye un sistema de afiliados binarios con comisiones automáticas, distribución en niveles y visualización del árbol genealógico.
+Bienvenido a la documentación de Nexo Real. Esta plataforma incluye un sistema de afiliados binarios con comisiones automáticas, distribución en niveles y visualización del árbol genealógico.
 
 ### Características Principales
 

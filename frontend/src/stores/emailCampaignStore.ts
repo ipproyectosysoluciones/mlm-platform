@@ -3,7 +3,7 @@
  * @description Manages email templates, campaigns, sending, monitoring, and logs
  *              Gestiona plantillas de email, campañas, envíos, monitoreo y logs
  * @module stores/emailCampaignStore
- * @author MLM Platform
+ * @author Nexo Real Development Team
  */
 import { create } from 'zustand';
 import { useShallow } from 'zustand/react/shallow';

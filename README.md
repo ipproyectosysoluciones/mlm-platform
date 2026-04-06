@@ -1,6 +1,11 @@
-# MLM Platform - Sistema de Afiliaciones Binarias
+# Nexo Real - Plataforma de Afiliaciones
 
-Plataforma MLM (Multi-Level Marketing) con sistema de afiliaciones binarias, comisiones por niveles y visualización de árbol genealógico.
+> **Nota:** Este proyecto fue originalmente desarrollado bajo el nombre **MLM Platform**
+> (`ipproyectosysoluciones/mlm-platform`). Ha sido renombrado a **Nexo Real** como parte
+> del reenfoque hacia servicios inmobiliarios y turismo en LATAM.
+> El repositorio de GitHub será renombrado próximamente.
+
+Conectamos tu negocio con el mundo. Plataforma de afiliaciones binarias con comisiones por niveles y visualización de árbol genealógico.
 
 **Versión actual: v1.11.0** — Sprint 3 completado (2026-04-04)
 
@@ -138,7 +143,7 @@ export TEST_DB_PORT=5435  # para tests
 | `BREVO_SMTP_USER`                    | Usuario SMTP de Brevo                    | -                    |
 | `BREVO_SMTP_PASS`                    | Contraseña SMTP de Brevo                 | -                    |
 | `EMAIL_FROM`                         | Email remitente por defecto              | noreply@example.com  |
-| `EMAIL_FROM_NAME`                    | Nombre del remitente                     | MLM Platform         |
+| `EMAIL_FROM_NAME`                    | Nombre del remitente                     | Nexo Real            |
 | `CART_ABANDONMENT_THRESHOLD_MINUTES` | Umbral para carrito abandonado           | 1000                 |
 | `CART_RECOVERY_TOKEN_EXPIRY_DAYS`    | Días de expiración del token             | 7                    |
 
@@ -320,8 +325,8 @@ Si este proyecto te resulta útil, podés apoyarlo con una donación:
 
 ## 📞 Contacto
 
-- **Proyecto**: MLM Binary Affiliations Platform
-- **GitHub**: https://github.com/ipproyectosysoluciones/mlm-platform
+- **Proyecto**: Nexo Real - Plataforma de Afiliaciones
+- **GitHub**: https://github.com/ipproyectosysoluciones/mlm-platform _(será renombrado próximamente)_
 - **Docker Hub**: https://hub.docker.com/u/ipproyectos
 
 ## 📄 Licencia

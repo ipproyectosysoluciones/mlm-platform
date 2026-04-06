@@ -4,9 +4,9 @@
 
 ### Visión General
 
-La plataforma MLM está construida con una arquitectura de API RESTful, separando claramente el backend (Node.js + Express + TypeScript + Sequelize + PostgreSQL) del frontend (React + Vite + TypeScript + Tailwind CSS).
+La plataforma MLM está construida con una arquitectura de API RESTful, separando claramente el backend (Node.js + Express + TypeScript + Sequelize + PostgreSQL) del frontend (React + Vite + TypeScript + Tailwind CSS). A partir de la v2.0.0 se incorpora un canal de atención por WhatsApp (Nexo Bot) orquestado por n8n para automatizaciones externas.
 
-**Estado del Proyecto**: v1.11.0 — Sprint 3 Completado ✅
+**Estado del Proyecto**: v2.0.0 — Sprint 4 Completado ✅
 
 **Características Implementadas**:
 
@@ -30,6 +30,9 @@ La plataforma MLM está construida con una arquitectura de API RESTful, separand
 - **Delivery Integration**: ShippingAddress, DeliveryProvider, ShipmentTracking
 - **Affiliate Contracts MVP**: ContractTemplate, AffiliateContract con versionado y hash
 - 307 tests automatizados
+- **WhatsApp Bot (Nexo Bot)**: BuilderBot + Baileys, 7 flujos conversacionales, IA (GPT-4o)
+- **n8n Automation**: orquestación de webhooks → Google Calendar + Notion CRM
+- **Sprint 4 Tests**: cobertura frontend de 155 → 210 tests
 
 ```map
 ┌─────────────────────────────────────────────────────────────┐
@@ -122,7 +125,7 @@ backend/src/
 
 The MLM platform is built with a RESTful API architecture, clearly separating the backend (Node.js + Express + TypeScript + Sequelize + PostgreSQL) from the frontend (React + Vite + TypeScript + Tailwind CSS).
 
-**Project Status**: v1.11.0 — Sprint 3 Completed ✅
+**Project Status**: v2.0.0 — Sprint 4 Completed ✅
 
 **Implemented Features**:
 
@@ -146,6 +149,9 @@ The MLM platform is built with a RESTful API architecture, clearly separating th
 - **Delivery Integration**: ShippingAddress, DeliveryProvider, ShipmentTracking
 - **Affiliate Contracts MVP**: ContractTemplate, AffiliateContract with versioning and hash
 - 307 automated tests
+- **WhatsApp Bot (Nexo Bot)**: BuilderBot + Baileys, 7 conversation flows, AI (GPT-4o)
+- **n8n Automation**: webhook orchestration → Google Calendar + Notion CRM
+- **Sprint 4 Tests**: frontend coverage from 155 → 210 tests
 
 ### Layer Structure
 
@@ -629,3 +635,224 @@ frontend/src/components/layout/
 | **TOTAL**           | **307** | **All passing**                 |
 
 > Note: Test count increased from 195 (pre-Sprint 3) to 307 with new integration tests for all Sprint 3 phases.
+
+---
+
+## Sprint 4: WhatsApp Bot + n8n Automation / Bot de WhatsApp + Automatización
+
+### Overview
+
+Sprint 4 añade un canal de atención por WhatsApp construido sobre **BuilderBot + Baileys** y orquestado con **n8n** para automatizaciones externas (Google Calendar, Notion CRM).
+
+> Sprint 4 adds a WhatsApp customer channel built on **BuilderBot + Baileys**, orchestrated with **n8n** for external automations (Google Calendar, Notion CRM).
+
+### Architecture Diagram / Diagrama de Arquitectura
+
+```map
+┌──────────────────────────────────────────────────────────────────────────┐
+│                           NEXO REAL v2.0.0                               │
+│                                                                           │
+│  ┌─────────────┐     ┌─────────────────────────────────────────────────┐ │
+│  │  WhatsApp   │────▶│              Nexo Bot (BuilderBot)              │ │
+│  │  (User)     │     │              port 3002                          │ │
+│  └─────────────┘     │                                                 │ │
+│                       │  Flows:                                         │ │
+│                       │  welcome · balance · network · support          │ │
+│                       │  schedule · handoff · language · agent          │ │
+│                       └──────────────────┬──────────────────────────────┘ │
+│                                          │                                │
+│                    ┌─────────────────────┴────────────────────┐          │
+│                    │                                           │          │
+│                    ▼                                           ▼          │
+│         ┌──────────────────────┐               ┌──────────────────────┐  │
+│         │   Backend API        │               │       n8n            │  │
+│         │   port 3001          │               │   port 5678          │  │
+│         │                      │               │   (internal only)    │  │
+│         │  REST API            │               │                      │  │
+│         │  (balance, network,  │               │  Webhooks:           │  │
+│         │   commissions)       │               │  /schedule-visit     │  │
+│         └──────────┬───────────┘               │  /human-handoff      │  │
+│                    │                            └───────┬──────────────┘  │
+│                    ▼                                    │                 │
+│         ┌──────────────────────┐         ┌─────────────┴──────────────┐  │
+│         │   PostgreSQL 16      │         │   External Services        │  │
+│         │   + Sequelize ORM    │         │                            │  │
+│         └──────────────────────┘         │   ┌──────────────────────┐ │  │
+│                                          │   │   Google Calendar    │ │  │
+│                                          │   └──────────────────────┘ │  │
+│                                          │   ┌──────────────────────┐ │  │
+│                                          │   │    Notion CRM        │ │  │
+│                                          │   └──────────────────────┘ │  │
+│                                          └────────────────────────────┘  │
+└──────────────────────────────────────────────────────────────────────────┘
+```
+
+### Bot Tech Stack
+
+| Technology                   | Version | Purpose                                |
+| ---------------------------- | ------- | -------------------------------------- |
+| @builderbot/bot              | latest  | Conversation flow engine               |
+| @builderbot/provider-baileys | latest  | WhatsApp connection via Baileys WA Web |
+| openai                       | ^4.x    | GPT-4o for AI agent responses          |
+| axios                        | ^1.x    | HTTP client for MLM API calls          |
+| tsx                          | ^4.x    | Dev server with hot reload             |
+| TypeScript                   | ^5.x    | Type safety (ESM, `"type": "module"`)  |
+
+### Bot Structure / Estructura del Bot
+
+```tree
+bot/src/
+├── app.ts                   # Bootstrap: provider, flows, HTTP server (port 3002)
+├── flows/
+│   ├── welcome.flow.ts      # Greeting + main menu
+│   ├── balance.flow.ts      # Wallet balance via MLM API
+│   ├── network.flow.ts      # Downline + commissions
+│   ├── support.flow.ts      # FAQ + escalation
+│   ├── schedule.flow.ts     # Book a visit → n8n → Google Calendar + Notion
+│   ├── handoff.flow.ts      # Human escalation → n8n → Notion CRM
+│   ├── language.flow.ts     # ES/EN language switch
+│   └── agent.flow.ts        # AI agent mode (Sophia / Max)
+└── services/
+    ├── ai.service.ts         # OpenAI GPT-4o integration
+    ├── mlm-api.service.ts    # MLM Backend REST API client
+    └── n8n.service.ts        # n8n webhook HTTP client
+```
+
+### Bot Flows / Flujos del Bot
+
+| Flow     | Keywords (ES)                         | Description                               |
+| -------- | ------------------------------------- | ----------------------------------------- |
+| welcome  | hola, inicio, menu, start             | Greeting + main menu                      |
+| balance  | saldo, balance, wallet, mi saldo      | Wallet balance from MLM API               |
+| network  | red, equipo, network, comisiones      | Downline tree + commission summary        |
+| support  | ayuda, soporte, help, support         | FAQ + escalation to human                 |
+| schedule | agendar, visita, reunión, appointment | Book visit → Google Calendar + Notion CRM |
+| handoff  | asesor, agente, humano, human, agent  | Escalate to human → Notion CRM            |
+| language | idioma, language, english, español    | Switch between ES / EN                    |
+| agent    | (AI fallback — EVENTS.WELCOME)        | GPT-4o agent (Sophia ES / Max EN)         |
+
+### n8n Integration / Integración con n8n
+
+n8n actúa como orquestador de automatizaciones externas. Nexo Bot dispara webhooks HTTP (internos, dentro de `mlm-network`) y n8n ejecuta los flujos.
+
+> n8n acts as the external automation orchestrator. Nexo Bot fires internal HTTP webhooks (inside `mlm-network`) and n8n executes the workflows.
+
+```map
+Nexo Bot
+   │
+   ├── POST /webhook/schedule-visit ──► n8n
+   │      Payload: { phone, name, preferredDate, interest, language }
+   │                     │
+   │                     ├──► Google Calendar (create event)
+   │                     └──► Notion CRM (lead: status = "Visit Scheduled")
+   │
+   └── POST /webhook/human-handoff ───► n8n
+          Payload: { phone, name, reason, agent, language, escalatedAt }
+                        │
+                        ├──► Notion CRM (lead: status = "Needs Human")
+                        └──► WhatsApp agent notification
+```
+
+#### n8n Webhook Payloads
+
+**schedule-visit**
+
+| Field         | Type   | Description                                  |
+| ------------- | ------ | -------------------------------------------- |
+| phone         | string | WhatsApp number (international format)       |
+| name          | string | User's name as captured in conversation      |
+| preferredDate | string | Free text date (e.g. "martes 15 a las 10am") |
+| interest      | string | Property/service of interest                 |
+| language      | es/en  | Conversation language                        |
+
+**human-handoff**
+
+| Field       | Type   | Description                            |
+| ----------- | ------ | -------------------------------------- |
+| phone       | string | WhatsApp number                        |
+| name        | string | User's name                            |
+| reason      | string | Brief summary of escalation reason     |
+| agent       | string | Last AI agent assigned (sophia \| max) |
+| language    | es/en  | Conversation language                  |
+| escalatedAt | string | ISO timestamp of escalation            |
+
+#### n8n Infrastructure
+
+| Component | Value                                      |
+| --------- | ------------------------------------------ |
+| Image     | `n8nio/n8n:2.14.2`                         |
+| Port      | 5678 (internal only — not exposed to host) |
+| Network   | `mlm-network` (Docker bridge)              |
+| Base URL  | `http://n8n:5678/webhook`                  |
+| Database  | SQLite (MVP) — volume `mlm_n8n_data`       |
+| Auth      | Basic auth / Owner account                 |
+
+### Proactive Notifications (Bot HTTP API)
+
+El backend MLM puede enviar mensajes proactivos por WhatsApp a través del servidor HTTP del bot.
+
+> The MLM backend can send proactive WhatsApp messages via the bot's built-in HTTP server.
+
+```
+POST http://nexo-bot:3002/v1/messages
+Content-Type: application/json
+
+{ "number": "5491122334455", "message": "Tu comisión de $50 fue acreditada 🎉" }
+```
+
+**Use cases:**
+
+- Commission earned notification
+- Welcome after registration
+- Withdrawal status update
+
+### AI Agents / Agentes de IA
+
+| Agent  | Language | Persona                     |
+| ------ | -------- | --------------------------- |
+| Sophia | Spanish  | Cálida asesora de Nexo Real |
+| Max    | English  | Friendly Nexo Real advisor  |
+
+Both agents use **GPT-4o** with a shared conversation history stored in bot state (MemoryDB).  
+Can be upgraded to PostgreSQLDB in a future sprint for persistence across restarts.
+
+---
+
+## Sprint 4: Frontend Tests
+
+### Overview
+
+Sprint 4 increments frontend test coverage from **155 → 210 tests** through new unit/integration tests for the Leaderboard and Achievements modules.
+
+### Test Breakdown (Frontend — Sprint 4)
+
+| File                                                       | Tests | New in S4 |
+| ---------------------------------------------------------- | ----- | --------- |
+| `components/leaderboard/__tests__/Podium.test.tsx`         | 12    | ✅        |
+| `components/leaderboard/__tests__/RankingTable.test.tsx`   | 12    | ✅        |
+| `components/leaderboard/__tests__/UserRankBanner.test.tsx` | 8     | ✅        |
+| `pages/__tests__/AchievementsPage.test.tsx`                | 12    | ✅        |
+| `__tests__/services.test.ts` (extended)                    | +9    | ✅        |
+
+### Vitest Config Change (Sprint 4)
+
+`poolOptions` was removed in Vitest 4. Parallel test hangs fixed by migrating to:
+
+```typescript
+// vitest.config.ts
+export default defineConfig({
+  test: {
+    pool: 'forks',
+    singleFork: true, // replaces poolOptions.forks.singleFork
+  },
+});
+```
+
+### Overall Test Summary (v2.0.0)
+
+| Layer          | Count   | Framework        |
+| -------------- | ------- | ---------------- |
+| Backend tests  | 307     | Jest + Supertest |
+| Frontend tests | 210     | Vitest + RTL     |
+| E2E tests      | 37      | Playwright       |
+| **TOTAL**      | **554** | **All passing**  |
