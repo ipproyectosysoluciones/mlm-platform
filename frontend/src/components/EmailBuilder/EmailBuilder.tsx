@@ -5,7 +5,7 @@
  *              Constructor de email principal con edición WYSIWYG, modo HTML, selector
  *              de variables y vista previa en tiempo real. Enfoque liviano sin TinyMCE.
  * @module components/EmailBuilder/EmailBuilder
- * @author MLM Platform
+ * @author Nexo Real Development Team
  */
 
 import { useState, useRef, useCallback } from 'react';

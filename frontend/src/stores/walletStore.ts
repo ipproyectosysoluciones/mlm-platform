@@ -3,7 +3,7 @@
  * @description Manages wallet balance, transactions, and withdrawal requests
  *              Gestiona balance, transacciones y solicitudes de retiro del wallet
  * @module stores/walletStore
- * @author MLM Development Team
+ * @author Nexo Real Development Team
  */
 import { create } from 'zustand';
 import { useShallow } from 'zustand/react/shallow';

@@ -5,7 +5,7 @@
  *              Muestra estadísticas de campaña (enviados, fallidos, tasa de entrega, apertura, clics)
  *              con polling de auto-refresco cada 10 segundos. Soporta acciones de envío, reintento y pausa.
  * @module components/EmailCampaigns/CampaignMonitor
- * @author MLM Platform
+ * @author Nexo Real Development Team
  */
 
 import { useEffect } from 'react';

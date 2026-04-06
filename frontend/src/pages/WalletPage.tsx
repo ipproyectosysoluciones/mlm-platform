@@ -3,7 +3,7 @@
  * @description Main wallet page displaying balance, transactions, and withdrawal form
  *              Página principal del wallet mostrando balance, transacciones y formulario de retiro
  * @module pages/WalletPage
- * @author MLM Development Team
+ * @author Nexo Real Development Team
  */
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';

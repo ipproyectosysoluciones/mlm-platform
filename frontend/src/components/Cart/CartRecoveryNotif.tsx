@@ -5,7 +5,7 @@
  *              Muestra una notificación descartable cuando se detecta una recuperación de carrito.
  *              Muestra cantidad de items y total, con enlace para retomar la compra.
  * @module components/Cart/CartRecoveryNotif
- * @author MLM Platform
+ * @author Nexo Real Development Team
  */
 
 import { useState } from 'react';

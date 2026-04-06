@@ -452,7 +452,7 @@
     "productNotFound": "The product you are looking for could not be found",
     "commissionBreakdown": "Commission Breakdown",
     "totalCommission": "Total Commission",
-    "paypalDescription": "MLM Platform Purchase",
+    "paypalDescription": "Nexo Real Purchase",
     "paypalNotConfigured": "PayPal is not configured. Please contact support or use simulated payment.",
     "paypalError": "PayPal payment failed. Please try again.",
     "paypalCaptureError": "Failed to complete PayPal payment. Please try again."

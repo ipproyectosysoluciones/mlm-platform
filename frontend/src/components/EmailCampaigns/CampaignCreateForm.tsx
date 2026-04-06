@@ -5,7 +5,7 @@
  *              Formulario para seleccionar plantilla, segmento de destinatarios,
  *              programación opcional y nombre para una nueva campaña de email.
  * @module components/EmailCampaigns/CampaignCreateForm
- * @author MLM Platform
+ * @author Nexo Real Development Team
  */
 
 import { useState, useEffect } from 'react';

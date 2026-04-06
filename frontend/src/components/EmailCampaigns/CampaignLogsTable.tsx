@@ -5,7 +5,7 @@
  *              Muestra logs de entrega de destinatarios en una tabla con badges de estado,
  *              razones de error, conteos de reintentos y paginación.
  * @module components/EmailCampaigns/CampaignLogsTable
- * @author MLM Platform
+ * @author Nexo Real Development Team
  */
 
 import { useEffect, useState } from 'react';
