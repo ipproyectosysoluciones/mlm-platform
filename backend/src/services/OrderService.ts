@@ -16,8 +16,13 @@ import { sequelize } from '../config/database';
 import { Order, Product, Purchase, User, VendorOrder, ShippingAddress } from '../models';
 import { AppError } from '../middleware/error.middleware';
 import { CommissionService } from './CommissionService';
+import { AchievementService } from './AchievementService';
+import { LeaderboardService } from './LeaderboardService';
 import { body } from 'express-validator';
 import type { OrderAttributes, ProductType, ShippingStatus } from '../types';
+
+const achievementService = new AchievementService();
+const leaderboardService = new LeaderboardService();
 
 // Express-validator validation chains (reusable in controllers)
 export const orderValidationRules = {
