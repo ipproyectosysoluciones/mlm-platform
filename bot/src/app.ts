@@ -15,6 +15,8 @@ import { welcomeFlow } from './flows/welcome.flow.js';
 import { balanceFlow } from './flows/balance.flow.js';
 import { networkFlow } from './flows/network.flow.js';
 import { supportFlow } from './flows/support.flow.js';
+import { scheduleFlow } from './flows/schedule.flow.js';
+import { handoffFlow } from './flows/handoff.flow.js';
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
@@ -60,6 +62,8 @@ const flow = createFlow([
   balanceFlow,
   networkFlow,
   supportFlow,
+  scheduleFlow,
+  handoffFlow,
   commissionsKeywordFlow,
 ]);
 
