@@ -183,10 +183,12 @@ services:
       N8N_PROTOCOL: ${N8N_PROTOCOL:-http}
       WEBHOOK_URL: ${N8N_WEBHOOK_URL:-http://localhost:5678/}
 
-      # ── Auth — protect the n8n UI ──────────────────────────────────────
-      N8N_BASIC_AUTH_ACTIVE: "true"
-      N8N_BASIC_AUTH_USER: ${N8N_BASIC_AUTH_USER:-admin}
-      N8N_BASIC_AUTH_PASSWORD: ${N8N_BASIC_AUTH_PASSWORD}
+      # ── Auth — owner account (n8n v1+, basic auth deprecated) ────────────
+      N8N_USER_MANAGEMENT_DISABLED: "false"
+      N8N_USER_EMAIL: ${N8N_USER_EMAIL}
+      N8N_USER_PASSWORD: ${N8N_USER_PASSWORD}
+      N8N_USER_FIRST_NAME: ${N8N_USER_FIRST_NAME:-Nexo}
+      N8N_USER_LAST_NAME: ${N8N_USER_LAST_NAME:-Admin}
 
       # ── Timezone ──────────────────────────────────────────────────────
       GENERIC_TIMEZONE: ${TZ:-America/Bogota}
