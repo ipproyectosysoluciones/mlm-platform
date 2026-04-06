@@ -267,3 +267,73 @@ describe('walletService', () => {
     expect(typeof walletService.createWithdrawal).toBe('function');
   });
 });
+
+// ─── achievementService ───────────────────────────────────────────────────────
+
+import { achievementService } from '../services/achievementService';
+
+describe('achievementService', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('should expose getAllAchievements method', () => {
+    expect(achievementService).toHaveProperty('getAllAchievements');
+    expect(typeof achievementService.getAllAchievements).toBe('function');
+  });
+
+  it('should expose getMyAchievements method', () => {
+    expect(achievementService).toHaveProperty('getMyAchievements');
+    expect(typeof achievementService.getMyAchievements).toBe('function');
+  });
+
+  it('should expose getMySummary method', () => {
+    expect(achievementService).toHaveProperty('getMySummary');
+    expect(typeof achievementService.getMySummary).toBe('function');
+  });
+
+  it('getAllAchievements should return a Promise', () => {
+    // We only check it is a thenable — no HTTP call needed
+    const result = achievementService.getAllAchievements();
+    expect(result).toBeInstanceOf(Promise);
+    // Suppress unhandled rejection — we don't care about the actual resolution
+    result.catch(() => {});
+  });
+});
+
+// ─── leaderboardService ───────────────────────────────────────────────────────
+
+import { leaderboardService } from '../services/leaderboardService';
+
+describe('leaderboardService', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('should expose getTopSellers method', () => {
+    expect(leaderboardService).toHaveProperty('getTopSellers');
+    expect(typeof leaderboardService.getTopSellers).toBe('function');
+  });
+
+  it('should expose getTopReferrers method', () => {
+    expect(leaderboardService).toHaveProperty('getTopReferrers');
+    expect(typeof leaderboardService.getTopReferrers).toBe('function');
+  });
+
+  it('should expose getMyRank method', () => {
+    expect(leaderboardService).toHaveProperty('getMyRank');
+    expect(typeof leaderboardService.getMyRank).toBe('function');
+  });
+
+  it('getTopSellers should return a Promise', () => {
+    const result = leaderboardService.getTopSellers('weekly');
+    expect(result).toBeInstanceOf(Promise);
+    result.catch(() => {});
+  });
+
+  it('getTopReferrers should return a Promise', () => {
+    const result = leaderboardService.getTopReferrers('monthly');
+    expect(result).toBeInstanceOf(Promise);
+    result.catch(() => {});
+  });
+});
