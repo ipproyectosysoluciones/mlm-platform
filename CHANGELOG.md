@@ -4,6 +4,54 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
+## [2.1.0] - 2026-04-07
+
+### Added
+
+- **Sprint 5: Real Estate & Tourism Frontend**
+  - `PropertiesPage` — listado paginado de propiedades con filtros por tipo, ciudad y rango de precio
+  - `PropertyDetailPage` — detalle de propiedad con galería de imágenes, features y CTA de reserva
+  - `ToursPage` — listado paginado de paquetes turísticos con filtros por categoría, duración y precio
+  - `TourDetailPage` — detalle de tour con itinerario, disponibilidad y CTA de reserva
+  - `ReservationFlowPage` — wizard de 3 pasos: selección de fechas → datos del huésped → confirmación
+  - `MisReservasPage` — dashboard de reservas del usuario con estados y cancelación
+  - `propertyService` — cliente HTTP para propiedades (list, detail, availability)
+  - `tourService` — cliente HTTP para paquetes turísticos (list, detail, availability)
+  - `reservationService` — cliente HTTP para reservas (create, list, cancel)
+  - `reservationStore` (Zustand 5) — estado del wizard de 3 pasos con useShallow
+  - Rutas agregadas en `App.tsx`: `/properties`, `/properties/:id`, `/tours`, `/tours/:id`, `/reservations/new`, `/mis-reservas`
+  - Tests Vitest: `sprint5-services.test.ts` y `sprint5-store.test.ts`
+
+### Fixed
+
+- **Playwright CI webServer**: `playwright.config.ts` usaba `echo && exit 0` como webServer en CI, causando `Process from config.webServer exited early`. Corregido usando `pnpm preview --port 4173` con `baseURL: http://localhost:4173` cuando `process.env.CI` está activo.
+
+### Security
+
+- **CodeQL Critical #39 & #40** (CWE-843 Type Confusion): `(property.images as string[]) ?? []` reemplazado con validación runtime `Array.isArray(rawImages) ? rawImages.filter((img): img is string => typeof img === 'string') : []` en `PropertyController.ts` y `TourPackageController.ts`
+- **Dependabot #37** (Moderate, `file-type` infinite loop DoS): forzado `file-type>=21.3.1` via `pnpm.overrides` en root `package.json`. Lockfile resuelve solo `file-type@21.3.4`
+
+---
+
+## [2.0.0] - 2026-04-06
+
+### Added
+
+- **Sprint 4: Nexo Bot + n8n Automation**
+  - WhatsApp Bot (Nexo Bot): BuilderBot + Baileys + OpenAI GPT-4o, agentes Sophia (♀) y Max (♂)
+  - 7 flujos conversacionales: bienvenida, propiedades, tours, reservas, FAQ, derivación humana, cierre
+  - n8n Automation: webhooks → Google Calendar + Notion CRM + notificación a agente humano
+  - Frontend Sprint 4: 155 → 210 tests (Vitest + Testing Library)
+  - ARCHITECTURE.md v2.0.0 documentando arquitectura completa del sistema
+  - Gamificación: Leaderboards + Achievement system con Redis cache
+
+### Security
+
+- **CodeQL HIGH #52** (CWE-1321 Prototype Pollution): `Object.assign` reemplazado con spread operator en rutas de achievements
+- **Dependabot múltiples** (#34–#36 lodash HIGH/MEDIUM): actualizados via pnpm overrides
+
+---
+
 ## [1.11.0] - 2026-04-04
 
 ### Added

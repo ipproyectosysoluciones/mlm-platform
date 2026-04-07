@@ -38,6 +38,11 @@ import { AffiliateContract } from './AffiliateContract';
 import { Achievement } from './Achievement';
 import { Badge } from './Badge';
 import { UserAchievement } from './UserAchievement';
+import { WebhookEvent } from './WebhookEvent';
+import { Property } from './Property';
+import { TourPackage } from './TourPackage';
+import { TourAvailability } from './TourAvailability';
+import { Reservation } from './Reservation';
 
 // User relationships
 User.hasMany(User, { as: 'children', foreignKey: 'sponsorId', sourceKey: 'id' });
@@ -421,6 +426,55 @@ UserAchievement.belongsTo(Achievement, { foreignKey: 'achievementId', targetKey:
 User.hasMany(UserAchievement, { as: 'userAchievements', foreignKey: 'userId', sourceKey: 'id' });
 UserAchievement.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
 
+// ============================================
+// NEXO REAL — Property Listings (#59)
+// ============================================
+
+// Vendor - Property (one vendor, many properties)
+Vendor.hasMany(Property, { foreignKey: 'vendorId', sourceKey: 'id' });
+Property.belongsTo(Vendor, { as: 'vendor', foreignKey: 'vendorId', targetKey: 'id' });
+
+// ============================================
+// NEXO REAL — Tourism Packages (#60)
+// ============================================
+
+Vendor.hasMany(TourPackage, { foreignKey: 'vendorId', sourceKey: 'id' });
+TourPackage.belongsTo(Vendor, { as: 'vendor', foreignKey: 'vendorId', targetKey: 'id' });
+TourPackage.hasMany(TourAvailability, {
+  as: 'availabilities',
+  foreignKey: 'tourPackageId',
+  sourceKey: 'id',
+});
+TourAvailability.belongsTo(TourPackage, {
+  as: 'tourPackage',
+  foreignKey: 'tourPackageId',
+  targetKey: 'id',
+});
+
+// ============================================
+// NEXO REAL — Reservations (#61)
+// ============================================
+
+User.hasMany(Reservation, { as: 'reservations', foreignKey: 'userId', sourceKey: 'id' });
+Reservation.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
+
+Vendor.hasMany(Reservation, { as: 'reservations', foreignKey: 'vendorId', sourceKey: 'id' });
+Reservation.belongsTo(Vendor, { as: 'vendor', foreignKey: 'vendorId', targetKey: 'id' });
+
+Property.hasMany(Reservation, { as: 'reservations', foreignKey: 'propertyId', sourceKey: 'id' });
+Reservation.belongsTo(Property, { as: 'property', foreignKey: 'propertyId', targetKey: 'id' });
+
+TourPackage.hasMany(Reservation, {
+  as: 'reservations',
+  foreignKey: 'tourPackageId',
+  sourceKey: 'id',
+});
+Reservation.belongsTo(TourPackage, {
+  as: 'tourPackage',
+  foreignKey: 'tourPackageId',
+  targetKey: 'id',
+});
+
 export {
   sequelize,
   User,
@@ -463,6 +517,11 @@ export {
   Achievement,
   Badge,
   UserAchievement,
+  WebhookEvent,
+  Property,
+  TourPackage,
+  TourAvailability,
+  Reservation,
 };
 
 export function initModels(): void {

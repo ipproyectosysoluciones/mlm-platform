@@ -34,6 +34,14 @@ const ProductLanding = lazy(() => import('./pages/ProductLanding'));
 const RecoverCartPage = lazy(() => import('./pages/RecoverCartPage'));
 const EmailCampaignPage = lazy(() => import('./pages/EmailCampaignPage'));
 
+// Lazy loaded pages for Real Estate & Tourism (Sprint 5)
+const PropertiesPage = lazy(() => import('./pages/PropertiesPage'));
+const PropertyDetailPage = lazy(() => import('./pages/PropertyDetailPage'));
+const ToursPage = lazy(() => import('./pages/ToursPage'));
+const TourDetailPage = lazy(() => import('./pages/TourDetailPage'));
+const ReservationFlowPage = lazy(() => import('./pages/ReservationFlowPage'));
+const MisReservasPage = lazy(() => import('./pages/MisReservasPage'));
+
 /**
  * Loading fallback component for lazy loaded routes
  */
@@ -273,6 +281,68 @@ function App() {
                   <EmailCampaignPage />
                 </Suspense>
               </AdminRoute>
+            }
+          />
+
+          {/* Real Estate & Tourism Routes (Sprint 5) */}
+          <Route
+            path="/properties"
+            element={
+              <AppLayout>
+                <Suspense fallback={<PageLoader />}>
+                  <PropertiesPage />
+                </Suspense>
+              </AppLayout>
+            }
+          />
+          <Route
+            path="/properties/:id"
+            element={
+              <AppLayout>
+                <Suspense fallback={<PageLoader />}>
+                  <PropertyDetailPage />
+                </Suspense>
+              </AppLayout>
+            }
+          />
+          <Route
+            path="/tours"
+            element={
+              <AppLayout>
+                <Suspense fallback={<PageLoader />}>
+                  <ToursPage />
+                </Suspense>
+              </AppLayout>
+            }
+          />
+          <Route
+            path="/tours/:id"
+            element={
+              <AppLayout>
+                <Suspense fallback={<PageLoader />}>
+                  <TourDetailPage />
+                </Suspense>
+              </AppLayout>
+            }
+          />
+          <Route
+            path="/reservations/new"
+            element={
+              <ProtectedRoute>
+                <Suspense fallback={<PageLoader />}>
+                  <ReservationFlowPage />
+                </Suspense>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/mis-reservas"
+            element={
+              <ProtectedRoute>
+                <Suspense fallback={<PageLoader />}>
+                  <MisReservasPage />
+                </Suspense>
+              </ProtectedRoute>
             }
           />
 

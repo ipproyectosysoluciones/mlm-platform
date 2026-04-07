@@ -6,7 +6,7 @@
 
 La plataforma MLM está construida con una arquitectura de API RESTful, separando claramente el backend (Node.js + Express + TypeScript + Sequelize + PostgreSQL) del frontend (React + Vite + TypeScript + Tailwind CSS). A partir de la v2.0.0 se incorpora un canal de atención por WhatsApp (Nexo Bot) orquestado por n8n para automatizaciones externas.
 
-**Estado del Proyecto**: v2.0.0 — Sprint 4 Completado ✅
+**Estado del Proyecto**: v2.1.0 — Sprint 5 Completado ✅
 
 **Características Implementadas**:
 
@@ -33,6 +33,10 @@ La plataforma MLM está construida con una arquitectura de API RESTful, separand
 - **WhatsApp Bot (Nexo Bot)**: BuilderBot + Baileys, 7 flujos conversacionales, IA (GPT-4o)
 - **n8n Automation**: orquestación de webhooks → Google Calendar + Notion CRM
 - **Sprint 4 Tests**: cobertura frontend de 155 → 210 tests
+- **Real Estate Frontend**: PropertiesPage, PropertyDetailPage, filtros, galería
+- **Tourism Frontend**: ToursPage, TourDetailPage, itinerario, disponibilidad
+- **Reservation Wizard**: wizard 3 pasos + MisReservasPage + reservationStore (Zustand 5)
+- **Security Sprint 5**: CodeQL CWE-843 fix en PropertyController + TourPackageController, file-type override
 
 ```map
 ┌─────────────────────────────────────────────────────────────┐
@@ -125,7 +129,7 @@ backend/src/
 
 The MLM platform is built with a RESTful API architecture, clearly separating the backend (Node.js + Express + TypeScript + Sequelize + PostgreSQL) from the frontend (React + Vite + TypeScript + Tailwind CSS).
 
-**Project Status**: v2.0.0 — Sprint 4 Completed ✅
+**Project Status**: v2.1.0 — Sprint 5 Completed ✅
 
 **Implemented Features**:
 
@@ -152,6 +156,10 @@ The MLM platform is built with a RESTful API architecture, clearly separating th
 - **WhatsApp Bot (Nexo Bot)**: BuilderBot + Baileys, 7 conversation flows, AI (GPT-4o)
 - **n8n Automation**: webhook orchestration → Google Calendar + Notion CRM
 - **Sprint 4 Tests**: frontend coverage from 155 → 210 tests
+- **Real Estate Frontend**: PropertiesPage, PropertyDetailPage, filters, gallery
+- **Tourism Frontend**: ToursPage, TourDetailPage, itinerary, availability
+- **Reservation Wizard**: 3-step wizard + MisReservasPage + reservationStore (Zustand 5)
+- **Security Sprint 5**: CodeQL CWE-843 fix in PropertyController + TourPackageController, file-type override
 
 ### Layer Structure
 
@@ -224,11 +232,20 @@ frontend/src/
 │   ├── AdminDashboard.tsx
 │   ├── CRM.tsx
 │   ├── LandingPages.tsx
-│   └── PublicProfile.tsx
+│   ├── PublicProfile.tsx
+│   ├── PropertiesPage.tsx        # Sprint 5
+│   ├── PropertyDetailPage.tsx    # Sprint 5
+│   ├── ToursPage.tsx             # Sprint 5
+│   ├── TourDetailPage.tsx        # Sprint 5
+│   ├── ReservationFlowPage.tsx   # Sprint 5
+│   └── MisReservasPage.tsx       # Sprint 5
 ├── stores/            # State Management
 │   └── treeStore.ts  # Zustand store for tree
 ├── services/         # API Services
-│   └── api.ts        # Centralized API client
+│   ├── api.ts        # Centralized API client
+│   ├── propertyService.ts    # Sprint 5
+│   ├── tourService.ts        # Sprint 5
+│   └── reservationService.ts # Sprint 5
 ├── i18n/             # Internationalization
 │   ├── index.ts      # Configuration + helpers
 │   └── locales/      # en.json, es.json translations

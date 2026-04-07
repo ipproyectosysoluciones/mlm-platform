@@ -7,7 +7,7 @@
 
 Conectamos tu negocio con el mundo. Plataforma de afiliaciones binarias con comisiones por niveles y visualización de árbol genealógico.
 
-**Versión actual: v1.11.0** — Sprint 3 completado (2026-04-04)
+**Versión actual: v2.1.0** — Sprint 5 completado (2026-04-07)
 
 ## 🚀 Características / Features
 
@@ -20,7 +20,7 @@ Conectamos tu negocio con el mundo. Plataforma de afiliaciones binarias con comi
 - **Landing Pages** - Creador de páginas de captura
 - **Panel de Administración** - Gestión completa de usuarios y comisiones
 - **API REST Documentada** - OpenAPI/Swagger bilingüe (ES/EN)
-- **Tests Automatizados** - 307 tests (Unit + Integration + E2E con Playwright)
+- **Tests Automatizados** - 307+ tests (Unit + Integration + E2E con Playwright)
 - **i18n** - Interfaz bilingüe (Español/Inglés)
 - **Wallet Digital** - Billetera digital con retiros y transacciones
 - **2FA (TOTP)** - Two-Factor Authentication con códigos de recuperación
@@ -31,6 +31,9 @@ Conectamos tu negocio con el mundo. Plataforma de afiliaciones binarias con comi
 - **Marketplace Multi-vendor** — Vendors con dashboard propio, split de comisiones 3-way (plataforma/vendor/afiliado)
 - **Delivery Integration** — Shipping addresses, delivery providers, shipment tracking con webhooks
 - **Affiliate Contracts MVP** — Templates versionados, aceptación con IP/userAgent/hash, admin CRUD
+- **Real Estate Module** — Listado y detalle de propiedades (alquiler, venta, gestión)
+- **Tourism Module** — Paquetes turísticos con itinerarios y disponibilidad
+- **Reservation Wizard** — Flujo de reserva de 3 pasos con wizard UI
 
 ## 📊 Estado de Implementación / Implementation Status
 
@@ -56,6 +59,7 @@ Conectamos tu negocio con el mundo. Plataforma de afiliaciones binarias con comi
 | pwa-improvements                  | Iconos multi-size, OfflineBanner                     | ✅ Completo  | 2026-03-31 |
 | sprint2-v1.10.0                   | Gift Cards, Abandoned Cart, Email Automation         | ✅ Completo  | 2026-04-04 |
 | sprint3-v1.11.0                   | Security, Products, Marketplace, Delivery, Contracts | ✅ Completo  | 2026-04-04 |
+| sprint5-v2.1.0                    | Real Estate & Tourism frontend + security fixes      | ✅ Completo  | 2026-04-07 |
 
 ### 🚧 Cambios en Progreso
 

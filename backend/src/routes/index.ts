@@ -22,12 +22,19 @@ import adminCategoryRoutes from './admin-category.routes';
 import categoryRoutes from './category.routes';
 import vendorRoutes from './vendor.routes';
 import adminVendorRoutes from './admin-vendor.routes';
+import propertyRoutes from './property.routes';
+import adminPropertyRoutes from './admin-property.routes';
+import tourRoutes from './tour.routes';
+import adminTourRoutes from './admin-tour.routes';
+import reservationRouter from './reservation.routes';
+import adminReservationRouter from './admin-reservation.routes';
 import contractRoutes from './contract.routes';
 import adminContractRoutes from './admin-contract.routes';
 import addressRoutes from './address.routes';
 import shippingRoutes from './shipping.routes';
 import achievementRoutes from './achievement.routes';
 import leaderboardRoutes from './leaderboard.routes';
+import webhookInternalRoutes from './webhook-internal.routes';
 
 const router: ExpressRouter = Router();
 
@@ -62,6 +69,24 @@ router.use('/vendors', vendorRoutes);
 // Admin vendor routes
 router.use('/admin/vendors', adminVendorRoutes);
 
+// Property routes (public)
+router.use('/properties', propertyRoutes);
+
+// Admin property routes
+router.use('/admin/properties', adminPropertyRoutes);
+
+// Tour routes (public)
+router.use('/tours', tourRoutes);
+
+// Admin tour routes
+router.use('/admin/tours', adminTourRoutes);
+
+// Reservation routes (public)
+router.use('/reservations', reservationRouter);
+
+// Admin reservation routes
+router.use('/admin/reservations', adminReservationRouter);
+
 // Contract routes (user)
 router.use('/contracts', contractRoutes);
 
@@ -79,6 +104,10 @@ router.use('/achievements', achievementRoutes);
 
 // Leaderboard routes
 router.use('/leaderboard', leaderboardRoutes);
+
+// Internal webhook routes (for n8n and internal services)
+// Rutas de webhook interno (para n8n y servicios internos)
+router.use('/webhooks/internal', webhookInternalRoutes);
 
 // Profile public routes (MUST be before publicRoutes to avoid /profile/:code conflict)
 import profilePublicRoutes from './profile-public.routes';

@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "Nexo Real API",
-    "description": "Complete API collection for Nexo Real Platform - v1.11.0 (Sprint 3: Categories, Products, Inventory, Vendors, Contracts, Shipping)",
+    "description": "Complete API collection for Nexo Real Platform - v2.1.0 (Sprint 4: Properties, Tour Packages, Reservations)",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -2377,6 +2377,330 @@
             }
           },
           "response": []
+        }
+      ]
+    },
+    {
+      "name": "Properties",
+      "item": [
+        {
+          "name": "List Properties",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/properties?type=rental&city=Bogotá&page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["properties"],
+              "query": [
+                {"key": "type", "value": "rental", "description": "rental | sale | management"},
+                {"key": "city", "value": "Bogotá"},
+                {"key": "minPrice", "value": "", "disabled": true},
+                {"key": "maxPrice", "value": "", "disabled": true},
+                {"key": "bedrooms", "value": "", "disabled": true},
+                {"key": "page", "value": "1"},
+                {"key": "limit", "value": "10"}
+              ]
+            },
+            "description": "List active properties with optional filters / Listar propiedades con filtros opcionales"
+          }
+        },
+        {
+          "name": "Get Property Detail",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/properties/{{property_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["properties", "{{property_id}}"]
+            },
+            "description": "Get property detail by ID / Detalle de propiedad por ID"
+          }
+        },
+        {
+          "name": "Get Property Availability",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/properties/{{property_id}}/availability?startDate=2026-05-01&endDate=2026-05-31",
+              "host": ["{{base_url}}"],
+              "path": ["properties", "{{property_id}}", "availability"],
+              "query": [
+                {"key": "startDate", "value": "2026-05-01"},
+                {"key": "endDate", "value": "2026-05-31"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Admin: Create Property",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Apartamento Zona Rosa\",\n  \"description\": \"Hermoso apartamento en pleno corazón de Bogotá\",\n  \"type\": \"rental\",\n  \"price\": 1500000,\n  \"city\": \"Bogotá\",\n  \"address\": \"Calle 93 #13-24\",\n  \"bedrooms\": 2,\n  \"bathrooms\": 2,\n  \"area\": 85\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/properties",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "properties"]
+            }
+          }
+        },
+        {
+          "name": "Admin: Update Property",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"rented\",\n  \"price\": 1600000\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/properties/{{property_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "properties", "{{property_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Admin: Delete Property",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/properties/{{property_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "properties", "{{property_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tour Packages",
+      "item": [
+        {
+          "name": "List Tours",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/tours?category=adventure&page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["tours"],
+              "query": [
+                {"key": "category", "value": "adventure", "description": "adventure | cultural | beach | mountain | city | eco | luxury | family"},
+                {"key": "minDuration", "value": "", "disabled": true},
+                {"key": "maxDuration", "value": "", "disabled": true},
+                {"key": "minPrice", "value": "", "disabled": true},
+                {"key": "maxPrice", "value": "", "disabled": true},
+                {"key": "page", "value": "1"},
+                {"key": "limit", "value": "10"}
+              ]
+            },
+            "description": "List active tour packages / Listar paquetes turísticos activos"
+          }
+        },
+        {
+          "name": "Get Tour Detail",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/tours/{{tour_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["tours", "{{tour_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Tour Availability",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/tours/{{tour_id}}/availability?startDate=2026-05-01&endDate=2026-06-30",
+              "host": ["{{base_url}}"],
+              "path": ["tours", "{{tour_id}}", "availability"],
+              "query": [
+                {"key": "startDate", "value": "2026-05-01"},
+                {"key": "endDate", "value": "2026-06-30"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Admin: Create Tour",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Café & Ciudad Medellín\",\n  \"description\": \"Recorrido por los mejores cafés y cultura de Medellín\",\n  \"category\": \"cultural\",\n  \"price\": 250000,\n  \"duration\": 3,\n  \"maxCapacity\": 12\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/tours",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "tours"]
+            }
+          }
+        },
+        {
+          "name": "Admin: Update Tour",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"sold_out\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/tours/{{tour_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "tours", "{{tour_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Admin: Delete Tour",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/tours/{{tour_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "tours", "{{tour_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reservations",
+      "item": [
+        {
+          "name": "Create Reservation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reservableType\": \"property\",\n  \"reservableId\": \"{{property_id}}\",\n  \"startDate\": \"2026-05-10\",\n  \"endDate\": \"2026-05-15\",\n  \"guests\": 2,\n  \"notes\": \"Llegamos tarde, después de las 8pm\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/reservations",
+              "host": ["{{base_url}}"],
+              "path": ["reservations"]
+            },
+            "description": "Create a property or tour reservation / Crear una reserva de propiedad o tour"
+          }
+        },
+        {
+          "name": "List My Reservations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/reservations?status=pending&page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["reservations"],
+              "query": [
+                {"key": "status", "value": "pending", "description": "pending | confirmed | cancelled | completed"},
+                {"key": "page", "value": "1"},
+                {"key": "limit", "value": "10"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Reservation Detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/reservations/{{reservation_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["reservations", "{{reservation_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Cancel Reservation",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/reservations/{{reservation_id}}/cancel",
+              "host": ["{{base_url}}"],
+              "path": ["reservations", "{{reservation_id}}", "cancel"]
+            }
+          }
+        },
+        {
+          "name": "Admin: List All Reservations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/reservations?page=1&limit=20",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "reservations"],
+              "query": [
+                {"key": "page", "value": "1"},
+                {"key": "limit", "value": "20"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Admin: Update Reservation Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"confirmed\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/reservations/{{reservation_id}}/status",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "reservations", "{{reservation_id}}", "status"]
+            }
+          }
         }
       ]
     }
