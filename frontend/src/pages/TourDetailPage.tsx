@@ -1,13 +1,20 @@
 /**
  * @fileoverview TourDetailPage - Tourism package detail page
- * @description Shows full tour info, image gallery, availability calendar and booking CTA
- *               Muestra info completa del tour, galería, calendario de disponibilidad y CTA de reserva
+ * @description Shows full tour info, image gallery, availability calendar and booking CTA.
+ *              Includes SEO meta tags (title, description, Open Graph) and JSON-LD
+ *              TouristAttraction schema markup for search engine indexing.
+ *
+ *              Muestra info completa del tour, galería, calendario de disponibilidad y CTA de reserva.
+ *              Incluye meta tags SEO (title, description, Open Graph) y schema markup
+ *              JSON-LD TouristAttraction para indexación en motores de búsqueda.
+ *
  * @module pages/TourDetailPage
  * @author Nexo Real Development Team
  */
 
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import {
   MapPin,
   Clock,
@@ -227,148 +234,230 @@ export default function TourDetailPage() {
     navigate('/reservations/new');
   };
 
+  // ── SEO helpers ────────────────────────────────────────────────────────────
+
+  /**
+   * Dynamic page title for SEO: "Tour title | Destination | Nexo Real"
+   * Título dinámico para SEO: "Título tour | Destino | Nexo Real"
+   */
+  const seoTitle = `${tour.title} | ${tour.destination} | Nexo Real`;
+
+  /**
+   * Meta description combining category, duration, guests and description snippet.
+   * Meta description combinando categoría, duración, personas y fragmento de descripción.
+   */
+  const seoDescription = [
+    CATEGORY_LABELS[tour.category],
+    'en',
+    tour.destination,
+    `· ${tour.duration} ${tour.duration === 1 ? 'día' : 'días'}`,
+    `· Hasta ${tour.maxGuests} personas`,
+    `· ${tour.currency} ${tour.price.toLocaleString('es-AR')} por persona`,
+    tour.description ? `— ${tour.description.slice(0, 120)}` : '',
+  ]
+    .filter(Boolean)
+    .join(' ')
+    .trim();
+
+  /** Primary OG image (first tour image or fallback) */
+  const ogImage = tour.images?.[0] ?? 'https://nexoreal.com/og-default.jpg';
+
+  /** Canonical URL for this tour */
+  const canonicalUrl = `https://nexoreal.com/tours/${tour.id}`;
+
+  /**
+   * JSON-LD TouristAttraction schema markup.
+   * Provides structured data for Google rich results.
+   * Schema markup JSON-LD TouristAttraction.
+   * Proporciona datos estructurados para resultados enriquecidos de Google.
+   */
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'TouristAttraction',
+    name: tour.title,
+    description: tour.description ?? seoDescription,
+    url: canonicalUrl,
+    image: tour.images?.length ? tour.images : [ogImage],
+    touristType: CATEGORY_LABELS[tour.category],
+    geo: {
+      '@type': 'GeoCoordinates',
+      name: tour.destination,
+    },
+    offers: {
+      '@type': 'Offer',
+      price: tour.price,
+      priceCurrency: tour.currency,
+      availability:
+        tour.status === 'active' ? 'https://schema.org/InStock' : 'https://schema.org/SoldOut',
+      description: `Tour de ${tour.duration} ${tour.duration === 1 ? 'día' : 'días'} — hasta ${tour.maxGuests} personas`,
+    },
+  };
+
   return (
-    <div className="min-h-screen bg-slate-50 pb-12">
-      <div className="max-w-5xl mx-auto px-4 py-8">
-        {/* Back button */}
-        <button
-          onClick={() => navigate('/tours')}
-          className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 mb-6 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Volver a tours
-        </button>
+    <>
+      {/* SEO: meta tags + JSON-LD / Meta tags + JSON-LD para SEO */}
+      <Helmet>
+        <title>{seoTitle}</title>
+        <meta name="description" content={seoDescription} />
+        <link rel="canonical" href={canonicalUrl} />
+        {/* Open Graph */}
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={seoTitle} />
+        <meta property="og:description" content={seoDescription} />
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:site_name" content="Nexo Real" />
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={seoTitle} />
+        <meta name="twitter:description" content={seoDescription} />
+        <meta name="twitter:image" content={ogImage} />
+        {/* JSON-LD structured data */}
+        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+      </Helmet>
 
-        {/* Gallery */}
-        <ImageGallery images={tour.images} title={tour.title} />
+      <div className="min-h-screen bg-slate-50 pb-12">
+        <div className="max-w-5xl mx-auto px-4 py-8">
+          {/* Back button */}
+          <button
+            onClick={() => navigate('/tours')}
+            className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 mb-6 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Volver a tours
+          </button>
 
-        {/* Content grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
-          {/* Left: Info */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Title + category */}
-            <div>
-              <div className="flex items-start justify-between gap-4 mb-2">
-                <h1 className="text-2xl font-bold text-slate-800">{tour.title}</h1>
-                <span
-                  className={cn(
-                    'shrink-0 px-3 py-1 rounded-full text-sm font-semibold',
-                    CATEGORY_COLORS[tour.category]
-                  )}
+          {/* Gallery */}
+          <ImageGallery images={tour.images} title={tour.title} />
+
+          {/* Content grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
+            {/* Left: Info */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Title + category */}
+              <div>
+                <div className="flex items-start justify-between gap-4 mb-2">
+                  <h1 className="text-2xl font-bold text-slate-800">{tour.title}</h1>
+                  <span
+                    className={cn(
+                      'shrink-0 px-3 py-1 rounded-full text-sm font-semibold',
+                      CATEGORY_COLORS[tour.category]
+                    )}
+                  >
+                    {CATEGORY_LABELS[tour.category]}
+                  </span>
+                </div>
+                <p className="flex items-center gap-1 text-slate-500">
+                  <MapPin className="w-4 h-4" />
+                  {tour.destination}
+                </p>
+              </div>
+
+              {/* Specs */}
+              <div className="flex flex-wrap gap-6">
+                <div className="flex items-center gap-2 text-slate-700">
+                  <Clock className="w-5 h-5 text-emerald-500" />
+                  <span>
+                    <span className="font-semibold">{tour.duration}</span>{' '}
+                    {tour.duration === 1 ? 'día' : 'días'}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 text-slate-700">
+                  <Users className="w-5 h-5 text-emerald-500" />
+                  <span>
+                    Hasta <span className="font-semibold">{tour.maxGuests}</span> personas
+                  </span>
+                </div>
+              </div>
+
+              {/* Description */}
+              <div>
+                <h2 className="text-lg font-semibold text-slate-800 mb-2">Descripción</h2>
+                <p className="text-slate-600 leading-relaxed whitespace-pre-line">
+                  {tour.description}
+                </p>
+              </div>
+
+              {/* Includes / Excludes */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {tour.includes && tour.includes.length > 0 && (
+                  <div>
+                    <h2 className="text-base font-semibold text-slate-800 mb-2">Incluye</h2>
+                    <ul className="space-y-1">
+                      {tour.includes.map((item) => (
+                        <li key={item} className="flex items-center gap-2 text-sm text-slate-600">
+                          <Check className="w-4 h-4 text-emerald-500 shrink-0" />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {tour.excludes && tour.excludes.length > 0 && (
+                  <div>
+                    <h2 className="text-base font-semibold text-slate-800 mb-2">No incluye</h2>
+                    <ul className="space-y-1">
+                      {tour.excludes.map((item) => (
+                        <li key={item} className="flex items-center gap-2 text-sm text-slate-500">
+                          <X className="w-4 h-4 text-red-400 shrink-0" />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+
+              {/* Availability */}
+              <div>
+                <h2 className="text-lg font-semibold text-slate-800 mb-3">Fechas disponibles</h2>
+                <AvailabilityPicker
+                  availabilities={tour.availabilities ?? []}
+                  selected={selectedAvailability}
+                  onSelect={setSelectedAvailability}
+                />
+              </div>
+            </div>
+
+            {/* Right: Booking card */}
+            <div className="lg:col-span-1">
+              <div className="sticky top-6 bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+                <p className="text-3xl font-bold text-emerald-600 mb-1">
+                  {tour.currency} {tour.price.toLocaleString('es-AR', { minimumFractionDigits: 0 })}
+                </p>
+                <p className="text-sm text-slate-400 mb-4">por persona</p>
+
+                {selectedAvailability ? (
+                  <div className="text-sm bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2 mb-4 text-emerald-700">
+                    <CalendarDays className="w-4 h-4 inline mr-1" />
+                    {new Date(selectedAvailability.date).toLocaleDateString('es-AR', {
+                      weekday: 'long',
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })}
+                  </div>
+                ) : (
+                  <p className="text-sm text-slate-400 mb-4">Seleccioná una fecha disponible</p>
+                )}
+
+                <button
+                  onClick={handleReserve}
+                  disabled={!selectedAvailability}
+                  className="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-emerald-500 text-white font-semibold hover:bg-emerald-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                 >
-                  {CATEGORY_LABELS[tour.category]}
-                </span>
+                  <CalendarDays className="w-5 h-5" />
+                  Reservar este tour
+                </button>
+
+                <p className="text-xs text-slate-400 text-center mt-3">
+                  Sin costo hasta la confirmación
+                </p>
               </div>
-              <p className="flex items-center gap-1 text-slate-500">
-                <MapPin className="w-4 h-4" />
-                {tour.destination}
-              </p>
-            </div>
-
-            {/* Specs */}
-            <div className="flex flex-wrap gap-6">
-              <div className="flex items-center gap-2 text-slate-700">
-                <Clock className="w-5 h-5 text-emerald-500" />
-                <span>
-                  <span className="font-semibold">{tour.duration}</span>{' '}
-                  {tour.duration === 1 ? 'día' : 'días'}
-                </span>
-              </div>
-              <div className="flex items-center gap-2 text-slate-700">
-                <Users className="w-5 h-5 text-emerald-500" />
-                <span>
-                  Hasta <span className="font-semibold">{tour.maxGuests}</span> personas
-                </span>
-              </div>
-            </div>
-
-            {/* Description */}
-            <div>
-              <h2 className="text-lg font-semibold text-slate-800 mb-2">Descripción</h2>
-              <p className="text-slate-600 leading-relaxed whitespace-pre-line">
-                {tour.description}
-              </p>
-            </div>
-
-            {/* Includes / Excludes */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {tour.includes && tour.includes.length > 0 && (
-                <div>
-                  <h2 className="text-base font-semibold text-slate-800 mb-2">Incluye</h2>
-                  <ul className="space-y-1">
-                    {tour.includes.map((item) => (
-                      <li key={item} className="flex items-center gap-2 text-sm text-slate-600">
-                        <Check className="w-4 h-4 text-emerald-500 shrink-0" />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              {tour.excludes && tour.excludes.length > 0 && (
-                <div>
-                  <h2 className="text-base font-semibold text-slate-800 mb-2">No incluye</h2>
-                  <ul className="space-y-1">
-                    {tour.excludes.map((item) => (
-                      <li key={item} className="flex items-center gap-2 text-sm text-slate-500">
-                        <X className="w-4 h-4 text-red-400 shrink-0" />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-
-            {/* Availability */}
-            <div>
-              <h2 className="text-lg font-semibold text-slate-800 mb-3">Fechas disponibles</h2>
-              <AvailabilityPicker
-                availabilities={tour.availabilities ?? []}
-                selected={selectedAvailability}
-                onSelect={setSelectedAvailability}
-              />
-            </div>
-          </div>
-
-          {/* Right: Booking card */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-6 bg-white rounded-xl border border-slate-200 shadow-sm p-6">
-              <p className="text-3xl font-bold text-emerald-600 mb-1">
-                {tour.currency} {tour.price.toLocaleString('es-AR', { minimumFractionDigits: 0 })}
-              </p>
-              <p className="text-sm text-slate-400 mb-4">por persona</p>
-
-              {selectedAvailability ? (
-                <div className="text-sm bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2 mb-4 text-emerald-700">
-                  <CalendarDays className="w-4 h-4 inline mr-1" />
-                  {new Date(selectedAvailability.date).toLocaleDateString('es-AR', {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  })}
-                </div>
-              ) : (
-                <p className="text-sm text-slate-400 mb-4">Seleccioná una fecha disponible</p>
-              )}
-
-              <button
-                onClick={handleReserve}
-                disabled={!selectedAvailability}
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-emerald-500 text-white font-semibold hover:bg-emerald-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-              >
-                <CalendarDays className="w-5 h-5" />
-                Reservar este tour
-              </button>
-
-              <p className="text-xs text-slate-400 text-center mt-3">
-                Sin costo hasta la confirmación
-              </p>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

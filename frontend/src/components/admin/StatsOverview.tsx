@@ -70,7 +70,7 @@ export default function StatsOverview({ stats }: StatsOverviewProps) {
       />
       <StatCard
         icon={<TrendingUp className="w-6 h-6" />}
-        label={t('admin.ratio')}
+        label={t('admin.networkDistribution')}
         value={`${stats?.leftPercentage || 0}% / ${stats?.rightPercentage || 0}%`}
         color="purple"
       />

@@ -4,6 +4,9 @@ import swaggerJsdoc from 'swagger-jsdoc';
  * Swagger/OpenAPI Configuration for Nexo Real API
  * Configuración Swagger/OpenAPI para la API de Nexo Real
  *
+ * v2.2.0: Sprint 6 - Admin Dashboard CRUD, Nexo Bot flows, i18n cleanup, binary_balance migration, build hardening
+ * v2.1.0: Sprint 5 - Real Estate Frontend, Tourism Frontend, Reservation Wizard, Security fixes
+ * v2.0.0: Sprint 4 - Nexo Bot (WhatsApp AI), n8n Automation, Frontend tests 210+, Gamification
  * v1.10.0: Sprint 2 - Gift Cards, Abandoned Cart Recovery, Email Automation
  * v1.9.0: Gamification + Dynamic Commissions
  * v1.8.0: PayPal + MercadoPago Payment Gateways
@@ -18,7 +21,7 @@ const options: swaggerJsdoc.Options = {
     openapi: '3.0.0',
     info: {
       title: 'Nexo Real API',
-      version: '1.10.0',
+      version: '2.2.0',
       description: `
 ## API REST para plataforma MLM de Afiliaciones Binarias
 
@@ -38,6 +41,9 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
 | 429 | Rate limit excedido / Rate Limit Exceeded |
 
 ### Versiones / Versions
+- **v2.2.0** (2026-04-07): Sprint 6 - Admin Dashboard CRUD, Nexo Bot flows, i18n cleanup, network_balance migration, build hardening
+- **v2.1.0** (2026-04-07): Sprint 5 - Real Estate Frontend, Tourism Frontend, Reservation Wizard, Security fixes (CodeQL CWE-843, Dependabot file-type)
+- **v2.0.0** (2026-04-06): Sprint 4 - Nexo Bot (WhatsApp AI), n8n Automation, Frontend tests 210+, Gamification
 - **v1.10.0** (2026-04-04): Sprint 2 - Gift Cards, Abandoned Cart Recovery, Email Automation
 - **v1.9.0** (2026-04-03): Gamification + Dynamic Commissions
 - **v1.8.0** (2026-04-03): PayPal + MercadoPago Payment Gateways
@@ -65,6 +71,13 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
           scheme: 'bearer',
           bearerFormat: 'JWT',
           description: 'JWT token obtained from /auth/login or /auth/register',
+        },
+        botSecret: {
+          type: 'apiKey',
+          in: 'header',
+          name: 'X-Bot-Secret',
+          description:
+            'Bot secret key from BOT_SECRET env variable — used by Nexo Bot to authenticate / Clave secreta del bot desde la variable BOT_SECRET — usada por el Nexo Bot para autenticarse',
         },
       },
       schemas: {
@@ -2186,6 +2199,171 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
             count: { type: 'integer', description: 'Total de logs / Total logs' },
           },
         },
+
+        // ============================================================
+        // PROPERTIES / PROPIEDADES (Sprint 5)
+        // ============================================================
+        Property: {
+          type: 'object',
+          properties: {
+            id: { type: 'string', format: 'uuid' },
+            title: { type: 'string', description: 'Property title / Título de la propiedad' },
+            description: { type: 'string', nullable: true },
+            type: {
+              type: 'string',
+              enum: ['rental', 'sale', 'management'],
+              description: 'Property type / Tipo de propiedad',
+            },
+            status: { type: 'string', enum: ['active', 'inactive', 'sold', 'rented'] },
+            price: { type: 'number', description: 'Price in USD / Precio en USD' },
+            city: { type: 'string' },
+            address: { type: 'string', nullable: true },
+            bedrooms: { type: 'integer', nullable: true },
+            bathrooms: { type: 'integer', nullable: true },
+            area: { type: 'number', nullable: true, description: 'Area in m² / Área en m²' },
+            images: {
+              type: 'array',
+              items: { type: 'string' },
+              description: 'Image URLs / URLs de imágenes',
+            },
+            createdAt: { type: 'string', format: 'date-time' },
+          },
+        },
+
+        // ============================================================
+        // TOUR PACKAGES / PAQUETES TURÍSTICOS (Sprint 5)
+        // ============================================================
+        TourPackage: {
+          type: 'object',
+          properties: {
+            id: { type: 'string', format: 'uuid' },
+            name: { type: 'string', description: 'Tour name / Nombre del tour' },
+            description: { type: 'string', nullable: true },
+            category: {
+              type: 'string',
+              enum: [
+                'adventure',
+                'cultural',
+                'beach',
+                'mountain',
+                'city',
+                'eco',
+                'luxury',
+                'family',
+              ],
+            },
+            status: { type: 'string', enum: ['active', 'inactive', 'sold_out'] },
+            price: { type: 'number' },
+            duration: { type: 'integer', description: 'Duration in days / Duración en días' },
+            maxCapacity: { type: 'integer' },
+            images: { type: 'array', items: { type: 'string' } },
+            itinerary: { type: 'array', items: { type: 'object' }, nullable: true },
+            createdAt: { type: 'string', format: 'date-time' },
+          },
+        },
+
+        // ============================================================
+        // RESERVATIONS / RESERVAS (Sprint 5)
+        // ============================================================
+        Reservation: {
+          type: 'object',
+          properties: {
+            id: { type: 'string', format: 'uuid' },
+            userId: { type: 'string', format: 'uuid' },
+            reservableType: {
+              type: 'string',
+              enum: ['property', 'tour'],
+              description: 'Type of reservable item / Tipo de elemento reservable',
+            },
+            reservableId: { type: 'string', format: 'uuid' },
+            status: { type: 'string', enum: ['pending', 'confirmed', 'cancelled', 'completed'] },
+            startDate: { type: 'string', format: 'date' },
+            endDate: { type: 'string', format: 'date' },
+            guests: { type: 'integer' },
+            totalPrice: { type: 'number' },
+            notes: { type: 'string', nullable: true },
+            createdAt: { type: 'string', format: 'date-time' },
+          },
+        },
+
+        // ============================================================
+        // BOT SCHEMAS (Sprint 6)
+        // ============================================================
+        BotProperty: {
+          type: 'object',
+          description:
+            'Simplified property for Nexo Bot responses / Propiedad simplificada para respuestas del Nexo Bot',
+          properties: {
+            id: { type: 'string', format: 'uuid', description: 'Property ID / ID de la propiedad' },
+            type: {
+              type: 'string',
+              enum: ['rental', 'sale', 'management'],
+              description: 'Property type / Tipo de propiedad',
+            },
+            title: { type: 'string', description: 'Listing title / Título del listado' },
+            price: { type: 'number', description: 'Listing price / Precio del listado' },
+            currency: {
+              type: 'string',
+              example: 'USD',
+              description: 'Price currency / Moneda del precio',
+            },
+            city: {
+              type: 'string',
+              description: 'City where the property is located / Ciudad donde está la propiedad',
+            },
+            bedrooms: {
+              type: 'integer',
+              nullable: true,
+              description: 'Number of bedrooms / Número de habitaciones',
+            },
+            bathrooms: {
+              type: 'integer',
+              nullable: true,
+              description: 'Number of bathrooms / Número de baños',
+            },
+            areaM2: {
+              type: 'number',
+              nullable: true,
+              description: 'Area in square meters / Área en metros cuadrados',
+            },
+          },
+        },
+
+        BotTour: {
+          type: 'object',
+          description:
+            'Simplified tour package for Nexo Bot responses / Paquete turístico simplificado para respuestas del Nexo Bot',
+          properties: {
+            id: {
+              type: 'string',
+              format: 'uuid',
+              description: 'Tour package ID / ID del paquete turístico',
+            },
+            type: {
+              type: 'string',
+              description: 'Tour type (adventure, cultural, etc.) / Tipo de tour',
+            },
+            title: { type: 'string', description: 'Package title / Título del paquete' },
+            destination: {
+              type: 'string',
+              description: 'Main destination / Destino principal',
+            },
+            price: { type: 'number', description: 'Package price / Precio del paquete' },
+            currency: {
+              type: 'string',
+              example: 'USD',
+              description: 'Price currency / Moneda del precio',
+            },
+            durationDays: {
+              type: 'integer',
+              description: 'Duration in days / Duración en días',
+            },
+            maxCapacity: {
+              type: 'integer',
+              description: 'Maximum passenger capacity / Capacidad máxima de pasajeros',
+            },
+          },
+        },
       },
     },
 
@@ -2248,6 +2426,11 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
         name: 'email-campaigns',
         description:
           'Campañas de Email / Email Campaigns - Envío, programación, estadísticas, logs (Sprint 2)',
+      },
+      {
+        name: 'bot',
+        description:
+          'Nexo Bot API / API del Nexo Bot - Endpoints para el bot de WhatsApp: propiedades y tours (Sprint 6)',
       },
     ],
   },

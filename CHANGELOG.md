@@ -4,6 +4,50 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
+## [2.2.0] - 2026-04-07
+
+### Added
+
+- **Sprint 6: Admin Dashboard CRUD — Real Estate & Tourism**
+  - `AdminPropertiesPage` — tabla paginada con filtros por tipo, estado y ciudad; modal CRUD; toggle activo/inactivo
+  - `AdminToursPage` — tabla paginada con filtros por tipo, estado y destino; modal CRUD; toggle activo/inactivo
+  - `AdminReservationsPage` — tabla con filtros por estado/tipo; confirm/cancel rápido; modal de notas y estado detallado
+  - 12 métodos en `adminService` (`api.ts`): `getAdminProperties`, `createProperty`, `updateProperty`, `deleteProperty`, `getAdminTours`, `createTour`, `updateTour`, `deleteTour`, `getAdminReservations`, `updateReservationStatus`, `confirmReservation`, `cancelReservation`
+  - 3 rutas lazy `<AdminRoute>` en `App.tsx`: `/admin/properties`, `/admin/tours`, `/admin/reservations`
+
+- **Sprint 6: Nexo Bot — Properties & Tours Flows**
+  - `properties.flow.ts` — 11 keywords ES/EN, llama `mlmApi.searchProperties({ limit: 5 })`, formatea con precio/ciudad/tipo/habitaciones/m², manejo de array vacío y errores
+  - `tours.flow.ts` — 11 keywords ES/EN, llama `mlmApi.searchTours({ limit: 5 })`, formatea con precio/destino/duración/capacidad, manejo de array vacío y errores
+  - `bot/src/app.ts` — `propertiesFlow` y `toursFlow` registrados en `createFlow([...])`
+  - Idioma leído del state (definido por `welcomeFlow`) para respuestas bilingües
+
+- **Sprint 6: Swagger / OpenAPI v2.2.0**
+  - Versión actualizada a `2.2.0` en `swagger.ts`
+  - Schemas globales `BotProperty` y `BotTour` agregados en `components/schemas`
+  - Security scheme `botSecret` (apiKey, header `X-Bot-Secret`)
+  - Endpoints documentados con `@swagger`: `GET /api/bot/properties` y `GET /api/bot/tours` (tag: bot)
+  - Tag `bot` agregado en lista de tags de Swagger UI
+
+- **Sprint 6: SEO — Meta Tags Dinámicos + Schema Markup + Social Proof**
+  - `PropertyDetailPage` — `<Helmet>` con title dinámico, meta description, Open Graph tags, Twitter Card y JSON-LD `RealEstateListing` schema markup
+  - `TourDetailPage` — `<Helmet>` con title dinámico, meta description, Open Graph tags, Twitter Card y JSON-LD `TouristAttraction` schema markup
+  - `PropertiesPage` — `<Helmet>` dinámico basado en filtros activos (tipo, ciudad) + social proof badge "X personas vieron esto hoy" en cada card
+  - `ToursPage` — `<Helmet>` dinámico basado en filtros activos (categoría, destino) + social proof badge en cada card
+  - `HelmetProvider` wrapeando la app en `main.tsx` + `react-helmet-async` instalado
+  - Slugs: backend sin campo `slug` → fallback a rutas con ID (correcto según spec)
+
+### Changed
+
+- **`binary_balance` → `network_balance`** (Sprint 6 Fase 1, PR #89): campo renombrado en modelo `User`, migración Sequelize `20260407000000-rename-binary-balance.js`, eliminadas todas las referencias en frontend y backend
+- **Build hardening** (Sprint 6 Fase 1, PR #89): `build.mjs` actualizado para producción — elimina archivos `.map` con `--sourcemap false`, log de tamaños post-build
+- **i18n cleanup** (Sprint 6 Fase 2, PR #90): eliminadas 8 claves huérfanas en `es.json` y `en.json`, eliminado componente `DashboardStreaming` que no existía
+
+### Security
+
+- **CodeQL #39 & #40** (Sprint 6 Fase 9, PR #88): `req.files` cast normalizado a `Array.isArray(req.files) ? req.files : Object.values(req.files ?? {}).flat()` en `PropertyController.ts` y `TourPackageController.ts` — previene CWE-843 type confusion
+
+---
+
 ## [2.1.0] - 2026-04-07
 
 ### Added

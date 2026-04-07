@@ -66,17 +66,19 @@ cp .env.example .env
 
 ### Commits
 
-Usar Conventional Commits:
+Usar Conventional Commits (ver sección **📝 Commits Convencionales** más abajo):
 
 ```text
 feat: nueva funcionalidad
 fix: corrección de bug
 docs: cambios en documentación
 style: formato, comas, etc.
-refactor:重构
+refactor: refactoring
 test: agregar tests
 chore: mantenimiento
 ```
+
+> Siempre usar `--no-gpg-sign` (ver más abajo)
 
 ### Testing
 
@@ -107,6 +109,51 @@ pnpm test:e2e
 
 - Abre un Issue para讨论
 - Consulta la documentación en `/api-docs`
+
+---
+
+## 📝 Commits Convencionales
+
+Este proyecto usa [Conventional Commits](https://www.conventionalcommits.org/):
+
+```bash
+# Formato
+git commit --no-gpg-sign -m "type(scope): description"
+
+# Tipos válidos
+feat:     Nueva funcionalidad
+fix:      Corrección de bug
+chore:    Mantenimiento / configuración
+docs:     Documentación
+test:     Tests
+refactor: Refactoring sin cambio de comportamiento
+security: Fix de seguridad
+
+# Ejemplos
+git commit --no-gpg-sign -m "feat(admin): add CRUD for properties"
+git commit --no-gpg-sign -m "fix(security): normalize req.files cast"
+```
+
+> ⚠️ **Nota**: Siempre usar `--no-gpg-sign` en este repositorio (GPG key configuración pendiente).
+
+## 📖 JSDoc Bilingüe
+
+Todos los archivos nuevos o modificados DEBEN incluir JSDoc bilingüe (ES + EN):
+
+```typescript
+/**
+ * @fileoverview ComponentName - English description
+ * @description Spanish description
+ * @module path/to/module
+ */
+
+/**
+ * Function description in English.
+ * Descripción de la función en español.
+ */
+```
+
+---
 
 ## 📄 Licencia
 

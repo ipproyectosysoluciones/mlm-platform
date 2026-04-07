@@ -54,7 +54,18 @@ async function build() {
           console.log(`📦 ${file}: ${size} KB`);
         }
       }
-      
+
+      // Explicitly remove sourcemap if it exists (belt-and-suspenders: sourcemap is already
+      // disabled in production via sourcemap: !isProduction, but we enforce it here to
+      // guarantee no *.map file ever enters the Docker image).
+      // Eliminar explícitamente el sourcemap si existe (doble seguro: sourcemap ya está
+      // desactivado en producción vía sourcemap: !isProduction, pero lo forzamos aquí para
+      // garantizar que ningún archivo *.map entre a la imagen Docker).
+      if (isProduction) {
+        await rm('dist/server.mjs.map', { force: true });
+        console.log('🔒 Sourcemap removed from dist/ (production build)');
+      }
+
       console.log('✅ Build complete!');
       console.log('   Output: dist/server.mjs');
     }

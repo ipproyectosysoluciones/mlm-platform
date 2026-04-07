@@ -41,6 +41,11 @@ const TourDetailPage = lazy(() => import('./pages/TourDetailPage'));
 const ReservationFlowPage = lazy(() => import('./pages/ReservationFlowPage'));
 const MisReservasPage = lazy(() => import('./pages/MisReservasPage'));
 
+// Lazy loaded admin pages for Real Estate & Tourism management (Sprint 6)
+const AdminPropertiesPage = lazy(() => import('./pages/AdminPropertiesPage'));
+const AdminToursPage = lazy(() => import('./pages/AdminToursPage'));
+const AdminReservationsPage = lazy(() => import('./pages/AdminReservationsPage'));
+
 /**
  * Loading fallback component for lazy loaded routes
  */
@@ -334,6 +339,38 @@ function App() {
                   <MisReservasPage />
                 </Suspense>
               </ProtectedRoute>
+            }
+          />
+
+          {/* Admin Real Estate & Tourism CRUD Routes (Sprint 6) */}
+          <Route
+            path="/admin/properties"
+            element={
+              <AdminRoute>
+                <Suspense fallback={<PageLoader />}>
+                  <AdminPropertiesPage />
+                </Suspense>
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/tours"
+            element={
+              <AdminRoute>
+                <Suspense fallback={<PageLoader />}>
+                  <AdminToursPage />
+                </Suspense>
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/reservations"
+            element={
+              <AdminRoute>
+                <Suspense fallback={<PageLoader />}>
+                  <AdminReservationsPage />
+                </Suspense>
+              </AdminRoute>
             }
           />
 
