@@ -12,6 +12,8 @@ import {
   getWalletInfo,
   getNetworkSummary,
   getRecentCommissions,
+  getBotProperties,
+  getBotTours,
 } from '../controllers/BotController';
 import { asyncHandler } from '../middleware/asyncHandler';
 
@@ -48,5 +50,23 @@ router.get('/network/:userId', asyncHandler(getNetworkSummary));
  * @query   limit - Number of results (default 5)
  */
 router.get('/commissions/:userId', asyncHandler(getRecentCommissions));
+
+/**
+ * @route   GET /api/bot/properties
+ * @desc    Search available properties (simplified format for AI prompt)
+ *          Buscar propiedades disponibles (formato simplificado para prompt IA)
+ * @access  Bot-only (x-bot-secret)
+ * @query   city, type, maxPrice, limit
+ */
+router.get('/properties', asyncHandler(getBotProperties));
+
+/**
+ * @route   GET /api/bot/tours
+ * @desc    Search active tour packages (simplified format for AI prompt)
+ *          Buscar paquetes turísticos activos (formato simplificado para prompt IA)
+ * @access  Bot-only (x-bot-secret)
+ * @query   destination, type, maxPrice, limit
+ */
+router.get('/tours', asyncHandler(getBotTours));
 
 export default router;
