@@ -17,6 +17,7 @@
 import { WhereOptions } from 'sequelize';
 import { Reservation, Property, TourPackage, TourAvailability, User } from '../models';
 import type { ReservationAttributes, ReservationCreationAttributes } from '../models/Reservation';
+import { CalendarService } from './CalendarService';
 
 // ============================================
 // TYPES
@@ -282,6 +283,32 @@ export class ReservationService {
     const reservation = await this.findById(id);
     reservation.status = 'confirmed';
     await reservation.save();
+
+    // Non-blocking calendar sync — don't await
+    // Sincronización de calendario no bloqueante — no usar await
+    const calendarService = new CalendarService();
+    const payload = {
+      reservationId: reservation.id,
+      type: reservation.type,
+      guestName: reservation.guestName,
+      guestEmail: reservation.guestEmail,
+      guestPhone: reservation.guestPhone ?? null,
+      title:
+        reservation.type === 'property'
+          ? ((reservation as any).property?.title ?? 'Propiedad')
+          : ((reservation as any).tourPackage?.title ?? 'Tour'),
+      startDate:
+        reservation.type === 'property'
+          ? (reservation.checkIn ?? '')
+          : (reservation.tourDate ?? ''),
+      endDate: reservation.type === 'property' ? (reservation.checkOut ?? null) : null,
+      notes: reservation.notes ?? null,
+      vendorId: reservation.vendorId ?? null,
+    };
+    calendarService.notifyReservationConfirmed(payload).catch((err: unknown) => {
+      console.error('[ReservationService] Calendar sync error:', err);
+    });
+
     return reservation;
   }
 }

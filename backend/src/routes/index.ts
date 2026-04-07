@@ -34,6 +34,7 @@ import addressRoutes from './address.routes';
 import shippingRoutes from './shipping.routes';
 import achievementRoutes from './achievement.routes';
 import leaderboardRoutes from './leaderboard.routes';
+import webhookInternalRoutes from './webhook-internal.routes';
 
 const router: ExpressRouter = Router();
 
@@ -103,6 +104,10 @@ router.use('/achievements', achievementRoutes);
 
 // Leaderboard routes
 router.use('/leaderboard', leaderboardRoutes);
+
+// Internal webhook routes (for n8n and internal services)
+// Rutas de webhook interno (para n8n y servicios internos)
+router.use('/webhooks/internal', webhookInternalRoutes);
 
 // Profile public routes (MUST be before publicRoutes to avoid /profile/:code conflict)
 import profilePublicRoutes from './profile-public.routes';
