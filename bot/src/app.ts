@@ -17,6 +17,8 @@ import { networkFlow } from './flows/network.flow.js';
 import { supportFlow } from './flows/support.flow.js';
 import { scheduleFlow } from './flows/schedule.flow.js';
 import { handoffFlow } from './flows/handoff.flow.js';
+import { propertiesFlow } from './flows/properties.flow.js';
+import { toursFlow } from './flows/tours.flow.js';
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
@@ -65,6 +67,8 @@ const flow = createFlow([
   scheduleFlow,
   handoffFlow,
   commissionsKeywordFlow,
+  propertiesFlow,
+  toursFlow,
 ]);
 
 // ── Bootstrap ─────────────────────────────────────────────────────────────────
