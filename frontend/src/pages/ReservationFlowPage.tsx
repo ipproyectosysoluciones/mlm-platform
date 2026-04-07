@@ -9,7 +9,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  CalendarDays,
   Users,
   CheckCircle2,
   ChevronRight,
