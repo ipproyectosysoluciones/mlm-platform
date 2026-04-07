@@ -9,7 +9,8 @@ export default defineConfig({
   reporter: 'html',
 
   use: {
-    baseURL: process.env.BASE_URL || 'http://localhost:5173',
+    baseURL:
+      process.env.BASE_URL || (process.env.CI ? 'http://localhost:4173' : 'http://localhost:5173'),
     trace: 'on-first-retry',
     screenshot: 'always',
     video: 'on',
@@ -24,13 +25,14 @@ export default defineConfig({
     },
   ],
 
-  // In CI, the frontend is already running, so we just wait for it
+  // In CI the frontend is pre-built; serve via `vite preview` on port 4173.
+  // Locally `pnpm dev` uses port 5173.
   webServer: process.env.CI
     ? {
-        command: 'echo "Frontend already running" && exit 0',
-        url: 'http://localhost:5173',
-        reuseExistingServer: true,
-        timeout: 10000,
+        command: 'pnpm preview --port 4173',
+        url: 'http://localhost:4173',
+        reuseExistingServer: false,
+        timeout: 60 * 1000,
       }
     : {
         command: 'pnpm dev',
