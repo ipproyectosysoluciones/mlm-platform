@@ -10,7 +10,10 @@ import {
   createProperty,
   updateProperty,
   deleteProperty,
+  uploadPropertyImages,
+  deletePropertyImage,
 } from '../controllers/PropertyController';
+import { uploadImages } from '../middleware/upload';
 
 const router = Router();
 
@@ -231,5 +234,9 @@ router.put('/:id', updateProperty);
  *         description: Property not found / Propiedad no encontrada
  */
 router.delete('/:id', deleteProperty);
+
+// Image upload routes / Rutas de subida de imágenes
+router.post('/:id/images', uploadImages, uploadPropertyImages);
+router.delete('/:id/images/:imageIndex', deletePropertyImage);
 
 export default router;

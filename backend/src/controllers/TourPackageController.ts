@@ -16,10 +16,11 @@
  * // Español: Listar tours de aventura activos
  * GET /api/tours?type=adventure&status=active
  */
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { body, param, query, validationResult } from 'express-validator';
 import { authenticate, requireAdmin } from '../middleware/auth.middleware';
 import { tourPackageService } from '../services/TourPackageService';
+import { R2Service } from '../services/R2Service';
 
 // ============================================
 // VALIDATION RULES
@@ -357,3 +358,88 @@ export const deleteTourPackage = [
     }
   },
 ];
+
+/**
+ * POST /api/admin/tours/:id/images — Upload images to a tour package
+ * POST /api/admin/tours/:id/images — Sube imágenes a un paquete turístico
+ *
+ * @description Uploads files to Cloudflare R2 and appends the resulting public URLs
+ *              to the tour package's images array.
+ *              Sube archivos a Cloudflare R2 y agrega las URLs públicas resultantes
+ *              al array de imágenes del paquete turístico.
+ *
+ * @route POST /api/admin/tours/:id/images
+ * @access Admin
+ */
+export const uploadTourImages = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const tourPackage = await tourPackageService.findById(req.params.id);
+    const files = req.files as Express.Multer.File[];
+
+    if (!files || files.length === 0) {
+      res.status(400).json({ message: 'No images provided / No se proporcionaron imágenes' });
+      return;
+    }
+
+    const currentImages = (tourPackage.images as string[]) ?? [];
+
+    if (currentImages.length + files.length > 10) {
+      res.status(400).json({ message: `Max 10 images per tour. Current: ${currentImages.length}` });
+      return;
+    }
+
+    const r2Service = new R2Service();
+    const newUrls = await r2Service.uploadImages({
+      files,
+      entityType: 'tours',
+      entityId: tourPackage.id,
+    });
+
+    await tourPackageService.update(tourPackage.id, { images: [...currentImages, ...newUrls] });
+
+    res.json({ images: [...currentImages, ...newUrls] });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * DELETE /api/admin/tours/:id/images/:imageIndex — Delete a tour package image by index
+ * DELETE /api/admin/tours/:id/images/:imageIndex — Elimina una imagen de paquete turístico por índice
+ *
+ * @description Removes an image from Cloudflare R2 by index and updates the tour package record.
+ *              Elimina una imagen de Cloudflare R2 por índice y actualiza el registro del paquete turístico.
+ *
+ * @route DELETE /api/admin/tours/:id/images/:imageIndex
+ * @access Admin
+ */
+export const deleteTourImage = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const tourPackage = await tourPackageService.findById(req.params.id);
+    const imageIndex = parseInt(req.params.imageIndex, 10);
+    const currentImages = (tourPackage.images as string[]) ?? [];
+
+    if (imageIndex < 0 || imageIndex >= currentImages.length) {
+      res.status(400).json({ message: 'Invalid image index / Índice de imagen inválido' });
+      return;
+    }
+
+    const r2Service = new R2Service();
+    await r2Service.deleteImage(currentImages[imageIndex]);
+
+    const updatedImages = currentImages.filter((_, i) => i !== imageIndex);
+    await tourPackageService.update(tourPackage.id, { images: updatedImages });
+
+    res.json({ images: updatedImages });
+  } catch (error) {
+    next(error);
+  }
+};

@@ -12,7 +12,10 @@ import {
   createTourPackage,
   updateTourPackage,
   deleteTourPackage,
+  uploadTourImages,
+  deleteTourImage,
 } from '../controllers/TourPackageController';
+import { uploadImages } from '../middleware/upload';
 
 const router = Router();
 
@@ -255,5 +258,9 @@ router.put('/:id', updateTourPackage);
  *         description: Tour package not found / Paquete turístico no encontrado
  */
 router.delete('/:id', deleteTourPackage);
+
+// Image upload routes / Rutas de subida de imágenes
+router.post('/:id/images', uploadImages, uploadTourImages);
+router.delete('/:id/images/:imageIndex', deleteTourImage);
 
 export default router;

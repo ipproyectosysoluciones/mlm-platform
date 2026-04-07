@@ -13,10 +13,11 @@
  * // Español: Listar propiedades disponibles
  * GET /api/properties?city=Bogotá&status=available
  */
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { body, param, query, validationResult } from 'express-validator';
 import { authenticate, requireAdmin } from '../middleware/auth.middleware';
 import { propertyService } from '../services/PropertyService';
+import { R2Service } from '../services/R2Service';
 
 // ============================================
 // VALIDATION RULES
@@ -345,3 +346,90 @@ export const deleteProperty = [
     }
   },
 ];
+
+/**
+ * POST /api/admin/properties/:id/images — Upload images to a property
+ * POST /api/admin/properties/:id/images — Sube imágenes a una propiedad
+ *
+ * @description Uploads files to Cloudflare R2 and appends the resulting public URLs
+ *              to the property's images array.
+ *              Sube archivos a Cloudflare R2 y agrega las URLs públicas resultantes
+ *              al array de imágenes de la propiedad.
+ *
+ * @route POST /api/admin/properties/:id/images
+ * @access Admin
+ */
+export const uploadPropertyImages = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const property = await propertyService.findById(req.params.id);
+    const files = req.files as Express.Multer.File[];
+
+    if (!files || files.length === 0) {
+      res.status(400).json({ message: 'No images provided / No se proporcionaron imágenes' });
+      return;
+    }
+
+    const currentImages = (property.images as string[]) ?? [];
+
+    if (currentImages.length + files.length > 10) {
+      res
+        .status(400)
+        .json({ message: `Max 10 images per property. Current: ${currentImages.length}` });
+      return;
+    }
+
+    const r2Service = new R2Service();
+    const newUrls = await r2Service.uploadImages({
+      files,
+      entityType: 'properties',
+      entityId: property.id,
+    });
+
+    await propertyService.update(property.id, { images: [...currentImages, ...newUrls] });
+
+    res.json({ images: [...currentImages, ...newUrls] });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * DELETE /api/admin/properties/:id/images/:imageIndex — Delete a property image by index
+ * DELETE /api/admin/properties/:id/images/:imageIndex — Elimina una imagen de propiedad por índice
+ *
+ * @description Removes an image from Cloudflare R2 by index and updates the property record.
+ *              Elimina una imagen de Cloudflare R2 por índice y actualiza el registro de propiedad.
+ *
+ * @route DELETE /api/admin/properties/:id/images/:imageIndex
+ * @access Admin
+ */
+export const deletePropertyImage = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const property = await propertyService.findById(req.params.id);
+    const imageIndex = parseInt(req.params.imageIndex, 10);
+    const currentImages = (property.images as string[]) ?? [];
+
+    if (imageIndex < 0 || imageIndex >= currentImages.length) {
+      res.status(400).json({ message: 'Invalid image index / Índice de imagen inválido' });
+      return;
+    }
+
+    const r2Service = new R2Service();
+    await r2Service.deleteImage(currentImages[imageIndex]);
+
+    const updatedImages = currentImages.filter((_, i) => i !== imageIndex);
+    await propertyService.update(property.id, { images: updatedImages });
+
+    res.json({ images: updatedImages });
+  } catch (error) {
+    next(error);
+  }
+};
