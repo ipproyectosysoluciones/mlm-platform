@@ -1,24 +1,31 @@
 /**
  * @fileoverview Achievement Service - API client for achievement endpoints
- * @description Methods to fetch all achievements, user's achievements, and summary
+ * @description Methods to fetch all achievements, user's achievements, and summary.
+ *              Métodos para obtener logros, logros del usuario y resumen de logros.
  * @module services/achievementService
  */
 
 import api from './api';
 
-/** Achievement tier levels */
+/** Achievement tier levels / Niveles de tier de logro */
 export type AchievementTier = 'bronze' | 'silver' | 'gold';
 
-/** Achievement status */
+/** Achievement status / Estado del logro */
 export type AchievementStatus = 'active' | 'coming_soon';
 
-/** Condition types for achievements */
+/**
+ * Condition types for achievements.
+ * Tipos de condición para logros.
+ *
+ * @remarks 'binary_balance' was renamed to 'network_balance' in Sprint 6 (v2.2.0)
+ *          migration 20260407000001-rename-binary-balance
+ */
 export type AchievementConditionType =
   | 'count_referrals'
   | 'sales_amount'
   | 'sales_count'
   | 'login_streak'
-  | 'binary_balance';
+  | 'network_balance';
 
 /** Base achievement shape */
 export interface Achievement {

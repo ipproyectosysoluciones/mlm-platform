@@ -32,10 +32,10 @@ export type AchievementTrigger = 'referral_added' | 'sale_completed' | 'login' |
  * Mapea cada trigger a los conditionTypes que debe evaluar
  */
 const TRIGGER_MAP: Record<AchievementTrigger, AchievementConditionType[]> = {
-  referral_added: ['count_referrals', 'binary_balance'],
+  referral_added: ['count_referrals', 'network_balance'],
   sale_completed: ['sales_count', 'sales_amount'],
   login: ['login_streak'],
-  binary_update: ['binary_balance'],
+  binary_update: ['network_balance'],
 };
 
 /**
@@ -56,7 +56,7 @@ export interface AchievementWithProgress {
 
 /**
  * The 8 canonical achievements to seed on startup.
- * conditionType must match the DB ENUM: count_referrals | sales_amount | sales_count | login_streak | binary_balance
+ * conditionType must match the DB ENUM: count_referrals | sales_amount | sales_count | login_streak | network_balance
  *
  * NOTE: 'network_depth' is not a valid conditionType ENUM value in the DB.
  * The 'network_depth_5' achievement uses 'sales_count' as its conditionType field
@@ -111,12 +111,12 @@ const ACHIEVEMENTS_SEED = [
     status: 'active' as const,
   },
   {
-    key: 'binary_balance',
-    name: 'Balance Binario',
+    key: 'network_balance',
+    name: 'Balance de Red',
     description: 'Tiene al menos un referido en cada lado del árbol binario.',
     icon: '⚖️',
     points: 500,
-    conditionType: 'binary_balance' as AchievementConditionType,
+    conditionType: 'network_balance' as AchievementConditionType,
     conditionValue: 1,
     tier: 'gold' as const,
     status: 'active' as const,
@@ -235,8 +235,9 @@ export class AchievementService {
         return Number(rows[0]?.cnt ?? 0);
       }
 
-      case 'binary_balance': {
+      case 'network_balance': {
         // Both sides must have at least conditionValue users
+        // Ambos lados deben tener al menos conditionValue usuarios
         const leftRows = await sequelize.query<{ cnt: number }>(
           `SELECT COUNT(*) AS cnt FROM users WHERE sponsor_id = :userId AND position = 'left'`,
           { replacements: { userId }, type: QueryTypes.SELECT }
