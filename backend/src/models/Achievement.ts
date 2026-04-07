@@ -21,7 +21,7 @@ export type AchievementConditionType =
   | 'sales_amount'
   | 'sales_count'
   | 'login_streak'
-  | 'binary_balance';
+  | 'network_balance';
 
 export type AchievementTier = 'bronze' | 'silver' | 'gold';
 
@@ -98,7 +98,7 @@ Achievement.init(
         'sales_amount',
         'sales_count',
         'login_streak',
-        'binary_balance'
+        'network_balance'
       ),
       allowNull: false,
       field: 'condition_type',
