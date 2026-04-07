@@ -13,6 +13,8 @@ import { Op } from 'sequelize';
 import { User, Wallet, Commission, WithdrawalRequest } from '../models';
 import { propertyService } from '../services/PropertyService';
 import { tourPackageService } from '../services/TourPackageService';
+import { Property } from '../models/Property';
+import { TourPackage } from '../models/TourPackage';
 
 // ── GET /api/bot/user-by-phone/:phone ─────────────────────────────────────────
 
@@ -272,7 +274,7 @@ export const getBotProperties = async (
 
     // Return simplified format optimized for bot prompts
     // Retorna formato simplificado optimizado para prompts del bot
-    const simplified = rows.map((p) => ({
+    const simplified = rows.map((p: Property) => ({
       id: p.id,
       type: p.type,
       title: p.title,
@@ -380,7 +382,7 @@ export const getBotTours = async (
 
     // Return simplified format optimized for bot prompts
     // Retorna formato simplificado optimizado para prompts del bot
-    const simplified = rows.map((t) => ({
+    const simplified = rows.map((t: TourPackage) => ({
       id: t.id,
       type: t.type,
       title: t.title,

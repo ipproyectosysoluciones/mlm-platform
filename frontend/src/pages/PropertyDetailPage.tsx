@@ -233,7 +233,7 @@ export default function PropertyDetailPage() {
   const ogImage = property.images?.[0] ?? 'https://nexoreal.com/og-default.jpg';
 
   /** Canonical URL for this property */
-  const canonicalUrl = `https://nexoreal.com/properties/${property.id}`;
+  const canonicalUrl = `https://nexoreal.com/propiedades/${property.id}`;
 
   /**
    * JSON-LD RealEstateListing schema markup.

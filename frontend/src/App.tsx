@@ -292,7 +292,7 @@ function App() {
             }
           />
           <Route
-            path="/properties/:id"
+            path="/propiedades/:id"
             element={
               <AppLayout>
                 <Suspense fallback={<PageLoader />}>

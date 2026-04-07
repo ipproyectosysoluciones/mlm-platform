@@ -12,6 +12,8 @@ import {
   getWalletInfo,
   getNetworkSummary,
   getRecentCommissions,
+  getBotProperties,
+  getBotTours,
 } from '../controllers/BotController';
 import { asyncHandler } from '../middleware/asyncHandler';
 
@@ -48,5 +50,19 @@ router.get('/network/:userId', asyncHandler(getNetworkSummary));
  * @query   limit - Number of results (default 5)
  */
 router.get('/commissions/:userId', asyncHandler(getRecentCommissions));
+
+/**
+ * @route   GET /api/bot/properties
+ * @desc    Get active property listings for bot catalog flow
+ * @access  Bot-only (x-bot-secret)
+ */
+router.get('/properties', asyncHandler(getBotProperties));
+
+/**
+ * @route   GET /api/bot/tours
+ * @desc    Get active tour packages for bot catalog flow
+ * @access  Bot-only (x-bot-secret)
+ */
+router.get('/tours', asyncHandler(getBotTours));
 
 export default router;
