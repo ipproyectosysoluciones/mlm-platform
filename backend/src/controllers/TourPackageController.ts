@@ -364,9 +364,14 @@ export const deleteTourPackage = [
  * POST /api/admin/tours/:id/images — Sube imágenes a un paquete turístico
  *
  * @description Uploads files to Cloudflare R2 and appends the resulting public URLs
- *              to the tour package's images array.
+ *              to the tour package's images array. Safely normalizes req.files regardless
+ *              of whether Multer returns a flat array (array()) or a fieldname dict (fields()).
  *              Sube archivos a Cloudflare R2 y agrega las URLs públicas resultantes
- *              al array de imágenes del paquete turístico.
+ *              al array de imágenes del paquete turístico. Normaliza req.files de forma segura
+ *              independientemente de si Multer retorna array plano o diccionario por campo.
+ *
+ * @security Fixed CodeQL js/type-confusion-through-parameter-tampering (#39)
+ *           req.files puede ser File[] o { [fieldname]: File[] } — se normaliza explícitamente.
  *
  * @route POST /api/admin/tours/:id/images
  * @access Admin
@@ -378,7 +383,11 @@ export const uploadTourImages = async (
 ): Promise<void> => {
   try {
     const tourPackage = await tourPackageService.findById(req.params.id);
-    const files = req.files as Express.Multer.File[];
+    // Normalize req.files: Multer can return File[] (array()) or { [field]: File[] } (fields())
+    // Normalizar req.files: Multer puede retornar File[] (array()) o { [campo]: File[] } (fields())
+    const files: Express.Multer.File[] = Array.isArray(req.files)
+      ? req.files
+      : Object.values(req.files ?? {}).flat();
 
     if (!files || files.length === 0) {
       res.status(400).json({ message: 'No images provided / No se proporcionaron imágenes' });
