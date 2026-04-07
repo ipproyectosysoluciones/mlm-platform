@@ -1,13 +1,20 @@
 /**
  * @fileoverview PropertyDetailPage - Real estate property detail page
- * @description Shows full property info, image gallery, specs and booking CTA
- *               Muestra info completa de propiedad, galería de imágenes, specs y CTA de reserva
+ * @description Shows full property info, image gallery, specs and booking CTA.
+ *              Includes SEO meta tags (title, description, Open Graph) and
+ *              JSON-LD RealEstateListing schema markup for search engine indexing.
+ *
+ *              Muestra info completa de propiedad, galería de imágenes, specs y CTA de reserva.
+ *              Incluye meta tags SEO (title, description, Open Graph) y schema markup
+ *              JSON-LD RealEstateListing para indexación en motores de búsqueda.
+ *
  * @module pages/PropertyDetailPage
  * @author Nexo Real Development Team
  */
 
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import {
   MapPin,
   BedDouble,
@@ -196,122 +203,213 @@ export default function PropertyDetailPage() {
     navigate('/reservations/new');
   };
 
+  // ── SEO helpers ────────────────────────────────────────────────────────────
+
+  /**
+   * Dynamic page title for SEO: "Property title | City | Nexo Real"
+   * Título dinámico para SEO: "Título propiedad | Ciudad | Nexo Real"
+   */
+  const seoTitle = `${property.title} | ${property.city} | Nexo Real`;
+
+  /**
+   * Meta description combining type, price, city and bedrooms.
+   * Meta description combinando tipo, precio, ciudad y habitaciones.
+   */
+  const seoDescription = [
+    PROPERTY_TYPE_LABELS[property.type],
+    'en',
+    property.city,
+    property.bedrooms ? `· ${property.bedrooms} hab.` : '',
+    property.bathrooms ? `· ${property.bathrooms} baños` : '',
+    property.areaM2 ? `· ${property.areaM2} m²` : '',
+    `· ${property.currency} ${property.price.toLocaleString('es-AR')}`,
+    property.description ? `— ${property.description.slice(0, 120)}` : '',
+  ]
+    .filter(Boolean)
+    .join(' ')
+    .trim();
+
+  /** Primary OG image (first property image or fallback) */
+  const ogImage = property.images?.[0] ?? 'https://nexoreal.com/og-default.jpg';
+
+  /** Canonical URL for this property */
+  const canonicalUrl = `https://nexoreal.com/properties/${property.id}`;
+
+  /**
+   * JSON-LD RealEstateListing schema markup.
+   * Provides structured data for Google rich results.
+   * Schema markup JSON-LD RealEstateListing.
+   * Proporciona datos estructurados para resultados enriquecidos de Google.
+   */
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'RealEstateListing',
+    name: property.title,
+    description: property.description ?? seoDescription,
+    url: canonicalUrl,
+    image: property.images?.length ? property.images : [ogImage],
+    offers: {
+      '@type': 'Offer',
+      price: property.price,
+      priceCurrency: property.currency,
+      availability:
+        property.status === 'available'
+          ? 'https://schema.org/InStock'
+          : 'https://schema.org/SoldOut',
+    },
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: property.address,
+      addressLocality: property.city,
+      addressCountry: property.country ?? 'CO',
+    },
+    ...(property.bedrooms != null && { numberOfRooms: property.bedrooms }),
+    ...(property.areaM2 != null && {
+      floorSize: { '@type': 'QuantitativeValue', value: property.areaM2, unitCode: 'MTK' },
+    }),
+  };
+
   return (
-    <div className="min-h-screen bg-slate-50 pb-12">
-      <div className="max-w-5xl mx-auto px-4 py-8">
-        {/* Back button */}
-        <button
-          onClick={() => navigate('/properties')}
-          className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 mb-6 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Volver a propiedades
-        </button>
+    <>
+      {/* SEO: meta tags + JSON-LD / Meta tags + JSON-LD para SEO */}
+      <Helmet>
+        <title>{seoTitle}</title>
+        <meta name="description" content={seoDescription} />
+        <link rel="canonical" href={canonicalUrl} />
+        {/* Open Graph */}
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={seoTitle} />
+        <meta property="og:description" content={seoDescription} />
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:site_name" content="Nexo Real" />
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={seoTitle} />
+        <meta name="twitter:description" content={seoDescription} />
+        <meta name="twitter:image" content={ogImage} />
+        {/* JSON-LD structured data */}
+        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+      </Helmet>
 
-        {/* Gallery */}
-        <ImageGallery images={property.images} title={property.title} />
+      <div className="min-h-screen bg-slate-50 pb-12">
+        <div className="max-w-5xl mx-auto px-4 py-8">
+          {/* Back button */}
+          <button
+            onClick={() => navigate('/properties')}
+            className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 mb-6 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Volver a propiedades
+          </button>
 
-        {/* Content grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
-          {/* Left: Info */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Title + type */}
-            <div>
-              <div className="flex items-start justify-between gap-4 mb-2">
-                <h1 className="text-2xl font-bold text-slate-800">{property.title}</h1>
-                <span
-                  className={cn(
-                    'shrink-0 px-3 py-1 rounded-full text-sm font-semibold',
-                    PROPERTY_TYPE_COLORS[property.type]
-                  )}
-                >
-                  {PROPERTY_TYPE_LABELS[property.type]}
-                </span>
-              </div>
-              <p className="flex items-center gap-1 text-slate-500">
-                <MapPin className="w-4 h-4" />
-                {property.address}, {property.city}, {property.country}
-              </p>
-            </div>
+          {/* Gallery */}
+          <ImageGallery images={property.images} title={property.title} />
 
-            {/* Specs */}
-            <div className="flex flex-wrap gap-6">
-              {property.bedrooms != null && (
-                <div className="flex items-center gap-2 text-slate-700">
-                  <BedDouble className="w-5 h-5 text-emerald-500" />
-                  <span>
-                    <span className="font-semibold">{property.bedrooms}</span>{' '}
-                    {property.bedrooms === 1 ? 'dormitorio' : 'dormitorios'}
-                  </span>
-                </div>
-              )}
-              {property.bathrooms != null && (
-                <div className="flex items-center gap-2 text-slate-700">
-                  <Bath className="w-5 h-5 text-emerald-500" />
-                  <span>
-                    <span className="font-semibold">{property.bathrooms}</span>{' '}
-                    {property.bathrooms === 1 ? 'baño' : 'baños'}
-                  </span>
-                </div>
-              )}
-              {property.area != null && (
-                <div className="flex items-center gap-2 text-slate-700">
-                  <Maximize2 className="w-5 h-5 text-emerald-500" />
-                  <span>
-                    <span className="font-semibold">{property.area}</span> m²
-                  </span>
-                </div>
-              )}
-            </div>
-
-            {/* Description */}
-            <div>
-              <h2 className="text-lg font-semibold text-slate-800 mb-2">Descripción</h2>
-              <p className="text-slate-600 leading-relaxed whitespace-pre-line">
-                {property.description}
-              </p>
-            </div>
-
-            {/* Amenities */}
-            {property.amenities && property.amenities.length > 0 && (
+          {/* Content grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
+            {/* Left: Info */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Title + type */}
               <div>
-                <h2 className="text-lg font-semibold text-slate-800 mb-3">Comodidades</h2>
-                <div className="grid grid-cols-2 gap-2">
-                  {property.amenities.map((amenity) => (
-                    <div key={amenity} className="flex items-center gap-2 text-slate-600 text-sm">
-                      <Check className="w-4 h-4 text-emerald-500 shrink-0" />
-                      {amenity}
-                    </div>
-                  ))}
+                <div className="flex items-start justify-between gap-4 mb-2">
+                  <h1 className="text-2xl font-bold text-slate-800">{property.title}</h1>
+                  <span
+                    className={cn(
+                      'shrink-0 px-3 py-1 rounded-full text-sm font-semibold',
+                      PROPERTY_TYPE_COLORS[property.type]
+                    )}
+                  >
+                    {PROPERTY_TYPE_LABELS[property.type]}
+                  </span>
                 </div>
+                <p className="flex items-center gap-1 text-slate-500">
+                  <MapPin className="w-4 h-4" />
+                  {property.address}, {property.city}, {property.country}
+                </p>
               </div>
-            )}
-          </div>
 
-          {/* Right: Booking card */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-6 bg-white rounded-xl border border-slate-200 shadow-sm p-6">
-              <p className="text-3xl font-bold text-emerald-600 mb-1">
-                {property.currency}{' '}
-                {property.price.toLocaleString('es-AR', { minimumFractionDigits: 0 })}
-              </p>
-              {property.type === 'rental' && <p className="text-sm text-slate-400 mb-4">por mes</p>}
+              {/* Specs */}
+              <div className="flex flex-wrap gap-6">
+                {property.bedrooms != null && (
+                  <div className="flex items-center gap-2 text-slate-700">
+                    <BedDouble className="w-5 h-5 text-emerald-500" />
+                    <span>
+                      <span className="font-semibold">{property.bedrooms}</span>{' '}
+                      {property.bedrooms === 1 ? 'dormitorio' : 'dormitorios'}
+                    </span>
+                  </div>
+                )}
+                {property.bathrooms != null && (
+                  <div className="flex items-center gap-2 text-slate-700">
+                    <Bath className="w-5 h-5 text-emerald-500" />
+                    <span>
+                      <span className="font-semibold">{property.bathrooms}</span>{' '}
+                      {property.bathrooms === 1 ? 'baño' : 'baños'}
+                    </span>
+                  </div>
+                )}
+                {property.area != null && (
+                  <div className="flex items-center gap-2 text-slate-700">
+                    <Maximize2 className="w-5 h-5 text-emerald-500" />
+                    <span>
+                      <span className="font-semibold">{property.area}</span> m²
+                    </span>
+                  </div>
+                )}
+              </div>
 
-              <button
-                onClick={handleReserve}
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-emerald-500 text-white font-semibold hover:bg-emerald-600 transition-colors"
-              >
-                <CalendarDays className="w-5 h-5" />
-                {property.type === 'rental' ? 'Solicitar visita' : 'Consultar'}
-              </button>
+              {/* Description */}
+              <div>
+                <h2 className="text-lg font-semibold text-slate-800 mb-2">Descripción</h2>
+                <p className="text-slate-600 leading-relaxed whitespace-pre-line">
+                  {property.description}
+                </p>
+              </div>
 
-              <p className="text-xs text-slate-400 text-center mt-3">
-                Sin compromiso — te contactamos a la brevedad
-              </p>
+              {/* Amenities */}
+              {property.amenities && property.amenities.length > 0 && (
+                <div>
+                  <h2 className="text-lg font-semibold text-slate-800 mb-3">Comodidades</h2>
+                  <div className="grid grid-cols-2 gap-2">
+                    {property.amenities.map((amenity) => (
+                      <div key={amenity} className="flex items-center gap-2 text-slate-600 text-sm">
+                        <Check className="w-4 h-4 text-emerald-500 shrink-0" />
+                        {amenity}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Right: Booking card */}
+            <div className="lg:col-span-1">
+              <div className="sticky top-6 bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+                <p className="text-3xl font-bold text-emerald-600 mb-1">
+                  {property.currency}{' '}
+                  {property.price.toLocaleString('es-AR', { minimumFractionDigits: 0 })}
+                </p>
+                {property.type === 'rental' && (
+                  <p className="text-sm text-slate-400 mb-4">por mes</p>
+                )}
+
+                <button
+                  onClick={handleReserve}
+                  className="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-emerald-500 text-white font-semibold hover:bg-emerald-600 transition-colors"
+                >
+                  <CalendarDays className="w-5 h-5" />
+                  {property.type === 'rental' ? 'Solicitar visita' : 'Consultar'}
+                </button>
+
+                <p className="text-xs text-slate-400 text-center mt-3">
+                  Sin compromiso — te contactamos a la brevedad
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -28,6 +28,14 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
   - Endpoints documentados con `@swagger`: `GET /api/bot/properties` y `GET /api/bot/tours` (tag: bot)
   - Tag `bot` agregado en lista de tags de Swagger UI
 
+- **Sprint 6: SEO — Meta Tags Dinámicos + Schema Markup + Social Proof**
+  - `PropertyDetailPage` — `<Helmet>` con title dinámico, meta description, Open Graph tags, Twitter Card y JSON-LD `RealEstateListing` schema markup
+  - `TourDetailPage` — `<Helmet>` con title dinámico, meta description, Open Graph tags, Twitter Card y JSON-LD `TouristAttraction` schema markup
+  - `PropertiesPage` — `<Helmet>` dinámico basado en filtros activos (tipo, ciudad) + social proof badge "X personas vieron esto hoy" en cada card
+  - `ToursPage` — `<Helmet>` dinámico basado en filtros activos (categoría, destino) + social proof badge en cada card
+  - `HelmetProvider` wrapeando la app en `main.tsx` + `react-helmet-async` instalado
+  - Slugs: backend sin campo `slug` → fallback a rutas con ID (correcto según spec)
+
 ### Changed
 
 - **`binary_balance` → `network_balance`** (Sprint 6 Fase 1, PR #89): campo renombrado en modelo `User`, migración Sequelize `20260407000000-rename-binary-balance.js`, eliminadas todas las referencias en frontend y backend

@@ -36,8 +36,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/register",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "register"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
             }
           },
           "response": []
@@ -73,8 +78,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/login",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "login"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
             }
           },
           "response": []
@@ -91,8 +101,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/auth/me",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "me"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
             }
           },
           "response": []
@@ -114,8 +129,12 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/dashboard",
-              "host": ["{{baseUrl}}"],
-              "path": ["dashboard"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dashboard"
+              ]
             }
           },
           "response": []
@@ -137,8 +156,12 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm",
-              "host": ["{{baseUrl}}"],
-              "path": ["crm"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crm"
+              ]
             }
           },
           "response": []
@@ -155,8 +178,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm/{{leadId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["crm", "{{leadId}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crm",
+                "{{leadId}}"
+              ]
             }
           },
           "response": []
@@ -181,8 +209,12 @@
             },
             "url": {
               "raw": "{{baseUrl}}/crm",
-              "host": ["{{baseUrl}}"],
-              "path": ["crm"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crm"
+              ]
             }
           },
           "response": []
@@ -207,8 +239,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/crm/{{leadId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["crm", "{{leadId}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crm",
+                "{{leadId}}"
+              ]
             }
           },
           "response": []
@@ -225,8 +262,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm/{{leadId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["crm", "{{leadId}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crm",
+                "{{leadId}}"
+              ]
             }
           },
           "response": []
@@ -251,8 +293,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/crm/import",
-              "host": ["{{baseUrl}}"],
-              "path": ["crm", "import"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crm",
+                "import"
+              ]
             }
           },
           "response": []
@@ -269,8 +316,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm/export",
-              "host": ["{{baseUrl}}"],
-              "path": ["crm", "export"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crm",
+                "export"
+              ]
             }
           },
           "response": []
@@ -287,8 +339,14 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm/{{leadId}}/tasks",
-              "host": ["{{baseUrl}}"],
-              "path": ["crm", "{{leadId}}", "tasks"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crm",
+                "{{leadId}}",
+                "tasks"
+              ]
             }
           },
           "response": []
@@ -313,8 +371,14 @@
             },
             "url": {
               "raw": "{{baseUrl}}/crm/{{leadId}}/tasks",
-              "host": ["{{baseUrl}}"],
-              "path": ["crm", "{{leadId}}", "tasks"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crm",
+                "{{leadId}}",
+                "tasks"
+              ]
             }
           },
           "response": []
@@ -331,8 +395,15 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm/tasks/{{taskId}}/complete",
-              "host": ["{{baseUrl}}"],
-              "path": ["crm", "tasks", "{{taskId}}", "complete"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crm",
+                "tasks",
+                "{{taskId}}",
+                "complete"
+              ]
             }
           },
           "response": []
@@ -357,8 +428,14 @@
             },
             "url": {
               "raw": "{{baseUrl}}/crm/{{leadId}}/communications",
-              "host": ["{{baseUrl}}"],
-              "path": ["crm", "{{leadId}}", "communications"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crm",
+                "{{leadId}}",
+                "communications"
+              ]
             }
           },
           "response": []
@@ -375,8 +452,14 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm/{{leadId}}/communications",
-              "host": ["{{baseUrl}}"],
-              "path": ["crm", "{{leadId}}", "communications"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crm",
+                "{{leadId}}",
+                "communications"
+              ]
             }
           },
           "response": []
@@ -393,8 +476,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm/stats",
-              "host": ["{{baseUrl}}"],
-              "path": ["crm", "stats"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crm",
+                "stats"
+              ]
             }
           },
           "response": []
@@ -411,8 +499,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm/tasks",
-              "host": ["{{baseUrl}}"],
-              "path": ["crm", "tasks"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crm",
+                "tasks"
+              ]
             }
           },
           "response": []
@@ -429,8 +522,14 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm/analytics/report?period=month",
-              "host": ["{{baseUrl}}"],
-              "path": ["crm", "analytics", "report"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crm",
+                "analytics",
+                "report"
+              ]
             }
           },
           "response": []
@@ -447,8 +546,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm/alerts?daysInactive=7",
-              "host": ["{{baseUrl}}"],
-              "path": ["crm", "alerts"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crm",
+                "alerts"
+              ]
             }
           },
           "response": []
@@ -465,8 +569,14 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/crm/analytics/export?period=month",
-              "host": ["{{baseUrl}}"],
-              "path": ["crm", "analytics", "export"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crm",
+                "analytics",
+                "export"
+              ]
             }
           },
           "response": []
@@ -488,8 +598,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/users/me",
-              "host": ["{{baseUrl}}"],
-              "path": ["users", "me"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "me"
+              ]
             }
           },
           "response": []
@@ -506,8 +621,14 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/users/me/tree",
-              "host": ["{{baseUrl}}"],
-              "path": ["users", "me", "tree"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "me",
+                "tree"
+              ]
             }
           },
           "response": []
@@ -524,8 +645,14 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/users/me/qr-url",
-              "host": ["{{baseUrl}}"],
-              "path": ["users", "me", "qr-url"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "me",
+                "qr-url"
+              ]
             }
           },
           "response": []
@@ -550,8 +677,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/users/me",
-              "host": ["{{baseUrl}}"],
-              "path": ["users", "me"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "me"
+              ]
             }
           },
           "response": []
@@ -576,8 +708,14 @@
             },
             "url": {
               "raw": "{{baseUrl}}/users/me/change-password",
-              "host": ["{{baseUrl}}"],
-              "path": ["users", "me", "change-password"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "me",
+                "change-password"
+              ]
             }
           },
           "response": []
@@ -599,8 +737,12 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/commissions",
-              "host": ["{{baseUrl}}"],
-              "path": ["commissions"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "commissions"
+              ]
             }
           },
           "response": []
@@ -617,8 +759,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/commissions/stats",
-              "host": ["{{baseUrl}}"],
-              "path": ["commissions", "stats"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "commissions",
+                "stats"
+              ]
             }
           },
           "response": []
@@ -643,8 +790,12 @@
             },
             "url": {
               "raw": "{{baseUrl}}/commissions",
-              "host": ["{{baseUrl}}"],
-              "path": ["commissions"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "commissions"
+              ]
             }
           },
           "response": []
@@ -666,8 +817,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/admin/stats",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "stats"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "stats"
+              ]
             }
           },
           "response": []
@@ -684,11 +840,22 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/admin/users?page=1&limit=20",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "users"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "users"
+              ],
               "query": [
-                { "key": "page", "value": "1" },
-                { "key": "limit", "value": "20" }
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
               ]
             }
           },
@@ -706,8 +873,14 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/admin/users/{{userId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "users", "{{userId}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "users",
+                "{{userId}}"
+              ]
             }
           },
           "response": []
@@ -732,8 +905,15 @@
             },
             "url": {
               "raw": "{{baseUrl}}/admin/users/{{userId}}/status",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "users", "{{userId}}", "status"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "users",
+                "{{userId}}",
+                "status"
+              ]
             }
           },
           "response": []
@@ -750,8 +930,15 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/admin/users/{{userId}}/promote",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "users", "{{userId}}", "promote"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "users",
+                "{{userId}}",
+                "promote"
+              ]
             }
           },
           "response": []
@@ -768,8 +955,14 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/admin/reports/commissions",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "reports", "commissions"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "reports",
+                "commissions"
+              ]
             }
           },
           "response": []
@@ -785,8 +978,13 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/push/vapid-public-key",
-              "host": ["{{baseUrl}}"],
-              "path": ["push", "vapid-public-key"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "push",
+                "vapid-public-key"
+              ]
             }
           },
           "response": []
@@ -811,8 +1009,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/push/subscribe",
-              "host": ["{{baseUrl}}"],
-              "path": ["push", "subscribe"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "push",
+                "subscribe"
+              ]
             }
           },
           "response": []
@@ -837,8 +1040,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/push/unsubscribe",
-              "host": ["{{baseUrl}}"],
-              "path": ["push", "unsubscribe"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "push",
+                "unsubscribe"
+              ]
             }
           },
           "response": []
@@ -854,8 +1062,15 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/public/landing/product/{{productId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["public", "landing", "product", "{{productId}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "public",
+                "landing",
+                "product",
+                "{{productId}}"
+              ]
             }
           },
           "response": []
@@ -866,10 +1081,20 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/public/landing/product/{{productId}}?ref={{referralCode}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["public", "landing", "product", "{{productId}}"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "public",
+                "landing",
+                "product",
+                "{{productId}}"
+              ],
               "query": [
-                { "key": "ref", "value": "{{referralCode}}" }
+                {
+                  "key": "ref",
+                  "value": "{{referralCode}}"
+                }
               ]
             }
           },
@@ -881,8 +1106,15 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/public/profile/{{referralCode}}/products",
-              "host": ["{{baseUrl}}"],
-              "path": ["public", "profile", "{{referralCode}}", "products"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "public",
+                "profile",
+                "{{referralCode}}",
+                "products"
+              ]
             }
           },
           "response": []
@@ -904,12 +1136,26 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/gift-cards?page=1&limit=20",
-              "host": ["{{baseUrl}}"],
-              "path": ["gift-cards"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "gift-cards"
+              ],
               "query": [
-                { "key": "page", "value": "1" },
-                { "key": "limit", "value": "20" },
-                { "key": "status", "value": "active", "disabled": true }
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                },
+                {
+                  "key": "status",
+                  "value": "active",
+                  "disabled": true
+                }
               ]
             }
           },
@@ -935,8 +1181,12 @@
             },
             "url": {
               "raw": "{{baseUrl}}/gift-cards",
-              "host": ["{{baseUrl}}"],
-              "path": ["gift-cards"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "gift-cards"
+              ]
             }
           },
           "response": []
@@ -953,8 +1203,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/gift-cards/{{giftCardId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["gift-cards", "{{giftCardId}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "gift-cards",
+                "{{giftCardId}}"
+              ]
             }
           },
           "response": []
@@ -971,8 +1226,14 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/gift-cards/{{giftCardId}}/validate",
-              "host": ["{{baseUrl}}"],
-              "path": ["gift-cards", "{{giftCardId}}", "validate"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "gift-cards",
+                "{{giftCardId}}",
+                "validate"
+              ]
             }
           },
           "response": []
@@ -997,8 +1258,14 @@
             },
             "url": {
               "raw": "{{baseUrl}}/gift-cards/{{giftCardId}}/redeem",
-              "host": ["{{baseUrl}}"],
-              "path": ["gift-cards", "{{giftCardId}}", "redeem"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "gift-cards",
+                "{{giftCardId}}",
+                "redeem"
+              ]
             }
           },
           "response": []
@@ -1020,8 +1287,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/carts/me",
-              "host": ["{{baseUrl}}"],
-              "path": ["carts", "me"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "carts",
+                "me"
+              ]
             }
           },
           "response": []
@@ -1046,8 +1318,14 @@
             },
             "url": {
               "raw": "{{baseUrl}}/carts/me/items",
-              "host": ["{{baseUrl}}"],
-              "path": ["carts", "me", "items"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "carts",
+                "me",
+                "items"
+              ]
             }
           },
           "response": []
@@ -1072,8 +1350,15 @@
             },
             "url": {
               "raw": "{{baseUrl}}/carts/me/items/{{cartItemId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["carts", "me", "items", "{{cartItemId}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "carts",
+                "me",
+                "items",
+                "{{cartItemId}}"
+              ]
             }
           },
           "response": []
@@ -1090,8 +1375,15 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/carts/me/items/{{cartItemId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["carts", "me", "items", "{{cartItemId}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "carts",
+                "me",
+                "items",
+                "{{cartItemId}}"
+              ]
             }
           },
           "response": []
@@ -1102,8 +1394,14 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/carts/recover/{{recoveryToken}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["carts", "recover", "{{recoveryToken}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "carts",
+                "recover",
+                "{{recoveryToken}}"
+              ]
             }
           },
           "response": []
@@ -1114,8 +1412,14 @@
             "method": "POST",
             "url": {
               "raw": "{{baseUrl}}/carts/recover/{{recoveryToken}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["carts", "recover", "{{recoveryToken}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "carts",
+                "recover",
+                "{{recoveryToken}}"
+              ]
             }
           },
           "response": []
@@ -1132,12 +1436,26 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/carts/abandoned?limit=50&offset=0&days=30",
-              "host": ["{{baseUrl}}"],
-              "path": ["carts", "abandoned"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "carts",
+                "abandoned"
+              ],
               "query": [
-                { "key": "limit", "value": "50" },
-                { "key": "offset", "value": "0" },
-                { "key": "days", "value": "30" }
+                {
+                  "key": "limit",
+                  "value": "50"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                },
+                {
+                  "key": "days",
+                  "value": "30"
+                }
               ]
             }
           },
@@ -1160,11 +1478,21 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/email-templates?page=1&limit=20",
-              "host": ["{{baseUrl}}"],
-              "path": ["email-templates"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "email-templates"
+              ],
               "query": [
-                { "key": "page", "value": "1" },
-                { "key": "limit", "value": "20" }
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
               ]
             }
           },
@@ -1190,8 +1518,12 @@
             },
             "url": {
               "raw": "{{baseUrl}}/email-templates",
-              "host": ["{{baseUrl}}"],
-              "path": ["email-templates"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "email-templates"
+              ]
             }
           },
           "response": []
@@ -1208,8 +1540,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/email-templates/{{emailTemplateId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["email-templates", "{{emailTemplateId}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "email-templates",
+                "{{emailTemplateId}}"
+              ]
             }
           },
           "response": []
@@ -1226,8 +1563,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/email-templates/{{emailTemplateId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["email-templates", "{{emailTemplateId}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "email-templates",
+                "{{emailTemplateId}}"
+              ]
             }
           },
           "response": []
@@ -1249,12 +1591,26 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/email-campaigns?page=1&limit=20",
-              "host": ["{{baseUrl}}"],
-              "path": ["email-campaigns"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "email-campaigns"
+              ],
               "query": [
-                { "key": "page", "value": "1" },
-                { "key": "limit", "value": "20" },
-                { "key": "status", "value": "draft", "disabled": true }
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                },
+                {
+                  "key": "status",
+                  "value": "draft",
+                  "disabled": true
+                }
               ]
             }
           },
@@ -1280,8 +1636,12 @@
             },
             "url": {
               "raw": "{{baseUrl}}/email-campaigns",
-              "host": ["{{baseUrl}}"],
-              "path": ["email-campaigns"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "email-campaigns"
+              ]
             }
           },
           "response": []
@@ -1298,8 +1658,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/email-campaigns/{{campaignId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["email-campaigns", "{{campaignId}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "email-campaigns",
+                "{{campaignId}}"
+              ]
             }
           },
           "response": []
@@ -1316,10 +1681,19 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/email-campaigns/{{campaignId}}/preview?userId={{userId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["email-campaigns", "{{campaignId}}", "preview"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "email-campaigns",
+                "{{campaignId}}",
+                "preview"
+              ],
               "query": [
-                { "key": "userId", "value": "{{userId}}" }
+                {
+                  "key": "userId",
+                  "value": "{{userId}}"
+                }
               ]
             }
           },
@@ -1337,8 +1711,14 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/email-campaigns/{{campaignId}}/send",
-              "host": ["{{baseUrl}}"],
-              "path": ["email-campaigns", "{{campaignId}}", "send"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "email-campaigns",
+                "{{campaignId}}",
+                "send"
+              ]
             }
           },
           "response": []
@@ -1363,8 +1743,14 @@
             },
             "url": {
               "raw": "{{baseUrl}}/email-campaigns/{{campaignId}}/schedule",
-              "host": ["{{baseUrl}}"],
-              "path": ["email-campaigns", "{{campaignId}}", "schedule"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "email-campaigns",
+                "{{campaignId}}",
+                "schedule"
+              ]
             }
           },
           "response": []
@@ -1381,8 +1767,14 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/email-campaigns/{{campaignId}}/pause",
-              "host": ["{{baseUrl}}"],
-              "path": ["email-campaigns", "{{campaignId}}", "pause"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "email-campaigns",
+                "{{campaignId}}",
+                "pause"
+              ]
             }
           },
           "response": []
@@ -1399,8 +1791,14 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/email-campaigns/{{campaignId}}/retry-failed",
-              "host": ["{{baseUrl}}"],
-              "path": ["email-campaigns", "{{campaignId}}", "retry-failed"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "email-campaigns",
+                "{{campaignId}}",
+                "retry-failed"
+              ]
             }
           },
           "response": []
@@ -1417,12 +1815,28 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/email-campaigns/{{campaignId}}/logs?limit=50&offset=0",
-              "host": ["{{baseUrl}}"],
-              "path": ["email-campaigns", "{{campaignId}}", "logs"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "email-campaigns",
+                "{{campaignId}}",
+                "logs"
+              ],
               "query": [
-                { "key": "limit", "value": "50" },
-                { "key": "offset", "value": "0" },
-                { "key": "eventType", "value": "failed", "disabled": true }
+                {
+                  "key": "limit",
+                  "value": "50"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                },
+                {
+                  "key": "eventType",
+                  "value": "failed",
+                  "disabled": true
+                }
               ]
             }
           },
@@ -1439,8 +1853,12 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/health",
-              "host": ["{{baseUrl}}"],
-              "path": ["health"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health"
+              ]
             }
           },
           "response": []
@@ -1457,8 +1875,12 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/categories",
-              "host": ["{{baseUrl}}"],
-              "path": ["categories"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "categories"
+              ]
             }
           },
           "response": []
@@ -1475,8 +1897,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/admin/categories",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "categories"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "categories"
+              ]
             }
           },
           "response": []
@@ -1501,8 +1928,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/admin/categories",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "categories"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "categories"
+              ]
             }
           },
           "response": []
@@ -1527,8 +1959,14 @@
             },
             "url": {
               "raw": "{{baseUrl}}/admin/categories/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "categories", ":id"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "categories",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -1551,8 +1989,14 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/admin/categories/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "categories", ":id"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "categories",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -1575,11 +2019,21 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/products?page=1&limit=20",
-              "host": ["{{baseUrl}}"],
-              "path": ["products"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products"
+              ],
               "query": [
-                { "key": "page", "value": "1" },
-                { "key": "limit", "value": "20" }
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
               ]
             }
           },
@@ -1592,8 +2046,13 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/products/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["products", ":id"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -1616,8 +2075,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/admin/products",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "products"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "products"
+              ]
             }
           },
           "response": []
@@ -1642,8 +2106,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/admin/products",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "products"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "products"
+              ]
             }
           },
           "response": []
@@ -1668,8 +2137,14 @@
             },
             "url": {
               "raw": "{{baseUrl}}/admin/products/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "products", ":id"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "products",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -1692,8 +2167,14 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/admin/products/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "products", ":id"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "products",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -1721,8 +2202,15 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/admin/products/:id/inventory",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "products", ":id", "inventory"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "products",
+                ":id",
+                "inventory"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -1753,8 +2241,15 @@
             },
             "url": {
               "raw": "{{baseUrl}}/admin/products/:id/inventory",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "products", ":id", "inventory"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "products",
+                ":id",
+                "inventory"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -1777,8 +2272,16 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/admin/products/:id/inventory/movements",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "products", ":id", "inventory", "movements"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "products",
+                ":id",
+                "inventory",
+                "movements"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -1809,8 +2312,16 @@
             },
             "url": {
               "raw": "{{baseUrl}}/admin/products/:id/inventory/movements",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "products", ":id", "inventory", "movements"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "products",
+                ":id",
+                "inventory",
+                "movements"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -1838,8 +2349,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/vendor/dashboard",
-              "host": ["{{baseUrl}}"],
-              "path": ["vendor", "dashboard"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "vendor",
+                "dashboard"
+              ]
             }
           },
           "response": []
@@ -1856,8 +2372,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/vendor/products",
-              "host": ["{{baseUrl}}"],
-              "path": ["vendor", "products"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "vendor",
+                "products"
+              ]
             }
           },
           "response": []
@@ -1879,8 +2400,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/admin/vendors",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "vendors"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "vendors"
+              ]
             }
           },
           "response": []
@@ -1897,8 +2423,14 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/admin/vendors/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "vendors", ":id"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "vendors",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -1929,8 +2461,15 @@
             },
             "url": {
               "raw": "{{baseUrl}}/admin/vendors/:id/commission-rate",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "vendors", ":id", "commission-rate"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "vendors",
+                ":id",
+                "commission-rate"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -1958,8 +2497,12 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/contracts",
-              "host": ["{{baseUrl}}"],
-              "path": ["contracts"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "contracts"
+              ]
             }
           },
           "response": []
@@ -1976,8 +2519,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/contracts/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["contracts", ":id"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "contracts",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -2000,8 +2548,14 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/contracts/:id/accept",
-              "host": ["{{baseUrl}}"],
-              "path": ["contracts", ":id", "accept"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "contracts",
+                ":id",
+                "accept"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -2024,8 +2578,14 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/contracts/:id/decline",
-              "host": ["{{baseUrl}}"],
-              "path": ["contracts", ":id", "decline"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "contracts",
+                ":id",
+                "decline"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -2053,8 +2613,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/admin/contracts",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "contracts"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "contracts"
+              ]
             }
           },
           "response": []
@@ -2079,8 +2644,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/admin/contracts",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "contracts"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "contracts"
+              ]
             }
           },
           "response": []
@@ -2105,8 +2675,14 @@
             },
             "url": {
               "raw": "{{baseUrl}}/admin/contracts/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "contracts", ":id"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "contracts",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -2129,8 +2705,15 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/admin/contracts/users/:userId",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "contracts", "users", ":userId"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "contracts",
+                "users",
+                ":userId"
+              ],
               "variable": [
                 {
                   "key": "userId",
@@ -2153,8 +2736,16 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/admin/contracts/:id/revoke/:userId",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "contracts", ":id", "revoke", ":userId"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "contracts",
+                ":id",
+                "revoke",
+                ":userId"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -2186,8 +2777,12 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/addresses",
-              "host": ["{{baseUrl}}"],
-              "path": ["addresses"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addresses"
+              ]
             }
           },
           "response": []
@@ -2212,8 +2807,12 @@
             },
             "url": {
               "raw": "{{baseUrl}}/addresses",
-              "host": ["{{baseUrl}}"],
-              "path": ["addresses"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addresses"
+              ]
             }
           },
           "response": []
@@ -2230,8 +2829,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/addresses/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["addresses", ":id"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addresses",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -2262,8 +2866,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/addresses/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["addresses", ":id"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addresses",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -2286,8 +2895,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/addresses/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["addresses", ":id"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addresses",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -2310,8 +2924,14 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/addresses/:id/default",
-              "host": ["{{baseUrl}}"],
-              "path": ["addresses", ":id", "default"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "addresses",
+                ":id",
+                "default"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -2342,8 +2962,14 @@
             },
             "url": {
               "raw": "{{baseUrl}}/orders/:id/shipping",
-              "host": ["{{baseUrl}}"],
-              "path": ["orders", ":id", "shipping"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders",
+                ":id",
+                "shipping"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -2366,8 +2992,14 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/orders/:id/tracking",
-              "host": ["{{baseUrl}}"],
-              "path": ["orders", ":id", "tracking"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders",
+                ":id",
+                "tracking"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -2390,16 +3022,45 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/properties?type=rental&city=Bogotá&page=1&limit=10",
-              "host": ["{{base_url}}"],
-              "path": ["properties"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "properties"
+              ],
               "query": [
-                {"key": "type", "value": "rental", "description": "rental | sale | management"},
-                {"key": "city", "value": "Bogotá"},
-                {"key": "minPrice", "value": "", "disabled": true},
-                {"key": "maxPrice", "value": "", "disabled": true},
-                {"key": "bedrooms", "value": "", "disabled": true},
-                {"key": "page", "value": "1"},
-                {"key": "limit", "value": "10"}
+                {
+                  "key": "type",
+                  "value": "rental",
+                  "description": "rental | sale | management"
+                },
+                {
+                  "key": "city",
+                  "value": "Bogotá"
+                },
+                {
+                  "key": "minPrice",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "maxPrice",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "bedrooms",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
               ]
             },
             "description": "List active properties with optional filters / Listar propiedades con filtros opcionales"
@@ -2412,8 +3073,13 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/properties/{{property_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["properties", "{{property_id}}"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "properties",
+                "{{property_id}}"
+              ]
             },
             "description": "Get property detail by ID / Detalle de propiedad por ID"
           }
@@ -2425,11 +3091,23 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/properties/{{property_id}}/availability?startDate=2026-05-01&endDate=2026-05-31",
-              "host": ["{{base_url}}"],
-              "path": ["properties", "{{property_id}}", "availability"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "properties",
+                "{{property_id}}",
+                "availability"
+              ],
               "query": [
-                {"key": "startDate", "value": "2026-05-01"},
-                {"key": "endDate", "value": "2026-05-31"}
+                {
+                  "key": "startDate",
+                  "value": "2026-05-01"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2026-05-31"
+                }
               ]
             }
           }
@@ -2439,8 +3117,14 @@
           "request": {
             "method": "POST",
             "header": [
-              {"key": "Content-Type", "value": "application/json"},
-              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -2448,8 +3132,13 @@
             },
             "url": {
               "raw": "{{base_url}}/admin/properties",
-              "host": ["{{base_url}}"],
-              "path": ["admin", "properties"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "properties"
+              ]
             }
           }
         },
@@ -2458,8 +3147,14 @@
           "request": {
             "method": "PUT",
             "header": [
-              {"key": "Content-Type", "value": "application/json"},
-              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -2467,8 +3162,14 @@
             },
             "url": {
               "raw": "{{base_url}}/admin/properties/{{property_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["admin", "properties", "{{property_id}}"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "properties",
+                "{{property_id}}"
+              ]
             }
           }
         },
@@ -2477,12 +3178,21 @@
           "request": {
             "method": "DELETE",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
             ],
             "url": {
               "raw": "{{base_url}}/admin/properties/{{property_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["admin", "properties", "{{property_id}}"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "properties",
+                "{{property_id}}"
+              ]
             }
           }
         }
@@ -2498,16 +3208,46 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/tours?category=adventure&page=1&limit=10",
-              "host": ["{{base_url}}"],
-              "path": ["tours"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "tours"
+              ],
               "query": [
-                {"key": "category", "value": "adventure", "description": "adventure | cultural | beach | mountain | city | eco | luxury | family"},
-                {"key": "minDuration", "value": "", "disabled": true},
-                {"key": "maxDuration", "value": "", "disabled": true},
-                {"key": "minPrice", "value": "", "disabled": true},
-                {"key": "maxPrice", "value": "", "disabled": true},
-                {"key": "page", "value": "1"},
-                {"key": "limit", "value": "10"}
+                {
+                  "key": "category",
+                  "value": "adventure",
+                  "description": "adventure | cultural | beach | mountain | city | eco | luxury | family"
+                },
+                {
+                  "key": "minDuration",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "maxDuration",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "minPrice",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "maxPrice",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
               ]
             },
             "description": "List active tour packages / Listar paquetes turísticos activos"
@@ -2520,8 +3260,13 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/tours/{{tour_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["tours", "{{tour_id}}"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "tours",
+                "{{tour_id}}"
+              ]
             }
           }
         },
@@ -2532,11 +3277,23 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/tours/{{tour_id}}/availability?startDate=2026-05-01&endDate=2026-06-30",
-              "host": ["{{base_url}}"],
-              "path": ["tours", "{{tour_id}}", "availability"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "tours",
+                "{{tour_id}}",
+                "availability"
+              ],
               "query": [
-                {"key": "startDate", "value": "2026-05-01"},
-                {"key": "endDate", "value": "2026-06-30"}
+                {
+                  "key": "startDate",
+                  "value": "2026-05-01"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2026-06-30"
+                }
               ]
             }
           }
@@ -2546,8 +3303,14 @@
           "request": {
             "method": "POST",
             "header": [
-              {"key": "Content-Type", "value": "application/json"},
-              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -2555,8 +3318,13 @@
             },
             "url": {
               "raw": "{{base_url}}/admin/tours",
-              "host": ["{{base_url}}"],
-              "path": ["admin", "tours"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "tours"
+              ]
             }
           }
         },
@@ -2565,8 +3333,14 @@
           "request": {
             "method": "PUT",
             "header": [
-              {"key": "Content-Type", "value": "application/json"},
-              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -2574,8 +3348,14 @@
             },
             "url": {
               "raw": "{{base_url}}/admin/tours/{{tour_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["admin", "tours", "{{tour_id}}"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "tours",
+                "{{tour_id}}"
+              ]
             }
           }
         },
@@ -2584,12 +3364,21 @@
           "request": {
             "method": "DELETE",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
             ],
             "url": {
               "raw": "{{base_url}}/admin/tours/{{tour_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["admin", "tours", "{{tour_id}}"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "tours",
+                "{{tour_id}}"
+              ]
             }
           }
         }
@@ -2603,8 +3392,14 @@
           "request": {
             "method": "POST",
             "header": [
-              {"key": "Content-Type", "value": "application/json"},
-              {"key": "Authorization", "value": "Bearer {{token}}"}
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -2612,8 +3407,12 @@
             },
             "url": {
               "raw": "{{base_url}}/reservations",
-              "host": ["{{base_url}}"],
-              "path": ["reservations"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reservations"
+              ]
             },
             "description": "Create a property or tour reservation / Crear una reserva de propiedad o tour"
           }
@@ -2623,16 +3422,33 @@
           "request": {
             "method": "GET",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{token}}"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
             ],
             "url": {
               "raw": "{{base_url}}/reservations?status=pending&page=1&limit=10",
-              "host": ["{{base_url}}"],
-              "path": ["reservations"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reservations"
+              ],
               "query": [
-                {"key": "status", "value": "pending", "description": "pending | confirmed | cancelled | completed"},
-                {"key": "page", "value": "1"},
-                {"key": "limit", "value": "10"}
+                {
+                  "key": "status",
+                  "value": "pending",
+                  "description": "pending | confirmed | cancelled | completed"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
               ]
             }
           }
@@ -2642,12 +3458,20 @@
           "request": {
             "method": "GET",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{token}}"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
             ],
             "url": {
               "raw": "{{base_url}}/reservations/{{reservation_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["reservations", "{{reservation_id}}"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reservations",
+                "{{reservation_id}}"
+              ]
             }
           }
         },
@@ -2656,12 +3480,21 @@
           "request": {
             "method": "PATCH",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{token}}"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
             ],
             "url": {
               "raw": "{{base_url}}/reservations/{{reservation_id}}/cancel",
-              "host": ["{{base_url}}"],
-              "path": ["reservations", "{{reservation_id}}", "cancel"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reservations",
+                "{{reservation_id}}",
+                "cancel"
+              ]
             }
           }
         },
@@ -2670,15 +3503,29 @@
           "request": {
             "method": "GET",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
             ],
             "url": {
               "raw": "{{base_url}}/admin/reservations?page=1&limit=20",
-              "host": ["{{base_url}}"],
-              "path": ["admin", "reservations"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "reservations"
+              ],
               "query": [
-                {"key": "page", "value": "1"},
-                {"key": "limit", "value": "20"}
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
               ]
             }
           }
@@ -2688,8 +3535,14 @@
           "request": {
             "method": "PATCH",
             "header": [
-              {"key": "Content-Type", "value": "application/json"},
-              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -2697,10 +3550,114 @@
             },
             "url": {
               "raw": "{{base_url}}/admin/reservations/{{reservation_id}}/status",
-              "host": ["{{base_url}}"],
-              "path": ["admin", "reservations", "{{reservation_id}}", "status"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "reservations",
+                "{{reservation_id}}",
+                "status"
+              ]
             }
           }
+        }
+      ]
+    },
+    {
+      "name": "Nexo Bot",
+      "description": "Nexo Bot WhatsApp API endpoints — authenticated via X-Bot-Secret header / Endpoints para el bot de WhatsApp del Nexo Real, autenticados con cabecera X-Bot-Secret",
+      "item": [
+        {
+          "name": "Get Bot Properties",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Bot-Secret",
+                "value": "{{botSecret}}",
+                "type": "text",
+                "description": "Bot secret key / Clave secreta del bot"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/bot/properties?city=Buenos Aires&type=apartment&page=1&limit=5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "bot",
+                "properties"
+              ],
+              "query": [
+                {
+                  "key": "city",
+                  "value": "Buenos Aires",
+                  "description": "Filter by city / Filtrar por ciudad"
+                },
+                {
+                  "key": "type",
+                  "value": "apartment",
+                  "description": "Filter by type (apartment|house|commercial) / Filtrar por tipo"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number / Número de página"
+                },
+                {
+                  "key": "limit",
+                  "value": "5",
+                  "description": "Items per page (max 10) / Elementos por página (máx 10)"
+                }
+              ]
+            },
+            "description": "Get simplified property listings for Nexo Bot WhatsApp responses. Requires X-Bot-Secret header.\n\nObtiene propiedades simplificadas para respuestas del Nexo Bot de WhatsApp. Requiere cabecera X-Bot-Secret."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Bot Tour Packages",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Bot-Secret",
+                "value": "{{botSecret}}",
+                "type": "text",
+                "description": "Bot secret key / Clave secreta del bot"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/bot/tours?destination=Patagonia&page=1&limit=5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "bot",
+                "tours"
+              ],
+              "query": [
+                {
+                  "key": "destination",
+                  "value": "Patagonia",
+                  "description": "Filter by destination / Filtrar por destino"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number / Número de página"
+                },
+                {
+                  "key": "limit",
+                  "value": "5",
+                  "description": "Items per page (max 10) / Elementos por página (máx 10)"
+                }
+              ]
+            },
+            "description": "Get simplified tour package listings for Nexo Bot WhatsApp responses. Requires X-Bot-Secret header.\n\nObtiene paquetes turísticos simplificados para respuestas del Nexo Bot de WhatsApp. Requiere cabecera X-Bot-Secret."
+          },
+          "response": []
         }
       ]
     }

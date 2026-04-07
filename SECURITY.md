@@ -6,12 +6,11 @@ We currently support the following versions with security updates:
 
 | Version | Supported          |
 | ------- | ------------------ |
+| 2.2.x   | :white_check_mark: |
 | 2.1.x   | :white_check_mark: |
-| 2.0.x   | :white_check_mark: |
-| 1.10.x  | :white_check_mark: |
-| 1.6.x   | :white_check_mark: |
-| 1.5.x   | :x:                |
-| < 1.5   | :x:                |
+| 2.0.x   | :x:                |
+| 1.10.x  | :x:                |
+| < 1.10  | :x:                |
 
 ## Reporting a Vulnerability
 
@@ -199,5 +198,30 @@ Two critical type confusion vulnerabilities were identified and fixed in Sprint 
 | -------------- | ----------- | ------------------------ | ------------------------------------------------------------- |
 | Dependabot #37 | `file-type` | Moderate (infinite loop) | Forced `>=21.3.1` via `pnpm.overrides` in root `package.json` |
 
+---
+
+### Sprint 6 — CodeQL Fixes (v2.2.0)
+
+**CWE-843 Type Confusion — req.files normalization** (CodeQL #39, #40):
+
+Files fixed:
+
+- `backend/src/controllers/PropertyController.ts`
+- `backend/src/controllers/TourPackageController.ts`
+
+Fix applied:
+
+```typescript
+// Before (unsafe)
+const files = req.files as Express.Multer.File[];
+
+// After (safe — normalized)
+const files = Array.isArray(req.files) ? req.files : Object.values(req.files ?? {}).flat();
+```
+
+This prevents type confusion attacks where an attacker could manipulate the `files` parameter structure to bypass validation.
+
+---
+
 _Last updated: 2026-04-07_
-_Version: 2.1.0_
+_Version: 2.2.0_

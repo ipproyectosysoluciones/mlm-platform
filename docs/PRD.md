@@ -2,8 +2,8 @@
 
 ## Nexo Real — Plataforma SaaS de Servicios Inmobiliarios, Turismo y Afiliaciones
 
-**Version**: 2.1.0  
-**Status**: ✅ v2.1.0 Released  
+**Version**: 2.2.0  
+**Status**: ✅ v2.2.0 Released  
 **Last Updated**: 2026-04-07  
 **Document Owner**: Nexo Real Development Team  
 **Tagline**: _"Conectamos tu negocio con el mundo."_
@@ -33,7 +33,7 @@ Las agencias inmobiliarias, hoteles, hosterías y operadores turísticos en LATA
 3. **CRM integrado** — Gestión de leads, tareas, comunicaciones, y agendamiento
 4. **Integraciones n8n** — Google Calendar, Notion, notificación a agente humano
 
-> **Status**: v2.0.0 IN DEVELOPMENT (target: Mayo 2026)
+> **Status**: v2.2.0 RELEASED ✅
 
 ---
 
@@ -452,6 +452,14 @@ PATCH  /api/admin/vendors/:id/commission-rate
    ├── Tourism Frontend (tours listing + detail)
    ├── Reservation Wizard (multi-step booking flow)
    └── Security fixes (CodeQL CWE-843, Dependabot file-type)
+✅ SPRINT 6 (Completado): Admin Dashboard CRUD, Bot Flows, SEO Frontend — v2.2.0
+   ├── Admin Dashboard CRUD (AdminPropertiesPage, AdminToursPage, AdminReservationsPage)
+   ├── Nexo Bot Flows: propertiesFlow + toursFlow (ES/EN, BuilderBot, limit 5)
+   ├── SEO Frontend: react-helmet-async + JSON-LD + social proof badges
+   ├── network_balance: migración de binary_balance completada
+   ├── Build Hardening: producción sin .map, logs de tamaño
+   ├── i18n cleanup: claves huérfanas eliminadas
+   └── CodeQL #39 #40: req.files cast normalizado (CWE-843)
 ```
 
 ## Fase 2 — Multi-Tenant (1–2 meses post v2.0.0)
@@ -532,9 +540,9 @@ _Nexo Real — "Conectamos tu negocio con el mundo."_
 
 ## Sprint Status
 
-| Sprint     | Versión | Descripción                                                | Estado        | Fecha      |
-| ---------- | ------- | ---------------------------------------------------------- | ------------- | ---------- |
-| Sprint 1-3 | v1.11.0 | Auth, MLM, CRM, E-commerce, Security, Marketplace          | ✅ Completado | 2026-04-04 |
-| Sprint 4   | v2.0.0  | Nexo Bot WhatsApp, n8n Automation, Gamificación            | ✅ Completado | 2026-04-06 |
-| Sprint 5   | v2.1.0  | Real Estate Frontend, Tourism Frontend, Reservation Wizard | ✅ Completado | 2026-04-07 |
-| Sprint 6   | v2.2.0  | (por definir)                                              | 🔲 Pendiente  | -          |
+| Sprint     | Versión | Descripción                                                                                                        | Estado        | Fecha      |
+| ---------- | ------- | ------------------------------------------------------------------------------------------------------------------ | ------------- | ---------- |
+| Sprint 1-3 | v1.11.0 | Auth, MLM, CRM, E-commerce, Security, Marketplace                                                                  | ✅ Completado | 2026-04-04 |
+| Sprint 4   | v2.0.0  | Nexo Bot WhatsApp, n8n Automation, Gamificación                                                                    | ✅ Completado | 2026-04-06 |
+| Sprint 5   | v2.1.0  | Real Estate Frontend, Tourism Frontend, Reservation Wizard                                                         | ✅ Completado | 2026-04-07 |
+| Sprint 6   | v2.2.0  | Admin Dashboard CRUD, Nexo Bot Flows (properties+tours), SEO Frontend, Build Hardening, i18n cleanup, CodeQL fixes | ✅ Completado | 2026-04-07 |

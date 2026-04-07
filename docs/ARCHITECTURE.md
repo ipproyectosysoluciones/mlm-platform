@@ -6,7 +6,7 @@
 
 La plataforma MLM está construida con una arquitectura de API RESTful, separando claramente el backend (Node.js + Express + TypeScript + Sequelize + PostgreSQL) del frontend (React + Vite + TypeScript + Tailwind CSS). A partir de la v2.0.0 se incorpora un canal de atención por WhatsApp (Nexo Bot) orquestado por n8n para automatizaciones externas.
 
-**Estado del Proyecto**: v2.1.0 — Sprint 5 Completado ✅
+**Estado del Proyecto**: v2.2.0 — Sprint 6 Completado ✅
 
 **Características Implementadas**:
 
@@ -37,6 +37,11 @@ La plataforma MLM está construida con una arquitectura de API RESTful, separand
 - **Tourism Frontend**: ToursPage, TourDetailPage, itinerario, disponibilidad
 - **Reservation Wizard**: wizard 3 pasos + MisReservasPage + reservationStore (Zustand 5)
 - **Security Sprint 5**: CodeQL CWE-843 fix en PropertyController + TourPackageController, file-type override
+- **Admin Dashboard CRUD**: AdminPropertiesPage, AdminToursPage, AdminReservationsPage con paginación, filtros y modales
+- **Bot Flows (Sprint 6)**: propertiesFlow + toursFlow — responde consultas de propiedades y tours por WhatsApp (ES/EN)
+- **SEO Frontend**: react-helmet-async, meta tags dinámicos, JSON-LD RealEstateListing + TouristAttraction, social proof badges
+- **network_balance**: migración de binary_balance completada en DB + modelos + frontend
+- **Build Hardening Sprint 6**: producción sin archivos .map, logs de tamaño post-build
 
 ```map
 ┌─────────────────────────────────────────────────────────────┐
@@ -97,7 +102,8 @@ backend/src/
 │   ├── VendorController.ts          # Sprint 3
 │   ├── AdminVendorController.ts     # Sprint 3
 │   ├── ContractController.ts        # Sprint 3
-│   └── AdminContractController.ts   # Sprint 3
+│   ├── AdminContractController.ts   # Sprint 3
+│   └── BotController.ts             # Sprint 6 — bot endpoints
 ├── services/           # Lógica de negocio / Business Logic
 │   ├── AuthService.ts
 │   ├── UserService.ts
@@ -129,7 +135,7 @@ backend/src/
 
 The MLM platform is built with a RESTful API architecture, clearly separating the backend (Node.js + Express + TypeScript + Sequelize + PostgreSQL) from the frontend (React + Vite + TypeScript + Tailwind CSS).
 
-**Project Status**: v2.1.0 — Sprint 5 Completed ✅
+**Project Status**: v2.2.0 — Sprint 6 Completed ✅
 
 **Implemented Features**:
 
@@ -160,6 +166,11 @@ The MLM platform is built with a RESTful API architecture, clearly separating th
 - **Tourism Frontend**: ToursPage, TourDetailPage, itinerary, availability
 - **Reservation Wizard**: 3-step wizard + MisReservasPage + reservationStore (Zustand 5)
 - **Security Sprint 5**: CodeQL CWE-843 fix in PropertyController + TourPackageController, file-type override
+- **Admin Dashboard CRUD**: AdminPropertiesPage, AdminToursPage, AdminReservationsPage with pagination, filters and modals
+- **Bot Flows (Sprint 6)**: propertiesFlow + toursFlow — answers property and tour queries via WhatsApp (ES/EN)
+- **SEO Frontend**: react-helmet-async, dynamic meta tags, JSON-LD RealEstateListing + TouristAttraction, social proof badges
+- **network_balance**: migration from binary_balance completed in DB + models + frontend
+- **Build Hardening Sprint 6**: production without .map files, post-build size logs
 
 ### Layer Structure
 
@@ -182,7 +193,8 @@ backend/src/
 │   ├── VendorController.ts          # Sprint 3
 │   ├── AdminVendorController.ts     # Sprint 3
 │   ├── ContractController.ts        # Sprint 3
-│   └── AdminContractController.ts   # Sprint 3
+│   ├── AdminContractController.ts   # Sprint 3
+│   └── BotController.ts             # Sprint 6 — bot endpoints
 ├── services/            # Business Logic
 │   ├── AuthService.ts
 │   ├── UserService.ts

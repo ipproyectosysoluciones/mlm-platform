@@ -7,7 +7,7 @@
 
 Conectamos tu negocio con el mundo. Plataforma de afiliaciones binarias con comisiones por niveles y visualización de árbol genealógico.
 
-**Versión actual: v2.1.0** — Sprint 5 completado (2026-04-07)
+**Versión actual: v2.2.0** — Sprint 6 completado (2026-04-07)
 
 ## 🚀 Características / Features
 
@@ -31,9 +31,13 @@ Conectamos tu negocio con el mundo. Plataforma de afiliaciones binarias con comi
 - **Marketplace Multi-vendor** — Vendors con dashboard propio, split de comisiones 3-way (plataforma/vendor/afiliado)
 - **Delivery Integration** — Shipping addresses, delivery providers, shipment tracking con webhooks
 - **Affiliate Contracts MVP** — Templates versionados, aceptación con IP/userAgent/hash, admin CRUD
-- **Real Estate Module** — Listado y detalle de propiedades (alquiler, venta, gestión)
-- **Tourism Module** — Paquetes turísticos con itinerarios y disponibilidad
-- **Reservation Wizard** — Flujo de reserva de 3 pasos con wizard UI
+  - **Real Estate Module** — Listado y detalle de propiedades (alquiler, venta, gestión)
+  - **Tourism Module** — Paquetes turísticos con itinerarios y disponibilidad
+  - **Reservation Wizard** — Flujo de reserva de 3 pasos con wizard UI
+  - **Admin Dashboard CRUD** — Gestión completa de Propiedades, Tours y Reservas desde el panel de administración
+  - **Nexo Bot** — Chatbot con flows de propiedades y tours en ES/EN (responde hasta 5 resultados por consulta)
+  - **SEO Avanzado** — Meta tags dinámicos + JSON-LD schema markup (RealEstateListing / TouristAttraction) + social proof badges
+  - **network_balance** — Campo migrado desde `binary_balance` en el modelo Achievement
 
 ## 📊 Estado de Implementación / Implementation Status
 
@@ -60,6 +64,7 @@ Conectamos tu negocio con el mundo. Plataforma de afiliaciones binarias con comi
 | sprint2-v1.10.0                   | Gift Cards, Abandoned Cart, Email Automation         | ✅ Completo  | 2026-04-04 |
 | sprint3-v1.11.0                   | Security, Products, Marketplace, Delivery, Contracts | ✅ Completo  | 2026-04-04 |
 | sprint5-v2.1.0                    | Real Estate & Tourism frontend + security fixes      | ✅ Completo  | 2026-04-07 |
+| sprint6-v2.2.0                    | Admin CRUD, Nexo Bot flows, SEO, network_balance     | ✅ Completo  | 2026-04-07 |
 
 ### 🚧 Cambios en Progreso
 
