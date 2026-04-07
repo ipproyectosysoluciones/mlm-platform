@@ -385,7 +385,10 @@ export const uploadTourImages = async (
       return;
     }
 
-    const currentImages = (tourPackage.images as string[]) ?? [];
+    const rawImages = tourPackage.images;
+    const currentImages: string[] = Array.isArray(rawImages)
+      ? rawImages.filter((img): img is string => typeof img === 'string')
+      : [];
 
     if (currentImages.length + files.length > 10) {
       res.status(400).json({ message: `Max 10 images per tour. Current: ${currentImages.length}` });
