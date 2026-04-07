@@ -285,7 +285,7 @@ export const adminService = {
 
 /**
  * @namespace treeService
- * @description Binary tree API methods / Métodos de API del árbol binario
+ * @description Unilevel network API methods / Métodos de API de la red unilevel
  */
 export const treeService = {
   /**
