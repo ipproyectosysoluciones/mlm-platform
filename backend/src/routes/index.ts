@@ -26,6 +26,8 @@ import propertyRoutes from './property.routes';
 import adminPropertyRoutes from './admin-property.routes';
 import tourRoutes from './tour.routes';
 import adminTourRoutes from './admin-tour.routes';
+import reservationRouter from './reservation.routes';
+import adminReservationRouter from './admin-reservation.routes';
 import contractRoutes from './contract.routes';
 import adminContractRoutes from './admin-contract.routes';
 import addressRoutes from './address.routes';
@@ -77,6 +79,12 @@ router.use('/tours', tourRoutes);
 
 // Admin tour routes
 router.use('/admin/tours', adminTourRoutes);
+
+// Reservation routes (public)
+router.use('/reservations', reservationRouter);
+
+// Admin reservation routes
+router.use('/admin/reservations', adminReservationRouter);
 
 // Contract routes (user)
 router.use('/contracts', contractRoutes);

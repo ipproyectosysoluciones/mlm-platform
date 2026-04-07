@@ -42,6 +42,7 @@ import { WebhookEvent } from './WebhookEvent';
 import { Property } from './Property';
 import { TourPackage } from './TourPackage';
 import { TourAvailability } from './TourAvailability';
+import { Reservation } from './Reservation';
 
 // User relationships
 User.hasMany(User, { as: 'children', foreignKey: 'sponsorId', sourceKey: 'id' });
@@ -450,6 +451,30 @@ TourAvailability.belongsTo(TourPackage, {
   targetKey: 'id',
 });
 
+// ============================================
+// NEXO REAL — Reservations (#61)
+// ============================================
+
+User.hasMany(Reservation, { as: 'reservations', foreignKey: 'userId', sourceKey: 'id' });
+Reservation.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
+
+Vendor.hasMany(Reservation, { as: 'reservations', foreignKey: 'vendorId', sourceKey: 'id' });
+Reservation.belongsTo(Vendor, { as: 'vendor', foreignKey: 'vendorId', targetKey: 'id' });
+
+Property.hasMany(Reservation, { as: 'reservations', foreignKey: 'propertyId', sourceKey: 'id' });
+Reservation.belongsTo(Property, { as: 'property', foreignKey: 'propertyId', targetKey: 'id' });
+
+TourPackage.hasMany(Reservation, {
+  as: 'reservations',
+  foreignKey: 'tourPackageId',
+  sourceKey: 'id',
+});
+Reservation.belongsTo(TourPackage, {
+  as: 'tourPackage',
+  foreignKey: 'tourPackageId',
+  targetKey: 'id',
+});
+
 export {
   sequelize,
   User,
@@ -496,6 +521,7 @@ export {
   Property,
   TourPackage,
   TourAvailability,
+  Reservation,
 };
 
 export function initModels(): void {
