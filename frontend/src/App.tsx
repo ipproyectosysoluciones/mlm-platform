@@ -5,7 +5,6 @@ import { AuthProvider } from './context/AuthContext';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
-import DashboardStreaming from './pages/DashboardStreaming';
 import TreeView from './pages/TreeView';
 import Profile from './pages/Profile';
 import TwoFactor from './pages/TwoFactor';
@@ -102,14 +101,6 @@ function App() {
             element={
               <ProtectedRoute>
                 <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/dashboard/streaming"
-            element={
-              <ProtectedRoute>
-                <DashboardStreaming />
               </ProtectedRoute>
             }
           />
