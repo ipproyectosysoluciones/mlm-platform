@@ -183,6 +183,60 @@ export async function getRecentCommissions(req: Request, res: Response): Promise
 // ── GET /api/bot/properties ───────────────────────────────────────────────────
 
 /**
+ * @swagger
+ * /bot/properties:
+ *   get:
+ *     summary: Search available properties (Bot API)
+ *     description: |
+ *       Returns a simplified list of available properties optimized for WhatsApp bot prompts.
+ *       Requires `X-Bot-Secret` header with the value of `BOT_SECRET` env variable.
+ *
+ *       Retorna una lista simplificada de propiedades disponibles optimizada para prompts del bot de WhatsApp.
+ *       Requiere el header `X-Bot-Secret` con el valor de la variable de entorno `BOT_SECRET`.
+ *     tags: [bot]
+ *     security:
+ *       - botSecret: []
+ *     parameters:
+ *       - in: query
+ *         name: city
+ *         schema: { type: string }
+ *         description: Filter by city / Filtrar por ciudad
+ *       - in: query
+ *         name: type
+ *         schema:
+ *           type: string
+ *           enum: [rental, sale, management]
+ *         description: Filter by property type / Filtrar por tipo de propiedad
+ *       - in: query
+ *         name: maxPrice
+ *         schema: { type: number }
+ *         description: Maximum price filter / Filtro de precio máximo
+ *       - in: query
+ *         name: limit
+ *         schema: { type: integer, default: 5, maximum: 10 }
+ *         description: Max results (default 5, cap 10) / Máximo resultados (default 5, cap 10)
+ *     responses:
+ *       200:
+ *         description: List of available properties / Lista de propiedades disponibles
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 properties:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/BotProperty'
+ *                 total:
+ *                   type: integer
+ *                   description: Number of results returned / Número de resultados retornados
+ *       401:
+ *         description: Missing or invalid BOT_SECRET / BOT_SECRET ausente o inválido
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+ */
+
+/**
  * Search available properties and return a simplified format optimized for bot prompts.
  * Busca propiedades disponibles y retorna un formato simplificado para prompts del bot.
  *
@@ -237,6 +291,58 @@ export const getBotProperties = async (
 };
 
 // ── GET /api/bot/tours ────────────────────────────────────────────────────────
+
+/**
+ * @swagger
+ * /bot/tours:
+ *   get:
+ *     summary: Search active tour packages (Bot API)
+ *     description: |
+ *       Returns a simplified list of active tour packages optimized for WhatsApp bot prompts.
+ *       Requires `X-Bot-Secret` header with the value of `BOT_SECRET` env variable.
+ *
+ *       Retorna una lista simplificada de paquetes turísticos activos optimizada para prompts del bot de WhatsApp.
+ *       Requiere el header `X-Bot-Secret` con el valor de la variable de entorno `BOT_SECRET`.
+ *     tags: [bot]
+ *     security:
+ *       - botSecret: []
+ *     parameters:
+ *       - in: query
+ *         name: destination
+ *         schema: { type: string }
+ *         description: Filter by destination / Filtrar por destino
+ *       - in: query
+ *         name: type
+ *         schema: { type: string }
+ *         description: Filter by tour type / Filtrar por tipo de tour
+ *       - in: query
+ *         name: maxPrice
+ *         schema: { type: number }
+ *         description: Maximum price filter / Filtro de precio máximo
+ *       - in: query
+ *         name: limit
+ *         schema: { type: integer, default: 5, maximum: 10 }
+ *         description: Max results (default 5, cap 10) / Máximo resultados (default 5, cap 10)
+ *     responses:
+ *       200:
+ *         description: List of active tour packages / Lista de paquetes turísticos activos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 tours:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/BotTour'
+ *                 total:
+ *                   type: integer
+ *                   description: Number of results returned / Número de resultados retornados
+ *       401:
+ *         description: Missing or invalid BOT_SECRET / BOT_SECRET ausente o inválido
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+ */
 
 /**
  * Search active tour packages and return a simplified format optimized for bot prompts.
