@@ -1,7 +1,19 @@
+/**
+ * @fileoverview AI Service — OpenAI chat integration with live knowledge base
+ * @description Manages OpenAI conversation sessions, builds system prompts from
+ *              static KB files, and injects real-time property/tour data from
+ *              the backend for richer bot responses.
+ *              Gestiona sesiones de conversación de OpenAI, construye prompts del
+ *              sistema desde archivos KB estáticos e inyecta datos en tiempo real
+ *              de propiedades/tours del backend para respuestas más ricas.
+ * @module services/ai.service
+ */
+
 import OpenAI from 'openai';
 import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
+import { mlmApi, BotProperty, BotTour } from './mlm-api.service.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -44,7 +56,62 @@ function loadFile(filename: string): string {
   }
 }
 
-function buildSystemPrompt(agent: AgentName, language: Language): string {
+/**
+ * Fetch live property/tour context for the bot prompt.
+ * Obtiene contexto en tiempo real de propiedades y tours para el prompt del bot.
+ *
+ * @returns Formatted markdown string with live data, or empty string on failure.
+ *          String markdown formateado con datos en vivo, o string vacío si falla.
+ */
+async function fetchLiveContext(): Promise<string> {
+  try {
+    const [properties, tours] = await Promise.all([
+      mlmApi.searchProperties({ limit: 5 }),
+      mlmApi.searchTours({ limit: 5 }),
+    ]);
+
+    let context = '';
+
+    if (properties.length > 0) {
+      context += '\n\n## Propiedades disponibles (datos en tiempo real)\n';
+      context += properties
+        .map(
+          (p: BotProperty) =>
+            `- ${p.title} | ${p.type} | ${p.city} | ${p.price} ${p.currency}` +
+            (p.bedrooms ? ` | ${p.bedrooms} hab` : '') +
+            (p.areaM2 ? ` | ${p.areaM2}m²` : '')
+        )
+        .join('\n');
+    }
+
+    if (tours.length > 0) {
+      context += '\n\n## Tours disponibles (datos en tiempo real)\n';
+      context += tours
+        .map(
+          (t: BotTour) =>
+            `- ${t.title} | ${t.destination} | ${t.durationDays} días | ${t.price} ${t.currency}`
+        )
+        .join('\n');
+    }
+
+    return context;
+  } catch {
+    // Non-blocking — return empty string if backend is unreachable
+    // No bloqueante — retorna string vacío si el backend no está disponible
+    return '';
+  }
+}
+
+/**
+ * Build the system prompt by combining static KB files with optional live context.
+ * Construye el prompt del sistema combinando archivos KB estáticos con contexto en vivo opcional.
+ *
+ * @param agent      - Active agent name ('sophia' | 'max')
+ * @param language   - Conversation language ('es' | 'en')
+ * @param liveContext - Optional real-time property/tour data / Contexto en tiempo real opcional
+ * @returns Composed system prompt string / String del prompt del sistema compuesto
+ */
+function buildSystemPrompt(agent: AgentName, language: Language, liveContext = ''): string {
   const basePrompt = loadFile('base-system-prompt.md');
   const knowledgeBase = loadFile('knowledge-base.md');
   const agentPrompt = loadFile(`${agent}.prompt.md`);
@@ -58,7 +125,7 @@ function buildSystemPrompt(agent: AgentName, language: Language): string {
       ? '\n\n## ACTIVE LANGUAGE\nThe user has selected ENGLISH. Respond ONLY in English for this entire conversation.'
       : '\n\n## IDIOMA ACTIVO\nEl usuario seleccionó ESPAÑOL. Respondé ÚNICAMENTE en español durante toda esta conversación.';
 
-  return `${promptWithKB}\n\n---\n\n## AGENT PERSONALITY\n\n${agentPrompt}${langInstruction}`;
+  return `${promptWithKB}\n\n---\n\n## AGENT PERSONALITY\n\n${agentPrompt}${langInstruction}${liveContext}`;
 }
 
 // ─── Gender Detection ─────────────────────────────────────────────────────────
@@ -215,8 +282,12 @@ export async function chat(
 ): Promise<AIResponse> {
   const client = getClient();
 
-  // Build system prompt with KB + agent personality + language
-  const systemPrompt = buildSystemPrompt(agent, language);
+  // Fetch real-time property/tour context (non-blocking — empty string on failure)
+  // Obtiene contexto de propiedades/tours en tiempo real (no bloqueante — string vacío si falla)
+  const liveContext = await fetchLiveContext();
+
+  // Build system prompt with KB + agent personality + language + live context
+  const systemPrompt = buildSystemPrompt(agent, language, liveContext);
 
   // Append user message to history
   appendToHistory(phone, { role: 'user', content: userMsg });
