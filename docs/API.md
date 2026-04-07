@@ -1783,3 +1783,40 @@ Authorization: Bearer <token> (admin only)
   }
 }
 ```
+
+---
+
+## Sprint 5 — Real Estate & Tourism Endpoints (v2.1.0)
+
+### Properties
+
+| Método | Ruta                               | Auth  | Descripción                                                                                  |
+| ------ | ---------------------------------- | ----- | -------------------------------------------------------------------------------------------- |
+| GET    | `/api/properties`                  | —     | Listado paginado. Query: `type`, `city`, `minPrice`, `maxPrice`, `bedrooms`, `page`, `limit` |
+| GET    | `/api/properties/:id`              | —     | Detalle de propiedad                                                                         |
+| GET    | `/api/properties/:id/availability` | —     | Disponibilidad. Query: `startDate`, `endDate`                                                |
+| POST   | `/api/admin/properties`            | Admin | Crear propiedad                                                                              |
+| PUT    | `/api/admin/properties/:id`        | Admin | Actualizar propiedad                                                                         |
+| DELETE | `/api/admin/properties/:id`        | Admin | Soft-delete propiedad                                                                        |
+
+### Tour Packages
+
+| Método | Ruta                          | Auth  | Descripción                                                                                                        |
+| ------ | ----------------------------- | ----- | ------------------------------------------------------------------------------------------------------------------ |
+| GET    | `/api/tours`                  | —     | Listado paginado. Query: `type`, `category`, `minDuration`, `maxDuration`, `minPrice`, `maxPrice`, `page`, `limit` |
+| GET    | `/api/tours/:id`              | —     | Detalle del tour                                                                                                   |
+| GET    | `/api/tours/:id/availability` | —     | Disponibilidad de fechas                                                                                           |
+| POST   | `/api/admin/tours`            | Admin | Crear tour                                                                                                         |
+| PUT    | `/api/admin/tours/:id`        | Admin | Actualizar tour                                                                                                    |
+| DELETE | `/api/admin/tours/:id`        | Admin | Soft-delete tour                                                                                                   |
+
+### Reservations
+
+| Método | Ruta                                 | Auth  | Descripción                             |
+| ------ | ------------------------------------ | ----- | --------------------------------------- |
+| POST   | `/api/reservations`                  | JWT   | Crear reserva (property o tour)         |
+| GET    | `/api/reservations`                  | JWT   | Listar reservas del usuario autenticado |
+| GET    | `/api/reservations/:id`              | JWT   | Detalle de reserva                      |
+| PATCH  | `/api/reservations/:id/cancel`       | JWT   | Cancelar reserva                        |
+| GET    | `/api/admin/reservations`            | Admin | Listar todas las reservas               |
+| PATCH  | `/api/admin/reservations/:id/status` | Admin | Cambiar status de reserva               |

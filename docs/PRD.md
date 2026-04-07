@@ -2,9 +2,9 @@
 
 ## Nexo Real — Plataforma SaaS de Servicios Inmobiliarios, Turismo y Afiliaciones
 
-**Version**: 2.0.0  
-**Status**: 🚀 IN DEVELOPMENT  
-**Last Updated**: 2026-04-05  
+**Version**: 2.1.0  
+**Status**: ✅ v2.1.0 Released  
+**Last Updated**: 2026-04-07  
 **Document Owner**: Nexo Real Development Team  
 **Tagline**: _"Conectamos tu negocio con el mundo."_
 
@@ -439,7 +439,7 @@ PATCH  /api/admin/vendors/:id/commission-rate
 ✅ SPRINT 1 (Completado): Monetización — v1.9.0
 ✅ SPRINT 2 (Completado): E-Commerce + Automation — v1.10.0
 ✅ SPRINT 3 (Completado): Multi-vendor + Delivery + Security — v1.11.0
-🟢 SPRINT 4 (En curso): QA + Release + Nexo Bot MVP — v2.0.0
+✅ SPRINT 4 (Completado): QA + Release + Nexo Bot MVP — v2.0.0
    ├── Test Coverage 90%+
    ├── Nexo Bot: OpenAI integration + Sophia/Max
    ├── Nexo Bot: Language detection ES/EN
@@ -447,6 +447,11 @@ PATCH  /api/admin/vendors/:id/commission-rate
    ├── n8n: Google Calendar integration
    ├── n8n: Notion CRM integration
    └── First bot startup + WhatsApp pairing
+✅ SPRINT 5 (Completado): Real Estate Frontend, Tourism Frontend, Reservation Wizard — v2.1.0
+   ├── Real Estate Frontend (properties listing + detail)
+   ├── Tourism Frontend (tours listing + detail)
+   ├── Reservation Wizard (multi-step booking flow)
+   └── Security fixes (CodeQL CWE-843, Dependabot file-type)
 ```
 
 ## Fase 2 — Multi-Tenant (1–2 meses post v2.0.0)
@@ -522,3 +527,14 @@ PATCH  /api/admin/vendors/:id/commission-rate
 
 _This PRD is a living document. Update as the project evolves._  
 _Nexo Real — "Conectamos tu negocio con el mundo."_
+
+---
+
+## Sprint Status
+
+| Sprint     | Versión | Descripción                                                | Estado        | Fecha      |
+| ---------- | ------- | ---------------------------------------------------------- | ------------- | ---------- |
+| Sprint 1-3 | v1.11.0 | Auth, MLM, CRM, E-commerce, Security, Marketplace          | ✅ Completado | 2026-04-04 |
+| Sprint 4   | v2.0.0  | Nexo Bot WhatsApp, n8n Automation, Gamificación            | ✅ Completado | 2026-04-06 |
+| Sprint 5   | v2.1.0  | Real Estate Frontend, Tourism Frontend, Reservation Wizard | ✅ Completado | 2026-04-07 |
+| Sprint 6   | v2.2.0  | (por definir)                                              | 🔲 Pendiente  | -          |

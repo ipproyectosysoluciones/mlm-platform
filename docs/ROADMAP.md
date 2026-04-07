@@ -3,41 +3,45 @@
 > Hoja de ruta completa para la plataforma **Nexo Real** — Servicios Inmobiliarios, Turismo/Hospitalidad y Afiliaciones.  
 > _"Conectamos tu negocio con el mundo."_
 
-**Versión actual**: v1.11.0 — Sprint 3 Completado ✅  
-**Última actualización**: 2026-04-05  
+**Versión actual**: v2.1.0 — Sprint 5 Completado ✅  
+**Última actualización**: 2026-04-07  
 **Estado**: Activo - Desarrollo intensivo  
-**Meta**: v2.0.0 en ~1 mes
+**Meta**: v3.0.0 — expansión México + Argentina
 
 ---
 
 ## 📊 Estado Actual del Proyecto
 
-### ✅ Lo que YA está implementado (v1.11.0)
+### ✅ Lo que YA está implementado (v2.1.0)
 
-| Área               | Funcionalidad                             | Estado |
-| ------------------ | ----------------------------------------- | ------ |
-| **Auth**           | JWT, 2FA, Roles                           | ✅     |
-| **MLM**            | Binario con Closure Table                 | ✅     |
-| **Comisiones**     | 5 niveles configurables                   | ✅     |
-| **E-commerce**     | Productos streaming (MVP ejemplo)         | ✅     |
-| **Wallet**         | Balance, transacciones, retiros           | ✅     |
-| **CRM**            | Leads, Tasks, Communications              | ✅     |
-| **Notificaciones** | Email (Brevo), Push (Web)                 | ✅     |
-| **PWA**            | Offline, instalable, shortcuts            | ✅     |
-| **Landing Pages**  | Productos con SEO                         | ✅     |
-| **Dashboard**      | Stats, tree view, perfil                  | ✅     |
-| **i18n**           | Español + Inglés                          | ✅     |
-| **Pagos**          | PayPal + MercadoPago                      | ✅     |
-| **Gamificación**   | Leaderboards + Achievements               | ✅     |
-| **Gift Cards**     | CRUD, redeem, balance, admin              | ✅     |
-| **Cart Recovery**  | Persistence, tokens, emails               | ✅     |
-| **Email Auto**     | Templates, campaigns, scheduling          | ✅     |
-| **Security**       | SSRF, XSS, pino-http, Docker hardening    | ✅     |
-| **Products**       | Generic products + inventory + categories | ✅     |
-| **Marketplace**    | Multi-vendor, commission split 3-way      | ✅     |
-| **Delivery**       | Shipping addresses, providers, tracking   | ✅     |
-| **Contracts**      | Affiliate contracts MVP con hash/IP       | ✅     |
-| **Tests**          | 307 tests (integration + E2E)             | ✅     |
+| Área                     | Funcionalidad                                         | Estado |
+| ------------------------ | ----------------------------------------------------- | ------ |
+| **Auth**                 | JWT, 2FA, Roles                                       | ✅     |
+| **MLM**                  | Binario con Closure Table                             | ✅     |
+| **Comisiones**           | 5 niveles configurables                               | ✅     |
+| **E-commerce**           | Productos streaming (MVP ejemplo)                     | ✅     |
+| **Wallet**               | Balance, transacciones, retiros                       | ✅     |
+| **CRM**                  | Leads, Tasks, Communications                          | ✅     |
+| **Notificaciones**       | Email (Brevo), Push (Web)                             | ✅     |
+| **PWA**                  | Offline, instalable, shortcuts                        | ✅     |
+| **Landing Pages**        | Productos con SEO                                     | ✅     |
+| **Dashboard**            | Stats, tree view, perfil                              | ✅     |
+| **i18n**                 | Español + Inglés                                      | ✅     |
+| **Pagos**                | PayPal + MercadoPago                                  | ✅     |
+| **Gamificación**         | Leaderboards + Achievements                           | ✅     |
+| **Gift Cards**           | CRUD, redeem, balance, admin                          | ✅     |
+| **Cart Recovery**        | Persistence, tokens, emails                           | ✅     |
+| **Email Auto**           | Templates, campaigns, scheduling                      | ✅     |
+| **Security**             | SSRF, XSS, pino-http, Docker hardening                | ✅     |
+| **Products**             | Generic products + inventory + categories             | ✅     |
+| **Marketplace**          | Multi-vendor, commission split 3-way                  | ✅     |
+| **Delivery**             | Shipping addresses, providers, tracking               | ✅     |
+| **Contracts**            | Affiliate contracts MVP con hash/IP                   | ✅     |
+| **Tests**                | 307 tests (integration + E2E)                         | ✅     |
+| **Real Estate Frontend** | PropertiesPage, PropertyDetailPage, filtros, galería  | ✅     |
+| **Tourism Frontend**     | ToursPage, TourDetailPage, itinerario, disponibilidad | ✅     |
+| **Reservation Wizard**   | Wizard 3 pasos + MisReservasPage + reservationStore   | ✅     |
+| **Tests**                | 307+ tests (integration + E2E + Vitest frontend)      | ✅     |
 
 ---
 
@@ -442,6 +446,6 @@ sprint:4             - Sprint 4
 
 ---
 
-**Última actualización**: 2026-04-05  
+**Última actualización**: 2026-04-07  
 **Proyecto**: https://github.com/users/ipproyectosysoluciones/projects/4  
 **Producto**: Nexo Real — _"Conectamos tu negocio con el mundo."_

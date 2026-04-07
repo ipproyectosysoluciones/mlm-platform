@@ -6,7 +6,8 @@ We currently support the following versions with security updates:
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 1.11.x  | :white_check_mark: |
+| 2.1.x   | :white_check_mark: |
+| 2.0.x   | :white_check_mark: |
 | 1.10.x  | :white_check_mark: |
 | 1.6.x   | :white_check_mark: |
 | 1.5.x   | :x:                |
@@ -181,5 +182,22 @@ When contributing to this project:
 
 ---
 
-_Last updated: 2026-04-04_
-_Version: 1.11.0_
+### Sprint 5 Security Fixes (v2.1.0)
+
+#### CodeQL Critical — Type Confusion (CWE-843)
+
+Two critical type confusion vulnerabilities were identified and fixed in Sprint 5:
+
+| Alert      | File                       | Issue                                                                          | Fix                                                                                                 |
+| ---------- | -------------------------- | ------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- |
+| CodeQL #39 | `TourPackageController.ts` | `(property.images as string[]) ?? []` — unsafe cast without runtime validation | `Array.isArray(rawImages) ? rawImages.filter((img): img is string => typeof img === 'string') : []` |
+| CodeQL #40 | `PropertyController.ts`    | `(property.images as string[]) ?? []` — unsafe cast without runtime validation | `Array.isArray(rawImages) ? rawImages.filter((img): img is string => typeof img === 'string') : []` |
+
+#### Dependabot Moderate — file-type DoS (CVE)
+
+| Alert          | Package     | Severity                 | Fix                                                           |
+| -------------- | ----------- | ------------------------ | ------------------------------------------------------------- |
+| Dependabot #37 | `file-type` | Moderate (infinite loop) | Forced `>=21.3.1` via `pnpm.overrides` in root `package.json` |
+
+_Last updated: 2026-04-07_
+_Version: 2.1.0_
