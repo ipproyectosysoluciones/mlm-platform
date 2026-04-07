@@ -40,6 +40,8 @@ import { Badge } from './Badge';
 import { UserAchievement } from './UserAchievement';
 import { WebhookEvent } from './WebhookEvent';
 import { Property } from './Property';
+import { TourPackage } from './TourPackage';
+import { TourAvailability } from './TourAvailability';
 
 // User relationships
 User.hasMany(User, { as: 'children', foreignKey: 'sponsorId', sourceKey: 'id' });
@@ -431,6 +433,23 @@ UserAchievement.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
 Vendor.hasMany(Property, { foreignKey: 'vendorId', sourceKey: 'id' });
 Property.belongsTo(Vendor, { as: 'vendor', foreignKey: 'vendorId', targetKey: 'id' });
 
+// ============================================
+// NEXO REAL — Tourism Packages (#60)
+// ============================================
+
+Vendor.hasMany(TourPackage, { foreignKey: 'vendorId', sourceKey: 'id' });
+TourPackage.belongsTo(Vendor, { as: 'vendor', foreignKey: 'vendorId', targetKey: 'id' });
+TourPackage.hasMany(TourAvailability, {
+  as: 'availabilities',
+  foreignKey: 'tourPackageId',
+  sourceKey: 'id',
+});
+TourAvailability.belongsTo(TourPackage, {
+  as: 'tourPackage',
+  foreignKey: 'tourPackageId',
+  targetKey: 'id',
+});
+
 export {
   sequelize,
   User,
@@ -475,6 +494,8 @@ export {
   UserAchievement,
   WebhookEvent,
   Property,
+  TourPackage,
+  TourAvailability,
 };
 
 export function initModels(): void {
