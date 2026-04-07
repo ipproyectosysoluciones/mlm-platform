@@ -193,7 +193,7 @@ export default function PropertyDetailPage() {
 
   const handleReserve = () => {
     startPropertyReservation(property);
-    navigate('/reservar');
+    navigate('/reservations/new');
   };
 
   return (

@@ -224,7 +224,7 @@ export default function TourDetailPage() {
   const handleReserve = () => {
     if (!selectedAvailability) return;
     startTourReservation(tour, selectedAvailability);
-    navigate('/reservar');
+    navigate('/reservations/new');
   };
 
   return (

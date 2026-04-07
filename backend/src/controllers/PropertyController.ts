@@ -418,7 +418,10 @@ export const deletePropertyImage = async (
   try {
     const property = await propertyService.findById(req.params.id);
     const imageIndex = parseInt(req.params.imageIndex, 10);
-    const currentImages = (property.images as string[]) ?? [];
+    const rawPropertyImages = property.images;
+    const currentImages: string[] = Array.isArray(rawPropertyImages)
+      ? rawPropertyImages.filter((img): img is string => typeof img === 'string')
+      : [];
 
     if (imageIndex < 0 || imageIndex >= currentImages.length) {
       res.status(400).json({ message: 'Invalid image index / Índice de imagen inválido' });

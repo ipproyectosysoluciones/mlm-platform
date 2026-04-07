@@ -428,7 +428,10 @@ export const deleteTourImage = async (
   try {
     const tourPackage = await tourPackageService.findById(req.params.id);
     const imageIndex = parseInt(req.params.imageIndex, 10);
-    const currentImages = (tourPackage.images as string[]) ?? [];
+    const rawTourImages = tourPackage.images;
+    const currentImages: string[] = Array.isArray(rawTourImages)
+      ? rawTourImages.filter((img): img is string => typeof img === 'string')
+      : [];
 
     if (imageIndex < 0 || imageIndex >= currentImages.length) {
       res.status(400).json({ message: 'Invalid image index / Índice de imagen inválido' });

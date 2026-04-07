@@ -326,7 +326,7 @@ function App() {
             }
           />
           <Route
-            path="/reservar"
+            path="/reservations/new"
             element={
               <ProtectedRoute>
                 <Suspense fallback={<PageLoader />}>
