@@ -373,7 +373,10 @@ export const uploadPropertyImages = async (
       return;
     }
 
-    const currentImages = (property.images as string[]) ?? [];
+    const rawImages = property.images;
+    const currentImages: string[] = Array.isArray(rawImages)
+      ? rawImages.filter((img): img is string => typeof img === 'string')
+      : [];
 
     if (currentImages.length + files.length > 10) {
       res
