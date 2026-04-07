@@ -5,7 +5,6 @@ import { AuthProvider } from './context/AuthContext';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
-import DashboardStreaming from './pages/DashboardStreaming';
 import TreeView from './pages/TreeView';
 import Profile from './pages/Profile';
 import TwoFactor from './pages/TwoFactor';
@@ -24,7 +23,7 @@ import { ProtectedRoute, AdminRoute, PublicRoute, PublicProfileRoute } from './c
 import { preloadData } from './lib/preload';
 import { dashboardService, authService } from './services/api';
 
-// Lazy loaded pages for streaming subscriptions e-commerce
+// Lazy loaded pages for e-commerce flows (checkout, orders)
 const ProductCatalog = lazy(() => import('./pages/ProductCatalog'));
 const Checkout = lazy(() => import('./pages/Checkout'));
 const OrderSuccess = lazy(() => import('./pages/OrderSuccess'));
@@ -59,7 +58,7 @@ function PageLoader() {
 function App() {
   // Preload critical data on app init
   useEffect(() => {
-    // Preload dashboard data for streaming
+    // Preload dashboard data
     preloadData('dashboard', () => dashboardService.getDashboard());
     // Preload current user data
     preloadData('currentUser', () => authService.getProfile());
@@ -86,13 +85,13 @@ function App() {
               </PublicRoute>
             }
           />
-          {/* Landing page - Product Catalog as home */}
+          {/* Home — Propiedades como landing principal */}
           <Route
             path="/"
             element={
               <AppLayout>
                 <Suspense fallback={<PageLoader />}>
-                  <ProductCatalog />
+                  <PropertiesPage />
                 </Suspense>
               </AppLayout>
             }
@@ -102,14 +101,6 @@ function App() {
             element={
               <ProtectedRoute>
                 <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/dashboard/streaming"
-            element={
-              <ProtectedRoute>
-                <DashboardStreaming />
               </ProtectedRoute>
             }
           />
@@ -194,7 +185,7 @@ function App() {
             }
           />
 
-          {/* Streaming Subscriptions E-Commerce Routes */}
+          {/* E-Commerce Routes (checkout, orders) */}
           <Route
             path="/products"
             element={

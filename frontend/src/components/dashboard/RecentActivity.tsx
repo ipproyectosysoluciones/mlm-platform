@@ -67,8 +67,8 @@ export function RecentActivity({ data }: RecentActivityProps) {
                     <p className="font-medium text-slate-900">{referral.email}</p>
                     <p className="text-sm text-slate-500 capitalize">
                       {referral.position === 'left'
-                        ? t('dashboard.leftLeg')
-                        : t('dashboard.rightLeg')}
+                        ? t('dashboard.directReferrals')
+                        : t('dashboard.totalNetwork')}
                     </p>
                   </div>
                 </div>

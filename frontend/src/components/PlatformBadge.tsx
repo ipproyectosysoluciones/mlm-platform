@@ -1,6 +1,6 @@
 /**
- * @fileoverview PlatformBadge Component - Streaming platform display
- * @description Badge component showing platform icon and name / Componente de insignia mostrando ícono y nombre de plataforma
+ * @fileoverview PlatformBadge Component - Streaming platform display (legacy e-commerce)
+ * @description Badge component for legacy product catalog. Not used in real estate / tourism flows.
  * @module components/PlatformBadge
  */
 

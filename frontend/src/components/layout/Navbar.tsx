@@ -18,7 +18,9 @@ import {
   Menu,
   X,
   LogIn,
-  Sparkles,
+  Building2,
+  MapPin,
+  CalendarCheck,
   Trophy,
   Medal,
 } from 'lucide-react';
@@ -28,6 +30,9 @@ import { UserMenu } from './UserMenu';
 // Navigation items
 const NAV_ITEMS = [
   { path: '/dashboard', labelKey: 'nav.dashboard', icon: LayoutDashboard },
+  { path: '/properties', labelKey: 'nav.properties', icon: Building2 },
+  { path: '/tours', labelKey: 'nav.tours', icon: MapPin },
+  { path: '/mis-reservas', labelKey: 'nav.myBookings', icon: CalendarCheck },
   { path: '/tree', labelKey: 'nav.tree', icon: TreeDeciduous },
   { path: '/crm', labelKey: 'nav.crm', icon: Users },
   { path: '/leaderboard', labelKey: 'nav.leaderboard', icon: Trophy },
@@ -71,7 +76,7 @@ export function Navbar({ onMobileMenuToggle, mobileMenuOpen }: NavbarProps) {
               <span className="font-bold text-xl bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
                 Nexo Real
               </span>
-              <div className="text-xs text-slate-400 -mt-1">Premium Streaming</div>
+              <div className="text-xs text-slate-400 -mt-1">Inmobiliaria & Turismo</div>
             </div>
           </Link>
 
@@ -106,13 +111,13 @@ export function Navbar({ onMobileMenuToggle, mobileMenuOpen }: NavbarProps) {
                 );
               })
             ) : (
-              // Not logged in: show products link
+              // Not logged in: show properties link
               <Link
-                to="/products"
+                to="/properties"
                 className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all duration-300"
               >
-                <Sparkles className="w-4 h-4" />
-                Products
+                <Building2 className="w-4 h-4" />
+                Propiedades
               </Link>
             )}
           </div>
@@ -186,12 +191,12 @@ export function Navbar({ onMobileMenuToggle, mobileMenuOpen }: NavbarProps) {
               })
             ) : (
               <Link
-                to="/products"
+                to="/properties"
                 onClick={onMobileMenuToggle}
                 className="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all duration-300"
               >
-                <Sparkles className="w-5 h-5" />
-                Products
+                <Building2 className="w-5 h-5" />
+                Propiedades
               </Link>
             )}
 

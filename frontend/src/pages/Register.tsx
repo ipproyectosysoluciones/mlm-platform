@@ -77,10 +77,11 @@ export default function Register() {
         <div className="relative z-20 mt-auto">
           <blockquote className="space-y-2">
             <p className="text-lg">
-              "This platform has transformed my business. The binary compensation plan and streaming
-              services are a winning combination."
+              "Formar parte de Nexo Real fue la mejor decisión para mi carrera. La plataforma me
+              conecta con propiedades y tours increíbles, y la red de referidos me genera ingresos
+              pasivos reales."
             </p>
-            <footer className="text-sm">Sofia Davis</footer>
+            <footer className="text-sm">Rodrigo Eguía — Consultor Inmobiliario</footer>
           </blockquote>
         </div>
       </div>

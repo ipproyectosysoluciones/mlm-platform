@@ -48,10 +48,10 @@ export default function Login() {
         <div className="relative z-20 mt-auto">
           <blockquote className="space-y-2">
             <p className="text-lg">
-              "This platform has transformed my business. The binary compensation plan and streaming
-              services are a winning combination."
+              "Gracias a Nexo Real pude escalar mi agencia inmobiliaria y ofrecer experiencias de
+              turismo únicas. La red de referidos cambió completamente mi modelo de negocio."
             </p>
-            <footer className="text-sm">Sofia Davis</footer>
+            <footer className="text-sm">Valentina Morales — Agente Inmobiliaria</footer>
           </blockquote>
         </div>
       </div>
