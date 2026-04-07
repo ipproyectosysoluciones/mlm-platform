@@ -3,7 +3,7 @@
 > Hoja de ruta completa para la plataforma **Nexo Real** — Servicios Inmobiliarios, Turismo/Hospitalidad y Afiliaciones.  
 > _"Conectamos tu negocio con el mundo."_
 
-**Versión actual**: v2.1.0 — Sprint 5 Completado ✅  
+**Versión actual**: v2.2.0 — Sprint 6 Completado ✅  
 **Última actualización**: 2026-04-07  
 **Estado**: Activo - Desarrollo intensivo  
 **Meta**: v3.0.0 — expansión México + Argentina
@@ -12,36 +12,56 @@
 
 ## 📊 Estado Actual del Proyecto
 
-### ✅ Lo que YA está implementado (v2.1.0)
+### ✅ Lo que YA está implementado (v2.2.0)
 
-| Área                     | Funcionalidad                                         | Estado |
-| ------------------------ | ----------------------------------------------------- | ------ |
-| **Auth**                 | JWT, 2FA, Roles                                       | ✅     |
-| **MLM**                  | Binario con Closure Table                             | ✅     |
-| **Comisiones**           | 5 niveles configurables                               | ✅     |
-| **E-commerce**           | Productos streaming (MVP ejemplo)                     | ✅     |
-| **Wallet**               | Balance, transacciones, retiros                       | ✅     |
-| **CRM**                  | Leads, Tasks, Communications                          | ✅     |
-| **Notificaciones**       | Email (Brevo), Push (Web)                             | ✅     |
-| **PWA**                  | Offline, instalable, shortcuts                        | ✅     |
-| **Landing Pages**        | Productos con SEO                                     | ✅     |
-| **Dashboard**            | Stats, tree view, perfil                              | ✅     |
-| **i18n**                 | Español + Inglés                                      | ✅     |
-| **Pagos**                | PayPal + MercadoPago                                  | ✅     |
-| **Gamificación**         | Leaderboards + Achievements                           | ✅     |
-| **Gift Cards**           | CRUD, redeem, balance, admin                          | ✅     |
-| **Cart Recovery**        | Persistence, tokens, emails                           | ✅     |
-| **Email Auto**           | Templates, campaigns, scheduling                      | ✅     |
-| **Security**             | SSRF, XSS, pino-http, Docker hardening                | ✅     |
-| **Products**             | Generic products + inventory + categories             | ✅     |
-| **Marketplace**          | Multi-vendor, commission split 3-way                  | ✅     |
-| **Delivery**             | Shipping addresses, providers, tracking               | ✅     |
-| **Contracts**            | Affiliate contracts MVP con hash/IP                   | ✅     |
-| **Tests**                | 307 tests (integration + E2E)                         | ✅     |
-| **Real Estate Frontend** | PropertiesPage, PropertyDetailPage, filtros, galería  | ✅     |
-| **Tourism Frontend**     | ToursPage, TourDetailPage, itinerario, disponibilidad | ✅     |
-| **Reservation Wizard**   | Wizard 3 pasos + MisReservasPage + reservationStore   | ✅     |
-| **Tests**                | 307+ tests (integration + E2E + Vitest frontend)      | ✅     |
+| Área                     | Funcionalidad                                                | Estado |
+| ------------------------ | ------------------------------------------------------------ | ------ |
+| **Auth**                 | JWT, 2FA, Roles                                              | ✅     |
+| **MLM**                  | Binario con Closure Table                                    | ✅     |
+| **Comisiones**           | 5 niveles configurables                                      | ✅     |
+| **E-commerce**           | Productos streaming (MVP ejemplo)                            | ✅     |
+| **Wallet**               | Balance, transacciones, retiros                              | ✅     |
+| **CRM**                  | Leads, Tasks, Communications                                 | ✅     |
+| **Notificaciones**       | Email (Brevo), Push (Web)                                    | ✅     |
+| **PWA**                  | Offline, instalable, shortcuts                               | ✅     |
+| **Landing Pages**        | Productos con SEO                                            | ✅     |
+| **Dashboard**            | Stats, tree view, perfil                                     | ✅     |
+| **i18n**                 | Español + Inglés (sin claves huérfanas)                      | ✅     |
+| **Pagos**                | PayPal + MercadoPago                                         | ✅     |
+| **Gamificación**         | Leaderboards + Achievements                                  | ✅     |
+| **Gift Cards**           | CRUD, redeem, balance, admin                                 | ✅     |
+| **Cart Recovery**        | Persistence, tokens, emails                                  | ✅     |
+| **Email Auto**           | Templates, campaigns, scheduling                             | ✅     |
+| **Security**             | SSRF, XSS, pino-http, Docker hardening, CodeQL fixes         | ✅     |
+| **Products**             | Generic products + inventory + categories                    | ✅     |
+| **Marketplace**          | Multi-vendor, commission split 3-way                         | ✅     |
+| **Delivery**             | Shipping addresses, providers, tracking                      | ✅     |
+| **Contracts**            | Affiliate contracts MVP con hash/IP                          | ✅     |
+| **Real Estate Frontend** | PropertiesPage, PropertyDetailPage, filtros, galería         | ✅     |
+| **Tourism Frontend**     | ToursPage, TourDetailPage, itinerario, disponibilidad        | ✅     |
+| **Reservation Wizard**   | Wizard 3 pasos + MisReservasPage + reservationStore          | ✅     |
+| **Admin Dashboard CRUD** | AdminPropertiesPage + AdminToursPage + AdminReservationsPage | ✅     |
+| **Nexo Bot Flows**       | propertiesFlow + toursFlow (ES/EN, limit 5)                  | ✅     |
+| **network_balance**      | Migración `binary_balance` → `network_balance`               | ✅     |
+| **Build Hardening**      | Sin `.map` en producción, logs de tamaño                     | ✅     |
+| **Tests**                | 307+ tests (integration + E2E + Vitest frontend)             | ✅     |
+
+---
+
+## 🚀 Sprint 6 — v2.2.0 (Completado 2026-04-07)
+
+### Objetivos cumplidos
+
+| Fase   | Área                                       | Estado    |
+| ------ | ------------------------------------------ | --------- |
+| Fase 0 | Setup: Issues + ramas                      | ✅        |
+| Fase 9 | Security: CodeQL #39 #40 fix               | ✅ PR #88 |
+| Fase 1 | Migration + Build hardening                | ✅ PR #89 |
+| Fase 2 | i18n cleanup + DashboardStreaming removal  | ✅ PR #90 |
+| Fase 3 | Backend bot endpoints (incluido en PR #89) | ✅        |
+| Fase 4 | Admin Dashboard CRUD frontend              | ✅ PR #91 |
+| Fase 5 | Nexo Bot flows (properties + tours)        | ✅ PR #92 |
+| Fase 6 | Documentación (Swagger v2.2.0 + CHANGELOG) | ✅        |
 
 ---
 
