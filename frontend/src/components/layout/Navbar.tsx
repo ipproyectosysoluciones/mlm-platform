@@ -1,5 +1,9 @@
 /**
- * Navbar - Modern navigation with glass morphism effect
+ * Navbar - Barra de navegación principal de Nexo Real con glass morphism.
+ * Muestra ítems diferenciados para usuarios autenticados vs. visitantes.
+ *
+ * Navbar - Main Nexo Real navigation bar with glass morphism.
+ * Shows different items for authenticated users vs. public visitors.
  *
  * @module components/layout/Navbar
  */
@@ -18,14 +22,16 @@ import {
   Menu,
   X,
   LogIn,
-  Sparkles,
+  Building2,
+  MapPin,
+  CalendarCheck,
   Trophy,
   Medal,
 } from 'lucide-react';
 import { LanguageSelector } from './LanguageSelector';
 import { UserMenu } from './UserMenu';
 
-// Navigation items
+/** Navigation items shown to authenticated users / Ítems de navegación para usuarios autenticados */
 const NAV_ITEMS = [
   { path: '/dashboard', labelKey: 'nav.dashboard', icon: LayoutDashboard },
   { path: '/tree', labelKey: 'nav.tree', icon: TreeDeciduous },
@@ -37,22 +43,39 @@ const NAV_ITEMS = [
   { path: '/profile', labelKey: 'nav.profile', icon: User },
 ];
 
+/** Admin-only navigation items / Ítems exclusivos para administradores */
 const ADMIN_ITEMS = [
   { path: '/admin', labelKey: 'nav.admin', icon: Shield },
   { path: '/admin/commissions', labelKey: 'nav.commissionConfig', icon: DollarSign },
 ];
 
+/** Public navigation items (not logged in) / Ítems públicos (visitantes no autenticados) */
+const PUBLIC_NAV_ITEMS = [
+  { path: '/properties', labelKey: 'nav.properties', icon: Building2 },
+  { path: '/tours', labelKey: 'nav.tours', icon: MapPin },
+  { path: '/mis-reservas', labelKey: 'nav.reservations', icon: CalendarCheck },
+];
+
 interface NavbarProps {
+  /** Callback to toggle mobile menu / Callback para abrir/cerrar menú mobile */
   onMobileMenuToggle: () => void;
+  /** Whether mobile menu is currently open / Si el menú mobile está abierto */
   mobileMenuOpen: boolean;
 }
 
+/**
+ * Navbar component with responsive layout, glass morphism and Nexo Real brand colors.
+ * Adapts navigation items based on authentication state and user role.
+ *
+ * Componente Navbar con layout responsive, glass morphism y colores de marca Nexo Real.
+ * Adapta los ítems de navegación según el estado de autenticación y rol del usuario.
+ */
 export function Navbar({ onMobileMenuToggle, mobileMenuOpen }: NavbarProps) {
   const location = useLocation();
   const { user } = useAuth();
   const { t } = useTranslation();
 
-  const isAdmin = (user as any)?.role === 'admin';
+  const isAdmin = (user as { role?: string })?.role === 'admin';
   const allNavItems = isAdmin ? [...NAV_ITEMS, ...ADMIN_ITEMS] : NAV_ITEMS;
 
   return (
@@ -62,8 +85,8 @@ export function Navbar({ onMobileMenuToggle, mobileMenuOpen }: NavbarProps) {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 shrink-0 group">
             <div className="relative">
-              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/25 group-hover:shadow-purple-500/40 transition-all duration-300 group-hover:scale-110">
-                <TreeDeciduous className="w-6 h-6 text-white" />
+              <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/25 group-hover:shadow-emerald-500/40 transition-all duration-300 group-hover:scale-110">
+                <Building2 className="w-6 h-6 text-white" />
               </div>
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full animate-pulse" />
             </div>
@@ -71,22 +94,22 @@ export function Navbar({ onMobileMenuToggle, mobileMenuOpen }: NavbarProps) {
               <span className="font-bold text-xl bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
                 Nexo Real
               </span>
-              <div className="text-xs text-slate-400 -mt-1">Premium Streaming</div>
+              <div className="text-xs text-emerald-400 -mt-1">Inmobiliaria & Turismo</div>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-1">
-            {user ? (
-              // Logged in: show navigation items
-              allNavItems.map((item) => {
-                const Icon = item.icon;
-                const isActive = location.pathname === item.path;
-                return (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    className={`
+            {user
+              ? // Logged in: show full navigation items
+                allNavItems.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = location.pathname === item.path;
+                  return (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      className={`
                       relative flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300
                       ${
                         isActive
@@ -94,27 +117,44 @@ export function Navbar({ onMobileMenuToggle, mobileMenuOpen }: NavbarProps) {
                           : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
                       }
                     `}
-                  >
-                    {isActive && (
-                      <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-xl border border-purple-500/30" />
-                    )}
-                    <Icon
-                      className={`w-4 h-4 relative z-10 ${isActive ? 'text-purple-400' : ''}`}
-                    />
-                    <span className="relative z-10">{t(item.labelKey)}</span>
-                  </Link>
-                );
-              })
-            ) : (
-              // Not logged in: show products link
-              <Link
-                to="/products"
-                className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all duration-300"
-              >
-                <Sparkles className="w-4 h-4" />
-                Products
-              </Link>
-            )}
+                    >
+                      {isActive && (
+                        <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 to-teal-500/20 rounded-xl border border-emerald-500/30" />
+                      )}
+                      <Icon
+                        className={`w-4 h-4 relative z-10 ${isActive ? 'text-emerald-400' : ''}`}
+                      />
+                      <span className="relative z-10">{t(item.labelKey)}</span>
+                    </Link>
+                  );
+                })
+              : // Not logged in: show public property/tour links
+                PUBLIC_NAV_ITEMS.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = location.pathname.startsWith(item.path);
+                  return (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      className={`
+                      relative flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300
+                      ${
+                        isActive
+                          ? 'text-white'
+                          : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                      }
+                    `}
+                    >
+                      {isActive && (
+                        <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 to-teal-500/20 rounded-xl border border-emerald-500/30" />
+                      )}
+                      <Icon
+                        className={`w-4 h-4 relative z-10 ${isActive ? 'text-emerald-400' : ''}`}
+                      />
+                      <span className="relative z-10">{t(item.labelKey)}</span>
+                    </Link>
+                  );
+                })}
           </div>
 
           {/* Right section */}
@@ -137,10 +177,10 @@ export function Navbar({ onMobileMenuToggle, mobileMenuOpen }: NavbarProps) {
                 {/* Login button (desktop) */}
                 <Link
                   to="/login"
-                  className="hidden md:flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl text-sm font-semibold shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all duration-300 hover:scale-105"
+                  className="hidden md:flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl text-sm font-semibold shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all duration-300 hover:scale-105"
                 >
                   <LogIn className="w-4 h-4" />
-                  Sign In
+                  {t('nav.signIn')}
                 </Link>
               </>
             )}
@@ -161,39 +201,51 @@ export function Navbar({ onMobileMenuToggle, mobileMenuOpen }: NavbarProps) {
         <div className="md:hidden bg-slate-900/95 backdrop-blur-xl border-t border-slate-700/50">
           <div className="px-4 py-6 space-y-4">
             {/* Mobile navigation items */}
-            {user ? (
-              allNavItems.map((item) => {
-                const Icon = item.icon;
-                const isActive = location.pathname === item.path;
-                return (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    onClick={onMobileMenuToggle}
-                    className={`
+            {user
+              ? allNavItems.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = location.pathname === item.path;
+                  return (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      onClick={onMobileMenuToggle}
+                      className={`
                       flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium transition-all duration-300
                       ${
                         isActive
-                          ? 'bg-gradient-to-r from-purple-500/20 to-blue-500/20 text-white border border-purple-500/30'
+                          ? 'bg-gradient-to-r from-emerald-500/20 to-teal-500/20 text-white border border-emerald-500/30'
                           : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
                       }
                     `}
-                  >
-                    <Icon className={`w-5 h-5 ${isActive ? 'text-purple-400' : ''}`} />
-                    {t(item.labelKey)}
-                  </Link>
-                );
-              })
-            ) : (
-              <Link
-                to="/products"
-                onClick={onMobileMenuToggle}
-                className="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all duration-300"
-              >
-                <Sparkles className="w-5 h-5" />
-                Products
-              </Link>
-            )}
+                    >
+                      <Icon className={`w-5 h-5 ${isActive ? 'text-emerald-400' : ''}`} />
+                      {t(item.labelKey)}
+                    </Link>
+                  );
+                })
+              : PUBLIC_NAV_ITEMS.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = location.pathname.startsWith(item.path);
+                  return (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      onClick={onMobileMenuToggle}
+                      className={`
+                      flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium transition-all duration-300
+                      ${
+                        isActive
+                          ? 'bg-gradient-to-r from-emerald-500/20 to-teal-500/20 text-white border border-emerald-500/30'
+                          : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                      }
+                    `}
+                    >
+                      <Icon className={`w-5 h-5 ${isActive ? 'text-emerald-400' : ''}`} />
+                      {t(item.labelKey)}
+                    </Link>
+                  );
+                })}
 
             {/* Mobile auth buttons */}
             <div className="pt-4 border-t border-slate-700/50">
@@ -205,10 +257,10 @@ export function Navbar({ onMobileMenuToggle, mobileMenuOpen }: NavbarProps) {
                 <Link
                   to="/login"
                   onClick={onMobileMenuToggle}
-                  className="flex items-center justify-center gap-2 w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl text-base font-semibold shadow-lg shadow-purple-500/25"
+                  className="flex items-center justify-center gap-2 w-full px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl text-base font-semibold shadow-lg shadow-emerald-500/25"
                 >
                   <LogIn className="w-5 h-5" />
-                  Sign In
+                  {t('nav.signIn')}
                 </Link>
               )}
             </div>

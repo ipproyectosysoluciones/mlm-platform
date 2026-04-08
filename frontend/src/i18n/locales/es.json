@@ -103,7 +103,11 @@
     "commissionConfig": "Comisiones",
     "logout": "Cerrar Sesión",
     "myProfile": "Mi Perfil",
-    "twoFactor": "Autenticación en 2 Pasos"
+    "twoFactor": "Autenticación en 2 Pasos",
+    "properties": "Propiedades",
+    "tours": "Tours",
+    "reservations": "Mis Reservas",
+    "signIn": "Ingresar"
   },
   "twoFactor": {
     "title": "Autenticación de Dos Factores",
@@ -195,7 +199,14 @@
     "passwordsNotMatch": "Las contraseñas no coinciden",
     "passwordMinLength": "La contraseña debe tener al menos 8 caracteres",
     "passwordReqLength": "Al menos 8 caracteres",
-    "passwordReqNumber": "Contener un número"
+    "passwordReqNumber": "Contener un número",
+    "loginQuote": "\"Encontré la propiedad perfecta para mi familia gracias a Nexo Real. El proceso fue simple y transparente.\"",
+    "loginQuoteAuthor": "María González",
+    "loginSubtitle": "Propiedades e inversiones para toda América Latina",
+    "registerQuote": "\"Invertir en bienes raíces nunca fue tan fácil. Nexo Real me conectó con las mejores oportunidades del mercado.\"",
+    "registerQuoteAuthor": "Carlos Rodríguez",
+    "referralCode": "Código de Referido",
+    "sponsorCodePlaceholder": "ABC123"
   },
   "profile": {
     "title": "Mi Perfil",
@@ -497,5 +508,46 @@
     "level2": "Referidos Nivel 2",
     "level3": "Referidos Nivel 3",
     "level4": "Referidos Nivel 4"
+  },
+  "landing": {
+    "hero": {
+      "badge": "Plataforma #1 en América Latina",
+      "title": "Tu próxima propiedad te está esperando",
+      "subtitle": "Descubrí propiedades exclusivas y tours únicos en toda América Latina. Invertí con confianza.",
+      "ctaProperties": "Ver Propiedades",
+      "ctaTours": "Explorar Tours",
+      "stats": {
+        "properties": "Propiedades",
+        "tours": "Tours disponibles",
+        "countries": "Países",
+        "clients": "Clientes satisfechos"
+      }
+    },
+    "featuredProperties": {
+      "title": "Propiedades Destacadas",
+      "subtitle": "Las mejores oportunidades de inversión seleccionadas para vos",
+      "viewAll": "Ver todas las propiedades",
+      "loading": "Cargando propiedades...",
+      "empty": "No hay propiedades disponibles"
+    },
+    "featuredTours": {
+      "title": "Tours Recomendados",
+      "subtitle": "Experiencias únicas en los destinos más exclusivos",
+      "viewAll": "Ver todos los tours",
+      "loading": "Cargando tours...",
+      "empty": "No hay tours disponibles"
+    },
+    "cta": {
+      "title": "¿Listo para invertir en tu futuro?",
+      "subtitle": "Unite a miles de inversores que ya confían en Nexo Real",
+      "button": "Crear cuenta gratis",
+      "login": "Ya tengo cuenta"
+    },
+    "footer": {
+      "tagline": "Propiedades e inversiones para toda América Latina.",
+      "links": "Enlaces",
+      "contact": "Contacto",
+      "rights": "Todos los derechos reservados."
+    }
   }
 }
