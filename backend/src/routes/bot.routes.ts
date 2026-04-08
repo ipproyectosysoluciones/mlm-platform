@@ -14,6 +14,7 @@ import {
   getRecentCommissions,
   getBotProperties,
   getBotTours,
+  getBotHealth,
 } from '../controllers/BotController';
 import { asyncHandler } from '../middleware/asyncHandler';
 
@@ -64,5 +65,15 @@ router.get('/properties', asyncHandler(getBotProperties));
  * @access  Bot-only (x-bot-secret)
  */
 router.get('/tours', asyncHandler(getBotTours));
+
+/**
+ * @route   GET /api/bot/health
+ * @desc    Backend health check for the bot process.
+ *          Returns status, timestamp, and basic config flags (openai key present, bot secret present).
+ *          Health check del backend para el proceso bot.
+ *          Devuelve estado, timestamp y flags de configuración básicos.
+ * @access  Bot-only (x-bot-secret)
+ */
+router.get('/health', asyncHandler(getBotHealth));
 
 export default router;

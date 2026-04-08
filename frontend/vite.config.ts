@@ -251,4 +251,21 @@ export default defineConfig({
     sourcemap: false,
     chunkSizeWarningLimit: 500,
   },
+  /**
+   * Dev server proxy — avoids CORS when backend runs in production mode.
+   * Proxy del servidor de desarrollo — evita CORS cuando el backend corre en modo producción.
+   * Rewrites /api/* → http://localhost:3000/api/* from the same origin (5173),
+   * so the browser never makes a cross-origin request.
+   * Reescribe /api/* → http://localhost:3000/api/* desde el mismo origen (5173),
+   * así el browser nunca hace una request cross-origin.
+   */
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
 });

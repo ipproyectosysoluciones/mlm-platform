@@ -1,6 +1,6 @@
 # Nexo Real — Bot (Nexo Bot)
 
-> **Versión actual: v2.2.0** — Sprint 6 completado (2026-04-07)
+> **Versión actual: v2.3.0** — Sprint 7 completado (2026-04-08)
 
 Chatbot de WhatsApp para la plataforma Nexo Real, construido con **BuilderBot** + **Baileys**. Responde consultas de propiedades y tours en español e inglés, y facilita la comunicación con el equipo comercial.
 
@@ -107,11 +107,82 @@ Los flows `propertiesFlow` y `toursFlow` detectan automáticamente el idioma con
 
 ## ⚙️ Variables de Entorno
 
-| Variable      | Descripción                       | Ejemplo                    |
-| ------------- | --------------------------------- | -------------------------- |
-| `BACKEND_URL` | URL base del backend              | `https://api.nexoreal.com` |
-| `BOT_SECRET`  | Secret para autenticación Bot API | `...`                      |
-| `PORT`        | Puerto del servidor del bot       | `3001`                     |
+| Variable            | Descripción                                 | Ejemplo                    |
+| ------------------- | ------------------------------------------- | -------------------------- |
+| `BACKEND_URL`       | URL base del backend                        | `https://api.nexoreal.com` |
+| `BOT_SECRET`        | Secret para autenticación Bot API           | `...`                      |
+| `PORT`              | Puerto del servidor del bot                 | `3001`                     |
+| `BOT_MAX_RECONNECT` | Máximo de reintentos de reconexión WhatsApp | `5`                        |
+
+## 🏥 Health Check
+
+`GET /api/bot/health`
+
+Endpoint de verificación de estado del servicio del bot. Implementado en `BotController` y registrado en `bot.routes.ts`.
+
+**Header requerido:**
+
+```
+x-bot-secret: <BOT_SECRET>
+```
+
+**Respuesta exitosa (200):**
+
+```json
+{
+  "status": "ok",
+  "uptime": 3600,
+  "timestamp": "2026-04-08T12:00:00.000Z"
+}
+```
+
+**Respuesta en error (401):** cabecera `x-bot-secret` ausente o inválida.
+
+---
+
+## 🔁 Retry Policy
+
+El servicio `ai.service.ts` expone la utility `withRetry<T>()` para reintentar llamadas a OpenAI ante errores transitorios.
+
+**Comportamiento:**
+
+| Parámetro          | Valor                                    |
+| ------------------ | ---------------------------------------- |
+| Máximo de intentos | 3                                        |
+| Delay base         | 500 ms                                   |
+| Backoff            | Exponencial — se duplica en cada intento |
+| Delays             | 500 ms → 1000 ms → 2000 ms               |
+
+**Non-retryable:** errores con `status < 500` y `status ≠ 429` se lanzan inmediatamente sin reintentar (ej. 400 Bad Request, 403 Forbidden).
+
+**Retryable:** `status >= 500` (errores de servidor) y `status === 429` (rate limit).
+
+**Ejemplo de uso:**
+
+```typescript
+const result = await withRetry(() => openai.chat.completions.create(params));
+```
+
+---
+
+## 🔌 Disconnect Handling
+
+El entry point `app.ts` incluye un handler de reconexión automática para la sesión de WhatsApp vía Baileys.
+
+**Variable de entorno:**
+
+| Variable            | Descripción                                        | Default |
+| ------------------- | -------------------------------------------------- | ------- |
+| `BOT_MAX_RECONNECT` | Número máximo de intentos de reconexión permitidos | `5`     |
+
+**Comportamiento:**
+
+- En cada desconexión, el contador de intentos se incrementa en 1.
+- Si el contador supera `MAX_RECONNECT_ATTEMPTS`, el proceso termina con `process.exit(1)`.
+- Si el código de desconexión es **401** (Unauthorized), el proceso termina de forma inmediata sin reintentar.
+- En una reconexión exitosa, el contador se resetea a `0`.
+
+---
 
 ## 📁 Estructura
 

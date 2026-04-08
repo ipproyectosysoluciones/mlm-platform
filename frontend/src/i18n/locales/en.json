@@ -111,7 +111,11 @@
     "commissionConfig": "Commissions",
     "logout": "Logout",
     "myProfile": "My Profile",
-    "twoFactor": "Two-Factor Authentication"
+    "twoFactor": "Two-Factor Authentication",
+    "properties": "Properties",
+    "tours": "Tours",
+    "reservations": "My Reservations",
+    "signIn": "Sign In"
   },
   "twoFactor": {
     "title": "Two-Factor Authentication",
@@ -203,7 +207,14 @@
     "passwordsNotMatch": "Passwords do not match",
     "passwordMinLength": "Password must be at least 8 characters",
     "passwordReqLength": "At least 8 characters",
-    "passwordReqNumber": "Contains a number"
+    "passwordReqNumber": "Contains a number",
+    "loginQuote": "\"I found the perfect property for my family thanks to Nexo Real. The process was simple and transparent.\"",
+    "loginQuoteAuthor": "María González",
+    "loginSubtitle": "Properties and investments across Latin America",
+    "registerQuote": "\"Investing in real estate has never been so easy. Nexo Real connected me with the best market opportunities.\"",
+    "registerQuoteAuthor": "Carlos Rodríguez",
+    "referralCode": "Referral Code",
+    "sponsorCodePlaceholder": "ABC123"
   },
   "profile": {
     "title": "My Profile",
@@ -505,5 +516,46 @@
     "level2": "Level 2 Referrals",
     "level3": "Level 3 Referrals",
     "level4": "Level 4 Referrals"
+  },
+  "landing": {
+    "hero": {
+      "badge": "#1 Platform in Latin America",
+      "title": "Your next property is waiting for you",
+      "subtitle": "Discover exclusive properties and unique tours across Latin America. Invest with confidence.",
+      "ctaProperties": "Browse Properties",
+      "ctaTours": "Explore Tours",
+      "stats": {
+        "properties": "Properties",
+        "tours": "Tours available",
+        "countries": "Countries",
+        "clients": "Happy clients"
+      }
+    },
+    "featuredProperties": {
+      "title": "Featured Properties",
+      "subtitle": "The best investment opportunities handpicked for you",
+      "viewAll": "View all properties",
+      "loading": "Loading properties...",
+      "empty": "No properties available"
+    },
+    "featuredTours": {
+      "title": "Recommended Tours",
+      "subtitle": "Unique experiences in the most exclusive destinations",
+      "viewAll": "View all tours",
+      "loading": "Loading tours...",
+      "empty": "No tours available"
+    },
+    "cta": {
+      "title": "Ready to invest in your future?",
+      "subtitle": "Join thousands of investors who already trust Nexo Real",
+      "button": "Create free account",
+      "login": "I already have an account"
+    },
+    "footer": {
+      "tagline": "Properties and investments for all of Latin America.",
+      "links": "Links",
+      "contact": "Contact",
+      "rights": "All rights reserved."
+    }
   }
 }

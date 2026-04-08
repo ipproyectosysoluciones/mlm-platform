@@ -1,7 +1,4 @@
 {
-  // ===========================================
-  // Editor Configuration
-  // ===========================================
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -15,9 +12,6 @@
   "editor.cursorBlinking": "smooth",
   "editor.smoothScrolling": true,
 
-  // ===========================================
-  // Files Configuration
-  // ===========================================
   "files.autoSave": "afterDelay",
   "files.autoSaveDelay": 1000,
   "files.trimTrailingWhitespace": true,
@@ -32,9 +26,6 @@
     "**/.next": true
   },
 
-  // ===========================================
-  // TypeScript Configuration
-  // ===========================================
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "typescript.preferences.includeInlayParameterNameHints": "all",
@@ -44,9 +35,6 @@
   "typescript.preferences.includeInlayPropertyDeclarationTypeHints": true,
   "typescript.preferences.includeInlayEnumMemberValueHints": true,
 
-  // ===========================================
-  // ESLint Configuration
-  // ===========================================
   "eslint.validate": [
     "javascript",
     "javascriptreact",
@@ -57,9 +45,6 @@
   "eslint.lintTask.enable": true,
   "eslint.run": "onSave",
 
-  // ===========================================
-  // Prettier Configuration
-  // ===========================================
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -76,21 +61,15 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
 
-  // ===========================================
-  // Tailwind CSS
-  // ===========================================
   "tailwindCSS.experimental.classRegex": [
-    ["clsx\\(([^)]*)\\)", "(?:\"|\')([^\"\']*)(?:\"|\')"],
-    ["cn\\(([^)]*)\\)", "(?:\"|\')([^\"\']*)(?:\"|\')"]
+    ["clsx\\(([^)]*)\\)", "(?:\"|'?)([^\"']*)(?:\"|'?)"],
+    ["cn\\(([^)]*)\\)", "(?:\"|'?)([^\"']*)(?:\"|'?)"]
   ],
   "tailwindCSS.includeLanguages": {
     "typescript": "typescript",
     "typescriptreact": "typescript"
   },
 
-  // ===========================================
-  // Path Intellisense
-  // ===========================================
   "path-intellisense.mappings": {
     "@": "${workspaceRoot}/src",
     "@components": "${workspaceRoot}/src/components",
@@ -101,9 +80,6 @@
     "@types": "${workspaceRoot}/src/types"
   },
 
-  // ===========================================
-  // Git Configuration
-  // ===========================================
   "git.enableSmartCommit": true,
   "git.confirmSync": false,
   "git.autofetch": true,
@@ -112,22 +88,13 @@
   "gitlens.currentLine.enabled": true,
   "gitlens.codeLens.enabled": true,
 
-  // ===========================================
-  // Terminal Configuration
-  // ===========================================
   "terminal.integrated.defaultProfile.linux": "bash",
   "terminal.integrated.fontSize": 13,
   "terminal.integrated.fontFamily": "JetBrains Mono, Fira Code, monospace",
 
-  // ===========================================
-  // Testing Configuration
-  // ===========================================
   "testing.automaticallyOpenPeekView": "never",
   "testing.followRunningTest": true,
 
-  // ===========================================
-  // i18n Ally Configuration
-  // ===========================================
   "i18n-ally.enabledLanguages": ["en", "es"],
   "i18n-ally.localesPaths": [
     "frontend/src/i18n/locales",
@@ -136,9 +103,6 @@
   "i18n-ally.encoding": "utf-8",
   "i18n-ally.indent": 2,
 
-  // ===========================================
-  // REST Client Configuration
-  // ===========================================
   "rest-client.environmentVariables": {
     "$local": {
       "host": "localhost:3000",
@@ -150,9 +114,6 @@
     }
   },
 
-  // ===========================================
-  // Files to Always Exclude
-  // ===========================================
   "search.exclude": {
     "**/node_modules": true,
     "**/dist": true,
@@ -163,30 +124,18 @@
     "**/*.min.css": true
   },
 
-  // ===========================================
-  // Workbench Configuration
-  // ===========================================
-  "workbench.colorTheme": "Default Dark+",
-  "workbench.iconTheme": "vscode-icons",
+  "workbench.colorTheme": "Dark Modern",
+  "workbench.iconTheme": "material-icon-theme",
   "workbench.startupEditor": "none",
   "workbench.tree.indent": 16,
 
-  // ===========================================
-  // Emmet Configuration
-  // ===========================================
   "emmet.includeLanguages": {
     "javascript": "javascriptreact",
     "typescript": "typescriptreact"
   },
 
-  // ===========================================
-  // Docker Configuration
-  // ===========================================
   "docker.containers.defaultContextPath": ".",
 
-  // ===========================================
-  // Spell Checker (cSpell)
-  // ===========================================
   "cSpell.words": [
     "downline",
     "flexbox",

@@ -23,7 +23,10 @@ import { ProtectedRoute, AdminRoute, PublicRoute, PublicProfileRoute } from './c
 import { preloadData } from './lib/preload';
 import { dashboardService, authService } from './services/api';
 
-// Lazy loaded pages for e-commerce flows (checkout, orders)
+// Lazy loaded pages for Real Estate & Tourism landing (Sprint 7)
+const NexoRealLanding = lazy(() => import('./pages/landing/NexoRealLanding'));
+
+// Lazy loaded pages for e-commerce (legacy — kept for /products route)
 const ProductCatalog = lazy(() => import('./pages/ProductCatalog'));
 const Checkout = lazy(() => import('./pages/Checkout'));
 const OrderSuccess = lazy(() => import('./pages/OrderSuccess'));
@@ -63,7 +66,7 @@ function PageLoader() {
 function App() {
   // Preload critical data on app init
   useEffect(() => {
-    // Preload dashboard data
+    // Preload dashboard data on app init
     preloadData('dashboard', () => dashboardService.getDashboard());
     // Preload current user data
     preloadData('currentUser', () => authService.getProfile());
@@ -90,13 +93,13 @@ function App() {
               </PublicRoute>
             }
           />
-          {/* Home — Propiedades como landing principal */}
+          {/* Landing page - Nexo Real home */}
           <Route
             path="/"
             element={
               <AppLayout>
                 <Suspense fallback={<PageLoader />}>
-                  <PropertiesPage />
+                  <NexoRealLanding />
                 </Suspense>
               </AppLayout>
             }
@@ -190,7 +193,7 @@ function App() {
             }
           />
 
-          {/* E-Commerce Routes (checkout, orders) */}
+          {/* Legacy E-Commerce Routes — kept for backward compatibility */}
           <Route
             path="/products"
             element={
@@ -292,7 +295,7 @@ function App() {
             }
           />
           <Route
-            path="/propiedades/:id"
+            path="/properties/:id"
             element={
               <AppLayout>
                 <Suspense fallback={<PageLoader />}>

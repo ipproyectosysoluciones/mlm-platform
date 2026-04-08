@@ -17,10 +17,16 @@ export const regularUser = {
  * Uses type selectors and waits for page load
  */
 export async function login(page: Page) {
-  // Clear cookies first to ensure fresh session
+  // Clear cookies AND localStorage to ensure fresh session / Limpia cookies Y localStorage para sesión fresca
   await page.context().clearCookies();
-
   await page.goto(`${baseURL}/login`, { waitUntil: 'domcontentloaded' });
+  // Clear localStorage after navigation to remove stale auth tokens
+  await page.evaluate(() => {
+    localStorage.clear();
+    sessionStorage.clear();
+  });
+  // Reload to apply cleared storage / Reload para aplicar storage limpio
+  await page.reload({ waitUntil: 'domcontentloaded' });
 
   // Wait for form to be visible with retry logic
   await page.waitForSelector('input[type="email"]', { state: 'visible', timeout: 20000 });

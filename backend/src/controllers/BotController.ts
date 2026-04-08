@@ -1,10 +1,11 @@
 /**
  * @fileoverview Bot Controller - Internal API endpoints for WhatsApp bot
  * @description Provides user lookup, wallet info, network summary, commission data,
- *              property listings, and tour package listings for the WhatsApp bot.
+ *              property listings, tour package listings, and a health check endpoint
+ *              for the WhatsApp bot.
  *              All endpoints are protected by x-bot-secret header (see bot.middleware.ts).
  *              Provee búsqueda de usuarios, info de wallet, resumen de red, comisiones,
- *              propiedades y tours para el bot de WhatsApp.
+ *              propiedades, tours y un endpoint de health check para el bot de WhatsApp.
  * @module controllers/BotController
  */
 
@@ -398,3 +399,35 @@ export const getBotTours = async (
     next(error);
   }
 };
+
+// ── GET /api/bot/health ───────────────────────────────────────────────────────
+
+/**
+ * Health check endpoint for the bot integration.
+ * Returns service status, timestamp, and basic config flags so the bot process
+ * can confirm the backend is reachable before accepting WhatsApp connections.
+ *
+ * Endpoint de health check para la integración del bot.
+ * Devuelve estado del servicio, timestamp y flags de configuración básicos para que
+ * el proceso bot confirme que el backend es alcanzable antes de aceptar conexiones de WhatsApp.
+ *
+ * @route   GET /api/bot/health
+ * @access  Bot-only (x-bot-secret)
+ */
+export async function getBotHealth(req: Request, res: Response): Promise<void> {
+  const openaiConfigured = Boolean(process.env.OPENAI_API_KEY);
+  const botSecretConfigured = Boolean(process.env.BOT_SECRET);
+
+  res.json({
+    success: true,
+    data: {
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+      service: 'nexo-bot-backend',
+      config: {
+        openai: openaiConfigured,
+        botSecret: botSecretConfigured,
+      },
+    },
+  });
+}

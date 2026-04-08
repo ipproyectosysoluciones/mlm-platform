@@ -228,6 +228,58 @@ export function detectAgent(name: string): AgentName {
   return FEMALE_NAMES.has(normalized) ? 'max' : 'sophia';
 }
 
+// ─── withRetry utility ────────────────────────────────────────────────────────
+
+/**
+ * Retries an async operation with exponential backoff on transient failures.
+ * Transient errors include rate limits (429), server errors (5xx), and network timeouts.
+ * Non-retryable errors (auth 401, invalid request 400) are re-thrown immediately.
+ *
+ * Reintenta una operación async con backoff exponencial ante fallos transitorios.
+ * Los errores transitorios incluyen rate limits (429), errores de servidor (5xx) y timeouts de red.
+ * Los errores no reintentables (auth 401, request inválido 400) se vuelven a lanzar de inmediato.
+ *
+ * @param fn       - Async function to retry
+ * @param retries  - Maximum number of attempts (default: 3)
+ * @param baseMs   - Base delay in ms between attempts (doubles each retry, default: 500)
+ * @returns Result of fn on first successful attempt
+ * @throws Last error after all retries are exhausted
+ */
+export async function withRetry<T>(fn: () => Promise<T>, retries = 3, baseMs = 500): Promise<T> {
+  let lastError: unknown;
+
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      return await fn();
+    } catch (err: unknown) {
+      lastError = err;
+
+      // Determine if error is retryable
+      const status =
+        (err as { status?: number })?.status ??
+        (err as { response?: { status?: number } })?.response?.status;
+
+      const isNonRetryable = status !== undefined && status < 500 && status !== 429;
+
+      if (isNonRetryable) {
+        console.error(`[withRetry] Non-retryable error (status ${status}), aborting.`);
+        throw err;
+      }
+
+      if (attempt < retries) {
+        const delay = baseMs * 2 ** (attempt - 1);
+        console.warn(
+          `[withRetry] Attempt ${attempt}/${retries} failed${status ? ` (${status})` : ''}. Retrying in ${delay}ms…`
+        );
+        await new Promise((r) => setTimeout(r, delay));
+      }
+    }
+  }
+
+  console.error(`[withRetry] All ${retries} attempts failed.`);
+  throw lastError;
+}
+
 // ─── OpenAI Client ────────────────────────────────────────────────────────────
 
 let openaiClient: OpenAI | null = null;
@@ -302,12 +354,14 @@ export async function chat(
   ];
 
   try {
-    const completion = await client.chat.completions.create({
-      model: MODEL,
-      messages,
-      max_tokens: MAX_TOKENS,
-      temperature: TEMPERATURE,
-    });
+    const completion = await withRetry(() =>
+      client.chat.completions.create({
+        model: MODEL,
+        messages,
+        max_tokens: MAX_TOKENS,
+        temperature: TEMPERATURE,
+      })
+    );
 
     const responseText =
       completion.choices[0]?.message?.content?.trim() ||
@@ -339,4 +393,5 @@ export const aiService = {
   getHistory,
   appendToHistory,
   clearHistory,
+  withRetry,
 };

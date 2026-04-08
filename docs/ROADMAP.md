@@ -3,8 +3,8 @@
 > Hoja de ruta completa para la plataforma **Nexo Real** — Servicios Inmobiliarios, Turismo/Hospitalidad y Afiliaciones.  
 > _"Conectamos tu negocio con el mundo."_
 
-**Versión actual**: v2.2.0 — Sprint 6 Completado ✅  
-**Última actualización**: 2026-04-07  
+**Versión actual**: v2.3.0 — Sprint 7 Completado ✅  
+**Última actualización**: 2026-04-08  
 **Estado**: Activo - Desarrollo intensivo  
 **Meta**: v3.0.0 — expansión México + Argentina
 
@@ -381,6 +381,72 @@ Target: Demo funcional para primer cliente piloto
 Stack:  Plataforma core + Nexo Bot single-tenant
 ```
 
+#### Sprint 7 — v2.3.0 — UI/UX + Testing + Bot Stability (Completado 2026-04-08)
+
+```
+Branch:    feature/sprint7-ui, feature/sprint7-testing, feature/sprint7-bot
+Estado:    Completado 2026-04-08
+
+Phase 1 — UI/UX Rebranding:
+  ✅ NexoRealLanding (hero, property grid, tour grid, CTA)       PR #99
+  ✅ Fix Login.tsx + Register.tsx (skin streaming → Nexo Real)   PR #99
+  ✅ Fix AppLayout/Navbar (nav items + colores)                  PR #99
+  ✅ PropertyCard + TourCard (variant grid/list)                 PR #99
+  ✅ Responsive 375/768/1280/1440px                              PR #99
+
+Phase 2 — Unit Tests:
+  ✅ Vitest: PropertyCard (16), TourCard (18), propertiesStore (7), toursStore (7), NexoRealLanding (21) = 69 tests   PR #100
+
+Phase 2 — E2E:
+  ✅ Playwright: properties.spec.ts (24) + tours.spec.ts (28) = 52 E2E tests   PR #101
+
+Phase 3 — Bot Stability:
+  ✅ GET /api/bot/health endpoint                                PR #102
+  ✅ withRetry() utility para OpenAI calls                       PR #102
+  ✅ WhatsApp disconnect handler                                 PR #102
+  ✅ DEMO_SCRIPT.md                                              PR #102
+```
+
+#### Sprint 8 — v2.4.0 — Bot Completo + n8n Workflows 📋
+
+```
+Branch:    feature/sprint8-bot-complete
+Estado:    Planificado (post Sprint 7)
+
+Batch 8.1 — Knowledge Base FAQ:
+  □ Crear /bot/src/prompt_kb/knowledge-base.md con FAQ real del negocio
+  □ Cubrir: propiedades, tours, afiliados, precios, zonas, contacto
+
+Batch 8.2 — n8n: Google Calendar workflow:
+  □ Crear workflow n8n "schedule-visit" → Google Calendar event
+  □ Test end-to-end: scheduleFlow → n8n → Calendar
+
+Batch 8.3 — n8n: Notion CRM workflow:
+  □ Crear workflow n8n "human-handoff" → Notion CRM lead
+  □ Crear workflow n8n "schedule-visit" → Notion CRM lead (Visit Scheduled)
+  □ Test end-to-end: handoffFlow → n8n → Notion
+
+Batch 8.4 — Captación de leads completa:
+  □ Agregar captura de email en welcomeFlow (después del nombre)
+  □ Agregar área de interés (propiedad / turismo / afiliados)
+  □ Persistir lead en DB (tabla CRM leads) via API interna
+
+Batch 8.5 — Onboarding de afiliados:
+  □ Diseñar y crear onboarding.flow.ts (guía paso a paso)
+  □ Keywords: "quiero ser afiliado", "cómo me registro", "join", etc.
+  □ Flow: requisitos → link registro → seguimiento post-registro
+
+Batch 8.6 — Manejo de objeciones:
+  □ Extender prompt Sophia/Max con técnicas: pyramid, time, network, trust
+  □ Test con escenarios de objeción en fixtures
+
+Batch 8.7 — Tests e2e bot completo:
+  □ Tests fixture-based para todos los flows (language, welcome, schedule,
+    handoff, balance, network, onboarding, objeciones)
+
+Estimado: ~30-35h
+```
+
 ### Fase 2 — Multi-Tenant (1–2 meses post v2.0.0)
 
 ```
@@ -455,6 +521,8 @@ Testing: Vitest (132 tests) + Playwright (13 E2E)
 ```
 area:backend         - Backend area
 area:frontend        - Frontend area
+area:bot             - Bot / WhatsApp area
+area:n8n             - n8n automation area
 type:feature         - New feature
 type:docs           - Documentation
 priority:critical    - Critical priority
@@ -465,10 +533,12 @@ sprint:1             - Sprint 1
 sprint:2             - Sprint 2
 sprint:3             - Sprint 3
 sprint:4             - Sprint 4
+sprint:7             - Sprint 7 — v2.3.0
+sprint:8             - Sprint 8 — v2.4.0
 ```
 
 ---
 
-**Última actualización**: 2026-04-07  
+**Última actualización**: 2026-04-08  
 **Proyecto**: https://github.com/users/ipproyectosysoluciones/projects/4  
 **Producto**: Nexo Real — _"Conectamos tu negocio con el mundo."_
