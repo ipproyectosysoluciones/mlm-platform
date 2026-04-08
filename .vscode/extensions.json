@@ -1,78 +1,47 @@
 {
   "recommendations": [
-    // ===========================================
-    // TypeScript & JavaScript
-    // ===========================================
     "ms-vscode.vscode-typescript-next",
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
+    "yoavbls.pretty-ts-errors",
 
-    // ===========================================
-    // React
-    // ===========================================
     "dsznajder.es7-react-js-snippets",
-    "msjsdiag.code-for-react-jsdoc",
 
-    // ===========================================
-    // Node.js & Backend
-    // ===========================================
-    "ms-vscode.vscode-node-debug2",
-    ".vertx.vscode-vertx",
-    "eg2.vscode-npm-script",
-
-    // ===========================================
-    // Database
-    // ===========================================
     "mtxr.sqltools",
-    "mtxr.sqltools-driver-mysql",
+    "mtxr.sqltools-driver-pg",
 
-    // ===========================================
-    // Docker
-    // ===========================================
     "ms-azuretools.vscode-docker",
 
-    // ===========================================
-    // Git
-    // ===========================================
     "eamodio.gitlens",
     "mhutchie.git-graph",
     "github.vscode-pull-request-github",
 
-    // ===========================================
-    // Testing
-    // ===========================================
-    "ms-vscode.test-adapter-converter",
-    "hbenl.vscode-test-explorer",
+    "vitest.explorer",
+    "ms-playwright.playwright",
 
-    // ===========================================
-    // Formatting & Linting
-    // ===========================================
     "stylelint.vscode-stylelint",
     "bradlc.vscode-tailwindcss",
     "streetsidesoftware.code-spell-checker",
 
-    // ===========================================
-    // Utilities
-    // ===========================================
     "christian-kohler.path-intellisense",
-    "zignd.html-css-class-completion",
     "humao.rest-client",
-    "ms-vscode.hexeditor",
+    "dotenv.dotenv-vscode",
+    "pkief.material-icon-theme",
 
-    // ===========================================
-    // Documentation
-    // ===========================================
     "bierner.markdown-mermaid",
     "yzhang.markdown-all-in-one",
 
-    // ===========================================
-    // i18n
-    // ===========================================
     "lokalise.i18n-ally",
 
-    // ===========================================
-    // API Documentation
-    // ===========================================
     "42Crunch.vscode-openapi"
+  ],
+  "unwantedRecommendations": [
+    "ms-vscode.vscode-node-debug2",
+    "eg2.vscode-npm-script",
+    "msjsdiag.code-for-react-jsdoc",
+    "ms-vscode.test-adapter-converter",
+    "hbenl.vscode-test-explorer",
+    "zignd.html-css-class-completion",
+    "mtxr.sqltools-driver-mysql"
   ]
 }
