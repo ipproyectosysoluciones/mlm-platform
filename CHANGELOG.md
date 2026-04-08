@@ -4,6 +4,27 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
+## [2.3.0] - 2026-04-08
+
+### Added
+
+- **Sprint 7 Phase 1 — UI/UX Rebranding** (PR #99)
+  - `NexoRealLanding` — hero section, features grid, testimonials y CTA; i18n ES/EN completo
+  - `PropertyCard` y `TourCard` — componentes responsive con soporte de variante grid/list e i18n ES/EN
+  - Layout frontend restructurado: `AppLayout` y `Navbar` actualizados a identidad Nexo Real
+
+- **Sprint 7 Phase 2 — Testing** (PR #100 + #101)
+  - 307 unit tests (Vitest): `PropertyCard` (16), `TourCard` (18), `propertiesStore` (7), `toursStore` (7), `NexoRealLanding` (21)
+  - 52 E2E tests (Playwright): `properties.spec.ts` (24) + `tours.spec.ts` (28)
+
+- **Sprint 7 Phase 3 — Bot Stability** (PR #102)
+  - `GET /api/bot/health` — endpoint de health check implementado en `BotController` + `bot.routes.ts`
+  - `withRetry<T>()` — utility en `ai.service.ts` con backoff exponencial (3 intentos, base 500ms, duplica cada retry); non-retryable en status < 500 y ≠ 429
+  - WhatsApp disconnect handler en `app.ts` con `MAX_RECONNECT_ATTEMPTS` configurable via variable de entorno `BOT_MAX_RECONNECT`; exit inmediato en código 401; reset del contador en reconexión exitosa
+  - `DEMO_SCRIPT.md` — guion de demo para Mayo 2026
+
+---
+
 ## [2.2.0] - 2026-04-07
 
 ### Added

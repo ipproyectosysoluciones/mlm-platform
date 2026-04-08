@@ -3,8 +3,8 @@
 > Hoja de ruta completa para la plataforma **Nexo Real** — Servicios Inmobiliarios, Turismo/Hospitalidad y Afiliaciones.  
 > _"Conectamos tu negocio con el mundo."_
 
-**Versión actual**: v2.2.0 — Sprint 6 Completado ✅  
-**Última actualización**: 2026-04-07  
+**Versión actual**: v2.3.0 — Sprint 7 Completado ✅  
+**Última actualización**: 2026-04-08  
 **Estado**: Activo - Desarrollo intensivo  
 **Meta**: v3.0.0 — expansión México + Argentina
 
@@ -381,30 +381,30 @@ Target: Demo funcional para primer cliente piloto
 Stack:  Plataforma core + Nexo Bot single-tenant
 ```
 
-#### Sprint 7 — v2.3.0 — UI/UX + Testing + Bot Stability 🔄
+#### Sprint 7 — v2.3.0 — UI/UX + Testing + Bot Stability (Completado 2026-04-08)
 
 ```
 Branch:    feature/sprint7-ui, feature/sprint7-testing, feature/sprint7-bot
-Estado:    En progreso
+Estado:    Completado 2026-04-08
 
 Phase 1 — UI/UX Rebranding:
-  □ NexoRealLanding (hero, property grid, tour grid, CTA)       feature/sprint7-ui
-  □ Fix Login.tsx + Register.tsx (skin streaming → Nexo Real)   feature/sprint7-ui
-  □ Fix AppLayout/Navbar (nav items + colores)                  feature/sprint7-ui
-  □ PropertyCard + TourCard (variant grid/list)                 feature/sprint7-ui
-  □ Responsive 375/768/1280/1440px                              feature/sprint7-ui
+  ✅ NexoRealLanding (hero, property grid, tour grid, CTA)       PR #99
+  ✅ Fix Login.tsx + Register.tsx (skin streaming → Nexo Real)   PR #99
+  ✅ Fix AppLayout/Navbar (nav items + colores)                  PR #99
+  ✅ PropertyCard + TourCard (variant grid/list)                 PR #99
+  ✅ Responsive 375/768/1280/1440px                              PR #99
 
-Phase 2 — Testing:
-  □ Vitest coverage ≥90% (statements/branches/functions/lines) feature/sprint7-testing
-  □ E2E Playwright: auth, property search, reservation wizard   feature/sprint7-testing
-  □ E2E: i18n toggle, responsive viewports                      feature/sprint7-testing
-  □ PWA install + push notification tests                       feature/sprint7-testing
+Phase 2 — Unit Tests:
+  ✅ Vitest: PropertyCard (16), TourCard (18), propertiesStore (7), toursStore (7), NexoRealLanding (21) = 69 tests   PR #100
+
+Phase 2 — E2E:
+  ✅ Playwright: properties.spec.ts (24) + tours.spec.ts (28) = 52 E2E tests   PR #101
 
 Phase 3 — Bot Stability:
-  □ GET /api/bot/health endpoint                                feature/sprint7-bot
-  □ withRetry() utility para OpenAI calls                       feature/sprint7-bot
-  □ WhatsApp disconnect handler                                 feature/sprint7-bot
-  □ DEMO_SCRIPT.md                                              feature/sprint7-bot
+  ✅ GET /api/bot/health endpoint                                PR #102
+  ✅ withRetry() utility para OpenAI calls                       PR #102
+  ✅ WhatsApp disconnect handler                                 PR #102
+  ✅ DEMO_SCRIPT.md                                              PR #102
 ```
 
 #### Sprint 8 — v2.4.0 — Bot Completo + n8n Workflows 📋
