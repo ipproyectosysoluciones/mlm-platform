@@ -4,6 +4,10 @@
  *               Muestra un resumen de propiedad en layout grid o lista con precio, ubicación y características.
  * @module components/property/PropertyCard
  * @author Nexo Real Development Team
+ *
+ * @todo [i18n debt] Status badges ('En Venta', 'En Alquiler', 'Administración') are hardcoded in Spanish.
+ *       They should use i18n keys (e.g. t('property.badge.sale')) when the i18n layer is extended.
+ *       Los badges de estado están hardcodeados en español y deben migrarse a claves i18n.
  */
 
 import { Link } from 'react-router-dom';
@@ -88,7 +92,7 @@ export function PropertyCard({ property, variant = 'grid', className }: Property
         )}
       >
         {/* Thumbnail */}
-        <div className="relative w-40 shrink-0 overflow-hidden rounded-l-2xl">
+        <div className="relative w-32 sm:w-40 min-h-[120px] shrink-0 overflow-hidden rounded-l-2xl">
           {coverImage ? (
             <img
               src={coverImage}

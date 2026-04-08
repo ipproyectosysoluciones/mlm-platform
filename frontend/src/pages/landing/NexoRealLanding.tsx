@@ -70,7 +70,7 @@ function HeroSection() {
         <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
           <Link
             to="/properties"
-            className="flex items-center gap-2 px-8 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all duration-300 hover:scale-105"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all duration-300 hover:scale-105"
           >
             <Building2 className="w-5 h-5" />
             {t('landing.hero.ctaProperties')}
@@ -78,7 +78,7 @@ function HeroSection() {
           </Link>
           <Link
             to="/tours"
-            className="flex items-center gap-2 px-8 py-3.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold rounded-xl border border-slate-700/50 hover:border-emerald-500/40 transition-all duration-300"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-3.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold rounded-xl border border-slate-700/50 hover:border-emerald-500/40 transition-all duration-300"
           >
             <MapPin className="w-5 h-5" />
             {t('landing.hero.ctaTours')}

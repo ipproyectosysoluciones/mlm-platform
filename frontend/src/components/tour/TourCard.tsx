@@ -4,6 +4,10 @@
  *               Muestra un resumen de paquete de tour en layout grid o lista con destino, duración y precio.
  * @module components/tour/TourCard
  * @author Nexo Real Development Team
+ *
+ * @todo [i18n debt] Category badges ('Aventura', 'Cultural', 'Gastronomía', etc.) are hardcoded in Spanish.
+ *       They should use i18n keys (e.g. t('tour.category.adventure')) when the i18n layer is extended.
+ *       Los badges de categoría están hardcodeados en español y deben migrarse a claves i18n.
  */
 
 import { Link } from 'react-router-dom';
@@ -103,7 +107,7 @@ export function TourCard({ tour, variant = 'grid', className }: TourCardProps) {
         )}
       >
         {/* Thumbnail */}
-        <div className="relative w-40 shrink-0 overflow-hidden rounded-l-2xl">
+        <div className="relative w-32 sm:w-40 min-h-[120px] shrink-0 overflow-hidden rounded-l-2xl">
           {coverImage ? (
             <img
               src={coverImage}
