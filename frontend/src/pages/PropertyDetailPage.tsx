@@ -221,7 +221,7 @@ export default function PropertyDetailPage() {
     property.city,
     property.bedrooms ? `· ${property.bedrooms} hab.` : '',
     property.bathrooms ? `· ${property.bathrooms} baños` : '',
-    property.areaM2 ? `· ${property.areaM2} m²` : '',
+    property.area ? `· ${property.area} m²` : '',
     `· ${property.currency} ${property.price.toLocaleString('es-AR')}`,
     property.description ? `— ${property.description.slice(0, 120)}` : '',
   ]
@@ -253,9 +253,7 @@ export default function PropertyDetailPage() {
       price: property.price,
       priceCurrency: property.currency,
       availability:
-        property.status === 'available'
-          ? 'https://schema.org/InStock'
-          : 'https://schema.org/SoldOut',
+        property.status === 'active' ? 'https://schema.org/InStock' : 'https://schema.org/SoldOut',
     },
     address: {
       '@type': 'PostalAddress',
@@ -264,8 +262,8 @@ export default function PropertyDetailPage() {
       addressCountry: property.country ?? 'CO',
     },
     ...(property.bedrooms != null && { numberOfRooms: property.bedrooms }),
-    ...(property.areaM2 != null && {
-      floorSize: { '@type': 'QuantitativeValue', value: property.areaM2, unitCode: 'MTK' },
+    ...(property.area != null && {
+      floorSize: { '@type': 'QuantitativeValue', value: property.area, unitCode: 'MTK' },
     }),
   };
 

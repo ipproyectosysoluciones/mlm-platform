@@ -287,8 +287,7 @@ export default function TourDetailPage() {
       '@type': 'Offer',
       price: tour.price,
       priceCurrency: tour.currency,
-      availability:
-        tour.status === 'active' ? 'https://schema.org/InStock' : 'https://schema.org/SoldOut',
+      availability: tour.isActive ? 'https://schema.org/InStock' : 'https://schema.org/SoldOut',
       description: `Tour de ${tour.duration} ${tour.duration === 1 ? 'día' : 'días'} — hasta ${tour.maxGuests} personas`,
     },
   };

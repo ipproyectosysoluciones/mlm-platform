@@ -1,18 +1,36 @@
 /**
- * Register Page - Modern split layout design matching Login
+ * Register Page - Diseño split con branding Nexo Real que coincide con Login.
+ * Panel izquierdo con quote de inversión inmobiliaria, panel derecho con formulario.
+ *
+ * Register Page - Split layout matching Login with Nexo Real branding.
+ * Left panel with real estate investment quote, right panel with form.
+ *
+ * @module pages/Register
  */
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Loader2, Eye, EyeOff, TreeDeciduous, Check } from 'lucide-react';
+import { Loader2, Eye, EyeOff, Building2, Check } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { authService } from '../services/api';
 
+/** Registration form state shape / Shape del estado del formulario de registro */
+interface RegisterFormData {
+  email: string;
+  password: string;
+  confirmPassword: string;
+  sponsorCode: string;
+}
+
+/**
+ * Register page component with Nexo Real brand identity.
+ * Componente de página de registro con identidad visual de Nexo Real.
+ */
 export default function Register() {
   const navigate = useNavigate();
   const { login } = useAuth();
   const { t } = useTranslation();
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<RegisterFormData>({
     email: '',
     password: '',
     confirmPassword: '',
@@ -51,8 +69,9 @@ export default function Register() {
       });
       login(response.token, response.user);
       navigate('/dashboard');
-    } catch (err: any) {
-      setError(err.response?.data?.message || t('auth.registerError'));
+    } catch (err: unknown) {
+      const axiosErr = err as { response?: { data?: { message?: string } } };
+      setError(axiosErr.response?.data?.message || t('auth.registerError'));
     } finally {
       setIsLoading(false);
     }
@@ -65,38 +84,49 @@ export default function Register() {
 
   return (
     <div className="container relative h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
-      {/* Left side - Branding */}
-      <div className="relative hidden h-full flex-col bg-zinc-900 p-10 text-white dark:border-r lg:flex">
+      {/* Left panel — Nexo Real branding */}
+      <div className="relative hidden h-full flex-col bg-slate-900 p-10 text-white lg:flex overflow-hidden">
+        {/* Gradient overlay / Overlay degradado */}
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/80 via-teal-900/60 to-slate-900" />
+        {/* Decorative grid pattern / Patrón de grilla decorativo */}
+        <div
+          className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage:
+              'linear-gradient(rgba(16,185,129,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(16,185,129,0.3) 1px, transparent 1px)',
+            backgroundSize: '40px 40px',
+          }}
+        />
+
         {/* Logo */}
-        <Link to="/" className="relative z-20 flex items-center text-lg font-medium">
-          <TreeDeciduous className="mr-2 h-6 w-6" />
-          Nexo Real
+        <Link to="/" className="relative z-20 flex items-center gap-3 text-lg font-medium">
+          <div className="w-9 h-9 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/30">
+            <Building2 className="w-5 h-5 text-white" />
+          </div>
+          <span className="font-bold">Nexo Real</span>
         </Link>
 
         {/* Quote */}
         <div className="relative z-20 mt-auto">
-          <blockquote className="space-y-2">
-            <p className="text-lg">
-              "This platform has transformed my business. The binary compensation plan and streaming
-              services are a winning combination."
-            </p>
-            <footer className="text-sm">Sofia Davis</footer>
+          <blockquote className="space-y-3">
+            <p className="text-lg leading-relaxed text-slate-100">{t('auth.registerQuote')}</p>
+            <footer className="text-sm text-emerald-300 font-medium">
+              — {t('auth.registerQuoteAuthor')}
+            </footer>
           </blockquote>
         </div>
       </div>
 
-      {/* Right side - Register form */}
-      <div className="p-8">
+      {/* Right panel — Register form */}
+      <div className="p-8 overflow-y-auto max-h-screen">
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[400px]">
           {/* Header */}
           <div className="flex flex-col space-y-2 text-center">
-            <h1 className="text-2xl font-semibold tracking-tight">Create Account</h1>
-            <p className="text-sm text-muted-foreground">
-              Enter your details below to create your account
-            </p>
+            <h1 className="text-2xl font-semibold tracking-tight">{t('auth.createAccount')}</h1>
+            <p className="text-sm text-muted-foreground">{t('auth.joinNetwork')}</p>
           </div>
 
-          {/* Error */}
+          {/* Error message / Mensaje de error */}
           {error && (
             <div className="bg-red-50 text-red-600 p-3 rounded-md text-sm text-center">{error}</div>
           )}
@@ -105,21 +135,21 @@ export default function Register() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Email */}
             <div className="space-y-2">
-              <label className="text-sm font-medium leading-none">Email</label>
+              <label className="text-sm font-medium leading-none">{t('auth.email')}</label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                placeholder="name@example.com"
+                placeholder="nombre@ejemplo.com"
                 required
               />
             </div>
 
             {/* Password */}
             <div className="space-y-2">
-              <label className="text-sm font-medium leading-none">Password</label>
+              <label className="text-sm font-medium leading-none">{t('auth.password')}</label>
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
@@ -133,12 +163,12 @@ export default function Register() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
-              {/* Password requirements */}
+              {/* Password requirements / Requisitos de contraseña */}
               <div className="space-y-1 mt-2">
                 {passwordRequirements.map((req, index) => (
                   <div key={index} className="flex items-center gap-2 text-xs">
@@ -155,7 +185,9 @@ export default function Register() {
 
             {/* Confirm Password */}
             <div className="space-y-2">
-              <label className="text-sm font-medium leading-none">Confirm Password</label>
+              <label className="text-sm font-medium leading-none">
+                {t('auth.confirmPassword')}
+              </label>
               <div className="relative">
                 <input
                   type={showConfirmPassword ? 'text' : 'password'}
@@ -169,7 +201,7 @@ export default function Register() {
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                 >
                   {showConfirmPassword ? (
                     <EyeOff className="h-4 w-4" />
@@ -180,16 +212,19 @@ export default function Register() {
               </div>
             </div>
 
-            {/* Sponsor Code (optional) */}
+            {/* Sponsor / Referral Code (optional) */}
             <div className="space-y-2">
-              <label className="text-sm font-medium leading-none">Referral Code (optional)</label>
+              <label className="text-sm font-medium leading-none">
+                {t('auth.referralCode')}{' '}
+                <span className="text-muted-foreground font-normal">({t('auth.optional')})</span>
+              </label>
               <input
                 type="text"
                 name="sponsorCode"
                 value={formData.sponsorCode}
                 onChange={handleChange}
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                placeholder="ABC123"
+                placeholder={t('auth.sponsorCodePlaceholder')}
               />
             </div>
 
@@ -199,16 +234,16 @@ export default function Register() {
               disabled={isLoading}
               className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full"
             >
-              {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-              Create Account
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {t('auth.createAccount')}
             </button>
           </form>
 
-          {/* Login link */}
+          {/* Login link / Enlace de login */}
           <p className="px-8 text-center text-sm text-muted-foreground">
-            Already have an account?{' '}
+            {t('auth.haveAccount')}{' '}
             <Link to="/login" className="underline underline-offset-4 hover:text-primary">
-              Sign in
+              {t('auth.signIn')}
             </Link>
           </p>
         </div>

@@ -50,8 +50,8 @@ context: |
     - max.prompt.md          - personalidad agente Max
     - knowledge-base.md      - KB completa bilingue (ES/EN), 7 secciones
 
-  Estado actual: v1.11.0, Sprint 3 completado, en Sprint 4 (QA + Nexo Bot MVP)
-  Branch activo: release
+  Estado actual: v2.2.0, Sprint 6 completado, preparando Sprint 7 (Multi-Tenant Fase 2)
+  Branch activo: development
   GPG signing: EXPIRADO - usar --no-gpg-sign en todos los commits
   Repo GitHub Project: https://github.com/users/ipproyectosysoluciones/projects/4
 

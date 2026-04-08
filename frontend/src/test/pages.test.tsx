@@ -78,7 +78,7 @@ describe('Login Page', () => {
       </TestWrapper>
     );
 
-    expect(screen.getByPlaceholderText(/name@example.com/i)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/nombre@ejemplo.com/i)).toBeInTheDocument();
   });
 
   it('renders login form with password input', () => {
@@ -98,7 +98,7 @@ describe('Login Page', () => {
       </TestWrapper>
     );
 
-    expect(screen.getByRole('button', { name: /login/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /iniciar sesión/i })).toBeInTheDocument();
   });
 
   it('has a link to register', () => {
@@ -108,7 +108,7 @@ describe('Login Page', () => {
       </TestWrapper>
     );
 
-    expect(screen.getByRole('link', { name: /sign up/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /registrate/i })).toBeInTheDocument();
   });
 });
 
@@ -124,7 +124,7 @@ describe('Register Page', () => {
       </TestWrapper>
     );
 
-    expect(screen.getByPlaceholderText(/name@example.com/i)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/nombre@ejemplo.com/i)).toBeInTheDocument();
   });
 
   it('has a submit button', () => {
@@ -135,7 +135,7 @@ describe('Register Page', () => {
     );
 
     // Search by name to avoid multiple button matches (eye toggle buttons)
-    expect(screen.getByRole('button', { name: /create account/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /crear cuenta/i })).toBeInTheDocument();
   });
 
   it('has a link to login page', () => {
@@ -145,8 +145,8 @@ describe('Register Page', () => {
       </TestWrapper>
     );
 
-    // Link text is hardcoded in English: "Already have an account? Sign in"
-    expect(screen.getByText(/sign in/i)).toBeInTheDocument();
+    // Link text resolved from mock i18n: t('auth.signIn') = 'Iniciar Sesión'
+    expect(screen.getByText(/iniciar sesión/i)).toBeInTheDocument();
   });
 });
 

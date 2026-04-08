@@ -223,17 +223,17 @@ Bonos adicionales:
 
 ### Capacidades del Bot
 
-| Feature                     | Descripción                                       | Prioridad | Estado |
-| --------------------------- | ------------------------------------------------- | --------- | ------ |
-| Detección de idioma ES/EN   | Pregunta al inicio, mantiene toda la conversación | 🔴 Alta   | 🔲     |
-| Detección de género         | Por nombre / preferencia, asigna Sophia o Max     | 🔴 Alta   | 🔲     |
-| Captación de leads          | Nombre, teléfono, email, área de interés          | 🔴 Alta   | 🔲     |
-| Onboarding de afiliados     | Guía paso a paso para registrarse                 | 🔴 Alta   | 🔲     |
-| Soporte a afiliados activos | Saldo, red, comisiones por WhatsApp               | 🔴 Alta   | ✅     |
-| FAQ del negocio             | Responde con Knowledge Base, nunca inventa        | 🔴 Alta   | 🔲     |
-| Agendamiento de citas       | Google Calendar vía n8n                           | 🟡 Media  | 🔲     |
-| Escalación a humano         | Siempre disponible, sin excusas                   | 🔴 Alta   | 🔲     |
-| Manejo de objeciones        | Pyramid, time, network, trust                     | 🟡 Media  | 🔲     |
+| Feature                     | Descripción                                       | Prioridad | Estado | Nota                                              |
+| --------------------------- | ------------------------------------------------- | --------- | ------ | ------------------------------------------------- |
+| Detección de idioma ES/EN   | Pregunta al inicio, mantiene toda la conversación | 🔴 Alta   | ✅     | `language.flow.ts` implementado                   |
+| Detección de género         | Por nombre / preferencia, asigna Sophia o Max     | 🔴 Alta   | ✅     | `agent.flow.ts` + `ai.service.detectAgent()`      |
+| Captación de leads          | Nombre, teléfono, email, área de interés          | 🔴 Alta   | ⚠️     | Captura nombre+teléfono. Falta email+interés+DB   |
+| Onboarding de afiliados     | Guía paso a paso para registrarse                 | 🔴 Alta   | 🔲     | Sprint 8                                          |
+| Soporte a afiliados activos | Saldo, red, comisiones por WhatsApp               | 🔴 Alta   | ✅     | `balance/network/commissions flows`               |
+| FAQ del negocio             | Responde con Knowledge Base, nunca inventa        | 🔴 Alta   | ⚠️     | Prompt listo, `knowledge-base.md` vacío. Sprint 8 |
+| Agendamiento de citas       | Google Calendar vía n8n                           | 🟡 Media  | ⚠️     | `schedule.flow.ts` listo, falta workflow en n8n   |
+| Escalación a humano         | Siempre disponible, sin excusas                   | 🔴 Alta   | ✅     | `handoff.flow.ts` implementado                    |
+| Manejo de objeciones        | Pyramid, time, network, trust                     | 🟡 Media  | 🔲     | Sprint 8                                          |
 
 ### Reglas Duras del Bot (Non-Negotiable)
 
@@ -262,13 +262,13 @@ Session:     experimentalStore: true, timeRelease: 10800000
 
 ## 4.4 CRM Integrado
 
-| Feature        | Descripción                        | Estado |
-| -------------- | ---------------------------------- | ------ |
-| Leads          | Captura, seguimiento, estado       | ✅     |
-| Tasks          | Tareas asignadas a leads/afiliados | ✅     |
-| Communications | Historial de contactos             | ✅     |
-| Agendamiento   | Google Calendar sync (vía n8n)     | 🔲     |
-| Notion sync    | Leads exportados a Notion          | 🔲     |
+| Feature        | Descripción                        | Estado | Nota                                                                    |
+| -------------- | ---------------------------------- | ------ | ----------------------------------------------------------------------- |
+| Leads          | Captura, seguimiento, estado       | ✅     |                                                                         |
+| Tasks          | Tareas asignadas a leads/afiliados | ✅     |                                                                         |
+| Communications | Historial de contactos             | ✅     |                                                                         |
+| Agendamiento   | Google Calendar sync (vía n8n)     | ⚠️     | `CalendarService` + `scheduleFlow` listos. Falta workflow n8n. Sprint 8 |
+| Notion sync    | Leads exportados a Notion          | ⚠️     | `n8nService.triggerHumanHandoff` listo. Falta workflow n8n. Sprint 8    |
 
 ## 4.5 Sistema de Wallet y Pagos
 
@@ -540,9 +540,11 @@ _Nexo Real — "Conectamos tu negocio con el mundo."_
 
 ## Sprint Status
 
-| Sprint     | Versión | Descripción                                                                                                        | Estado        | Fecha      |
-| ---------- | ------- | ------------------------------------------------------------------------------------------------------------------ | ------------- | ---------- |
-| Sprint 1-3 | v1.11.0 | Auth, MLM, CRM, E-commerce, Security, Marketplace                                                                  | ✅ Completado | 2026-04-04 |
-| Sprint 4   | v2.0.0  | Nexo Bot WhatsApp, n8n Automation, Gamificación                                                                    | ✅ Completado | 2026-04-06 |
-| Sprint 5   | v2.1.0  | Real Estate Frontend, Tourism Frontend, Reservation Wizard                                                         | ✅ Completado | 2026-04-07 |
-| Sprint 6   | v2.2.0  | Admin Dashboard CRUD, Nexo Bot Flows (properties+tours), SEO Frontend, Build Hardening, i18n cleanup, CodeQL fixes | ✅ Completado | 2026-04-07 |
+| Sprint     | Versión | Descripción                                                                                                          | Estado         | Fecha      |
+| ---------- | ------- | -------------------------------------------------------------------------------------------------------------------- | -------------- | ---------- |
+| Sprint 1-3 | v1.11.0 | Auth, MLM, CRM, E-commerce, Security, Marketplace                                                                    | ✅ Completado  | 2026-04-04 |
+| Sprint 4   | v2.0.0  | Nexo Bot WhatsApp, n8n Automation, Gamificación                                                                      | ✅ Completado  | 2026-04-06 |
+| Sprint 5   | v2.1.0  | Real Estate Frontend, Tourism Frontend, Reservation Wizard                                                           | ✅ Completado  | 2026-04-07 |
+| Sprint 6   | v2.2.0  | Admin Dashboard CRUD, Nexo Bot Flows (properties+tours), SEO Frontend, Build Hardening, i18n cleanup, CodeQL fixes   | ✅ Completado  | 2026-04-07 |
+| Sprint 7   | v2.3.0  | UI/UX Rebranding completo (landing Nexo Real, auth skin, AppLayout), Vitest 90%+ coverage, E2E Playwright, PWA       | 🔄 En progreso | 2026-04-08 |
+| Sprint 8   | v2.4.0  | Bot completo: Knowledge Base FAQ, n8n workflows (Calendar+Notion), captación leads, onboarding afiliados, objeciones | 📋 Planificado | —          |
