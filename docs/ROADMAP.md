@@ -381,6 +381,72 @@ Target: Demo funcional para primer cliente piloto
 Stack:  Plataforma core + Nexo Bot single-tenant
 ```
 
+#### Sprint 7 — v2.3.0 — UI/UX + Testing + Bot Stability 🔄
+
+```
+Branch:    feature/sprint7-ui, feature/sprint7-testing, feature/sprint7-bot
+Estado:    En progreso
+
+Phase 1 — UI/UX Rebranding:
+  □ NexoRealLanding (hero, property grid, tour grid, CTA)       feature/sprint7-ui
+  □ Fix Login.tsx + Register.tsx (skin streaming → Nexo Real)   feature/sprint7-ui
+  □ Fix AppLayout/Navbar (nav items + colores)                  feature/sprint7-ui
+  □ PropertyCard + TourCard (variant grid/list)                 feature/sprint7-ui
+  □ Responsive 375/768/1280/1440px                              feature/sprint7-ui
+
+Phase 2 — Testing:
+  □ Vitest coverage ≥90% (statements/branches/functions/lines) feature/sprint7-testing
+  □ E2E Playwright: auth, property search, reservation wizard   feature/sprint7-testing
+  □ E2E: i18n toggle, responsive viewports                      feature/sprint7-testing
+  □ PWA install + push notification tests                       feature/sprint7-testing
+
+Phase 3 — Bot Stability:
+  □ GET /api/bot/health endpoint                                feature/sprint7-bot
+  □ withRetry() utility para OpenAI calls                       feature/sprint7-bot
+  □ WhatsApp disconnect handler                                 feature/sprint7-bot
+  □ DEMO_SCRIPT.md                                              feature/sprint7-bot
+```
+
+#### Sprint 8 — v2.4.0 — Bot Completo + n8n Workflows 📋
+
+```
+Branch:    feature/sprint8-bot-complete
+Estado:    Planificado (post Sprint 7)
+
+Batch 8.1 — Knowledge Base FAQ:
+  □ Crear /bot/src/prompt_kb/knowledge-base.md con FAQ real del negocio
+  □ Cubrir: propiedades, tours, afiliados, precios, zonas, contacto
+
+Batch 8.2 — n8n: Google Calendar workflow:
+  □ Crear workflow n8n "schedule-visit" → Google Calendar event
+  □ Test end-to-end: scheduleFlow → n8n → Calendar
+
+Batch 8.3 — n8n: Notion CRM workflow:
+  □ Crear workflow n8n "human-handoff" → Notion CRM lead
+  □ Crear workflow n8n "schedule-visit" → Notion CRM lead (Visit Scheduled)
+  □ Test end-to-end: handoffFlow → n8n → Notion
+
+Batch 8.4 — Captación de leads completa:
+  □ Agregar captura de email en welcomeFlow (después del nombre)
+  □ Agregar área de interés (propiedad / turismo / afiliados)
+  □ Persistir lead en DB (tabla CRM leads) via API interna
+
+Batch 8.5 — Onboarding de afiliados:
+  □ Diseñar y crear onboarding.flow.ts (guía paso a paso)
+  □ Keywords: "quiero ser afiliado", "cómo me registro", "join", etc.
+  □ Flow: requisitos → link registro → seguimiento post-registro
+
+Batch 8.6 — Manejo de objeciones:
+  □ Extender prompt Sophia/Max con técnicas: pyramid, time, network, trust
+  □ Test con escenarios de objeción en fixtures
+
+Batch 8.7 — Tests e2e bot completo:
+  □ Tests fixture-based para todos los flows (language, welcome, schedule,
+    handoff, balance, network, onboarding, objeciones)
+
+Estimado: ~30-35h
+```
+
 ### Fase 2 — Multi-Tenant (1–2 meses post v2.0.0)
 
 ```
@@ -455,6 +521,8 @@ Testing: Vitest (132 tests) + Playwright (13 E2E)
 ```
 area:backend         - Backend area
 area:frontend        - Frontend area
+area:bot             - Bot / WhatsApp area
+area:n8n             - n8n automation area
 type:feature         - New feature
 type:docs           - Documentation
 priority:critical    - Critical priority
@@ -465,10 +533,12 @@ sprint:1             - Sprint 1
 sprint:2             - Sprint 2
 sprint:3             - Sprint 3
 sprint:4             - Sprint 4
+sprint:7             - Sprint 7 — v2.3.0
+sprint:8             - Sprint 8 — v2.4.0
 ```
 
 ---
 
-**Última actualización**: 2026-04-07  
+**Última actualización**: 2026-04-08  
 **Proyecto**: https://github.com/users/ipproyectosysoluciones/projects/4  
 **Producto**: Nexo Real — _"Conectamos tu negocio con el mundo."_
