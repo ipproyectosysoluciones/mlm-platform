@@ -15,7 +15,7 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 
 - **Sprint 7 Phase 2 — Testing** (PR #100 + #101)
   - 307 unit tests (Vitest): `PropertyCard` (16), `TourCard` (18), `propertiesStore` (7), `toursStore` (7), `NexoRealLanding` (21)
-  - 52 E2E tests (Playwright): `properties.spec.ts` (24) + `tours.spec.ts` (28)
+  - 51 E2E tests (Playwright): `properties.spec.ts` (24) + `tours.spec.ts` (27)
 
 - **Sprint 7 Phase 3 — Bot Stability** (PR #102)
   - `GET /api/bot/health` — endpoint de health check implementado en `BotController` + `bot.routes.ts`
