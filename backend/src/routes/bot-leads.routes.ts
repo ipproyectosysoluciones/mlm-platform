@@ -9,7 +9,7 @@
 
 import { Router, Request, Response } from 'express';
 import { asyncHandler } from '../middleware/asyncHandler';
-import { db } from '../database';
+import { sequelize } from '../config/database';
 import { v4 as uuidv4 } from 'uuid';
 
 const router = Router();
@@ -51,6 +51,10 @@ router.post(
       return;
     }
 
+    // Use email if provided, otherwise generate a placeholder (contact_email is NOT NULL)
+    // Usar email si se proveyó, sino generar un placeholder (contact_email es NOT NULL)
+    const contactEmail = email ?? `bot-${phone}@nexoreal.bot`;
+
     // Build notes with conversation context
     // Construir notas con contexto de la conversación
     const notes = [
@@ -61,9 +65,9 @@ router.post(
       .filter(Boolean)
       .join(' | ');
 
-    // Insert lead into database
-    // Insertar lead en la base de datos
-    const [result] = await db.sequelize.query(
+    // Insert lead into database — ON CONFLICT DO NOTHING deduplicates by phone
+    // Insertar lead en la base de datos — ON CONFLICT DO NOTHING deduplica por teléfono
+    const [result] = await sequelize.query(
       `INSERT INTO leads (
         id, user_id, contact_name, contact_phone, contact_email,
         source, status, notes, metadata, created_at, updated_at
@@ -80,7 +84,7 @@ router.post(
           userId: systemUserId,
           name,
           phone,
-          email: email ?? null,
+          email: contactEmail,
           notes,
           metadata: JSON.stringify({
             agentName,
