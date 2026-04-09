@@ -29,7 +29,7 @@
       "parameters": {
         "resource": "databasePage",
         "operation": "create",
-        "databaseId": "={{ $env.NOTION_LEADS_DB_ID }}",
+        "databaseId": "33a293bfbcf080829d4b000cee5a8b21",
         "title": "={{ $json.name }} — {{ $json.phone }}",
         "propertiesUi": {
           "propertyValues": [
@@ -86,36 +86,27 @@
       "parameters": {
         "method": "POST",
         "url": "https://api.brevo.com/v3/smtp/email",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "api-key",
-              "value": "={{ $env.BREVO_API_KEY }}"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "name": "accept",
-              "value": "application/json"
-            }
-          ]
-        },
+        "sendHeaders": false,
         "sendBody": true,
         "bodyParameters": {
           "parameters": []
         },
         "specifyBody": "json",
-        "jsonBody": "={\n  \"to\": [{\"email\": \"{{ $env.SALES_TEAM_EMAIL }}\", \"name\": \"Equipo Nexo Real\"}],\n  \"templateId\": {{ $env.BREVO_HANDOFF_TEMPLATE_ID }},\n  \"params\": {\n    \"lead_name\": \"{{ $node['Validate & Transform Input'].json.name }}\",\n    \"lead_phone\": \"{{ $node['Validate & Transform Input'].json.phone }}\",\n    \"lead_summary\": \"{{ $node['Validate & Transform Input'].json.summary }}\",\n    \"bot_agent\": \"{{ $node['Validate & Transform Input'].json.agentName }}\",\n    \"handoff_time\": \"{{ $node['Validate & Transform Input'].json.handoffAt }}\",\n    \"notion_url\": \"https://notion.so/{{ $node['Notion — Create Lead'].json.id.replace(/-/g, '') }}\"\n  }\n}",
-        "options": {}
+        "jsonBody": "={\n  \"to\": [{\"email\": \"info@nexoreal.xyz\", \"name\": \"Equipo Nexo Real\"}],\n  \"templateId\": 1,\n  \"params\": {\n    \"lead_name\": \"{{ $node['Validate & Transform Input'].json.name }}\",\n    \"lead_phone\": \"{{ $node['Validate & Transform Input'].json.phone }}\",\n    \"lead_summary\": \"{{ $node['Validate & Transform Input'].json.summary }}\",\n    \"bot_agent\": \"{{ $node['Validate & Transform Input'].json.agentName }}\",\n    \"handoff_time\": \"{{ $node['Validate & Transform Input'].json.handoffAt }}\",\n    \"notion_url\": \"https://notion.so/{{ $node['Notion — Create Lead'].json.id.replace(/-/g, '') }}\"\n  }\n}",
+        "options": {},
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
       },
       "id": "brevo-send-email",
       "name": "Brevo — Send Handoff Email",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [680, 400]
+      "position": [680, 400],
+      "credentials": {
+        "httpHeaderAuth": {
+          "name": "Brevo — API Key"
+        }
+      }
     },
     {
       "parameters": {

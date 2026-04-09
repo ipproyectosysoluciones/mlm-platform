@@ -29,7 +29,7 @@
       "parameters": {
         "resource": "event",
         "operation": "create",
-        "calendarId": "={{ $env.GOOGLE_CALENDAR_ID }}",
+        "calendarId": "9b50ed17bc52a4392a7fea2a50ab29ad2e8810379b606e114eb24fde1a53fe32@group.calendar.google.com",
         "summary": "={{ $json.summary }}",
         "description": "={{ $json.description }}",
         "start": "={{ $json.startDateTime }}",
@@ -37,7 +37,7 @@
         "additionalFields": {
           "attendees": [
             {
-              "email": "={{ $env.SALES_TEAM_EMAIL }}"
+              "email": "info@nexoreal.xyz"
             }
           ],
           "sendUpdates": "all",
