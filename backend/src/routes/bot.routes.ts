@@ -17,6 +17,7 @@ import {
   getBotHealth,
 } from '../controllers/BotController';
 import { asyncHandler } from '../middleware/asyncHandler';
+import botLeadsRouter from './bot-leads.routes';
 
 const router = Router();
 
@@ -79,5 +80,13 @@ router.get('/tours', asyncHandler(getBotTours));
  * @access  Bot-only (x-bot-secret)
  */
 router.get('/health', asyncHandler(getBotHealth));
+
+/**
+ * @route   POST /api/bot/leads
+ * @desc    Persist a lead captured by the WhatsApp AI bot (Sophia / Max)
+ *          Persistir un lead capturado por el bot de WhatsApp con IA (Sophia / Max)
+ * @access  Bot-only (x-bot-secret)
+ */
+router.use('/leads', botLeadsRouter);
 
 export default router;

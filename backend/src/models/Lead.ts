@@ -10,7 +10,14 @@ export type LeadStatus =
   | 'negotiation'
   | 'won'
   | 'lost';
-export type LeadSource = 'website' | 'referral' | 'social' | 'landing_page' | 'manual' | 'other';
+export type LeadSource =
+  | 'website'
+  | 'referral'
+  | 'social'
+  | 'landing_page'
+  | 'manual'
+  | 'other'
+  | 'whatsapp_bot';
 
 interface LeadAttributes {
   id: string;
@@ -99,7 +106,15 @@ Lead.init(
       defaultValue: 'new',
     },
     source: {
-      type: DataTypes.ENUM('website', 'referral', 'social', 'landing_page', 'manual', 'other'),
+      type: DataTypes.ENUM(
+        'website',
+        'referral',
+        'social',
+        'landing_page',
+        'manual',
+        'other',
+        'whatsapp_bot'
+      ),
       defaultValue: 'website',
     },
     value: {
