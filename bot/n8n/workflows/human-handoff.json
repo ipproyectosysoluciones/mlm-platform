@@ -29,7 +29,7 @@
       "parameters": {
         "resource": "databasePage",
         "operation": "create",
-        "databaseId": "33a293bfbcf080829d4b000cee5a8b21",
+        "databaseId": "33a293bfbcf08050b983ed786679c415",
         "title": "={{ $json.name }} — {{ $json.phone }}",
         "propertiesUi": {
           "propertyValues": [
