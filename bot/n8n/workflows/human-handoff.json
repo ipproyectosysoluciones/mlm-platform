@@ -34,39 +34,39 @@
         "propertiesUi": {
           "propertyValues": [
             {
-              "key": "Nombre",
+              "key": "Name",
               "type": "title",
               "titleValue": "={{ $json.name }}"
             },
             {
-              "key": "Teléfono",
+              "key": "Phone",
               "type": "phone_number",
               "phoneValue": "={{ $json.phone }}"
             },
             {
-              "key": "Resumen",
+              "key": "Interest",
               "type": "rich_text",
               "textContent": "={{ $json.summary }}"
             },
             {
-              "key": "Agente Bot",
+              "key": "Language",
               "type": "select",
-              "selectValue": "={{ $json.agentName }}"
+              "selectValue": "={{ $json.language }}"
             },
             {
-              "key": "Estado",
+              "key": "Status",
               "type": "select",
-              "selectValue": "Pendiente"
+              "selectValue": "Needs Human"
             },
             {
-              "key": "Fecha Handoff",
-              "type": "date",
-              "dateValue": "={{ $json.handoffAt }}"
-            },
-            {
-              "key": "Canal",
+              "key": "Source",
               "type": "select",
               "selectValue": "WhatsApp Bot"
+            },
+            {
+              "key": "Created At",
+              "type": "date",
+              "dateValue": "={{ $json.handoffAt }}"
             }
           ]
         }
