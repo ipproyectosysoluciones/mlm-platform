@@ -72,10 +72,9 @@ jest.mock('sequelize', () => ({
 }));
 
 import { CartService, cartService } from '../../services/CartService';
-import { Cart, CartItem, CartRecoveryToken, Product, User } from '../../models';
+import { Cart, CartRecoveryToken } from '../../models';
 import { CART_RECOVERY_TOKEN_STATUS, CART_STATUS } from '../../types';
 import bcrypt from 'bcryptjs';
-import { Op } from 'sequelize';
 
 describe('CartService — Recovery Token Logic (recoverCart)', () => {
   beforeEach(() => {

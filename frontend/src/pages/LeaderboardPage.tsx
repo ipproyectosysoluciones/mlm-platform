@@ -25,7 +25,7 @@ import {
   type ReferrerEntry,
   type MyRankResponse,
 } from '../services/leaderboardService';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 
 type TabValue = 'sellers' | 'referrers';
 

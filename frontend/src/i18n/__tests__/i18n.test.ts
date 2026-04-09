@@ -4,7 +4,7 @@
  * @module i18n/i18n.test
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 // Mock localStorage
 const localStorageMock = (() => {

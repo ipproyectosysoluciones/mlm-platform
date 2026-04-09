@@ -6,7 +6,7 @@
 
 La plataforma MLM está construida con una arquitectura de API RESTful, separando claramente el backend (Node.js + Express + TypeScript + Sequelize + PostgreSQL) del frontend (React + Vite + TypeScript + Tailwind CSS). A partir de la v2.0.0 se incorpora un canal de atención por WhatsApp (Nexo Bot) orquestado por n8n para automatizaciones externas.
 
-**Estado del Proyecto**: v2.2.0 — Sprint 6 Completado ✅
+**Estado del Proyecto**: v2.3.5 — Sprint 7 Completado ✅
 
 **Características Implementadas**:
 
@@ -135,7 +135,7 @@ backend/src/
 
 The MLM platform is built with a RESTful API architecture, clearly separating the backend (Node.js + Express + TypeScript + Sequelize + PostgreSQL) from the frontend (React + Vite + TypeScript + Tailwind CSS).
 
-**Project Status**: v2.2.0 — Sprint 6 Completed ✅
+**Project Status**: v2.3.5 — Sprint 7 Completed ✅
 
 **Implemented Features**:
 

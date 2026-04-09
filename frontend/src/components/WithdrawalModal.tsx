@@ -78,7 +78,7 @@ export function WithdrawalModal({
         onClose();
         resetState();
       }, 2000);
-    } catch (error) {
+    } catch {
       setIsConfirmed(false);
     }
   };

@@ -8,7 +8,7 @@
 import { User, UserClosure } from '../models';
 import { sequelize } from '../config/database';
 import bcrypt from 'bcryptjs';
-import { treeServiceInstance } from '../services/UserService';
+import { generateToken } from '../services/AuthService';
 
 /**
  * Create a test user with valid credentials
@@ -135,7 +135,6 @@ export async function createSponsorWithReferrals(): Promise<{
  * Get auth token for a user
  */
 export function getAuthToken(user: User): string {
-  const { generateToken } = require('../services/AuthService');
   return generateToken({
     id: user.id,
     email: user.email,

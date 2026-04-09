@@ -325,7 +325,7 @@ describe('Phase 3: Visual Tree UI API Tests', () => {
         position: 'left',
       });
 
-      const right1 = await createTestUser({
+      await createTestUser({
         email: 'closure_right1@test.mlm',
         sponsorId: root.id,
         position: 'right',

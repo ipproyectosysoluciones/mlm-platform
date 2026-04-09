@@ -5,7 +5,7 @@
  */
 
 import { testAgent } from '../setup';
-import { User, ContractTemplate, AffiliateContract } from '../../models';
+import { User } from '../../models';
 import { generateUniqueReferralCode, generateUUID } from '../../utils/codeGenerator';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
@@ -14,7 +14,6 @@ describe('Contracts Integration', () => {
   let userToken: string;
   let adminToken: string;
   let userId: string;
-  let adminId: string;
 
   beforeEach(async () => {
     const passwordHash = await bcrypt.hash('password123', 12);
@@ -29,14 +28,13 @@ describe('Contracts Integration', () => {
     });
     userId = user.id;
 
-    const admin = await User.create({
+    await User.create({
       id: generateUUID(),
       email: 'admin@test.com',
       passwordHash,
       referralCode: await generateUniqueReferralCode(),
       role: 'admin',
     });
-    adminId = admin.id;
 
     // Get auth tokens
     const userAuth = await testAgent.post('/api/auth/login').send({

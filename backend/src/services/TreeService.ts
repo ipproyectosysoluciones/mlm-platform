@@ -23,7 +23,7 @@
 import { Op } from 'sequelize';
 import { sequelize } from '../config/database';
 import { User, UserClosure } from '../models';
-import type { TreeNode, UserAttributes } from '../types';
+import type { TreeNode } from '../types';
 
 // Types for Phase 3
 interface UserSearchResult {

@@ -129,7 +129,7 @@ export default function TreeView() {
       try {
         const treeData = await treeService.getMyTree(depth);
         setTree(treeData);
-      } catch (err) {
+      } catch {
         setError('Error al cargar el árbol. Intenta de nuevo.');
       } finally {
         setIsLoading(false);
@@ -195,7 +195,7 @@ export default function TreeView() {
         try {
           const subtree = await treeService.getTree(nodeId, depth);
           setTree(subtree);
-        } catch (err) {
+        } catch {
           setError('Error al cargar subárbol');
         }
       };

@@ -109,7 +109,7 @@ jest.mock('../config/env.js', () => ({
 
 // ─── Mock asyncHandler (pass-through) ────────────────────────────────────────
 jest.mock('../middleware/asyncHandler.js', () => ({
-  asyncHandler: (fn: Function) => fn,
+  asyncHandler: (fn: (...args: unknown[]) => unknown) => fn,
 }));
 
 // ─── Mock ApiResponse util ───────────────────────────────────────────────────
@@ -124,18 +124,10 @@ jest.mock('../utils/response.util.js', () => ({
 }));
 
 // ─── Now import the real service and controller (after all mocks) ─────────────
-import { MercadoPagoService } from '../services/MercadoPagoService.js';
 import { PaymentMercadoPagoController } from '../controllers/PaymentMercadoPagoController.js';
 import { Order, Purchase, Product } from '../models/index.js';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-/** Build a valid HMAC-SHA256 x-signature header for the given ts + body */
-function buildSignature(ts: string, body: string, secret: string): string {
-  const manifest = `${ts}.${body}`;
-  const hmac = createHmac('sha256', secret).update(manifest).digest('hex');
-  return `ts=${ts},v1=${hmac}`;
-}
 
 /** Create minimal Express-like req/res mocks */
 function buildReqRes(overrides: {
@@ -165,7 +157,6 @@ function buildReqRes(overrides: {
 // ─────────────────────────────────────────────────────────────────────────────
 
 describe('MercadoPago — verifyWebhookSignature', () => {
-  let service: MercadoPagoService;
   const WEBHOOK_SECRET = 'super-secret';
   const TIMESTAMP = '1712000000';
   const RAW_BODY = '{"id":123,"type":"payment"}';
@@ -296,7 +287,7 @@ describe('MercadoPago — webhook handler', () => {
       },
     });
 
-    await (PaymentMercadoPagoController.webhook as Function)(req, res);
+    await (PaymentMercadoPagoController.webhook as (...args: unknown[]) => Promise<void>)(req, res);
 
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({ received: true });
@@ -338,7 +329,7 @@ describe('MercadoPago — webhook handler', () => {
       headers: { 'x-signature': 'ts=123456,v1=abc' },
     });
 
-    await (PaymentMercadoPagoController.webhook as Function)(req, res);
+    await (PaymentMercadoPagoController.webhook as (...args: unknown[]) => Promise<void>)(req, res);
 
     expect(mockCalculateCommissions).toHaveBeenCalledWith('purchase-new-1');
     expect(res.status).toHaveBeenCalledWith(200);
@@ -360,7 +351,7 @@ describe('MercadoPago — webhook handler', () => {
       headers: { 'x-signature': 'ts=123456,v1=abc' },
     });
 
-    await (PaymentMercadoPagoController.webhook as Function)(req, res);
+    await (PaymentMercadoPagoController.webhook as (...args: unknown[]) => Promise<void>)(req, res);
 
     expect(Purchase.create).not.toHaveBeenCalled();
     expect(Order.create).not.toHaveBeenCalled();
@@ -383,7 +374,7 @@ describe('MercadoPago — webhook handler', () => {
       headers: { 'x-signature': 'ts=123456,v1=abc' },
     });
 
-    await (PaymentMercadoPagoController.webhook as Function)(req, res);
+    await (PaymentMercadoPagoController.webhook as (...args: unknown[]) => Promise<void>)(req, res);
 
     // MercadoPago MUST receive 200 regardless
     expect(res.status).toHaveBeenCalledWith(200);
@@ -402,7 +393,7 @@ describe('MercadoPago — webhook handler', () => {
       headers: { 'x-signature': 'ts=123456,v1=abc' },
     });
 
-    await (PaymentMercadoPagoController.webhook as Function)(req, res);
+    await (PaymentMercadoPagoController.webhook as (...args: unknown[]) => Promise<void>)(req, res);
 
     expect(Purchase.create).not.toHaveBeenCalled();
     expect(Order.create).not.toHaveBeenCalled();
@@ -428,7 +419,7 @@ describe('MercadoPago — webhook handler', () => {
       // No x-signature header
     });
 
-    await (PaymentMercadoPagoController.webhook as Function)(req, res);
+    await (PaymentMercadoPagoController.webhook as (...args: unknown[]) => Promise<void>)(req, res);
 
     // Should have logged a warning about missing secret
     expect(consoleSpy).toHaveBeenCalledWith(
@@ -460,7 +451,7 @@ describe('MercadoPago — webhook handler', () => {
       headers: { 'x-signature': 'ts=123456,v1=abc' },
     });
 
-    await (PaymentMercadoPagoController.webhook as Function)(req, res);
+    await (PaymentMercadoPagoController.webhook as (...args: unknown[]) => Promise<void>)(req, res);
 
     expect(Purchase.create).toHaveBeenCalled();
     expect(Order.create).toHaveBeenCalled();

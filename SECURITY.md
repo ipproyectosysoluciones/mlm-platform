@@ -6,11 +6,11 @@ We currently support the following versions with security updates:
 
 | Version | Supported          |
 | ------- | ------------------ |
+| 2.3.x   | :white_check_mark: |
 | 2.2.x   | :white_check_mark: |
-| 2.1.x   | :white_check_mark: |
+| 2.1.x   | :x:                |
 | 2.0.x   | :x:                |
-| 1.10.x  | :x:                |
-| < 1.10  | :x:                |
+| < 2.0   | :x:                |
 
 ## Reporting a Vulnerability
 
@@ -223,5 +223,5 @@ This prevents type confusion attacks where an attacker could manipulate the `fil
 
 ---
 
-_Last updated: 2026-04-07_
-_Version: 2.2.0_
+_Last updated: 2026-04-09_
+_Version: 2.3.5_

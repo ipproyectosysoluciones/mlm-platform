@@ -16,7 +16,7 @@ import { categoryService } from '../services/CategoryService';
 import { asyncHandler } from '../middleware/asyncHandler';
 import { AppError } from '../middleware/error.middleware';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware';
-import type { ApiResponse, CategoryAttributes } from '../types';
+import type { ApiResponse } from '../types';
 import type { Category } from '../models/Category';
 import type { CategoryTreeNode, CategoryBreadcrumbItem } from '../services/CategoryService';
 

@@ -202,14 +202,31 @@ export default function TourDetailPage() {
 
   useEffect(() => {
     if (!id) return;
-    setIsLoading(true);
-    setError(null);
+
+    let cancelled = false;
 
     tourService
       .getTour(id)
-      .then((data) => setTour(data))
-      .catch(() => setError('No se pudo cargar el tour.'))
-      .finally(() => setIsLoading(false));
+      .then((data) => {
+        if (!cancelled) {
+          setTour(data);
+          setError(null);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setError('No se pudo cargar el tour.');
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [id]);
 
   if (isLoading) return <TourDetailSkeleton />;

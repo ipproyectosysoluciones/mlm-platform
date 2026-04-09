@@ -6,13 +6,7 @@
  */
 
 import { testAgent } from '../setup';
-import {
-  createTestUser,
-  createAdminUser,
-  getAuthHeaders,
-  createSponsorWithReferrals,
-} from '../fixtures';
-import { Commission, Purchase } from '../../models';
+import { createTestUser, getAuthHeaders } from '../fixtures';
 
 describe('Commission Integration Tests', () => {
   describe('POST /api/commissions (Create Purchase)', () => {

@@ -111,7 +111,7 @@ vi.mock('../services/api', () => ({
 }));
 
 /** Auth context mock */
-vi.mock('../context/AuthContext', () => ({
+vi.mock('../context/useAuth', () => ({
   useAuth: () => ({
     user: {
       id: 'admin-1',

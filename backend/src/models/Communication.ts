@@ -18,10 +18,10 @@ interface CommunicationAttributes {
   updatedAt: Date;
 }
 
-interface CommunicationCreationAttributes extends Optional<
+type CommunicationCreationAttributes = Optional<
   CommunicationAttributes,
   'id' | 'createdAt' | 'updatedAt'
-> {}
+>;
 
 export class Communication
   extends Model<CommunicationAttributes, CommunicationCreationAttributes>

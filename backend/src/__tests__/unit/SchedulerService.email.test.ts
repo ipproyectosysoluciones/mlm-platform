@@ -75,7 +75,7 @@ jest.mock('../../models', () => ({
   },
 }));
 
-import { SchedulerService, schedulerService } from '../../services/SchedulerService';
+import { schedulerService } from '../../services/SchedulerService';
 
 // ============================================
 // TESTS

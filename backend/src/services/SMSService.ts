@@ -5,7 +5,6 @@
  */
 import axios from 'axios';
 import { config } from '../config/env';
-import { ApiResponse } from '../utils/response.util';
 
 /**
  * SMSService - Brevo SMS delivery
@@ -37,7 +36,7 @@ export class SMSService {
     const message = `Tu código de verificación es: ${code}`;
 
     try {
-      const response = await axios.post(
+      await axios.post(
         'https://api.brevo.com/v3/sms/send',
         {
           recipient: phone, // E.164 format required

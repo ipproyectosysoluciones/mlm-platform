@@ -14,7 +14,7 @@
  */
 import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../config/database';
-import type { DeliveryProviderAttributes, DeliveryProviderCreationAttributes } from '../types';
+import type { DeliveryProviderAttributes } from '../types';
 
 type DeliveryProviderCreation = Optional<
   DeliveryProviderAttributes,

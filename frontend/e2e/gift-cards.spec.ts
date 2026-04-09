@@ -9,7 +9,7 @@
  * @module e2e/gift-cards.spec
  */
 import { test, expect } from '@playwright/test';
-import { baseURL, login, loginAs, waitForPageReady } from './helpers';
+import { baseURL, login, waitForPageReady } from './helpers';
 
 test.describe('Gift Cards', () => {
   // ============================================================

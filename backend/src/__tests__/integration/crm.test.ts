@@ -6,7 +6,7 @@
  */
 
 import { testAgent } from '../setup';
-import { createTestUser, createAdminUser, getAuthHeaders } from '../fixtures';
+import { createTestUser, getAuthHeaders } from '../fixtures';
 
 describe('CRM Integration Tests', () => {
   describe('GET /api/crm/stats', () => {

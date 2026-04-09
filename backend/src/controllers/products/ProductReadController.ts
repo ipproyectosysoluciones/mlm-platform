@@ -21,7 +21,6 @@ import type {
   GenericProductAttributes,
 } from '../../types';
 import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
-import { AppError } from '../../middleware/error.middleware';
 import { asyncHandler } from '../../middleware/asyncHandler';
 import type { Product } from '../../models/Product';
 

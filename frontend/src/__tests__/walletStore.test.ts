@@ -4,13 +4,8 @@
  * @module stores/walletStore.test
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { renderHook, act, waitFor } from '@testing-library/react';
-import {
-  useWalletStore,
-  useWalletBalance,
-  useWalletTransactions,
-  useWalletWithdrawals,
-} from '../stores/walletStore';
+import { renderHook, act } from '@testing-library/react';
+import { useWalletStore } from '../stores/walletStore';
 import type { WalletBalance, WalletTransaction, WithdrawalRequest } from '../types';
 
 // Mock the API service

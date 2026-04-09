@@ -48,6 +48,9 @@ vi.mock('react-router-dom', async () => {
 
 vi.mock('../context/AuthContext', () => ({
   AuthProvider: ({ children }: { children: React.ReactNode }) => children,
+}));
+
+vi.mock('../context/useAuth', () => ({
   useAuth: () => ({
     user: { id: 'test', email: 'test@test.com' },
     login: vi.fn(),

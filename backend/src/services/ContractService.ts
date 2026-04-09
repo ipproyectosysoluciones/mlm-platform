@@ -6,15 +6,12 @@
  * @author MLM Development Team
  */
 
-import { ContractTemplate, AffiliateContract, User } from '../models';
+import { ContractTemplate, AffiliateContract } from '../models';
 import { AppError } from '../middleware/error.middleware';
 import { generateUUID } from '../utils/codeGenerator';
-import crypto from 'crypto';
 import type {
   ContractTemplateAttributes,
-  ContractTemplateCreationAttributes,
   AffiliateContractAttributes,
-  AffiliateContractCreationAttributes,
   ContractType,
   ContractStatus,
 } from '../types';
@@ -150,7 +147,7 @@ export class ContractService {
     }
 
     // Get user acceptances if userId provided
-    let userAcceptances: Map<string, AffiliateContractAttributes> = new Map();
+    const userAcceptances: Map<string, AffiliateContractAttributes> = new Map();
     if (userId) {
       const acceptances = await AffiliateContract.findAll({
         where: { userId },
@@ -162,7 +159,7 @@ export class ContractService {
 
     // Build response with status
     const result: UserContractInfo[] = [];
-    for (const [type, template] of latestByType) {
+    for (const [, template] of latestByType) {
       const acceptance = userAcceptances.get(template.id);
       result.push({
         id: template.id,
@@ -226,7 +223,6 @@ export class ContractService {
 
     // Create new version with updated data
     const newContent = data.content ?? originalTemplate.content;
-    const contentHash = ContractTemplate.computeContentHash(newContent);
 
     const newTemplate = await this.createTemplate({
       type: originalTemplate.type,
@@ -449,7 +445,7 @@ export class ContractService {
 
     // Build response
     const result: UserContractInfo[] = [];
-    for (const [type, template] of latestByType) {
+    for (const [, template] of latestByType) {
       // Get user's latest acceptance for this template
       const latestAcceptance = acceptances.find((a) => a.templateId === template.id);
 

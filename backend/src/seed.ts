@@ -61,49 +61,6 @@ async function createUser(
 }
 
 /**
- * Populate closure table for existing users (for backwards compatibility)
- */
-async function populateClosures(): Promise<void> {
-  const users = await User.findAll();
-
-  for (const user of users) {
-    // Self-reference
-    const exists = await UserClosure.findOne({
-      where: { ancestorId: user.id, descendantId: user.id },
-    });
-
-    if (!exists) {
-      await UserClosure.create({
-        ancestorId: user.id,
-        descendantId: user.id,
-        depth: 0,
-      });
-    }
-
-    // If has sponsor, add closure entries for all sponsor's ancestors
-    if (user.sponsorId) {
-      const sponsorClosures = await UserClosure.findAll({
-        where: { descendantId: user.sponsorId },
-      });
-
-      for (const closure of sponsorClosures) {
-        const closureExists = await UserClosure.findOne({
-          where: { ancestorId: closure.ancestorId, descendantId: user.id },
-        });
-
-        if (!closureExists) {
-          await UserClosure.create({
-            ancestorId: closure.ancestorId,
-            descendantId: user.id,
-            depth: closure.depth + 1,
-          });
-        }
-      }
-    }
-  }
-}
-
-/**
  * Seed default commission configurations
  */
 async function seedCommissionConfigs(): Promise<void> {

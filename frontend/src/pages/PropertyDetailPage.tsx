@@ -172,14 +172,31 @@ export default function PropertyDetailPage() {
 
   useEffect(() => {
     if (!id) return;
-    setIsLoading(true);
-    setError(null);
+
+    let cancelled = false;
 
     propertyService
       .getProperty(id)
-      .then((data) => setProperty(data))
-      .catch(() => setError('No se pudo cargar la propiedad. Verificá que el ID sea correcto.'))
-      .finally(() => setIsLoading(false));
+      .then((data) => {
+        if (!cancelled) {
+          setProperty(data);
+          setError(null);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setError('No se pudo cargar la propiedad. Verificá que el ID sea correcto.');
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [id]);
 
   if (isLoading) return <PropertyDetailSkeleton />;

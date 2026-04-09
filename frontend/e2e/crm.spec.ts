@@ -133,7 +133,7 @@ test.describe('CRM Lead Creation', () => {
         await page.waitForTimeout(500);
 
         // Should show validation errors
-        const hasErrors = await page
+        await page
           .locator('[class*="error"], .text-red')
           .isVisible()
           .catch(() => false);
@@ -189,7 +189,7 @@ test.describe('CRM Lead Actions', () => {
 
   test('should have pagination for leads list', async ({ page }) => {
     // Look for pagination controls
-    const pagination = page.locator('[class*="pagination"], nav[aria-label*="paginación"]');
+    page.locator('[class*="pagination"], nav[aria-label*="paginación"]');
     // Pagination might not be visible if there are few leads
     // This is a soft check
     expect(true).toBeTruthy();
@@ -197,7 +197,7 @@ test.describe('CRM Lead Actions', () => {
 
   test('should display lead count or summary', async ({ page }) => {
     // Should show total count or summary somewhere
-    const summary = page.getByText(/total|contactos|leads/i);
+    page.getByText(/total|contactos|leads/i);
     // Summary might or might not be present
     expect(true).toBeTruthy();
   });

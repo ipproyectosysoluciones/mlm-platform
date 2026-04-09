@@ -39,10 +39,10 @@ export interface TourAvailabilityAttributes {
  * Creation attributes — fields that can be omitted on create
  * Atributos de creación — campos que pueden omitirse al crear
  */
-export interface TourAvailabilityCreationAttributes extends Optional<
+export type TourAvailabilityCreationAttributes = Optional<
   TourAvailabilityAttributes,
   'id' | 'bookedSpots' | 'isBlocked' | 'notes' | 'createdAt' | 'updatedAt'
-> {}
+>;
 
 type TourAvailabilityCreation = Optional<
   TourAvailabilityAttributes,

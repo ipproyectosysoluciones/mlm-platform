@@ -8,14 +8,11 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import NexoRealLanding from '../pages/landing/NexoRealLanding';
-import { usePropertiesStore } from '../stores/propertiesStore';
-import { useToursStore } from '../stores/toursStore';
 import type { Property } from '../services/propertyService';
 import type { TourPackage } from '../services/tourService';
-import { act } from '@testing-library/react';
 
 // ============================================
 // Mocks / Mocks

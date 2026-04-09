@@ -122,7 +122,6 @@ export async function down(): Promise<void> {
 
 // Run if called directly
 import { fileURLToPath } from 'url';
-import path from 'path';
 
 const isMainModule = process.argv[1] === fileURLToPath(import.meta.url);
 

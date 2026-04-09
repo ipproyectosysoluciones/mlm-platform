@@ -427,7 +427,7 @@ export class CommissionService {
     mlmCommissions: Array<{ userId: string; level: string; amount: number }>,
     purchaseId: string,
     buyerId: string,
-    totalAmount: number
+    _totalAmount: number
   ): Promise<Commission[]> {
     const createdCommissions: Commission[] = [];
     const buyer = await User.findByPk(buyerId);

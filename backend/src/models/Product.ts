@@ -22,16 +22,7 @@
  */
 import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../config/database';
-import type {
-  ProductAttributes,
-  ProductCreationAttributes,
-  ProductType,
-  GenericProductAttributes,
-  GenericProductCreationAttributes,
-} from '../types';
-
-// Base optional attributes (without extensions)
-type ProductCreation = Optional<ProductAttributes, 'id' | 'createdAt' | 'updatedAt'>;
+import type { ProductAttributes, ProductType, GenericProductAttributes } from '../types';
 
 // Extended optional attributes
 type GenericProductCreation = Optional<
@@ -92,7 +83,6 @@ export class Product
 // Placeholder imports for associations - will be set up in index.ts
 import type { Category } from './Category';
 import type { InventoryMovement } from './InventoryMovement';
-import type { Vendor } from './Vendor';
 
 Product.init(
   {

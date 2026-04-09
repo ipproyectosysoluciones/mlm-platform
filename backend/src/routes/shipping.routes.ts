@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { body } from 'express-validator';
 import * as ShipmentTrackingController from '../controllers/ShipmentTrackingController';
-import { authenticate, requireUser, requireAdmin } from '../middleware/auth.middleware';
+import { authenticate } from '../middleware/auth.middleware';
 
 const router = Router();
 

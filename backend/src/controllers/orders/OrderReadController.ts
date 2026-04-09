@@ -16,7 +16,6 @@ import { Response, RequestHandler } from 'express';
 import { orderService } from '../../services/OrderService';
 import type { ApiResponse, OrderAttributes } from '../../types';
 import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
-import { AppError } from '../../middleware/error.middleware';
 import { asyncHandler } from '../../middleware/asyncHandler';
 
 /**

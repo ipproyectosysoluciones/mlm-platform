@@ -5,7 +5,7 @@
  * @module __tests__/components/CampaignDashboard.test
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { CampaignDashboard } from '../../components/EmailCampaigns/CampaignDashboard';
 import type { EmailCampaign } from '../../types';

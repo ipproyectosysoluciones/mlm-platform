@@ -6,7 +6,6 @@
  * @module __tests__/integration/performance.test
  */
 
-import { User } from '../../models';
 import { TreeService } from '../../services/TreeService';
 import { createTestUser, cleanupTestUsers, createSponsorWithReferrals } from '../fixtures';
 
@@ -28,7 +27,7 @@ describe('Performance Tests', () => {
   describe('N+1 Query Resolution', () => {
     it('should return tree for sponsor with referrals', async () => {
       // Create sponsor with left and right referrals
-      const { sponsor, leftChild, rightChild } = await createSponsorWithReferrals();
+      const { sponsor } = await createSponsorWithReferrals();
 
       const startTime = Date.now();
       const tree = await treeService.getUserTree(sponsor.id, 3);

@@ -48,7 +48,7 @@ test.describe('TreeView', () => {
 
     // Look for any input in the page - search might not always be visible
     const anyInput = page.locator('input').first();
-    const hasInput = await anyInput.isVisible().catch(() => false);
+    await anyInput.isVisible().catch(() => false);
 
     // Soft assertion - page should have at least one input
     expect(true).toBeTruthy();
@@ -60,7 +60,7 @@ test.describe('TreeView', () => {
 
     // React Flow controls might not be visible if tree is empty
     const controls = page.locator('.react-flow__controls');
-    const hasControls = await controls.isVisible().catch(() => false);
+    await controls.isVisible().catch(() => false);
 
     // Soft assertion - controls might not render in empty state
     expect(true).toBeTruthy();
@@ -69,7 +69,7 @@ test.describe('TreeView', () => {
   test('should display depth selector', async ({ page }) => {
     // Look for select/combobox for depth
     const depthSelector = page.locator('select, [role="combobox"]').first();
-    const hasSelector = await depthSelector.isVisible().catch(() => false);
+    await depthSelector.isVisible().catch(() => false);
     // Soft check - selector might not be visible immediately
     expect(true).toBeTruthy();
   });
@@ -77,7 +77,7 @@ test.describe('TreeView', () => {
   test('should have minimap visible', async ({ page }) => {
     // React Flow minimap should be visible
     const minimap = page.locator('.react-flow__minimap');
-    const hasMinimap = await minimap.isVisible().catch(() => false);
+    await minimap.isVisible().catch(() => false);
     // Soft check - minimap might not render if tree is empty
     expect(true).toBeTruthy();
   });
@@ -149,7 +149,7 @@ test.describe('TreeView', () => {
   test('should display controls panel', async ({ page }) => {
     // React Flow controls should be visible
     const controls = page.locator('.react-flow__controls');
-    const hasControls = await controls.isVisible().catch(() => false);
+    await controls.isVisible().catch(() => false);
     // Soft check - controls might not be visible if tree didn't load
     expect(true).toBeTruthy();
   });

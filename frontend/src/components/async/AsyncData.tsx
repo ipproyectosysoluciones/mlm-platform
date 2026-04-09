@@ -5,7 +5,7 @@
  * @module components/async/AsyncData
  */
 
-import { use, Suspense, type ReactNode, type ComponentType } from 'react';
+import { use, Suspense, type ReactNode } from 'react';
 
 interface AsyncDataProps<T> {
   promise: Promise<T>;
@@ -61,76 +61,6 @@ function DefaultSkeleton(): ReactNode {
       <div className="h-4 bg-muted rounded w-5/6" />
     </div>
   );
-}
-
-/**
- * HOC to create an async component from a promise-returning function
- * Useful for creating reusable async components
- *
- * @example
- * const UserProfile = createAsyncComponent(
- *   (userId: string) => api.getUser(userId),
- *   (user) => <div>{user.name}</div>
- * );
- *
- * // Usage with Suspense
- * <Suspense fallback={<Loading />}>
- *   <UserProfile userId="123" />
- * </Suspense>
- */
-export function createAsyncComponent<T, Props extends { promise: Promise<T> }>(
-  render: (data: T) => ReactNode
-): ComponentType<Props> {
-  return function AsyncComponent({ promise }: Props) {
-    return (
-      <Suspense fallback={<DefaultSkeleton />}>
-        <AsyncContent promise={promise}>{render}</AsyncContent>
-      </Suspense>
-    );
-  };
-}
-
-/**
- * Hook-based async data component alternative
- * Use this when you need more control over the loading state
- */
-export function useAsyncData<T>(promise: Promise<T>): {
-  data: T | null;
-  isLoading: boolean;
-  error: Error | null;
-} {
-  try {
-    const data = use(promise);
-    return { data, isLoading: false, error: null };
-  } catch (thrownValue) {
-    if (thrownValue instanceof Promise) {
-      return { data: null, isLoading: true, error: null };
-    }
-    return { data: null, isLoading: false, error: thrownValue as Error };
-  }
-}
-
-/**
- * Component that renders different content based on async state
- * Provides a unified API for loading, error, and success states
- */
-interface AsyncStateProps<T> {
-  promise: Promise<T>;
-  loading: ReactNode;
-  error: (error: Error) => ReactNode;
-  success: (data: T) => ReactNode;
-}
-
-export function AsyncState<T>({ promise, loading, error, success }: AsyncStateProps<T>): ReactNode {
-  try {
-    const data = use(promise);
-    return success(data);
-  } catch (thrownValue) {
-    if (thrownValue instanceof Promise) {
-      return loading;
-    }
-    return error(thrownValue as Error);
-  }
 }
 
 /**
