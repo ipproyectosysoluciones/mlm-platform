@@ -34,11 +34,6 @@
         "propertiesUi": {
           "propertyValues": [
             {
-              "key": "Name",
-              "type": "title",
-              "titleValue": "={{ $json.name }}"
-            },
-            {
               "key": "Phone",
               "type": "phone_number",
               "phoneValue": "={{ $json.phone }}"
