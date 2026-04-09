@@ -1,0 +1,18 @@
+{
+  "cookies": [],
+  "origins": [
+    {
+      "origin": "http://localhost:5173",
+      "localStorage": [
+        {
+          "name": "token",
+          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJlbWFpbCI6ImFkbWluQG1sbS5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NzU2NTEwNTQsImV4cCI6MTc3NjI1NTg1NH0.xh5ytNrEaa73Wuogz6CnMMYYbkzrJ5uvXxPD1a2P-rY"
+        },
+        {
+          "name": "mlm_user_cache",
+          "value": "{\"id\":\"00000000-0000-0000-0000-000000000001\",\"email\":\"admin@mlm.com\",\"referralCode\":\"MLM-ADMIN-001\",\"level\":1,\"currency\":\"USD\",\"role\":\"admin\"}"
+        }
+      ]
+    }
+  ]
+}

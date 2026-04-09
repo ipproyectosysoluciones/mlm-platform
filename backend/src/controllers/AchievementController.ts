@@ -116,15 +116,6 @@ export class AchievementController {
       0
     );
 
-    const tierCounts = unlocked.reduce(
-      (acc: Record<string, number>, item: AchievementWithProgress) => {
-        const tier = item.achievement.tier;
-        acc[tier] = (acc[tier] ?? 0) + 1;
-        return acc;
-      },
-      {} as Record<string, number>
-    );
-
     const recent = unlocked
       .sort((a: AchievementWithProgress, b: AchievementWithProgress) => {
         const aDate = a.unlockedAt!.getTime();

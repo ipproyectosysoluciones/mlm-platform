@@ -5,7 +5,7 @@
  * @module components/client/TreeClient
  */
 
-import { useState, useEffect, useCallback, type ReactNode } from 'react';
+import { useState, useCallback, type ReactNode } from 'react';
 import { treeService } from '../../services/api';
 import { useData } from '../../hooks/useData';
 import type { TreeNode } from '../../types';
@@ -27,8 +27,9 @@ export function TreeClient({
   maxDepth = 3,
   onNodeClick,
 }: TreeClientProps): ReactNode {
-  const [treeData, setTreeData] = useState<TreeNode | null>(initialData ?? null);
-  const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
+  const [expandedNodes, setExpandedNodes] = useState<Set<string>>(
+    initialData?.children?.length ? new Set([initialData.id]) : new Set()
+  );
   const [selectedNode, setSelectedNode] = useState<TreeNode | null>(null);
 
   // Use the data fetching hook
@@ -38,15 +39,8 @@ export function TreeClient({
     fallback: initialData ?? undefined,
   });
 
-  useEffect(() => {
-    if (data) {
-      setTreeData(data);
-      // Auto-expand first level
-      if (data.children?.length) {
-        setExpandedNodes(new Set([data.id]));
-      }
-    }
-  }, [data]);
+  // Derive effective data: prefer fresh data from hook, fallback to initialData
+  const effectiveData = data ?? initialData ?? null;
 
   const toggleNode = useCallback((nodeId: string) => {
     setExpandedNodes((prev) => {
@@ -68,7 +62,7 @@ export function TreeClient({
     [onNodeClick]
   );
 
-  if (isLoading && !treeData) {
+  if (isLoading && !effectiveData) {
     return <TreeSkeleton />;
   }
 
@@ -76,7 +70,7 @@ export function TreeClient({
     return <TreeError error={error} onRetry={() => refetch()} />;
   }
 
-  if (!treeData) {
+  if (!effectiveData) {
     return <TreeEmpty />;
   }
 
@@ -84,7 +78,7 @@ export function TreeClient({
     <div className="flex flex-col lg:flex-row gap-6">
       <div className="flex-1">
         <TreeVisualization
-          node={treeData}
+          node={effectiveData}
           expandedNodes={expandedNodes}
           selectedNode={selectedNode}
           onToggle={toggleNode}

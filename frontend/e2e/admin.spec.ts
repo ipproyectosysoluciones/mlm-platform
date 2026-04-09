@@ -71,7 +71,7 @@ test.describe('Admin Dashboard', () => {
     await page.waitForTimeout(2000);
     // Look for user role badges - might be "user" or role badge
     const userBadges = page.locator('text=user, text=Usuario').first();
-    const hasBadges = await userBadges.isVisible().catch(() => false);
+    await userBadges.isVisible().catch(() => false);
     // Soft check - badges might not be visible if no regular users
     expect(true).toBeTruthy();
   });

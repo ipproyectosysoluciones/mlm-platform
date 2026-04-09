@@ -182,7 +182,7 @@ test.describe('User Menu Dropdown', () => {
     await page.waitForTimeout(500);
 
     // Dropdown should close (logout button not visible)
-    const logoutStillVisible = await page
+    await page
       .locator('button')
       .filter({ hasText: /cerrar sesión|logout/i })
       .first()
@@ -219,9 +219,8 @@ test.describe('Language Selector', () => {
     const langIndicator = page.locator('nav').getByText(/es|en/i).first();
     const flagIndicator = page.locator('nav').getByText(/🇪🇸|🇺🇸/i).first();
 
-    const isVisible =
-      (await langIndicator.isVisible().catch(() => false)) ||
-      (await flagIndicator.isVisible().catch(() => false));
+    await langIndicator.isVisible().catch(() => false);
+    await flagIndicator.isVisible().catch(() => false);
     // Language selector might be in a dropdown, soft check
     expect(true).toBeTruthy();
   });
@@ -328,7 +327,7 @@ test.describe('Mobile Navigation', () => {
 
     // Look for language section
     const langSection = page.getByText(/idioma|language/i).first();
-    const isVisible = await langSection.isVisible().catch(() => false);
+    await langSection.isVisible().catch(() => false);
 
     // Soft check - language options might be in the menu
     expect(true).toBeTruthy();

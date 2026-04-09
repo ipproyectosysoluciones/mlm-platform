@@ -14,7 +14,7 @@
  */
 import { DataTypes, Model, Optional, ForeignKey } from 'sequelize';
 import { sequelize } from '../config/database';
-import type { ShippingAddressAttributes, ShippingAddressCreationAttributes } from '../types';
+import type { ShippingAddressAttributes } from '../types';
 
 type ShippingAddressCreation = Optional<
   ShippingAddressAttributes,

@@ -53,7 +53,7 @@ export interface PropertyAttributes {
  * Creation attributes — fields that can be omitted on create
  * Atributos de creación — campos que pueden omitirse al crear
  */
-export interface PropertyCreationAttributes extends Optional<
+export type PropertyCreationAttributes = Optional<
   PropertyAttributes,
   | 'id'
   | 'titleEn'
@@ -74,7 +74,7 @@ export interface PropertyCreationAttributes extends Optional<
   | 'deletedAt'
   | 'createdAt'
   | 'updatedAt'
-> {}
+>;
 
 type PropertyCreation = Optional<
   PropertyAttributes,

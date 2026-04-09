@@ -15,7 +15,7 @@
  */
 import { Response, RequestHandler } from 'express';
 import { userService } from '../../services/UserService';
-import type { ApiResponse, UserAttributes } from '../../types';
+import type { ApiResponse } from '../../types';
 import { AppError } from '../../middleware/error.middleware';
 import { LEVEL_NAMES } from '../../types';
 import type { AuthenticatedRequest } from '../../middleware/auth.middleware';

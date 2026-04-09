@@ -420,7 +420,7 @@ describe('ReservationService', () => {
       (Reservation.findByPk as jest.Mock).mockResolvedValue(mockReservation);
       (TourAvailability.decrement as jest.Mock).mockResolvedValue([]);
 
-      const result = await reservationService.cancel('reservation-2', 'Guest requested');
+      await reservationService.cancel('reservation-2', 'Guest requested');
 
       expect(mockReservation.status).toBe('cancelled');
       expect(saveMock).toHaveBeenCalled();
@@ -478,7 +478,7 @@ describe('ReservationService', () => {
       const mockReservation = { ...mockPropertyReservation, save: saveMock };
       (Reservation.findByPk as jest.Mock).mockResolvedValue(mockReservation);
 
-      const result = await reservationService.confirm('reservation-1');
+      await reservationService.confirm('reservation-1');
 
       expect(mockReservation.status).toBe('confirmed');
       expect(saveMock).toHaveBeenCalled();

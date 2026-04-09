@@ -15,7 +15,7 @@
  */
 import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../config/database';
-import type { CategoryAttributes, CategoryCreationAttributes } from '../types';
+import type { CategoryAttributes } from '../types';
 
 type CategoryCreation = Optional<CategoryAttributes, 'id' | 'createdAt' | 'updatedAt'>;
 

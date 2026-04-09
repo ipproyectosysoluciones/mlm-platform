@@ -27,7 +27,6 @@
  * const publicKey = vapidConfig.publicKey;
  */
 import webpush from 'web-push';
-import { config } from './env.js';
 
 /**
  * VAPID keys structure

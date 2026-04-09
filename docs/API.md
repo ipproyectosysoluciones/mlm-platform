@@ -1786,6 +1786,77 @@ Authorization: Bearer <token> (admin only)
 
 ---
 
+## 🤖 Bot Endpoints (Sprint 7 — v2.3.0)
+
+> Todos los endpoints `/api/bot/*` requieren el header `x-bot-secret` en lugar de Bearer token. La autenticación es manejada por el middleware `authenticateBot`.
+
+### Bot Health Check
+
+```
+GET /api/bot/health
+x-bot-secret: <bot-secret>
+```
+
+**Auth:** Header `x-bot-secret` — validado por middleware `authenticateBot`.
+
+**Response 200:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "status": "ok",
+    "timestamp": "2026-04-08T00:00:00.000Z",
+    "service": "nexo-bot-backend",
+    "config": {
+      "openai": true,
+      "botSecret": true
+    }
+  }
+}
+```
+
+**Response 401** — header ausente o inválido:
+
+```json
+{
+  "error": "Unauthorized"
+}
+```
+
+---
+
+### Bot: Get Properties
+
+```
+GET /api/bot/properties
+x-bot-secret: <bot-secret>
+```
+
+**Query Parameters:**
+
+- `city`: Filtrar por ciudad
+- `type`: Tipo de propiedad (`apartment`, `house`, `commercial`)
+- `page`: Número de página (default: 1)
+- `limit`: Items por página (max: 10, default: 5)
+
+---
+
+### Bot: Get Tour Packages
+
+```
+GET /api/bot/tours
+x-bot-secret: <bot-secret>
+```
+
+**Query Parameters:**
+
+- `destination`: Filtrar por destino
+- `page`: Número de página (default: 1)
+- `limit`: Items por página (max: 10, default: 5)
+
+---
+
 ## Sprint 5 — Real Estate & Tourism Endpoints (v2.1.0)
 
 ### Properties

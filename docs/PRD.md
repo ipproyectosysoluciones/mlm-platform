@@ -2,9 +2,9 @@
 
 ## Nexo Real — Plataforma SaaS de Servicios Inmobiliarios, Turismo y Afiliaciones
 
-**Version**: 2.2.0  
-**Status**: ✅ v2.2.0 Released  
-**Last Updated**: 2026-04-07  
+**Version**: 2.3.5  
+**Status**: ✅ v2.3.5 Released  
+**Last Updated**: 2026-04-09  
 **Document Owner**: Nexo Real Development Team  
 **Tagline**: _"Conectamos tu negocio con el mundo."_
 

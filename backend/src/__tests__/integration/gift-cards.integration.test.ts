@@ -253,7 +253,7 @@ describe('Gift Cards Integration Tests', () => {
       }
 
       // Create a redeemed card directly in DB
-      const redeemedCard = await GiftCard.create({
+      await GiftCard.create({
         code: `GC-TEST-${Date.now()}-REDEEMED`,
         qrCodeData: null,
         balance: 0,

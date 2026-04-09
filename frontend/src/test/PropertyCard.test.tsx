@@ -111,9 +111,8 @@ describe('PropertyCard — grid variant', () => {
   });
 
   it('does not render bedrooms when bedrooms is undefined', () => {
-    const { container } = renderCard({ ...baseProperty, bedrooms: undefined });
+    renderCard({ ...baseProperty, bedrooms: undefined });
     // Only bathrooms (1) and area (65) badges should render
-    const bedsIcons = container.querySelectorAll('svg');
     // Bed icon should NOT be present; we rely on text absence
     expect(screen.queryByText('2')).toBeNull();
   });

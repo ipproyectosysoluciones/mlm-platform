@@ -71,7 +71,6 @@ jest.mock('../../middleware/error.middleware', () => ({
 
 import { VendorService } from '../../services/VendorService';
 import { Vendor, Product, VendorOrder, VendorPayout } from '../../models';
-import { AppError } from '../../middleware/error.middleware';
 
 describe('VendorService', () => {
   let vendorService: VendorService;

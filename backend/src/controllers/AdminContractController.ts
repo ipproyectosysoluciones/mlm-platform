@@ -12,7 +12,6 @@ import {
   UpdateTemplateData,
 } from '../services/ContractService';
 import { requireAdmin, type AuthenticatedRequest } from '../middleware/auth.middleware';
-import type { ContractType } from '../types';
 
 const contractService = new ContractService();
 

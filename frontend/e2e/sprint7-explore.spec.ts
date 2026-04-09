@@ -6,7 +6,7 @@
  *              antes de escribir los tests de Phase 2.
  * @module e2e/sprint7-explore
  */
-import { test, expect, type BrowserContext } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { baseURL } from './helpers';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
@@ -15,13 +15,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const SHOT = (name: string) => `e2e/screenshots/sprint7-explore/${name}.png` as const;
-
-/** Loads the authenticated storage state saved by globalSetup / Carga el storage state autenticado guardado por globalSetup */
-async function useAuthState(context: BrowserContext) {
-  await context.storageState(); // ensure fresh
-  // Storage state is applied via project config — this is a no-op placeholder
-  // El storage state se aplica vía config del proyecto — este es un placeholder sin operación
-}
 
 // ─── Public routes (no auth) ───────────────────────────────────────────────
 

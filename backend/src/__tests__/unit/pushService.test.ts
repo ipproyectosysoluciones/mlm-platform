@@ -49,6 +49,7 @@ jest.mock('../../utils/vapid', () => ({
 // Import mocks after setting them up
 import { PushSubscription } from '../../models';
 import { getWebPush, validateVapid } from '../../utils/vapid';
+import { WebPushError } from 'web-push';
 
 describe('PushService', () => {
   let pushService: PushService;
@@ -114,9 +115,7 @@ describe('PushService', () => {
       mockFindAll.mockResolvedValue([mockSubscription]);
 
       const mockWebPush = {
-        sendNotification: jest
-          .fn()
-          .mockRejectedValue(new (require('web-push').WebPushError)('Gone', 410)),
+        sendNotification: jest.fn().mockRejectedValue(new WebPushError('Gone', 410)),
       };
       mockGetWebPush.mockReturnValue(mockWebPush);
 

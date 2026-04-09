@@ -28,7 +28,7 @@ vi.mock('../services/leaderboardService', () => ({
 }));
 
 // Mock AuthContext — provide a fake authenticated user
-vi.mock('../context/AuthContext', () => ({
+vi.mock('../context/useAuth', () => ({
   useAuth: () => ({
     user: { id: 'user-test', email: 'test@example.com' },
     isAuthenticated: true,

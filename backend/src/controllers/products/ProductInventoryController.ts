@@ -8,7 +8,7 @@ import { Response } from 'express';
 import { productService } from '../../services/ProductService';
 import { asyncHandler } from '../../middleware/asyncHandler';
 import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
-import type { ApiResponse, InventoryMovementType } from '../../types';
+import type { ApiResponse } from '../../types';
 import type { Product } from '../../models/Product';
 import type { InventoryMovement } from '../../models/InventoryMovement';
 

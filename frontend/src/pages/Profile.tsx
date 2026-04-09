@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ArrowLeft, User, Mail, Gift, Calendar, LogOut, FileText } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import { authService } from '../services/api';
 import Swal from 'sweetalert2';
 import type { User as UserType } from '../types';

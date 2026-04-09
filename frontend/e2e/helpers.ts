@@ -41,7 +41,7 @@ export async function login(page: Page) {
   // Wait for navigation to dashboard with extended timeout
   try {
     await page.waitForURL(/\/dashboard/, { timeout: 45000 });
-  } catch (e) {
+  } catch {
     // If timeout, try waiting a bit more and check URL
     await page.waitForTimeout(5000);
     if (!page.url().includes('/dashboard')) {

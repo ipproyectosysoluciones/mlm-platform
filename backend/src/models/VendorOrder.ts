@@ -13,7 +13,7 @@
  */
 import { DataTypes, Model, Optional, ForeignKey } from 'sequelize';
 import { sequelize } from '../config/database';
-import type { VendorOrderAttributes, VendorOrderCreationAttributes } from '../types';
+import type { VendorOrderAttributes } from '../types';
 import type { Vendor } from './Vendor';
 import type { Order } from './Order';
 

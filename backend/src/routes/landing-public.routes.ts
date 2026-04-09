@@ -13,7 +13,6 @@
  */
 import { Router, Request, Response } from 'express';
 import { param, query } from 'express-validator';
-import { validationResult } from 'express-validator';
 import { Product, User } from '../models';
 import { asyncHandler } from '../middleware/asyncHandler';
 import { validate } from '../middleware/validate.middleware';

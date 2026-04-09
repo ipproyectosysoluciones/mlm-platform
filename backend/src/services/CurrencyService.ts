@@ -6,8 +6,6 @@
  * @author MLM Development Team
  */
 
-import { config } from '../config/env';
-
 const FRANKFURTER_API = 'https://api.frankfurter.dev';
 
 /**
@@ -32,8 +30,6 @@ const CURRENCY = {
   MXN: 'MXN',
   COP: 'COP',
 } as const;
-
-type CurrencyCode = (typeof CURRENCY)[keyof typeof CURRENCY];
 
 /**
  * Fetch latest exchange rates from frankfurter.dev API

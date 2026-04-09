@@ -90,7 +90,7 @@ export async function getGlobalStats(req: AuthenticatedRequest, res: Response): 
     };
 
     res.json(response);
-  } catch (error) {
+  } catch {
     res.status(500).json(ResponseUtil.error('INTERNAL_ERROR', 'Error fetching global stats', 500));
   }
 }
@@ -156,7 +156,7 @@ export async function getCommissionsReport(
         })),
       },
     });
-  } catch (error) {
+  } catch {
     res
       .status(500)
       .json(ResponseUtil.error('INTERNAL_ERROR', 'Error generating commissions report', 500));

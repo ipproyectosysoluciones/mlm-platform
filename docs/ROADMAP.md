@@ -3,8 +3,8 @@
 > Hoja de ruta completa para la plataforma **Nexo Real** — Servicios Inmobiliarios, Turismo/Hospitalidad y Afiliaciones.  
 > _"Conectamos tu negocio con el mundo."_
 
-**Versión actual**: v2.2.0 — Sprint 6 Completado ✅  
-**Última actualización**: 2026-04-07  
+**Versión actual**: v2.3.5 — Sprint 7 Completado ✅  
+**Última actualización**: 2026-04-09  
 **Estado**: Activo - Desarrollo intensivo  
 **Meta**: v3.0.0 — expansión México + Argentina
 
@@ -12,7 +12,7 @@
 
 ## 📊 Estado Actual del Proyecto
 
-### ✅ Lo que YA está implementado (v2.2.0)
+### ✅ Lo que YA está implementado (v2.3.5)
 
 | Área                     | Funcionalidad                                                               | Estado |
 | ------------------------ | --------------------------------------------------------------------------- | ------ |
@@ -45,7 +45,7 @@
 | **network_balance**      | Migración `binary_balance` → `network_balance`                              | ✅     |
 | **Build Hardening**      | Sin `.map` en producción, logs de tamaño                                    | ✅     |
 | **SEO Frontend**         | Helmet dinámico + OG tags + JSON-LD (Property + Tour) + social proof badges | ✅     |
-| **Tests**                | 307+ tests (integration + E2E + Vitest frontend)                            | ✅     |
+| **Tests**                | 967 tests (Backend 39 suites/535 + Frontend 33 suites/432)                  | ✅     |
 
 ---
 
@@ -381,30 +381,36 @@ Target: Demo funcional para primer cliente piloto
 Stack:  Plataforma core + Nexo Bot single-tenant
 ```
 
-#### Sprint 7 — v2.3.0 — UI/UX + Testing + Bot Stability 🔄
+#### Sprint 7 — v2.3.0 → v2.3.5 — UI/UX + Testing + Bot Stability (Completado 2026-04-09)
 
 ```
 Branch:    feature/sprint7-ui, feature/sprint7-testing, feature/sprint7-bot
-Estado:    En progreso
+Estado:    Completado 2026-04-09 (patch v2.3.5)
 
 Phase 1 — UI/UX Rebranding:
-  □ NexoRealLanding (hero, property grid, tour grid, CTA)       feature/sprint7-ui
-  □ Fix Login.tsx + Register.tsx (skin streaming → Nexo Real)   feature/sprint7-ui
-  □ Fix AppLayout/Navbar (nav items + colores)                  feature/sprint7-ui
-  □ PropertyCard + TourCard (variant grid/list)                 feature/sprint7-ui
-  □ Responsive 375/768/1280/1440px                              feature/sprint7-ui
+  ✅ NexoRealLanding (hero, property grid, tour grid, CTA)       PR #99
+  ✅ Fix Login.tsx + Register.tsx (skin streaming → Nexo Real)   PR #99
+  ✅ Fix AppLayout/Navbar (nav items + colores)                  PR #99
+  ✅ PropertyCard + TourCard (variant grid/list)                 PR #99
+  ✅ Responsive 375/768/1280/1440px                              PR #99
 
-Phase 2 — Testing:
-  □ Vitest coverage ≥90% (statements/branches/functions/lines) feature/sprint7-testing
-  □ E2E Playwright: auth, property search, reservation wizard   feature/sprint7-testing
-  □ E2E: i18n toggle, responsive viewports                      feature/sprint7-testing
-  □ PWA install + push notification tests                       feature/sprint7-testing
+Phase 2 — Unit Tests:
+  ✅ Vitest: PropertyCard (16), TourCard (18), propertiesStore (7), toursStore (7), NexoRealLanding (21) = 69 tests   PR #100
+
+Phase 2 — E2E:
+  ✅ Playwright: properties.spec.ts (24) + tours.spec.ts (28) = 52 E2E tests   PR #101
 
 Phase 3 — Bot Stability:
-  □ GET /api/bot/health endpoint                                feature/sprint7-bot
-  □ withRetry() utility para OpenAI calls                       feature/sprint7-bot
-  □ WhatsApp disconnect handler                                 feature/sprint7-bot
-  □ DEMO_SCRIPT.md                                              feature/sprint7-bot
+  ✅ GET /api/bot/health endpoint                                PR #102
+  ✅ withRetry() utility para OpenAI calls                       PR #102
+  ✅ WhatsApp disconnect handler                                 PR #102
+  ✅ DEMO_SCRIPT.md                                              PR #102
+
+Patch v2.3.5 (2026-04-09):
+  ✅ fix(frontend): ReservationFlowPage.handleConfirm try/catch
+  ✅ fix(lint): pushService.test.ts — unused var + const fix
+  ✅ fix(cd): cd-backend.yml — Docker build context correction
+  ✅ Tests: Backend 39 suites / 535 tests, Frontend 33 suites / 432 tests
 ```
 
 #### Sprint 8 — v2.4.0 — Bot Completo + n8n Workflows 📋
@@ -482,7 +488,7 @@ Email: Brevo (SMTP + API)
 SMS: Brevo SMS
 Pagos: PayPal + MercadoPago
 Delivery: Providers via webhooks
-Testing: Jest (307 tests)
+Testing: Jest (39 suites / 535 tests)
 ```
 
 ### Frontend Stack
@@ -494,17 +500,17 @@ State: Zustand 5
 Routing: React Router 7
 i18n: i18next
 PWA: Workbox
-Testing: Vitest (132 tests) + Playwright (13 E2E)
+Testing: Vitest (33 suites / 432 tests)
 ```
 
 ---
 
 ## 📈 Métricas Objetivo
 
-| Métrica       | Actual (v1.11.0)                                                 | Objetivo                 |
+| Métrica       | Actual (v2.3.5)                                                  | Objetivo                 |
 | ------------- | ---------------------------------------------------------------- | ------------------------ |
 | Test Coverage | ~70%                                                             | **90%+**                 |
-| Tests Totales | 307 (integration + E2E)                                          | **~550**                 |
+| Tests Totales | 967 (Backend 535 + Frontend 432)                                 | **~550** ✅ superado     |
 | Features      | Pagos + Gamif + E-commerce + Multi-vendor + Delivery + Contracts | **Release v2.0.0**       |
 | Delivery      | Shipping addresses + tracking                                    | **+ DiDi/Uber/InDriver** |
 | Pagos         | PayPal + MP                                                      | **+ Gift Cards** ✅      |
@@ -533,12 +539,12 @@ sprint:1             - Sprint 1
 sprint:2             - Sprint 2
 sprint:3             - Sprint 3
 sprint:4             - Sprint 4
-sprint:7             - Sprint 7 — v2.3.0
+sprint:7             - Sprint 7 — v2.3.0 → v2.3.5
 sprint:8             - Sprint 8 — v2.4.0
 ```
 
 ---
 
-**Última actualización**: 2026-04-08  
+**Última actualización**: 2026-04-09  
 **Proyecto**: https://github.com/users/ipproyectosysoluciones/projects/4  
 **Producto**: Nexo Real — _"Conectamos tu negocio con el mundo."_

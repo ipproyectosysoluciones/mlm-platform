@@ -5,7 +5,7 @@
  * @module e2e/commissions.spec
  */
 import { test, expect } from '@playwright/test';
-import { baseURL, login } from './helpers';
+import { login } from './helpers';
 
 test.describe('Commissions', () => {
   test.beforeEach(async ({ page }) => {

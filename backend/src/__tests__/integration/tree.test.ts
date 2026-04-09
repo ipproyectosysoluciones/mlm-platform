@@ -6,12 +6,12 @@
  */
 
 import { testAgent } from '../setup';
-import { createTestUser, createAdminUser, getAuthHeaders } from '../fixtures';
+import { createTestUser, getAuthHeaders } from '../fixtures';
 
 describe('Binary Tree Integration Tests', () => {
   describe('User Registration with Sponsor', () => {
     it('should register user and link to sponsor via referral code', async () => {
-      const sponsor = await createTestUser({
+      await createTestUser({
         email: 'sponsor@test.mlm',
         referralCode: 'SPONSOR001',
       });
@@ -155,7 +155,7 @@ describe('Binary Tree Integration Tests', () => {
 
     it('should handle multiple levels of referrals', async () => {
       // Level 1
-      const level1 = await createTestUser({
+      await createTestUser({
         email: 'l1@test.mlm',
         referralCode: 'LEVEL1',
       });

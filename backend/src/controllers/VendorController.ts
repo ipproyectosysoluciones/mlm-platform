@@ -17,7 +17,7 @@ import { Request, Response } from 'express';
 import { vendorService } from '../services/VendorService';
 import { authenticate, requireVendor } from '../middleware/auth.middleware';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware';
-import { body, param, query, validationResult } from 'express-validator';
+import { body, validationResult } from 'express-validator';
 import { Product } from '../models';
 
 // Validation rules

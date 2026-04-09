@@ -25,7 +25,6 @@ jest.mock('../config/database', () => ({
 }));
 
 // Make mockTransaction available globally for tests
-const globalMockTransaction = mockTransaction;
 
 // Mock all models
 jest.mock('../models', () => ({
@@ -101,7 +100,7 @@ jest.mock('../services/CommissionService', () => ({
 }));
 
 import { OrderService } from '../services/OrderService';
-import { Order, Product, Purchase, User, Commission } from '../models';
+import { Order, Product, Purchase, User } from '../models';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type CreateOrderData = any; // Use any to bypass TypeScript strict checks in tests
@@ -558,7 +557,7 @@ describe('OrderService', () => {
         paymentMethod: 'simulated',
       };
 
-      const result = await orderService.createOrder('user-123', data);
+      await orderService.createOrder('user-123', data);
 
       // Note: The actual implementation creates Purchase with productId directly,
       // so update is not called. Verify the create call includes productId.

@@ -7,7 +7,7 @@
 
 Conectamos tu negocio con el mundo. Plataforma de afiliaciones binarias con comisiones por niveles y visualización de árbol genealógico.
 
-**Versión actual: v2.2.0** — Sprint 6 completado (2026-04-07)
+**Versión actual: v2.3.5** — Sprint 7 completado (2026-04-09)
 
 ## 🚀 Características / Features
 
@@ -20,7 +20,7 @@ Conectamos tu negocio con el mundo. Plataforma de afiliaciones binarias con comi
 - **Landing Pages** - Creador de páginas de captura
 - **Panel de Administración** - Gestión completa de usuarios y comisiones
 - **API REST Documentada** - OpenAPI/Swagger bilingüe (ES/EN)
-- **Tests Automatizados** - 307+ tests (Unit + Integration + E2E con Playwright)
+- **Tests Automatizados** - 359+ tests (Unit + Integration + E2E con Playwright)
 - **i18n** - Interfaz bilingüe (Español/Inglés)
 - **Wallet Digital** - Billetera digital con retiros y transacciones
 - **2FA (TOTP)** - Two-Factor Authentication con códigos de recuperación
@@ -36,6 +36,7 @@ Conectamos tu negocio con el mundo. Plataforma de afiliaciones binarias con comi
   - **Reservation Wizard** — Flujo de reserva de 3 pasos con wizard UI
   - **Admin Dashboard CRUD** — Gestión completa de Propiedades, Tours y Reservas desde el panel de administración
   - **Nexo Bot** — Chatbot con flows de propiedades y tours en ES/EN (responde hasta 5 resultados por consulta)
+  - **Bot Stability** — Health check endpoint (`GET /api/bot/health`), `withRetry<T>()` con backoff exponencial, disconnect handler configurable
   - **SEO Avanzado** — Meta tags dinámicos + JSON-LD schema markup (RealEstateListing / TouristAttraction) + social proof badges
   - **network_balance** — Campo migrado desde `binary_balance` en el modelo Achievement
 
@@ -43,28 +44,29 @@ Conectamos tu negocio con el mundo. Plataforma de afiliaciones binarias con comi
 
 ### ✅ Cambios Completados
 
-| Cambio                            | Descripción                                          | Estado       | Fecha      |
-| --------------------------------- | ---------------------------------------------------- | ------------ | ---------- |
-| streaming-subscriptions-ecommerce | Sistema de suscripciones y e-commerce                | ✅ Archivado | 2026-03-27 |
-| wallet-digital                    | Billetera digital con retiros                        | ✅ Archivado | 2026-03-27 |
-| sdd-i18n-bilingual                | Sistema de internacionalización ES/EN                | ✅ Archivado | 2026-03-27 |
-| phase-3-visual-tree               | Visual Tree UI con React Flow                        | ✅ Archivado | 2026-03-27 |
-| sdd-horizontal-navbar             | Layout de navbar horizontal                          | ✅ Archivado | 2026-03-27 |
-| es-modules-migration              | Migración a ES Modules                               | ✅ Completo  | 2026-03-28 |
-| postgresql-support                | Soporte para PostgreSQL + Docker                     | ✅ Completo  | 2026-03-28 |
-| build-optimization                | Build optimizado (3.4MB → 1.2MB)                     | ✅ Completo  | 2026-03-28 |
-| github-templates                  | CODE_OF_CONDUCT, Issues, PR templates                | ✅ Completo  | 2026-03-28 |
-| 2fa-totp                          | Two-Factor Authentication con TOTP                   | ✅ Archivado | 2026-03-29 |
-| playwright-visual-testing         | Scripts E2E con modo visual                          | ✅ Archivado | 2026-03-29 |
-| frontend-2fa-ui                   | UI de React para 2FA con QR code                     | ✅ Completo  | 2026-03-30 |
-| frontend-refactoring              | Modularización de componentes frontend               | ✅ Completo  | 2026-03-30 |
-| backend-refactoring               | Controllers modulares (auth, crm, etc)               | ✅ Completo  | 2026-04-01 |
-| pwa-offline-pages                 | Páginas 404 y Offline                                | ✅ Completo  | 2026-03-31 |
-| pwa-improvements                  | Iconos multi-size, OfflineBanner                     | ✅ Completo  | 2026-03-31 |
-| sprint2-v1.10.0                   | Gift Cards, Abandoned Cart, Email Automation         | ✅ Completo  | 2026-04-04 |
-| sprint3-v1.11.0                   | Security, Products, Marketplace, Delivery, Contracts | ✅ Completo  | 2026-04-04 |
-| sprint5-v2.1.0                    | Real Estate & Tourism frontend + security fixes      | ✅ Completo  | 2026-04-07 |
-| sprint6-v2.2.0                    | Admin CRUD, Nexo Bot flows, SEO, network_balance     | ✅ Completo  | 2026-04-07 |
+| Cambio                            | Descripción                                                                   | Estado       | Fecha      |
+| --------------------------------- | ----------------------------------------------------------------------------- | ------------ | ---------- |
+| streaming-subscriptions-ecommerce | Sistema de suscripciones y e-commerce                                         | ✅ Archivado | 2026-03-27 |
+| wallet-digital                    | Billetera digital con retiros                                                 | ✅ Archivado | 2026-03-27 |
+| sdd-i18n-bilingual                | Sistema de internacionalización ES/EN                                         | ✅ Archivado | 2026-03-27 |
+| phase-3-visual-tree               | Visual Tree UI con React Flow                                                 | ✅ Archivado | 2026-03-27 |
+| sdd-horizontal-navbar             | Layout de navbar horizontal                                                   | ✅ Archivado | 2026-03-27 |
+| es-modules-migration              | Migración a ES Modules                                                        | ✅ Completo  | 2026-03-28 |
+| postgresql-support                | Soporte para PostgreSQL + Docker                                              | ✅ Completo  | 2026-03-28 |
+| build-optimization                | Build optimizado (3.4MB → 1.2MB)                                              | ✅ Completo  | 2026-03-28 |
+| github-templates                  | CODE_OF_CONDUCT, Issues, PR templates                                         | ✅ Completo  | 2026-03-28 |
+| 2fa-totp                          | Two-Factor Authentication con TOTP                                            | ✅ Archivado | 2026-03-29 |
+| playwright-visual-testing         | Scripts E2E con modo visual                                                   | ✅ Archivado | 2026-03-29 |
+| frontend-2fa-ui                   | UI de React para 2FA con QR code                                              | ✅ Completo  | 2026-03-30 |
+| frontend-refactoring              | Modularización de componentes frontend                                        | ✅ Completo  | 2026-03-30 |
+| backend-refactoring               | Controllers modulares (auth, crm, etc)                                        | ✅ Completo  | 2026-04-01 |
+| pwa-offline-pages                 | Páginas 404 y Offline                                                         | ✅ Completo  | 2026-03-31 |
+| pwa-improvements                  | Iconos multi-size, OfflineBanner                                              | ✅ Completo  | 2026-03-31 |
+| sprint2-v1.10.0                   | Gift Cards, Abandoned Cart, Email Automation                                  | ✅ Completo  | 2026-04-04 |
+| sprint3-v1.11.0                   | Security, Products, Marketplace, Delivery, Contracts                          | ✅ Completo  | 2026-04-04 |
+| sprint5-v2.1.0                    | Real Estate & Tourism frontend + security fixes                               | ✅ Completo  | 2026-04-07 |
+| sprint6-v2.2.0                    | Admin CRUD, Nexo Bot flows, SEO, network_balance                              | ✅ Completo  | 2026-04-07 |
+| sprint7-v2.3.0                    | NexoRealLanding, PropertyCard/TourCard, 359 tests, bot health/retry/reconnect | ✅ Completo  | 2026-04-08 |
 
 ### 🚧 Cambios en Progreso
 
@@ -221,44 +223,45 @@ Ver [docs/INDEX.md](docs/INDEX.md) para el directorio completo de documentación
 
 ### API Endpoints Principales
 
-| Método | Endpoint                                 | Descripción                               |
-| ------ | ---------------------------------------- | ----------------------------------------- |
-| POST   | `/api/auth/register`                     | Registrar usuario                         |
-| POST   | `/api/auth/login`                        | Iniciar sesión                            |
-| GET    | `/api/auth/me`                           | Usuario actual                            |
-| GET    | `/api/dashboard`                         | Dashboard del usuario                     |
-| GET    | `/api/users/me/tree`                     | Árbol binario                             |
-| GET    | `/api/commissions`                       | Lista de comisiones                       |
-| GET    | `/api/admin/stats`                       | Estadísticas globales (admin)             |
-| GET    | `/api/admin/users`                       | Lista de usuarios (admin)                 |
-| POST   | `/api/v1/gift-cards`                     | Crear tarjeta regalo (admin)              |
-| GET    | `/api/v1/gift-cards/{id}/validate`       | Validar tarjeta regalo                    |
-| POST   | `/api/v1/gift-cards/{id}/redeem`         | Redimir tarjeta regalo                    |
-| GET    | `/api/v1/gift-cards`                     | Listar tarjetas (admin)                   |
-| GET    | `/api/v1/carts/me`                       | Obtener carrito actual                    |
-| POST   | `/api/v1/carts/me/items`                 | Agregar item al carrito                   |
-| GET    | `/api/v1/carts/recover/{token}`          | Recuperar carrito abandonado              |
-| GET    | `/api/v1/carts/abandoned`                | Listar carritos abandonados (admin)       |
-| POST   | `/api/v1/email-templates`                | Crear template de email                   |
-| POST   | `/api/v1/email-campaigns`                | Crear campaña de email                    |
-| POST   | `/api/v1/email-campaigns/{id}/send`      | Enviar campaña                            |
-| POST   | `/api/v1/email-campaigns/{id}/pause`     | Pausar campaña                            |
-| GET    | `/api/v1/email-campaigns/{id}/logs`      | Ver logs de campaña                       |
-| GET    | `/api/v1/email-campaigns`                | Listar campañas                           |
-| GET    | `/api/products`                          | Listar productos activos (público)        |
-| GET    | `/api/products/:id`                      | Detalle de producto                       |
-| GET    | `/api/categories`                        | Listar categorías activas                 |
-| GET    | `/api/addresses`                         | Listar direcciones de envío               |
-| POST   | `/api/addresses`                         | Crear dirección de envío                  |
-| PATCH  | `/api/addresses/:id/default`             | Marcar dirección como predeterminada      |
-| PUT    | `/api/orders/:id/shipping`               | Asignar envío a una orden                 |
-| GET    | `/api/orders/:id/tracking`               | Ver tracking de una orden                 |
-| GET    | `/api/contracts`                         | Listar contratos con estado de aceptación |
-| POST   | `/api/contracts/:id/accept`              | Aceptar contrato (guarda IP/hash)         |
-| GET    | `/api/vendor/dashboard`                  | Dashboard del vendor                      |
-| GET    | `/api/admin/products`                    | Listar todos los productos (admin)        |
-| PATCH  | `/api/admin/vendors/:id/commission-rate` | Actualizar comisión de vendor             |
-| GET    | `/api/admin/contracts`                   | Gestión de contratos (admin)              |
+| Método | Endpoint                                 | Descripción                                  |
+| ------ | ---------------------------------------- | -------------------------------------------- |
+| POST   | `/api/auth/register`                     | Registrar usuario                            |
+| POST   | `/api/auth/login`                        | Iniciar sesión                               |
+| GET    | `/api/auth/me`                           | Usuario actual                               |
+| GET    | `/api/dashboard`                         | Dashboard del usuario                        |
+| GET    | `/api/users/me/tree`                     | Árbol binario                                |
+| GET    | `/api/commissions`                       | Lista de comisiones                          |
+| GET    | `/api/admin/stats`                       | Estadísticas globales (admin)                |
+| GET    | `/api/admin/users`                       | Lista de usuarios (admin)                    |
+| POST   | `/api/v1/gift-cards`                     | Crear tarjeta regalo (admin)                 |
+| GET    | `/api/v1/gift-cards/{id}/validate`       | Validar tarjeta regalo                       |
+| POST   | `/api/v1/gift-cards/{id}/redeem`         | Redimir tarjeta regalo                       |
+| GET    | `/api/v1/gift-cards`                     | Listar tarjetas (admin)                      |
+| GET    | `/api/v1/carts/me`                       | Obtener carrito actual                       |
+| POST   | `/api/v1/carts/me/items`                 | Agregar item al carrito                      |
+| GET    | `/api/v1/carts/recover/{token}`          | Recuperar carrito abandonado                 |
+| GET    | `/api/v1/carts/abandoned`                | Listar carritos abandonados (admin)          |
+| POST   | `/api/v1/email-templates`                | Crear template de email                      |
+| POST   | `/api/v1/email-campaigns`                | Crear campaña de email                       |
+| POST   | `/api/v1/email-campaigns/{id}/send`      | Enviar campaña                               |
+| POST   | `/api/v1/email-campaigns/{id}/pause`     | Pausar campaña                               |
+| GET    | `/api/v1/email-campaigns/{id}/logs`      | Ver logs de campaña                          |
+| GET    | `/api/v1/email-campaigns`                | Listar campañas                              |
+| GET    | `/api/products`                          | Listar productos activos (público)           |
+| GET    | `/api/products/:id`                      | Detalle de producto                          |
+| GET    | `/api/categories`                        | Listar categorías activas                    |
+| GET    | `/api/addresses`                         | Listar direcciones de envío                  |
+| POST   | `/api/addresses`                         | Crear dirección de envío                     |
+| PATCH  | `/api/addresses/:id/default`             | Marcar dirección como predeterminada         |
+| PUT    | `/api/orders/:id/shipping`               | Asignar envío a una orden                    |
+| GET    | `/api/orders/:id/tracking`               | Ver tracking de una orden                    |
+| GET    | `/api/contracts`                         | Listar contratos con estado de aceptación    |
+| POST   | `/api/contracts/:id/accept`              | Aceptar contrato (guarda IP/hash)            |
+| GET    | `/api/vendor/dashboard`                  | Dashboard del vendor                         |
+| GET    | `/api/admin/products`                    | Listar todos los productos (admin)           |
+| PATCH  | `/api/admin/vendors/:id/commission-rate` | Actualizar comisión de vendor                |
+| GET    | `/api/admin/contracts`                   | Gestión de contratos (admin)                 |
+| GET    | `/api/bot/health`                        | Health check del bot (header `x-bot-secret`) |
 
 ## 📁 Estructura del Proyecto / Project Structure
 

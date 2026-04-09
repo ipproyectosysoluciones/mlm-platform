@@ -12,16 +12,9 @@
  * // Español: Agregar seguimiento a un pedido
  * const tracking = await shipmentTrackingService.addTracking(uuid-pedido, datosSeguimiento);
  */
-import { sequelize } from '../config/database';
-import { ShipmentTracking, Order, VendorOrder } from '../models';
+import { ShipmentTracking, Order } from '../models';
 import { AppError } from '../middleware/error.middleware';
-import type {
-  ShipmentTrackingAttributes,
-  ShipmentTrackingCreationAttributes,
-  ShipmentStatusHistoryEntry,
-  ShipmentTrackingStatus,
-  AddTrackingDto,
-} from '../types';
+import type { ShipmentStatusHistoryEntry, ShipmentTrackingStatus, AddTrackingDto } from '../types';
 
 /**
  * ShipmentTrackingService - Handles shipment tracking operations
