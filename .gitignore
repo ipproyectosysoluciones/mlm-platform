@@ -118,4 +118,4 @@ deploy.prod.sh
 # ===========================================
 # AI Prompts & Knowledge Base (PRIVATE - never commit)
 # ===========================================
-prompt_kb/
+/prompt_kb/
