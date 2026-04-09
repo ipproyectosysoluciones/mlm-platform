@@ -38,6 +38,10 @@ import { AffiliateContract } from './AffiliateContract';
 import { Achievement } from './Achievement';
 import { Badge } from './Badge';
 import { UserAchievement } from './UserAchievement';
+import { Property } from './Property';
+import { TourPackage } from './TourPackage';
+import { TourAvailability } from './TourAvailability';
+import { Reservation } from './Reservation';
 
 // User relationships
 User.hasMany(User, { as: 'children', foreignKey: 'sponsorId', sourceKey: 'id' });
@@ -476,13 +480,9 @@ Reservation.belongsTo(TourPackage, {
 // export statement. Exporting directly from the source file fixes this.
 // ─────────────────────────────────────────────────────────────────────────────
 // Fix de re-exports para esbuild ESM: cuando el barrel tiene side effects entre
-// el import y el export, esbuild no puede resolver los exports nombrados. Exportar
-// directamente desde el archivo fuente corrige el problema.
-export { Property } from './Property';
-export { TourPackage } from './TourPackage';
-export { TourAvailability } from './TourAvailability';
-export { Reservation } from './Reservation';
-
+// el import y el export, esbuild no puede resolver los exports nombrados. Importar
+// y re-exportar desde el bloque unificado resuelve el problema tanto para esbuild
+// como para Jest (que necesita los imports en scope para el auto-mock).
 export {
   sequelize,
   User,
@@ -526,8 +526,10 @@ export {
   Badge,
   UserAchievement,
   WebhookEvent,
-  // Property, TourPackage, TourAvailability, Reservation are exported above
-  // via explicit re-exports from source (esbuild ESM fix) — do not duplicate here.
+  Property,
+  TourPackage,
+  TourAvailability,
+  Reservation,
 };
 
 export function initModels(): void {
