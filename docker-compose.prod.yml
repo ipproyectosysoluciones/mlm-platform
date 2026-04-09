@@ -1,12 +1,15 @@
 # ============================================
 # Nexo Real - Production
 # ============================================
-# Usage: VERSION=v1.11.0 docker compose -f docker-compose.prod.yml up -d
+# Usage: docker compose -f docker-compose.prod.yml --env-file .env.production up -d
 # Requires: .env.production at project root
 #
-# Pull pre-built images from DockerHub (no source code needed on server):
-#   VERSION=v1.11.0 docker compose -f docker-compose.prod.yml pull
-#   VERSION=v1.11.0 docker compose -f docker-compose.prod.yml up -d
+# NOTE: Docker Compose does NOT auto-load .env.production — always pass --env-file:
+#   docker compose -f docker-compose.prod.yml --env-file .env.production up -d
+#   docker compose -f docker-compose.prod.yml --env-file .env.production up -d n8n
+#
+# Alternative: use deploy.sh which exports vars automatically:
+#   ./deploy.sh [version]
 
 services:
   postgres:
