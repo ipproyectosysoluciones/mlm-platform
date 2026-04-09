@@ -162,7 +162,12 @@ function StepGuests() {
   const maxGuests = wizardData.type === 'tour' ? wizardData.availability.availableSpots : 20;
 
   const handleConfirm = async () => {
-    await confirmReservation();
+    try {
+      await confirmReservation();
+    } catch {
+      // Error is already captured in createError state by the store.
+      // El store captura el error en createError — no se necesita manejo adicional aquí.
+    }
   };
 
   return (

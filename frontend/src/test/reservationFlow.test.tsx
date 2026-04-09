@@ -296,7 +296,7 @@ describe('ReservationFlowPage', () => {
         new Error('Servicio no disponible')
       );
 
-      act(() => {
+      await act(async () => {
         useReservationStore.getState().setWizardStep('guests');
         useReservationStore.getState().updateWizardData({
           checkIn: '2024-06-01',
@@ -307,6 +307,8 @@ describe('ReservationFlowPage', () => {
 
       await act(async () => {
         fireEvent.click(screen.getByRole('button', { name: /confirmar reserva/i }));
+        // Allow microtask queue to flush so rejection is handled by component
+        await Promise.resolve();
       });
 
       await waitFor(() => {
