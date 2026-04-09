@@ -1,0 +1,226 @@
+{
+  "name": "Nexo Real — Human Handoff (Notion + Brevo)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "human-handoff",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook — Receive Handoff Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "webhookId": "human-handoff-nexo-real"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Validate required fields\nconst body = $input.first().json.body || $input.first().json;\nconst required = ['phone', 'name', 'summary', 'agentName'];\n\nfor (const field of required) {\n  if (!body[field]) {\n    throw new Error(`Missing required field: ${field}`);\n  }\n}\n\nreturn [\n  {\n    json: {\n      phone: body.phone,\n      name: body.name,\n      summary: body.summary,\n      agentName: body.agentName,\n      language: body.language || 'es',\n      handoffAt: new Date().toISOString()\n    }\n  }\n];"
+      },
+      "id": "validate-transform",
+      "name": "Validate & Transform Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "create",
+        "databaseId": "={{ $env.NOTION_LEADS_DB_ID }}",
+        "title": "={{ $json.name }} — {{ $json.phone }}",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Nombre",
+              "type": "title",
+              "titleValue": "={{ $json.name }}"
+            },
+            {
+              "key": "Teléfono",
+              "type": "phone_number",
+              "phoneValue": "={{ $json.phone }}"
+            },
+            {
+              "key": "Resumen",
+              "type": "rich_text",
+              "textContent": "={{ $json.summary }}"
+            },
+            {
+              "key": "Agente Bot",
+              "type": "select",
+              "selectValue": "={{ $json.agentName }}"
+            },
+            {
+              "key": "Estado",
+              "type": "select",
+              "selectValue": "Pendiente"
+            },
+            {
+              "key": "Fecha Handoff",
+              "type": "date",
+              "dateValue": "={{ $json.handoffAt }}"
+            },
+            {
+              "key": "Canal",
+              "type": "select",
+              "selectValue": "WhatsApp Bot"
+            }
+          ]
+        }
+      },
+      "id": "notion-create-lead",
+      "name": "Notion — Create Lead",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [680, 220],
+      "credentials": {
+        "notionApi": {
+          "id": "notion-credentials",
+          "name": "Notion — Nexo Real"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "email",
+        "operation": "send",
+        "templateId": "={{ $env.BREVO_HANDOFF_TEMPLATE_ID }}",
+        "to": [
+          {
+            "email": "={{ $env.SALES_TEAM_EMAIL }}",
+            "name": "Equipo de Ventas Nexo Real"
+          }
+        ],
+        "params": {
+          "lead_name": "={{ $node['Validate & Transform Input'].json.name }}",
+          "lead_phone": "={{ $node['Validate & Transform Input'].json.phone }}",
+          "lead_summary": "={{ $node['Validate & Transform Input'].json.summary }}",
+          "bot_agent": "={{ $node['Validate & Transform Input'].json.agentName }}",
+          "handoff_time": "={{ $node['Validate & Transform Input'].json.handoffAt }}",
+          "notion_url": "=https://notion.so/{{ $json.id.replace(/-/g, '') }}"
+        }
+      },
+      "id": "brevo-send-email",
+      "name": "Brevo — Send Handoff Email",
+      "type": "n8n-nodes-base.sendInBlue",
+      "typeVersion": 1,
+      "position": [680, 400],
+      "credentials": {
+        "sendInBlueApi": {
+          "id": "brevo-credentials",
+          "name": "Brevo — Nexo Real"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const notionResult = $node['Notion — Create Lead'].json;\nconst brevoResult = $node['Brevo — Send Handoff Email'].json;\n\nreturn [\n  {\n    json: {\n      success: true,\n      notionPageId: notionResult.id || null,\n      emailSent: brevoResult.messageId ? true : false\n    }\n  }\n];"
+      },
+      "id": "merge-results",
+      "name": "Merge Results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}"
+      },
+      "id": "respond-success",
+      "name": "Respond — Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1100, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseCode": 400,
+        "responseBody": "={\n  \"success\": false,\n  \"error\": \"{{ $json.message }}\"\n}"
+      },
+      "id": "respond-error",
+      "name": "Respond — Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [680, 540]
+    }
+  ],
+  "connections": {
+    "Webhook — Receive Handoff Request": {
+      "main": [
+        [
+          {
+            "node": "Validate & Transform Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate & Transform Input": {
+      "main": [
+        [
+          {
+            "node": "Notion — Create Lead",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Brevo — Send Handoff Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notion — Create Lead": {
+      "main": [
+        [
+          {
+            "node": "Merge Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Brevo — Send Handoff Email": {
+      "main": [
+        [
+          {
+            "node": "Merge Results",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Results": {
+      "main": [
+        [
+          {
+            "node": "Respond — Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "staticData": null,
+  "tags": ["nexo-real", "bot", "handoff", "notion", "brevo", "sprint8"],
+  "triggerCount": 0,
+  "updatedAt": "2026-04-09T00:00:00.000Z",
+  "versionId": "1.0.0"
+}
