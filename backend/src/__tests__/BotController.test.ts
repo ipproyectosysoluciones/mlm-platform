@@ -28,6 +28,20 @@ jest.mock('../config/database', () => ({
   resetSequelize: jest.fn(),
 }));
 
+// ── Mock Reservation model (imported directly, not via barrel) ────────────────
+jest.mock('../models/Reservation', () => ({
+  Reservation: {
+    findAll: jest.fn(),
+    findByPk: jest.fn(),
+    findOne: jest.fn(),
+    create: jest.fn(),
+    count: jest.fn(),
+    init: jest.fn(),
+    hasMany: jest.fn(),
+    belongsTo: jest.fn(),
+  },
+}));
+
 // ── Mock models ───────────────────────────────────────────────────────────────
 jest.mock('../models', () => ({
   Property: {
