@@ -4,6 +4,7 @@ import { resolveLanguageFromInput } from './language.flow.js';
 import { assignAgent, getAgentIntro, getAgentTransitionMessage } from './agent.flow.js';
 import { leadPersistenceService } from '../services/lead-persistence.service.js';
 import type { BotLeadAreaOfInterest } from '../types/lead.types.js';
+import { SKIP_KEYWORDS } from '../config/keywords.js';
 
 /**
  * Welcome flow — Nexo Real AI Bot
@@ -110,8 +111,7 @@ export const welcomeFlow = addKeyword(EVENTS.WELCOME).addAction(
 
     // ── STEP 3: Waiting for email ────────────────────────────────────────────
     if (currentState?.awaitingEmail) {
-      const skipKeywords = ['omitir', 'skip', 'no', 'ninguno', 'none', '-'];
-      const isSkip = skipKeywords.some((k) => incomingText.toLowerCase().includes(k));
+      const isSkip = SKIP_KEYWORDS.some((k) => incomingText.toLowerCase().includes(k));
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       const isEmail = emailRegex.test(incomingText);
       const userEmail = isSkip || !isEmail ? undefined : incomingText;

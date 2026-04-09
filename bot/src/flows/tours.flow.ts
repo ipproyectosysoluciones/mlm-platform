@@ -1,23 +1,6 @@
 import { addKeyword } from '@builderbot/bot';
 import { mlmApi, type BotTour } from '../services/mlm-api.service.js';
-
-/**
- * Keywords that trigger the tours flow in Spanish and English.
- * Palabras clave que activan el flujo de tours en español e inglés.
- */
-const TOURS_KEYWORDS: [string, ...string[]] = [
-  'tours',
-  'tours disponibles',
-  'ver tours',
-  'buscar tours',
-  'paquetes',
-  'paquetes turísticos',
-  'viajes',
-  'excursiones',
-  'travel packages',
-  'available tours',
-  'tour packages',
-];
+import { TOURS_KEYWORDS } from '../config/keywords.js';
 
 /**
  * Formats a list of tour packages into a human-readable WhatsApp message.

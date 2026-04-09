@@ -1,6 +1,7 @@
 import { addKeyword } from '@builderbot/bot';
 import { n8nService } from '../services/n8n.service.js';
 import type { Language } from '../services/ai.service.js';
+import { SCHEDULE_KEYWORDS } from '../config/keywords.js';
 
 /**
  * @file schedule.flow.ts
@@ -15,25 +16,6 @@ import type { Language } from '../services/ai.service.js';
  *
  * @author Nexo Real Development Team
  */
-
-// ─── Keywords ────────────────────────────────────────────────────────────────
-
-const SCHEDULE_KEYWORDS: [string, ...string[]] = [
-  'agendar',
-  'agenda',
-  'visita',
-  'visitar',
-  'quiero ver',
-  'ver propiedad',
-  'reunión',
-  'reunion',
-  'cita',
-  'schedule',
-  'visit',
-  'appointment',
-  'book a visit',
-  'book visit',
-];
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 

@@ -1,23 +1,6 @@
 import { addKeyword } from '@builderbot/bot';
 import { mlmApi, type BotProperty } from '../services/mlm-api.service.js';
-
-/**
- * Keywords that trigger the properties flow in Spanish and English.
- * Palabras clave que activan el flujo de propiedades en español e inglés.
- */
-const PROPERTIES_KEYWORDS: [string, ...string[]] = [
-  'propiedades',
-  'ver propiedades',
-  'buscar propiedades',
-  'inmuebles',
-  'alquileres',
-  'casas',
-  'departamentos',
-  'properties',
-  'real estate',
-  'houses',
-  'apartments',
-];
+import { PROPERTIES_KEYWORDS } from '../config/keywords.js';
 
 /**
  * Formats a list of properties into a human-readable WhatsApp message.

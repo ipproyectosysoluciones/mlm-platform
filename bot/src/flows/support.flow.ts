@@ -1,16 +1,5 @@
 import { addKeyword } from '@builderbot/bot';
-
-const SUPPORT_KEYWORDS: [string, ...string[]] = [
-  'ayuda',
-  'help',
-  'soporte',
-  'opciones',
-  'menu',
-  'menú',
-  'que puedo hacer',
-  'qué puedo hacer',
-  'comandos',
-];
+import { SUPPORT_KEYWORDS } from '../config/keywords.js';
 
 /**
  * Support / FAQ flow — shows all available commands and a link to the platform.
