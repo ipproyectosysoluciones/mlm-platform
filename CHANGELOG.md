@@ -4,6 +4,21 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
+## [2.3.5] - 2026-04-09
+
+### Fixed
+
+- **Frontend** — `ReservationFlowPage`: capturar rechazo de `confirmReservation()` en `handleConfirm` para evitar unhandled promise rejection cuando el servicio falla (`frontend/src/pages/ReservationFlowPage.tsx`)
+- **Tests** — `pushService.test.ts`: eliminar variable `mockPermission` sin uso; cambiar `mockOnLine` a `const`
+- **CD Backend** — workflow `cd-backend.yml`: corregir contexto Docker de `.` a `./backend` para que el `COPY dist/server.mjs` resuelva correctamente desde el subdirectorio del monorepo
+
+### Tests
+
+- Backend: 39 suites / 535 tests ✅
+- Frontend: 33 suites / 432 tests ✅
+
+---
+
 ## [2.3.0] - 2026-04-08
 
 ### Added

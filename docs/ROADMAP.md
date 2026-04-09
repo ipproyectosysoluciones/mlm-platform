@@ -3,8 +3,8 @@
 > Hoja de ruta completa para la plataforma **Nexo Real** — Servicios Inmobiliarios, Turismo/Hospitalidad y Afiliaciones.  
 > _"Conectamos tu negocio con el mundo."_
 
-**Versión actual**: v2.3.0 — Sprint 7 Completado ✅  
-**Última actualización**: 2026-04-08  
+**Versión actual**: v2.3.5 — Sprint 7 Completado ✅  
+**Última actualización**: 2026-04-09  
 **Estado**: Activo - Desarrollo intensivo  
 **Meta**: v3.0.0 — expansión México + Argentina
 
@@ -12,7 +12,7 @@
 
 ## 📊 Estado Actual del Proyecto
 
-### ✅ Lo que YA está implementado (v2.2.0)
+### ✅ Lo que YA está implementado (v2.3.5)
 
 | Área                     | Funcionalidad                                                               | Estado |
 | ------------------------ | --------------------------------------------------------------------------- | ------ |
@@ -45,7 +45,7 @@
 | **network_balance**      | Migración `binary_balance` → `network_balance`                              | ✅     |
 | **Build Hardening**      | Sin `.map` en producción, logs de tamaño                                    | ✅     |
 | **SEO Frontend**         | Helmet dinámico + OG tags + JSON-LD (Property + Tour) + social proof badges | ✅     |
-| **Tests**                | 307+ tests (integration + E2E + Vitest frontend)                            | ✅     |
+| **Tests**                | 967 tests (Backend 39 suites/535 + Frontend 33 suites/432)                  | ✅     |
 
 ---
 
@@ -381,11 +381,11 @@ Target: Demo funcional para primer cliente piloto
 Stack:  Plataforma core + Nexo Bot single-tenant
 ```
 
-#### Sprint 7 — v2.3.0 — UI/UX + Testing + Bot Stability (Completado 2026-04-08)
+#### Sprint 7 — v2.3.0 → v2.3.5 — UI/UX + Testing + Bot Stability (Completado 2026-04-09)
 
 ```
 Branch:    feature/sprint7-ui, feature/sprint7-testing, feature/sprint7-bot
-Estado:    Completado 2026-04-08
+Estado:    Completado 2026-04-09 (patch v2.3.5)
 
 Phase 1 — UI/UX Rebranding:
   ✅ NexoRealLanding (hero, property grid, tour grid, CTA)       PR #99
@@ -405,6 +405,12 @@ Phase 3 — Bot Stability:
   ✅ withRetry() utility para OpenAI calls                       PR #102
   ✅ WhatsApp disconnect handler                                 PR #102
   ✅ DEMO_SCRIPT.md                                              PR #102
+
+Patch v2.3.5 (2026-04-09):
+  ✅ fix(frontend): ReservationFlowPage.handleConfirm try/catch
+  ✅ fix(lint): pushService.test.ts — unused var + const fix
+  ✅ fix(cd): cd-backend.yml — Docker build context correction
+  ✅ Tests: Backend 39 suites / 535 tests, Frontend 33 suites / 432 tests
 ```
 
 #### Sprint 8 — v2.4.0 — Bot Completo + n8n Workflows 📋
@@ -482,7 +488,7 @@ Email: Brevo (SMTP + API)
 SMS: Brevo SMS
 Pagos: PayPal + MercadoPago
 Delivery: Providers via webhooks
-Testing: Jest (307 tests)
+Testing: Jest (39 suites / 535 tests)
 ```
 
 ### Frontend Stack
@@ -494,17 +500,17 @@ State: Zustand 5
 Routing: React Router 7
 i18n: i18next
 PWA: Workbox
-Testing: Vitest (132 tests) + Playwright (13 E2E)
+Testing: Vitest (33 suites / 432 tests)
 ```
 
 ---
 
 ## 📈 Métricas Objetivo
 
-| Métrica       | Actual (v1.11.0)                                                 | Objetivo                 |
+| Métrica       | Actual (v2.3.5)                                                  | Objetivo                 |
 | ------------- | ---------------------------------------------------------------- | ------------------------ |
 | Test Coverage | ~70%                                                             | **90%+**                 |
-| Tests Totales | 307 (integration + E2E)                                          | **~550**                 |
+| Tests Totales | 967 (Backend 535 + Frontend 432)                                 | **~550** ✅ superado     |
 | Features      | Pagos + Gamif + E-commerce + Multi-vendor + Delivery + Contracts | **Release v2.0.0**       |
 | Delivery      | Shipping addresses + tracking                                    | **+ DiDi/Uber/InDriver** |
 | Pagos         | PayPal + MP                                                      | **+ Gift Cards** ✅      |
@@ -533,12 +539,12 @@ sprint:1             - Sprint 1
 sprint:2             - Sprint 2
 sprint:3             - Sprint 3
 sprint:4             - Sprint 4
-sprint:7             - Sprint 7 — v2.3.0
+sprint:7             - Sprint 7 — v2.3.0 → v2.3.5
 sprint:8             - Sprint 8 — v2.4.0
 ```
 
 ---
 
-**Última actualización**: 2026-04-08  
+**Última actualización**: 2026-04-09  
 **Proyecto**: https://github.com/users/ipproyectosysoluciones/projects/4  
 **Producto**: Nexo Real — _"Conectamos tu negocio con el mundo."_
