@@ -201,9 +201,17 @@ services:
       # ── Google Calendar integration ────────────────────────────────────
       # Credentials are configured via the n8n UI, not env vars.
       # See docs/N8N-SETUP.md for the setup guide.
+      GOOGLE_CALENDAR_ID: ${GOOGLE_CALENDAR_ID}
 
       # ── Notion integration ─────────────────────────────────────────────
       # Credentials are configured via the n8n UI, not env vars.
+      NOTION_LEADS_DB_ID: ${NOTION_DATABASE_ID_LEADS}
+      NOTION_DATABASE_ID_VISITS: ${NOTION_DATABASE_ID_VISITS}
+
+      # ── Brevo — Human Handoff email (httpRequest node, no credential needed) ─
+      BREVO_API_KEY: ${BREVO_API_KEY}
+      BREVO_HANDOFF_TEMPLATE_ID: ${BREVO_HANDOFF_TEMPLATE_ID:-1}
+      SALES_TEAM_EMAIL: ${SALES_TEAM_EMAIL}
 
     volumes:
       - n8n_data:/home/node/.n8n

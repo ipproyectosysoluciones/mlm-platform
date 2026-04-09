@@ -85,35 +85,38 @@
     },
     {
       "parameters": {
-        "resource": "email",
-        "operation": "send",
-        "templateId": "={{ $env.BREVO_HANDOFF_TEMPLATE_ID }}",
-        "to": [
-          {
-            "email": "={{ $env.SALES_TEAM_EMAIL }}",
-            "name": "Equipo de Ventas Nexo Real"
-          }
-        ],
-        "params": {
-          "lead_name": "={{ $node['Validate & Transform Input'].json.name }}",
-          "lead_phone": "={{ $node['Validate & Transform Input'].json.phone }}",
-          "lead_summary": "={{ $node['Validate & Transform Input'].json.summary }}",
-          "bot_agent": "={{ $node['Validate & Transform Input'].json.agentName }}",
-          "handoff_time": "={{ $node['Validate & Transform Input'].json.handoffAt }}",
-          "notion_url": "=https://notion.so/{{ $json.id.replace(/-/g, '') }}"
-        }
+        "method": "POST",
+        "url": "https://api.brevo.com/v3/smtp/email",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "api-key",
+              "value": "={{ $env.BREVO_API_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": []
+        },
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"to\": [{\"email\": \"{{ $env.SALES_TEAM_EMAIL }}\", \"name\": \"Equipo Nexo Real\"}],\n  \"templateId\": {{ $env.BREVO_HANDOFF_TEMPLATE_ID }},\n  \"params\": {\n    \"lead_name\": \"{{ $node['Validate & Transform Input'].json.name }}\",\n    \"lead_phone\": \"{{ $node['Validate & Transform Input'].json.phone }}\",\n    \"lead_summary\": \"{{ $node['Validate & Transform Input'].json.summary }}\",\n    \"bot_agent\": \"{{ $node['Validate & Transform Input'].json.agentName }}\",\n    \"handoff_time\": \"{{ $node['Validate & Transform Input'].json.handoffAt }}\",\n    \"notion_url\": \"https://notion.so/{{ $node['Notion — Create Lead'].json.id.replace(/-/g, '') }}\"\n  }\n}",
+        "options": {}
       },
       "id": "brevo-send-email",
       "name": "Brevo — Send Handoff Email",
-      "type": "n8n-nodes-base.sendInBlue",
-      "typeVersion": 1,
-      "position": [680, 400],
-      "credentials": {
-        "sendInBlueApi": {
-          "id": "brevo-credentials",
-          "name": "Brevo — Nexo Real"
-        }
-      }
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [680, 400]
     },
     {
       "parameters": {
@@ -222,5 +225,5 @@
   "tags": ["nexo-real", "bot", "handoff", "notion", "brevo", "sprint8"],
   "triggerCount": 0,
   "updatedAt": "2026-04-09T00:00:00.000Z",
-  "versionId": "1.0.0"
+  "versionId": "1.1.0"
 }
