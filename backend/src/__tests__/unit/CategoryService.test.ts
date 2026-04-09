@@ -48,9 +48,9 @@ jest.mock('../../middleware/error.middleware', () => ({
   },
 }));
 
-import { Category, MAX_CATEGORY_DEPTH } from '../../models';
+import { Category } from '../../models';
 import { Product } from '../../models';
-import { categoryService, CategoryTreeNode } from '../../services/CategoryService';
+import { categoryService } from '../../services/CategoryService';
 
 describe('CategoryService', () => {
   let getDepthSpy: jest.SpyInstance;
@@ -261,7 +261,7 @@ describe('CategoryService', () => {
       (Category.findByPk as jest.Mock).mockResolvedValue(mockCategory);
       (Category.findOne as jest.Mock).mockResolvedValue(null); // No duplicate slug
 
-      const result = await categoryService.update('cat-1', { name: 'New Name' });
+      await categoryService.update('cat-1', { name: 'New Name' });
 
       expect(mockCategory.update).toHaveBeenCalledWith({ name: 'New Name' });
     });

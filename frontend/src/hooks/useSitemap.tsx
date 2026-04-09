@@ -7,7 +7,7 @@ interface SitemapUrl {
   priority: string;
 }
 
-export function generateSitemapXML(urls: SitemapUrl[]): string {
+function generateSitemapXML(urls: SitemapUrl[]): string {
   const header = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
   const footer = '</urlset>';
@@ -26,7 +26,7 @@ export function generateSitemapXML(urls: SitemapUrl[]): string {
   return header + urlElements + footer;
 }
 
-export function useSitemap() {
+function useSitemap() {
   const [sitemap, setSitemap] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 

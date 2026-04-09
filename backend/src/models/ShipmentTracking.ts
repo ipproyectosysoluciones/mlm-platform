@@ -14,11 +14,7 @@
  */
 import { DataTypes, Model, Optional, ForeignKey } from 'sequelize';
 import { sequelize } from '../config/database';
-import type {
-  ShipmentTrackingAttributes,
-  ShipmentTrackingCreationAttributes,
-  ShipmentStatusHistoryEntry,
-} from '../types';
+import type { ShipmentTrackingAttributes, ShipmentStatusHistoryEntry } from '../types';
 
 type ShipmentTrackingCreation = Optional<
   ShipmentTrackingAttributes,

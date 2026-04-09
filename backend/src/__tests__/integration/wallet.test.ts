@@ -7,7 +7,7 @@
 
 import { testAgent } from '../setup';
 import { createTestUser, getAuthHeaders } from '../fixtures';
-import { Wallet, WalletTransaction, WithdrawalRequest, Commission, User } from '../../models';
+import { Wallet, WalletTransaction, WithdrawalRequest } from '../../models';
 import { WITHDRAWAL_STATUS, WALLET_TRANSACTION_TYPE } from '../../types';
 
 describe('Wallet Integration Tests', () => {
@@ -35,7 +35,7 @@ describe('Wallet Integration Tests', () => {
   describe('GET /api/wallets/:userId (Get Balance)', () => {
     it('should return wallet balance for authenticated user', async () => {
       // First create a wallet with some balance
-      const wallet = await Wallet.create({
+      await Wallet.create({
         userId: testUser.id,
         balance: 100.0,
         currency: 'USD',
@@ -148,7 +148,7 @@ describe('Wallet Integration Tests', () => {
   describe('POST /api/wallets/withdraw', () => {
     it('should create withdrawal request with sufficient balance', async () => {
       // Create wallet with balance
-      const wallet = await Wallet.create({
+      await Wallet.create({
         userId: testUser.id,
         balance: 100.0,
         currency: 'USD',
@@ -171,7 +171,7 @@ describe('Wallet Integration Tests', () => {
     });
 
     it('should reject withdrawal below minimum ($20)', async () => {
-      const wallet = await Wallet.create({
+      await Wallet.create({
         userId: testUser.id,
         balance: 100.0,
         currency: 'USD',
@@ -192,7 +192,7 @@ describe('Wallet Integration Tests', () => {
     });
 
     it('should reject withdrawal when insufficient balance', async () => {
-      const wallet = await Wallet.create({
+      await Wallet.create({
         userId: testUser.id,
         balance: 15.0, // Less than $20 minimum
         currency: 'USD',
@@ -212,7 +212,7 @@ describe('Wallet Integration Tests', () => {
 
   describe('GET /api/wallets/withdrawals/:id', () => {
     it('should return withdrawal request status', async () => {
-      const wallet = await Wallet.create({
+      await Wallet.create({
         userId: testUser.id,
         balance: 100.0,
         currency: 'USD',
@@ -249,7 +249,7 @@ describe('Wallet Integration Tests', () => {
 
   describe('DELETE /api/wallets/withdrawals/:id (Cancel)', () => {
     it('should cancel pending withdrawal', async () => {
-      const wallet = await Wallet.create({
+      await Wallet.create({
         userId: testUser.id,
         balance: 100.0,
         currency: 'USD',
@@ -273,7 +273,7 @@ describe('Wallet Integration Tests', () => {
     });
 
     it('should not cancel already processed withdrawal', async () => {
-      const wallet = await Wallet.create({
+      await Wallet.create({
         userId: testUser.id,
         balance: 100.0,
         currency: 'USD',
@@ -301,7 +301,7 @@ describe('Wallet Integration Tests', () => {
   describe('Daily Payout Job', () => {
     it('should process approved withdrawals', async () => {
       // Create wallet with balance
-      const wallet = await Wallet.create({
+      await Wallet.create({
         userId: testUser.id,
         balance: 100.0,
         currency: 'USD',

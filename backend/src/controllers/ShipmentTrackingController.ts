@@ -9,7 +9,7 @@ import { Request, Response, NextFunction } from 'express';
 import crypto from 'crypto';
 import { ShipmentTrackingService } from '../services/ShipmentTrackingService';
 import { DeliveryProvider } from '../models/DeliveryProvider';
-import { Order, Product, User } from '../models';
+import { Order, Product } from '../models';
 import { AppError } from '../middleware/error.middleware';
 import { ApiResponse, ShipmentTrackingStatus } from '../types';
 

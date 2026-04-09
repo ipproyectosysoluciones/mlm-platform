@@ -87,7 +87,7 @@ export interface ReservationAttributes {
  * Creation attributes — fields that can be omitted on create
  * Atributos de creación — campos que pueden omitirse al crear
  */
-export interface ReservationCreationAttributes extends Optional<
+export type ReservationCreationAttributes = Optional<
   ReservationAttributes,
   | 'id'
   | 'status'
@@ -107,7 +107,7 @@ export interface ReservationCreationAttributes extends Optional<
   | 'deletedAt'
   | 'createdAt'
   | 'updatedAt'
-> {}
+>;
 
 type ReservationCreation = Optional<
   ReservationAttributes,

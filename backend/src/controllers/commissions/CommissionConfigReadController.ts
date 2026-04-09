@@ -7,7 +7,7 @@
  */
 import { Response } from 'express';
 import { CommissionConfig } from '../../models';
-import { BUSINESS_TYPES, type BusinessType } from '../../types';
+import { BUSINESS_TYPES } from '../../types';
 import type { ApiResponse } from '../../types';
 import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
 

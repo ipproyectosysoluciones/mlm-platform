@@ -51,7 +51,7 @@ export interface TourPackageAttributes {
  * Creation attributes — fields that can be omitted on create
  * Atributos de creación — campos que pueden omitirse al crear
  */
-export interface TourPackageCreationAttributes extends Optional<
+export type TourPackageCreationAttributes = Optional<
   TourPackageAttributes,
   | 'id'
   | 'titleEn'
@@ -69,7 +69,7 @@ export interface TourPackageCreationAttributes extends Optional<
   | 'deletedAt'
   | 'createdAt'
   | 'updatedAt'
-> {}
+>;
 
 type TourPackageCreation = Optional<
   TourPackageAttributes,

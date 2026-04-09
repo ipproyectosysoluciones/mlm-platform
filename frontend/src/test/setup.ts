@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { expect, afterEach, vi } from 'vitest';
+import { afterEach, vi } from 'vitest';
 import { cleanup } from '@testing-library/react';
 
 // Cleanup after each test
@@ -37,7 +37,7 @@ vi.mock('axios', () => ({
 }));
 
 // Mock i18next
-const mockT = (key: string, options?: Record<string, unknown>) => {
+const mockT = (key: string, _options?: Record<string, unknown>) => {
   const translations: Record<string, string> = {
     'auth.welcome': 'Bienvenido',
     'auth.signIn': 'Iniciar Sesión',

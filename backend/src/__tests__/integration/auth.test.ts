@@ -8,7 +8,7 @@
  */
 
 import { testAgent } from '../setup';
-import { createTestUser, createAdminUser, getAuthHeaders } from '../fixtures';
+import { createTestUser, getAuthHeaders } from '../fixtures';
 
 describe('Auth Integration Tests', () => {
   describe('POST /api/auth/register', () => {
@@ -29,7 +29,7 @@ describe('Auth Integration Tests', () => {
     });
 
     it('should register user with sponsor_code', async () => {
-      const sponsor = await createTestUser({
+      await createTestUser({
         email: 'sponsor@test.mlm',
         referralCode: 'SPONSOR123',
       });

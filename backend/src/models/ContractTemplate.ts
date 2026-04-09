@@ -29,11 +29,7 @@
 
 import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../config/database';
-import type {
-  ContractTemplateAttributes,
-  ContractTemplateCreationAttributes,
-  ContractType,
-} from '../types';
+import type { ContractTemplateAttributes, ContractType } from '../types';
 import crypto from 'crypto';
 
 type ContractTemplateCreation = Optional<

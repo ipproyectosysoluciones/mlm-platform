@@ -8,7 +8,7 @@ import { WifiOff, X } from 'lucide-react';
 
 export default function OfflineBanner() {
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(!navigator.onLine);
   const hideTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -34,12 +34,6 @@ export default function OfflineBanner() {
     // Listen for online/offline events
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
-
-    // Check initial state
-    if (!navigator.onLine) {
-      setIsOffline(true);
-      setIsVisible(true);
-    }
 
     return () => {
       window.removeEventListener('online', handleOnline);

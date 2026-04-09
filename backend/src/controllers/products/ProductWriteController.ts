@@ -7,7 +7,6 @@
 import { Response } from 'express';
 import { productService } from '../../services/ProductService';
 import { asyncHandler } from '../../middleware/asyncHandler';
-import { AppError } from '../../middleware/error.middleware';
 import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
 import type { ApiResponse, ProductType } from '../../types';
 import type { Product } from '../../models/Product';

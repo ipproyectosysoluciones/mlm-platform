@@ -23,7 +23,6 @@ import {
   disable2FA,
 } from '../controllers/TwoFactorController';
 import { authenticateToken } from '../middleware/auth.middleware';
-import { validate } from '../middleware/validate.middleware';
 
 const router: ExpressRouter = Router();
 

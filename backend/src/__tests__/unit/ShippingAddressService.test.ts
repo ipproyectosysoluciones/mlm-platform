@@ -49,7 +49,7 @@ jest.mock('../../middleware/error.middleware', () => ({
 }));
 
 import { ShippingAddressService } from '../../services/ShippingAddressService';
-const { ShippingAddress } = require('../../models/ShippingAddress');
+import { ShippingAddress } from '../../models/ShippingAddress';
 
 describe('ShippingAddressService', () => {
   let service: ShippingAddressService;
@@ -214,7 +214,7 @@ describe('ShippingAddressService', () => {
       (ShippingAddress.findOne as jest.Mock).mockResolvedValue(mockAddress);
       (ShippingAddress.update as jest.Mock).mockResolvedValue([1]);
 
-      const result = await service.setDefault('addr-uuid', 'user-uuid');
+      await service.setDefault('addr-uuid', 'user-uuid');
 
       // Just verify the methods were called (don't check exact arguments due to transaction mocking)
       expect(ShippingAddress.update).toHaveBeenCalled();

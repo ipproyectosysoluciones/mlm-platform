@@ -22,7 +22,9 @@ describe('cn utility', () => {
   });
 
   it('should handle conditional classes', () => {
-    const result = cn('foo', true && 'bar', false && 'baz');
+    const showBar = true;
+    const showBaz = false;
+    const result = cn('foo', showBar && 'bar', showBaz && 'baz');
     expect(result).toContain('foo');
     expect(result).toContain('bar');
     expect(result).not.toContain('baz');

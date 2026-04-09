@@ -118,7 +118,7 @@ test.describe('Email Campaigns', () => {
           'textarea, [contenteditable="true"], .ql-editor, .tox-tinymce, [data-testid="email-builder"], [data-testid="html-editor"], .monaco-editor, .CodeMirror'
         )
         .first();
-      const editorVisible = await editorArea.isVisible({ timeout: 5000 }).catch(() => false);
+      await editorArea.isVisible({ timeout: 5000 }).catch(() => false);
 
       // Also check for preview pane or preview button
       const previewElement = page
@@ -126,7 +126,7 @@ test.describe('Email Campaigns', () => {
           'button:has-text("preview"), [data-testid="preview-pane"], iframe[title*="preview" i], .email-preview'
         )
         .first();
-      const previewVisible = await previewElement.isVisible({ timeout: 5000 }).catch(() => false);
+      await previewElement.isVisible({ timeout: 5000 }).catch(() => false);
 
       // Either editor or preview should be accessible in the email builder area
       // If neither is found, just verify the page loaded without errors

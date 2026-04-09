@@ -46,10 +46,7 @@ export interface CommissionConfigAttributes {
 /**
  * CommissionConfig creation attributes
  */
-export interface CommissionConfigCreationAttributes extends Optional<
-  CommissionConfigAttributes,
-  'id'
-> {}
+export type CommissionConfigCreationAttributes = Optional<CommissionConfigAttributes, 'id'>;
 
 export class CommissionConfig
   extends Model<CommissionConfigAttributes, CommissionConfigCreationAttributes>

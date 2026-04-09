@@ -82,7 +82,7 @@ describe('Public Landing Integration Tests', () => {
     });
 
     it('should include affiliate info when ref code is provided', async () => {
-      const affiliateUser = await createTestUser({
+      await createTestUser({
         email: 'affiliate@test.mlm',
         referralCode: 'AFFILIATE123',
       });

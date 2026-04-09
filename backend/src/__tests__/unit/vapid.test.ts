@@ -5,13 +5,7 @@
  * @module __tests__/unit/vapid
  */
 
-import {
-  getVapidPublicKey,
-  getWebPush,
-  validateVapid,
-  generateKeys,
-  vapidConfig,
-} from '../../utils/vapid';
+import { getVapidPublicKey, getWebPush, validateVapid, vapidConfig } from '../../utils/vapid';
 
 // Mock web-push
 jest.mock('web-push', () => {
@@ -62,8 +56,8 @@ describe('VAPID Utils', () => {
       expect(publicKey).toBe('test-public-key');
     });
 
-    it('should validate config before returning', () => {
-      const { validateVapidConfig } = require('../../config/vapid');
+    it('should validate config before returning', async () => {
+      const { validateVapidConfig } = await import('../../config/vapid');
 
       getVapidPublicKey();
 
@@ -88,8 +82,8 @@ describe('VAPID Utils', () => {
       );
     });
 
-    it('should validate config before configuring', () => {
-      const { validateVapidConfig } = require('../../config/vapid');
+    it('should validate config before configuring', async () => {
+      const { validateVapidConfig } = await import('../../config/vapid');
 
       getWebPush();
 
@@ -98,8 +92,8 @@ describe('VAPID Utils', () => {
   });
 
   describe('validateVapid()', () => {
-    it('should call validateVapidConfig', () => {
-      const { validateVapidConfig } = require('../../config/vapid');
+    it('should call validateVapidConfig', async () => {
+      const { validateVapidConfig } = await import('../../config/vapid');
 
       validateVapid();
 
@@ -108,8 +102,8 @@ describe('VAPID Utils', () => {
   });
 
   describe('generateKeys()', () => {
-    it('should generate valid VAPID keys', () => {
-      const { generateKeys: generateKeysFromConfig } = require('../../config/vapid');
+    it('should generate valid VAPID keys', async () => {
+      const { generateKeys: generateKeysFromConfig } = await import('../../config/vapid');
 
       const keys = generateKeysFromConfig();
 
@@ -119,7 +113,7 @@ describe('VAPID Utils', () => {
   });
 
   describe('Error handling', () => {
-    it('should throw error when VAPID keys are missing (via config)', () => {
+    it('should throw error when VAPID keys are missing (via config)', async () => {
       // Re-mock with empty config
       jest.doMock('../../config/vapid', () => ({
         vapidConfig: {
@@ -132,14 +126,14 @@ describe('VAPID Utils', () => {
         }),
       }));
 
-      // Need to re-require to get new mock
+      // Need to re-import to get new mock
       jest.resetModules();
-      const { validateVapid } = require('../../utils/vapid');
+      const { validateVapid } = await import('../../utils/vapid');
 
       expect(() => validateVapid()).toThrow('VAPID keys are not configured');
     });
 
-    it('should throw error when getting public key with missing config', () => {
+    it('should throw error when getting public key with missing config', async () => {
       jest.doMock('../../config/vapid', () => ({
         vapidConfig: {
           publicKey: '',
@@ -152,12 +146,12 @@ describe('VAPID Utils', () => {
       }));
 
       jest.resetModules();
-      const { getVapidPublicKey } = require('../../utils/vapid');
+      const { getVapidPublicKey } = await import('../../utils/vapid');
 
       expect(() => getVapidPublicKey()).toThrow('VAPID keys are not configured');
     });
 
-    it('should throw error when getting web-push with missing config', () => {
+    it('should throw error when getting web-push with missing config', async () => {
       jest.doMock('../../config/vapid', () => ({
         vapidConfig: {
           publicKey: '',
@@ -170,7 +164,7 @@ describe('VAPID Utils', () => {
       }));
 
       jest.resetModules();
-      const { getWebPush } = require('../../utils/vapid');
+      const { getWebPush } = await import('../../utils/vapid');
 
       expect(() => getWebPush()).toThrow('VAPID keys are not configured');
     });

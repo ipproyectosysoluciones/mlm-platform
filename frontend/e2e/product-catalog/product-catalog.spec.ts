@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { baseURL, login } from '../helpers';
+import { login } from '../helpers';
 import { ProductCatalogPage } from './product-catalog-page';
 
 test.describe('Product Catalog', () => {

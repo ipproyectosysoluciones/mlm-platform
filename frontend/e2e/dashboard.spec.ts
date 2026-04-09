@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { baseURL, login } from './helpers';
+import { login } from './helpers';
 
 test.describe('Dashboard', () => {
   test.beforeEach(async ({ page }) => {

@@ -7,7 +7,7 @@
  * @module components/routes/ProtectedRoute
  */
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 import AppLayout from '../layout/AppLayout';
 
 interface ProtectedRouteProps {

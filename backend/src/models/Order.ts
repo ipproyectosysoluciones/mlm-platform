@@ -23,7 +23,7 @@ import { sequelize } from '../config/database';
 import { User } from './User';
 import { Product } from './Product';
 import { Purchase } from './Purchase';
-import type { OrderAttributes, OrderCreationAttributes, ShippingStatus } from '../types';
+import type { OrderAttributes, ShippingStatus } from '../types';
 
 type OrderCreation = Optional<OrderAttributes, 'id' | 'createdAt' | 'updatedAt'>;
 

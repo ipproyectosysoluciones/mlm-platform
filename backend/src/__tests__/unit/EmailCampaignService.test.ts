@@ -60,7 +60,6 @@ import {
   EmailCampaignLog,
   User,
 } from '../../models';
-import { sequelize } from '../../config/database';
 import { EMAIL_CAMPAIGN_STATUS, EMAIL_QUEUE_STATUS, ALLOWED_TEMPLATE_VARIABLES } from '../../types';
 
 describe('EmailCampaignService', () => {

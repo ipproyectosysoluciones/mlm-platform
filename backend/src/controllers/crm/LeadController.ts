@@ -7,11 +7,10 @@
  */
 
 import { Response } from 'express';
-import { body, query } from 'express-validator';
+import { body } from 'express-validator';
 import { crmService } from '../../services/CRMService';
 import { AppError } from '../../middleware/error.middleware';
 import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
-import type { LeadStatus, LeadSource } from '../../models/Lead';
 
 /**
  * Validation rules for creating a new lead
