@@ -1,15 +1,6 @@
 import { addKeyword } from '@builderbot/bot';
 import { mlmApi } from '../services/mlm-api.service.js';
-
-const NETWORK_KEYWORDS: [string, ...string[]] = [
-  'mi red',
-  'red',
-  'referidos',
-  'afiliados',
-  'ver red',
-  'equipo',
-  'downline',
-];
+import { NETWORK_KEYWORDS } from '../config/keywords.js';
 
 /**
  * Network flow — shows the user's downline summary: total referrals,

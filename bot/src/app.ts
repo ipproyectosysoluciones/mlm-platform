@@ -19,6 +19,8 @@ import { scheduleFlow } from './flows/schedule.flow.js';
 import { handoffFlow } from './flows/handoff.flow.js';
 import { propertiesFlow } from './flows/properties.flow.js';
 import { toursFlow } from './flows/tours.flow.js';
+import { onboardingFlow } from './flows/onboarding.flow.js';
+import { COMMISSIONS_KEYWORDS } from './config/keywords.js';
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
@@ -61,17 +63,18 @@ const database = new MemoryDB();
 /**
  * "comisiones" keyword — re-uses networkFlow logic (shows last commissions inline).
  * We create a thin alias flow here rather than duplicating network.flow.ts.
+ * Keywords are centralized in config/keywords.ts (COMMISSIONS_KEYWORDS).
  */
-const commissionsKeywordFlow = addKeyword(['comisiones', 'mis comisiones', 'ver comisiones'] as [
-  string,
-  ...string[],
-]).addAction(async (ctx: any, utils: any) => {
-  // Delegate to networkFlow which already includes commissions in its response
-  await utils.gotoFlow(networkFlow);
-});
+const commissionsKeywordFlow = addKeyword(COMMISSIONS_KEYWORDS).addAction(
+  async (ctx: any, utils: any) => {
+    // Delegate to networkFlow which already includes commissions in its response
+    await utils.gotoFlow(networkFlow);
+  }
+);
 
 const flow = createFlow([
   welcomeFlow,
+  onboardingFlow,
   balanceFlow,
   networkFlow,
   supportFlow,

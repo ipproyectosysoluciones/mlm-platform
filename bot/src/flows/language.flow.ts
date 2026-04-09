@@ -1,5 +1,6 @@
 import { addKeyword, EVENTS } from '@builderbot/bot';
 import type { Language } from '../services/ai.service.js';
+import { LANGUAGE_ES_KEYWORDS, LANGUAGE_EN_KEYWORDS } from '../config/keywords.js';
 
 /**
  * Language detection flow.
@@ -7,18 +8,22 @@ import type { Language } from '../services/ai.service.js';
  * Triggered on WELCOME — asks the user to choose Spanish or English.
  * Stores the choice in BuilderBot state as `lang: Language`.
  *
- * Keywords that trigger language selection directly:
- *   - "1", "español", "espanol", "es" → 'es'
- *   - "2", "english", "inglés", "ingles", "en" → 'en'
+ * Keywords are centralized in config/keywords.ts:
+ *   - LANGUAGE_ES_KEYWORDS → 'es'
+ *   - LANGUAGE_EN_KEYWORDS → 'en'
  */
 
-const ES_KEYWORDS = ['1', 'español', 'espanol', 'es', 'castellano'];
-const EN_KEYWORDS = ['2', 'english', 'inglés', 'ingles', 'en', 'english please'];
-
+/**
+ * Detects language from user input using centralized keyword lists.
+ * Detecta el idioma del input del usuario usando las listas centralizadas de keywords.
+ *
+ * @param text - Raw user input / Texto crudo del usuario
+ * @returns 'es' | 'en' | null
+ */
 function detectLanguageFromText(text: string): Language | null {
   const normalized = text.trim().toLowerCase();
-  if (ES_KEYWORDS.includes(normalized)) return 'es';
-  if (EN_KEYWORDS.includes(normalized)) return 'en';
+  if (LANGUAGE_ES_KEYWORDS.includes(normalized)) return 'es';
+  if (LANGUAGE_EN_KEYWORDS.includes(normalized)) return 'en';
   return null;
 }
 

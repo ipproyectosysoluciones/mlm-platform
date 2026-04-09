@@ -1,6 +1,7 @@
 import { addKeyword } from '@builderbot/bot';
 import { n8nService } from '../services/n8n.service.js';
 import type { Language, AgentName } from '../services/ai.service.js';
+import { HANDOFF_KEYWORDS } from '../config/keywords.js';
 
 /**
  * @file handoff.flow.ts
@@ -18,26 +19,6 @@ import type { Language, AgentName } from '../services/ai.service.js';
  *
  * @author Nexo Real Development Team
  */
-
-// ─── Keywords ────────────────────────────────────────────────────────────────
-
-const HANDOFF_KEYWORDS: [string, ...string[]] = [
-  'hablar con alguien',
-  'hablar con una persona',
-  'hablar con un asesor',
-  'quiero un asesor',
-  'asesor humano',
-  'agente humano',
-  'persona real',
-  'no quiero hablar con un bot',
-  'speak to a human',
-  'talk to a person',
-  'human agent',
-  'real person',
-  'speak to agent',
-  'talk to agent',
-  'connect me with someone',
-];
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 

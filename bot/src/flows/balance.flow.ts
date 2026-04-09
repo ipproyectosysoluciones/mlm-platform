@@ -1,14 +1,6 @@
 import { addKeyword } from '@builderbot/bot';
 import { mlmApi } from '../services/mlm-api.service.js';
-
-const BALANCE_KEYWORDS: [string, ...string[]] = [
-  'saldo',
-  'balance',
-  'mi saldo',
-  'ver saldo',
-  'billetera',
-  'wallet',
-];
+import { BALANCE_KEYWORDS } from '../config/keywords.js';
 
 /**
  * Balance flow — responds with wallet balance + pending withdrawals.
