@@ -67,7 +67,8 @@ export default defineConfig({
         'src/pages/ProductCatalog.tsx',
         'src/pages/ProductLanding.tsx',
         'src/pages/ShoppingCartPage.tsx',
-        'src/pages/ReservationFlowPage.tsx',
+        // ReservationFlowPage covered by integration test T2.3.2
+        // 'src/pages/ReservationFlowPage.tsx',
         'src/pages/TwoFactor.tsx',
         'src/pages/GiftCardConfig.tsx',
         'src/components/CheckoutForm.tsx',
