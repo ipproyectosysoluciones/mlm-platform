@@ -44,12 +44,9 @@ import {
   getTemplate,
   deleteTemplate,
   createCampaign,
-  listCampaigns,
   getCampaign,
-  previewCampaign,
   sendCampaign,
   scheduleCampaign,
-  pauseCampaign,
   retryFailedEmails,
   getCampaignLogs,
 } from '../../controllers/EmailCampaignController';

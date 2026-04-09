@@ -17,15 +17,6 @@ export interface LeadFormData {
   notes: string;
 }
 
-export const initialLeadFormData: LeadFormData = {
-  contactName: '',
-  contactEmail: '',
-  contactPhone: '',
-  company: '',
-  source: 'website',
-  notes: '',
-};
-
 interface LeadModalProps {
   isOpen: boolean;
   onClose: () => void;

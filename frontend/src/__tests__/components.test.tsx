@@ -4,7 +4,7 @@
  * @module components.test
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 // Mock the API service to prevent real network calls in unit tests
@@ -60,7 +60,7 @@ vi.mock('../services/api', async () => {
 });
 
 // Mock AuthContext
-vi.mock('../context/AuthContext', async () => {
+vi.mock('../context/useAuth', async () => {
   return {
     useAuth: () => ({
       user: {

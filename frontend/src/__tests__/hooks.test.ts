@@ -6,7 +6,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { useData, useRefetchableData } from '../hooks/useData';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import { useTreeStore } from '../stores/treeStore';
 import { useWalletStore } from '../stores/walletStore';
 
@@ -27,7 +27,7 @@ vi.mock('../services/api', () => ({
   },
 }));
 
-vi.mock('../context/AuthContext', () => ({
+vi.mock('../context/useAuth', () => ({
   useAuth: () => ({
     user: {
       id: 'test-user',

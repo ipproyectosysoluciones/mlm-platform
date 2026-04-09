@@ -5,7 +5,7 @@
  * @author MLM Development Team
  */
 
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { ContractService } from '../services/ContractService';
 import type { AuthenticatedRequest } from './auth.middleware';
 import type { ContractType } from '../types';

@@ -7,11 +7,7 @@
 
 // Mock crypto BEFORE importing the service
 // We need to handle the fact that crypto is used at module load time
-const crypto = require('crypto');
-const originalRandomBytes = crypto.randomBytes;
 
-// Create a counter to track calls and return different values
-let callCount = 0;
 const bufferValues = [
   'aaaaaaaabbbbbbbbccccccccdddddddd', // 16 bytes for IV
   'eeeeeeeeffffffff0000000000000000', // 16 bytes for auth tag
@@ -33,7 +29,7 @@ jest.mock('crypto', () => {
       update: jest.fn().mockReturnThis(),
       digest: jest.fn().mockReturnValue(Buffer.from('mockkeydigest123456', 'hex')),
     })),
-    createCipheriv: jest.fn((algo: string, key: Buffer, iv: Buffer) => {
+    createCipheriv: jest.fn((_algo: string, _key: Buffer, _iv: Buffer) => {
       return {
         update: jest.fn((data: string) => {
           // Simple XOR-like transformation for test (not real encryption)
@@ -46,7 +42,7 @@ jest.mock('crypto', () => {
         getAuthTag: jest.fn(() => Buffer.from('authtag12345678', 'hex')),
       };
     }),
-    createDecipheriv: jest.fn((algo: string, key: Buffer, iv: Buffer) => {
+    createDecipheriv: jest.fn((_algo: string, _key: Buffer, _iv: Buffer) => {
       return {
         update: jest.fn((data: string) => {
           // Reverse the XOR transformation

@@ -19,10 +19,9 @@
  * // Español: Obtener migas de pan para una categoría
  * const breadcrumb = await categoryService.getBreadcrumb('category-id');
  */
-import { Op } from 'sequelize';
 import { Category, MAX_CATEGORY_DEPTH, Product } from '../models';
 import { AppError } from '../middleware/error.middleware';
-import type { CategoryAttributes, CategoryCreationAttributes } from '../types';
+import type { CategoryAttributes } from '../types';
 import type { CategoryCreation } from '../models/Category';
 
 export interface CategoryTreeNode extends CategoryAttributes {

@@ -12,21 +12,11 @@
  * GET /api/public/profile/AFFILIATE123/products
  */
 import { Router, Request, Response } from 'express';
-import { param } from 'express-validator';
 import { Product, User } from '../models';
 import { asyncHandler } from '../middleware/asyncHandler';
 import type { ApiResponse } from '../types';
 
 const router = Router();
-
-// Validation for referral code
-const codeValidation = [
-  param('code')
-    .isString()
-    .trim()
-    .isLength({ min: 3, max: 15 })
-    .withMessage('Referral code must be 3-15 characters'),
-];
 
 /**
  * @swagger

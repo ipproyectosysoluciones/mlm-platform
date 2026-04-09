@@ -7,8 +7,7 @@
 
 import { Request, Response } from 'express';
 import { ContractService } from '../services/ContractService';
-import { authenticate, type AuthenticatedRequest } from '../middleware/auth.middleware';
-import type { ContractType } from '../types';
+import { type AuthenticatedRequest } from '../middleware/auth.middleware';
 
 const contractService = new ContractService();
 

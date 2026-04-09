@@ -17,9 +17,6 @@ export let testAgent: any;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let sequelizeInstance: any = null;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let importedModels: any = {};
-
 beforeAll(async () => {
   console.log('=== SETUP: Starting integration test setup ===');
   console.log('TEST_DB_NAME:', process.env.TEST_DB_NAME);
@@ -64,37 +61,36 @@ beforeAll(async () => {
     AffiliateContract,
   } = await import('../models');
 
-  importedModels = {
-    User,
-    UserClosure,
-    Commission,
-    Purchase,
-    Lead,
-    Task,
-    Communication,
-    LandingPage,
-    Product,
-    Order,
-    Wallet,
-    WalletTransaction,
-    WithdrawalRequest,
-    CommissionConfig,
-    GiftCard,
-    QrMapping,
-    GiftCardTransaction,
-    Cart,
-    CartItem,
-    CartRecoveryToken,
-    EmailTemplate,
-    EmailCampaign,
-    CampaignRecipient,
-    EmailQueue,
-    EmailCampaignLog,
-    Category,
-    InventoryMovement,
-    ContractTemplate,
-    AffiliateContract,
-  };
+  // Models imported for side-effect: registering with sequelize instance
+  void User;
+  void UserClosure;
+  void Commission;
+  void Purchase;
+  void Lead;
+  void Task;
+  void Communication;
+  void LandingPage;
+  void Product;
+  void Order;
+  void Wallet;
+  void WalletTransaction;
+  void WithdrawalRequest;
+  void CommissionConfig;
+  void GiftCard;
+  void QrMapping;
+  void GiftCardTransaction;
+  void Cart;
+  void CartItem;
+  void CartRecoveryToken;
+  void EmailTemplate;
+  void EmailCampaign;
+  void CampaignRecipient;
+  void EmailQueue;
+  void EmailCampaignLog;
+  void Category;
+  void InventoryMovement;
+  void ContractTemplate;
+  void AffiliateContract;
 
   console.log('Models registered');
 
@@ -143,8 +139,8 @@ beforeAll(async () => {
   try {
     console.log('Loading app...');
     // Mock the database module to return our test sequelize
-    const originalRequire = (global as any).__mockDb;
-    const app = require('../app').default;
+    const appModule = await import('../app');
+    const app = appModule.default;
     console.log('App loaded, creating test agent...');
     testAgent = supertest(app);
     console.log('Test agent created successfully');

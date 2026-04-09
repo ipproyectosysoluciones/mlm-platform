@@ -5,7 +5,7 @@
  * @module components/client/DashboardClient
  */
 
-import { useState, useEffect, useCallback, type ReactNode } from 'react';
+import { useState, useCallback, type ReactNode } from 'react';
 import { dashboardService } from '../../services/api';
 import { useData } from '../../hooks/useData';
 import { useOptimistic } from '../../hooks/useOptimistic';
@@ -29,11 +29,8 @@ export function DashboardClient({ initialData, children }: DashboardClientProps)
     fallback: initialData ?? undefined,
   });
 
-  useEffect(() => {
-    if (data) {
-      setDashboardData(data);
-    }
-  }, [data]);
+  // Derive effective data: prefer fresh data from hook, fallback to local state
+  const effectiveData = data ?? dashboardData;
 
   const handleRefresh = useCallback(async () => {
     try {
@@ -44,7 +41,7 @@ export function DashboardClient({ initialData, children }: DashboardClientProps)
     }
   }, []);
 
-  if (isLoading && !dashboardData) {
+  if (isLoading && !effectiveData) {
     return <DashboardSkeleton />;
   }
 
@@ -52,15 +49,15 @@ export function DashboardClient({ initialData, children }: DashboardClientProps)
     return <DashboardError error={error} onRetry={handleRefresh} />;
   }
 
-  if (!dashboardData) {
+  if (!effectiveData) {
     return <DashboardEmpty />;
   }
 
   if (children) {
-    return <>{children(dashboardData)}</>;
+    return <>{children(effectiveData)}</>;
   }
 
-  return <DashboardContent data={dashboardData} onRefresh={handleRefresh} />;
+  return <DashboardContent data={effectiveData} onRefresh={handleRefresh} />;
 }
 
 /**

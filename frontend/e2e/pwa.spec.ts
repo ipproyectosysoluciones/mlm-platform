@@ -5,7 +5,7 @@
  */
 
 import { test, expect } from '@playwright/test';
-import { baseURL, login, logout } from './helpers';
+import { baseURL, login } from './helpers';
 
 test.describe('PWA Functionality', () => {
   test('service worker should register successfully', async ({ page }) => {
@@ -43,7 +43,7 @@ test.describe('PWA Functionality', () => {
       // - An error indicator
 
       // Check for offline indicator
-      const offlineIndicator = page.locator('text=/offline|sin conexión|no hay internet/i');
+      page.locator('text=/offline|sin conexión|no hay internet/i');
 
       // If we get here, either offline fallback worked or there's cached content
       console.log('Offline mode handled');
@@ -80,7 +80,7 @@ test.describe('PWA Functionality', () => {
     }
   });
 
-  test('app can be installed as PWA on supported browsers', async ({ page, browser }) => {
+  test('app can be installed as PWA on supported browsers', async ({ page }) => {
     // Note: PWA installation testing is browser-dependent
     // Most CI environments don't support actual PWA installation
 

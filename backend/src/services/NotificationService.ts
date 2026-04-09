@@ -13,7 +13,6 @@
 import cron from 'node-cron';
 import { User, Commission } from '../models';
 import { emailService } from './EmailService';
-import { config } from '../config/env';
 
 /**
  * Weekly digest cron schedule - Every Sunday at 9:00 AM UTC
@@ -34,7 +33,6 @@ export class NotificationService {
   }> {
     const now = new Date();
     const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-    const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
     // This week's commissions
     const weeklyCommissions = await Commission.findAll({
@@ -87,7 +85,7 @@ export class NotificationService {
             continue;
           }
 
-          const { weeklyEarnings, totalEarnings } = await this.getUserCommissionStats(user.id);
+          const { weeklyEarnings } = await this.getUserCommissionStats(user.id);
 
           const firstName = user.email.split('@')[0];
 

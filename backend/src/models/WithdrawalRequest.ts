@@ -17,11 +17,7 @@
 import { DataTypes, Model, Optional, ForeignKey } from 'sequelize';
 import { sequelize } from '../config/database';
 import { User } from './User';
-import type {
-  WithdrawalRequestAttributes,
-  WithdrawalRequestCreationAttributes,
-  WithdrawalStatus,
-} from '../types';
+import type { WithdrawalRequestAttributes, WithdrawalStatus } from '../types';
 
 type WithdrawalRequestCreation = Optional<
   WithdrawalRequestAttributes,

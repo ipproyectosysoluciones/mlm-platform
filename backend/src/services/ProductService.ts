@@ -15,16 +15,7 @@
 import { Op, Transaction } from 'sequelize';
 import { sequelize, Product, Category, InventoryMovement, User } from '../models';
 import { AppError } from '../middleware/error.middleware';
-import type {
-  ProductAttributes,
-  ProductCreationAttributes,
-  ProductType,
-  GenericProductAttributes,
-  GenericProductCreationAttributes,
-  GenericProductListOptions,
-  InventoryMovementType,
-} from '../types';
-import type { CategoryCreation, Product as ProductModel } from '../models/Product';
+import type { ProductAttributes, ProductType, GenericProductAttributes } from '../types';
 import type { InventoryMovementCreation } from '../models/InventoryMovement';
 
 export interface ProductListOptions {

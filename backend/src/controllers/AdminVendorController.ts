@@ -15,7 +15,7 @@ import { Request, Response } from 'express';
 import { vendorService } from '../services/VendorService';
 import { authenticate, requireAdmin } from '../middleware/auth.middleware';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware';
-import { body, param, query, validationResult } from 'express-validator';
+import { body, validationResult } from 'express-validator';
 
 /**
  * List vendors with pagination and filters

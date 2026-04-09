@@ -33,10 +33,7 @@ interface LeadAttributes {
   updatedAt: Date;
 }
 
-interface LeadCreationAttributes extends Optional<
-  LeadAttributes,
-  'id' | 'createdAt' | 'updatedAt'
-> {}
+type LeadCreationAttributes = Optional<LeadAttributes, 'id' | 'createdAt' | 'updatedAt'>;
 
 export class Lead extends Model<LeadAttributes, LeadCreationAttributes> implements LeadAttributes {
   public id!: string;

@@ -22,7 +22,7 @@
 
 import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../config/database';
-import type { UserAttributes, UserCreationAttributes } from '../types';
+import type { UserAttributes } from '../types';
 
 type UserCreation = Optional<UserAttributes, 'id' | 'createdAt' | 'updatedAt'>;
 

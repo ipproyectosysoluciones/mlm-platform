@@ -5,7 +5,7 @@
  */
 
 import { test, expect } from '@playwright/test';
-import { baseURL, login, logout } from './helpers';
+import { baseURL, login } from './helpers';
 
 test.describe('Push Notifications', () => {
   test.beforeEach(async ({ page }) => {
@@ -93,7 +93,7 @@ test.describe('Push Notifications', () => {
 
     // Check if there's an indicator or message about notifications being denied
     // This is optional - depends on implementation
-    const deniedMessage = page.locator('text=/notificaciones.*denegadas|permission.*denied/i');
+    page.locator('text=/notificaciones.*denegadas|permission.*denied/i');
 
     // Not all apps show this, so we just verify the permission is actually denied
     const actualPermission = await page.evaluate(() => {

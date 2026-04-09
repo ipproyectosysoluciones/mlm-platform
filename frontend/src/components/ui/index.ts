@@ -1,5 +1,7 @@
-export { Button, buttonVariants } from './button';
-export { Badge, badgeVariants } from './badge';
+export { Button } from './button';
+export { buttonVariants } from './button.variants';
+export { Badge } from './badge';
+export { badgeVariants } from './badge.variants';
 export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent } from './card';
 export { Skeleton } from './skeleton';
 export { Tabs, TabsList, TabsTrigger, TabsContent } from './tabs';

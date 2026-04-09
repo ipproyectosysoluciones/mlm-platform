@@ -4,6 +4,7 @@ import swaggerJsdoc from 'swagger-jsdoc';
  * Swagger/OpenAPI Configuration for Nexo Real API
  * Configuración Swagger/OpenAPI para la API de Nexo Real
  *
+ * v2.3.5: Sprint 7 patch - ReservationFlowPage unhandled rejection fix, CD pipeline Docker context fix, lint fixes
  * v2.2.0: Sprint 6 - Admin Dashboard CRUD, Nexo Bot flows, i18n cleanup, binary_balance migration, build hardening
  * v2.1.0: Sprint 5 - Real Estate Frontend, Tourism Frontend, Reservation Wizard, Security fixes
  * v2.0.0: Sprint 4 - Nexo Bot (WhatsApp AI), n8n Automation, Frontend tests 210+, Gamification
@@ -21,7 +22,7 @@ const options: swaggerJsdoc.Options = {
     openapi: '3.0.0',
     info: {
       title: 'Nexo Real API',
-      version: '2.2.0',
+      version: '2.3.5',
       description: `
 ## API REST para plataforma MLM de Afiliaciones Binarias
 
@@ -41,6 +42,7 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
 | 429 | Rate limit excedido / Rate Limit Exceeded |
 
 ### Versiones / Versions
+- **v2.3.5** (2026-04-09): Sprint 7 patch - ReservationFlowPage unhandled rejection fix, CD pipeline Docker context fix, lint cleanup
 - **v2.2.0** (2026-04-07): Sprint 6 - Admin Dashboard CRUD, Nexo Bot flows, i18n cleanup, network_balance migration, build hardening
 - **v2.1.0** (2026-04-07): Sprint 5 - Real Estate Frontend, Tourism Frontend, Reservation Wizard, Security fixes (CodeQL CWE-843, Dependabot file-type)
 - **v2.0.0** (2026-04-06): Sprint 4 - Nexo Bot (WhatsApp AI), n8n Automation, Frontend tests 210+, Gamification

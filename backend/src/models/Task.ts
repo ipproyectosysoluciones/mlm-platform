@@ -19,10 +19,7 @@ interface TaskAttributes {
   updatedAt: Date;
 }
 
-interface TaskCreationAttributes extends Optional<
-  TaskAttributes,
-  'id' | 'createdAt' | 'updatedAt'
-> {}
+type TaskCreationAttributes = Optional<TaskAttributes, 'id' | 'createdAt' | 'updatedAt'>;
 
 export class Task extends Model<TaskAttributes, TaskCreationAttributes> implements TaskAttributes {
   public id!: string;

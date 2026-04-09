@@ -7,7 +7,7 @@
 
 Conectamos tu negocio con el mundo. Plataforma de afiliaciones binarias con comisiones por niveles y visualización de árbol genealógico.
 
-**Versión actual: v2.3.0** — Sprint 7 completado (2026-04-08)
+**Versión actual: v2.3.5** — Sprint 7 completado (2026-04-09)
 
 ## 🚀 Características / Features
 

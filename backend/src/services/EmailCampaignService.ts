@@ -23,7 +23,6 @@
  * await emailCampaignService.sendCampaign('campaign-uuid');
  */
 
-import { Op } from 'sequelize';
 import { sequelize } from '../config/database';
 import {
   EmailTemplate,

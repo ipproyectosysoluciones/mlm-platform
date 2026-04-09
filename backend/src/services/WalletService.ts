@@ -19,8 +19,7 @@
  * // Español: Crear solicitud de retiro
  * const withdrawal = await walletService.createWithdrawal(userId, 100);
  */
-import { sequelize, DataTypes } from '../config/database';
-import { Wallet, WalletTransaction, WithdrawalRequest, User } from '../models';
+import { Wallet, WalletTransaction, WithdrawalRequest } from '../models';
 import { config } from '../config/env';
 import { WALLET_TRANSACTION_TYPE, WITHDRAWAL_STATUS } from '../types';
 import { Op } from 'sequelize';
@@ -134,7 +133,7 @@ export class WalletService {
     const amountInUSD = convertToUSD(amount, currency);
     const exchangeRate = currency !== 'USD' ? EXCHANGE_RATES[currency] : null;
 
-    const transaction = await WalletTransaction.create({
+    await WalletTransaction.create({
       walletId: wallet.id,
       type: WALLET_TRANSACTION_TYPE.COMMISSION_EARNED,
       amount: amountInUSD,

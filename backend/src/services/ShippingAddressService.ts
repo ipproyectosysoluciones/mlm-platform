@@ -15,7 +15,7 @@
 import { sequelize } from '../config/database';
 import { ShippingAddress } from '../models/ShippingAddress';
 import { AppError } from '../middleware/error.middleware';
-import type { ShippingAddressAttributes, ShippingAddressCreationAttributes } from '../types';
+import type { ShippingAddressCreationAttributes } from '../types';
 
 const MAX_ADDRESSES_PER_USER = 10;
 

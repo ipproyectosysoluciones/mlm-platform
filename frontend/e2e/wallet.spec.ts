@@ -47,7 +47,7 @@ test.describe('Wallet Digital', () => {
     await page.waitForLoadState('networkidle');
 
     // Check for balance display (may show $0.00 if no wallet yet)
-    const balanceSection = page.locator('text=/\\$[\d,]+\.?\d*/').first();
+    page.locator(/\$[\d,]+\.?\d*/).first();
     // Just verify page loaded - balance depends on user data
     await expect(page.getByText(/Balance|Saldo/i)).toBeVisible({ timeout: 5000 });
   });
@@ -78,7 +78,7 @@ test.describe('Wallet Digital', () => {
     await page.waitForLoadState('networkidle');
 
     // Check for minimum amount information ($20 minimum)
-    const minAmountText = page.locator('text=/\$20|20 USD|minimum|minimo/i').first();
+    page.locator(/\$20|20 USD|minimum|minimo/i).first();
     // May or may not be visible depending on form state
     // Just verify form exists
     await expect(page.getByPlaceholder(/amount|monto|monto/i))
@@ -113,7 +113,7 @@ test.describe('Wallet Digital', () => {
         await page.waitForTimeout(1000);
 
         // Should show validation error for minimum amount
-        const errorMessage = page.locator('text=/minimum|minimo|20|mínimo/i').first();
+        page.locator('text=/minimum|minimo|20|mínimo/i').first();
         // Either shows error or form prevents submission
       }
     }
@@ -142,7 +142,7 @@ test.describe('Wallet Digital', () => {
         await page.waitForTimeout(1000);
 
         // Should show confirmation modal or preview
-        const modal = page.locator('[role="dialog"], .modal, .fixed').first();
+        page.locator('[role="dialog"], .modal, .fixed').first();
         // Modal may or may not appear depending on implementation
       }
     }

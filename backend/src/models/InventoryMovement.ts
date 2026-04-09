@@ -21,11 +21,7 @@
  */
 import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../config/database';
-import type {
-  InventoryMovementAttributes,
-  InventoryMovementCreationAttributes,
-  InventoryMovementType,
-} from '../types';
+import type { InventoryMovementAttributes, InventoryMovementType } from '../types';
 
 type InventoryMovementCreation = Optional<
   InventoryMovementAttributes,

@@ -11,12 +11,10 @@ import type { UserAttributes } from '../../types';
 
 // Type for User where clauses
 type UserWhereClause = WhereOptions<UserAttributes>;
-import { UserService } from '../../services/UserService';
 import { TreeService } from '../../services/TreeService';
 import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
 import { ApiResponse } from '../../utils/response.util';
 
-const userService = new UserService();
 const treeService = new TreeService();
 
 /**
@@ -81,7 +79,7 @@ export async function getAllUsers(req: AuthenticatedRequest, res: Response): Pro
         },
       },
     });
-  } catch (error) {
+  } catch {
     res.status(500).json(ApiResponse.error('INTERNAL_ERROR', 'Error fetching users', 500));
   }
 }
@@ -147,7 +145,7 @@ export async function getUserById(req: AuthenticatedRequest, res: Response): Pro
         },
       },
     });
-  } catch (error) {
+  } catch {
     // Invalid UUID format or other DB error - treat as not found
     res.status(404).json(ApiResponse.error('NOT_FOUND', 'User not found', 404));
   }
@@ -185,7 +183,7 @@ export async function updateUserStatus(req: AuthenticatedRequest, res: Response)
       message: `User status updated to ${status}`,
       data: { id: user.id, status: user.status },
     });
-  } catch (error) {
+  } catch {
     res.status(500).json({
       success: false,
       error: 'Error updating user',
@@ -225,7 +223,7 @@ export async function promoteToAdmin(req: AuthenticatedRequest, res: Response): 
       message: 'User promoted to admin',
       data: { id: user.id, role: user.role },
     });
-  } catch (error) {
+  } catch {
     res.status(500).json(ApiResponse.error('INTERNAL_ERROR', 'Error promoting user', 500));
   }
 }

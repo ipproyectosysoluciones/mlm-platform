@@ -27,7 +27,6 @@
  * - Reports summary of migrated vs skipped vs failed
  */
 
-import { sequelize } from '../../config/database';
 import { Commission, Wallet, WalletTransaction, User } from '../../models';
 import { WALLET_TRANSACTION_TYPE } from '../../types';
 import { convertToUSD } from './currencyConversion';

@@ -13,7 +13,7 @@
  */
 import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../config/database';
-import type { VendorAttributes, VendorCreationAttributes } from '../types';
+import type { VendorAttributes } from '../types';
 
 type VendorCreation = Optional<VendorAttributes, 'id' | 'createdAt' | 'updatedAt'>;
 

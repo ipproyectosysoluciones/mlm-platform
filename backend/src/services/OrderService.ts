@@ -19,7 +19,7 @@ import { CommissionService } from './CommissionService';
 import { AchievementService } from './AchievementService';
 import { LeaderboardService } from './LeaderboardService';
 import { body } from 'express-validator';
-import type { OrderAttributes, ProductType, ShippingStatus } from '../types';
+import type { ProductType, ShippingStatus } from '../types';
 
 const achievementService = new AchievementService();
 const leaderboardService = new LeaderboardService();

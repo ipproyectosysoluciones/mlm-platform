@@ -358,6 +358,9 @@ jobs:
 | ------- | ---- | ----------- | --- | ------- |
 | v1.8.x  | 93   | 178         | 37  | 308     |
 | v1.9.0  | 93   | 208         | 37  | **338** |
+| v2.3.5  | —    | —           | —   | **967** |
+
+> **v2.3.5 (2026-04-09)**: Backend 39 suites / 535 tests (Jest), Frontend 33 suites / 432 tests (Vitest). Fix: unhandled rejection en `ReservationFlowPage.handleConfirm`, lint fix en `pushService.test.ts`.
 
 ### v1.9.0 New Tests / Nuevos Tests en v1.9.0
 
