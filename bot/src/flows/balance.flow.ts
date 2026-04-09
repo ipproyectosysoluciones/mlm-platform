@@ -1,5 +1,6 @@
 import { addKeyword } from '@builderbot/bot';
 import { mlmApi } from '../services/mlm-api.service.js';
+import { logger } from '../services/logger.js';
 
 const BALANCE_KEYWORDS: [string, ...string[]] = [
   'saldo',
@@ -25,6 +26,7 @@ export const balanceFlow = addKeyword(BALANCE_KEYWORDS).addAction(
       })());
 
     if (!user) {
+      logger.warn('balance.user.not-found', { phone: ctx.from });
       await flowDynamic([
         {
           body: '❌ No encontré una cuenta asociada a tu número.\n\n🌐 Registrate en:\nhttps://nexoreal.com/register', // TODO: domain pending
@@ -36,6 +38,7 @@ export const balanceFlow = addKeyword(BALANCE_KEYWORDS).addAction(
     const wallet = await mlmApi.getWalletBalance(user.id);
 
     if (!wallet) {
+      logger.warn('balance.wallet.unavailable', { phone: ctx.from, userId: user.id });
       await flowDynamic([
         { body: '⚠️ No pude obtener tu saldo en este momento. Intentá de nuevo en unos minutos.' },
       ]);

@@ -16,6 +16,9 @@
  *
  * // Español: Loguear un error de handler
  * logger.error('handoff.failed', { phone: ctx.from, error: err.message });
+ *
+ * // English: Alert on critical failure (also fires Slack webhook if configured)
+ * await logger.alert('openai.failed', { phone: ctx.from, error: err.message });
  */
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -142,5 +145,50 @@ export const logger = {
       ...(context ? { context } : {}),
     };
     process.stderr.write(JSON.stringify(entry) + '\n');
+  },
+
+  /**
+   * Critical alert — logs as error AND fires a POST to BOT_ALERT_WEBHOOK_URL (Slack-compatible).
+   * If BOT_ALERT_WEBHOOK_URL is not set, behaves exactly like logger.error (fail-safe).
+   *
+   * Alerta crítica — loguea como error Y dispara un POST a BOT_ALERT_WEBHOOK_URL (compatible con Slack).
+   * Si BOT_ALERT_WEBHOOK_URL no está configurada, funciona igual que logger.error (fail-safe).
+   *
+   * @param event   - Dot-separated event name / Nombre de evento separado por puntos
+   * @param context - Should include `error` key with message or stack / Debe incluir key `error` con mensaje o stack
+   * @returns Promise<void> — fire-and-forget; never rejects / fire-and-forget; nunca rechaza
+   *
+   * @example
+   * await logger.alert('openai.failed', { phone: ctx.from, error: err.message });
+   */
+  async alert(event: string, context?: Record<string, unknown>): Promise<void> {
+    // Always log as structured error first
+    // Siempre loguear como error estructurado primero
+    const entry: LogEntry = {
+      timestamp: new Date().toISOString(),
+      level: 'error',
+      event,
+      service: 'nexo-bot',
+      ...(context ? { context } : {}),
+    };
+    process.stderr.write(JSON.stringify(entry) + '\n');
+
+    // Fire webhook alert if configured / Disparar webhook si está configurado
+    const webhookUrl = process.env.BOT_ALERT_WEBHOOK_URL;
+    if (!webhookUrl) return;
+
+    const errorMsg = context?.error ? String(context.error) : '(no error detail)';
+    const text = `🚨 *[nexo-bot] CRITICAL: ${event}*\n\`\`\`${errorMsg}\`\`\``;
+
+    try {
+      await fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text }),
+      });
+    } catch {
+      // Fire-and-forget: ignore webhook delivery failures
+      // Fire-and-forget: ignorar fallos de entrega del webhook
+    }
   },
 };
