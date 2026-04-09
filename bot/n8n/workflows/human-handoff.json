@@ -78,7 +78,6 @@
       "position": [680, 220],
       "credentials": {
         "notionApi": {
-          "id": "notion-credentials",
           "name": "Notion — Nexo Real"
         }
       }

@@ -51,7 +51,6 @@
       "position": [680, 300],
       "credentials": {
         "googleCalendarOAuth2Api": {
-          "id": "google-calendar-credentials",
           "name": "Google Calendar — Nexo Real"
         }
       }
