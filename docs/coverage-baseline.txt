@@ -1,0 +1,77 @@
+# Coverage Baseline — Sprint 7 (T2.0.2)
+# Date: 2026-04-09
+# Provider: v8
+# Runner: pnpm vitest run --coverage (from frontend/)
+# Tests: 307 passing (27 test files)
+
+## OVERALL
+  Statements : 52.82%
+  Branches   : 47.13%
+  Functions  : 46.00%
+  Lines      : 53.69%
+
+## PER MODULE
+
+| Module                     | Stmts  | Branch | Funcs  | Lines  | Priority |
+|----------------------------|--------|--------|--------|--------|----------|
+| components/                | 32.52  | 21.03  | 19.14  | 32.67  | HIGH     |
+|   ErrorToast.tsx           |  4.76  |  0.00  |  0.00  |  5.26  | CRITICAL |
+|   PerformanceBadge.tsx     | 22.22  |  0.00  |  0.00  | 22.22  | LOW      |
+|   PriceDisplay.tsx         | 33.33  |  0.00  |  0.00  | 33.33  | LOW      |
+|   ProductCard.tsx          |  5.26  |  0.00  |  0.00  |  5.26  | CRITICAL |
+|   QRDisplay.tsx            |  0.00  |  0.00  |  0.00  |  0.00  | CRITICAL |
+|   TransactionHistory.tsx   | 52.00  | 25.49  | 25.00  | 52.00  | MEDIUM   |
+|   WalletBalance.tsx        | 53.84  | 40.00  | 25.00  | 53.84  | MEDIUM   |
+|   WithdrawalForm.tsx       | 39.28  | 31.16  | 57.14  | 39.28  | LOW      |
+|   WithdrawalModal.tsx      | 41.37  |  6.06  | 16.66  | 40.74  | LOW      |
+| components/Checkout/       | 70.00  | 54.71  | 87.50  | 76.08  | MEDIUM   |
+| components/EmailBuilder/   | 68.59  | 59.52  | 64.28  | 70.79  | MEDIUM   |
+| components/EmailCampaigns/ | 75.00  | 69.23  | 80.00  | 76.92  | MEDIUM   |
+| components/GiftCards/      | 56.79  | 49.57  | 54.54  | 63.01  | LOW      |
+| components/achievements/   |100.00  | 96.15  |100.00  |100.00  | GOOD ✓   |
+| components/dashboard/      | 76.92  | 37.50  | 62.50  | 76.92  | MEDIUM   |
+|   CommissionChart.tsx      | 66.66  | 37.50  | 50.00  | 66.66  | LOW      |
+|   RecentActivity.tsx       | 50.00  | 25.00  | 33.33  | 50.00  | LOW      |
+| components/leaderboard/    | 98.03  | 94.64  |100.00  | 97.82  | GOOD ✓   |
+| components/property/       |100.00  | 95.23  |100.00  |100.00  | GOOD ✓   |
+| components/tour/           |100.00  | 88.88  |100.00  |100.00  | GOOD ✓   |
+| components/tree/           |  0.92  |  0.00  |  0.00  |  0.97  | N/A(legacy)|
+| components/ui/             | 95.00  | 90.00  | 84.00  | 95.00  | GOOD ✓   |
+| hooks/                     | 89.74  | 66.66  | 81.81  | 89.74  | MEDIUM   |
+|   useData.ts               | 89.74  | 66.66  | 81.81  | 89.74  | MEDIUM   |
+| lib/                       |100.00  |100.00  |100.00  |100.00  | GOOD ✓   |
+| pages/                     | 58.25  | 54.21  | 44.51  | 59.28  | HIGH     |
+|   PropertiesPage.tsx       | 49.53  | 36.47  | 31.11  | 53.00  | LOW      |
+|   Dashboard.tsx            | 69.76  | 39.13  | 58.33  | 72.50  | MEDIUM   |
+|   Login.tsx                | 43.47  | 40.00  | 20.00  | 43.47  | LOW      |
+|   ProductCatalog.tsx       | 59.57  | 62.00  | 35.29  | 60.86  | LOW      |
+|   Profile.tsx              | 21.66  | 16.32  | 27.27  | 21.66  | CRITICAL |
+|   Register.tsx             | 40.62  | 33.33  | 33.33  | 40.62  | LOW      |
+|   TreeView.tsx             | 57.77  | 45.94  | 38.09  | 57.30  | N/A(legacy)|
+|   WalletPage.tsx           | 64.28  | 57.14  | 40.00  | 64.28  | LOW      |
+| pages/landing/             |100.00  |100.00  |100.00  |100.00  | GOOD ✓   |
+| services/                  | 15.86  | 24.39  |  8.92  | 16.34  | CRITICAL |
+|   api.ts                   |  7.56  |  6.45  |  0.00  |  7.82  | CRITICAL |
+|   achievementService.ts    | 42.85  | 50.00  | 33.33  | 42.85  | LOW      |
+|   giftCardService.ts       | 71.42  |100.00  | 66.66  | 71.42  | MEDIUM   |
+|   propertyService.ts       |100.00  |100.00  |100.00  |100.00  | GOOD ✓   |
+|   reservationService.ts    | 77.77  |100.00  | 75.00  | 77.77  | MEDIUM   |
+|   tourService.ts           |100.00  |100.00  |100.00  |100.00  | GOOD ✓   |
+| stores/                    | 72.72  | 52.63  | 75.71  | 72.56  | MEDIUM   |
+|   propertiesStore.ts       | 85.71  |100.00  | 60.00  | 84.61  | MEDIUM   |
+|   reservationStore.ts      | 59.57  | 22.22  | 68.75  | 60.46  | LOW      |
+|   toursStore.ts            | 85.71  |100.00  | 60.00  | 84.61  | MEDIUM   |
+|   treeStore.ts             | 93.10  |100.00  | 95.23  | 92.59  | GOOD ✓   |
+|   walletStore.ts           | 68.05  | 58.06  | 69.56  | 67.64  | LOW      |
+| types/                     |100.00  |100.00  |100.00  |100.00  | GOOD ✓   |
+
+## T2.1.4 — TOP 5 TARGETS (highest ROI, excludes legacy tree/*)
+
+1. stores/reservationStore.ts  — 59.57% stmts / 22.22% branches (most impactful)
+2. stores/walletStore.ts       — 68.05% stmts / 58.06% branches
+3. stores/propertiesStore.ts   — 85.71% stmts / 60.00% funcs (close to 90%)
+4. stores/toursStore.ts        — 85.71% stmts / 60.00% funcs (close to 90%)
+5. pages/Login.tsx + Register.tsx — 43.47% / 40.62% stmts (auth flow coverage gap)
+
+NOTE: services/api.ts (7.56%) is massive but requires heavy mocking.
+      components/tree/* excluded (legacy MLM code, not Sprint 7 scope).
