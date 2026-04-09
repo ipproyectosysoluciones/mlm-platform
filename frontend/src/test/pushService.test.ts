@@ -53,8 +53,7 @@ const makeMockRegistration = (
 });
 
 // ─── Navigator / Notification mocks ──────────────────────────────────────
-let mockPermission: NotificationPermission = 'default';
-let mockOnLine = true;
+const mockOnLine = true;
 
 const setupNavigatorMocks = (
   opts: {
@@ -64,7 +63,6 @@ const setupNavigatorMocks = (
   } = {}
 ) => {
   const { hasNotification = true, hasSW = true, permission = 'granted' } = opts;
-  mockPermission = permission;
 
   if (hasNotification) {
     Object.defineProperty(window, 'Notification', {
