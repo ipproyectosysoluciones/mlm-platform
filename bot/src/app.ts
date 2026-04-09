@@ -19,6 +19,7 @@ import { scheduleFlow } from './flows/schedule.flow.js';
 import { handoffFlow } from './flows/handoff.flow.js';
 import { propertiesFlow } from './flows/properties.flow.js';
 import { toursFlow } from './flows/tours.flow.js';
+import { reservationsFlow } from './flows/reservations.flow.js';
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
@@ -80,6 +81,7 @@ const flow = createFlow([
   commissionsKeywordFlow,
   propertiesFlow,
   toursFlow,
+  reservationsFlow,
 ]);
 
 // ── Bootstrap ─────────────────────────────────────────────────────────────────

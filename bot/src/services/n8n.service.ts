@@ -9,8 +9,15 @@
  * n8n runs internally on the mlm-network — webhooks are NOT public.
  * Base URL is configured via N8N_WEBHOOK_URL env var.
  *
+ * Client HTTP para integraciones con webhooks de n8n.
+ * Llama a webhooks de n8n para disparar automatizaciones externas.
+ * La URL base se configura via variable de entorno N8N_WEBHOOK_URL.
+ *
  * @author Nexo Real Development Team
+ * @module services/n8n
  */
+
+import { logger } from './logger.js';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -72,18 +79,30 @@ async function postWebhook<T>(path: string, payload: T): Promise<N8nWebhookResul
 
     if (!response.ok) {
       const body = await response.text().catch(() => '');
-      console.error(`[n8n.service] Webhook ${path} failed: ${response.status} — ${body}`);
+      await logger.alert(`n8n.webhook.failed`, {
+        path,
+        status: response.status,
+        body,
+      });
       return { success: false, error: `HTTP ${response.status}` };
     }
 
     return { success: true };
-  } catch (err: any) {
-    if (err?.name === 'AbortError') {
-      console.error(`[n8n.service] Webhook ${path} timed out after ${WEBHOOK_TIMEOUT_MS}ms`);
+  } catch (err: unknown) {
+    const error = err as { name?: string; message?: string };
+    if (error?.name === 'AbortError') {
+      await logger.alert(`n8n.webhook.timeout`, {
+        path,
+        timeoutMs: WEBHOOK_TIMEOUT_MS,
+        error: `Webhook ${path} timed out after ${WEBHOOK_TIMEOUT_MS}ms`,
+      });
       return { success: false, error: 'timeout' };
     }
-    console.error(`[n8n.service] Webhook ${path} error:`, err);
-    return { success: false, error: err?.message || 'unknown' };
+    await logger.alert(`n8n.webhook.error`, {
+      path,
+      error: error?.message ?? 'unknown',
+    });
+    return { success: false, error: error?.message ?? 'unknown' };
   }
 }
 
@@ -94,11 +113,13 @@ async function postWebhook<T>(path: string, payload: T): Promise<N8nWebhookResul
  * n8n will:
  *   1. Create a Google Calendar event with the preferred date
  *   2. Create / update a lead in Notion CRM with status "Visit Scheduled"
+ *
+ * Dispara la automatización "agendar visita" en n8n.
  */
 export async function triggerScheduleVisit(
   payload: ScheduleVisitPayload
 ): Promise<N8nWebhookResult> {
-  console.log(`[n8n.service] Triggering schedule-visit for ${payload.phone}`);
+  logger.info('n8n.schedule-visit.triggered', { phone: payload.phone });
   return postWebhook('schedule-visit', payload);
 }
 
@@ -107,9 +128,11 @@ export async function triggerScheduleVisit(
  * n8n will:
  *   1. Update / create lead in Notion CRM with status "Needs Human"
  *   2. Send a WhatsApp notification to the assigned agent (via Meta API or Baileys)
+ *
+ * Dispara la automatización "transferir a humano" en n8n.
  */
 export async function triggerHumanHandoff(payload: HumanHandoffPayload): Promise<N8nWebhookResult> {
-  console.log(`[n8n.service] Triggering human-handoff for ${payload.phone}`);
+  logger.info('n8n.human-handoff.triggered', { phone: payload.phone });
   return postWebhook('human-handoff', payload);
 }
 

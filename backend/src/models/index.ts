@@ -38,6 +38,10 @@ import { AffiliateContract } from './AffiliateContract';
 import { Achievement } from './Achievement';
 import { Badge } from './Badge';
 import { UserAchievement } from './UserAchievement';
+import { Property } from './Property';
+import { TourPackage } from './TourPackage';
+import { TourAvailability } from './TourAvailability';
+import { Reservation } from './Reservation';
 
 // User relationships
 User.hasMany(User, { as: 'children', foreignKey: 'sponsorId', sourceKey: 'id' });
@@ -421,6 +425,64 @@ UserAchievement.belongsTo(Achievement, { foreignKey: 'achievementId', targetKey:
 User.hasMany(UserAchievement, { as: 'userAchievements', foreignKey: 'userId', sourceKey: 'id' });
 UserAchievement.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
 
+// ============================================
+// NEXO REAL — Property Listings (#59)
+// ============================================
+
+// Vendor - Property (one vendor, many properties)
+Vendor.hasMany(Property, { foreignKey: 'vendorId', sourceKey: 'id' });
+Property.belongsTo(Vendor, { as: 'vendor', foreignKey: 'vendorId', targetKey: 'id' });
+
+// ============================================
+// NEXO REAL — Tourism Packages (#60)
+// ============================================
+
+Vendor.hasMany(TourPackage, { foreignKey: 'vendorId', sourceKey: 'id' });
+TourPackage.belongsTo(Vendor, { as: 'vendor', foreignKey: 'vendorId', targetKey: 'id' });
+TourPackage.hasMany(TourAvailability, {
+  as: 'availabilities',
+  foreignKey: 'tourPackageId',
+  sourceKey: 'id',
+});
+TourAvailability.belongsTo(TourPackage, {
+  as: 'tourPackage',
+  foreignKey: 'tourPackageId',
+  targetKey: 'id',
+});
+
+// ============================================
+// NEXO REAL — Reservations (#61)
+// ============================================
+
+User.hasMany(Reservation, { as: 'reservations', foreignKey: 'userId', sourceKey: 'id' });
+Reservation.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
+
+Vendor.hasMany(Reservation, { as: 'reservations', foreignKey: 'vendorId', sourceKey: 'id' });
+Reservation.belongsTo(Vendor, { as: 'vendor', foreignKey: 'vendorId', targetKey: 'id' });
+
+Property.hasMany(Reservation, { as: 'reservations', foreignKey: 'propertyId', sourceKey: 'id' });
+Reservation.belongsTo(Property, { as: 'property', foreignKey: 'propertyId', targetKey: 'id' });
+
+TourPackage.hasMany(Reservation, {
+  as: 'reservations',
+  foreignKey: 'tourPackageId',
+  sourceKey: 'id',
+});
+Reservation.belongsTo(TourPackage, {
+  as: 'tourPackage',
+  foreignKey: 'tourPackageId',
+  targetKey: 'id',
+});
+
+// esbuild ESM re-export fix: explicit source re-exports for models added after the
+// initial barrel was created. esbuild with bundle:true cannot statically resolve
+// named exports when the same module has side effects between the import and the
+// export statement. Exporting directly from the source file fixes this.
+// ─────────────────────────────────────────────────────────────────────────────
+// Fix de re-exports para esbuild ESM: cuando el barrel tiene side effects entre
+// el import y el export, esbuild no puede resolver los exports nombrados. Importar
+// y re-exportar desde el bloque unificado resuelve el problema tanto para esbuild
+// como para Jest (que necesita los imports en scope para el auto-mock).
 export {
   sequelize,
   User,
@@ -463,6 +525,11 @@ export {
   Achievement,
   Badge,
   UserAchievement,
+  WebhookEvent,
+  Property,
+  TourPackage,
+  TourAvailability,
+  Reservation,
 };
 
 export function initModels(): void {
