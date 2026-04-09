@@ -14,6 +14,7 @@ import {
   getRecentCommissions,
   getBotProperties,
   getBotTours,
+  getBotReservations,
   getBotHealth,
 } from '../controllers/BotController';
 import { asyncHandler } from '../middleware/asyncHandler';
@@ -65,6 +66,15 @@ router.get('/properties', asyncHandler(getBotProperties));
  * @access  Bot-only (x-bot-secret)
  */
 router.get('/tours', asyncHandler(getBotTours));
+
+/**
+ * @route   GET /api/bot/reservations/:userId
+ * @desc    Get recent reservations for a user (property + tour)
+ *          Obtener reservas recientes de un usuario (propiedad + tour)
+ * @access  Bot-only (x-bot-secret)
+ * @query   limit (default 5, max 10), status, type
+ */
+router.get('/reservations/:userId', asyncHandler(getBotReservations));
 
 /**
  * @route   GET /api/bot/health

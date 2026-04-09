@@ -116,6 +116,39 @@ export interface BotTour {
   maxCapacity: number;
 }
 
+/**
+ * Simplified reservation entry for bot responses.
+ * Entrada de reserva simplificada para respuestas del bot.
+ */
+export interface BotReservation {
+  /** Unique reservation identifier / Identificador único de reserva */
+  id: string;
+  /** Reservation type: property | tour / Tipo de reserva: propiedad | tour */
+  type: 'property' | 'tour';
+  /** Current status / Estado actual */
+  status: 'pending' | 'confirmed' | 'cancelled' | 'completed' | 'no_show';
+  /** Property ID (if type = property) / ID de propiedad (si type = property) */
+  propertyId?: string;
+  /** Check-in date (if type = property) / Fecha de check-in (si type = property) */
+  checkIn?: string;
+  /** Check-out date (if type = property) / Fecha de check-out (si type = property) */
+  checkOut?: string;
+  /** Tour package ID (if type = tour) / ID de paquete turístico (si type = tour) */
+  tourPackageId?: string;
+  /** Tour date (if type = tour) / Fecha de tour (si type = tour) */
+  tourDate?: string;
+  /** Group size for tours / Tamaño del grupo para tours */
+  groupSize: number;
+  /** Total price / Precio total */
+  totalPrice: number;
+  /** Price currency / Moneda */
+  currency: string;
+  /** Payment status / Estado del pago */
+  paymentStatus: 'pending' | 'paid' | 'refunded' | 'failed';
+  /** Reservation creation date / Fecha de creación de la reserva */
+  createdAt: string;
+}
+
 // ── Service methods ───────────────────────────────────────────────────────────
 
 export const mlmApi = {
@@ -217,5 +250,31 @@ export const mlmApi = {
   }): Promise<BotTour[]> {
     const res = await api.get('/bot/tours', { params });
     return res.data.tours ?? [];
+  },
+
+  /**
+   * Get recent reservations for a user (property + tour combined).
+   * Obtiene las reservas recientes de un usuario (propiedades + tours combinados).
+   *
+   * @param userId  - User UUID / UUID del usuario
+   * @param params  - Optional filters: limit, status, type
+   *                  Filtros opcionales: límite, estado, tipo
+   * @returns Array of simplified reservation objects or empty array on error
+   *          Array de reservas simplificadas o array vacío en error
+   */
+  async getReservations(
+    userId: string,
+    params: {
+      limit?: number;
+      status?: 'pending' | 'confirmed' | 'cancelled' | 'completed' | 'no_show';
+      type?: 'property' | 'tour';
+    } = {}
+  ): Promise<BotReservation[]> {
+    try {
+      const { data } = await api.get(`/bot/reservations/${userId}`, { params });
+      return (data.reservations as BotReservation[]) ?? [];
+    } catch {
+      return [];
+    }
   },
 };

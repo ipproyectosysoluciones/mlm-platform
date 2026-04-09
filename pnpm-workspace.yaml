@@ -6,6 +6,7 @@ packages:
 pnpm:
   onlyBuiltDependencies:
     - esbuild
+    - sharp
     - sqlite3
   overrides:
     'brace-expansion': '>=5.0.5'
