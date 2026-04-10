@@ -266,8 +266,6 @@ class PayPalService {
         transmission_time: headers['paypal-transmission-time'],
         webhook_id: config.paypal.webhookId,
         webhook_event: JSON.parse(rawBody) as unknown,
-        // CRC32 of the raw body as required by PayPal spec
-        crc32: crc32(rawBody),
       };
 
       const response = await axios.post<{ verification_status: string }>(verifyUrl, payload, {
