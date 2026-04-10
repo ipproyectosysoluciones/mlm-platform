@@ -228,6 +228,9 @@ importers:
       '@builderbot/bot':
         specifier: latest
         version: 1.4.1
+      '@builderbot/database-postgres':
+        specifier: ^1.4.1
+        version: 1.4.1
       '@builderbot/provider-baileys':
         specifier: latest
         version: 1.4.1
@@ -1258,6 +1261,9 @@ packages:
 
   '@builderbot/bot@1.4.1':
     resolution: {integrity: sha512-50L22zZigICPA7rCSKcclN8KesheSJhNLRJFK6yIlOG91NuL7CmxQ8qNw9kRR5jEHf8xydCLnAFn48p4TMp4KQ==}
+
+  '@builderbot/database-postgres@1.4.1':
+    resolution: {integrity: sha512-rffoRCMaGVpv6k/S0KNBiHEqN2dZXHzG910hpaEYQidHm4t5Kbjj0z6X30vSBIRuw17BPphyVhVE0zJcu/KI/w==}
 
   '@builderbot/provider-baileys@1.4.1':
     resolution: {integrity: sha512-mG9h3X2wA297QlYKG4ziHp3rrr2zZPzOrnHCqkZ9P59CIVptS+VSB9jy17TQSzVelH/UBf1ocURD/PlgBua/EQ==}
@@ -9530,6 +9536,15 @@ snapshots:
       sharp: 0.33.3
     transitivePeerDependencies:
       - debug
+      - supports-color
+
+  '@builderbot/database-postgres@1.4.1':
+    dependencies:
+      '@builderbot/bot': 1.4.1
+      pg: 8.20.0
+    transitivePeerDependencies:
+      - debug
+      - pg-native
       - supports-color
 
   '@builderbot/provider-baileys@1.4.1':
