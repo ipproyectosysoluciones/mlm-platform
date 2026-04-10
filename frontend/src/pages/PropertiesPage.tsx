@@ -361,7 +361,7 @@ export default function PropertiesPage() {
                   <PropertyCard
                     key={property.id}
                     property={property}
-                    onClick={(id) => navigate(`/propiedades/${id}`)}
+                    onClick={(id) => navigate(`/properties/${id}`)}
                   />
                 ))}
               </div>
