@@ -12,8 +12,11 @@
 import { Request, Response, NextFunction } from 'express';
 import { Op } from 'sequelize';
 import { User, Wallet, Commission, WithdrawalRequest } from '../models';
+import { Reservation } from '../models/Reservation';
 import { propertyService } from '../services/PropertyService';
 import { tourPackageService } from '../services/TourPackageService';
+import { Property } from '../models/Property';
+import { TourPackage } from '../models/TourPackage';
 
 // ── GET /api/bot/user-by-phone/:phone ─────────────────────────────────────────
 
@@ -273,7 +276,7 @@ export const getBotProperties = async (
 
     // Return simplified format optimized for bot prompts
     // Retorna formato simplificado optimizado para prompts del bot
-    const simplified = rows.map((p) => ({
+    const simplified = rows.map((p: Property) => ({
       id: p.id,
       type: p.type,
       title: p.title,
@@ -381,7 +384,7 @@ export const getBotTours = async (
 
     // Return simplified format optimized for bot prompts
     // Retorna formato simplificado optimizado para prompts del bot
-    const simplified = rows.map((t) => ({
+    const simplified = rows.map((t: TourPackage) => ({
       id: t.id,
       type: t.type,
       title: t.title,
@@ -398,16 +401,90 @@ export const getBotTours = async (
   }
 };
 
+// ── GET /api/bot/reservations/:userId ────────────────────────────────────────
+
+/**
+ * Returns the recent reservations (property + tour) for a user.
+ * Retorna las reservas recientes (propiedad + tour) de un usuario.
+ *
+ * @route   GET /api/bot/reservations/:userId
+ * @access  Bot-only (x-bot-secret)
+ * @query   limit  - Max results (default 5, cap 10) / Máximo resultados (default 5, cap 10)
+ * @query   status - Filter by status / Filtrar por estado
+ * @query   type   - Filter by type: property | tour / Filtrar por tipo: propiedad | tour
+ *
+ * @param req  - Express request with userId param and optional query filters
+ *               Petición Express con param userId y filtros opcionales de query
+ * @param res  - Express response — returns { reservations, total }
+ *               Respuesta Express — retorna { reservations, total }
+ */
+export async function getBotReservations(req: Request, res: Response): Promise<void> {
+  const { userId } = req.params;
+  const limit = Math.min(Number(req.query.limit ?? 5), 10);
+  const { status, type } = req.query as { status?: string; type?: string };
+
+  // Build dynamic where clause / Construir cláusula where dinámica
+  const where: Record<string, unknown> = { userId };
+  if (status) where.status = status;
+  if (type) where.type = type;
+
+  const reservations = await Reservation.findAll({
+    where,
+    order: [['createdAt', 'DESC']],
+    limit,
+    attributes: [
+      'id',
+      'type',
+      'status',
+      'propertyId',
+      'checkIn',
+      'checkOut',
+      'tourPackageId',
+      'tourDate',
+      'groupSize',
+      'totalPrice',
+      'currency',
+      'paymentStatus',
+      'createdAt',
+    ],
+  });
+
+  res.json({
+    success: true,
+    reservations: reservations.map((r: Reservation) => ({
+      id: r.id,
+      type: r.type,
+      status: r.status,
+      // Property-specific / Específico de propiedad
+      propertyId: r.propertyId ?? undefined,
+      checkIn: r.checkIn ?? undefined,
+      checkOut: r.checkOut ?? undefined,
+      // Tour-specific / Específico de tour
+      tourPackageId: r.tourPackageId ?? undefined,
+      tourDate: r.tourDate ?? undefined,
+      groupSize: r.groupSize,
+      // Pricing / Precio
+      totalPrice: Number(r.totalPrice),
+      currency: r.currency,
+      paymentStatus: r.paymentStatus,
+      createdAt: r.createdAt,
+    })),
+    total: reservations.length,
+  });
+}
+
 // ── GET /api/bot/health ───────────────────────────────────────────────────────
 
 /**
  * Health check endpoint for the bot integration.
- * Returns service status, timestamp, and basic config flags so the bot process
+ * Returns service status, uptime, timestamp, and config flags so the bot process
  * can confirm the backend is reachable before accepting WhatsApp connections.
+ * Also provides DB connectivity and recent-activity counts for demo readiness.
  *
  * Endpoint de health check para la integración del bot.
- * Devuelve estado del servicio, timestamp y flags de configuración básicos para que
+ * Devuelve estado del servicio, uptime, timestamp y flags de configuración para que
  * el proceso bot confirme que el backend es alcanzable antes de aceptar conexiones de WhatsApp.
+ * También provee conectividad a DB y conteos de actividad reciente para readiness en demo.
  *
  * @route   GET /api/bot/health
  * @access  Bot-only (x-bot-secret)
@@ -415,16 +492,50 @@ export const getBotTours = async (
 export async function getBotHealth(req: Request, res: Response): Promise<void> {
   const openaiConfigured = Boolean(process.env.OPENAI_API_KEY);
   const botSecretConfigured = Boolean(process.env.BOT_SECRET);
+  const n8nConfigured = Boolean(process.env.N8N_WEBHOOK_URL);
 
+  // ── DB probe — count active users as a lightweight connectivity check ──────
+  // Sondeo a DB — contar usuarios activos como chequeo ligero de conectividad
+  let dbStatus: 'ok' | 'error' = 'ok';
+  let activeUsers = 0;
+  let recentReservations = 0;
+
+  try {
+    const since = new Date(Date.now() - 24 * 60 * 60 * 1000); // last 24 h
+
+    const [usersCount, reservationsCount] = await Promise.all([
+      User.count({ where: { status: 'active' } }),
+      Reservation.count({
+        where: {
+          createdAt: { [Op.gte]: since },
+        },
+      }),
+    ]);
+
+    activeUsers = usersCount;
+    recentReservations = reservationsCount;
+  } catch {
+    dbStatus = 'error';
+  }
+
+  // ── Response ────────────────────────────────────────────────────────────────
   res.json({
     success: true,
     data: {
-      status: 'ok',
+      status: dbStatus === 'ok' ? 'ok' : 'degraded',
       timestamp: new Date().toISOString(),
       service: 'nexo-bot-backend',
+      /** Process uptime in seconds / Uptime del proceso en segundos */
+      uptimeSeconds: Math.floor(process.uptime()),
       config: {
         openai: openaiConfigured,
         botSecret: botSecretConfigured,
+        n8n: n8nConfigured,
+      },
+      db: {
+        status: dbStatus,
+        activeUsers,
+        reservationsLast24h: recentReservations,
       },
     },
   });

@@ -98,16 +98,7 @@ app.use(
   })
 );
 
-app.use(
-  express.json({
-    limit: '10mb',
-    verify: (req: any, _res, buf) => {
-      // Capture raw body string for webhook signature verification
-      // MercadoPago requires rawBody for HMAC-SHA256 validation
-      req.rawBody = buf.toString('utf8');
-    },
-  })
-);
+app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // Global API rate limiter - 200 requests per minute for all API routes

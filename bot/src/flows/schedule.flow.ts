@@ -118,9 +118,10 @@ export const scheduleFlow = addKeyword(SCHEDULE_KEYWORDS)
         lang === 'es'
           ? MSG.success.es(interest, preferredDate)
           : MSG.success.en(interest, preferredDate);
+      logger.info('schedule.visit.success', { phone, interest, preferredDate });
       await flowDynamic([{ body: successMsg }]);
     } else {
-      console.error(`[scheduleFlow] n8n webhook failed for ${phone}:`, result.error);
+      logger.error('schedule.webhook.failed', { phone, interest, error: result.error });
       await flowDynamic([{ body: MSG.error[lang] }]);
     }
   });

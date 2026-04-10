@@ -17,7 +17,7 @@ context: |
     PWA: Workbox
 
   Tech Stack — Nexo Bot:
-    Runtime: Node.js CommonJS
+    Runtime: Node.js ESM ("type": "module", NodeNext)
     Bot Framework: BuilderBot + Baileys (WhatsApp Web API)
     AI: OpenAI GPT-4o
     Agentes: Sophia (femenino, atiende hombres) + Max (masculino, atiende mujeres)
@@ -50,8 +50,8 @@ context: |
     - max.prompt.md          - personalidad agente Max
     - knowledge-base.md      - KB completa bilingue (ES/EN), 7 secciones
 
-  Estado actual: v2.2.0, Sprint 6 completado, preparando Sprint 7 (Multi-Tenant Fase 2)
-  Branch activo: development
+  Estado actual: v2.0.0, Sprint 4 completado ✅, preparando Sprint 5
+  Branch activo: release
   GPG signing: EXPIRADO - usar --no-gpg-sign en todos los commits
   Repo GitHub Project: https://github.com/users/ipproyectosysoluciones/projects/4
 
@@ -74,7 +74,7 @@ rules:
     - Keep tasks small enough to complete in one session
   apply:
     - Follow existing code patterns and conventions
-    - Bot code MUST be CommonJS only (not ESM)
+    - Bot code MUST be ESM ("type": "module") — required by BuilderBot + Baileys
     - Bot MUST never hallucinate - KB is the only source of truth
     - Load relevant coding skills for the project stack
   verify:

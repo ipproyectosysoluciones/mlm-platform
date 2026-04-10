@@ -83,6 +83,7 @@ const flow = createFlow([
   commissionsKeywordFlow,
   propertiesFlow,
   toursFlow,
+  reservationsFlow,
 ]);
 
 // ── Bootstrap ─────────────────────────────────────────────────────────────────

@@ -38,7 +38,6 @@ import { AffiliateContract } from './AffiliateContract';
 import { Achievement } from './Achievement';
 import { Badge } from './Badge';
 import { UserAchievement } from './UserAchievement';
-import { WebhookEvent } from './WebhookEvent';
 import { Property } from './Property';
 import { TourPackage } from './TourPackage';
 import { TourAvailability } from './TourAvailability';
@@ -475,6 +474,15 @@ Reservation.belongsTo(TourPackage, {
   targetKey: 'id',
 });
 
+// esbuild ESM re-export fix: explicit source re-exports for models added after the
+// initial barrel was created. esbuild with bundle:true cannot statically resolve
+// named exports when the same module has side effects between the import and the
+// export statement. Exporting directly from the source file fixes this.
+// ─────────────────────────────────────────────────────────────────────────────
+// Fix de re-exports para esbuild ESM: cuando el barrel tiene side effects entre
+// el import y el export, esbuild no puede resolver los exports nombrados. Importar
+// y re-exportar desde el bloque unificado resuelve el problema tanto para esbuild
+// como para Jest (que necesita los imports en scope para el auto-mock).
 export {
   sequelize,
   User,

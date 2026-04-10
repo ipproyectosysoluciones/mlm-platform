@@ -36,7 +36,7 @@ export interface AIResponse {
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const PROMPT_KB_DIR = path.resolve(__dirname, '../prompt_kb');
-const MODEL = process.env.OPENAI_MODEL || 'gpt-4o-mini';
+const MODEL = process.env.OPENAI_MODEL || 'gpt-4o';
 const MAX_TOKENS = 512;
 const TEMPERATURE = 0.7;
 

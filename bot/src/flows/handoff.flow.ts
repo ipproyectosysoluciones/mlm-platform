@@ -87,13 +87,18 @@ export const handoffFlow = addKeyword(HANDOFF_KEYWORDS).addAction(
       })
       .then((result) => {
         if (!result.success) {
-          console.error(`[handoffFlow] n8n webhook failed for ${phone}:`, result.error);
+          logger.error('handoff.webhook.failed', { phone, error: result.error });
           // We already sent the success message to user, so we send a soft error follow-up
           flowDynamic([{ body: MSG.error[lang] }]).catch(() => {});
+        } else {
+          logger.info('handoff.webhook.success', { phone, agent: aiAgent });
         }
       })
-      .catch((err) => {
-        console.error(`[handoffFlow] Unexpected error for ${phone}:`, err);
+      .catch((err: unknown) => {
+        logger.error('handoff.webhook.unexpected', {
+          phone,
+          error: err instanceof Error ? err.message : String(err),
+        });
       });
   }
 );

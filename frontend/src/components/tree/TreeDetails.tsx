@@ -135,7 +135,7 @@ export default function TreeDetails({
                   label={t('tree.details.position')}
                   value={
                     <span className={isLeft ? 'text-blue-600' : 'text-purple-600'}>
-                      {t(isLeft ? 'tree.details.leftLeg' : 'tree.details.rightLeg')}
+                      {t(isLeft ? 'tree.details.directReferrals' : 'tree.details.totalNetwork')}
                     </span>
                   }
                 />

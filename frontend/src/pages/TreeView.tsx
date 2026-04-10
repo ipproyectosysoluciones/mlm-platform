@@ -1,6 +1,6 @@
 /**
- * TreeView - Visualización del árbol binario MLM con React Flow
- * TreeView - MLM binary tree visualization with React Flow
+ * TreeView - Visualización de la red unilevel MLM con React Flow
+ * TreeView - MLM unilevel network visualization with React Flow
  *
  * Implementa pan, zoom, búsqueda, minimap y panel de detalles.
  * Implements pan, zoom, search, minimap, and details panel.

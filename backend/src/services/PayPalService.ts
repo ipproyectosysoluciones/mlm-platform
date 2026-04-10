@@ -61,93 +61,9 @@ interface CaptureOrderRequest {
   internalOrderId: string; // Our internal order ID
 }
 
-/** Headers sent by PayPal on every webhook call */
-interface PayPalWebhookHeaders {
-  'paypal-transmission-id': string;
-  'paypal-transmission-time': string;
-  'paypal-transmission-sig': string;
-  'paypal-cert-url': string;
-  'paypal-auth-algo': string;
-}
-
 class PayPalService {
   private accessToken: string | null = null;
   private tokenExpiry: number = 0;
-
-  /** In-memory idempotency set — prevents double-processing the same event */
-  private processedEvents = new Set<string>();
-
-  /**
-   * Verify PayPal webhook signature using PayPal's verify API.
-   * Verifica la firma del webhook de PayPal usando la API de verificación de PayPal.
-   *
-   * @see https://developer.paypal.com/docs/api/webhooks/v1/#verify-webhook-signature
-   * @param headers - PayPal webhook headers
-   * @param rawBody - Raw request body string
-   * @returns true if signature is valid
-   */
-  async verifyWebhookSignature(headers: PayPalWebhookHeaders, rawBody: string): Promise<boolean> {
-    const webhookId = config.paypal.webhookId;
-    if (!webhookId) {
-      console.warn('[PayPal] PAYPAL_WEBHOOK_ID not configured — skipping signature verification');
-      return true; // dev mode
-    }
-
-    try {
-      const token = await this.getAccessToken();
-      const verifyUrl = new URL('/v1/notifications/verify-webhook-signature', PAYPAL_API_BASE);
-
-      const response = await axios.post(
-        verifyUrl.toString(),
-        {
-          auth_algo: headers['paypal-auth-algo'],
-          cert_url: headers['paypal-cert-url'],
-          transmission_id: headers['paypal-transmission-id'],
-          transmission_sig: headers['paypal-transmission-sig'],
-          transmission_time: headers['paypal-transmission-time'],
-          webhook_id: webhookId,
-          webhook_event: JSON.parse(rawBody),
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-
-      return response.data?.verification_status === 'SUCCESS';
-    } catch (error) {
-      console.error('[PayPal] Webhook signature verification failed:', error);
-      return false;
-    }
-  }
-
-  /**
-   * Check if an event has already been processed (idempotency).
-   * Verifica si un evento ya fue procesado (idempotencia).
-   *
-   * @param eventId - PayPal resource ID or event ID
-   * @returns true if already processed (duplicate)
-   */
-  isIdempotent(eventId: string): boolean {
-    return this.processedEvents.has(eventId);
-  }
-
-  /**
-   * Mark an event as processed to prevent duplicate handling.
-   * Marca un evento como procesado para evitar procesamiento duplicado.
-   *
-   * @param eventId - PayPal resource ID or event ID
-   */
-  markAsProcessed(eventId: string): void {
-    this.processedEvents.add(eventId);
-    // Keep set bounded — remove oldest entries if it grows too large
-    if (this.processedEvents.size > 10_000) {
-      const first = this.processedEvents.values().next().value;
-      if (first) this.processedEvents.delete(first);
-    }
-  }
 
   /**
    * Build a safe PayPal API URL using the URL constructor.
@@ -302,6 +218,8 @@ class PayPalService {
   /**
    * Get order details
    * GET /v2/checkout/orders/{orderId}
+   *
+   * Obtiene detalles de una orden de PayPal.
    */
   async getOrder(orderId: string): Promise<PayPalOrder> {
     validatePayPalId(orderId, 'PayPal order ID');
@@ -315,6 +233,102 @@ class PayPalService {
     });
 
     return response.data;
+  }
+
+  // ── Webhook signature verification ──────────────────────────────────────────
+
+  /**
+   * Verify PayPal webhook signature using the PayPal Notifications API.
+   * In dev mode (no PAYPAL_WEBHOOK_ID configured) always returns true.
+   *
+   * Verifica la firma del webhook de PayPal usando la API de Notificaciones.
+   * En modo dev (sin PAYPAL_WEBHOOK_ID configurado) retorna true directamente.
+   *
+   * @param headers - HTTP headers from the incoming webhook request
+   * @param rawBody - Raw JSON string body of the webhook event
+   * @returns true if signature is valid (or dev mode bypass), false otherwise
+   */
+  async verifyWebhookSignature(headers: Record<string, string>, rawBody: string): Promise<boolean> {
+    // Dev mode bypass: if no webhook ID is configured, skip verification
+    if (!config.paypal.webhookId) {
+      return true;
+    }
+
+    try {
+      const token = await this.getAccessToken();
+      const verifyUrl = `${PAYPAL_API_BASE}/v1/notifications/verify-webhook-signature`;
+
+      const payload = {
+        auth_algo: headers['paypal-auth-algo'],
+        cert_url: headers['paypal-cert-url'],
+        transmission_id: headers['paypal-transmission-id'],
+        transmission_sig: headers['paypal-transmission-sig'],
+        transmission_time: headers['paypal-transmission-time'],
+        webhook_id: config.paypal.webhookId,
+        webhook_event: JSON.parse(rawBody) as unknown,
+        // CRC32 of the raw body as required by PayPal spec
+        crc32: crc32(rawBody),
+      };
+
+      const response = await axios.post<{ verification_status: string }>(verifyUrl, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      return response.data.verification_status === 'SUCCESS';
+    } catch {
+      return false;
+    }
+  }
+
+  // ── Idempotency guard ────────────────────────────────────────────────────────
+
+  /**
+   * Set of already-processed PayPal webhook event IDs.
+   * Capped at MAX_PROCESSED_EVENTS to prevent unbounded memory growth.
+   *
+   * Conjunto de IDs de eventos de webhook ya procesados.
+   * Limitado a MAX_PROCESSED_EVENTS para evitar crecimiento ilimitado de memoria.
+   */
+  private readonly processedEvents: Set<string> = new Set();
+  private static readonly MAX_PROCESSED_EVENTS = 10_000;
+
+  /**
+   * Check whether a PayPal webhook event has already been processed.
+   * Used to implement idempotent webhook handling.
+   *
+   * Verifica si un evento de webhook de PayPal ya fue procesado.
+   *
+   * @param eventId - PayPal event ID (e.g. from event.id)
+   * @returns true if the event was already processed
+   */
+  isIdempotent(eventId: string): boolean {
+    return this.processedEvents.has(eventId);
+  }
+
+  /**
+   * Mark a PayPal webhook event as processed.
+   * Evicts the oldest entry if the set exceeds MAX_PROCESSED_EVENTS.
+   *
+   * Marca un evento de webhook de PayPal como procesado.
+   * Elimina la entrada más antigua si el set supera MAX_PROCESSED_EVENTS.
+   *
+   * @param eventId - PayPal event ID to mark as processed
+   */
+  markAsProcessed(eventId: string): void {
+    if (this.processedEvents.has(eventId)) return;
+
+    // Evict oldest entry if at capacity
+    if (this.processedEvents.size >= PayPalService.MAX_PROCESSED_EVENTS) {
+      const oldest = this.processedEvents.values().next().value;
+      if (oldest !== undefined) {
+        this.processedEvents.delete(oldest);
+      }
+    }
+
+    this.processedEvents.add(eventId);
   }
 }
 

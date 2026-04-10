@@ -1,45 +1,21 @@
 # ============================================
-# Nexo Real Backend — Multi-stage Production Image
-# Stage 1: builder — compiles TypeScript → ESM via esbuild
-# Stage 2: runtime — minimal Alpine image, no dev deps, no source code
+# MLM Backend - Production Image
 # ============================================
-
-# ── Stage 1: builder ─────────────────────────────────────────────────────────
-FROM node:24-alpine AS builder
+FROM node:24-alpine
 
 WORKDIR /app
 
-# Copy package files needed for dependency install and build
+# Copy package file — lockfile lives at monorepo root and is incompatible with
+# --frozen-lockfile here (root overrides don't match backend package.json).
+# pnpm install --prod with pinned versions in package.json is deterministic enough.
 COPY package.json ./
 
-# Enable pnpm via corepack (pinned version — reproducible)
-RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
-
-# Install ALL deps (including devDependencies — needed for esbuild and typescript)
-RUN pnpm install --no-lockfile
-
-# Copy source code
-COPY src/ ./src/
-COPY scripts/ ./scripts/
-COPY tsconfig.json ./
-
-# Run esbuild — outputs dist/server.mjs (minified, legalComments: none)
-RUN NODE_ENV=production node scripts/build.mjs
-
-# ── Stage 2: runtime ─────────────────────────────────────────────────────────
-FROM node:24-alpine AS runtime
-
-WORKDIR /app
-
-# Copy only the package.json for production dependency install
-COPY package.json ./
-
-# Enable pnpm and install production dependencies only
+# Install production dependencies (pinned pnpm, prod-only, no dev deps)
 RUN corepack enable && corepack prepare pnpm@10.33.0 --activate && \
     pnpm install --prod --no-lockfile
 
-# Copy compiled bundle from builder stage — no source, no dev tools
-COPY --from=builder /app/dist/server.mjs ./dist/server.mjs
+# Copy compiled dist from host
+COPY dist/server.mjs ./dist/server.mjs
 
 # Setup non-root user for security
 RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001 && \

@@ -14,6 +14,7 @@ import {
   getRecentCommissions,
   getBotProperties,
   getBotTours,
+  getBotReservations,
   getBotHealth,
 } from '../controllers/BotController';
 import { asyncHandler } from '../middleware/asyncHandler';
@@ -55,21 +56,26 @@ router.get('/commissions/:userId', asyncHandler(getRecentCommissions));
 
 /**
  * @route   GET /api/bot/properties
- * @desc    Search available properties (simplified format for AI prompt)
- *          Buscar propiedades disponibles (formato simplificado para prompt IA)
+ * @desc    Get active property listings for bot catalog flow
  * @access  Bot-only (x-bot-secret)
- * @query   city, type, maxPrice, limit
  */
 router.get('/properties', asyncHandler(getBotProperties));
 
 /**
  * @route   GET /api/bot/tours
- * @desc    Search active tour packages (simplified format for AI prompt)
- *          Buscar paquetes turísticos activos (formato simplificado para prompt IA)
+ * @desc    Get active tour packages for bot catalog flow
  * @access  Bot-only (x-bot-secret)
- * @query   destination, type, maxPrice, limit
  */
 router.get('/tours', asyncHandler(getBotTours));
+
+/**
+ * @route   GET /api/bot/reservations/:userId
+ * @desc    Get recent reservations for a user (property + tour)
+ *          Obtener reservas recientes de un usuario (propiedad + tour)
+ * @access  Bot-only (x-bot-secret)
+ * @query   limit (default 5, max 10), status, type
+ */
+router.get('/reservations/:userId', asyncHandler(getBotReservations));
 
 /**
  * @route   GET /api/bot/health

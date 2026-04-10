@@ -114,17 +114,17 @@ export default function Dashboard() {
         />
       </div>
 
-      {/* Tree & Referral section */}
+      {/* Network & Referral section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-          <h2 className="text-lg font-semibold text-slate-900 mb-4">{t('dashboard.binaryTree')}</h2>
+          <h2 className="text-lg font-semibold text-slate-900 mb-4">{t('dashboard.myNetwork')}</h2>
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-blue-50 rounded-xl p-4 text-center border border-blue-100">
-              <p className="text-sm text-blue-600 font-medium">{t('dashboard.leftLeg')}</p>
+              <p className="text-sm text-blue-600 font-medium">{t('dashboard.directReferrals')}</p>
               <p className="text-3xl font-bold text-blue-600 mt-1">{data.stats.leftCount}</p>
             </div>
             <div className="bg-purple-50 rounded-xl p-4 text-center border border-purple-100">
-              <p className="text-sm text-purple-600 font-medium">{t('dashboard.rightLeg')}</p>
+              <p className="text-sm text-purple-600 font-medium">{t('dashboard.totalNetwork')}</p>
               <p className="text-3xl font-bold text-purple-600 mt-1">{data.stats.rightCount}</p>
             </div>
           </div>

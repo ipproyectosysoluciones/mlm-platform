@@ -1,5 +1,6 @@
 import { addKeyword, EVENTS } from '@builderbot/bot';
 import { aiService, type AgentName, type Language } from '../services/ai.service.js';
+import { logger } from '../services/logger.js';
 import { resolveLanguageFromInput } from './language.flow.js';
 import { assignAgent, getAgentIntro, getAgentTransitionMessage } from './agent.flow.js';
 import { leadPersistenceService } from '../services/lead-persistence.service.js';
@@ -200,7 +201,8 @@ export const welcomeFlow = addKeyword(EVENTS.WELCOME).addAction(
 
       await flowDynamic([{ body: response.text }]);
     } catch (error) {
-      console.error('[welcomeFlow] AI error:', error);
+      const err = error as { message?: string };
+      await logger.alert('openai.failed', { phone, agent, error: err?.message ?? String(error) });
       const errorMsg =
         lang === 'es'
           ? 'Tuve un problema técnico. ¿Podés repetir tu mensaje? Si el problema persiste, escribí *ayuda*. 🙏'
