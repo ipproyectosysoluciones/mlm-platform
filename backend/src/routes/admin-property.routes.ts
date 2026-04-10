@@ -1,10 +1,16 @@
 /**
  * @fileoverview Admin Property Routes - Admin property management endpoints
- * @description Routes for admin property CRUD operations (create, update, delete, list)
+ * @description Routes for admin property CRUD operations (create, update, delete, list).
+ *              Rate-limited to 60 req/min (production) to prevent abuse on authorized endpoints.
+ *              Protected by JWT authentication and admin role verification.
+ *              Rutas CRUD de propiedades para admin. Rate limit de 60 req/min en producción.
+ *              Protegidas por autenticación JWT y verificación de rol admin.
  * @module routes/admin-property.routes
  * @author MLM Development Team
  */
 import { Router } from 'express';
+import rateLimit from 'express-rate-limit';
+import { authenticate, requireAdmin } from '../middleware/auth.middleware';
 import {
   getProperties,
   createProperty,
@@ -16,6 +22,40 @@ import {
 import { uploadImages } from '../middleware/upload';
 
 const router = Router();
+
+/**
+ * Rate limiter for admin property endpoints.
+ * Stricter than the global limiter (200 req/min) since these routes perform
+ * authorization checks and write operations.
+ *
+ * Rate limit para endpoints admin de propiedades.
+ * Más estricto que el global (200 req/min) ya que estas rutas realizan
+ * verificación de autorización y operaciones de escritura.
+ */
+const adminPropertyLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute / 1 minuto
+  max: process.env.NODE_ENV === 'test' ? 1000 : 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    error: { code: 'RATE_LIMIT', message: 'Too many requests. Please try again later.' },
+  },
+});
+
+router.use(adminPropertyLimiter);
+
+/**
+ * Enforce JWT authentication and admin role for all routes in this router.
+ * Any request without a valid token or without the 'admin' role will receive
+ * a 401 (Unauthorized) or 403 (Forbidden) response before reaching any handler.
+ *
+ * Aplica autenticación JWT y rol admin a todas las rutas de este router.
+ * Cualquier request sin token válido o sin rol 'admin' recibe 401 o 403
+ * antes de llegar a cualquier handler.
+ */
+router.use(authenticate);
+router.use(requireAdmin);
 
 /**
  * @swagger
