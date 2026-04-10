@@ -709,7 +709,7 @@ class BrevoEmailService {
           to: [{ email: params.to }],
           sender: {
             name: params.fromName || 'Nexo Real',
-            email: 'noreply@nexoreal.com', // TODO: domain pending
+            email: 'noreply@nexoreal.xyz', // TODO: domain pending
           },
           replyTo: params.replyTo ? { email: params.replyTo } : undefined,
           subject: params.subject,
@@ -744,7 +744,7 @@ class BrevoEmailService {
     });
 
     await transporter.sendMail({
-      from: `Nexo Real <noreply@nexoreal.com>`, // TODO: domain pending
+      from: `Nexo Real <noreply@nexoreal.xyz>`, // TODO: domain pending
       to: params.to,
       subject: params.subject,
       html: params.htmlContent,

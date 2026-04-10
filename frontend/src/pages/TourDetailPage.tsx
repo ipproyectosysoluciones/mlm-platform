@@ -31,6 +31,7 @@ import { tourService } from '../services/tourService';
 import type { TourPackage, TourCategory, TourAvailability } from '../services/tourService';
 import { useReservationStore } from '../stores/reservationStore';
 import { cn } from '../lib/utils';
+import { APP_URL, APP_OG_DEFAULT_IMAGE } from '../config/app.config';
 
 // ============================================
 // Constants / Constantes
@@ -277,10 +278,10 @@ export default function TourDetailPage() {
     .trim();
 
   /** Primary OG image (first tour image or fallback) */
-  const ogImage = tour.images?.[0] ?? 'https://nexoreal.com/og-default.jpg';
+  const ogImage = tour.images?.[0] ?? APP_OG_DEFAULT_IMAGE;
 
   /** Canonical URL for this tour */
-  const canonicalUrl = `https://nexoreal.com/tours/${tour.id}`;
+  const canonicalUrl = `${APP_URL}/tours/${tour.id}`;
 
   /**
    * JSON-LD TouristAttraction schema markup.

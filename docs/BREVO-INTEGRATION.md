@@ -67,7 +67,7 @@ POST https://api.brevo.com/v3/smtp/email
 {
   "to": [{ "email": "user@example.com" }],
   "sender": {
-    "email": "noreply@nexoreal.com",
+    "email": "noreply@nexoreal.xyz",
     "name": "Nexo Real"
   },
   "subject": "Hello John!",
@@ -262,7 +262,7 @@ BREVO_SMTP_USER=xxx@smtp-brevo.com         # SMTP login
 BREVO_SMTP_PASS=xxx                        # SMTP password
 
 # Sender Identity
-BREVO_SENDER_EMAIL=noreply@nexoreal.com     # From email (TODO: domain pending)
+BREVO_SENDER_EMAIL=noreply@nexoreal.xyz     # From email (TODO: domain pending)
 BREVO_SENDER_NAME=Nexo Real                # From name
 ```
 

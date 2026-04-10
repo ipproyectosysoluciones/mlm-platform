@@ -4,7 +4,7 @@
 
 ```
 Development: http://localhost:3000/api
-Production: https://api.mlm.com/api
+Production: https://api.nexoreal.xyz/api
 ```
 
 ---
@@ -28,6 +28,34 @@ Production: https://api.mlm.com/api
   "success": true,
   "data": {
     "user": { "id": "uuid", "email": "...", "referralCode": "REF..." },
+    "token": "jwt_token_here"
+  }
+}
+```
+
+### Register Guest / Registrar Invitado
+
+**POST** `/api/auth/register/guest`
+
+Sin autenticación requerida. Crea un usuario con `role: 'guest'` sin necesitar un sponsor.
+
+```json
+// Request / Solicitud
+{
+  "email": "invitado@ejemplo.com",
+  "password": "Invitado123!"
+}
+
+// Response / Respuesta (201)
+{
+  "success": true,
+  "data": {
+    "user": {
+      "id": "uuid",
+      "email": "invitado@ejemplo.com",
+      "role": "guest",
+      "referralCode": "NXR-GT-XXX"
+    },
     "token": "jwt_token_here"
   }
 }
@@ -421,7 +449,7 @@ Headers: `Authorization: Bearer <token>`
 
 ## Admin / Administrador
 
-All admin endpoints require `role: "admin"` / Todos los endpoints de admin requieren `role: "admin"`
+All admin endpoints require `role: "super_admin"` or `role: "admin"` / Todos los endpoints de admin requieren `role: "super_admin"` o `role: "admin"`
 
 ### Global Stats / Estadísticas Globales
 
@@ -480,6 +508,38 @@ Headers: `Authorization: Bearer <token>`
 **PATCH** `/api/admin/users/:userId/promote`
 
 Headers: `Authorization: Bearer <token>`
+
+### Update User Role / Actualizar Rol de Usuario
+
+**PATCH** `/api/admin/users/:userId/role`
+
+Headers: `Authorization: Bearer <token>` — Requiere `super_admin` o `admin`
+
+```json
+// Request / Solicitud
+{
+  "role": "advisor"
+}
+// Roles válidos: "super_admin" | "admin" | "finance" | "sales" | "advisor" | "vendor" | "user" | "guest" | "bot"
+
+// Response / Respuesta (200)
+{
+  "success": true,
+  "data": {
+    "user": {
+      "id": "uuid",
+      "email": "usuario@nexoreal.xyz",
+      "role": "advisor"
+    }
+  }
+}
+
+// Response (403) - Rol insuficiente
+{ "success": false, "error": { "code": "FORBIDDEN", "message": "Insufficient role" } }
+
+// Response (404) - Usuario no encontrado
+{ "success": false, "error": { "code": "NOT_FOUND", "message": "User not found" } }
+```
 
 ### Commissions Report / Reporte de Comisiones
 

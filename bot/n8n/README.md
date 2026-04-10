@@ -48,8 +48,8 @@ This directory contains n8n workflow definitions for the Nexo Real bot integrati
 
 | Variable             | Description                            | Example               |
 | -------------------- | -------------------------------------- | --------------------- |
-| `GOOGLE_CALENDAR_ID` | Google Calendar ID for the team        | `team@nexoreal.com`   |
-| `SALES_TEAM_EMAIL`   | Email to add as attendee to all events | `ventas@nexoreal.com` |
+| `GOOGLE_CALENDAR_ID` | Google Calendar ID for the team        | `team@nexoreal.xyz`   |
+| `SALES_TEAM_EMAIL`   | Email to add as attendee to all events | `ventas@nexoreal.xyz` |
 
 **Required n8n credentials**:
 
@@ -91,7 +91,7 @@ This directory contains n8n workflow definitions for the Nexo Real bot integrati
 | --------------------------- | ------------------------------------- | -------------------------------------- |
 | `NOTION_LEADS_DB_ID`        | Notion database ID for leads          | `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` |
 | `BREVO_HANDOFF_TEMPLATE_ID` | Brevo transactional email template ID | `42`                                   |
-| `SALES_TEAM_EMAIL`          | Email to notify on handoff            | `ventas@nexoreal.com`                  |
+| `SALES_TEAM_EMAIL`          | Email to notify on handoff            | `ventas@nexoreal.xyz`                  |
 
 **Required n8n credentials**:
 

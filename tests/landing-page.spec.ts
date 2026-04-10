@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test('Landing page loads correctly', async ({ page }) => {
   // Go to the landing page
-  await page.goto('https://nexoreal.com/ // TODO: domain pending — update when live');
+  await page.goto('https://nexoreal.xyz/ // TODO: domain pending — update when live');
 
   // Wait for page to load
   await page.waitForLoadState('networkidle');
@@ -30,7 +30,7 @@ test('Landing page loads correctly', async ({ page }) => {
 });
 
 test('Check what component renders', async ({ page }) => {
-  await page.goto('https://nexoreal.com/ // TODO: domain pending — update when live');
+  await page.goto('https://nexoreal.xyz/ // TODO: domain pending — update when live');
   await page.waitForLoadState('networkidle');
 
   // Check for specific elements

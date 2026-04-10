@@ -23,7 +23,7 @@ The platform uses a **hybrid deployment model**:
 
 | Service  | URL                                                                   | Purpose                |
 | -------- | --------------------------------------------------------------------- | ---------------------- |
-| Frontend | https://nexoreal.com _(TODO: domain pending — actualmente en Vercel)_ | Production (principal) |
+| Frontend | https://nexoreal.xyz _(TODO: domain pending — actualmente en Vercel)_ | Production (principal) |
 | Backend  | https://backend.lordastaroth77.cloudflareaccess.com                   | API Backend            |
 | Docker   | https://hub.docker.com/r/ipproyectos/mlm-backend                      | Container Registry     |
 
