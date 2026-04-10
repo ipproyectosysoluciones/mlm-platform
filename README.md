@@ -5,14 +5,15 @@
 > del reenfoque hacia servicios inmobiliarios y turismo en LATAM.
 > El repositorio de GitHub será renombrado próximamente.
 
-Conectamos tu negocio con el mundo. Plataforma de afiliaciones binarias con comisiones por niveles y visualización de árbol genealógico.
+Conectamos tu negocio con el mundo. Plataforma de afiliaciones Unilevel con comisiones por niveles y visualización de árbol genealógico.
 
-**Versión actual: v2.3.5** — Sprint 7 completado (2026-04-09)
+**Versión actual: v2.4.0** — Sprint 8 completado (2026-04-10)
 
 ## 🚀 Características / Features
 
-- **Sistema de Afiliaciones Binarias** - Red de usuarios con izquierda/derecha
+- **Sistema de Afiliaciones Unilevel** - Red de usuarios multinivel sin restricción de posición
 - **Comisiones Automáticas** - Directas y por niveles (hasta 4 niveles)
+- **RBAC 9 Roles** - super_admin, admin, finance, sales, advisor, vendor, user, guest, bot
 - **Código QR de Referido** - Generación automática para cada usuario
 - **Dashboard con Gráficos** - Estadísticas, referidos y comisiones por mes
 - **CRM Integrado** - Leads, tareas, pipeline Kanban, importar/exportar CSV
@@ -20,7 +21,7 @@ Conectamos tu negocio con el mundo. Plataforma de afiliaciones binarias con comi
 - **Landing Pages** - Creador de páginas de captura
 - **Panel de Administración** - Gestión completa de usuarios y comisiones
 - **API REST Documentada** - OpenAPI/Swagger bilingüe (ES/EN)
-- **Tests Automatizados** - 359+ tests (Unit + Integration + E2E con Playwright)
+- **Tests Automatizados** - 967 tests (Unit + Integration + E2E con Playwright)
 - **i18n** - Interfaz bilingüe (Español/Inglés)
 - **Wallet Digital** - Billetera digital con retiros y transacciones
 - **2FA (TOTP)** - Two-Factor Authentication con códigos de recuperación
@@ -67,6 +68,7 @@ Conectamos tu negocio con el mundo. Plataforma de afiliaciones binarias con comi
 | sprint5-v2.1.0                    | Real Estate & Tourism frontend + security fixes                               | ✅ Completo  | 2026-04-07 |
 | sprint6-v2.2.0                    | Admin CRUD, Nexo Bot flows, SEO, network_balance                              | ✅ Completo  | 2026-04-07 |
 | sprint7-v2.3.0                    | NexoRealLanding, PropertyCard/TourCard, 359 tests, bot health/retry/reconnect | ✅ Completo  | 2026-04-08 |
+| sprint8-v2.4.0                    | RBAC 9 roles, register/guest, updateUserRole, Seed Nexo Real colombiano       | ✅ Completo  | 2026-04-10 |
 
 ### 🚧 Cambios en Progreso
 
@@ -223,45 +225,47 @@ Ver [docs/INDEX.md](docs/INDEX.md) para el directorio completo de documentación
 
 ### API Endpoints Principales
 
-| Método | Endpoint                                 | Descripción                                  |
-| ------ | ---------------------------------------- | -------------------------------------------- |
-| POST   | `/api/auth/register`                     | Registrar usuario                            |
-| POST   | `/api/auth/login`                        | Iniciar sesión                               |
-| GET    | `/api/auth/me`                           | Usuario actual                               |
-| GET    | `/api/dashboard`                         | Dashboard del usuario                        |
-| GET    | `/api/users/me/tree`                     | Árbol binario                                |
-| GET    | `/api/commissions`                       | Lista de comisiones                          |
-| GET    | `/api/admin/stats`                       | Estadísticas globales (admin)                |
-| GET    | `/api/admin/users`                       | Lista de usuarios (admin)                    |
-| POST   | `/api/v1/gift-cards`                     | Crear tarjeta regalo (admin)                 |
-| GET    | `/api/v1/gift-cards/{id}/validate`       | Validar tarjeta regalo                       |
-| POST   | `/api/v1/gift-cards/{id}/redeem`         | Redimir tarjeta regalo                       |
-| GET    | `/api/v1/gift-cards`                     | Listar tarjetas (admin)                      |
-| GET    | `/api/v1/carts/me`                       | Obtener carrito actual                       |
-| POST   | `/api/v1/carts/me/items`                 | Agregar item al carrito                      |
-| GET    | `/api/v1/carts/recover/{token}`          | Recuperar carrito abandonado                 |
-| GET    | `/api/v1/carts/abandoned`                | Listar carritos abandonados (admin)          |
-| POST   | `/api/v1/email-templates`                | Crear template de email                      |
-| POST   | `/api/v1/email-campaigns`                | Crear campaña de email                       |
-| POST   | `/api/v1/email-campaigns/{id}/send`      | Enviar campaña                               |
-| POST   | `/api/v1/email-campaigns/{id}/pause`     | Pausar campaña                               |
-| GET    | `/api/v1/email-campaigns/{id}/logs`      | Ver logs de campaña                          |
-| GET    | `/api/v1/email-campaigns`                | Listar campañas                              |
-| GET    | `/api/products`                          | Listar productos activos (público)           |
-| GET    | `/api/products/:id`                      | Detalle de producto                          |
-| GET    | `/api/categories`                        | Listar categorías activas                    |
-| GET    | `/api/addresses`                         | Listar direcciones de envío                  |
-| POST   | `/api/addresses`                         | Crear dirección de envío                     |
-| PATCH  | `/api/addresses/:id/default`             | Marcar dirección como predeterminada         |
-| PUT    | `/api/orders/:id/shipping`               | Asignar envío a una orden                    |
-| GET    | `/api/orders/:id/tracking`               | Ver tracking de una orden                    |
-| GET    | `/api/contracts`                         | Listar contratos con estado de aceptación    |
-| POST   | `/api/contracts/:id/accept`              | Aceptar contrato (guarda IP/hash)            |
-| GET    | `/api/vendor/dashboard`                  | Dashboard del vendor                         |
-| GET    | `/api/admin/products`                    | Listar todos los productos (admin)           |
-| PATCH  | `/api/admin/vendors/:id/commission-rate` | Actualizar comisión de vendor                |
-| GET    | `/api/admin/contracts`                   | Gestión de contratos (admin)                 |
-| GET    | `/api/bot/health`                        | Health check del bot (header `x-bot-secret`) |
+| Método | Endpoint                                 | Descripción                                   |
+| ------ | ---------------------------------------- | --------------------------------------------- |
+| POST   | `/api/auth/register`                     | Registrar usuario                             |
+| POST   | `/api/auth/register/guest`               | Registrar usuario invitado (sin sponsor)      |
+| POST   | `/api/auth/login`                        | Iniciar sesión                                |
+| GET    | `/api/auth/me`                           | Usuario actual                                |
+| GET    | `/api/dashboard`                         | Dashboard del usuario                         |
+| GET    | `/api/users/me/tree`                     | Árbol Unilevel                                |
+| GET    | `/api/commissions`                       | Lista de comisiones                           |
+| GET    | `/api/admin/stats`                       | Estadísticas globales (admin)                 |
+| GET    | `/api/admin/users`                       | Lista de usuarios (admin)                     |
+| PATCH  | `/api/admin/users/:userId/role`          | Actualizar rol de usuario (super_admin/admin) |
+| POST   | `/api/v1/gift-cards`                     | Crear tarjeta regalo (admin)                  |
+| GET    | `/api/v1/gift-cards/{id}/validate`       | Validar tarjeta regalo                        |
+| POST   | `/api/v1/gift-cards/{id}/redeem`         | Redimir tarjeta regalo                        |
+| GET    | `/api/v1/gift-cards`                     | Listar tarjetas (admin)                       |
+| GET    | `/api/v1/carts/me`                       | Obtener carrito actual                        |
+| POST   | `/api/v1/carts/me/items`                 | Agregar item al carrito                       |
+| GET    | `/api/v1/carts/recover/{token}`          | Recuperar carrito abandonado                  |
+| GET    | `/api/v1/carts/abandoned`                | Listar carritos abandonados (admin)           |
+| POST   | `/api/v1/email-templates`                | Crear template de email                       |
+| POST   | `/api/v1/email-campaigns`                | Crear campaña de email                        |
+| POST   | `/api/v1/email-campaigns/{id}/send`      | Enviar campaña                                |
+| POST   | `/api/v1/email-campaigns/{id}/pause`     | Pausar campaña                                |
+| GET    | `/api/v1/email-campaigns/{id}/logs`      | Ver logs de campaña                           |
+| GET    | `/api/v1/email-campaigns`                | Listar campañas                               |
+| GET    | `/api/products`                          | Listar productos activos (público)            |
+| GET    | `/api/products/:id`                      | Detalle de producto                           |
+| GET    | `/api/categories`                        | Listar categorías activas                     |
+| GET    | `/api/addresses`                         | Listar direcciones de envío                   |
+| POST   | `/api/addresses`                         | Crear dirección de envío                      |
+| PATCH  | `/api/addresses/:id/default`             | Marcar dirección como predeterminada          |
+| PUT    | `/api/orders/:id/shipping`               | Asignar envío a una orden                     |
+| GET    | `/api/orders/:id/tracking`               | Ver tracking de una orden                     |
+| GET    | `/api/contracts`                         | Listar contratos con estado de aceptación     |
+| POST   | `/api/contracts/:id/accept`              | Aceptar contrato (guarda IP/hash)             |
+| GET    | `/api/vendor/dashboard`                  | Dashboard del vendor                          |
+| GET    | `/api/admin/products`                    | Listar todos los productos (admin)            |
+| PATCH  | `/api/admin/vendors/:id/commission-rate` | Actualizar comisión de vendor                 |
+| GET    | `/api/admin/contracts`                   | Gestión de contratos (admin)                  |
+| GET    | `/api/bot/health`                        | Health check del bot (header `x-bot-secret`)  |
 
 ## 📁 Estructura del Proyecto / Project Structure
 

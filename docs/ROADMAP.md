@@ -3,8 +3,8 @@
 > Hoja de ruta completa para la plataforma **Nexo Real** — Servicios Inmobiliarios, Turismo/Hospitalidad y Afiliaciones.  
 > _"Conectamos tu negocio con el mundo."_
 
-**Versión actual**: v2.3.5 — Sprint 7 Completado ✅  
-**Última actualización**: 2026-04-09  
+**Versión actual**: v2.4.0 — Sprint 8 Completado ✅  
+**Última actualización**: 2026-04-10  
 **Estado**: Activo - Desarrollo intensivo  
 **Meta**: v3.0.0 — expansión México + Argentina
 
@@ -12,12 +12,12 @@
 
 ## 📊 Estado Actual del Proyecto
 
-### ✅ Lo que YA está implementado (v2.3.5)
+### ✅ Lo que YA está implementado (v2.4.0)
 
 | Área                     | Funcionalidad                                                               | Estado |
 | ------------------------ | --------------------------------------------------------------------------- | ------ |
 | **Auth**                 | JWT, 2FA, Roles                                                             | ✅     |
-| **MLM**                  | Binario con Closure Table                                                   | ✅     |
+| **MLM**                  | Unilevel con Closure Table                                                  | ✅     |
 | **Comisiones**           | 5 niveles configurables                                                     | ✅     |
 | **E-commerce**           | Productos streaming (MVP ejemplo)                                           | ✅     |
 | **Wallet**               | Balance, transacciones, retiros                                             | ✅     |
@@ -46,6 +46,10 @@
 | **Build Hardening**      | Sin `.map` en producción, logs de tamaño                                    | ✅     |
 | **SEO Frontend**         | Helmet dinámico + OG tags + JSON-LD (Property + Tour) + social proof badges | ✅     |
 | **Tests**                | 967 tests (Backend 39 suites/535 + Frontend 33 suites/432)                  | ✅     |
+| **RBAC 9 Roles**         | super_admin, admin, finance, sales, advisor, vendor, user, guest, bot       | ✅     |
+| **Register Guest**       | `POST /api/auth/register/guest` — registro público sin sponsor              | ✅     |
+| **Update User Role**     | `PATCH /api/admin/users/:id/role` — solo super_admin/admin                  | ✅     |
+| **Seed Nexo Real**       | Datos colombianos (Medellín, Bogotá, Cartagena), árbol Unilevel completo    | ✅     |
 
 ---
 
@@ -413,42 +417,64 @@ Patch v2.3.5 (2026-04-09):
   ✅ Tests: Backend 39 suites / 535 tests, Frontend 33 suites / 432 tests
 ```
 
-#### Sprint 8 — v2.4.0 — Bot Completo + n8n Workflows 📋
+#### Sprint 8 — v2.4.0 — RBAC 9 Roles + Seed Nexo Real ✅
 
 ```
-Branch:    feature/sprint8-bot-complete
-Estado:    Planificado (post Sprint 7)
+Branch:    feature/sprint8-seed-docs
+Estado:    Completado 2026-04-10
 
-Batch 8.1 — Knowledge Base FAQ:
+Batch 8.1 — RBAC 9 Roles:
+  ✅ feat(rbac): 9 roles — super_admin, admin, finance, sales, advisor, vendor, user, guest, bot
+  ✅ feat(auth): POST /api/auth/register/guest — registro público sin sponsor required
+  ✅ feat(admin): PATCH /api/admin/users/:userId/role — actualización de rol (super_admin/admin only)
+  ✅ Tests: cobertura completa de permisos por rol
+
+Batch 8.2 — Seed Nexo Real Colombiano:
+  ✅ refactor(seed): seed.ts — árbol Unilevel 12 usuarios colombianos, 6 productos, CommissionConfig
+  ✅ refactor(seed): server.ts — autoSeed actualizado + banner "Nexo Real — Backend Server"
+  ✅ refactor(seed): seed-e2e.sql — migrado MySQL → PostgreSQL con árbol Unilevel completo
+
+Batch 8.3 — Documentación:
+  ✅ docs: swagger.ts v2.4.0 — 9 roles, schemas RBAC, TreeNode Unilevel
+  ✅ docs: PRD.md v2.4.0 — Sprint 8 ✅, Sprint 9 planificado
+  ✅ docs: ROADMAP.md v2.4.0 — tabla estado actualizada
+  ✅ docs: backend-API.md — 2 endpoints RBAC, URL nexoreal.com
+  ✅ docs: README.md v2.4.0 — Unilevel, 9 roles, 967 tests
+  ✅ docs: Postman — colección y environment renombrados a Nexo Real + carpeta RBAC
+```
+
+#### Sprint 9 — v3.0.0 — Bot Completo + n8n Workflows 📋
+
+```
+Branch:    feature/sprint9-bot-complete
+Estado:    Planificado (post Sprint 8)
+
+Batch 9.1 — Knowledge Base FAQ:
   □ Crear /bot/src/prompt_kb/knowledge-base.md con FAQ real del negocio
   □ Cubrir: propiedades, tours, afiliados, precios, zonas, contacto
 
-Batch 8.2 — n8n: Google Calendar workflow:
+Batch 9.2 — n8n: Google Calendar workflow:
   □ Crear workflow n8n "schedule-visit" → Google Calendar event
   □ Test end-to-end: scheduleFlow → n8n → Calendar
 
-Batch 8.3 — n8n: Notion CRM workflow:
+Batch 9.3 — n8n: Notion CRM workflow:
   □ Crear workflow n8n "human-handoff" → Notion CRM lead
   □ Crear workflow n8n "schedule-visit" → Notion CRM lead (Visit Scheduled)
   □ Test end-to-end: handoffFlow → n8n → Notion
 
-Batch 8.4 — Captación de leads completa:
+Batch 9.4 — Captación de leads completa:
   □ Agregar captura de email en welcomeFlow (después del nombre)
   □ Agregar área de interés (propiedad / turismo / afiliados)
   □ Persistir lead en DB (tabla CRM leads) via API interna
 
-Batch 8.5 — Onboarding de afiliados:
+Batch 9.5 — Onboarding de afiliados:
   □ Diseñar y crear onboarding.flow.ts (guía paso a paso)
   □ Keywords: "quiero ser afiliado", "cómo me registro", "join", etc.
   □ Flow: requisitos → link registro → seguimiento post-registro
 
-Batch 8.6 — Manejo de objeciones:
+Batch 9.6 — Manejo de objeciones:
   □ Extender prompt Sophia/Max con técnicas: pyramid, time, network, trust
   □ Test con escenarios de objeción en fixtures
-
-Batch 8.7 — Tests e2e bot completo:
-  □ Tests fixture-based para todos los flows (language, welcome, schedule,
-    handoff, balance, network, onboarding, objeciones)
 
 Estimado: ~30-35h
 ```
@@ -507,7 +533,7 @@ Testing: Vitest (33 suites / 432 tests)
 
 ## 📈 Métricas Objetivo
 
-| Métrica       | Actual (v2.3.5)                                                  | Objetivo                 |
+| Métrica       | Actual (v2.4.0)                                                  | Objetivo                 |
 | ------------- | ---------------------------------------------------------------- | ------------------------ |
 | Test Coverage | ~70%                                                             | **90%+**                 |
 | Tests Totales | 967 (Backend 535 + Frontend 432)                                 | **~550** ✅ superado     |
@@ -545,6 +571,6 @@ sprint:8             - Sprint 8 — v2.4.0
 
 ---
 
-**Última actualización**: 2026-04-09  
+**Última actualización**: 2026-04-10  
 **Proyecto**: https://github.com/users/ipproyectosysoluciones/projects/4  
 **Producto**: Nexo Real — _"Conectamos tu negocio con el mundo."_

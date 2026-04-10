@@ -4,6 +4,8 @@ import swaggerJsdoc from 'swagger-jsdoc';
  * Swagger/OpenAPI Configuration for Nexo Real API
  * Configuración Swagger/OpenAPI para la API de Nexo Real
  *
+ * v2.4.0: Sprint 8 - RBAC 9 roles (super_admin, admin, finance, sales, advisor, vendor, user, guest, bot),
+ *          register/guest endpoint, updateUserRole endpoint, Seed Nexo Real colombiano (Unilevel)
  * v2.3.5: Sprint 7 patch - ReservationFlowPage unhandled rejection fix, CD pipeline Docker context fix, lint fixes
  * v2.2.0: Sprint 6 - Admin Dashboard CRUD, Nexo Bot flows, i18n cleanup, binary_balance migration, build hardening
  * v2.1.0: Sprint 5 - Real Estate Frontend, Tourism Frontend, Reservation Wizard, Security fixes
@@ -22,9 +24,9 @@ const options: swaggerJsdoc.Options = {
     openapi: '3.0.0',
     info: {
       title: 'Nexo Real API',
-      version: '2.3.5',
+      version: '2.4.0',
       description: `
-## API REST para plataforma MLM de Afiliaciones Binarias
+## API REST para plataforma Nexo Real — Servicios Inmobiliarios, Turismo y Afiliaciones Unilevel
 
 ### Autenticación / Authentication
 Esta API usa JWT Bearer tokens. Incluye el token en el header:
@@ -42,6 +44,7 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
 | 429 | Rate limit excedido / Rate Limit Exceeded |
 
 ### Versiones / Versions
+- **v2.4.0** (2026-04-10): Sprint 8 - RBAC 9 roles, register/guest, updateUserRole, Seed Nexo Real colombiano
 - **v2.3.5** (2026-04-09): Sprint 7 patch - ReservationFlowPage unhandled rejection fix, CD pipeline Docker context fix, lint cleanup
 - **v2.2.0** (2026-04-07): Sprint 6 - Admin Dashboard CRUD, Nexo Bot flows, i18n cleanup, network_balance migration, build hardening
 - **v2.1.0** (2026-04-07): Sprint 5 - Real Estate Frontend, Tourism Frontend, Reservation Wizard, Security fixes (CodeQL CWE-843, Dependabot file-type)
@@ -314,7 +317,17 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
             },
             role: {
               type: 'string',
-              enum: ['user', 'admin'],
+              enum: [
+                'super_admin',
+                'admin',
+                'finance',
+                'sales',
+                'advisor',
+                'vendor',
+                'user',
+                'guest',
+                'bot',
+              ],
               default: 'user',
               description: 'Rol del usuario / User role',
             },
@@ -392,6 +405,50 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
           },
         },
 
+        RegisterGuestRequest: {
+          type: 'object',
+          required: ['email', 'password'],
+          description:
+            'Registro de usuario invitado (sin sponsor) / Guest user registration (no sponsor required)',
+          properties: {
+            email: {
+              type: 'string',
+              format: 'email',
+              description: 'Email del usuario invitado / Guest user email',
+            },
+            password: {
+              type: 'string',
+              format: 'password',
+              minLength: 8,
+              description: 'Contraseña (min 8 chars) / Password (min 8 chars)',
+            },
+          },
+        },
+
+        UpdateUserRoleRequest: {
+          type: 'object',
+          required: ['role'],
+          description:
+            'Solicitud para actualizar el rol de un usuario / Request to update user role (super_admin/admin only)',
+          properties: {
+            role: {
+              type: 'string',
+              enum: [
+                'super_admin',
+                'admin',
+                'finance',
+                'sales',
+                'advisor',
+                'vendor',
+                'user',
+                'guest',
+                'bot',
+              ],
+              description: 'Nuevo rol para el usuario / New role for the user',
+            },
+          },
+        },
+
         AuthToken: {
           type: 'object',
           description: 'Respuesta de autenticación / Authentication response',
@@ -445,7 +502,7 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
         // ============================================================
         TreeNode: {
           type: 'object',
-          description: 'Nodo del árbol binario / Binary tree node',
+          description: 'Nodo del árbol Unilevel / Unilevel tree node',
           properties: {
             id: { type: 'string', format: 'uuid', description: 'ID del usuario / User ID' },
             email: {
@@ -456,21 +513,21 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
             referralCode: { type: 'string', description: 'Código de referido / Referral code' },
             position: {
               type: 'string',
-              enum: ['left', 'right'],
-              description: 'Posición en el árbol (pierna) / Position in tree (leg)',
+              nullable: true,
+              description: 'Posición (null en Unilevel) / Position (null in Unilevel)',
             },
             level: { type: 'integer', description: 'Nivel en el árbol / Level in tree' },
             stats: {
               type: 'object',
               description: 'Estadísticas del nodo / Node statistics',
               properties: {
-                leftCount: {
+                directChildren: {
                   type: 'integer',
-                  description: 'Cantidad de miembros en pierna izquierda / Members in left leg',
+                  description: 'Hijos directos del nodo / Direct children of node',
                 },
-                rightCount: {
+                totalDownline: {
                   type: 'integer',
-                  description: 'Cantidad de miembros en pierna derecha / Members in right leg',
+                  description: 'Total de descendientes / Total downline members',
                 },
               },
             },
@@ -484,21 +541,20 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
 
         TreeResponse: {
           type: 'object',
-          description: 'Respuesta del árbol con estadísticas / Tree response with stats',
+          description:
+            'Respuesta del árbol Unilevel con estadísticas / Unilevel tree response with stats',
           properties: {
             tree: { $ref: '#/components/schemas/TreeNode' },
             stats: {
               type: 'object',
               properties: {
-                leftCount: { type: 'integer' },
-                rightCount: { type: 'integer' },
-                leftVolume: {
+                directChildren: {
                   type: 'integer',
-                  description: 'Volumen pierna izquierda (count * 100) / Left leg volume',
+                  description: 'Hijos directos / Direct children',
                 },
-                rightVolume: {
+                totalDownline: {
                   type: 'integer',
-                  description: 'Volumen pierna derecha (count * 100) / Right leg volume',
+                  description: 'Total downline / Total downline members',
                 },
               },
             },
@@ -531,17 +587,17 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
 
         UserStats: {
           type: 'object',
-          description: 'Estadísticas del usuario en el árbol / User stats in tree (Phase 3)',
+          description:
+            'Estadísticas del usuario en el árbol Unilevel / User stats in Unilevel tree (Phase 3)',
           properties: {
-            leftCount: {
+            directChildren: {
               type: 'integer',
-              description: 'Miembros en pierna izquierda / Members in left leg',
+              description: 'Hijos directos del usuario / Direct children of user',
             },
-            rightCount: {
+            totalDownline: {
               type: 'integer',
-              description: 'Miembros en pierna derecha / Members in right leg',
+              description: 'Total downline / Total downline',
             },
-            totalDownline: { type: 'integer', description: 'Total downline / Total downline' },
           },
         },
 
@@ -553,7 +609,11 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
             id: { type: 'string', format: 'uuid' },
             email: { type: 'string', format: 'email' },
             referralCode: { type: 'string' },
-            position: { type: 'string', enum: ['left', 'right'] },
+            position: {
+              type: 'string',
+              nullable: true,
+              description: 'null en Unilevel / null in Unilevel',
+            },
             level: { type: 'integer' },
             status: { type: 'string', enum: ['active', 'inactive'] },
             stats: { $ref: '#/components/schemas/UserStats' },
@@ -571,13 +631,14 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
               type: 'integer',
               description: 'Total de referidos directos / Total direct referrals',
             },
-            leftCount: {
+            directChildren: {
               type: 'integer',
-              description: 'Miembros pierna izquierda / Left leg members',
+              description:
+                'Hijos directos en la red Unilevel / Direct children in Unilevel network',
             },
-            rightCount: {
+            totalDownline: {
               type: 'integer',
-              description: 'Miembros pierna derecha / Right leg members',
+              description: 'Total de miembros en la red / Total downline members',
             },
             totalEarnings: {
               type: 'number',
