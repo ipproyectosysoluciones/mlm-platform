@@ -36,6 +36,7 @@ import type { ApiResponse, UserAttributes } from '../types';
 import { AppError } from '../middleware/error.middleware';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware';
 import { asyncHandler } from '../middleware/asyncHandler';
+import { Lead } from '../models/Lead';
 
 // Re-export profile controller (maintains backward compatibility)
 export { me } from './auth/ProfileController';
@@ -61,6 +62,25 @@ export const registerValidation = [
 export const loginValidation = [
   body('email').isEmail().withMessage('Valid email is required').normalizeEmail(),
   body('password').notEmpty().withMessage('Password is required'),
+];
+
+/**
+ * Validation rules for guest registration
+ * Reglas de validación para registro de invitado
+ *
+ * @description Minimal registration: only name, email, and optional phone/sponsor.
+ *              No password required — guest accounts cannot log in until role is promoted.
+ *              Registro mínimo: solo nombre, email, y teléfono/sponsor opcionales.
+ *              No requiere contraseña — los guests no pueden iniciar sesión hasta que se promueva el rol.
+ */
+export const registerGuestValidation = [
+  body('email').isEmail().withMessage('Valid email is required').normalizeEmail(),
+  body('name')
+    .trim()
+    .isLength({ min: 2, max: 100 })
+    .withMessage('Name must be between 2 and 100 characters'),
+  body('phone').optional().isMobilePhone('any').withMessage('Invalid phone number'),
+  body('sponsor_code').optional().isString().withMessage('Sponsor code must be a string'),
 ];
 
 /**
@@ -215,5 +235,87 @@ export const login: RequestHandler = asyncHandler(
     };
 
     res.json(response);
+  }
+);
+
+/**
+ * Register a guest user (no password required)
+ * Registra un usuario invitado (sin contraseña)
+ *
+ * @description Creates a User with role='guest' and automatically creates a Lead in the CRM.
+ *              The guest cannot log in — they must be promoted (PATCH /admin/users/:id/role)
+ *              to user|vendor|advisor before they receive full access.
+ *
+ *              Crea un User con role='guest' y automáticamente crea un Lead en el CRM.
+ *              El guest no puede iniciar sesión — debe ser promovido (PATCH /admin/users/:id/role)
+ *              a user|vendor|advisor para recibir acceso completo.
+ *
+ * @param req - Express request with name, email, and optional phone/sponsor_code
+ * @param res - Express response with created user data (no token)
+ * @throws {AppError} 400 - If email already registered
+ *
+ * @example
+ * // English: Register a guest from landing page contact form
+ * POST /auth/register/guest
+ * { "name": "Juan Pérez", "email": "juan@example.com", "phone": "+54911234567" }
+ *
+ * // Español: Registrar un invitado desde formulario de contacto
+ * POST /auth/register/guest
+ * { "name": "Juan Pérez", "email": "juan@example.com", "phone": "+54911234567" }
+ */
+export const registerGuest: RequestHandler = asyncHandler(
+  async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+    const { name, email, phone, sponsor_code } = req.body;
+
+    // Check for existing user / Verificar usuario existente
+    const existingUser = await userService.findByEmail(email);
+    if (existingUser) {
+      throw new AppError(400, 'VALIDATION_ERROR', 'Email already registered');
+    }
+
+    // Guests get a random placeholder password — they cannot log in
+    // Los guests reciben una contraseña aleatoria — no pueden iniciar sesión
+    const placeholderPassword = `guest_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+    const passwordHash = await hashPassword(placeholderPassword);
+
+    const user = await userService.createUser({
+      email,
+      passwordHash,
+      sponsorCode: sponsor_code,
+      currency: 'USD',
+      role: 'guest',
+    });
+
+    // Auto-create a Lead in the CRM for this guest
+    // Crear automáticamente un Lead en el CRM para este invitado
+    await Lead.create({
+      userId: user.sponsorId || user.id, // Assign to sponsor if exists, otherwise self
+      contactName: name,
+      contactEmail: email,
+      contactPhone: phone || null,
+      status: 'new',
+      source: 'website',
+      value: 0,
+      currency: 'USD',
+      referredBy: user.sponsorId || null,
+      metadata: {
+        guestUserId: user.id,
+        registeredAt: new Date().toISOString(),
+      },
+    });
+
+    const response: ApiResponse<{ user: Partial<UserAttributes> }> = {
+      success: true,
+      data: {
+        user: {
+          id: user.id,
+          email: user.email,
+          referralCode: user.referralCode,
+          role: user.role,
+        },
+      },
+    };
+
+    res.status(201).json(response);
   }
 );

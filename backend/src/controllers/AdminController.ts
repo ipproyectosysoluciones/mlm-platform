@@ -18,4 +18,5 @@ export {
   getUserById,
   updateUserStatus,
   promoteToAdmin,
+  updateUserRole,
 } from './admin/UsersAdminController';
