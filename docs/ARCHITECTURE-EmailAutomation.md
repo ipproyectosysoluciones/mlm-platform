@@ -469,7 +469,7 @@ class BrevoEmailService {
         headers: { 'api-key': this.apiKey },
         body: JSON.stringify({
           to: [{ email: params.to }],
-          sender: { email: 'noreply@nexoreal.com', name: 'Nexo Real' }, // TODO: domain pending
+          sender: { email: 'noreply@nexoreal.xyz', name: 'Nexo Real' }, // TODO: domain pending
           subject: params.subject,
           htmlContent: params.htmlContent,
         }),

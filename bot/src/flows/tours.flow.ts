@@ -1,23 +1,6 @@
 import { addKeyword } from '@builderbot/bot';
 import { mlmApi, type BotTour } from '../services/mlm-api.service.js';
-
-/**
- * Keywords that trigger the tours flow in Spanish and English.
- * Palabras clave que activan el flujo de tours en español e inglés.
- */
-const TOURS_KEYWORDS: [string, ...string[]] = [
-  'tours',
-  'tours disponibles',
-  'ver tours',
-  'buscar tours',
-  'paquetes',
-  'paquetes turísticos',
-  'viajes',
-  'excursiones',
-  'travel packages',
-  'available tours',
-  'tour packages',
-];
+import { TOURS_KEYWORDS } from '../config/keywords.js';
 
 /**
  * Formats a list of tour packages into a human-readable WhatsApp message.
@@ -32,8 +15,8 @@ function formatToursMessage(lang: string, tours: BotTour[]): string {
 
   if (tours.length === 0) {
     return isEs
-      ? '✈️ No hay tours disponibles en este momento.\n\nVisitá la plataforma para más información:\n🌐 https://nexoreal.com/tours'
-      : '✈️ No tours available at the moment.\n\nVisit the platform for more info:\n🌐 https://nexoreal.com/tours';
+      ? '✈️ No hay tours disponibles en este momento.\n\nVisitá la plataforma para más información:\n🌐 https://nexoreal.xyz/tours'
+      : '✈️ No tours available at the moment.\n\nVisit the platform for more info:\n🌐 https://nexoreal.xyz/tours';
   }
 
   const header = isEs
@@ -62,8 +45,8 @@ function formatToursMessage(lang: string, tours: BotTour[]): string {
   });
 
   const footer = isEs
-    ? `\n\n🔍 Ver todos los tours:\n🌐 https://nexoreal.com/tours`
-    : `\n\n🔍 View all tours:\n🌐 https://nexoreal.com/tours`;
+    ? `\n\n🔍 Ver todos los tours:\n🌐 https://nexoreal.xyz/tours`
+    : `\n\n🔍 View all tours:\n🌐 https://nexoreal.xyz/tours`;
 
   return header + lines.join('\n\n') + footer;
 }

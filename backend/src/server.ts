@@ -8,106 +8,198 @@ import { initModels, User, Product, CommissionConfig, UserClosure } from './mode
 import { achievementService } from './services/AchievementService';
 import bcrypt from 'bcryptjs';
 
-// Auto-seed function
+/**
+ * Auto-seed de Nexo Real — corre solo si la DB está vacía.
+ * Nexo Real auto-seed — runs only when the DB is empty.
+ *
+ * Crea el árbol Unilevel mínimo con super_admin + admin + un asesor + un usuario,
+ * más los productos de servicios colombianos y las configs de comisión.
+ *
+ * Creates the minimal Unilevel tree with super_admin + admin + one advisor + one user,
+ * plus Colombian service products and commission configs.
+ */
 async function autoSeed(): Promise<void> {
   try {
-    // Check if users exist
+    // Verificar si ya hay datos / Check if data already exists
     const userCount = await User.count();
     if (userCount > 0) {
       console.log('✅ Database already seeded (' + userCount + ' users)');
       return;
     }
 
-    console.log('🌱 Database empty - running auto-seed...');
+    console.log('🌱 Database empty — running Nexo Real auto-seed...');
 
-    // Seed commission configs
-    const businessTypes = ['suscripcion', 'producto', 'membresia', 'servicio', 'otro'];
-    const levels = ['direct', 'level_1', 'level_2', 'level_3', 'level_4'];
-    const defaultRates: Record<string, Record<string, number>> = {
-      suscripcion: { direct: 0.2, level_1: 0.1, level_2: 0.08, level_3: 0.05, level_4: 0.03 },
-      producto: { direct: 0.15, level_1: 0.08, level_2: 0.05, level_3: 0.03, level_4: 0.02 },
-      membresia: { direct: 0.25, level_1: 0.12, level_2: 0.08, level_3: 0.05, level_4: 0.03 },
-      servicio: { direct: 0.18, level_1: 0.1, level_2: 0.06, level_3: 0.04, level_4: 0.02 },
-      otro: { direct: 0.1, level_1: 0.05, level_2: 0.03, level_3: 0.02, level_4: 0.01 },
-    };
+    // ── Comisiones / Commission configs ─────────────────────────────────────
+    const commissionData: Array<{
+      businessType: 'servicio' | 'otro';
+      customBusinessName: string;
+      rates: Record<'direct' | 'level_1' | 'level_2' | 'level_3' | 'level_4', number>;
+    }> = [
+      {
+        businessType: 'servicio',
+        customBusinessName: 'arrendamiento',
+        rates: { direct: 0.05, level_1: 0.03, level_2: 0.02, level_3: 0.01, level_4: 0.005 },
+      },
+      {
+        businessType: 'otro',
+        customBusinessName: 'venta_inmueble',
+        rates: { direct: 0.03, level_1: 0.015, level_2: 0.01, level_3: 0.005, level_4: 0.002 },
+      },
+      {
+        businessType: 'servicio',
+        customBusinessName: 'property_management',
+        rates: { direct: 0.08, level_1: 0.04, level_2: 0.025, level_3: 0.015, level_4: 0.005 },
+      },
+      {
+        businessType: 'otro',
+        customBusinessName: 'tour_turistico',
+        rates: { direct: 0.1, level_1: 0.05, level_2: 0.03, level_3: 0.015, level_4: 0.005 },
+      },
+      {
+        businessType: 'otro',
+        customBusinessName: 'hospitalidad',
+        rates: { direct: 0.07, level_1: 0.035, level_2: 0.02, level_3: 0.01, level_4: 0.005 },
+      },
+    ];
 
-    for (const bType of businessTypes) {
+    const levels = ['direct', 'level_1', 'level_2', 'level_3', 'level_4'] as const;
+
+    for (const cfg of commissionData) {
       for (const level of levels) {
         await CommissionConfig.create({
-          businessType: bType,
-          level: level,
-          percentage: defaultRates[bType]?.[level] || 0.05,
+          businessType: cfg.businessType,
+          customBusinessName: cfg.customBusinessName,
+          level,
+          percentage: cfg.rates[level],
           isActive: true,
         });
       }
     }
-    console.log('  ✅ Commission configs seeded');
+    console.log('  ✅ Commission configs seeded (5 types × 5 levels)');
 
-    // Seed products
-    const products = [
+    // ── Productos / Products ─────────────────────────────────────────────────
+    const products: Array<{
+      id: string;
+      name: string;
+      description: string;
+      platform: 'other';
+      price: number;
+      currency: string;
+      durationDays: number;
+      isActive: boolean;
+      type: 'service';
+      isDigital: boolean;
+      metadata: Record<string, unknown>;
+    }> = [
       {
         id: '00000000-0000-0000-0000-000000000101',
-        name: 'Netflix Premium',
+        name: 'Arriendo Apartamento — El Poblado, Medellín',
         description:
-          'Enjoy unlimited access to thousands of TV shows, movies, and original content. Stream in 4K Ultra HD.',
-        platform: 'netflix',
-        price: 22.99,
-        currency: 'USD',
+          'Gestión integral de arriendo para apartamento en El Poblado, Medellín. ' +
+          'Full rental management for apartment in El Poblado, Medellín.',
+        platform: 'other',
+        price: 3_500_000,
+        currency: 'COP',
         durationDays: 30,
         isActive: true,
+        type: 'service',
+        isDigital: true,
+        metadata: {
+          city: 'Medellín',
+          zone: 'El Poblado',
+          category: 'arrendamiento',
+          country: 'CO',
+        },
       },
       {
         id: '00000000-0000-0000-0000-000000000102',
-        name: 'Spotify Premium',
-        description: 'Ad-free music streaming with offline downloads and high-quality audio.',
-        platform: 'spotify',
-        price: 10.99,
-        currency: 'USD',
-        durationDays: 30,
+        name: 'Asesoría Venta Inmueble — Chapinero, Bogotá',
+        description:
+          'Asesoría completa para venta de inmueble en Chapinero, Bogotá. ' +
+          'Complete advisory for property sale in Chapinero, Bogotá.',
+        platform: 'other',
+        price: 8_000_000,
+        currency: 'COP',
+        durationDays: 90,
         isActive: true,
+        type: 'service',
+        isDigital: true,
+        metadata: { city: 'Bogotá', zone: 'Chapinero', category: 'venta_inmueble', country: 'CO' },
       },
       {
         id: '00000000-0000-0000-0000-000000000103',
-        name: 'Disney+ Bundle',
+        name: 'Property Management Premium — Laureles, Medellín',
         description:
-          'Get Disney+, Pixar, Marvel, Star Wars, and National Geographic. Family-friendly content.',
-        platform: 'disney_plus',
-        price: 14.99,
-        currency: 'USD',
+          'Administración total de propiedad en Laureles, Medellín. ' +
+          'Full property management in Laureles, Medellín.',
+        platform: 'other',
+        price: 1_800_000,
+        currency: 'COP',
         durationDays: 30,
         isActive: true,
+        type: 'service',
+        isDigital: true,
+        metadata: {
+          city: 'Medellín',
+          zone: 'Laureles',
+          category: 'property_management',
+          country: 'CO',
+        },
       },
       {
         id: '00000000-0000-0000-0000-000000000104',
-        name: 'HBO Max',
+        name: 'Tour Histórico — Ciudad Amurallada, Cartagena',
         description:
-          'Stream HBO originals, Warner Bros. movies, and DC Universe content. Ad-free streaming.',
-        platform: 'hbo_max',
-        price: 15.99,
-        currency: 'USD',
-        durationDays: 30,
+          'Tour guiado por la Ciudad Amurallada de Cartagena con guía bilingüe. ' +
+          "Guided tour through Cartagena's Walled City with bilingual guide.",
+        platform: 'other',
+        price: 180_000,
+        currency: 'COP',
+        durationDays: 1,
         isActive: true,
+        type: 'service',
+        isDigital: false,
+        metadata: {
+          city: 'Cartagena',
+          zone: 'Ciudad Amurallada',
+          category: 'tour_turistico',
+          country: 'CO',
+        },
       },
       {
         id: '00000000-0000-0000-0000-000000000105',
-        name: 'Amazon Prime',
-        description: 'Prime Video, free shipping, Prime Music, and exclusive deals.',
-        platform: 'amazon_prime',
-        price: 14.99,
-        currency: 'USD',
-        durationDays: 30,
+        name: 'Paquete Buceo — San Andrés Isla',
+        description:
+          'Paquete de buceo en San Andrés: 2 inmersiones y equipo completo incluidos. ' +
+          'Diving package in San Andrés: 2 guided dives and full equipment included.',
+        platform: 'other',
+        price: 420_000,
+        currency: 'COP',
+        durationDays: 3,
         isActive: true,
+        type: 'service',
+        isDigital: false,
+        metadata: {
+          city: 'San Andrés',
+          zone: 'La Piscinita',
+          category: 'tour_turistico',
+          country: 'CO',
+        },
       },
       {
         id: '00000000-0000-0000-0000-000000000106',
-        name: 'YouTube Premium',
+        name: 'Alojamiento Boutique — Getsemaní, Cartagena',
         description:
-          'Ad-free YouTube, YouTube Music Premium, background play, and offline downloads.',
-        platform: 'youtube_premium',
-        price: 13.99,
-        currency: 'USD',
-        durationDays: 30,
+          'Hospedaje en hotel boutique en Getsemaní. Desayuno y concierge incluidos. ' +
+          'Boutique hotel stay in Getsemaní. Breakfast and concierge included.',
+        platform: 'other',
+        price: 320_000,
+        currency: 'COP',
+        durationDays: 1,
         isActive: true,
+        type: 'service',
+        isDigital: false,
+        metadata: { city: 'Cartagena', zone: 'Getsemaní', category: 'hospitalidad', country: 'CO' },
       },
     ];
 
@@ -116,71 +208,97 @@ async function autoSeed(): Promise<void> {
       console.log('  ✅ Created product: ' + prod.name);
     }
 
-    // Seed admin user
-    const hashedPassword = await bcrypt.hash('admin123', 10);
-    const admin = await User.create({
-      id: '00000000-0000-0000-0000-000000000001',
-      email: 'admin@mlm.com',
-      passwordHash: hashedPassword,
-      referralCode: 'MLM-ADMIN-001',
-      level: 1,
-      status: 'active',
-      role: 'admin',
-      currency: 'USD',
-    });
-    await UserClosure.create({ ancestorId: admin.id, descendantId: admin.id, depth: 0 });
-    console.log('  ✅ Created admin: admin@mlm.com');
+    // ── Árbol Unilevel mínimo / Minimal Unilevel tree ────────────────────────
+    const hashedPassword = await bcrypt.hash('Nexo2024!', 10);
 
-    // Seed test users
-    const users = [
-      {
-        id: '00000000-0000-0000-0000-000000000002',
-        email: 'user1@mlm.com',
-        referralCode: 'MLM-001-002',
-        sponsorId: admin.id,
-        position: 'left',
-        level: 2,
-      },
-      {
-        id: '00000000-0000-0000-0000-000000000003',
-        email: 'user2@mlm.com',
-        referralCode: 'MLM-002-003',
-        sponsorId: admin.id,
-        position: 'right',
-        level: 2,
-      },
-    ];
-
-    for (const u of users) {
+    /** Crea usuario + entradas de closure / Creates user + closure entries */
+    async function createUserWithClosure(
+      id: string,
+      email: string,
+      referralCode: string,
+      role: string,
+      sponsorId: string | null,
+      level: number
+    ): Promise<User> {
       const user = await User.create({
-        id: u.id,
-        email: u.email,
+        id,
+        email,
         passwordHash: hashedPassword,
-        referralCode: u.referralCode,
-        sponsorId: u.sponsorId,
-        position: u.position,
-        level: u.level,
+        referralCode,
+        sponsorId,
+        position: null, // Unilevel — sin posición binaria / no binary position
+        level,
         status: 'active',
-        role: 'user',
-        currency: 'USD',
+        role,
+        currency: 'COP',
       });
       await UserClosure.create({ ancestorId: user.id, descendantId: user.id, depth: 0 });
-      // Add closure for sponsor
-      const sponsorClosures = await UserClosure.findAll({ where: { descendantId: u.sponsorId } });
-      for (const closure of sponsorClosures) {
-        await UserClosure.create({
-          ancestorId: closure.ancestorId,
-          descendantId: user.id,
-          depth: closure.depth + 1,
-        });
+      if (sponsorId) {
+        const sponsorClosures = await UserClosure.findAll({ where: { descendantId: sponsorId } });
+        for (const closure of sponsorClosures) {
+          await UserClosure.create({
+            ancestorId: closure.ancestorId,
+            descendantId: user.id,
+            depth: closure.depth + 1,
+          });
+        }
       }
-      console.log('  ✅ Created user: ' + u.email);
+      console.log('  ✅ Created [' + role + ']: ' + email);
+      return user;
     }
 
+    const superAdmin = await createUserWithClosure(
+      '00000000-0000-0000-0000-000000000001',
+      'superadmin@nexoreal.xyz',
+      'NXR-SA-001',
+      'super_admin',
+      null,
+      1
+    );
+
+    const admin = await createUserWithClosure(
+      '00000000-0000-0000-0000-000000000002',
+      'admin@nexoreal.xyz',
+      'NXR-AD-002',
+      'admin',
+      superAdmin.id,
+      2
+    );
+
+    const advisor = await createUserWithClosure(
+      '00000000-0000-0000-0000-000000000003',
+      'valentina.ospina@nexoreal.xyz',
+      'NXR-AV-003',
+      'advisor',
+      admin.id,
+      3
+    );
+
+    await createUserWithClosure(
+      '00000000-0000-0000-0000-000000000004',
+      'andres.martinez@nexoreal.xyz',
+      'NXR-US-004',
+      'user',
+      advisor.id,
+      4
+    );
+
+    await createUserWithClosure(
+      '00000000-0000-0000-0000-000000000005',
+      'invitado@nexoreal.xyz',
+      'NXR-GT-005',
+      'guest',
+      null,
+      1
+    );
+
     console.log('');
-    console.log('📋 Test Credentials:');
-    console.log('   Admin: admin@mlm.com / admin123');
-    console.log('   Users: user1@mlm.com, user2@mlm.com / admin123');
+    console.log('📋 Nexo Real — Test Credentials:');
+    console.log('   superadmin@nexoreal.xyz  /  Nexo2024!  (super_admin)');
+    console.log('   admin@nexoreal.xyz       /  Nexo2024!  (admin)');
+    console.log('   valentina.ospina@...     /  Nexo2024!  (advisor)');
+    console.log('   andres.martinez@...      /  Nexo2024!  (user)');
+    console.log('   invitado@nexoreal.xyz    /  Nexo2024!  (guest)');
     console.log('');
   } catch (error) {
     console.error('❌ Auto-seed failed:', error);
@@ -211,12 +329,12 @@ async function startServer(): Promise<void> {
     app.listen(config.port, () => {
       console.log(`
 ╔═══════════════════════════════════════════════════════════╗
-║                    MLM Backend Server                       ║
+║                 Nexo Real — Backend Server                 ║
 ╠═══════════════════════════════════════════════════════════╣
 ║  Environment: ${config.nodeEnv.padEnd(40)}║
 ║  Port:        ${config.port.toString().padEnd(40)}║
-║  Database:     ${config.db.name.padEnd(40)}║
-║  Frontend:     ${config.app.frontendUrl.padEnd(40)}║
+║  Database:    ${config.db.name.padEnd(41)}║
+║  Frontend:    ${config.app.frontendUrl.padEnd(41)}║
 ╚═══════════════════════════════════════════════════════════╝
       `);
     });

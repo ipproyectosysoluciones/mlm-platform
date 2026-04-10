@@ -1,0 +1,239 @@
+author: ""
+brandUpdateTime: ""
+campaignType: template
+fields: {}
+fieldsHistory: []
+firstLoadSocialIcons: false
+hideSwapBanner: false
+id: a1b2c3d4-0001-4fe4-b690-nexoreal00001
+name: "Handoff Lead — Bot WhatsApp"
+subject: '🤖 Nuevo lead del bot — {{ params.lead_name }}'
+ui:
+  showDeleteOption: false
+user-hash: ""
+version: 3.0.1
+body:
+  id: b1000001-db84-4b2d-b186-nexoreal00001
+  type: body
+  layout:
+    320px:
+      width: 320px
+    default:
+      direction: ltr
+      wrapper-width: 600px
+  content:
+    -
+      content-type: wrapper
+      customBlockId: null
+      id: c1000001-3b4c-40b2-912d-nexoreal00001
+      isCustomBlock: null
+      moduleName: null
+      sidebarSection: null
+      stylable: false
+      sync-module-id: null
+      thumbnail: null
+      title: Wrapper
+      type: rows
+      layout:
+        320px:
+          width: 320px
+        default:
+          align: center
+          valign: top
+      content:
+        -
+          align: top
+          customBlockId: null
+          dist: '12'
+          gutter: 0px
+          id: d1000001-f1bb-45dd-aa1b-nexoreal00001
+          isCustomBlock: null
+          moduleName: grid-row12
+          sidebarSection: null
+          stylable: false
+          sync-module-id: null
+          thumbnail: /assets/img/editor/grid_12.svg
+          title: section
+          type: grid-row
+          layout:
+            320px:
+              display: rows
+              padding-left: 0px
+              padding-right: 0px
+              width: 100%
+            default:
+              align: center
+              background-color: '#f4f6f8'
+              padding-bottom: 0px
+              padding-left: 0px
+              padding-right: 0px
+              padding-top: 0px
+              valign: top
+              width: 100%
+          content:
+            -
+              customBlockId: null
+              id: e1000001-562d-4abb-887d-nexoreal00001
+              isCustomBlock: null
+              isEmpty: false
+              moduleName: null
+              sidebarSection: null
+              stylable: false
+              sync-module-id: null
+              thumbnail: null
+              title: grid-column
+              type: grid-column
+              layout:
+                320px: {}
+                default:
+                  padding-left: 0px
+                  padding-right: 0px
+                  valign: top
+              content:
+                -
+                  customBlockId: null
+                  id: f1000001-159b-41bd-9953-nexoreal00001
+                  isCustomBlock: null
+                  moduleName: null
+                  sidebarSection: null
+                  stylable: false
+                  sync-module-id: null
+                  thumbnail: null
+                  title: 'HTML — Handoff Lead'
+                  type: html
+                  layout:
+                    320px:
+                      padding-left: 0px
+                      padding-right: 0px
+                      width: 100%
+                    default:
+                      padding-left: 0px
+                      padding-right: 0px
+                      width: 100%
+                  content: |
+                    <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f6f8;padding:40px 0;">
+                      <tr>
+                        <td align="center">
+                          <table width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+                            <!-- HEADER -->
+                            <tr>
+                              <td style="background-color:#1a1a2e;padding:32px 40px;text-align:center;">
+                                <p style="margin:0;font-size:22px;font-weight:700;color:#ffffff;letter-spacing:1px;">NEXO REAL</p>
+                                <p style="margin:6px 0 0;font-size:13px;color:#a0aec0;letter-spacing:2px;text-transform:uppercase;">Plataforma Inmobiliaria</p>
+                              </td>
+                            </tr>
+                            <!-- ALERT BANNER -->
+                            <tr>
+                              <td style="background-color:#e53e3e;padding:14px 40px;text-align:center;">
+                                <p style="margin:0;font-size:14px;font-weight:600;color:#ffffff;letter-spacing:0.5px;">
+                                  🔔 NUEVO LEAD REQUIERE ATENCIÓN HUMANA
+                                </p>
+                              </td>
+                            </tr>
+                            <!-- BODY -->
+                            <tr>
+                              <td style="padding:40px 40px 24px;">
+                                <p style="margin:0 0 24px;font-size:15px;color:#4a5568;line-height:1.6;">Hola equipo,</p>
+                                <p style="margin:0 0 32px;font-size:15px;color:#4a5568;line-height:1.6;">El bot de WhatsApp transfirió un lead que requiere atención personalizada. A continuación los datos capturados:</p>
+                                <!-- LEAD DATA CARD -->
+                                <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f7fafc;border:1px solid #e2e8f0;border-radius:6px;margin-bottom:32px;">
+                                  <tr>
+                                    <td style="padding:20px 24px;border-bottom:1px solid #e2e8f0;">
+                                      <p style="margin:0 0 4px;font-size:11px;font-weight:600;color:#718096;text-transform:uppercase;letter-spacing:1px;">Nombre</p>
+                                      <p style="margin:0;font-size:16px;font-weight:600;color:#1a202c;">{{ params.lead_name }}</p>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td style="padding:20px 24px;border-bottom:1px solid #e2e8f0;">
+                                      <p style="margin:0 0 4px;font-size:11px;font-weight:600;color:#718096;text-transform:uppercase;letter-spacing:1px;">Teléfono WhatsApp</p>
+                                      <p style="margin:0;font-size:16px;font-weight:600;color:#1a202c;">
+                                        <a href="https://wa.me/{{ params.lead_phone }}" style="color:#25D366;text-decoration:none;">+{{ params.lead_phone }}</a>
+                                      </p>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td style="padding:20px 24px;border-bottom:1px solid #e2e8f0;">
+                                      <p style="margin:0 0 8px;font-size:11px;font-weight:600;color:#718096;text-transform:uppercase;letter-spacing:1px;">Resumen de la conversación</p>
+                                      <p style="margin:0;font-size:14px;color:#2d3748;line-height:1.6;font-style:italic;">"{{ params.lead_summary }}"</p>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td style="padding:20px 24px;border-bottom:1px solid #e2e8f0;">
+                                      <p style="margin:0 0 4px;font-size:11px;font-weight:600;color:#718096;text-transform:uppercase;letter-spacing:1px;">Agente IA que atendió</p>
+                                      <p style="margin:0;font-size:14px;color:#2d3748;">{{ params.bot_agent }}</p>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td style="padding:20px 24px;">
+                                      <p style="margin:0 0 4px;font-size:11px;font-weight:600;color:#718096;text-transform:uppercase;letter-spacing:1px;">Fecha y hora del handoff</p>
+                                      <p style="margin:0;font-size:14px;color:#2d3748;">{{ params.handoff_time }}</p>
+                                    </td>
+                                  </tr>
+                                </table>
+                                <!-- CTA BUTTON -->
+                                <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
+                                  <tr>
+                                    <td align="center">
+                                      <a href="{{ params.notion_url }}" style="display:inline-block;background-color:#1a1a2e;color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;padding:14px 32px;border-radius:6px;letter-spacing:0.5px;">Ver Lead en Notion →</a>
+                                    </td>
+                                  </tr>
+                                </table>
+                                <!-- QUICK ACTIONS -->
+                                <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
+                                  <tr>
+                                    <td align="center">
+                                      <a href="https://wa.me/{{ params.lead_phone }}" style="display:inline-block;background-color:#25D366;color:#ffffff;font-size:13px;font-weight:600;text-decoration:none;padding:10px 24px;border-radius:6px;margin:0 8px;">💬 Contactar por WhatsApp</a>
+                                    </td>
+                                  </tr>
+                                </table>
+                                <p style="margin:0;font-size:13px;color:#718096;line-height:1.6;padding-top:16px;border-top:1px solid #e2e8f0;">
+                                  Este email fue generado automáticamente por el bot de WhatsApp de Nexo Real.<br/>
+                                  Por favor contactá al lead dentro de las próximas <strong>2 horas</strong> para maximizar la conversión.
+                                </p>
+                              </td>
+                            </tr>
+                            <!-- FOOTER -->
+                            <tr>
+                              <td style="background-color:#f7fafc;padding:24px 40px;text-align:center;border-top:1px solid #e2e8f0;">
+                                <p style="margin:0;font-size:12px;color:#a0aec0;">© 2026 Nexo Real · info@nexoreal.xyz</p>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+media:
+  320px:
+    max-width: 600
+    min-width: 0
+styles:
+  default:
+    properties:
+      color: '#414141'
+      font-family: Arial
+      font-size: 16px
+      line-height: '1.5'
+    title: Paragraph
+  default-button:
+    properties:
+      background-color: '#1a1a2e'
+      border-radius: 4px
+      border-width: 0px
+      color: '#fff'
+      font-family: Arial
+      font-size: 14px
+      remove-vml-button: optional
+      width: 50%
+    title: Button
+  default-heading1:
+    properties:
+      color: '#1a202c'
+      font-family: Arial
+      font-size: 36px
+      font-weight: '700'
+    title: 'Heading 1'
+  default-link:
+    properties:
+      color: '#1a1a2e'
+      text-decoration: underline
+    title: Link

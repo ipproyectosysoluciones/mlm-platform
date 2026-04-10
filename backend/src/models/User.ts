@@ -22,7 +22,8 @@
 
 import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../config/database';
-import type { UserAttributes } from '../types';
+import type { UserAttributes, UserRole } from '../types';
+import { USER_ROLES } from '../types';
 
 type UserCreation = Optional<UserAttributes, 'id' | 'createdAt' | 'updatedAt'>;
 
@@ -35,7 +36,7 @@ export class User extends Model<UserAttributes, UserCreation> {
   declare position: 'left' | 'right' | null;
   declare level: number;
   declare status: 'active' | 'inactive';
-  declare role: 'admin' | 'user' | 'vendor';
+  declare role: UserRole;
   declare currency: 'USD' | 'COP' | 'MXN';
   // Notification preferences
   declare emailNotifications: boolean;
@@ -102,7 +103,7 @@ User.init(
       defaultValue: 'USD',
     },
     role: {
-      type: DataTypes.ENUM('admin', 'user', 'vendor'),
+      type: DataTypes.ENUM(...(USER_ROLES as unknown as [string, ...string[]])),
       defaultValue: 'user',
     },
     // Notification preferences / Preferencias de notificación

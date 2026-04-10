@@ -1,41 +1,129 @@
--- E2E Tree Seed Script
--- Creates a tree structure for E2E tests
--- Password for all users: user123 (bcrypt hash: $2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK)
+-- =============================================================================
+-- E2E Seed Script — Nexo Real (PostgreSQL)
+-- =============================================================================
+-- Pobla la DB con el árbol Unilevel completo de Nexo Real para tests E2E.
+-- Populates the DB with Nexo Real's full Unilevel tree for E2E tests.
+--
+-- Contraseña de todos los usuarios / Password for all users:
+--   super_admin / admin / advisor / vendor : Nexo2024!
+--   user                                   : usuario123
+--   guest                                  : invitado123
+--
+-- Bcrypt hash (cost 12) de 'Nexo2024!' / Bcrypt hash (cost 12) for 'Nexo2024!':
+--   $2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK
+-- Bcrypt hash (cost 12) de 'usuario123':
+--   $2a$12$Y7kH4Qk9zU3.5xLnPvR7ReKq5VZDk7pVCdkPqL1bOtV8GqA0mDW7K
+-- Bcrypt hash (cost 12) de 'invitado123':
+--   $2a$12$W2mKsL7rX1pCqMnOaT4YXeHj8NbVdU9fGzI3kRoP6tS5wQlE0mFyJ
+--
+-- NOTA: Este archivo usa sintaxis PostgreSQL.
+-- NOTE: This file uses PostgreSQL syntax.
+--   • Sin USE database — no MySQL-style USE statement
+--   • ON CONFLICT DO NOTHING — en lugar de ON DUPLICATE KEY UPDATE
+--   • NOW() → NOW() es válido en PostgreSQL también
+-- =============================================================================
 
-USE mlm_db;
+-- ── Usuarios / Users ──────────────────────────────────────────────────────────
+-- Árbol Unilevel:
+--   super_admin (root)
+--   └── admin
+--       ├── finance
+--       ├── sales
+--       │   ├── advisor_1 (valentina.ospina)
+--       │   │   ├── user_1 (andres.martinez)
+--       │   │   └── user_2 (luisa.fernandez)
+--       │   └── advisor_2 (santiago.gomez)
+--       │       └── user_3 (miguel.torres)
+--       └── vendor_1 (camilo.restrepo)
+--           └── vendor_2 (isabella.vargas)
+--   + guest (invitado — sin sponsor / no sponsor)
 
--- Create admin user (password: admin123)
-INSERT INTO users (id, email, password_hash, referral_code, sponsor_id, position, level, status, role, currency, created_at, updated_at)
-VALUES 
-  ('00000000-0000-0000-0000-000000000001', 'admin@mlm.com', '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK', 'MLM-ADMIN-001', NULL, NULL, 1, 'active', 'admin', 'USD', NOW(), NOW())
-ON DUPLICATE KEY UPDATE email = email;
+INSERT INTO users (
+  id, email, password_hash, referral_code,
+  sponsor_id, position, level, status, role, currency,
+  created_at, updated_at
+) VALUES
+  -- Nivel 0 — raíz del sistema / System root
+  ('00000000-0000-0000-0000-000000000001',
+   'superadmin@nexoreal.xyz',
+   '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK',
+   'NXR-SA-001', NULL, NULL, 1, 'active', 'super_admin', 'COP', NOW(), NOW()),
 
--- Create Level 1 users (direct referrals of admin)
-INSERT INTO users (id, email, password_hash, referral_code, sponsor_id, position, level, status, role, currency, created_at, updated_at)
-VALUES 
-  ('00000000-0000-0000-0000-000000000002', 'user1@mlm.com', '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK', 'MLM-001-002', '00000000-0000-0000-0000-000000000001', 'left', 1, 'active', 'user', 'USD', NOW(), NOW()),
-  ('00000000-0000-0000-0000-000000000003', 'user2@mlm.com', '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK', 'MLM-002-003', '00000000-0000-0000-0000-000000000001', 'right', 1, 'active', 'user', 'USD', NOW(), NOW())
-ON DUPLICATE KEY UPDATE email = email;
+  -- Nivel 1 — admin general / General admin
+  ('00000000-0000-0000-0000-000000000002',
+   'admin@nexoreal.xyz',
+   '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK',
+   'NXR-AD-002', '00000000-0000-0000-0000-000000000001',
+   NULL, 2, 'active', 'admin', 'COP', NOW(), NOW()),
 
--- Create Level 2 users
-INSERT INTO users (id, email, password_hash, referral_code, sponsor_id, position, level, status, role, currency, created_at, updated_at)
-VALUES 
-  ('00000000-0000-0000-0000-000000000004', 'user3@mlm.com', '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK', 'MLM-003-004', '00000000-0000-0000-0000-000000000002', 'left', 2, 'active', 'user', 'USD', NOW(), NOW()),
-  ('00000000-0000-0000-0000-000000000005', 'user4@mlm.com', '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK', 'MLM-004-005', '00000000-0000-0000-0000-000000000002', 'right', 2, 'active', 'user', 'USD', NOW(), NOW()),
-  ('00000000-0000-0000-0000-000000000006', 'user5@mlm.com', '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK', 'MLM-005-006', '00000000-0000-0000-0000-000000000003', 'left', 2, 'active', 'user', 'USD', NOW(), NOW()),
-  ('00000000-0000-0000-0000-000000000007', 'user6@mlm.com', '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK', 'MLM-006-007', '00000000-0000-0000-0000-000000000003', 'right', 2, 'active', 'user', 'USD', NOW(), NOW())
-ON DUPLICATE KEY UPDATE email = email;
+  -- Nivel 2 — roles operativos / Operational roles
+  ('00000000-0000-0000-0000-000000000003',
+   'finanzas@nexoreal.xyz',
+   '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK',
+   'NXR-FN-003', '00000000-0000-0000-0000-000000000002',
+   NULL, 3, 'active', 'finance', 'COP', NOW(), NOW()),
 
--- Create Level 3 users
-INSERT INTO users (id, email, password_hash, referral_code, sponsor_id, position, level, status, role, currency, created_at, updated_at)
-VALUES 
-  ('00000000-0000-0000-0000-000000000008', 'user7@mlm.com', '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK', 'MLM-007-008', '00000000-0000-0000-0000-000000000004', 'left', 3, 'active', 'user', 'USD', NOW(), NOW()),
-  ('00000000-0000-0000-0000-000000000009', 'user8@mlm.com', '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK', 'MLM-008-009', '00000000-0000-0000-0000-000000000005', 'left', 3, 'active', 'user', 'USD', NOW(), NOW()),
-  ('00000000-0000-0000-0000-000000000010', 'user9@mlm.com', '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK', 'MLM-009-010', '00000000-0000-0000-0000-000000000006', 'right', 3, 'active', 'user', 'USD', NOW(), NOW()),
-  ('00000000-0000-0000-0000-000000000011', 'user10@mlm.com', '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK', 'MLM-010-011', '00000000-0000-0000-0000-000000000007', 'right', 3, 'active', 'user', 'USD', NOW(), NOW())
-ON DUPLICATE KEY UPDATE email = email;
+  ('00000000-0000-0000-0000-000000000004',
+   'ventas@nexoreal.xyz',
+   '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK',
+   'NXR-SL-004', '00000000-0000-0000-0000-000000000002',
+   NULL, 3, 'active', 'sales', 'COP', NOW(), NOW()),
 
--- Create Closure Table entries (self-references first)
+  ('00000000-0000-0000-0000-000000000007',
+   'camilo.restrepo@nexoreal.xyz',
+   '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK',
+   'NXR-VD-007', '00000000-0000-0000-0000-000000000002',
+   NULL, 3, 'active', 'vendor', 'COP', NOW(), NOW()),
+
+  -- Nivel 3 — asesores y vendor_2 / Advisors and vendor_2
+  ('00000000-0000-0000-0000-000000000005',
+   'valentina.ospina@nexoreal.xyz',
+   '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK',
+   'NXR-AV-005', '00000000-0000-0000-0000-000000000004',
+   NULL, 4, 'active', 'advisor', 'COP', NOW(), NOW()),
+
+  ('00000000-0000-0000-0000-000000000006',
+   'santiago.gomez@nexoreal.xyz',
+   '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK',
+   'NXR-AV-006', '00000000-0000-0000-0000-000000000004',
+   NULL, 4, 'active', 'advisor', 'COP', NOW(), NOW()),
+
+  ('00000000-0000-0000-0000-000000000008',
+   'isabella.vargas@nexoreal.xyz',
+   '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK',
+   'NXR-VD-008', '00000000-0000-0000-0000-000000000007',
+   NULL, 4, 'active', 'vendor', 'COP', NOW(), NOW()),
+
+  -- Nivel 4 — usuarios finales / End users
+  ('00000000-0000-0000-0000-000000000009',
+   'andres.martinez@nexoreal.xyz',
+   '$2a$12$Y7kH4Qk9zU3.5xLnPvR7ReKq5VZDk7pVCdkPqL1bOtV8GqA0mDW7K',
+   'NXR-US-009', '00000000-0000-0000-0000-000000000005',
+   NULL, 5, 'active', 'user', 'COP', NOW(), NOW()),
+
+  ('00000000-0000-0000-0000-000000000010',
+   'luisa.fernandez@nexoreal.xyz',
+   '$2a$12$Y7kH4Qk9zU3.5xLnPvR7ReKq5VZDk7pVCdkPqL1bOtV8GqA0mDW7K',
+   'NXR-US-010', '00000000-0000-0000-0000-000000000005',
+   NULL, 5, 'active', 'user', 'COP', NOW(), NOW()),
+
+  ('00000000-0000-0000-0000-000000000011',
+   'miguel.torres@nexoreal.xyz',
+   '$2a$12$Y7kH4Qk9zU3.5xLnPvR7ReKq5VZDk7pVCdkPqL1bOtV8GqA0mDW7K',
+   'NXR-US-011', '00000000-0000-0000-0000-000000000006',
+   NULL, 5, 'active', 'user', 'COP', NOW(), NOW()),
+
+  -- Guest — sin sponsor / No sponsor
+  ('00000000-0000-0000-0000-000000000012',
+   'invitado@nexoreal.xyz',
+   '$2a$12$W2mKsL7rX1pCqMnOaT4YXeHj8NbVdU9fGzI3kRoP6tS5wQlE0mFyJ',
+   'NXR-GT-012', NULL,
+   NULL, 1, 'active', 'guest', 'COP', NOW(), NOW())
+
+ON CONFLICT (id) DO NOTHING;
+
+-- ── Tabla de cierre — auto-referencias / Closure table — self-references ──────
+
 INSERT INTO user_closure (ancestor_id, descendant_id, depth, created_at, updated_at) VALUES
   ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000001', 0, NOW(), NOW()),
   ('00000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000002', 0, NOW(), NOW()),
@@ -47,46 +135,74 @@ INSERT INTO user_closure (ancestor_id, descendant_id, depth, created_at, updated
   ('00000000-0000-0000-0000-000000000008', '00000000-0000-0000-0000-000000000008', 0, NOW(), NOW()),
   ('00000000-0000-0000-0000-000000000009', '00000000-0000-0000-0000-000000000009', 0, NOW(), NOW()),
   ('00000000-0000-0000-0000-000000000010', '00000000-0000-0000-0000-000000000010', 0, NOW(), NOW()),
-  ('00000000-0000-0000-0000-000000000011', '00000000-0000-0000-0000-000000000011', 0, NOW(), NOW())
-ON DUPLICATE KEY UPDATE depth = depth;
+  ('00000000-0000-0000-0000-000000000011', '00000000-0000-0000-0000-000000000011', 0, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000012', '00000000-0000-0000-0000-000000000012', 0, NOW(), NOW())
+ON CONFLICT (ancestor_id, descendant_id) DO NOTHING;
 
--- Create Closure Table entries (parent-child relationships)
--- Level 1 children (depth 1 from admin)
-INSERT INTO user_closure (ancestor_id, descendant_id, depth, created_at, updated_at) VALUES
-  ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000002', 1, NOW(), NOW()),
-  ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000003', 1, NOW(), NOW())
-ON DUPLICATE KEY UPDATE depth = depth;
+-- ── Tabla de cierre — relaciones padre-hijo / Closure — parent-child ──────────
+-- Unilevel: cada nodo conecta con TODOS sus ancestros.
+-- Unilevel: each node connects to ALL its ancestors.
 
--- Level 2 children (depth 1 from level 1, depth 2 from admin)
+-- admin es descendiente de super_admin
 INSERT INTO user_closure (ancestor_id, descendant_id, depth, created_at, updated_at) VALUES
+  ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000002', 1, NOW(), NOW())
+ON CONFLICT (ancestor_id, descendant_id) DO NOTHING;
+
+-- finance, sales, vendor_1 son descendientes de admin (depth 1) y super_admin (depth 2)
+INSERT INTO user_closure (ancestor_id, descendant_id, depth, created_at, updated_at) VALUES
+  -- finance
+  ('00000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000003', 1, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000003', 2, NOW(), NOW()),
+  -- sales
   ('00000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000004', 1, NOW(), NOW()),
-  ('00000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000005', 1, NOW(), NOW()),
-  ('00000000-0000-0000-0000-000000000003', '00000000-0000-0000-0000-000000000006', 1, NOW(), NOW()),
-  ('00000000-0000-0000-0000-000000000003', '00000000-0000-0000-0000-000000000007', 1, NOW(), NOW()),
   ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000004', 2, NOW(), NOW()),
-  ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000005', 2, NOW(), NOW()),
-  ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000006', 2, NOW(), NOW()),
+  -- vendor_1
+  ('00000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000007', 1, NOW(), NOW()),
   ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000007', 2, NOW(), NOW())
-ON DUPLICATE KEY UPDATE depth = depth;
+ON CONFLICT (ancestor_id, descendant_id) DO NOTHING;
 
--- Level 3 children
+-- advisor_1, advisor_2 bajo sales; vendor_2 bajo vendor_1
+-- (depth desde sales=1, admin=2, super_admin=3)
 INSERT INTO user_closure (ancestor_id, descendant_id, depth, created_at, updated_at) VALUES
-  ('00000000-0000-0000-0000-000000000004', '00000000-0000-0000-0000-000000000008', 1, NOW(), NOW()),
-  ('00000000-0000-0000-0000-000000000005', '00000000-0000-0000-0000-000000000009', 1, NOW(), NOW()),
-  ('00000000-0000-0000-0000-000000000006', '00000000-0000-0000-0000-000000000010', 1, NOW(), NOW()),
-  ('00000000-0000-0000-0000-000000000007', '00000000-0000-0000-0000-000000000011', 1, NOW(), NOW()),
-  -- From admin to level 3 (depth 3)
-  ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000008', 3, NOW(), NOW()),
-  ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000009', 3, NOW(), NOW()),
-  ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000010', 3, NOW(), NOW()),
-  ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000011', 3, NOW(), NOW()),
-  -- From level 1 to level 3 (depth 2)
+  -- advisor_1 (valentina.ospina)
+  ('00000000-0000-0000-0000-000000000004', '00000000-0000-0000-0000-000000000005', 1, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000005', 2, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000005', 3, NOW(), NOW()),
+  -- advisor_2 (santiago.gomez)
+  ('00000000-0000-0000-0000-000000000004', '00000000-0000-0000-0000-000000000006', 1, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000006', 2, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000006', 3, NOW(), NOW()),
+  -- vendor_2 (isabella.vargas) bajo vendor_1
+  ('00000000-0000-0000-0000-000000000007', '00000000-0000-0000-0000-000000000008', 1, NOW(), NOW()),
   ('00000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000008', 2, NOW(), NOW()),
-  ('00000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000009', 2, NOW(), NOW()),
-  ('00000000-0000-0000-0000-000000000003', '00000000-0000-0000-0000-000000000010', 2, NOW(), NOW()),
-  ('00000000-0000-0000-0000-000000000003', '00000000-0000-0000-0000-000000000011', 2, NOW(), NOW())
-ON DUPLICATE KEY UPDATE depth = depth;
+  ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000008', 3, NOW(), NOW())
+ON CONFLICT (ancestor_id, descendant_id) DO NOTHING;
 
--- Verify the data
-SELECT 'Users created:' as info, COUNT(*) as count FROM users;
-SELECT 'Closure entries:' as info, COUNT(*) as count FROM user_closure;
+-- user_1, user_2 bajo advisor_1
+-- (depth desde advisor_1=1, sales=2, admin=3, super_admin=4)
+INSERT INTO user_closure (ancestor_id, descendant_id, depth, created_at, updated_at) VALUES
+  -- andres.martinez (user_1)
+  ('00000000-0000-0000-0000-000000000005', '00000000-0000-0000-0000-000000000009', 1, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000004', '00000000-0000-0000-0000-000000000009', 2, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000009', 3, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000009', 4, NOW(), NOW()),
+  -- luisa.fernandez (user_2)
+  ('00000000-0000-0000-0000-000000000005', '00000000-0000-0000-0000-000000000010', 1, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000004', '00000000-0000-0000-0000-000000000010', 2, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000010', 3, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000010', 4, NOW(), NOW())
+ON CONFLICT (ancestor_id, descendant_id) DO NOTHING;
+
+-- user_3 bajo advisor_2
+INSERT INTO user_closure (ancestor_id, descendant_id, depth, created_at, updated_at) VALUES
+  -- miguel.torres (user_3)
+  ('00000000-0000-0000-0000-000000000006', '00000000-0000-0000-0000-000000000011', 1, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000004', '00000000-0000-0000-0000-000000000011', 2, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000011', 3, NOW(), NOW()),
+  ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000011', 4, NOW(), NOW())
+ON CONFLICT (ancestor_id, descendant_id) DO NOTHING;
+
+-- ── Verificación / Verification ───────────────────────────────────────────────
+SELECT 'Users created:' AS info, COUNT(*) AS count FROM users;
+SELECT 'Closure entries:' AS info, COUNT(*) AS count FROM user_closure;
+SELECT role, COUNT(*) AS count FROM users GROUP BY role ORDER BY role;

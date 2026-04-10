@@ -1,0 +1,164 @@
+{
+  "name": "Nexo Real — Schedule Visit (Google Calendar)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "schedule-visit",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook — Receive Visit Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "webhookId": "schedule-visit-nexo-real"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Validate required fields\nconst body = $input.first().json.body || $input.first().json;\nconst required = ['phone', 'name', 'preferredDate', 'propertyId'];\n\nfor (const field of required) {\n  if (!body[field]) {\n    throw new Error(`Missing required field: ${field}`);\n  }\n}\n\n// Parse preferredDate (ISO 8601 expected)\nconst startDate = new Date(body.preferredDate);\nif (isNaN(startDate.getTime())) {\n  throw new Error('Invalid preferredDate format. Expected ISO 8601.');\n}\n\n// End time = start + 1 hour\nconst endDate = new Date(startDate.getTime() + 60 * 60 * 1000);\n\nreturn [\n  {\n    json: {\n      phone: body.phone,\n      name: body.name,\n      propertyId: body.propertyId,\n      agentName: body.agentName || 'Equipo Nexo Real',\n      summary: `Visita Nexo Real — ${body.name} | Prop. ${body.propertyId}`,\n      description: `Prospecto: ${body.name}\\nTeléfono: ${body.phone}\\nPropiedad: ${body.propertyId}\\nAgendado vía bot WhatsApp`,\n      startDateTime: startDate.toISOString(),\n      endDateTime: endDate.toISOString()\n    }\n  }\n];"
+      },
+      "id": "validate-transform",
+      "name": "Validate & Transform Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "resource": "event",
+        "operation": "create",
+        "calendarId": "9b50ed17bc52a4392a7fea2a50ab29ad2e8810379b606e114eb24fde1a53fe32@group.calendar.google.com",
+        "summary": "={{ $json.summary }}",
+        "description": "={{ $json.description }}",
+        "start": "={{ $json.startDateTime }}",
+        "end": "={{ $json.endDateTime }}",
+        "additionalFields": {
+          "attendees": [
+            {
+              "email": "info@nexoreal.xyz"
+            }
+          ],
+          "sendUpdates": "all",
+          "colorId": "2"
+        }
+      },
+      "id": "google-calendar-create",
+      "name": "Google Calendar — Create Event",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.1,
+      "position": [680, 300],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "name": "Google Calendar — Nexo Real"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"eventId\": \"{{ $json.id }}\",\n  \"calendarLink\": \"{{ $json.htmlLink }}\",\n  \"scheduledAt\": \"{{ $node['Validate & Transform Input'].json.startDateTime }}\"\n}"
+      },
+      "id": "respond-success",
+      "name": "Respond — Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [900, 220]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseCode": 400,
+        "responseBody": "={\n  \"success\": false,\n  \"error\": \"{{ $json.message }}\"\n}"
+      },
+      "id": "respond-error",
+      "name": "Respond — Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [900, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.id }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "id": "check-event-created",
+      "name": "Event Created?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [900, 300]
+    }
+  ],
+  "connections": {
+    "Webhook — Receive Visit Request": {
+      "main": [
+        [
+          {
+            "node": "Validate & Transform Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate & Transform Input": {
+      "main": [
+        [
+          {
+            "node": "Google Calendar — Create Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Calendar — Create Event": {
+      "main": [
+        [
+          {
+            "node": "Event Created?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Event Created?": {
+      "main": [
+        [
+          {
+            "node": "Respond — Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond — Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "staticData": null,
+  "tags": ["nexo-real", "bot", "calendar", "sprint8"],
+  "triggerCount": 0,
+  "updatedAt": "2026-04-09T00:00:00.000Z",
+  "versionId": "1.0.0"
+}

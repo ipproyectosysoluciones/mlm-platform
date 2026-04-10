@@ -37,8 +37,7 @@ docker build -t ${FRONTEND_IMAGE} -f frontend/Dockerfile .
 rm -f backend/pnpm-lock.yaml
 
 # Load env and start all services
-export $(cat .env.production | grep -v '^#' | grep -v '^$' | xargs)
-docker compose -f docker-compose.prod.yml up -d
+docker compose -f docker-compose.prod.yml --env-file .env.production up -d
 
 # Wait for services to initialize
 echo "⏳ Waiting for services to start..."

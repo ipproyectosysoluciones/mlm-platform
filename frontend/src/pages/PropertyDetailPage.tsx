@@ -30,6 +30,7 @@ import { propertyService } from '../services/propertyService';
 import type { Property, PropertyType } from '../services/propertyService';
 import { useReservationStore } from '../stores/reservationStore';
 import { cn } from '../lib/utils';
+import { APP_URL, APP_OG_DEFAULT_IMAGE } from '../config/app.config';
 
 // ============================================
 // Constants / Constantes
@@ -247,10 +248,10 @@ export default function PropertyDetailPage() {
     .trim();
 
   /** Primary OG image (first property image or fallback) */
-  const ogImage = property.images?.[0] ?? 'https://nexoreal.com/og-default.jpg';
+  const ogImage = property.images?.[0] ?? APP_OG_DEFAULT_IMAGE;
 
   /** Canonical URL for this property */
-  const canonicalUrl = `https://nexoreal.com/propiedades/${property.id}`;
+  const canonicalUrl = `${APP_URL}/propiedades/${property.id}`;
 
   /**
    * JSON-LD RealEstateListing schema markup.

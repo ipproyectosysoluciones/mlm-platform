@@ -7,13 +7,17 @@ import {
   updateUserStatus,
   getCommissionsReport,
   promoteToAdmin,
+  updateUserRole,
 } from '../controllers/AdminController';
 import { asyncHandler } from '../middleware/asyncHandler';
+import { body } from 'express-validator';
+import { validate } from '../middleware/validate.middleware';
+import { USER_ROLES, ADMIN_ROLES } from '../types';
 
 const router: ExpressRouter = Router();
 
 router.use(authenticate);
-router.use(requireRole('admin'));
+router.use(requireRole(...(ADMIN_ROLES as import('../types').UserRole[])));
 
 /**
  * @swagger
@@ -157,6 +161,55 @@ router.patch('/users/:userId/status', asyncHandler(updateUserStatus));
  *         description: Usuario no encontrado / User not found
  */
 router.patch('/users/:userId/promote', asyncHandler(promoteToAdmin));
+
+/**
+ * @swagger
+ * /admin/users/{userId}/role:
+ *   patch:
+ *     summary: Actualizar rol del usuario / Update user role
+ *     description: |
+ *       Actualiza el rol de un usuario con validación RBAC completa.
+ *       Reglas: super_admin no puede asignarse por API, no podés cambiar tu propio rol,
+ *       no podés degradar a un super_admin. Cuando guest es promovido a user|vendor|advisor,
+ *       el Lead CRM asociado se marca como 'won'.
+ *
+ *       Updates a user's role with full RBAC validation.
+ *       Rules: super_admin cannot be assigned via API, cannot change own role,
+ *       cannot demote a super_admin. When guest is promoted to user|vendor|advisor,
+ *       the associated CRM Lead is marked as 'won'.
+ *     tags: [admin]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - role
+ *             properties:
+ *               role:
+ *                 type: string
+ *                 enum: [admin, finance, sales, advisor, vendor, user, guest, bot]
+ *     responses:
+ *       200:
+ *         description: Rol actualizado / Role updated
+ *       400:
+ *         description: Rol inválido o cambio propio / Invalid role or self-change
+ *       403:
+ *         description: No se puede cambiar super_admin / Cannot change super_admin
+ *       404:
+ *         description: Usuario no encontrado / User not found
+ */
+const updateRoleValidation = [body('role').isString().notEmpty().withMessage('Role is required')];
+router.patch('/users/:userId/role', validate(updateRoleValidation), asyncHandler(updateUserRole));
 
 /**
  * @swagger

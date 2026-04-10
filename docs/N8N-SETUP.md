@@ -82,7 +82,7 @@ n8n v1+ usa un sistema de owner account con email/password.
 
 1. Abrí `http://localhost:5678`
 2. Completá el formulario **"Set up owner account"**:
-   - **Email**: `admin@nexoreal.com`
+   - **Email**: `admin@nexoreal.xyz`
    - **First Name**: `Nexo`
    - **Last Name**: `Admin`
    - **Password**: ver `.env.production` → `N8N_USER_PASSWORD`
@@ -341,7 +341,7 @@ N8N_PROTOCOL=http
 N8N_WEBHOOK_URL=http://localhost:5678/
 
 # Owner account (n8n v1+ — basic auth deprecado)
-N8N_USER_EMAIL=admin@nexoreal.com
+N8N_USER_EMAIL=admin@nexoreal.xyz
 N8N_USER_PASSWORD=<ver secrets>
 N8N_USER_FIRST_NAME=Nexo
 N8N_USER_LAST_NAME=Admin

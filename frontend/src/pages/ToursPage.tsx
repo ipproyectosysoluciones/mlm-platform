@@ -13,6 +13,7 @@ import { MapPin, Clock, Users, Search, SlidersHorizontal, Compass, Eye } from 'l
 import { tourService } from '../services/tourService';
 import type { TourPackage, TourListParams, TourCategory } from '../services/tourService';
 import { cn } from '../lib/utils';
+import { APP_URL } from '../config/app.config';
 
 // ============================================
 // Helpers / Utilidades
@@ -224,11 +225,11 @@ export default function ToursPage() {
       <Helmet>
         <title>{seoTitle}</title>
         <meta name="description" content={seoDescription} />
-        <link rel="canonical" href="https://nexoreal.com/tours" />
+        <link rel="canonical" href={`${APP_URL}/tours`} />
         <meta property="og:type" content="website" />
         <meta property="og:title" content={seoTitle} />
         <meta property="og:description" content={seoDescription} />
-        <meta property="og:url" content="https://nexoreal.com/tours" />
+        <meta property="og:url" content={`${APP_URL}/tours`} />
         <meta property="og:site_name" content="Nexo Real" />
       </Helmet>
 
