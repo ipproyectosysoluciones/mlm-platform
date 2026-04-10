@@ -15,8 +15,8 @@ function formatToursMessage(lang: string, tours: BotTour[]): string {
 
   if (tours.length === 0) {
     return isEs
-      ? '✈️ No hay tours disponibles en este momento.\n\nVisitá la plataforma para más información:\n🌐 https://nexoreal.com/tours'
-      : '✈️ No tours available at the moment.\n\nVisit the platform for more info:\n🌐 https://nexoreal.com/tours';
+      ? '✈️ No hay tours disponibles en este momento.\n\nVisitá la plataforma para más información:\n🌐 https://nexoreal.xyz/tours'
+      : '✈️ No tours available at the moment.\n\nVisit the platform for more info:\n🌐 https://nexoreal.xyz/tours';
   }
 
   const header = isEs
@@ -45,8 +45,8 @@ function formatToursMessage(lang: string, tours: BotTour[]): string {
   });
 
   const footer = isEs
-    ? `\n\n🔍 Ver todos los tours:\n🌐 https://nexoreal.com/tours`
-    : `\n\n🔍 View all tours:\n🌐 https://nexoreal.com/tours`;
+    ? `\n\n🔍 Ver todos los tours:\n🌐 https://nexoreal.xyz/tours`
+    : `\n\n🔍 View all tours:\n🌐 https://nexoreal.xyz/tours`;
 
   return header + lines.join('\n\n') + footer;
 }

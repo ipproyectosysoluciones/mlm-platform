@@ -19,7 +19,7 @@ export const networkFlow = addKeyword(NETWORK_KEYWORDS).addAction(
     if (!user) {
       await flowDynamic([
         {
-          body: '❌ No encontré una cuenta asociada a tu número.\n\n🌐 Registrate en:\nhttps://nexoreal.com/register', // TODO: domain pending
+          body: '❌ No encontré una cuenta asociada a tu número.\n\n🌐 Registrate en:\nhttps://nexoreal.xyz/register', // TODO: domain pending
         },
       ]);
       return;
@@ -59,7 +59,7 @@ export const networkFlow = addKeyword(NETWORK_KEYWORDS).addAction(
           `➡️ Pierna derecha: ${network.rightLeg}\n` +
           `🏆 Nivel actual: *${network.level}*` +
           commissionsText +
-          `\n\n🌐 Ver árbol completo:\nhttps://nexoreal.com/tree`, // TODO: domain pending
+          `\n\n🌐 Ver árbol completo:\nhttps://nexoreal.xyz/tree`, // TODO: domain pending
       },
     ]);
   }

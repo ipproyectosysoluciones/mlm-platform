@@ -22,7 +22,7 @@ const DEFAULT_SEO: SEOProps = {
 export function useSEO(props: SEOProps = {}) {
   const location = useLocation();
   const seo = { ...DEFAULT_SEO, ...props };
-  const url = seo.url || `https://nexoreal.com${location.pathname}`; // TODO: domain pending
+  const url = seo.url || `https://nexoreal.xyz${location.pathname}`; // TODO: domain pending
 
   useEffect(() => {
     document.title = seo.title || DEFAULT_SEO.title || 'Nexo Real';

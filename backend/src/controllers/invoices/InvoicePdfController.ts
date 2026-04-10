@@ -31,7 +31,7 @@ const COMPANY_INFO = {
   name: 'Nexo Real',
   address: '123 Business Street, City, Country',
   phone: '+1 (555) 123-4567',
-  email: 'billing@nexoreal.com', // TODO: domain pending
+  email: 'billing@nexoreal.xyz', // TODO: domain pending
   taxId: 'TAX-12345678',
 };
 

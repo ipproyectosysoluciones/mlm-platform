@@ -19,7 +19,7 @@ We take security vulnerabilities seriously. If you discover a security issue, pl
 **Please report security vulnerabilities by:**
 
 - Opening a private security advisory on GitHub
-- Emailing us directly at **security@nexoreal.com** <!-- TODO: domain pending -->
+- Emailing us directly at **security@nexoreal.xyz** <!-- TODO: domain pending -->
 
 ### Response Timeline
 

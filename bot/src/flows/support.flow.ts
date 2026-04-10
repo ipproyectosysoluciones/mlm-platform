@@ -13,6 +13,6 @@ export const supportFlow = addKeyword(SUPPORT_KEYWORDS).addAnswer(
     `👤 *hablar con un asesor* — Conectarte con una persona real\n` +
     `❓ *ayuda* — Ver este menú\n\n` +
     `━━━━━━━━━━━━━━━━━━━━\n\n` +
-    `🌐 *Plataforma web:*\nhttps://nexoreal.com\n\n` + // TODO: domain pending
+    `🌐 *Plataforma web:*\nhttps://nexoreal.xyz\n\n` + // TODO: domain pending
     `Si tenés algún problema, podés escribirme en cualquier momento. 😊`
 );

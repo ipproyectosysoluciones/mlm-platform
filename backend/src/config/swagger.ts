@@ -60,7 +60,7 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
       `,
       contact: {
         name: 'Nexo Real Support',
-        email: 'support@nexoreal.com', // TODO: domain pending
+        email: 'support@nexoreal.xyz', // TODO: domain pending
       },
     },
     servers: [

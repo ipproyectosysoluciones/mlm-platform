@@ -5,7 +5,7 @@
 ## Base URL
 
 ```
-Production: https://api.nexoreal.com # TODO: domain pending
+Production: https://api.nexoreal.xyz # TODO: domain pending
 Development: http://localhost:3000
 ```
 
@@ -256,7 +256,7 @@ Authorization: Bearer <token>
       "totalEarnings": 1250.00,
       "pendingEarnings": 150.00
     },
-    "referralLink": "https://nexoreal.com/register?ref=NXR-ABCD-1234", // TODO: domain pending
+    "referralLink": "https://nexoreal.xyz/register?ref=NXR-ABCD-1234", // TODO: domain pending
     "recentCommissions": [ ... ],
     "recentReferrals": [ ... ],
     "referralsChart": [

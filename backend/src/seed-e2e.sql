@@ -45,77 +45,77 @@ INSERT INTO users (
 ) VALUES
   -- Nivel 0 — raíz del sistema / System root
   ('00000000-0000-0000-0000-000000000001',
-   'superadmin@nexoreal.com',
+   'superadmin@nexoreal.xyz',
    '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK',
    'NXR-SA-001', NULL, NULL, 1, 'active', 'super_admin', 'COP', NOW(), NOW()),
 
   -- Nivel 1 — admin general / General admin
   ('00000000-0000-0000-0000-000000000002',
-   'admin@nexoreal.com',
+   'admin@nexoreal.xyz',
    '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK',
    'NXR-AD-002', '00000000-0000-0000-0000-000000000001',
    NULL, 2, 'active', 'admin', 'COP', NOW(), NOW()),
 
   -- Nivel 2 — roles operativos / Operational roles
   ('00000000-0000-0000-0000-000000000003',
-   'finanzas@nexoreal.com',
+   'finanzas@nexoreal.xyz',
    '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK',
    'NXR-FN-003', '00000000-0000-0000-0000-000000000002',
    NULL, 3, 'active', 'finance', 'COP', NOW(), NOW()),
 
   ('00000000-0000-0000-0000-000000000004',
-   'ventas@nexoreal.com',
+   'ventas@nexoreal.xyz',
    '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK',
    'NXR-SL-004', '00000000-0000-0000-0000-000000000002',
    NULL, 3, 'active', 'sales', 'COP', NOW(), NOW()),
 
   ('00000000-0000-0000-0000-000000000007',
-   'camilo.restrepo@nexoreal.com',
+   'camilo.restrepo@nexoreal.xyz',
    '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK',
    'NXR-VD-007', '00000000-0000-0000-0000-000000000002',
    NULL, 3, 'active', 'vendor', 'COP', NOW(), NOW()),
 
   -- Nivel 3 — asesores y vendor_2 / Advisors and vendor_2
   ('00000000-0000-0000-0000-000000000005',
-   'valentina.ospina@nexoreal.com',
+   'valentina.ospina@nexoreal.xyz',
    '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK',
    'NXR-AV-005', '00000000-0000-0000-0000-000000000004',
    NULL, 4, 'active', 'advisor', 'COP', NOW(), NOW()),
 
   ('00000000-0000-0000-0000-000000000006',
-   'santiago.gomez@nexoreal.com',
+   'santiago.gomez@nexoreal.xyz',
    '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK',
    'NXR-AV-006', '00000000-0000-0000-0000-000000000004',
    NULL, 4, 'active', 'advisor', 'COP', NOW(), NOW()),
 
   ('00000000-0000-0000-0000-000000000008',
-   'isabella.vargas@nexoreal.com',
+   'isabella.vargas@nexoreal.xyz',
    '$2a$12$Sbwck.9Dg5fXbj34Oti2..q0Gqz9jAHsS4OeXY.pWyt7wUQPBtNaK',
    'NXR-VD-008', '00000000-0000-0000-0000-000000000007',
    NULL, 4, 'active', 'vendor', 'COP', NOW(), NOW()),
 
   -- Nivel 4 — usuarios finales / End users
   ('00000000-0000-0000-0000-000000000009',
-   'andres.martinez@nexoreal.com',
+   'andres.martinez@nexoreal.xyz',
    '$2a$12$Y7kH4Qk9zU3.5xLnPvR7ReKq5VZDk7pVCdkPqL1bOtV8GqA0mDW7K',
    'NXR-US-009', '00000000-0000-0000-0000-000000000005',
    NULL, 5, 'active', 'user', 'COP', NOW(), NOW()),
 
   ('00000000-0000-0000-0000-000000000010',
-   'luisa.fernandez@nexoreal.com',
+   'luisa.fernandez@nexoreal.xyz',
    '$2a$12$Y7kH4Qk9zU3.5xLnPvR7ReKq5VZDk7pVCdkPqL1bOtV8GqA0mDW7K',
    'NXR-US-010', '00000000-0000-0000-0000-000000000005',
    NULL, 5, 'active', 'user', 'COP', NOW(), NOW()),
 
   ('00000000-0000-0000-0000-000000000011',
-   'miguel.torres@nexoreal.com',
+   'miguel.torres@nexoreal.xyz',
    '$2a$12$Y7kH4Qk9zU3.5xLnPvR7ReKq5VZDk7pVCdkPqL1bOtV8GqA0mDW7K',
    'NXR-US-011', '00000000-0000-0000-0000-000000000006',
    NULL, 5, 'active', 'user', 'COP', NOW(), NOW()),
 
   -- Guest — sin sponsor / No sponsor
   ('00000000-0000-0000-0000-000000000012',
-   'invitado@nexoreal.com',
+   'invitado@nexoreal.xyz',
    '$2a$12$W2mKsL7rX1pCqMnOaT4YXeHj8NbVdU9fGzI3kRoP6tS5wQlE0mFyJ',
    'NXR-GT-012', NULL,
    NULL, 1, 'active', 'guest', 'COP', NOW(), NOW())

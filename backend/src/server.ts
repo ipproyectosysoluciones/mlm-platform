@@ -249,7 +249,7 @@ async function autoSeed(): Promise<void> {
 
     const superAdmin = await createUserWithClosure(
       '00000000-0000-0000-0000-000000000001',
-      'superadmin@nexoreal.com',
+      'superadmin@nexoreal.xyz',
       'NXR-SA-001',
       'super_admin',
       null,
@@ -258,7 +258,7 @@ async function autoSeed(): Promise<void> {
 
     const admin = await createUserWithClosure(
       '00000000-0000-0000-0000-000000000002',
-      'admin@nexoreal.com',
+      'admin@nexoreal.xyz',
       'NXR-AD-002',
       'admin',
       superAdmin.id,
@@ -267,7 +267,7 @@ async function autoSeed(): Promise<void> {
 
     const advisor = await createUserWithClosure(
       '00000000-0000-0000-0000-000000000003',
-      'valentina.ospina@nexoreal.com',
+      'valentina.ospina@nexoreal.xyz',
       'NXR-AV-003',
       'advisor',
       admin.id,
@@ -276,7 +276,7 @@ async function autoSeed(): Promise<void> {
 
     await createUserWithClosure(
       '00000000-0000-0000-0000-000000000004',
-      'andres.martinez@nexoreal.com',
+      'andres.martinez@nexoreal.xyz',
       'NXR-US-004',
       'user',
       advisor.id,
@@ -285,7 +285,7 @@ async function autoSeed(): Promise<void> {
 
     await createUserWithClosure(
       '00000000-0000-0000-0000-000000000005',
-      'invitado@nexoreal.com',
+      'invitado@nexoreal.xyz',
       'NXR-GT-005',
       'guest',
       null,
@@ -294,11 +294,11 @@ async function autoSeed(): Promise<void> {
 
     console.log('');
     console.log('📋 Nexo Real — Test Credentials:');
-    console.log('   superadmin@nexoreal.com  /  Nexo2024!  (super_admin)');
-    console.log('   admin@nexoreal.com       /  Nexo2024!  (admin)');
+    console.log('   superadmin@nexoreal.xyz  /  Nexo2024!  (super_admin)');
+    console.log('   admin@nexoreal.xyz       /  Nexo2024!  (admin)');
     console.log('   valentina.ospina@...     /  Nexo2024!  (advisor)');
     console.log('   andres.martinez@...      /  Nexo2024!  (user)');
-    console.log('   invitado@nexoreal.com    /  Nexo2024!  (guest)');
+    console.log('   invitado@nexoreal.xyz    /  Nexo2024!  (guest)');
     console.log('');
   } catch (error) {
     console.error('❌ Auto-seed failed:', error);

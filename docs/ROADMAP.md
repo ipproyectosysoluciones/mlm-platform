@@ -438,7 +438,7 @@ Batch 8.3 — Documentación:
   ✅ docs: swagger.ts v2.4.0 — 9 roles, schemas RBAC, TreeNode Unilevel
   ✅ docs: PRD.md v2.4.0 — Sprint 8 ✅, Sprint 9 planificado
   ✅ docs: ROADMAP.md v2.4.0 — tabla estado actualizada
-  ✅ docs: backend-API.md — 2 endpoints RBAC, URL nexoreal.com
+  ✅ docs: backend-API.md — 2 endpoints RBAC, URL nexoreal.xyz
   ✅ docs: README.md v2.4.0 — Unilevel, 9 roles, 967 tests
   ✅ docs: Postman — colección y environment renombrados a Nexo Real + carpeta RBAC
 ```

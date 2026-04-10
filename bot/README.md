@@ -109,7 +109,7 @@ Los flows `propertiesFlow` y `toursFlow` detectan automáticamente el idioma con
 
 | Variable            | Descripción                                 | Ejemplo                    |
 | ------------------- | ------------------------------------------- | -------------------------- |
-| `BACKEND_URL`       | URL base del backend                        | `https://api.nexoreal.com` |
+| `BACKEND_URL`       | URL base del backend                        | `https://api.nexoreal.xyz` |
 | `BOT_SECRET`        | Secret para autenticación Bot API           | `...`                      |
 | `PORT`              | Puerto del servidor del bot                 | `3001`                     |
 | `BOT_MAX_RECONNECT` | Máximo de reintentos de reconexión WhatsApp | `5`                        |

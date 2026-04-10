@@ -117,7 +117,7 @@ export const reservationsFlow = addKeyword(RESERVATIONS_KEYWORDS).addAction(
         {
           body:
             '❌ No encontré una cuenta asociada a tu número.\n\n' +
-            '🌐 Registrate en:\nhttps://nexoreal.com/register', // TODO: domain pending
+            '🌐 Registrate en:\nhttps://nexoreal.xyz/register', // TODO: domain pending
         },
       ]);
       return;
@@ -131,7 +131,7 @@ export const reservationsFlow = addKeyword(RESERVATIONS_KEYWORDS).addAction(
           body:
             '📋 *Tus Reservas — Nexo Real*\n\n' +
             'No tenés reservas registradas todavía.\n\n' +
-            '🏠 Para reservar una propiedad o tour, visitá:\nhttps://nexoreal.com', // TODO: domain pending
+            '🏠 Para reservar una propiedad o tour, visitá:\nhttps://nexoreal.xyz', // TODO: domain pending
         },
       ]);
       return;
@@ -144,7 +144,7 @@ export const reservationsFlow = addKeyword(RESERVATIONS_KEYWORDS).addAction(
         body:
           `📋 *Tus últimas reservas — Nexo Real*\n\n` +
           items +
-          `\n\n🌐 Ver todas tus reservas:\nhttps://nexoreal.com/reservations`, // TODO: domain pending
+          `\n\n🌐 Ver todas tus reservas:\nhttps://nexoreal.xyz/reservations`, // TODO: domain pending
       },
     ]);
   }

@@ -4,7 +4,7 @@
 
 ```
 Development: http://localhost:3000/api
-Production: https://api.nexoreal.com/api
+Production: https://api.nexoreal.xyz/api
 ```
 
 ---
@@ -528,7 +528,7 @@ Headers: `Authorization: Bearer <token>` — Requiere `super_admin` o `admin`
   "data": {
     "user": {
       "id": "uuid",
-      "email": "usuario@nexoreal.com",
+      "email": "usuario@nexoreal.xyz",
       "role": "advisor"
     }
   }
