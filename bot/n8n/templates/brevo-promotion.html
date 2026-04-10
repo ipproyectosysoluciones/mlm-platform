@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Oferta Especial — Nexo Real</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body style="margin:0;padding:0;background-color:#F8F6F1;font-family:'Inter',Helvetica,Arial,sans-serif;">
+
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#F8F6F1;padding:40px 0;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border-radius:10px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,0.08);">
+
+          <!-- HEADER -->
+          <tr>
+            <td style="background-color:#0F1F3D;padding:36px 40px;text-align:center;">
+              <p style="margin:0 0 6px;font-family:'Playfair Display',Georgia,serif;font-size:28px;font-weight:700;color:#ffffff;letter-spacing:2px;">NEXO REAL</p>
+              <p style="margin:0;font-size:11px;color:#C9A84C;letter-spacing:4px;text-transform:uppercase;">Propiedades · Inversión · Confianza</p>
+            </td>
+          </tr>
+
+          <!-- PROMO BANNER -->
+          <tr>
+            <td style="background:linear-gradient(135deg, #C9A84C 0%, #E8C870 100%);padding:32px 40px;text-align:center;">
+              <p style="margin:0 0 8px;font-size:11px;font-weight:700;color:#0F1F3D;text-transform:uppercase;letter-spacing:3px;">⭐ Oferta exclusiva ⭐</p>
+              <p style="margin:0 0 8px;font-family:'Playfair Display',Georgia,serif;font-size:34px;font-weight:700;color:#0F1F3D;line-height:1.2;">{{ params.promo_headline }}</p>
+              <p style="margin:0;font-size:14px;color:#5D4E20;line-height:1.6;">{{ params.promo_subheadline }}</p>
+            </td>
+          </tr>
+
+          <!-- COUNTDOWN / URGENCY -->
+          <tr>
+            <td style="background-color:#C53030;padding:12px 40px;text-align:center;">
+              <p style="margin:0;font-size:13px;font-weight:600;color:#ffffff;">
+                ⏰ Oferta válida hasta el {{ params.promo_expiry }} · Cupos limitados
+              </p>
+            </td>
+          </tr>
+
+          <!-- PROPERTY HIGHLIGHT -->
+          <tr>
+            <td style="padding:40px 40px 24px;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="border:2px solid #C9A84C;border-radius:10px;overflow:hidden;">
+                <tr>
+                  <td style="background-color:#0F1F3D;padding:16px 24px;">
+                    <p style="margin:0;font-size:11px;color:#C9A84C;text-transform:uppercase;letter-spacing:2px;">Propiedad en promoción</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:24px;">
+                    <p style="margin:0 0 6px;font-family:'Playfair Display',Georgia,serif;font-size:22px;font-weight:700;color:#0F1F3D;">{{ params.property_name }}</p>
+                    <p style="margin:0 0 16px;font-size:13px;color:#718096;">📍 {{ params.property_location }}</p>
+                    <p style="margin:0 0 20px;font-size:14px;color:#4A5568;line-height:1.7;">{{ params.property_description }}</p>
+
+                    <!-- Price Block -->
+                    <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#F8F6F1;border-radius:8px;">
+                      <tr>
+                        <td style="padding:16px 20px;text-align:center;" width="50%">
+                          <p style="margin:0 0 4px;font-size:11px;color:#A0AEC0;text-transform:uppercase;letter-spacing:1px;">Precio anterior</p>
+                          <p style="margin:0;font-size:18px;color:#A0AEC0;text-decoration:line-through;">{{ params.original_price }}</p>
+                        </td>
+                        <td style="padding:16px 20px;text-align:center;background-color:#0F1F3D;border-radius:0 8px 8px 0;" width="50%">
+                          <p style="margin:0 0 4px;font-size:11px;color:#C9A84C;text-transform:uppercase;letter-spacing:1px;">Precio promocional</p>
+                          <p style="margin:0;font-size:24px;font-weight:700;color:#C9A84C;">{{ params.promo_price }}</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- BENEFITS -->
+          <tr>
+            <td style="padding:0 40px 32px;">
+              <p style="margin:0 0 16px;font-size:11px;font-weight:600;color:#718096;text-transform:uppercase;letter-spacing:2px;">Lo que incluye</p>
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="padding:8px 0;border-bottom:1px solid #E2E8F0;">
+                    <p style="margin:0;font-size:14px;color:#2D3748;">✅ &nbsp;{{ params.benefit_1 }}</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:8px 0;border-bottom:1px solid #E2E8F0;">
+                    <p style="margin:0;font-size:14px;color:#2D3748;">✅ &nbsp;{{ params.benefit_2 }}</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:8px 0;">
+                    <p style="margin:0;font-size:14px;color:#2D3748;">✅ &nbsp;{{ params.benefit_3 }}</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- CTA -->
+          <tr>
+            <td style="padding:0 40px 40px;text-align:center;">
+              <a href="{{ params.promo_url }}"
+                 style="display:inline-block;background-color:#C9A84C;color:#0F1F3D;font-size:15px;font-weight:700;text-decoration:none;padding:18px 48px;border-radius:6px;letter-spacing:1px;text-transform:uppercase;">
+                Quiero esta propiedad
+              </a>
+              <p style="margin:16px 0 0;font-size:13px;color:#718096;">
+                ¿Dudas? Escribinos al
+                <a href="https://wa.me/tunumero" style="color:#25D366;text-decoration:none;font-weight:600;">WhatsApp</a>
+              </p>
+            </td>
+          </tr>
+
+          <!-- DIVIDER -->
+          <tr>
+            <td style="padding:0 40px;">
+              <div style="height:1px;background:linear-gradient(to right, transparent, #C9A84C, transparent);"></div>
+            </td>
+          </tr>
+
+          <!-- UNSUBSCRIBE -->
+          <tr>
+            <td style="padding:24px 40px;text-align:center;">
+              <p style="margin:0;font-size:12px;color:#A0AEC0;line-height:1.7;">
+                Recibiste este email porque estás en nuestra lista de contactos.<br/>
+                <a href="{{ params.unsubscribe_url }}" style="color:#A0AEC0;text-decoration:underline;">Cancelar suscripción</a>
+              </p>
+            </td>
+          </tr>
+
+          <!-- FOOTER -->
+          <tr>
+            <td style="background-color:#0F1F3D;padding:24px 40px;text-align:center;">
+              <p style="margin:0 0 4px;font-size:12px;color:#C9A84C;letter-spacing:2px;text-transform:uppercase;">NEXO REAL</p>
+              <p style="margin:0;font-size:11px;color:#4A5568;">© 2026 · info@nexoreal.xyz · Todos los derechos reservados</p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>

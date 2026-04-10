@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bienvenido a Nexo Real</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body style="margin:0;padding:0;background-color:#F8F6F1;font-family:'Inter',Helvetica,Arial,sans-serif;">
+
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#F8F6F1;padding:40px 0;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border-radius:10px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,0.08);">
+
+          <!-- HEADER -->
+          <tr>
+            <td style="background-color:#0F1F3D;padding:48px 40px;text-align:center;">
+              <p style="margin:0 0 8px;font-family:'Playfair Display',Georgia,serif;font-size:32px;font-weight:700;color:#ffffff;letter-spacing:2px;">NEXO REAL</p>
+              <p style="margin:0;font-size:11px;color:#C9A84C;letter-spacing:4px;text-transform:uppercase;">Propiedades · Inversión · Confianza</p>
+              <div style="width:48px;height:2px;background-color:#C9A84C;margin:20px auto 0;"></div>
+            </td>
+          </tr>
+
+          <!-- HERO -->
+          <tr>
+            <td style="padding:48px 40px 32px;text-align:center;">
+              <p style="margin:0 0 16px;font-family:'Playfair Display',Georgia,serif;font-size:26px;color:#0F1F3D;line-height:1.3;">Bienvenido a Nexo Real,<br/>{{ params.user_name }}</p>
+              <p style="margin:0;font-size:15px;color:#718096;line-height:1.7;">Tu cuenta ha sido creada exitosamente.<br/>Estás a un paso de acceder a la plataforma.</p>
+            </td>
+          </tr>
+
+          <!-- DIVIDER -->
+          <tr>
+            <td style="padding:0 40px;">
+              <div style="height:1px;background:linear-gradient(to right, transparent, #C9A84C, transparent);"></div>
+            </td>
+          </tr>
+
+          <!-- CREDENTIALS CARD -->
+          <tr>
+            <td style="padding:32px 40px;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#F8F6F1;border-radius:8px;border-left:4px solid #C9A84C;">
+                <tr>
+                  <td style="padding:24px 28px;">
+                    <p style="margin:0 0 16px;font-size:11px;font-weight:600;color:#C9A84C;text-transform:uppercase;letter-spacing:2px;">Tus credenciales de acceso</p>
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td style="padding:8px 0;border-bottom:1px solid #E2D9C8;">
+                          <p style="margin:0;font-size:12px;color:#718096;">Usuario / Email</p>
+                          <p style="margin:4px 0 0;font-size:15px;font-weight:600;color:#0F1F3D;">{{ params.user_email }}</p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding:8px 0;">
+                          <p style="margin:0;font-size:12px;color:#718096;">Contraseña temporal</p>
+                          <p style="margin:4px 0 0;font-size:15px;font-weight:600;color:#0F1F3D;font-family:monospace;letter-spacing:2px;">{{ params.temp_password }}</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- ROLE INFO -->
+          <tr>
+            <td style="padding:0 40px 32px;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#0F1F3D;border-radius:8px;">
+                <tr>
+                  <td style="padding:20px 28px;">
+                    <p style="margin:0 0 4px;font-size:11px;color:#C9A84C;text-transform:uppercase;letter-spacing:2px;">Tu rol en la plataforma</p>
+                    <p style="margin:0;font-size:18px;font-weight:600;color:#ffffff;">{{ params.user_role }}</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- CTA -->
+          <tr>
+            <td style="padding:0 40px 40px;text-align:center;">
+              <a href="{{ params.login_url }}"
+                 style="display:inline-block;background-color:#C9A84C;color:#0F1F3D;font-size:14px;font-weight:700;text-decoration:none;padding:16px 40px;border-radius:6px;letter-spacing:1px;text-transform:uppercase;">
+                Ingresar a la plataforma
+              </a>
+              <p style="margin:20px 0 0;font-size:12px;color:#A0AEC0;">Por seguridad, cambiá tu contraseña al ingresar por primera vez.</p>
+            </td>
+          </tr>
+
+          <!-- DIVIDER -->
+          <tr>
+            <td style="padding:0 40px;">
+              <div style="height:1px;background-color:#E2E8F0;"></div>
+            </td>
+          </tr>
+
+          <!-- SUPPORT -->
+          <tr>
+            <td style="padding:28px 40px;text-align:center;">
+              <p style="margin:0;font-size:13px;color:#718096;line-height:1.7;">¿Necesitás ayuda? Contactanos en
+                <a href="mailto:info@nexoreal.xyz" style="color:#C9A84C;text-decoration:none;">info@nexoreal.xyz</a>
+                o por WhatsApp.<br/>Estaremos encantados de asistirte.
+              </p>
+            </td>
+          </tr>
+
+          <!-- FOOTER -->
+          <tr>
+            <td style="background-color:#0F1F3D;padding:24px 40px;text-align:center;">
+              <p style="margin:0 0 4px;font-size:12px;color:#C9A84C;letter-spacing:2px;text-transform:uppercase;">NEXO REAL</p>
+              <p style="margin:0;font-size:11px;color:#4A5568;">© 2026 · info@nexoreal.xyz · Todos los derechos reservados</p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>
