@@ -19,6 +19,8 @@ COPY src/ ./src/
 RUN pnpm build
 
 # ─── Stage 2: Production ──────────────────────────────────────────────────────
+
+# ─── Stage 2: Production ──────────────────────────────────────────────────────
 FROM node:20-slim AS production
 
 # Required by Baileys (Chromium/canvas native deps) + git for libsignal-node GitHub dep
@@ -48,12 +50,18 @@ RUN pnpm install --no-frozen-lockfile --prod
 
 COPY --from=builder /app/dist ./dist
 
+# prompt_kb/ contains AI prompts and knowledge base files — baked into image.
+# Previously gitignored and mounted at runtime; now tracked in git and embedded
+# in the Docker image so the bot works without host-mounted volumes.
+#
+# prompt_kb/ contiene prompts de IA y base de conocimiento — embebido en la imagen.
+# Antes estaba en .gitignore y se montaba en tiempo de ejecución; ahora se rastrea
+# en git y se embebe en la imagen para que el bot funcione sin volúmenes del host.
+COPY --from=builder /app/src/prompt_kb ./prompt_kb
+
 # bot_sessions/ is mounted as a Docker volume to persist WhatsApp session
 # If this directory disappears, the bot needs to re-pair via pairing code
 RUN mkdir -p /app/bot_sessions
-
-# prompt_kb/ is mounted at runtime via docker-compose volume (never baked into image)
-RUN mkdir -p /app/prompt_kb
 
 ENV NODE_ENV=production
 
