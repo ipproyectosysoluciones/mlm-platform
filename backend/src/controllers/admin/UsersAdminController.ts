@@ -7,13 +7,28 @@
 import { Response } from 'express';
 import { Op, WhereOptions } from 'sequelize';
 import { User, Commission } from '../../models';
-import type { UserAttributes } from '../../types';
+import type { UserAttributes, UserRole, USER_ROLES } from '../../types';
 
 // Type for User where clauses
 type UserWhereClause = WhereOptions<UserAttributes>;
 import { TreeService } from '../../services/TreeService';
 import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
 import { ApiResponse } from '../../utils/response.util';
+import { Lead } from '../../models/Lead';
+import { ADMIN_ROLES } from '../../types';
+
+// All roles assignable via API — super_admin is excluded for security
+// Todos los roles asignables por API — super_admin se excluye por seguridad
+const ASSIGNABLE_ROLES: readonly UserRole[] = [
+  'admin',
+  'finance',
+  'sales',
+  'advisor',
+  'vendor',
+  'user',
+  'guest',
+  'bot',
+] as const;
 
 const treeService = new TreeService();
 
@@ -225,5 +240,89 @@ export async function promoteToAdmin(req: AuthenticatedRequest, res: Response): 
     });
   } catch {
     res.status(500).json(ApiResponse.error('INTERNAL_ERROR', 'Error promoting user', 500));
+  }
+}
+
+/**
+ * Update user role with full RBAC business rules
+ * Actualiza el rol del usuario con reglas de negocio RBAC completas
+ *
+ * @route PATCH /api/admin/users/:userId/role
+ * @access Admin only (super_admin | admin)
+ *
+ * Business rules / Reglas de negocio:
+ * - super_admin cannot be assigned via API (manual DB only)
+ * - Cannot demote an existing super_admin
+ * - Cannot change your own role
+ * - When guest → user|vendor|advisor: update associated Lead to status='won'
+ *
+ * @param req - Path: userId, Body: role (new role)
+ * @param res - Success response with updated user
+ */
+export async function updateUserRole(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    const { userId } = req.params;
+    const { role: newRole } = req.body as { role: UserRole };
+    const requester = req.user!;
+
+    // Validate role is provided and assignable
+    if (!newRole || !ASSIGNABLE_ROLES.includes(newRole)) {
+      res
+        .status(400)
+        .json(
+          ApiResponse.error(
+            'INVALID_PARAMS',
+            `Invalid role. Assignable roles: ${ASSIGNABLE_ROLES.join(', ')}`,
+            400
+          )
+        );
+      return;
+    }
+
+    // Cannot change your own role
+    if (requester.id === userId) {
+      res.status(400).json(ApiResponse.error('INVALID_PARAMS', 'Cannot change your own role', 400));
+      return;
+    }
+
+    const user = await User.findByPk(userId);
+    if (!user) {
+      res.status(404).json(ApiResponse.error('NOT_FOUND', 'User not found', 404));
+      return;
+    }
+
+    // Cannot demote a super_admin
+    if (user.role === 'super_admin') {
+      res
+        .status(403)
+        .json(ApiResponse.error('FORBIDDEN', 'Cannot change role of a super_admin', 403));
+      return;
+    }
+
+    const previousRole = user.role;
+    await user.update({ role: newRole });
+
+    // When guest is promoted to an active role, update their CRM lead to 'won'
+    // Cuando un guest es promovido a un rol activo, actualizar su Lead en CRM a 'won'
+    const activeRoles: readonly UserRole[] = ['user', 'vendor', 'advisor', 'sales', 'finance'];
+    if (previousRole === 'guest' && activeRoles.includes(newRole)) {
+      await Lead.update(
+        { status: 'won' },
+        {
+          where: {
+            metadata: { guestUserId: userId } as unknown as Record<string, unknown>,
+            status: { [Op.ne]: 'won' } as WhereOptions,
+          } as WhereOptions,
+        }
+      );
+    }
+
+    res.json({
+      success: true,
+      message: `User role updated from '${previousRole}' to '${newRole}'`,
+      data: { id: user.id, role: user.role },
+    });
+  } catch {
+    res.status(500).json(ApiResponse.error('INTERNAL_ERROR', 'Error updating user role', 500));
   }
 }

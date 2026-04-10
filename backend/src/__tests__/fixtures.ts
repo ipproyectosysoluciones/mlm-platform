@@ -1,6 +1,7 @@
 /**
  * @fileoverview Test fixtures for integration tests
  * @description Provides reusable factory functions for creating test data
+ * Provee funciones de fábrica reutilizables para crear datos de prueba
  *
  * @module __tests__/fixtures
  */
@@ -9,16 +10,21 @@ import { User, UserClosure } from '../models';
 import { sequelize } from '../config/database';
 import bcrypt from 'bcryptjs';
 import { generateToken } from '../services/AuthService';
+import type { UserRole } from '../types';
 
 /**
- * Create a test user with valid credentials
- * Populates the closure table if sponsorId is provided
+ * Create a test user with valid credentials.
+ * Populates the closure table if sponsorId is provided.
+ *
+ * Crea un usuario de prueba con credenciales válidas.
+ * Rellena la tabla de cierre si se provee sponsorId.
  */
 export async function createTestUser(
   overrides: {
     email?: string;
     password?: string;
-    role?: 'admin' | 'user';
+    /** Any valid UserRole — defaults to 'user' */
+    role?: UserRole;
     sponsorId?: string | null;
     position?: 'left' | 'right' | null;
     referralCode?: string;
@@ -78,7 +84,8 @@ export async function createTestUser(
 }
 
 /**
- * Create an admin user for testing
+ * Create an admin user for testing.
+ * Crea un usuario con rol 'admin' para pruebas.
  */
 export async function createAdminUser(): Promise<User> {
   const unique = Math.random().toString(36).substring(7).toUpperCase();
@@ -90,7 +97,8 @@ export async function createAdminUser(): Promise<User> {
 }
 
 /**
- * Create a regular user for testing
+ * Create a regular user for testing.
+ * Crea un usuario con rol 'user' para pruebas.
  */
 export async function createRegularUser(): Promise<User> {
   const unique = Math.random().toString(36).substring(7).toUpperCase();
@@ -98,6 +106,72 @@ export async function createRegularUser(): Promise<User> {
     email: `user_${Date.now()}_${unique}@mlm.test`,
     role: 'user',
     referralCode: `USR${unique}`,
+  });
+}
+
+/**
+ * Create a vendor user for testing.
+ * Crea un usuario con rol 'vendor' para pruebas.
+ */
+export async function createVendorUser(): Promise<User> {
+  const unique = Math.random().toString(36).substring(7).toUpperCase();
+  return createTestUser({
+    email: `vendor_${Date.now()}_${unique}@mlm.test`,
+    role: 'vendor',
+    referralCode: `VND${unique}`,
+  });
+}
+
+/**
+ * Create a finance user for testing.
+ * Crea un usuario con rol 'finance' para pruebas.
+ */
+export async function createFinanceUser(): Promise<User> {
+  const unique = Math.random().toString(36).substring(7).toUpperCase();
+  return createTestUser({
+    email: `finance_${Date.now()}_${unique}@mlm.test`,
+    role: 'finance',
+    referralCode: `FIN${unique}`,
+  });
+}
+
+/**
+ * Create a sales user for testing.
+ * Crea un usuario con rol 'sales' para pruebas.
+ */
+export async function createSalesUser(): Promise<User> {
+  const unique = Math.random().toString(36).substring(7).toUpperCase();
+  return createTestUser({
+    email: `sales_${Date.now()}_${unique}@mlm.test`,
+    role: 'sales',
+    referralCode: `SAL${unique}`,
+  });
+}
+
+/**
+ * Create a guest user for testing.
+ * Crea un usuario con rol 'guest' para pruebas.
+ */
+export async function createGuestUser(): Promise<User> {
+  const unique = Math.random().toString(36).substring(7).toUpperCase();
+  return createTestUser({
+    email: `guest_${Date.now()}_${unique}@mlm.test`,
+    role: 'guest',
+    referralCode: `GST${unique}`,
+  });
+}
+
+/**
+ * Create a super_admin user for testing.
+ * NOTE: In production, super_admin is set directly in DB — this is for test coverage only.
+ * NOTA: En producción, super_admin se asigna directo en DB — esto es solo para cobertura de tests.
+ */
+export async function createSuperAdminUser(): Promise<User> {
+  const unique = Math.random().toString(36).substring(7).toUpperCase();
+  return createTestUser({
+    email: `superadmin_${Date.now()}_${unique}@mlm.test`,
+    role: 'super_admin',
+    referralCode: `SUP${unique}`,
   });
 }
 

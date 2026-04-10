@@ -5,12 +5,14 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { config } from '../config/env';
+import { UserRole, ADMIN_ROLES, FINANCE_ROLES, CRM_ROLES, PROPERTY_MGMT_ROLES } from '../types';
 
 // ============================================
 // TYPES
 // ============================================
 
-export type UserRole = 'admin' | 'user' | 'vendor';
+// Re-export for backward compatibility with consumers that import UserRole from here
+export type { UserRole } from '../types';
 
 interface TokenPayload {
   userId: string;
@@ -166,7 +168,15 @@ export function requireRole(...allowedRoles: UserRole[]) {
 }
 
 export function requireAdmin(req: AuthenticatedRequest, res: Response, next: NextFunction): void {
-  return requireRole('admin')(req, res, next);
+  return requireRole(...(ADMIN_ROLES as UserRole[]))(req, res, next);
+}
+
+export function requireSuperAdmin(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): void {
+  return requireRole('super_admin')(req, res, next);
 }
 
 export function requireUser(req: AuthenticatedRequest, res: Response, next: NextFunction): void {
@@ -175,6 +185,42 @@ export function requireUser(req: AuthenticatedRequest, res: Response, next: Next
 
 export function requireVendor(req: AuthenticatedRequest, res: Response, next: NextFunction): void {
   return requireRole('vendor')(req, res, next);
+}
+
+/**
+ * Requires finance module access (super_admin, admin, finance)
+ * Requiere acceso al módulo financiero
+ */
+export function requireFinance(req: AuthenticatedRequest, res: Response, next: NextFunction): void {
+  return requireRole(...(FINANCE_ROLES as UserRole[]))(req, res, next);
+}
+
+/**
+ * Requires CRM module access (super_admin, admin, sales, advisor)
+ * Requiere acceso al módulo CRM
+ */
+export function requireCRM(req: AuthenticatedRequest, res: Response, next: NextFunction): void {
+  return requireRole(...(CRM_ROLES as UserRole[]))(req, res, next);
+}
+
+/**
+ * Requires property management access (super_admin, admin, sales)
+ * Requiere acceso a gestión de propiedades
+ */
+export function requirePropertyMgmt(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): void {
+  return requireRole(...(PROPERTY_MGMT_ROLES as UserRole[]))(req, res, next);
+}
+
+/**
+ * Requires bot/programmatic access
+ * Requiere acceso programático de bot
+ */
+export function requireBot(req: AuthenticatedRequest, res: Response, next: NextFunction): void {
+  return requireRole('bot')(req, res, next);
 }
 
 export function requireVendorOrAdmin(
@@ -193,7 +239,7 @@ export function requireVendorOrAdmin(
     return;
   }
 
-  if (req.user.role !== 'vendor' && req.user.role !== 'admin') {
+  if (req.user.role !== 'vendor' && !ADMIN_ROLES.includes(req.user.role)) {
     res.status(403).json({
       success: false,
       error: {
@@ -225,8 +271,8 @@ export function canManageProduct(
   userRole: UserRole,
   product: { vendorId: string | null } | null
 ): boolean {
-  // Admins can manage any product
-  if (userRole === 'admin') {
+  // Admins (super_admin, admin) can manage any product
+  if (ADMIN_ROLES.includes(userRole)) {
     return true;
   }
 
@@ -261,8 +307,8 @@ export function restrictToOwnResource(resourceField: 'userId' | 'sponsorId' = 'u
       return;
     }
 
-    // Admins can access any resource
-    if (req.user.role === 'admin') {
+    // Admins (super_admin, admin) can access any resource
+    if (ADMIN_ROLES.includes(req.user.role)) {
       return next();
     }
 
@@ -289,7 +335,7 @@ export function canAccessResource(
   resourceOwnerId: string,
   resourceSponsorId?: string | null
 ): boolean {
-  if (requester.role === 'admin') return true;
+  if (ADMIN_ROLES.includes(requester.role)) return true;
   if (requester.id === resourceOwnerId) return true;
   if (resourceSponsorId && requester.id === resourceSponsorId) return true;
   return false;
