@@ -2,12 +2,15 @@
  * @fileoverview Admin Tour Routes - Admin tourism package management endpoints
  * @description Routes for admin tour package CRUD operations (create, update, delete, list).
  *              Rate-limited to 60 req/min (production) to prevent abuse on authorized endpoints.
+ *              Protected by JWT authentication and admin role verification.
  *              Rutas CRUD de paquetes turísticos para admin. Rate limit de 60 req/min en producción.
+ *              Protegidas por autenticación JWT y verificación de rol admin.
  * @module routes/admin-tour.routes
  * @author MLM Development Team
  */
 import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
+import { authenticate, requireAdmin } from '../middleware/auth.middleware';
 import {
   getTourPackages,
   getTourPackage,
@@ -42,6 +45,18 @@ const adminTourLimiter = rateLimit({
 });
 
 router.use(adminTourLimiter);
+
+/**
+ * Enforce JWT authentication and admin role for all routes in this router.
+ * Any request without a valid token or without the 'admin' role will receive
+ * a 401 (Unauthorized) or 403 (Forbidden) response before reaching any handler.
+ *
+ * Aplica autenticación JWT y rol admin a todas las rutas de este router.
+ * Cualquier request sin token válido o sin rol 'admin' recibe 401 o 403
+ * antes de llegar a cualquier handler.
+ */
+router.use(authenticate);
+router.use(requireAdmin);
 
 /**
  * @swagger
