@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { APP_URL, APP_SITE_NAME } from '../config/app.config';
 
 interface SEOProps {
   title?: string;
@@ -16,13 +17,13 @@ const DEFAULT_SEO: SEOProps = {
     'Nexo Real — Conectamos tu negocio con el mundo. Sistema de afiliaciones binarias, comisiones automáticas y árbol genealógico.',
   image: '/og-image.png',
   type: 'website',
-  siteName: 'Nexo Real',
+  siteName: APP_SITE_NAME,
 };
 
 export function useSEO(props: SEOProps = {}) {
   const location = useLocation();
   const seo = { ...DEFAULT_SEO, ...props };
-  const url = seo.url || `https://nexoreal.xyz${location.pathname}`; // TODO: domain pending
+  const url = seo.url || `${APP_URL}${location.pathname}`;
 
   useEffect(() => {
     document.title = seo.title || DEFAULT_SEO.title || 'Nexo Real';
