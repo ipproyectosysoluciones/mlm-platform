@@ -3,6 +3,7 @@ import { aiService, type AgentName, type Language } from '../services/ai.service
 import { logger } from '../services/logger.js';
 import { resolveLanguageFromInput } from './language.flow.js';
 import { assignAgent, getAgentIntro, getAgentTransitionMessage } from './agent.flow.js';
+// @ts-ignore — CommonJS JS service without .d.ts; safe at runtime
 import { leadPersistenceService } from '../services/lead-persistence.service.js';
 import type { BotLeadAreaOfInterest } from '../types/lead.types.js';
 import { SKIP_KEYWORDS } from '../config/keywords.js';

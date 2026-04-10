@@ -20,6 +20,7 @@ import { handoffFlow } from './flows/handoff.flow.js';
 import { propertiesFlow } from './flows/properties.flow.js';
 import { toursFlow } from './flows/tours.flow.js';
 import { onboardingFlow } from './flows/onboarding.flow.js';
+import { reservationsFlow } from './flows/reservations.flow.js';
 import { COMMISSIONS_KEYWORDS } from './config/keywords.js';
 
 // ── Config ────────────────────────────────────────────────────────────────────

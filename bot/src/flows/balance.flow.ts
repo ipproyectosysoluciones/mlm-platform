@@ -1,5 +1,6 @@
 import { addKeyword } from '@builderbot/bot';
 import { mlmApi } from '../services/mlm-api.service.js';
+import { logger } from '../services/logger.js';
 import { BALANCE_KEYWORDS } from '../config/keywords.js';
 
 /**

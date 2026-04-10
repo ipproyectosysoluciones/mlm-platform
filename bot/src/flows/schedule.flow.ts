@@ -1,6 +1,7 @@
 import { addKeyword } from '@builderbot/bot';
 import { n8nService } from '../services/n8n.service.js';
 import type { Language } from '../services/ai.service.js';
+import { logger } from '../services/logger.js';
 import { SCHEDULE_KEYWORDS } from '../config/keywords.js';
 
 /**
