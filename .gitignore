@@ -116,6 +116,8 @@ deploy.prod.sh
 *.tar.gz
 
 # ===========================================
-# AI Prompts & Knowledge Base (PRIVATE - never commit)
+# AI Prompts & Knowledge Base
+# Files live at bot/src/prompt_kb/ and are baked into the Docker image.
+# No longer gitignored — must be tracked to be included in the Docker build context.
 # ===========================================
-/prompt_kb/
+# /prompt_kb/  ← removed: prompt_kb is now baked into the bot Docker image

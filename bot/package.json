@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@builderbot/bot": "latest",
+    "@builderbot/database-postgres": "^1.4.1",
     "@builderbot/provider-baileys": "latest",
     "axios": "^1.15.0",
     "dotenv": "^16.6.1",
