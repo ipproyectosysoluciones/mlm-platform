@@ -25,6 +25,7 @@
  * router.post('/auth/login', loginValidation, login);
  * router.get('/auth/me', authenticateToken, me);
  */
+import { randomBytes } from 'crypto';
 import { Response, RequestHandler } from 'express';
 import { body } from 'express-validator';
 import { userService } from '../services/UserService';
@@ -273,9 +274,9 @@ export const registerGuest: RequestHandler = asyncHandler(
       throw new AppError(400, 'VALIDATION_ERROR', 'Email already registered');
     }
 
-    // Guests get a random placeholder password — they cannot log in
-    // Los guests reciben una contraseña aleatoria — no pueden iniciar sesión
-    const placeholderPassword = `guest_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+    // Guests get a cryptographically secure random placeholder password — they cannot log in
+    // Los guests reciben una contraseña aleatoria segura — no pueden iniciar sesión
+    const placeholderPassword = `guest_${Date.now()}_${randomBytes(16).toString('hex')}`;
     const passwordHash = await hashPassword(placeholderPassword);
 
     const user = await userService.createUser({
