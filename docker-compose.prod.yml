@@ -126,9 +126,7 @@ services:
 
 
   bot:
-    build:
-      context: ./bot
-      dockerfile: Dockerfile
+    image: ipproyectos/mlm-bot:${VERSION:-latest}
     restart: unless-stopped
     ports:
       - "3002:3002"
@@ -158,8 +156,8 @@ services:
     volumes:
       # Persist WhatsApp session — without this, re-pairing needed on every restart
       - bot_sessions:/app/bot_sessions
-      # prompt_kb is private (gitignored) — mounted from host at runtime, never baked into image
-      - ./prompt_kb:/app/prompt_kb:ro
+      # prompt_kb is now baked into the Docker image (no longer gitignored)
+      # No host volume needed — files are embedded at build time
     depends_on:
       backend:
         condition: service_started
