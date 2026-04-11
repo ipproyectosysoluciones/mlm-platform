@@ -45,8 +45,6 @@ const STEPS: { id: WizardStep; labelKey: string }[] = [
   { id: 'payment', labelKey: 'reservation.payment' },
 ];
 
-const STEP_ORDER: WizardStep[] = ['dates', 'guests', 'confirm', 'payment'];
-
 // ============================================
 // PriceBadge - Inline price indicator
 // ============================================
