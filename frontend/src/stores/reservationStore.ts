@@ -1,7 +1,7 @@
 /**
  * @fileoverview Reservation Store - Zustand store for reservation wizard state
- * @description Manages the 3-step reservation wizard state: dates → guest data → confirmation
- *               Gestiona el estado del wizard de reserva de 3 pasos: fechas → datos → confirmación
+ * @description Manages the 4-step reservation wizard state: dates → guests → confirmation → payment
+ *               Gestiona el estado del wizard de reserva de 4 pasos: fechas → huéspedes → confirmación → pago
  * @module stores/reservationStore
  * @author Nexo Real Development Team
  */
@@ -23,10 +23,10 @@ import type { TourPackage, TourAvailability } from '../services/tourService';
 // ============================================
 
 /**
- * Wizard step enum
- * Enum de paso del wizard
+ * Wizard step enum (now includes 'payment' for post-confirmation flow)
+ * Enum de paso del wizard (ahora incluye 'payment' para flujo post-confirmación)
  */
-export type WizardStep = 'dates' | 'guests' | 'confirm';
+export type WizardStep = 'dates' | 'guests' | 'confirm' | 'payment';
 
 /**
  * Wizard data for a property reservation
@@ -56,6 +56,27 @@ export interface TourWizardData {
 export type WizardData = PropertyWizardData | TourWizardData;
 
 /**
+ * Computed price breakdown for the current wizard state
+ * Desglose de precio calculado para el estado actual del wizard
+ */
+export interface PriceBreakdown {
+  /** Price per unit (night for properties, person for tours) / Precio por unidad */
+  pricePerUnit: number;
+  /** Currency code / Código de moneda */
+  currency: string;
+  /** Number of nights (property) or 1 (tour) / Cantidad de noches o 1 */
+  totalNights: number;
+  /** Number of guests / Cantidad de huéspedes */
+  guestCount: number;
+  /** pricePerUnit × totalNights / Subtotal sin multiplicar por huéspedes */
+  subtotal: number;
+  /** pricePerUnit × totalNights × guestCount / Total final */
+  totalPrice: number;
+  /** Whether it's a property (per night) or tour (per person) / Si es propiedad o tour */
+  isProperty: boolean;
+}
+
+/**
  * Reservation store state interface
  * Interfaz del estado del store de reservaciones
  */
@@ -80,6 +101,10 @@ interface ReservationState {
   isCancelling: boolean;
   cancelError: string | null;
 
+  // Payment flow / Flujo de pago
+  isProcessingPayment: boolean;
+  paymentError: string | null;
+
   // Wizard Actions / Acciones del wizard
   startPropertyReservation: (property: Property) => void;
   startTourReservation: (tour: TourPackage, availability: TourAvailability) => void;
@@ -92,8 +117,94 @@ interface ReservationState {
   confirmReservation: () => Promise<Reservation>;
   cancelReservation: (id: string) => Promise<void>;
 
+  // Payment Actions / Acciones de pago
+  setPaymentProcessing: (processing: boolean) => void;
+  setPaymentError: (error: string | null) => void;
+
   // Reset
   reset: () => void;
+}
+
+// ============================================
+// Price Utilities / Utilidades de precio
+// ============================================
+
+/**
+ * Calculate the number of days between two date strings
+ * Calcular la cantidad de días entre dos strings de fecha
+ * @param checkIn - ISO date string for check-in
+ * @param checkOut - ISO date string for check-out
+ * @returns Number of nights (minimum 1)
+ */
+export function daysBetween(checkIn: string, checkOut: string): number {
+  if (!checkIn || !checkOut) return 0;
+  const start = new Date(checkIn);
+  const end = new Date(checkOut);
+  const diff = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+  return Math.max(diff, 0);
+}
+
+/**
+ * Compute full price breakdown from current wizard data
+ * Calcular desglose completo de precio desde los datos del wizard
+ * @param wizardData - Current wizard data / Datos actuales del wizard
+ * @returns PriceBreakdown or null if data is insufficient
+ */
+export function computePriceBreakdown(wizardData: WizardData | null): PriceBreakdown | null {
+  if (!wizardData) return null;
+
+  if (wizardData.type === 'property') {
+    const totalNights = daysBetween(wizardData.checkIn, wizardData.checkOut);
+    const pricePerUnit = wizardData.property.price;
+    const currency = wizardData.property.currency;
+    const guestCount = wizardData.guests;
+    const subtotal = pricePerUnit * totalNights;
+    const totalPrice = subtotal * guestCount;
+
+    return {
+      pricePerUnit,
+      currency,
+      totalNights,
+      guestCount,
+      subtotal,
+      totalPrice,
+      isProperty: true,
+    };
+  }
+
+  // Tour: price is per person, 1 "night"
+  const pricePerUnit = wizardData.tour.price;
+  const currency = wizardData.tour.currency;
+  const guestCount = wizardData.guests;
+  const totalNights = 1;
+  const subtotal = pricePerUnit * totalNights;
+  const totalPrice = subtotal * guestCount;
+
+  return {
+    pricePerUnit,
+    currency,
+    totalNights,
+    guestCount,
+    subtotal,
+    totalPrice,
+    isProperty: false,
+  };
+}
+
+/**
+ * Format a price amount with currency symbol
+ * Formatear un monto con símbolo de moneda
+ * @param amount - Numeric amount
+ * @param currency - Currency code (e.g. "USD", "ARS")
+ * @returns Formatted string like "$1,200.00"
+ */
+export function formatPrice(amount: number, currency: string): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: currency || 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  }).format(amount);
 }
 
 // ============================================
@@ -116,6 +227,9 @@ const initialState = {
 
   isCancelling: false,
   cancelError: null,
+
+  isProcessingPayment: false,
+  paymentError: null,
 };
 
 // ============================================
@@ -147,6 +261,7 @@ export const useReservationStore = create<ReservationState>((set, get) => ({
       isWizardOpen: true,
       createdReservation: null,
       createError: null,
+      paymentError: null,
     });
   },
 
@@ -167,6 +282,7 @@ export const useReservationStore = create<ReservationState>((set, get) => ({
       isWizardOpen: true,
       createdReservation: null,
       createError: null,
+      paymentError: null,
     });
   },
 
@@ -196,6 +312,7 @@ export const useReservationStore = create<ReservationState>((set, get) => ({
       wizardStep: 'dates',
       wizardData: null,
       createError: null,
+      paymentError: null,
     });
   },
 
@@ -285,6 +402,22 @@ export const useReservationStore = create<ReservationState>((set, get) => ({
     }
   },
 
+  // ==========================================
+  // Payment Actions / Acciones de pago
+  // ==========================================
+
+  /**
+   * Set payment processing state
+   * Establecer estado de procesamiento de pago
+   */
+  setPaymentProcessing: (processing: boolean) => set({ isProcessingPayment: processing }),
+
+  /**
+   * Set payment error
+   * Establecer error de pago
+   */
+  setPaymentError: (error: string | null) => set({ paymentError: error }),
+
   /**
    * Reset store to initial state
    * Resetear el store al estado inicial
@@ -309,12 +442,16 @@ export const useReservationWizard = () =>
       isCreating: state.isCreating,
       createdReservation: state.createdReservation,
       createError: state.createError,
+      isProcessingPayment: state.isProcessingPayment,
+      paymentError: state.paymentError,
       startPropertyReservation: state.startPropertyReservation,
       startTourReservation: state.startTourReservation,
       setWizardStep: state.setWizardStep,
       updateWizardData: state.updateWizardData,
       closeWizard: state.closeWizard,
       confirmReservation: state.confirmReservation,
+      setPaymentProcessing: state.setPaymentProcessing,
+      setPaymentError: state.setPaymentError,
     }))
   );
 
