@@ -93,7 +93,7 @@ function formatPrice(price: number, currency: string): string {
  * <TourCard tour={tour} variant="grid" />
  */
 export function TourCard({ tour, variant = 'grid', className }: TourCardProps) {
-  const badge = CATEGORY_BADGE[tour.category];
+  const badge = CATEGORY_BADGE[tour.type];
   const coverImage = tour.images[0] ?? null;
 
   if (variant === 'list') {
@@ -143,15 +143,15 @@ export function TourCard({ tour, variant = 'grid', className }: TourCardProps) {
           <div className="flex items-center gap-4 text-sm text-slate-400">
             <span className="flex items-center gap-1">
               <Clock className="w-3.5 h-3.5" />
-              {tour.duration} días
+              {tour.durationDays} días
             </span>
             <span className="flex items-center gap-1">
               <Users className="w-3.5 h-3.5" />
-              Máx. {tour.maxGuests}
+              Máx. {tour.maxCapacity}
             </span>
           </div>
           <p className="text-emerald-400 font-bold text-lg">
-            {formatPrice(tour.price, tour.currency)}
+            {formatPrice(Number(tour.price), tour.currency)}
             <span className="text-slate-500 text-sm font-normal"> / persona</span>
           </p>
         </div>
@@ -208,17 +208,17 @@ export function TourCard({ tour, variant = 'grid', className }: TourCardProps) {
         <div className="flex items-center gap-4 text-sm text-slate-400">
           <span className="flex items-center gap-1">
             <Clock className="w-3.5 h-3.5" />
-            {tour.duration} días
+            {tour.durationDays} días
           </span>
           <span className="flex items-center gap-1">
             <Users className="w-3.5 h-3.5" />
-            Máx. {tour.maxGuests}
+            Máx. {tour.maxCapacity}
           </span>
         </div>
 
         {/* Price */}
         <p className="text-emerald-400 font-bold text-xl">
-          {formatPrice(tour.price, tour.currency)}
+          {formatPrice(Number(tour.price), tour.currency)}
           <span className="text-slate-500 text-sm font-normal"> / persona</span>
         </p>
       </div>

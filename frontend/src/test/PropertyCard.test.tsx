@@ -29,7 +29,7 @@ const baseProperty: Property = {
   country: 'Argentina',
   bedrooms: 2,
   bathrooms: 1,
-  area: 65,
+  areaM2: 65,
   images: [],
   amenities: ['wifi', 'garage'],
   createdAt: '2024-01-01T00:00:00Z',

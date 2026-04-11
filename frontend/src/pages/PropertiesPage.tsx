@@ -129,10 +129,10 @@ function PropertyCard({ property, onClick }: PropertyCardProps) {
               {property.bathrooms}
             </span>
           )}
-          {property.area != null && (
+          {property.areaM2 != null && (
             <span className="flex items-center gap-1">
               <Maximize2 className="w-4 h-4" />
-              {property.area} m²
+              {property.areaM2} m²
             </span>
           )}
         </div>
@@ -141,7 +141,7 @@ function PropertyCard({ property, onClick }: PropertyCardProps) {
         <div className="flex items-center justify-between gap-2">
           <p className="text-lg font-bold text-emerald-600">
             {property.currency}{' '}
-            {property.price.toLocaleString('es-AR', { minimumFractionDigits: 0 })}
+            {Number(property.price).toLocaleString('es-AR', { minimumFractionDigits: 0 })}
             {property.type === 'rental' && (
               <span className="text-sm font-normal text-slate-400"> / mes</span>
             )}
@@ -195,8 +195,8 @@ export default function PropertiesPage() {
     setError(null);
     try {
       const result = await propertyService.getProperties(params);
-      setProperties(result.data);
-      setPagination(result.pagination);
+      setProperties(Array.isArray(result?.data) ? result.data : []);
+      setPagination(result?.pagination ?? null);
     } catch {
       setError('No se pudieron cargar las propiedades. Intentá de nuevo.');
     } finally {

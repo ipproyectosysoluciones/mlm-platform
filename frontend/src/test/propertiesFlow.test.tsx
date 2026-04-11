@@ -57,7 +57,7 @@ const mockProperty: Property = {
   country: 'AR',
   bedrooms: 2,
   bathrooms: 1,
-  area: 65,
+  areaM2: 65,
   images: ['https://img.nexoreal.xyz/prop-123-1.jpg'],
   amenities: ['WiFi', 'Cochera', 'Balcón'],
   createdAt: '2024-01-01T00:00:00Z',

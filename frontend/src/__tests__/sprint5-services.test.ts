@@ -51,17 +51,17 @@ const mockTourPackage = {
   id: 'tour-1',
   title: 'Tour Patagonia',
   description: 'Expedición increíble',
-  category: 'adventure' as const,
+  type: 'adventure' as const,
   destination: 'Bariloche',
   country: 'Argentina',
-  duration: 5,
-  maxParticipants: 12,
+  durationDays: 5,
+  maxCapacity: 12,
   price: 800,
   currency: 'USD',
   images: ['tour1.jpg'],
-  includes: ['hotel', 'meals'],
-  excludes: ['flights'],
-  isActive: true,
+  priceIncludes: ['hotel', 'meals'],
+  priceExcludes: ['flights'],
+  status: 'active' as const,
   createdAt: '2024-01-01T00:00:00.000Z',
   updatedAt: '2024-01-01T00:00:00.000Z',
 };
@@ -102,7 +102,7 @@ describe('propertyService', () => {
   it('getProperties — returns paginated list', async () => {
     const { propertyService } = await import('../services/propertyService');
     mockApiGet.mockResolvedValue({
-      data: { success: true, data: { data: [mockProperty], pagination: paginationMeta } },
+      data: { success: true, data: [mockProperty], pagination: paginationMeta },
     });
 
     const result = await propertyService.getProperties();
@@ -116,7 +116,7 @@ describe('propertyService', () => {
   it('getProperties — passes query params', async () => {
     const { propertyService } = await import('../services/propertyService');
     mockApiGet.mockResolvedValue({
-      data: { success: true, data: { data: [], pagination: { ...paginationMeta, total: 0 } } },
+      data: { success: true, data: [], pagination: { ...paginationMeta, total: 0 } },
     });
 
     await propertyService.getProperties({ city: 'Buenos Aires', page: 2, limit: 5 });
@@ -159,7 +159,7 @@ describe('tourService', () => {
   it('getTours — returns paginated list', async () => {
     const { tourService } = await import('../services/tourService');
     mockApiGet.mockResolvedValue({
-      data: { success: true, data: { data: [mockTourPackage], pagination: paginationMeta } },
+      data: { success: true, data: [mockTourPackage], pagination: paginationMeta },
     });
 
     const result = await tourService.getTours();
@@ -172,7 +172,7 @@ describe('tourService', () => {
   it('getTours — passes category filter', async () => {
     const { tourService } = await import('../services/tourService');
     mockApiGet.mockResolvedValue({
-      data: { success: true, data: { data: [mockTourPackage], pagination: paginationMeta } },
+      data: { success: true, data: [mockTourPackage], pagination: paginationMeta },
     });
 
     await tourService.getTours({ category: 'adventure', page: 1 });
@@ -192,7 +192,7 @@ describe('tourService', () => {
 
     expect(mockApiGet).toHaveBeenCalledWith('/tours/tour-1');
     expect(result.id).toBe('tour-1');
-    expect(result.duration).toBe(5);
+    expect(result.durationDays).toBe(5);
   });
 
   it('getTour — throws on network error', async () => {

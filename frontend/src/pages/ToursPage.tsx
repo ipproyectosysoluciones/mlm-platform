@@ -51,10 +51,10 @@ function getSocialProofViews(id: string): number {
  * Como la API de listado no incluye datos de disponibilidad, derivamos un
  * número estable del ID del tour y maxGuests para simular ocupación.
  */
-function getDemoAvailableSpots(id: string, maxGuests: number): number {
+function getDemoAvailableSpots(id: string, maxCapacity: number): number {
   const hash = id.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
-  // Produce a number between 0 and maxGuests with bias toward mid-range
-  return Math.min(maxGuests, hash % (maxGuests + 3));
+  // Produce a number between 0 and maxCapacity with bias toward mid-range
+  return Math.min(maxCapacity, hash % (maxCapacity + 3));
 }
 
 // ============================================
@@ -96,13 +96,18 @@ function TourCard({ tour, onClick }: TourCardProps) {
   // Availability: use real data if present, otherwise derive demo spots
   const availableSpots = tour.availabilities?.length
     ? tour.availabilities.reduce((best, a) => Math.max(best, a.availableSpots), 0)
-    : getDemoAvailableSpots(tour.id, tour.maxGuests);
+    : getDemoAvailableSpots(tour.id, tour.maxCapacity);
 
   const isSoldOut = availableSpots === 0;
   const isAlmostFull = availableSpots > 0 && availableSpots <= 5;
 
   /** Badge color: emerald > 5, amber 1-5, red 0 */
   const badgeBg = isSoldOut ? 'bg-red-500' : isAlmostFull ? 'bg-amber-500' : 'bg-emerald-500';
+
+  /** Safely resolve category label/color from `tour.type` */
+  const tourCategory = tour.type as TourCategory;
+  const categoryLabel = CATEGORY_LABELS[tourCategory] ?? tour.type;
+  const categoryColor = CATEGORY_COLORS[tourCategory] ?? 'bg-slate-100 text-slate-700';
 
   return (
     <article
@@ -125,10 +130,10 @@ function TourCard({ tour, onClick }: TourCardProps) {
         <span
           className={cn(
             'absolute top-3 left-3 px-2 py-1 rounded-full text-xs font-semibold',
-            CATEGORY_COLORS[tour.category]
+            categoryColor
           )}
         >
-          {CATEGORY_LABELS[tour.category]}
+          {categoryLabel}
         </span>
 
         {/* Occupancy badge / Badge de ocupación */}
@@ -169,18 +174,19 @@ function TourCard({ tour, onClick }: TourCardProps) {
         <div className="flex items-center gap-4 text-sm text-slate-600 mb-4">
           <span className="flex items-center gap-1">
             <Clock className="w-4 h-4" />
-            {tour.duration} {tour.duration === 1 ? 'día' : 'días'}
+            {tour.durationDays} {tour.durationDays === 1 ? 'día' : 'días'}
           </span>
           <span className="flex items-center gap-1">
             <Users className="w-4 h-4" />
-            Hasta {tour.maxGuests}
+            Hasta {tour.maxCapacity}
           </span>
         </div>
 
         {/* Price + CTA */}
         <div className="flex items-center justify-between gap-2">
           <p className="text-lg font-bold text-emerald-600">
-            {tour.currency} {tour.price.toLocaleString('es-AR', { minimumFractionDigits: 0 })}
+            {tour.currency}{' '}
+            {Number(tour.price).toLocaleString('es-AR', { minimumFractionDigits: 0 })}
             <span className="text-sm font-normal text-slate-400"> / persona</span>
           </p>
           {isSoldOut ? (
@@ -242,8 +248,8 @@ export default function ToursPage() {
     setError(null);
     try {
       const result = await tourService.getTours(params);
-      setTours(result.data);
-      setPagination(result.pagination);
+      setTours(Array.isArray(result?.data) ? result.data : []);
+      setPagination(result?.pagination ?? null);
     } catch {
       setError('No se pudieron cargar los tours. Intentá de nuevo.');
     } finally {
