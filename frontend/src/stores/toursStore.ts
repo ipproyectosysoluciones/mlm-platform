@@ -63,7 +63,7 @@ export const useToursStore = create<ToursState>((set) => ({
       const params: TourListParams = { page: 1, limit: 6 };
       const response = await tourService.getTours(params);
       set({
-        featuredTours: response.data,
+        featuredTours: Array.isArray(response?.data) ? response.data : [],
         isFetchingFeatured: false,
       });
     } catch (error) {

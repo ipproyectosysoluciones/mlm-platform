@@ -106,7 +106,12 @@ export const tourService = {
     const response = await api.get<{ success: boolean; data: TourListResponse }>('/tours', {
       params,
     });
-    return response.data.data!;
+    return (
+      response.data.data ?? {
+        data: [],
+        pagination: { total: 0, page: 1, limit: 10, totalPages: 0 },
+      }
+    );
   },
 
   /**
@@ -117,7 +122,7 @@ export const tourService = {
    */
   getTour: async (id: string): Promise<TourPackage> => {
     const response = await api.get<{ success: boolean; data: TourPackage }>(`/tours/${id}`);
-    return response.data.data!;
+    return response.data.data ?? ({} as TourPackage);
   },
 };
 

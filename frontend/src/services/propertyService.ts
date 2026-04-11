@@ -96,7 +96,12 @@ export const propertyService = {
       '/properties',
       { params }
     );
-    return response.data.data!;
+    return (
+      response.data.data ?? {
+        data: [],
+        pagination: { total: 0, page: 1, limit: 10, totalPages: 0 },
+      }
+    );
   },
 
   /**
@@ -107,7 +112,7 @@ export const propertyService = {
    */
   getProperty: async (id: string): Promise<Property> => {
     const response = await api.get<{ success: boolean; data: Property }>(`/properties/${id}`);
-    return response.data.data!;
+    return response.data.data ?? ({} as Property);
   },
 };
 

@@ -63,7 +63,7 @@ export const usePropertiesStore = create<PropertiesState>((set) => ({
       const params: PropertyListParams = { page: 1, limit: 6 };
       const response = await propertyService.getProperties(params);
       set({
-        featuredProperties: response.data,
+        featuredProperties: Array.isArray(response?.data) ? response.data : [],
         isFetchingFeatured: false,
       });
     } catch (error) {
