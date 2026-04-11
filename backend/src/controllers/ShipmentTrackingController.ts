@@ -11,7 +11,8 @@ import { ShipmentTrackingService } from '../services/ShipmentTrackingService';
 import { DeliveryProvider } from '../models/DeliveryProvider';
 import { Order, Product } from '../models';
 import { AppError } from '../middleware/error.middleware';
-import { ApiResponse, ShipmentTrackingStatus } from '../types';
+import type { ApiResponse } from '../types';
+import { ShipmentTrackingStatus } from '../types';
 
 const shipmentTrackingService = new ShipmentTrackingService();
 

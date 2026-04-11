@@ -9,7 +9,7 @@ import { Op, WhereOptions } from 'sequelize';
 import { User, Commission, Purchase } from '../../models';
 import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
 import type { ApiResponse } from '../../types';
-import { ApiResponse as ResponseUtil } from '../../utils/response.util';
+import { ResponseUtil } from '../../utils/response.util';
 import type { CommissionAttributes } from '../../types';
 
 // Type for Commission where clauses

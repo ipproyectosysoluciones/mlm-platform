@@ -13,7 +13,7 @@ import { userService, treeServiceInstance } from '../services/UserService';
 import type { ApiResponse } from '../types';
 import { LEVEL_NAMES } from '../types';
 import type { Request } from 'express';
-import { ApiResponse as ResponseUtil } from '../utils/response.util';
+import { ResponseUtil } from '../utils/response.util';
 
 /**
  * Get public user profile by referral code
