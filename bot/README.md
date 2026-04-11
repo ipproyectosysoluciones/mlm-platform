@@ -1,6 +1,6 @@
 # Nexo Real — Bot (Nexo Bot)
 
-> **Versión actual: v2.3.0** — Sprint 7 completado (2026-04-08)
+> **Versión actual: v2.4.0** — Sprint 8 completado (2026-04-10)
 
 Chatbot de WhatsApp para la plataforma Nexo Real, construido con **BuilderBot** + **Baileys**. Responde consultas de propiedades y tours en español e inglés, y facilita la comunicación con el equipo comercial.
 

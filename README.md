@@ -21,7 +21,7 @@ Conectamos tu negocio con el mundo. Plataforma de afiliaciones Unilevel con comi
 - **Landing Pages** - Creador de páginas de captura
 - **Panel de Administración** - Gestión completa de usuarios y comisiones
 - **API REST Documentada** - OpenAPI/Swagger bilingüe (ES/EN)
-- **Tests Automatizados** - 967 tests (Unit + Integration + E2E con Playwright)
+- **Tests Automatizados** - ~1,236 tests (Backend 39 suites/528 + Frontend Unit 34/446 + E2E 22/262)
 - **i18n** - Interfaz bilingüe (Español/Inglés)
 - **Wallet Digital** - Billetera digital con retiros y transacciones
 - **2FA (TOTP)** - Two-Factor Authentication con códigos de recuperación

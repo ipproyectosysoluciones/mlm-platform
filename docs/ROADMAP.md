@@ -45,7 +45,7 @@
 | **network_balance**      | Migración `binary_balance` → `network_balance`                              | ✅     |
 | **Build Hardening**      | Sin `.map` en producción, logs de tamaño                                    | ✅     |
 | **SEO Frontend**         | Helmet dinámico + OG tags + JSON-LD (Property + Tour) + social proof badges | ✅     |
-| **Tests**                | 967 tests (Backend 39 suites/535 + Frontend 33 suites/432)                  | ✅     |
+| **Tests**                | ~1,236 tests (Backend 39/528 + Frontend Unit 34/446 + E2E 22/262)           | ✅     |
 | **RBAC 9 Roles**         | super_admin, admin, finance, sales, advisor, vendor, user, guest, bot       | ✅     |
 | **Register Guest**       | `POST /api/auth/register/guest` — registro público sin sponsor              | ✅     |
 | **Update User Role**     | `PATCH /api/admin/users/:id/role` — solo super_admin/admin                  | ✅     |
@@ -417,66 +417,69 @@ Patch v2.3.5 (2026-04-09):
   ✅ Tests: Backend 39 suites / 535 tests, Frontend 33 suites / 432 tests
 ```
 
-#### Sprint 8 — v2.4.0 — RBAC 9 Roles + Seed Nexo Real ✅
+#### Sprint 8 — v2.4.0 — Bot Production-Ready + RBAC + Seed ✅
 
 ```
-Branch:    feature/sprint8-seed-docs
+Branch:    feature/sprint8-* (multiple feature branches)
 Estado:    Completado 2026-04-10
+PRs:       #107–#125 (16 PRs merged)
+Release:   GitHub Release v2.4.0 + tag on release branch
 
-Batch 8.1 — RBAC 9 Roles:
+Batch 8.1 — Bot Knowledge Base:
+  ✅ prompt_kb/ con 4 archivos curados (knowledge-base.md, objection-handling.md, onboarding-affiliates.md, lead-capture-guide.md)
+  ✅ FAQ real del negocio: propiedades, tours, afiliados, precios, zonas, contacto
+  ✅ prompt_kb baked into Docker image (no host-mounted volumes)
+
+Batch 8.2 — n8n Workflows:
+  ✅ Google Calendar workflow "schedule-visit" → crea evento en Calendar
+  ✅ Notion CRM workflow "human-handoff" → captura lead en Notion
+  ✅ Notion CRM workflow "schedule-visit" → marca lead como Visit Scheduled
+  ✅ Human agent notification webhook
+
+Batch 8.3 — Bot Lead Capture:
+  ✅ welcomeFlow: captura email después del nombre
+  ✅ Área de interés (propiedad / turismo / afiliados)
+  ✅ Persistencia de lead en DB via API interna
+
+Batch 8.4 — Bot Onboarding + Objection Handling:
+  ✅ onboarding.flow.ts: guía paso a paso para registro de afiliados
+  ✅ Keywords: "quiero ser afiliado", "cómo me registro", "join", etc.
+  ✅ Técnicas de objeción integradas en prompts Sophia/Max (pyramid, time, network, trust)
+
+Batch 8.5 — RBAC 9 Roles:
   ✅ feat(rbac): 9 roles — super_admin, admin, finance, sales, advisor, vendor, user, guest, bot
   ✅ feat(auth): POST /api/auth/register/guest — registro público sin sponsor required
   ✅ feat(admin): PATCH /api/admin/users/:userId/role — actualización de rol (super_admin/admin only)
   ✅ Tests: cobertura completa de permisos por rol
 
-Batch 8.2 — Seed Nexo Real Colombiano:
+Batch 8.6 — Seed Nexo Real Colombiano:
   ✅ refactor(seed): seed.ts — árbol Unilevel 12 usuarios colombianos, 6 productos, CommissionConfig
-  ✅ refactor(seed): server.ts — autoSeed actualizado + banner "Nexo Real — Backend Server"
+  ✅ refactor(seed): server.ts — autoSeed + banner "Nexo Real — Backend Server"
   ✅ refactor(seed): seed-e2e.sql — migrado MySQL → PostgreSQL con árbol Unilevel completo
 
-Batch 8.3 — Documentación:
+Batch 8.7 — Bot Infrastructure:
+  ✅ MemoryDB → PostgreSQLAdapter (conversaciones persisten entre reinicios)
+  ✅ prompt_kb baked into Docker image (self-contained)
+  ✅ CD workflow cd-bot.yml → ipproyectos/mlm-bot en Docker Hub
+
+Batch 8.8 — Documentación:
   ✅ docs: swagger.ts v2.4.0 — 9 roles, schemas RBAC, TreeNode Unilevel
   ✅ docs: PRD.md v2.4.0 — Sprint 8 ✅, Sprint 9 planificado
-  ✅ docs: ROADMAP.md v2.4.0 — tabla estado actualizada
   ✅ docs: backend-API.md — 2 endpoints RBAC, URL nexoreal.xyz
-  ✅ docs: README.md v2.4.0 — Unilevel, 9 roles, 967 tests
+  ✅ docs: README.md v2.4.0 — Unilevel, 9 roles
   ✅ docs: Postman — colección y environment renombrados a Nexo Real + carpeta RBAC
 ```
 
-#### Sprint 9 — v3.0.0 — Bot Completo + n8n Workflows 📋
+#### Sprint 9 — v3.0.0 — TBD 📋
 
 ```
-Branch:    feature/sprint9-bot-complete
-Estado:    Planificado (post Sprint 8)
+Branch:    TBD
+Estado:    No iniciado — pendiente definición de alcance post-auditoría v2.4.0
 
-Batch 9.1 — Knowledge Base FAQ:
-  □ Crear /bot/src/prompt_kb/knowledge-base.md con FAQ real del negocio
-  □ Cubrir: propiedades, tours, afiliados, precios, zonas, contacto
-
-Batch 9.2 — n8n: Google Calendar workflow:
-  □ Crear workflow n8n "schedule-visit" → Google Calendar event
-  □ Test end-to-end: scheduleFlow → n8n → Calendar
-
-Batch 9.3 — n8n: Notion CRM workflow:
-  □ Crear workflow n8n "human-handoff" → Notion CRM lead
-  □ Crear workflow n8n "schedule-visit" → Notion CRM lead (Visit Scheduled)
-  □ Test end-to-end: handoffFlow → n8n → Notion
-
-Batch 9.4 — Captación de leads completa:
-  □ Agregar captura de email en welcomeFlow (después del nombre)
-  □ Agregar área de interés (propiedad / turismo / afiliados)
-  □ Persistir lead en DB (tabla CRM leads) via API interna
-
-Batch 9.5 — Onboarding de afiliados:
-  □ Diseñar y crear onboarding.flow.ts (guía paso a paso)
-  □ Keywords: "quiero ser afiliado", "cómo me registro", "join", etc.
-  □ Flow: requisitos → link registro → seguimiento post-registro
-
-Batch 9.6 — Manejo de objeciones:
-  □ Extender prompt Sophia/Max con técnicas: pyramid, time, network, trust
-  □ Test con escenarios de objeción en fixtures
-
-Estimado: ~30-35h
+Nota: Los ítems que estaban listados aquí (KB FAQ, n8n Google Calendar,
+n8n Notion CRM, lead capture, onboarding, objection handling) fueron
+TODOS completados en Sprint 8 (PRs #107-#125). Sprint 9 se definirá
+en el próximo ciclo SDD.
 ```
 
 ### Fase 2 — Multi-Tenant (1–2 meses post v2.0.0)
@@ -514,7 +517,7 @@ Email: Brevo (SMTP + API)
 SMS: Brevo SMS
 Pagos: PayPal + MercadoPago
 Delivery: Providers via webhooks
-Testing: Jest (39 suites / 535 tests)
+Testing: Jest (39 suites / 528 tests)
 ```
 
 ### Frontend Stack
@@ -526,7 +529,7 @@ State: Zustand 5
 Routing: React Router 7
 i18n: i18next
 PWA: Workbox
-Testing: Vitest (33 suites / 432 tests)
+Testing: Vitest (34 files / 446 tests) + Playwright (22 specs / 262 E2E)
 ```
 
 ---
@@ -536,7 +539,7 @@ Testing: Vitest (33 suites / 432 tests)
 | Métrica       | Actual (v2.4.0)                                                  | Objetivo                 |
 | ------------- | ---------------------------------------------------------------- | ------------------------ |
 | Test Coverage | ~70%                                                             | **90%+**                 |
-| Tests Totales | 967 (Backend 535 + Frontend 432)                                 | **~550** ✅ superado     |
+| Tests Totales | ~1,236 (Backend 528 + Frontend Unit 446 + E2E 262)               | **~550** ✅ superado     |
 | Features      | Pagos + Gamif + E-commerce + Multi-vendor + Delivery + Contracts | **Release v2.0.0**       |
 | Delivery      | Shipping addresses + tracking                                    | **+ DiDi/Uber/InDriver** |
 | Pagos         | PayPal + MP                                                      | **+ Gift Cards** ✅      |
@@ -567,6 +570,7 @@ sprint:3             - Sprint 3
 sprint:4             - Sprint 4
 sprint:7             - Sprint 7 — v2.3.0 → v2.3.5
 sprint:8             - Sprint 8 — v2.4.0
+sprint:9             - Sprint 9 — v3.0.0
 ```
 
 ---

@@ -1106,6 +1106,189 @@ GET /api/leaderboard/me?period=weekly&category=sellers
 
 ---
 
+## ⚙️ Commission Configuration (Admin)
+
+> Admin endpoints for managing commission rate configurations by business type and MLM level. All endpoints require admin authentication and are mounted at `/api/admin/commissions`.
+
+### Get All Commission Configurations
+
+```
+GET /api/admin/commissions/config
+Authorization: Bearer <token> (admin only)
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "uuid",
+      "businessType": "suscripcion",
+      "customBusinessName": null,
+      "level": "direct",
+      "percentage": 0.1,
+      "isActive": true,
+      "createdAt": "2026-04-01T00:00:00.000Z",
+      "updatedAt": "2026-04-01T00:00:00.000Z"
+    }
+  ]
+}
+```
+
+---
+
+### Get Commission Config by ID
+
+```
+GET /api/admin/commissions/config/:id
+Authorization: Bearer <token> (admin only)
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "businessType": "producto",
+    "level": "level_1",
+    "percentage": 0.05,
+    "isActive": true
+  }
+}
+```
+
+---
+
+### Create Commission Configuration
+
+```
+POST /api/admin/commissions/config
+Authorization: Bearer <token> (admin only)
+```
+
+**Body:**
+
+```json
+{
+  "businessType": "suscripcion",
+  "level": "direct",
+  "percentage": 0.1
+}
+```
+
+| Field                | Type   | Required | Description                                                   |
+| -------------------- | ------ | -------- | ------------------------------------------------------------- |
+| `businessType`       | string | ✅       | `suscripcion`, `producto`, `membresia`, `servicio`, or `otro` |
+| `customBusinessName` | string | —        | Custom name (only when `businessType` is `otro`)              |
+| `level`              | string | ✅       | `direct`, `level_1`, `level_2`, `level_3`, or `level_4`       |
+| `percentage`         | number | ✅       | Commission rate between 0 and 1 (e.g., 0.10 = 10%)            |
+
+> Returns `409 Conflict` if a configuration already exists for the given `businessType` + `level` combination.
+
+**Response (201):**
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "businessType": "suscripcion",
+    "level": "direct",
+    "percentage": 0.1,
+    "isActive": true,
+    "createdAt": "2026-04-08T00:00:00.000Z"
+  }
+}
+```
+
+---
+
+### Update Commission Configuration
+
+```
+PUT /api/admin/commissions/config/:id
+Authorization: Bearer <token> (admin only)
+```
+
+**Body:**
+
+```json
+{
+  "percentage": 0.12,
+  "isActive": false
+}
+```
+
+> Both `percentage` and `isActive` are optional. Only provided fields are updated.
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "businessType": "suscripcion",
+    "level": "direct",
+    "percentage": 0.12,
+    "isActive": false,
+    "updatedAt": "2026-04-08T12:00:00.000Z"
+  }
+}
+```
+
+---
+
+### Delete Commission Configuration
+
+```
+DELETE /api/admin/commissions/config/:id
+Authorization: Bearer <token> (admin only)
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": null
+}
+```
+
+---
+
+### Get Active Rates by Business Type
+
+```
+GET /api/admin/commissions/rates/:businessType
+Authorization: Bearer <token> (admin only)
+```
+
+**Path Parameter:** `businessType` — one of `suscripcion`, `producto`, `membresia`, `servicio`, `otro`
+
+**Description:** Returns active commission rates for a specific business type, filling in default rates for any unconfigured levels.
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "direct": 0.1,
+    "level_1": 0.05,
+    "level_2": 0.03,
+    "level_3": 0.02,
+    "level_4": 0.01
+  }
+}
+```
+
+---
+
 ## ⚠️ Error Codes
 
 | Code               | Description              |
@@ -1319,6 +1502,172 @@ Authorization: Bearer <token> (admin only)
 
 ---
 
+### Admin: Reserve Stock
+
+```
+POST /api/admin/products/:id/inventory/reserve
+Authorization: Bearer <token> (admin only)
+```
+
+**Description:** Reserves stock for an order. Returns error if insufficient stock is available.
+
+**Body:**
+
+```json
+{
+  "quantity": 5,
+  "referenceId": "order-uuid"
+}
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "productId": "uuid",
+    "reserved": 5,
+    "availableStock": 145
+  }
+}
+```
+
+---
+
+### Admin: Release Reserved Stock
+
+```
+POST /api/admin/products/:id/inventory/release
+Authorization: Bearer <token> (admin only)
+```
+
+**Description:** Releases previously reserved stock (e.g., when an order is cancelled).
+
+**Body:**
+
+```json
+{
+  "quantity": 5,
+  "referenceId": "order-uuid"
+}
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "productId": "uuid",
+    "released": 5,
+    "availableStock": 150
+  }
+}
+```
+
+---
+
+### Admin: Adjust Stock Manually
+
+```
+POST /api/admin/products/:id/inventory/adjust
+Authorization: Bearer <token> (admin only)
+```
+
+**Description:** Manually adjusts stock quantity with a reason for audit trail. Quantity can be positive (add) or negative (remove).
+
+**Body:**
+
+```json
+{
+  "quantity": -3,
+  "reason": "Damaged items removed from inventory"
+}
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "productId": "uuid",
+    "adjusted": -3,
+    "newStock": 147
+  }
+}
+```
+
+---
+
+### Admin: Set Initial Stock
+
+```
+POST /api/admin/products/:id/inventory/initial
+Authorization: Bearer <token> (admin only)
+```
+
+**Description:** Sets the initial stock quantity for a product. Typically used when first setting up inventory.
+
+**Body:**
+
+```json
+{
+  "quantity": 200
+}
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "productId": "uuid",
+    "stock": 200
+  }
+}
+```
+
+---
+
+### Admin: Record Return
+
+```
+POST /api/admin/products/:id/inventory/return
+Authorization: Bearer <token> (admin only)
+```
+
+**Description:** Records returned items back into inventory.
+
+**Body:**
+
+```json
+{
+  "quantity": 2,
+  "reason": "Customer return — defective item",
+  "referenceId": "order-uuid"
+}
+```
+
+> `referenceId` is optional — links the return to a specific order.
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "productId": "uuid",
+    "returned": 2,
+    "newStock": 152
+  }
+}
+```
+
+---
+
 ### Admin: List All Categories
 
 ```
@@ -1444,6 +1793,97 @@ Authorization: Bearer <token> (admin only)
     "commissionRate": 0.2,
     "updatedAt": "2026-04-04T00:00:00.000Z"
   }
+}
+```
+
+---
+
+### Admin: Approve Vendor
+
+```
+POST /api/admin/vendors/:id/approve
+Authorization: Bearer <token> (admin only)
+```
+
+**Description:** Approves a pending vendor application. Only vendors in `pending` status can be approved.
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "status": "approved",
+    "updatedAt": "2026-04-04T00:00:00.000Z"
+  },
+  "message": "Vendor approved successfully"
+}
+```
+
+---
+
+### Admin: Reject Vendor
+
+```
+POST /api/admin/vendors/:id/reject
+Authorization: Bearer <token> (admin only)
+```
+
+**Body:**
+
+```json
+{
+  "reason": "Incomplete documentation"
+}
+```
+
+> `reason` is required (max 500 characters).
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "status": "rejected",
+    "updatedAt": "2026-04-04T00:00:00.000Z"
+  },
+  "message": "Vendor rejected"
+}
+```
+
+---
+
+### Admin: Suspend Vendor
+
+```
+POST /api/admin/vendors/:id/suspend
+Authorization: Bearer <token> (admin only)
+```
+
+**Body:**
+
+```json
+{
+  "reason": "Policy violation"
+}
+```
+
+> `reason` is required (max 500 characters).
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "status": "suspended",
+    "updatedAt": "2026-04-04T00:00:00.000Z"
+  },
+  "message": "Vendor suspended"
 }
 ```
 
@@ -1883,11 +2323,234 @@ x-bot-secret: <bot-secret>
 
 ### Reservations
 
-| Método | Ruta                                 | Auth  | Descripción                             |
-| ------ | ------------------------------------ | ----- | --------------------------------------- |
-| POST   | `/api/reservations`                  | JWT   | Crear reserva (property o tour)         |
-| GET    | `/api/reservations`                  | JWT   | Listar reservas del usuario autenticado |
-| GET    | `/api/reservations/:id`              | JWT   | Detalle de reserva                      |
-| PATCH  | `/api/reservations/:id/cancel`       | JWT   | Cancelar reserva                        |
-| GET    | `/api/admin/reservations`            | Admin | Listar todas las reservas               |
-| PATCH  | `/api/admin/reservations/:id/status` | Admin | Cambiar status de reserva               |
+| Método | Ruta                                  | Auth  | Descripción                             |
+| ------ | ------------------------------------- | ----- | --------------------------------------- |
+| POST   | `/api/reservations`                   | JWT   | Crear reserva (property o tour)         |
+| GET    | `/api/reservations`                   | JWT   | Listar reservas del usuario autenticado |
+| GET    | `/api/reservations/:id`               | JWT   | Detalle de reserva                      |
+| PATCH  | `/api/reservations/:id/cancel`        | JWT   | Cancelar reserva                        |
+| GET    | `/api/admin/reservations`             | Admin | Listar todas las reservas               |
+| GET    | `/api/admin/reservations/:id`         | Admin | Detalle de reserva (admin)              |
+| POST   | `/api/admin/reservations`             | Admin | Crear reserva (admin)                   |
+| PUT    | `/api/admin/reservations/:id`         | Admin | Actualizar reserva                      |
+| POST   | `/api/admin/reservations/:id/cancel`  | Admin | Cancelar reserva                        |
+| POST   | `/api/admin/reservations/:id/confirm` | Admin | Confirmar reserva                       |
+
+---
+
+## 🗓️ Admin Reservation Management
+
+> Admin-level endpoints for full reservation lifecycle management. All endpoints require admin role authentication.
+
+### Admin: List All Reservations
+
+```
+GET /api/admin/reservations
+Authorization: Bearer <token> (admin only)
+```
+
+**Query Parameters:**
+
+- `type`: `property` | `tour` — filter by reservation type
+- `status`: `pending` | `confirmed` | `cancelled` | `completed` | `no_show`
+- `userId`: UUID — filter by user
+- `vendorId`: UUID — filter by vendor
+- `paymentStatus`: `pending` | `paid` | `refunded` | `failed`
+- `page`: Page number (default: 1)
+- `limit`: Items per page (default: 20, max: 100)
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "uuid",
+      "type": "property",
+      "status": "pending",
+      "guestName": "John Doe",
+      "guestEmail": "john@example.com",
+      "totalPrice": 500.0,
+      "paymentStatus": "pending",
+      "createdAt": "2026-04-08T00:00:00.000Z"
+    }
+  ],
+  "pagination": {
+    "total": 45,
+    "page": 1,
+    "totalPages": 3
+  }
+}
+```
+
+---
+
+### Admin: Get Reservation by ID
+
+```
+GET /api/admin/reservations/:id
+Authorization: Bearer <token> (admin only)
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "type": "property",
+    "status": "pending",
+    "userId": "uuid",
+    "propertyId": "uuid",
+    "checkIn": "2026-07-01",
+    "checkOut": "2026-07-07",
+    "guestName": "John Doe",
+    "guestEmail": "john@example.com",
+    "guestPhone": "+1234567890",
+    "totalPrice": 500.0,
+    "currency": "USD",
+    "paymentStatus": "pending",
+    "notes": "Late check-in requested",
+    "createdAt": "2026-04-08T00:00:00.000Z"
+  }
+}
+```
+
+---
+
+### Admin: Create Reservation
+
+```
+POST /api/admin/reservations
+Authorization: Bearer <token> (admin only)
+```
+
+**Body:**
+
+```json
+{
+  "type": "property",
+  "userId": "uuid",
+  "propertyId": "uuid",
+  "checkIn": "2026-07-01",
+  "checkOut": "2026-07-07",
+  "guestName": "John Doe",
+  "guestEmail": "john@example.com",
+  "totalPrice": 500.0,
+  "currency": "USD"
+}
+```
+
+> For tour reservations, use `tourPackageId`, `tourDate`, and `groupSize` instead of `propertyId`, `checkIn`, and `checkOut`.
+
+**Response (201):**
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "type": "property",
+    "status": "pending",
+    "totalPrice": 500.0,
+    "createdAt": "2026-04-08T00:00:00.000Z"
+  }
+}
+```
+
+---
+
+### Admin: Update Reservation
+
+```
+PUT /api/admin/reservations/:id
+Authorization: Bearer <token> (admin only)
+```
+
+**Body:**
+
+```json
+{
+  "status": "confirmed",
+  "adminNotes": "Payment verified manually",
+  "paymentStatus": "paid",
+  "paymentId": "PAY-12345"
+}
+```
+
+> All fields are optional. Supports updating status, admin notes, payment status, and payment reference.
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "status": "confirmed",
+    "paymentStatus": "paid",
+    "adminNotes": "Payment verified manually",
+    "updatedAt": "2026-04-08T12:00:00.000Z"
+  }
+}
+```
+
+---
+
+### Admin: Cancel Reservation
+
+```
+POST /api/admin/reservations/:id/cancel
+Authorization: Bearer <token> (admin only)
+```
+
+**Description:** Cancels a reservation and restores tour availability if applicable.
+
+**Body:**
+
+```json
+{
+  "reason": "Guest requested cancellation"
+}
+```
+
+> `reason` is optional but recommended for audit trail.
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "status": "cancelled",
+    "updatedAt": "2026-04-08T12:00:00.000Z"
+  }
+}
+```
+
+---
+
+### Admin: Confirm Reservation
+
+```
+POST /api/admin/reservations/:id/confirm
+Authorization: Bearer <token> (admin only)
+```
+
+**Description:** Confirms a pending reservation.
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "status": "confirmed",
+    "updatedAt": "2026-04-08T12:00:00.000Z"
+  }
+}
+```

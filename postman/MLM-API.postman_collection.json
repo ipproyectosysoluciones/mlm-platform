@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "Nexo Real API",
-    "description": "Complete API collection for Nexo Real Platform - v2.3.5 (Sprint 7: Bot Stability, Frontend Tests, CD Pipeline)",
+    "description": "Complete API collection for Nexo Real Platform - v2.4.0 (Sprint 8: RBAC 9 roles, register/guest, updateUserRole, Seed Nexo Real colombiano)",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -3656,6 +3656,62 @@
               ]
             },
             "description": "Get simplified tour package listings for Nexo Bot WhatsApp responses. Requires X-Bot-Secret header.\n\nObtiene paquetes turísticos simplificados para respuestas del Nexo Bot de WhatsApp. Requiere cabecera X-Bot-Secret."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "RBAC",
+      "description": "Endpoints de control de acceso basado en roles / Role-Based Access Control endpoints (Sprint 8)",
+      "item": [
+        {
+          "name": "Register Guest",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"invitado@nexoreal.xyz\",\n  \"password\": \"Invitado123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register/guest",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register", "guest"]
+            },
+            "description": "Registra un usuario con role 'guest' sin necesitar un sponsor. No requiere autenticación.\n\nRegisters a user with 'guest' role without requiring a sponsor. No auth needed."
+          },
+          "response": []
+        },
+        {
+          "name": "Update User Role",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"role\": \"advisor\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/users/{{userId}}/role",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "users", "{{userId}}", "role"]
+            },
+            "description": "Actualiza el rol de un usuario. Solo accesible por super_admin y admin.\nRoles válidos: super_admin | admin | finance | sales | advisor | vendor | user | guest | bot\n\nUpdates a user's role. Accessible only by super_admin and admin.\nValid roles: super_admin | admin | finance | sales | advisor | vendor | user | guest | bot"
           },
           "response": []
         }
