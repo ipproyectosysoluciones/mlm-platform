@@ -517,6 +517,63 @@
     "level3": "Level 3 Referrals",
     "level4": "Level 4 Referrals"
   },
+  "catalog": {
+    "bookNow": "Book Now",
+    "viewedToday": "{{count}} people viewed this today"
+  },
+  "reservation": {
+    "selectDates": "Select dates",
+    "dates": "Dates",
+    "guests": "Guests",
+    "confirmation": "Confirmation",
+    "payment": "Payment",
+    "property": "Property",
+    "tour": "Tour",
+    "pricePerNight": "Price per night",
+    "pricePerPerson": "Price per person",
+    "totalNights": "{{count}} night",
+    "totalNights_other": "{{count}} nights",
+    "totalGuests": "{{count}} guest",
+    "totalGuests_other": "{{count}} guests",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "priceBreakdown": "Price breakdown",
+    "estimatedTotal": "Estimated total",
+    "nightsCount": "{{nights}} nights × {{price}}",
+    "guestsMultiplier": "× {{guests}} guests",
+    "checkIn": "Check-in",
+    "checkOut": "Check-out",
+    "howManyGuests": "How many guests?",
+    "numberOfGuests": "Number of guests",
+    "additionalNotes": "Additional notes",
+    "additionalNotesHint": "Any special requests, preferences, etc.",
+    "optional": "optional",
+    "confirming": "Confirming...",
+    "confirmReservation": "Confirm reservation",
+    "reservationConfirmed": "Reservation confirmed!",
+    "reservationConfirmedDesc": "Your request has been submitted. The Nexo Real team will contact you shortly to coordinate the details.",
+    "reservationId": "Reservation ID",
+    "status": "Status",
+    "paymentMethod": "Payment method",
+    "selectPayment": "Choose how to pay",
+    "selectPaymentDesc": "Select your preferred payment method to complete the reservation.",
+    "payWithPaypal": "Pay with PayPal",
+    "payWithMercadopago": "Pay with MercadoPago",
+    "payWithWallet": "Pay with wallet",
+    "walletBalance": "Available balance: {{balance}}",
+    "payLater": "Pay later",
+    "payLaterHint": "You can pay from My Reservations",
+    "insufficientBalance": "Insufficient balance",
+    "processingPayment": "Processing payment...",
+    "viewMyReservations": "View my reservations",
+    "keepExploring": "Keep exploring",
+    "cancel": "Cancel",
+    "back": "Back",
+    "continue": "Continue",
+    "paymentError": "Failed to process payment. Please try again.",
+    "secure": "Secure payment",
+    "secureDesc": "All transactions are encrypted and protected."
+  },
   "landing": {
     "hero": {
       "badge": "#1 Platform in Latin America",
@@ -566,10 +623,7 @@
         "title": "Multi-Level Commissions",
         "description": "Earn up to 5 levels deep with transparent, real-time commission tracking."
       },
-      "bot": {
-        "title": "Nexo Bot",
-        "description": "AI-powered assistant (Sophia & Max) via WhatsApp for 24/7 support and sales automation."
-      },
+
       "payments": {
         "title": "Global Payments",
         "description": "PayPal, MercadoPago, and crypto wallet support to collect from anywhere."
@@ -591,7 +645,7 @@
         "city": "Cancún, Mexico"
       },
       "t3": {
-        "quote": "I started as an independent agent with no experience. With the WhatsApp bot and the platform tools, I already have a network of 15 people generating passive income.",
+        "quote": "I started as an independent agent with no experience. With the CRM and the platform tools, I already have a network of 15 people generating passive income.",
         "name": "Camila Torres",
         "role": "Independent Agent",
         "city": "Buenos Aires, Argentina"

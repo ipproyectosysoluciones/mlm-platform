@@ -23,7 +23,6 @@ import {
   Network,
   TrendingUp,
   Compass,
-  Bot,
   CreditCard,
   Star,
 } from 'lucide-react';
@@ -87,11 +86,6 @@ const FEATURES = [
     icon: TrendingUp,
     titleKey: 'landing.features.commissions.title',
     descKey: 'landing.features.commissions.description',
-  },
-  {
-    icon: Bot,
-    titleKey: 'landing.features.bot.title',
-    descKey: 'landing.features.bot.description',
   },
   {
     icon: CreditCard,

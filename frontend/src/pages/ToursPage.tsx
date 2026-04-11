@@ -8,8 +8,18 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
-import { MapPin, Clock, Users, Search, SlidersHorizontal, Compass, Eye } from 'lucide-react';
+import {
+  MapPin,
+  Clock,
+  Users,
+  Search,
+  SlidersHorizontal,
+  Compass,
+  Eye,
+  CalendarCheck,
+} from 'lucide-react';
 import { tourService } from '../services/tourService';
 import type { TourPackage, TourListParams, TourCategory } from '../services/tourService';
 import { cn } from '../lib/utils';
@@ -63,6 +73,8 @@ interface TourCardProps {
 }
 
 function TourCard({ tour, onClick }: TourCardProps) {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
   const mainImage = tour.images?.[0];
 
   return (
@@ -95,7 +107,7 @@ function TourCard({ tour, onClick }: TourCardProps) {
         {/* Social proof badge / Badge de prueba social */}
         <span className="absolute bottom-3 right-3 flex items-center gap-1 px-2 py-1 rounded-full bg-black/50 text-white text-xs backdrop-blur-sm">
           <Eye className="w-3 h-3" />
-          {getSocialProofViews(tour.id)} personas vieron esto hoy
+          {t('catalog.viewedToday', { count: getSocialProofViews(tour.id) })}
         </span>
       </div>
 
@@ -119,11 +131,24 @@ function TourCard({ tour, onClick }: TourCardProps) {
           </span>
         </div>
 
-        {/* Price */}
-        <p className="text-lg font-bold text-emerald-600">
-          {tour.currency} {tour.price.toLocaleString('es-AR', { minimumFractionDigits: 0 })}
-          <span className="text-sm font-normal text-slate-400"> / persona</span>
-        </p>
+        {/* Price + CTA */}
+        <div className="flex items-center justify-between gap-2">
+          <p className="text-lg font-bold text-emerald-600">
+            {tour.currency} {tour.price.toLocaleString('es-AR', { minimumFractionDigits: 0 })}
+            <span className="text-sm font-normal text-slate-400"> / persona</span>
+          </p>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/reservations/new?tourPackageId=${tour.id}`);
+            }}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500 text-white text-sm font-medium hover:bg-emerald-600 transition-colors shrink-0"
+          >
+            <CalendarCheck className="w-3.5 h-3.5" />
+            {t('catalog.bookNow')}
+          </button>
+        </div>
       </div>
     </article>
   );

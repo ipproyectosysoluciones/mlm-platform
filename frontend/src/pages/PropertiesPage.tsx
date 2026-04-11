@@ -8,8 +8,18 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
-import { MapPin, BedDouble, Bath, Maximize2, Search, SlidersHorizontal, Eye } from 'lucide-react';
+import {
+  MapPin,
+  BedDouble,
+  Bath,
+  Maximize2,
+  Search,
+  SlidersHorizontal,
+  Eye,
+  CalendarCheck,
+} from 'lucide-react';
 import { propertyService } from '../services/propertyService';
 import type { Property, PropertyListParams, PropertyType } from '../services/propertyService';
 import { cn } from '../lib/utils';
@@ -57,6 +67,8 @@ interface PropertyCardProps {
 }
 
 function PropertyCard({ property, onClick }: PropertyCardProps) {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
   const mainImage = property.images?.[0];
 
   return (
@@ -89,7 +101,7 @@ function PropertyCard({ property, onClick }: PropertyCardProps) {
         {/* Social proof badge / Badge de prueba social */}
         <span className="absolute bottom-3 right-3 flex items-center gap-1 px-2 py-1 rounded-full bg-black/50 text-white text-xs backdrop-blur-sm">
           <Eye className="w-3 h-3" />
-          {getSocialProofViews(property.id)} personas vieron esto hoy
+          {t('catalog.viewedToday', { count: getSocialProofViews(property.id) })}
         </span>
       </div>
 
@@ -125,13 +137,27 @@ function PropertyCard({ property, onClick }: PropertyCardProps) {
           )}
         </div>
 
-        {/* Price */}
-        <p className="text-lg font-bold text-emerald-600">
-          {property.currency} {property.price.toLocaleString('es-AR', { minimumFractionDigits: 0 })}
-          {property.type === 'rental' && (
-            <span className="text-sm font-normal text-slate-400"> / mes</span>
-          )}
-        </p>
+        {/* Price + CTA */}
+        <div className="flex items-center justify-between gap-2">
+          <p className="text-lg font-bold text-emerald-600">
+            {property.currency}{' '}
+            {property.price.toLocaleString('es-AR', { minimumFractionDigits: 0 })}
+            {property.type === 'rental' && (
+              <span className="text-sm font-normal text-slate-400"> / mes</span>
+            )}
+          </p>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/reservations/new?propertyId=${property.id}`);
+            }}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500 text-white text-sm font-medium hover:bg-emerald-600 transition-colors shrink-0"
+          >
+            <CalendarCheck className="w-3.5 h-3.5" />
+            {t('catalog.bookNow')}
+          </button>
+        </div>
       </div>
     </article>
   );
