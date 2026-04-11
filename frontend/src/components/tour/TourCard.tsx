@@ -112,6 +112,8 @@ export function TourCard({ tour, variant = 'grid', className }: TourCardProps) {
             <img
               src={coverImage}
               alt={tour.title}
+              crossOrigin="anonymous"
+              referrerPolicy="no-referrer"
               className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
           ) : (
@@ -175,6 +177,8 @@ export function TourCard({ tour, variant = 'grid', className }: TourCardProps) {
           <img
             src={coverImage}
             alt={tour.title}
+            crossOrigin="anonymous"
+            referrerPolicy="no-referrer"
             className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
         ) : (

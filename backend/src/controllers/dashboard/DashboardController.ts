@@ -60,7 +60,7 @@ export async function getDashboard(req: AuthenticatedRequest, res: Response): Pr
       sponsorId: fullUser.id,
       createdAt: { [Op.gte]: sixMonthsAgo },
     },
-    attributes: ['createdAt'],
+    attributes: [['created_at', 'createdAt']],
   });
 
   const referralsChart = Array.from({ length: 6 }, (_, i) => {
@@ -81,7 +81,7 @@ export async function getDashboard(req: AuthenticatedRequest, res: Response): Pr
       status: 'completed',
       createdAt: { [Op.gte]: sixMonthsAgo },
     },
-    attributes: ['amount', 'createdAt'],
+    attributes: ['amount', ['created_at', 'createdAt']],
   });
 
   const commissionsChart = Array.from({ length: 6 }, (_, i) => {
@@ -119,6 +119,10 @@ export async function getDashboard(req: AuthenticatedRequest, res: Response): Pr
       amount: number;
       currency: string;
       createdAt: Date;
+      fromUser?: {
+        email: string;
+        referralCode: string;
+      };
     }>;
     recentReferrals: Array<{
       id: string;
@@ -152,6 +156,12 @@ export async function getDashboard(req: AuthenticatedRequest, res: Response): Pr
         amount: Number(c.amount),
         currency: c.currency,
         createdAt: c.createdAt,
+        fromUser: c.fromUser
+          ? {
+              email: c.fromUser.email,
+              referralCode: c.fromUser.referralCode,
+            }
+          : undefined,
       })),
       recentReferrals: recentReferrals.map((r: User) => ({
         id: r.id,

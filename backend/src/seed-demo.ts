@@ -2394,11 +2394,16 @@ function buildTourAvailabilities(): TourAvailabilityCreationAttributes[] {
  */
 export async function seedDemoProperties(): Promise<void> {
   console.log('\n🏠 Seeding demo properties (30 — Colombia + México + Argentina)...');
+  const now = new Date();
 
   for (const prop of DEMO_PROPERTIES) {
     const exists = await Property.findByPk(prop.id as string);
     if (!exists) {
-      await Property.create(prop);
+      await Property.create({
+        ...prop,
+        createdAt: now,
+        updatedAt: now,
+      } as PropertyCreationAttributes);
       console.log(`  ✅ ${prop.title}`);
     } else {
       console.log(`  ⏭️  Ya existe: ${prop.title}`);
@@ -2417,11 +2422,16 @@ export async function seedDemoProperties(): Promise<void> {
  */
 export async function seedDemoTours(): Promise<void> {
   console.log('\n✈️  Seeding demo tour packages (17 — Colombia + México + Argentina)...');
+  const now = new Date();
 
   for (const tour of DEMO_TOURS) {
     const exists = await TourPackage.findByPk(tour.id as string);
     if (!exists) {
-      await TourPackage.create(tour);
+      await TourPackage.create({
+        ...tour,
+        createdAt: now,
+        updatedAt: now,
+      } as TourPackageCreationAttributes);
       console.log(`  ✅ ${tour.title}`);
     } else {
       console.log(`  ⏭️  Ya existe: ${tour.title}`);
@@ -2440,13 +2450,18 @@ export async function seedDemoTours(): Promise<void> {
  */
 export async function seedDemoTourAvailabilities(): Promise<void> {
   console.log('\n📅 Seeding tour availabilities (51 — 3 dates × 17 tours)...');
+  const now = new Date();
 
   const availabilities = buildTourAvailabilities();
 
   for (const avail of availabilities) {
     const exists = await TourAvailability.findByPk(avail.id as string);
     if (!exists) {
-      await TourAvailability.create(avail);
+      await TourAvailability.create({
+        ...avail,
+        createdAt: now,
+        updatedAt: now,
+      } as TourAvailabilityCreationAttributes);
       console.log(
         `  ✅ Tour ${avail.tourPackageId.slice(-3)} → ${avail.date}  (${avail.availableSpots} spots, ${avail.bookedSpots} booked)`
       );
