@@ -523,6 +523,72 @@
         "clients": "Clientes satisfechos"
       }
     },
+    "howItWorks": {
+      "title": "¿Cómo funciona?",
+      "subtitle": "Empezá a generar ingresos en 3 simples pasos",
+      "step1": {
+        "title": "Registrate",
+        "description": "Creá tu cuenta y unite a una red inmobiliaria global con presencia en toda América Latina."
+      },
+      "step2": {
+        "title": "Conectá",
+        "description": "Publicá propiedades, tours o referí a otros para hacer crecer tu red de contactos y oportunidades."
+      },
+      "step3": {
+        "title": "Ganá",
+        "description": "Recibí comisiones por cada transacción en tu red, hasta 5 niveles de profundidad con tracking transparente."
+      }
+    },
+    "features": {
+      "title": "Todo lo que necesitás en una plataforma",
+      "subtitle": "Herramientas diseñadas para maximizar tu potencial de ingresos",
+      "properties": {
+        "title": "Propiedades",
+        "description": "Catálogo de propiedades en alquiler, venta y administración en toda América Latina."
+      },
+      "tours": {
+        "title": "Tours",
+        "description": "Paquetes turísticos curados: aventura, cultural, gastronómico y de lujo."
+      },
+      "crm": {
+        "title": "CRM Integrado",
+        "description": "Gestioná leads, tareas y comunicaciones en un solo lugar sin herramientas externas."
+      },
+      "commissions": {
+        "title": "Comisiones Multinivel",
+        "description": "Ganá hasta 5 niveles de profundidad con tracking de comisiones transparente y en tiempo real."
+      },
+      "bot": {
+        "title": "Nexo Bot",
+        "description": "Asistente IA (Sophia & Max) vía WhatsApp para soporte 24/7 y automatización de ventas."
+      },
+      "payments": {
+        "title": "Pagos Globales",
+        "description": "Soporte para PayPal, MercadoPago y billetera crypto para cobrar desde cualquier lugar."
+      }
+    },
+    "testimonials": {
+      "title": "Lo que dicen nuestros agentes",
+      "subtitle": "Historias reales de personas que transformaron su negocio con Nexo Real",
+      "t1": {
+        "quote": "En 6 meses construí una red de 40 agentes y las comisiones superaron lo que ganaba en mi agencia tradicional. La plataforma es intuitiva y el CRM me ahorra horas de trabajo.",
+        "name": "Valentina Restrepo",
+        "role": "Dueña de Agencia Inmobiliaria",
+        "city": "Medellín, Colombia"
+      },
+      "t2": {
+        "quote": "Los paquetes turísticos se venden solos gracias a la calidad de la presentación. Mis clientes aman reservar directamente y yo gano comisiones sin esfuerzo adicional.",
+        "name": "Roberto Jiménez",
+        "role": "Operador Turístico",
+        "city": "Cancún, México"
+      },
+      "t3": {
+        "quote": "Empecé como agente independiente sin experiencia. Con el bot de WhatsApp y las herramientas de la plataforma, ya tengo una red de 15 personas generando ingresos pasivos.",
+        "name": "Camila Torres",
+        "role": "Agente Independiente",
+        "city": "Buenos Aires, Argentina"
+      }
+    },
     "featuredProperties": {
       "title": "Propiedades Destacadas",
       "subtitle": "Las mejores oportunidades de inversión seleccionadas para vos",
@@ -538,9 +604,9 @@
       "empty": "No hay tours disponibles"
     },
     "cta": {
-      "title": "¿Listo para invertir en tu futuro?",
-      "subtitle": "Unite a miles de inversores que ya confían en Nexo Real",
-      "button": "Crear cuenta gratis",
+      "title": "¿Listo para transformar tu negocio?",
+      "subtitle": "Unite a miles de agentes que ya generan ingresos pasivos con Nexo Real. Sin inversión inicial, sin riesgo.",
+      "button": "Empezar ahora — Es gratis",
       "login": "Ya tengo cuenta"
     },
     "footer": {

@@ -26,6 +26,7 @@ dotenv.config();
 import { connectDatabase, syncDatabase } from './config/database';
 import { initModels, User, UserClosure, CommissionConfig, Product } from './models';
 import { hashPassword } from './services/AuthService';
+import { seedDemoProperties, seedDemoTours, seedDemoTourAvailabilities } from './seed-demo';
 
 // ─── Tipos auxiliares ─────────────────────────────────────────────────────────
 
@@ -560,6 +561,12 @@ async function seed(): Promise<void> {
     await seedProducts();
     await seedUsers();
 
+    // ── Demo data para pitch (propiedades, tours, disponibilidad) ──────
+    // Demo data for pitch (properties, tours, availability)
+    await seedDemoProperties();
+    await seedDemoTours();
+    await seedDemoTourAvailabilities();
+
     console.log('\n');
     console.log('╔═══════════════════════════════════════════════════════════╗');
     console.log('║          ✅  Nexo Real — Seed completado                  ║');
@@ -578,6 +585,9 @@ async function seed(): Promise<void> {
     console.log('║  luisa.fernandez@...      /  usuario123 (user)            ║');
     console.log('║  miguel.torres@...        /  usuario123 (user)            ║');
     console.log('║  invitado@nexoreal.xyz    /  invitado123 (guest)          ║');
+    console.log('║                                                           ║');
+    console.log('║  📊 Demo data:                                            ║');
+    console.log('║  20 propiedades (CO + MX) • 12 tours • 36 disponibilidades║');
     console.log('╚═══════════════════════════════════════════════════════════╝');
     console.log('');
 

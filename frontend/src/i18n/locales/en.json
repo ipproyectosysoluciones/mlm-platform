@@ -531,6 +531,72 @@
         "clients": "Happy clients"
       }
     },
+    "howItWorks": {
+      "title": "How does it work?",
+      "subtitle": "Start generating income in 3 simple steps",
+      "step1": {
+        "title": "Sign Up",
+        "description": "Create your account and join a global real estate network with presence across Latin America."
+      },
+      "step2": {
+        "title": "Connect",
+        "description": "List properties, tours, or refer others to grow your network of contacts and opportunities."
+      },
+      "step3": {
+        "title": "Earn",
+        "description": "Receive commissions on every transaction in your network, up to 5 levels deep with transparent tracking."
+      }
+    },
+    "features": {
+      "title": "Everything you need in one platform",
+      "subtitle": "Tools designed to maximize your income potential",
+      "properties": {
+        "title": "Properties",
+        "description": "Catalog of rental, sale, and managed properties across all of Latin America."
+      },
+      "tours": {
+        "title": "Tours",
+        "description": "Curated tourism packages: adventure, cultural, gastronomic, and luxury."
+      },
+      "crm": {
+        "title": "Integrated CRM",
+        "description": "Manage leads, tasks, and communications in one place without external tools."
+      },
+      "commissions": {
+        "title": "Multi-Level Commissions",
+        "description": "Earn up to 5 levels deep with transparent, real-time commission tracking."
+      },
+      "bot": {
+        "title": "Nexo Bot",
+        "description": "AI-powered assistant (Sophia & Max) via WhatsApp for 24/7 support and sales automation."
+      },
+      "payments": {
+        "title": "Global Payments",
+        "description": "PayPal, MercadoPago, and crypto wallet support to collect from anywhere."
+      }
+    },
+    "testimonials": {
+      "title": "What our agents say",
+      "subtitle": "Real stories from people who transformed their business with Nexo Real",
+      "t1": {
+        "quote": "In 6 months I built a network of 40 agents and commissions exceeded what I earned at my traditional agency. The platform is intuitive and the CRM saves me hours of work.",
+        "name": "Valentina Restrepo",
+        "role": "Real Estate Agency Owner",
+        "city": "Medellín, Colombia"
+      },
+      "t2": {
+        "quote": "Tourism packages sell themselves thanks to the quality of the presentation. My clients love booking directly and I earn commissions with no extra effort.",
+        "name": "Roberto Jiménez",
+        "role": "Tourism Operator",
+        "city": "Cancún, Mexico"
+      },
+      "t3": {
+        "quote": "I started as an independent agent with no experience. With the WhatsApp bot and the platform tools, I already have a network of 15 people generating passive income.",
+        "name": "Camila Torres",
+        "role": "Independent Agent",
+        "city": "Buenos Aires, Argentina"
+      }
+    },
     "featuredProperties": {
       "title": "Featured Properties",
       "subtitle": "The best investment opportunities handpicked for you",
@@ -546,9 +612,9 @@
       "empty": "No tours available"
     },
     "cta": {
-      "title": "Ready to invest in your future?",
-      "subtitle": "Join thousands of investors who already trust Nexo Real",
-      "button": "Create free account",
+      "title": "Ready to transform your business?",
+      "subtitle": "Join thousands of agents already generating passive income with Nexo Real. No upfront investment, no risk.",
+      "button": "Get started — It's free",
       "login": "I already have an account"
     },
     "footer": {
