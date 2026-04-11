@@ -13,7 +13,7 @@ import type { UserAttributes, UserRole, USER_ROLES } from '../../types';
 type UserWhereClause = WhereOptions<UserAttributes>;
 import { TreeService } from '../../services/TreeService';
 import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
-import { ApiResponse } from '../../utils/response.util';
+import { ResponseUtil } from '../../utils/response.util';
 import { Lead } from '../../models/Lead';
 import { ADMIN_ROLES } from '../../types';
 
@@ -95,7 +95,7 @@ export async function getAllUsers(req: AuthenticatedRequest, res: Response): Pro
       },
     });
   } catch {
-    res.status(500).json(ApiResponse.error('INTERNAL_ERROR', 'Error fetching users', 500));
+    res.status(500).json(ResponseUtil.error('INTERNAL_ERROR', 'Error fetching users', 500));
   }
 }
 
@@ -127,7 +127,7 @@ export async function getUserById(req: AuthenticatedRequest, res: Response): Pro
     });
 
     if (!user) {
-      res.status(404).json(ApiResponse.error('NOT_FOUND', 'User not found', 404));
+      res.status(404).json(ResponseUtil.error('NOT_FOUND', 'User not found', 404));
       return;
     }
 
@@ -162,7 +162,7 @@ export async function getUserById(req: AuthenticatedRequest, res: Response): Pro
     });
   } catch {
     // Invalid UUID format or other DB error - treat as not found
-    res.status(404).json(ApiResponse.error('NOT_FOUND', 'User not found', 404));
+    res.status(404).json(ResponseUtil.error('NOT_FOUND', 'User not found', 404));
   }
 }
 
@@ -181,13 +181,13 @@ export async function updateUserStatus(req: AuthenticatedRequest, res: Response)
     const { status } = req.body;
 
     if (!['active', 'inactive'].includes(status)) {
-      res.status(400).json(ApiResponse.error('INVALID_PARAMS', 'Invalid status', 400));
+      res.status(400).json(ResponseUtil.error('INVALID_PARAMS', 'Invalid status', 400));
       return;
     }
 
     const user = await User.findByPk(userId);
     if (!user) {
-      res.status(404).json(ApiResponse.error('NOT_FOUND', 'User not found', 404));
+      res.status(404).json(ResponseUtil.error('NOT_FOUND', 'User not found', 404));
       return;
     }
 
@@ -221,13 +221,15 @@ export async function promoteToAdmin(req: AuthenticatedRequest, res: Response): 
     const currentUser = req.user!;
 
     if (currentUser.id === userId) {
-      res.status(400).json(ApiResponse.error('INVALID_PARAMS', 'Cannot change your own role', 400));
+      res
+        .status(400)
+        .json(ResponseUtil.error('INVALID_PARAMS', 'Cannot change your own role', 400));
       return;
     }
 
     const user = await User.findByPk(userId);
     if (!user) {
-      res.status(404).json(ApiResponse.error('NOT_FOUND', 'User not found', 404));
+      res.status(404).json(ResponseUtil.error('NOT_FOUND', 'User not found', 404));
       return;
     }
 
@@ -239,7 +241,7 @@ export async function promoteToAdmin(req: AuthenticatedRequest, res: Response): 
       data: { id: user.id, role: user.role },
     });
   } catch {
-    res.status(500).json(ApiResponse.error('INTERNAL_ERROR', 'Error promoting user', 500));
+    res.status(500).json(ResponseUtil.error('INTERNAL_ERROR', 'Error promoting user', 500));
   }
 }
 
@@ -270,7 +272,7 @@ export async function updateUserRole(req: AuthenticatedRequest, res: Response): 
       res
         .status(400)
         .json(
-          ApiResponse.error(
+          ResponseUtil.error(
             'INVALID_PARAMS',
             `Invalid role. Assignable roles: ${ASSIGNABLE_ROLES.join(', ')}`,
             400
@@ -281,13 +283,15 @@ export async function updateUserRole(req: AuthenticatedRequest, res: Response): 
 
     // Cannot change your own role
     if (requester.id === userId) {
-      res.status(400).json(ApiResponse.error('INVALID_PARAMS', 'Cannot change your own role', 400));
+      res
+        .status(400)
+        .json(ResponseUtil.error('INVALID_PARAMS', 'Cannot change your own role', 400));
       return;
     }
 
     const user = await User.findByPk(userId);
     if (!user) {
-      res.status(404).json(ApiResponse.error('NOT_FOUND', 'User not found', 404));
+      res.status(404).json(ResponseUtil.error('NOT_FOUND', 'User not found', 404));
       return;
     }
 
@@ -295,7 +299,7 @@ export async function updateUserRole(req: AuthenticatedRequest, res: Response): 
     if (user.role === 'super_admin') {
       res
         .status(403)
-        .json(ApiResponse.error('FORBIDDEN', 'Cannot change role of a super_admin', 403));
+        .json(ResponseUtil.error('FORBIDDEN', 'Cannot change role of a super_admin', 403));
       return;
     }
 
@@ -323,6 +327,6 @@ export async function updateUserRole(req: AuthenticatedRequest, res: Response): 
       data: { id: user.id, role: user.role },
     });
   } catch {
-    res.status(500).json(ApiResponse.error('INTERNAL_ERROR', 'Error updating user role', 500));
+    res.status(500).json(ResponseUtil.error('INTERNAL_ERROR', 'Error updating user role', 500));
   }
 }

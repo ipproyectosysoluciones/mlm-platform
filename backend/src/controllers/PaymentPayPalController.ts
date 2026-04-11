@@ -7,7 +7,7 @@
 import { Request, Response } from 'express';
 import { asyncHandler } from '../middleware/asyncHandler.js';
 import { paypalService } from '../services/PayPalService.js';
-import { ApiResponse } from '../utils/response.util.js';
+import { ResponseUtil } from '../utils/response.util.js';
 
 /**
  * PayPal order ID format: alphanumeric, 17 characters
@@ -27,7 +27,7 @@ export class PaymentPayPalController {
     if (!amount || amount <= 0) {
       return res
         .status(400)
-        .json(ApiResponse.error('INVALID_AMOUNT', 'Amount must be greater than 0', 400));
+        .json(ResponseUtil.error('INVALID_AMOUNT', 'Amount must be greater than 0', 400));
     }
 
     const order = await paypalService.createOrder({
@@ -61,20 +61,22 @@ export class PaymentPayPalController {
     if (!orderId) {
       return res
         .status(400)
-        .json(ApiResponse.error('MISSING_ORDER_ID', 'PayPal order ID is required', 400));
+        .json(ResponseUtil.error('MISSING_ORDER_ID', 'PayPal order ID is required', 400));
     }
 
     // Validate orderId format to prevent SSRF (CodeQL)
     if (!PAYPAL_ORDER_ID_REGEX.test(orderId)) {
       return res
         .status(400)
-        .json(ApiResponse.error('INVALID_ORDER_ID', 'Invalid PayPal order ID format', 400));
+        .json(ResponseUtil.error('INVALID_ORDER_ID', 'Invalid PayPal order ID format', 400));
     }
 
     if (!internalOrderId) {
       return res
         .status(400)
-        .json(ApiResponse.error('MISSING_INTERNAL_ORDER_ID', 'Internal order ID is required', 400));
+        .json(
+          ResponseUtil.error('MISSING_INTERNAL_ORDER_ID', 'Internal order ID is required', 400)
+        );
     }
 
     const capturedOrder = await paypalService.captureOrder({
@@ -119,7 +121,9 @@ export class PaymentPayPalController {
       console.error('[PayPal Webhook] Invalid signature');
       return res
         .status(403)
-        .json(ApiResponse.error('INVALID_SIGNATURE', 'Webhook signature verification failed', 403));
+        .json(
+          ResponseUtil.error('INVALID_SIGNATURE', 'Webhook signature verification failed', 403)
+        );
     }
 
     const event = req.body;
@@ -172,14 +176,14 @@ export class PaymentPayPalController {
     if (!orderId) {
       return res
         .status(400)
-        .json(ApiResponse.error('MISSING_ORDER_ID', 'Order ID is required', 400));
+        .json(ResponseUtil.error('MISSING_ORDER_ID', 'Order ID is required', 400));
     }
 
     // Validate orderId format to prevent SSRF (CodeQL)
     if (!PAYPAL_ORDER_ID_REGEX.test(orderId)) {
       return res
         .status(400)
-        .json(ApiResponse.error('INVALID_ORDER_ID', 'Invalid PayPal order ID format', 400));
+        .json(ResponseUtil.error('INVALID_ORDER_ID', 'Invalid PayPal order ID format', 400));
     }
 
     const order = await paypalService.getOrder(orderId);

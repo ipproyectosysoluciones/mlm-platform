@@ -12,7 +12,7 @@ import { User, Commission } from '../../models';
 import type { ApiResponse } from '../../types';
 import { LEVEL_NAMES } from '../../types';
 import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
-import { ApiResponse } from '../../utils/response.util';
+import { ResponseUtil } from '../../utils/response.util';
 
 /**
  * Get user dashboard with stats, referrals, and commissions
@@ -29,7 +29,7 @@ export async function getDashboard(req: AuthenticatedRequest, res: Response): Pr
   const fullUser = await userService.findById(userId);
 
   if (!fullUser) {
-    res.status(404).json(ApiResponse.error('NOT_FOUND', 'User not found', 404));
+    res.status(404).json(ResponseUtil.error('NOT_FOUND', 'User not found', 404));
     return;
   }
 

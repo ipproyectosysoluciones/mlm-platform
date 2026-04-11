@@ -11,7 +11,7 @@ import { Response } from 'express';
 import { landingPageService } from '../services/LandingPageService';
 import type { ApiResponse } from '../types';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware';
-import { ApiResponse as ResponseUtil } from '../utils/response.util';
+import { ResponseUtil } from '../utils/response.util';
 import type { Request } from 'express';
 
 /**
