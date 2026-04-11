@@ -316,7 +316,7 @@ describe('ReservationFlowPage', () => {
       });
     });
 
-    it('navigates to /properties when clicking "Seguir explorando" on confirm step', async () => {
+    it('shows payment selector on confirm step after successful reservation', async () => {
       vi.mocked(reservationService.createReservation).mockResolvedValue(mockCreatedReservation);
 
       act(() => {
@@ -325,19 +325,21 @@ describe('ReservationFlowPage', () => {
       });
       renderPage();
 
-      fireEvent.click(screen.getByRole('button', { name: /seguir explorando/i }));
-
-      expect(mockNavigate).toHaveBeenCalledWith('/properties');
+      // Confirm step now shows payment CTA and pay-later option
+      expect(
+        screen.getByRole('button', { name: /Seleccioná método de pago/i })
+      ).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /Pagar después/i })).toBeInTheDocument();
     });
 
-    it('navigates to /mis-reservas when clicking "Ver mis reservas" on confirm step', async () => {
+    it('navigates to /mis-reservas when clicking "Pagar después" on confirm step', async () => {
       act(() => {
         useReservationStore.getState().setWizardStep('confirm');
         useReservationStore.setState({ createdReservation: mockCreatedReservation });
       });
       renderPage();
 
-      fireEvent.click(screen.getByRole('button', { name: /ver mis reservas/i }));
+      fireEvent.click(screen.getByRole('button', { name: /Pagar después/i }));
 
       expect(mockNavigate).toHaveBeenCalledWith('/mis-reservas');
     });
@@ -415,16 +417,16 @@ describe('ReservationFlowPage', () => {
       expect(screen.getByText('res-tour-456')).toBeInTheDocument();
     });
 
-    it('navigates to /tours when clicking "Seguir explorando" on confirm step', () => {
+    it('navigates to /mis-reservas when clicking "Pagar después" on confirm step', () => {
       act(() => {
         useReservationStore.getState().setWizardStep('confirm');
         useReservationStore.setState({ createdReservation: mockCreatedReservation });
       });
       renderPage();
 
-      fireEvent.click(screen.getByRole('button', { name: /seguir explorando/i }));
+      fireEvent.click(screen.getByRole('button', { name: /Pagar después/i }));
 
-      expect(mockNavigate).toHaveBeenCalledWith('/tours');
+      expect(mockNavigate).toHaveBeenCalledWith('/mis-reservas');
     });
   });
 });
