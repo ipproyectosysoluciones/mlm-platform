@@ -12,7 +12,7 @@ context: |
     Auth: JWT + 2FA (TOTP)
     Pagos: PayPal SDK + MercadoPago SDK (LATAM-friendly)
     Email: Brevo (SMTP + API)
-    Testing: Jest 307+ tests (backend) + Vitest + Playwright (frontend)
+    Testing: Jest 535+ tests (backend) + Vitest 432+ tests (frontend) + Playwright E2E
     i18n: i18next (ES + EN)
     PWA: Workbox
 
@@ -50,8 +50,9 @@ context: |
     - max.prompt.md          - personalidad agente Max
     - knowledge-base.md      - KB completa bilingue (ES/EN), 7 secciones
 
-  Estado actual: v2.0.0, Sprint 4 completado ✅, preparando Sprint 5
-  Branch activo: release
+  Estado actual: v2.4.0, Sprint 8 completado ✅, Sprint 9 planeado
+  Branch activo: development (main = v2.4.0)
+  Próximo: Sprint 9
   GPG signing: EXPIRADO - usar --no-gpg-sign en todos los commits
   Repo GitHub Project: https://github.com/users/ipproyectosysoluciones/projects/4
 
