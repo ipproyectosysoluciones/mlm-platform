@@ -8,7 +8,7 @@ import { userService, treeServiceInstance } from '../../services/UserService';
 import { CommissionService } from '../../services/CommissionService';
 import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
 import type { ApiResponse } from '../../types';
-import { ApiResponse as ResponseUtil } from '../../utils/response.util';
+import { ResponseUtil } from '../../utils/response.util';
 
 /**
  * Get user stats for dashboard
