@@ -14,6 +14,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
 import {
   MapPin,
@@ -26,6 +27,7 @@ import {
   Check,
   X,
   Compass,
+  AlertTriangle,
 } from 'lucide-react';
 import { tourService } from '../services/tourService';
 import type { TourPackage, TourCategory, TourAvailability } from '../services/tourService';
@@ -194,6 +196,7 @@ function TourDetailSkeleton() {
 export default function TourDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const startTourReservation = useReservationStore((s) => s.startTourReservation);
 
   const [tour, setTour] = useState<TourPackage | null>(null);
@@ -387,6 +390,92 @@ export default function TourDetailPage() {
                 </div>
               </div>
 
+              {/* Occupancy indicator / Indicador de ocupación */}
+              {(() => {
+                const availabilities = tour.availabilities ?? [];
+                const futureAvailabilities = availabilities.filter((a) => a.availableSpots > 0);
+
+                // Aggregate: best available slot for headline numbers
+                const bestSlot = availabilities.reduce<{
+                  available: number;
+                  total: number;
+                } | null>((best, a) => {
+                  if (!best || a.availableSpots > best.available) {
+                    return { available: a.availableSpots, total: a.totalSpots };
+                  }
+                  return best;
+                }, null);
+
+                const totalSpots = bestSlot?.total ?? tour.maxGuests;
+                const availableSpots = bestSlot?.available ?? tour.maxGuests;
+                const bookedSpots = totalSpots - availableSpots;
+                const occupancyPct =
+                  totalSpots > 0 ? Math.round((bookedSpots / totalSpots) * 100) : 0;
+                const isSoldOut = availabilities.length > 0 && futureAvailabilities.length === 0;
+                const isAlmostFull = availableSpots > 0 && availableSpots <= 5;
+
+                // Next available date
+                const nextAvailable = futureAvailabilities
+                  .map((a) => ({ ...a, dateObj: new Date(a.date) }))
+                  .sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime())[0];
+
+                return (
+                  <div className="space-y-3">
+                    {/* Sold-out banner */}
+                    {isSoldOut && (
+                      <div className="flex items-center gap-2 px-4 py-3 rounded-lg bg-red-50 border border-red-200 text-red-700 font-semibold">
+                        <AlertTriangle className="w-5 h-5 shrink-0" />
+                        {t('tours.soldOut')}
+                      </div>
+                    )}
+
+                    {/* Spots indicator + progress bar */}
+                    {!isSoldOut && (
+                      <div>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="text-sm font-medium text-slate-700">
+                            {t('tours.spotsOf', {
+                              available: availableSpots,
+                              total: totalSpots,
+                            })}
+                          </span>
+                          {isAlmostFull && (
+                            <span className="flex items-center gap-1 text-xs font-semibold text-amber-600">
+                              <AlertTriangle className="w-3.5 h-3.5" />
+                              {t('tours.almostFull')}
+                            </span>
+                          )}
+                        </div>
+                        <div className="h-2.5 w-full rounded-full bg-slate-100 overflow-hidden">
+                          <div
+                            className={cn(
+                              'h-full rounded-full transition-all',
+                              occupancyPct >= 80 ? 'bg-red-500' : 'bg-emerald-500'
+                            )}
+                            style={{ width: `${occupancyPct}%` }}
+                          />
+                        </div>
+                        <p className="text-xs text-slate-400 mt-1">{occupancyPct}% ocupado</p>
+                      </div>
+                    )}
+
+                    {/* Next available date */}
+                    {nextAvailable && (
+                      <p className="text-sm text-slate-600">
+                        <CalendarDays className="w-4 h-4 inline mr-1 text-emerald-500" />
+                        {t('tours.nextAvailableDate', {
+                          date: nextAvailable.dateObj.toLocaleDateString('es-AR', {
+                            day: 'numeric',
+                            month: 'short',
+                            year: 'numeric',
+                          }),
+                        })}
+                      </p>
+                    )}
+                  </div>
+                );
+              })()}
+
               {/* Description */}
               <div>
                 <h2 className="text-lg font-semibold text-slate-800 mb-2">Descripción</h2>
@@ -444,28 +533,58 @@ export default function TourDetailPage() {
                 </p>
                 <p className="text-sm text-slate-400 mb-4">por persona</p>
 
-                {selectedAvailability ? (
-                  <div className="text-sm bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2 mb-4 text-emerald-700">
-                    <CalendarDays className="w-4 h-4 inline mr-1" />
-                    {new Date(selectedAvailability.date).toLocaleDateString('es-AR', {
-                      weekday: 'long',
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                    })}
-                  </div>
-                ) : (
-                  <p className="text-sm text-slate-400 mb-4">Seleccioná una fecha disponible</p>
-                )}
+                {/* Sold-out state in booking card */}
+                {(() => {
+                  const availabilities = tour.availabilities ?? [];
+                  const hasAvailability = availabilities.some((a) => a.availableSpots > 0);
+                  const isTourSoldOut = availabilities.length > 0 && !hasAvailability;
 
-                <button
-                  onClick={handleReserve}
-                  disabled={!selectedAvailability}
-                  className="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-emerald-500 text-white font-semibold hover:bg-emerald-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                >
-                  <CalendarDays className="w-5 h-5" />
-                  Reservar este tour
-                </button>
+                  if (isTourSoldOut) {
+                    return (
+                      <>
+                        <div className="text-sm bg-red-50 border border-red-200 rounded-lg px-3 py-2 mb-4 text-red-700 font-semibold text-center">
+                          {t('tours.soldOut')}
+                        </div>
+                        <button
+                          type="button"
+                          disabled
+                          className="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-slate-300 text-slate-500 font-semibold cursor-not-allowed"
+                        >
+                          {t('tours.soldOut')}
+                        </button>
+                      </>
+                    );
+                  }
+
+                  return (
+                    <>
+                      {selectedAvailability ? (
+                        <div className="text-sm bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2 mb-4 text-emerald-700">
+                          <CalendarDays className="w-4 h-4 inline mr-1" />
+                          {new Date(selectedAvailability.date).toLocaleDateString('es-AR', {
+                            weekday: 'long',
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                          })}
+                        </div>
+                      ) : (
+                        <p className="text-sm text-slate-400 mb-4">
+                          Seleccioná una fecha disponible
+                        </p>
+                      )}
+
+                      <button
+                        onClick={handleReserve}
+                        disabled={!selectedAvailability}
+                        className="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-emerald-500 text-white font-semibold hover:bg-emerald-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                      >
+                        <CalendarDays className="w-5 h-5" />
+                        Reservar este tour
+                      </button>
+                    </>
+                  );
+                })()}
 
                 <p className="text-xs text-slate-400 text-center mt-3">
                   Sin costo hasta la confirmación
