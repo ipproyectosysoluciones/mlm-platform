@@ -1,12 +1,15 @@
 # ============================================
 # Nexo Real - Production
 # ============================================
-# Usage: VERSION=v1.11.0 docker compose -f docker-compose.prod.yml up -d
+# Usage: docker compose -f docker-compose.prod.yml --env-file .env.production up -d
 # Requires: .env.production at project root
 #
-# Pull pre-built images from DockerHub (no source code needed on server):
-#   VERSION=v1.11.0 docker compose -f docker-compose.prod.yml pull
-#   VERSION=v1.11.0 docker compose -f docker-compose.prod.yml up -d
+# NOTE: Docker Compose does NOT auto-load .env.production — always pass --env-file:
+#   docker compose -f docker-compose.prod.yml --env-file .env.production up -d
+#   docker compose -f docker-compose.prod.yml --env-file .env.production up -d n8n
+#
+# Alternative: use deploy.sh which exports vars automatically:
+#   ./deploy.sh [version]
 
 services:
   postgres:
@@ -79,7 +82,7 @@ services:
       BREVO_SMTP_PORT: ${BREVO_SMTP_PORT:-587}
       BREVO_SMTP_USER: ${BREVO_SMTP_USER}
       BREVO_SMTP_PASS: ${BREVO_SMTP_PASS}
-      BREVO_SENDER_EMAIL: ${BREVO_SENDER_EMAIL:-noreply@nexoreal.com} # TODO: domain pending
+      BREVO_SENDER_EMAIL: ${BREVO_SENDER_EMAIL:-noreply@nexoreal.xyz} # TODO: domain pending
       BREVO_SENDER_NAME: ${BREVO_SENDER_NAME:-Nexo Real}
       BREVO_API_KEY: ${BREVO_API_KEY}
       BREVO_SMS_SENDER: ${BREVO_SMS_SENDER:-NexoReal}
@@ -92,7 +95,7 @@ services:
       # ── Push Notifications (VAPID) ────────────────────────────────────
       VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY}
       VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY}
-      VAPID_SUBJECT: ${VAPID_SUBJECT:-mailto:admin@nexoreal.com} # TODO: domain pending
+      VAPID_SUBJECT: ${VAPID_SUBJECT:-mailto:admin@nexoreal.xyz} # TODO: domain pending
 
       # ── PayPal ────────────────────────────────────────────────────────
       PAYPAL_MODE: ${PAYPAL_MODE:-sandbox}
@@ -123,9 +126,7 @@ services:
 
 
   bot:
-    build:
-      context: ./bot
-      dockerfile: Dockerfile
+    image: ipproyectos/mlm-bot:${VERSION:-latest}
     restart: unless-stopped
     ports:
       - "3002:3002"
@@ -155,8 +156,8 @@ services:
     volumes:
       # Persist WhatsApp session — without this, re-pairing needed on every restart
       - bot_sessions:/app/bot_sessions
-      # prompt_kb is private (gitignored) — mounted from host at runtime, never baked into image
-      - ./prompt_kb:/app/prompt_kb:ro
+      # prompt_kb is now baked into the Docker image (no longer gitignored)
+      # No host volume needed — files are embedded at build time
     depends_on:
       backend:
         condition: service_started
@@ -201,9 +202,17 @@ services:
       # ── Google Calendar integration ────────────────────────────────────
       # Credentials are configured via the n8n UI, not env vars.
       # See docs/N8N-SETUP.md for the setup guide.
+      GOOGLE_CALENDAR_ID: ${GOOGLE_CALENDAR_ID}
 
       # ── Notion integration ─────────────────────────────────────────────
       # Credentials are configured via the n8n UI, not env vars.
+      NOTION_LEADS_DB_ID: ${NOTION_DATABASE_ID_LEADS}
+      NOTION_DATABASE_ID_VISITS: ${NOTION_DATABASE_ID_VISITS}
+
+      # ── Brevo — Human Handoff email (httpRequest node, no credential needed) ─
+      BREVO_API_KEY: ${BREVO_API_KEY}
+      BREVO_HANDOFF_TEMPLATE_ID: ${BREVO_HANDOFF_TEMPLATE_ID:-1}
+      SALES_TEAM_EMAIL: ${SALES_TEAM_EMAIL}
 
     volumes:
       - n8n_data:/home/node/.n8n

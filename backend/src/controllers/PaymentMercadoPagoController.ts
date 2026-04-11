@@ -7,7 +7,7 @@
 import { Request, Response } from 'express';
 import { asyncHandler } from '../middleware/asyncHandler.js';
 import { mercadoPagoService } from '../services/MercadoPagoService.js';
-import { ApiResponse } from '../utils/response.util.js';
+import { ResponseUtil } from '../utils/response.util.js';
 import { config } from '../config/env.js';
 import { Purchase, Order, Product } from '../models/index.js';
 import { CommissionService } from '../services/CommissionService.js';
@@ -23,7 +23,7 @@ export class PaymentMercadoPagoController {
     const userEmail = (req as any).user?.email;
 
     if (!items || !Array.isArray(items) || items.length === 0) {
-      return res.status(400).json(ApiResponse.error('INVALID_ITEMS', 'Items are required', 400));
+      return res.status(400).json(ResponseUtil.error('INVALID_ITEMS', 'Items are required', 400));
     }
 
     const preference = await mercadoPagoService.createPreference({
@@ -77,7 +77,7 @@ export class PaymentMercadoPagoController {
       return res
         .status(400)
         .json(
-          ApiResponse.error(
+          ResponseUtil.error(
             'MISSING_FIELDS',
             'Token, paymentMethodId, transactionAmount and payer email are required',
             400
@@ -122,7 +122,7 @@ export class PaymentMercadoPagoController {
     if (!paymentId) {
       return res
         .status(400)
-        .json(ApiResponse.error('MISSING_PAYMENT_ID', 'Payment ID is required', 400));
+        .json(ResponseUtil.error('MISSING_PAYMENT_ID', 'Payment ID is required', 400));
     }
 
     const payment = await mercadoPagoService.getPayment(paymentId);
@@ -174,7 +174,7 @@ export class PaymentMercadoPagoController {
         console.warn('[MercadoPago Webhook] Invalid signature — rejecting request');
         return res
           .status(401)
-          .json(ApiResponse.error('INVALID_SIGNATURE', 'Invalid webhook signature', 401));
+          .json(ResponseUtil.error('INVALID_SIGNATURE', 'Invalid webhook signature', 401));
       }
     } else {
       console.warn(

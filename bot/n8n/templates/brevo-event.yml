@@ -1,0 +1,239 @@
+author: ""
+brandUpdateTime: ""
+campaignType: template
+fields: {}
+fieldsHistory: []
+firstLoadSocialIcons: false
+hideSwapBanner: false
+id: a1b2c3d4-0004-4fe4-b690-nexoreal00004
+name: "Evento / Open House — Nexo Real"
+subject: '📅 {{ params.event_type }}: {{ params.event_name }}'
+ui:
+  showDeleteOption: false
+user-hash: ""
+version: 3.0.1
+body:
+  id: b1000004-db84-4b2d-b186-nexoreal00004
+  type: body
+  layout:
+    320px:
+      width: 320px
+    default:
+      direction: ltr
+      wrapper-width: 600px
+  content:
+    -
+      content-type: wrapper
+      customBlockId: null
+      id: c1000004-3b4c-40b2-912d-nexoreal00004
+      isCustomBlock: null
+      moduleName: null
+      sidebarSection: null
+      stylable: false
+      sync-module-id: null
+      thumbnail: null
+      title: Wrapper
+      type: rows
+      layout:
+        320px:
+          width: 320px
+        default:
+          align: center
+          valign: top
+      content:
+        -
+          align: top
+          customBlockId: null
+          dist: '12'
+          gutter: 0px
+          id: d1000004-f1bb-45dd-aa1b-nexoreal00004
+          isCustomBlock: null
+          moduleName: grid-row12
+          sidebarSection: null
+          stylable: false
+          sync-module-id: null
+          thumbnail: /assets/img/editor/grid_12.svg
+          title: section
+          type: grid-row
+          layout:
+            320px:
+              display: rows
+              padding-left: 0px
+              padding-right: 0px
+              width: 100%
+            default:
+              align: center
+              background-color: '#F8F6F1'
+              padding-bottom: 0px
+              padding-left: 0px
+              padding-right: 0px
+              padding-top: 0px
+              valign: top
+              width: 100%
+          content:
+            -
+              customBlockId: null
+              id: e1000004-562d-4abb-887d-nexoreal00004
+              isCustomBlock: null
+              isEmpty: false
+              moduleName: null
+              sidebarSection: null
+              stylable: false
+              sync-module-id: null
+              thumbnail: null
+              title: grid-column
+              type: grid-column
+              layout:
+                320px: {}
+                default:
+                  padding-left: 0px
+                  padding-right: 0px
+                  valign: top
+              content:
+                -
+                  customBlockId: null
+                  id: f1000004-159b-41bd-9953-nexoreal00004
+                  isCustomBlock: null
+                  moduleName: null
+                  sidebarSection: null
+                  stylable: false
+                  sync-module-id: null
+                  thumbnail: null
+                  title: 'HTML — Evento / Open House'
+                  type: html
+                  layout:
+                    320px:
+                      padding-left: 0px
+                      padding-right: 0px
+                      width: 100%
+                    default:
+                      padding-left: 0px
+                      padding-right: 0px
+                      width: 100%
+                  content: |
+                    <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#F8F6F1;padding:40px 0;">
+                      <tr>
+                        <td align="center">
+                          <table width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border-radius:10px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,0.08);">
+                            <!-- HEADER -->
+                            <tr>
+                              <td style="background-color:#0F1F3D;padding:40px 40px 32px;text-align:center;">
+                                <p style="margin:0 0 6px;font-size:28px;font-weight:700;color:#ffffff;letter-spacing:2px;">NEXO REAL</p>
+                                <p style="margin:0 0 24px;font-size:11px;color:#C9A84C;letter-spacing:4px;text-transform:uppercase;">Propiedades · Inversión · Confianza</p>
+                                <div style="display:inline-block;background-color:#C9A84C;padding:6px 20px;border-radius:20px;">
+                                  <p style="margin:0;font-size:11px;font-weight:700;color:#0F1F3D;letter-spacing:2px;text-transform:uppercase;">{{ params.event_type }}</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <!-- EVENT HERO -->
+                            <tr>
+                              <td style="background-color:#0F1F3D;padding:0 40px 48px;text-align:center;">
+                                <p style="margin:0 0 12px;font-size:30px;font-weight:700;color:#ffffff;line-height:1.3;">{{ params.event_name }}</p>
+                                <p style="margin:0;font-size:14px;color:#A0AEC0;line-height:1.7;">{{ params.event_description }}</p>
+                              </td>
+                            </tr>
+                            <!-- EVENT DETAILS -->
+                            <tr>
+                              <td style="padding:40px 40px 32px;">
+                                <table width="100%" cellpadding="0" cellspacing="0">
+                                  <tr>
+                                    <td width="33%" style="text-align:center;padding:20px 12px;background-color:#F8F6F1;border-radius:8px;">
+                                      <p style="margin:0 0 8px;font-size:24px;">📅</p>
+                                      <p style="margin:0 0 4px;font-size:11px;font-weight:600;color:#C9A84C;text-transform:uppercase;letter-spacing:1px;">Fecha</p>
+                                      <p style="margin:0;font-size:14px;font-weight:600;color:#0F1F3D;">{{ params.event_date }}</p>
+                                    </td>
+                                    <td width="4%"></td>
+                                    <td width="33%" style="text-align:center;padding:20px 12px;background-color:#F8F6F1;border-radius:8px;">
+                                      <p style="margin:0 0 8px;font-size:24px;">🕐</p>
+                                      <p style="margin:0 0 4px;font-size:11px;font-weight:600;color:#C9A84C;text-transform:uppercase;letter-spacing:1px;">Hora</p>
+                                      <p style="margin:0;font-size:14px;font-weight:600;color:#0F1F3D;">{{ params.event_time }}</p>
+                                    </td>
+                                    <td width="4%"></td>
+                                    <td width="33%" style="text-align:center;padding:20px 12px;background-color:#F8F6F1;border-radius:8px;">
+                                      <p style="margin:0 0 8px;font-size:24px;">📍</p>
+                                      <p style="margin:0 0 4px;font-size:11px;font-weight:600;color:#C9A84C;text-transform:uppercase;letter-spacing:1px;">Lugar</p>
+                                      <p style="margin:0;font-size:14px;font-weight:600;color:#0F1F3D;">{{ params.event_location }}</p>
+                                    </td>
+                                  </tr>
+                                </table>
+                              </td>
+                            </tr>
+                            <!-- DESCRIPTION -->
+                            <tr>
+                              <td style="padding:0 40px 32px;">
+                                <table width="100%" cellpadding="0" cellspacing="0">
+                                  <tr>
+                                    <td style="border-left:3px solid #C9A84C;padding-left:20px;">
+                                      <p style="margin:0 0 8px;font-size:11px;font-weight:600;color:#C9A84C;text-transform:uppercase;letter-spacing:2px;">Acerca del evento</p>
+                                      <p style="margin:0;font-size:14px;color:#4A5568;line-height:1.8;">{{ params.event_details }}</p>
+                                    </td>
+                                  </tr>
+                                </table>
+                              </td>
+                            </tr>
+                            <!-- CTA -->
+                            <tr>
+                              <td style="padding:0 40px 40px;text-align:center;">
+                                <a href="{{ params.event_register_url }}" style="display:inline-block;background-color:#C9A84C;color:#0F1F3D;font-size:14px;font-weight:700;text-decoration:none;padding:16px 40px;border-radius:6px;letter-spacing:1px;text-transform:uppercase;">Reservar mi lugar</a>
+                                <p style="margin:16px 0 0;font-size:12px;color:#A0AEC0;">Cupos limitados · {{ params.event_spots }} lugares disponibles</p>
+                              </td>
+                            </tr>
+                            <!-- DIVIDER -->
+                            <tr>
+                              <td style="padding:0 40px;">
+                                <div style="height:1px;background:linear-gradient(to right, transparent, #C9A84C, transparent);"></div>
+                              </td>
+                            </tr>
+                            <!-- CONTACT -->
+                            <tr>
+                              <td style="padding:28px 40px;text-align:center;">
+                                <p style="margin:0;font-size:13px;color:#718096;line-height:1.7;">¿Tenés preguntas sobre el evento?<br/><a href="mailto:info@nexoreal.xyz" style="color:#C9A84C;text-decoration:none;">info@nexoreal.xyz</a></p>
+                              </td>
+                            </tr>
+                            <!-- FOOTER -->
+                            <tr>
+                              <td style="background-color:#0F1F3D;padding:24px 40px;text-align:center;">
+                                <p style="margin:0 0 4px;font-size:12px;color:#C9A84C;letter-spacing:2px;text-transform:uppercase;">NEXO REAL</p>
+                                <p style="margin:0;font-size:11px;color:#4A5568;">© 2026 · info@nexoreal.xyz · Todos los derechos reservados</p>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+media:
+  320px:
+    max-width: 600
+    min-width: 0
+styles:
+  default:
+    properties:
+      color: '#4A5568'
+      font-family: Arial
+      font-size: 14px
+      line-height: '1.8'
+    title: Paragraph
+  default-button:
+    properties:
+      background-color: '#C9A84C'
+      border-radius: 6px
+      border-width: 0px
+      color: '#0F1F3D'
+      font-family: Arial
+      font-size: 14px
+      font-weight: '700'
+      remove-vml-button: optional
+      width: 50%
+    title: Button
+  default-heading1:
+    properties:
+      color: '#ffffff'
+      font-family: Georgia
+      font-size: 30px
+      font-weight: '700'
+    title: 'Heading 1'
+  default-link:
+    properties:
+      color: '#C9A84C'
+      text-decoration: none
+    title: Link

@@ -1,0 +1,211 @@
+{
+  "name": "human-handoff",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "human-handoff",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "1cc1986d-40d4-4ccc-9159-9ac8fe1656d9",
+      "name": "Webhook — Receive Handoff Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [-2352, 1008],
+      "webhookId": "human-handoff-nexo-real"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Validate required fields\nconst body = $input.first().json.body || $input.first().json;\nconst required = ['phone', 'name', 'summary', 'agentName'];\n\nfor (const field of required) {\n  if (!body[field]) {\n    throw new Error(`Missing required field: ${field}`);\n  }\n}\n\n// Format date/time for Argentina (UTC-3) — manual offset, no locale dependency\nconst now = new Date();\nconst handoffAt = now.toISOString();\n\nconst ar = new Date(now.getTime() - 3 * 60 * 60 * 1000);\nconst dd = String(ar.getUTCDate()).padStart(2, '0');\nconst mm = String(ar.getUTCMonth() + 1).padStart(2, '0');\nconst yyyy = ar.getUTCFullYear();\nconst hh = String(ar.getUTCHours()).padStart(2, '0');\nconst min = String(ar.getUTCMinutes()).padStart(2, '0');\nconst handoffDisplay = `${dd}/${mm}/${yyyy} a las ${hh}:${min} hs`;\n\nreturn [\n  {\n    json: {\n      phone: body.phone,\n      name: body.name,\n      summary: body.summary,\n      agentName: body.agentName,\n      language: body.language || 'es',\n      handoffAt,\n      handoffDisplay\n    }\n  }\n];"
+      },
+      "id": "f45ea76a-e7e2-4cc2-b612-a5a468f4baa2",
+      "name": "Validate & Transform Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-2128, 1008]
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "databaseId": "33a293bfbcf08050b983ed786679c415",
+        "title": "={{ $json.name }} — {{ $json.phone }}",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Phone|phone_number",
+              "type": "phone_number",
+              "phoneValue": "={{ $json.phone }}"
+            },
+            {
+              "key": "Interest|rich_text",
+              "type": "rich_text",
+              "textContent": "={{ $json.summary }}"
+            },
+            {
+              "key": "Language|select",
+              "type": "select",
+              "selectValue": "={{ $json.language }}"
+            },
+            {
+              "key": "Status|select",
+              "type": "select",
+              "selectValue": "=Needs Human"
+            },
+            {
+              "key": "Source|select",
+              "type": "select",
+              "selectValue": "=WhatsApp Bot"
+            },
+            {
+              "key": "Created At|date",
+              "type": "date",
+              "date": "={{ $json.handoffAt }}",
+              "timezone": "UTC"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "cdf2d55d-420d-4f5b-8815-d09e4fbad827",
+      "name": "Notion — Create Lead",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [-1904, 928],
+      "credentials": {
+        "notionApi": {
+          "name": "Notion — Nexo Real"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.brevo.com/v3/smtp/email",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  \"sender\": { \"name\": \"Nexo Real Bot\", \"email\": \"info@nexoreal.xyz\" },\n  \"to\": [{ \"email\": \"info@nexoreal.xyz\", \"name\": \"Equipo Nexo Real\" }],\n  \"subject\": \"🔔 Nuevo lead del bot — \" + $('Validate & Transform Input').item.json.name,\n  \"htmlContent\": \"<!DOCTYPE html><html lang='es'><head><meta charset='UTF-8'/><meta name='viewport' content='width=device-width,initial-scale=1.0'/></head><body style='margin:0;padding:0;background-color:#f4f6f8;font-family:Helvetica Neue,Helvetica,Arial,sans-serif;'><table width='100%' cellpadding='0' cellspacing='0' style='background-color:#f4f6f8;padding:40px 0;'><tr><td align='center'><table width='600' cellpadding='0' cellspacing='0' style='background-color:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);'><tr><td style='background-color:#0F1F3D;padding:32px 40px;text-align:center;'><p style='margin:0;font-size:22px;font-weight:700;color:#ffffff;letter-spacing:1px;'>NEXO REAL</p><p style='margin:6px 0 0;font-size:13px;color:#C9A84C;letter-spacing:2px;text-transform:uppercase;'>Plataforma Inmobiliaria</p></td></tr><tr><td style='background-color:#e53e3e;padding:14px 40px;text-align:center;'><p style='margin:0;font-size:14px;font-weight:600;color:#ffffff;'>🔔 NUEVO LEAD REQUIERE ATENCIÓN HUMANA</p></td></tr><tr><td style='padding:40px 40px 24px;'><p style='margin:0 0 24px;font-size:15px;color:#4a5568;line-height:1.6;'>Hola equipo,</p><p style='margin:0 0 32px;font-size:15px;color:#4a5568;line-height:1.6;'>El bot de WhatsApp transfirió un lead que requiere atención personalizada:</p><table width='100%' cellpadding='0' cellspacing='0' style='background-color:#f7fafc;border:1px solid #e2e8f0;border-radius:6px;margin-bottom:32px;'><tr><td style='padding:20px 24px;border-bottom:1px solid #e2e8f0;'><p style='margin:0 0 4px;font-size:11px;font-weight:600;color:#718096;text-transform:uppercase;letter-spacing:1px;'>Nombre</p><p style='margin:0;font-size:16px;font-weight:600;color:#1a202c;'>\" + $('Validate & Transform Input').item.json.name + \"</p></td></tr><tr><td style='padding:20px 24px;border-bottom:1px solid #e2e8f0;'><p style='margin:0 0 4px;font-size:11px;font-weight:600;color:#718096;text-transform:uppercase;letter-spacing:1px;'>Teléfono WhatsApp</p><p style='margin:0;font-size:16px;font-weight:600;color:#1a202c;'><a href='https://wa.me/\" + $('Validate & Transform Input').item.json.phone + \"' style='color:#25D366;text-decoration:none;'>+\" + $('Validate & Transform Input').item.json.phone + \"</a></p></td></tr><tr><td style='padding:20px 24px;border-bottom:1px solid #e2e8f0;'><p style='margin:0 0 8px;font-size:11px;font-weight:600;color:#718096;text-transform:uppercase;letter-spacing:1px;'>Resumen de la conversación</p><p style='margin:0;font-size:14px;color:#2d3748;line-height:1.6;font-style:italic;'>\\\"\" + $('Validate & Transform Input').item.json.summary + \"\\\"</p></td></tr><tr><td style='padding:20px 24px;border-bottom:1px solid #e2e8f0;'><p style='margin:0 0 4px;font-size:11px;font-weight:600;color:#718096;text-transform:uppercase;letter-spacing:1px;'>Agente IA</p><p style='margin:0;font-size:14px;color:#2d3748;'>\" + $('Validate & Transform Input').item.json.agentName + \"</p></td></tr><tr><td style='padding:20px 24px;'><p style='margin:0 0 4px;font-size:11px;font-weight:600;color:#718096;text-transform:uppercase;letter-spacing:1px;'>Fecha y hora del handoff</p><p style='margin:0;font-size:14px;color:#2d3748;'>\" + $('Validate & Transform Input').item.json.handoffDisplay + \"</p></td></tr></table><table width='100%' cellpadding='0' cellspacing='0' style='margin-bottom:24px;'><tr><td align='center'><a href='https://notion.so/\" + $json.id.replace(/-/g, '') + \"' style='display:inline-block;background-color:#0F1F3D;color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;padding:14px 32px;border-radius:6px;margin-bottom:12px;'>Ver Lead en Notion →</a></td></tr><tr><td align='center' style='padding-top:8px;'><a href='https://wa.me/\" + $('Validate & Transform Input').item.json.phone + \"' style='display:inline-block;background-color:#25D366;color:#ffffff;font-size:13px;font-weight:600;text-decoration:none;padding:10px 24px;border-radius:6px;'>💬 Contactar por WhatsApp</a></td></tr></table><p style='margin:0;font-size:13px;color:#718096;line-height:1.6;padding-top:16px;border-top:1px solid #e2e8f0;'>Este email fue generado automáticamente por el bot de WhatsApp de Nexo Real.<br/>Por favor contactá al lead dentro de las próximas <strong>2 horas</strong>.</p></td></tr><tr><td style='background-color:#f7fafc;padding:24px 40px;text-align:center;border-top:1px solid #e2e8f0;'><p style='margin:0;font-size:12px;color:#a0aec0;'>© 2026 Nexo Real · info@nexoreal.xyz</p></td></tr></table></td></tr></table></body></html>\"\n}) }}",
+        "options": {}
+      },
+      "id": "4a4a25cc-d723-43c7-b74f-da837630018a",
+      "name": "Brevo — Send Handoff Email",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-1680, 928],
+      "credentials": {
+        "httpHeaderAuth": {
+          "name": "Brevo — API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const notionResult = $('Notion — Create Lead').item.json;\nconst brevoResult = $json;\n\nreturn [\n  {\n    json: {\n      success: true,\n      notionPageId: notionResult.id || null,\n      emailSent: brevoResult.messageId ? true : false\n    }\n  }\n];\n"
+      },
+      "id": "c42a19da-e8d3-487b-ae65-0f132616a2df",
+      "name": "Merge Results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-1456, 928]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "id": "27b31b6a-12e4-4a85-98c3-e15b72549d49",
+      "name": "Respond — Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [-1232, 928]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": false,\n  \"error\": \"{{ $json.message }}\"\n}",
+        "options": {}
+      },
+      "id": "617aa383-47b9-4331-9c3e-dcd744fc6c7f",
+      "name": "Respond — Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [-1920, 1184]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook — Receive Handoff Request": {
+      "main": [
+        [
+          {
+            "node": "Validate & Transform Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate & Transform Input": {
+      "main": [
+        [
+          {
+            "node": "Notion — Create Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notion — Create Lead": {
+      "main": [
+        [
+          {
+            "node": "Brevo — Send Handoff Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Brevo — Send Handoff Email": {
+      "main": [
+        [
+          {
+            "node": "Merge Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Results": {
+      "main": [
+        [
+          {
+            "node": "Respond — Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "0292854b-f075-4ddb-8530-90a7ffeceb56",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a6a4a686028e3be9978afbd5454ddb00d71f1c20603326190a244e5624b72206"
+  },
+  "id": "ZaYAzqWPOX1skG0F",
+  "tags": []
+}

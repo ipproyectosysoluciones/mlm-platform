@@ -2,9 +2,9 @@
 
 ## Nexo Real — Plataforma SaaS de Servicios Inmobiliarios, Turismo y Afiliaciones
 
-**Version**: 2.3.5  
-**Status**: ✅ v2.3.5 Released  
-**Last Updated**: 2026-04-09  
+**Version**: 2.4.0  
+**Status**: ✅ v2.4.0 Released  
+**Last Updated**: 2026-04-10  
 **Document Owner**: Nexo Real Development Team  
 **Tagline**: _"Conectamos tu negocio con el mundo."_
 
@@ -491,7 +491,7 @@ PATCH  /api/admin/vendors/:id/commission-rate
 | KPI                       | Target        | Actual |
 | ------------------------- | ------------- | ------ |
 | Test Coverage             | >= 90%        | ~70%   |
-| Tests Totales             | ~550          | 307    |
+| Tests Totales             | ~550          | 967    |
 | API Response Time         | < 200ms (p95) | TBD    |
 | System Uptime             | >= 99.5%      | TBD    |
 | Payment Success Rate      | >= 95%        | N/A    |
@@ -517,6 +517,7 @@ PATCH  /api/admin/vendors/:id/commission-rate
 
 | Version | Date       | Author         | Changes                                                                                                                                                                                                                                                                          |
 | ------- | ---------- | -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2.4.0   | 2026-04-10 | Nexo Real Team | Sprint 8 RBAC completo: 9 roles (super_admin, admin, finance, sales, advisor, vendor, user, guest, bot), endpoints register/guest y updateUserRole. Seed Nexo Real colombiano (Unilevel). Tests 967.                                                                             |
 | 2.0.0   | 2026-04-05 | Nexo Real Team | Reescritura completa. Proyecto renombrado de `mlm-platform` a **Nexo Real**. Foco en servicios inmobiliarios + turismo/hospitalidad. Nexo Bot documentado. Modelo MLM definido como Unilevel con bonos. Eliminado: streaming, delivery DiDi/Uber, productos genéricos como foco. |
 | 1.8.0   | 2026-04-03 | MLM Team       | Multi-vendor + delivery scope                                                                                                                                                                                                                                                    |
 | 1.3.0   | 2026-03-30 | MLM Team       | MVP streaming e-commerce                                                                                                                                                                                                                                                         |
@@ -546,5 +547,7 @@ _Nexo Real — "Conectamos tu negocio con el mundo."_
 | Sprint 4   | v2.0.0  | Nexo Bot WhatsApp, n8n Automation, Gamificación                                                                      | ✅ Completado  | 2026-04-06 |
 | Sprint 5   | v2.1.0  | Real Estate Frontend, Tourism Frontend, Reservation Wizard                                                           | ✅ Completado  | 2026-04-07 |
 | Sprint 6   | v2.2.0  | Admin Dashboard CRUD, Nexo Bot Flows (properties+tours), SEO Frontend, Build Hardening, i18n cleanup, CodeQL fixes   | ✅ Completado  | 2026-04-07 |
-| Sprint 7   | v2.3.0  | UI/UX Rebranding completo (landing Nexo Real, auth skin, AppLayout), Vitest 90%+ coverage, E2E Playwright, PWA       | 🔄 En progreso | 2026-04-08 |
+| Sprint 7   | v2.3.5  | UI/UX Rebranding completo (landing Nexo Real, auth skin, AppLayout), Vitest 90%+ coverage, E2E Playwright, PWA       | ✅ Completado  | 2026-04-09 |
+| Sprint 8   | v2.4.0  | RBAC 9 roles + endpoints register/guest y updateUserRole + Seed Nexo Real colombiano (Unilevel)                      | ✅ Completado  | 2026-04-10 |
+| Sprint 9   | v3.0.0  | Bot Completo: flows de ventas, onboarding, gestión de reservas, WhatsApp Business API                                | 📋 Planificado | —          |
 | Sprint 8   | v2.4.0  | Bot completo: Knowledge Base FAQ, n8n workflows (Calendar+Notion), captación leads, onboarding afiliados, objeciones | 📋 Planificado | —          |

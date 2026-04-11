@@ -1,3 +1,62 @@
+// ============================================
+// USER ROLES — Canonical RBAC definitions
+// ROLES DE USUARIO — Definiciones RBAC canónicas
+// ============================================
+
+/**
+ * All valid user roles in the system.
+ * Todos los roles de usuario válidos en el sistema.
+ *
+ * @constant {readonly string[]} USER_ROLES
+ *
+ * @example
+ * // English: Check if a role is valid
+ * const isValid = USER_ROLES.includes(someRole);
+ *
+ * // Español: Verificar si un rol es válido
+ * const isValid = USER_ROLES.includes(someRole);
+ */
+export const USER_ROLES = [
+  'super_admin',
+  'admin',
+  'finance',
+  'sales',
+  'advisor',
+  'vendor',
+  'user',
+  'guest',
+  'bot',
+] as const;
+
+/** Canonical user role type — single source of truth */
+export type UserRole = (typeof USER_ROLES)[number];
+
+// ============================================
+// ROLE GROUPS — Permission arrays by module
+// GRUPOS DE ROLES — Arrays de permisos por módulo
+// ============================================
+
+/** Roles with full admin access / Roles con acceso admin completo */
+export const ADMIN_ROLES: readonly UserRole[] = ['super_admin', 'admin'] as const;
+
+/** Roles with financial module access / Roles con acceso al módulo financiero */
+export const FINANCE_ROLES: readonly UserRole[] = ['super_admin', 'admin', 'finance'] as const;
+
+/** Roles with CRM module access / Roles con acceso al módulo CRM */
+export const CRM_ROLES: readonly UserRole[] = ['super_admin', 'admin', 'sales', 'advisor'] as const;
+
+/** Roles with property management access / Roles con gestión de propiedades */
+export const PROPERTY_MGMT_ROLES: readonly UserRole[] = ['super_admin', 'admin', 'sales'] as const;
+
+/** Roles with buyer access (personal wallet, purchases) / Roles con acceso de comprador */
+export const BUYER_ROLES: readonly UserRole[] = [
+  'super_admin',
+  'admin',
+  'finance',
+  'vendor',
+  'user',
+] as const;
+
 export interface UserAttributes {
   id: string;
   email: string;
@@ -7,7 +66,7 @@ export interface UserAttributes {
   position: 'left' | 'right' | null;
   level: number;
   status: 'active' | 'inactive';
-  role: 'admin' | 'user';
+  role: UserRole;
   currency: 'USD' | 'COP' | 'MXN';
   // Notification preferences
   emailNotifications: boolean;
@@ -27,7 +86,7 @@ export interface UserCreationAttributes {
   position?: 'left' | 'right' | null;
   level?: number;
   status?: 'active' | 'inactive';
-  role?: 'admin' | 'user';
+  role?: UserRole;
   currency?: 'USD' | 'COP' | 'MXN';
 }
 
@@ -84,7 +143,7 @@ export interface ApiResponse<T> {
 export interface JwtPayload {
   userId: string;
   email: string;
-  role: 'admin' | 'user';
+  role: UserRole;
 }
 
 export interface TreeNode {

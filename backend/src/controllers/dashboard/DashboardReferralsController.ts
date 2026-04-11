@@ -10,7 +10,7 @@ import { userService } from '../../services/UserService';
 import { QRService } from '../../services/QRService';
 import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
 import type { ApiResponse } from '../../types';
-import { ApiResponse as ResponseUtil } from '../../utils/response.util';
+import { ResponseUtil } from '../../utils/response.util';
 
 /**
  * Get recent referrals and referral link for dashboard

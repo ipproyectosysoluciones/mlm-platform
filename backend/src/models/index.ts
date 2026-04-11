@@ -42,6 +42,7 @@ import { Property } from './Property';
 import { TourPackage } from './TourPackage';
 import { TourAvailability } from './TourAvailability';
 import { Reservation } from './Reservation';
+import { WebhookEvent } from './WebhookEvent';
 
 // User relationships
 User.hasMany(User, { as: 'children', foreignKey: 'sponsorId', sourceKey: 'id' });

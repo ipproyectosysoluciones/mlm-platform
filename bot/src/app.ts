@@ -1,15 +1,11 @@
 import 'dotenv/config';
-import {
-  createBot,
-  createProvider,
-  createFlow,
-  addKeyword,
-  EVENTS,
-  MemoryDB,
-} from '@builderbot/bot';
+import { createBot, createProvider, createFlow, addKeyword, EVENTS } from '@builderbot/bot';
 // @ts-ignore — BaileysProvider is exported at runtime but TS NodeNext resolver
 // fails to resolve the re-export chain in provider-baileys' .d.ts files.
 import { BaileysProvider } from '@builderbot/provider-baileys';
+// @ts-ignore — PostgreSQLAdapter ships as CJS (index.cjs) with "type":"module" in its package.json,
+// which confuses NodeNext moduleResolution. The adapter works correctly at runtime.
+import { PostgreSQLAdapter } from '@builderbot/database-postgres';
 
 import { welcomeFlow } from './flows/welcome.flow.js';
 import { balanceFlow } from './flows/balance.flow.js';
@@ -19,7 +15,9 @@ import { scheduleFlow } from './flows/schedule.flow.js';
 import { handoffFlow } from './flows/handoff.flow.js';
 import { propertiesFlow } from './flows/properties.flow.js';
 import { toursFlow } from './flows/tours.flow.js';
+import { onboardingFlow } from './flows/onboarding.flow.js';
 import { reservationsFlow } from './flows/reservations.flow.js';
+import { COMMISSIONS_KEYWORDS } from './config/keywords.js';
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
@@ -52,27 +50,39 @@ const provider = createProvider(BaileysProvider, {
 });
 
 // ── Database ──────────────────────────────────────────────────────────────────
-// Using MemoryDB for MVP — conversation state is managed in ai.service.ts.
-// Can be upgraded to PostgreSQLDB in a future sprint for persistence across restarts.
+// PostgreSQLAdapter persists conversation history and contact data across restarts.
+// Tables `contact` and `history` are auto-created on first run via stored procedures.
+// Shares the same PostgreSQL instance as the backend (mlm_db).
+//
+// PostgreSQLAdapter persiste historial de conversaciones y datos de contactos entre reinicios.
+// Las tablas `contact` e `history` se crean automáticamente en el primer arranque.
+// Comparte la misma instancia de PostgreSQL que el backend (mlm_db).
 
-const database = new MemoryDB();
+const database = new PostgreSQLAdapter({
+  host: process.env.DB_HOST ?? 'localhost',
+  port: Number(process.env.DB_PORT ?? 5432),
+  database: process.env.DB_NAME ?? 'mlm_db',
+  user: process.env.DB_USER ?? 'mlm',
+  password: process.env.DB_PASSWORD ?? '',
+});
 
 // ── Flows ─────────────────────────────────────────────────────────────────────
 
 /**
  * "comisiones" keyword — re-uses networkFlow logic (shows last commissions inline).
  * We create a thin alias flow here rather than duplicating network.flow.ts.
+ * Keywords are centralized in config/keywords.ts (COMMISSIONS_KEYWORDS).
  */
-const commissionsKeywordFlow = addKeyword(['comisiones', 'mis comisiones', 'ver comisiones'] as [
-  string,
-  ...string[],
-]).addAction(async (ctx: any, utils: any) => {
-  // Delegate to networkFlow which already includes commissions in its response
-  await utils.gotoFlow(networkFlow);
-});
+const commissionsKeywordFlow = addKeyword(COMMISSIONS_KEYWORDS).addAction(
+  async (ctx: any, utils: any) => {
+    // Delegate to networkFlow which already includes commissions in its response
+    await utils.gotoFlow(networkFlow);
+  }
+);
 
 const flow = createFlow([
   welcomeFlow,
+  onboardingFlow,
   balanceFlow,
   networkFlow,
   supportFlow,

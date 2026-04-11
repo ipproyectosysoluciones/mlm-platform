@@ -5,6 +5,8 @@ import {
   me,
   registerValidation,
   loginValidation,
+  registerGuest,
+  registerGuestValidation,
 } from '../controllers/AuthController';
 import { authenticateToken } from '../middleware/auth.middleware';
 import { validate } from '../middleware/validate.middleware';
@@ -142,5 +144,46 @@ router.post('/login', validate(loginValidation), login);
  *               $ref: '#/components/schemas/Error'
  */
 router.get('/me', authenticateToken, me);
+
+/**
+ * @swagger
+ * /auth/register/guest:
+ *   post:
+ *     summary: Registrar usuario invitado / Register guest user
+ *     description: |
+ *       Crea una cuenta de tipo 'guest' sin contraseña y genera automáticamente un Lead en el CRM.
+ *       El invitado no puede iniciar sesión hasta que un admin promueva su rol.
+ *       Creates a 'guest' account without password and auto-generates a CRM Lead.
+ *       The guest cannot log in until an admin promotes their role.
+ *     tags: [auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - email
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: Nombre completo / Full name
+ *               email:
+ *                 type: string
+ *                 format: email
+ *               phone:
+ *                 type: string
+ *                 description: Teléfono opcional / Optional phone
+ *               sponsor_code:
+ *                 type: string
+ *                 description: Código de referido opcional / Optional referral code
+ *     responses:
+ *       201:
+ *         description: Invitado registrado y Lead creado / Guest registered and Lead created
+ *       400:
+ *         description: Email ya registrado o validación fallida / Email already registered or validation failed
+ */
+router.post('/register/guest', validate(registerGuestValidation), registerGuest);
 
 export default router;

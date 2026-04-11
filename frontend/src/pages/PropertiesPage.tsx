@@ -13,6 +13,7 @@ import { MapPin, BedDouble, Bath, Maximize2, Search, SlidersHorizontal, Eye } fr
 import { propertyService } from '../services/propertyService';
 import type { Property, PropertyListParams, PropertyType } from '../services/propertyService';
 import { cn } from '../lib/utils';
+import { APP_URL } from '../config/app.config';
 
 // ============================================
 // Helpers / Utilidades
@@ -232,11 +233,11 @@ export default function PropertiesPage() {
       <Helmet>
         <title>{seoTitle}</title>
         <meta name="description" content={seoDescription} />
-        <link rel="canonical" href="https://nexoreal.com/properties" />
+        <link rel="canonical" href={`${APP_URL}/properties`} />
         <meta property="og:type" content="website" />
         <meta property="og:title" content={seoTitle} />
         <meta property="og:description" content={seoDescription} />
-        <meta property="og:url" content="https://nexoreal.com/properties" />
+        <meta property="og:url" content={`${APP_URL}/properties`} />
         <meta property="og:site_name" content="Nexo Real" />
       </Helmet>
 
@@ -361,7 +362,7 @@ export default function PropertiesPage() {
                   <PropertyCard
                     key={property.id}
                     property={property}
-                    onClick={(id) => navigate(`/propiedades/${id}`)}
+                    onClick={(id) => navigate(`/properties/${id}`)}
                   />
                 ))}
               </div>

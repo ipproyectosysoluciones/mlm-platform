@@ -115,7 +115,7 @@ vi.mock('../context/useAuth', () => ({
   useAuth: () => ({
     user: {
       id: 'admin-1',
-      email: 'admin@nexoreal.com',
+      email: 'admin@nexoreal.xyz',
       firstName: 'Admin',
       lastName: 'User',
       referralCode: 'ADMIN',
