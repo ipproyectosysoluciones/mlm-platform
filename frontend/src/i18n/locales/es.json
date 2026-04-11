@@ -74,6 +74,9 @@
     "binaryTree": "Árbol Binario",
     "leftLeg": "Pierna Izquierda",
     "rightLeg": "Pierna Derecha",
+    "myNetwork": "Mi Red Unilevel",
+    "directReferrals": "Referidos Directos",
+    "totalNetwork": "Red Total",
     "viewFullTree": "Ver Árbol Completo",
     "referralLink": "Tu Link de Referido",
     "copyLink": "Copiar Link",
@@ -88,7 +91,15 @@
     "noReferrals": "Aún no tenés referidos",
     "noReferralsHint": "Compartí tu link para invitar personas",
     "amount": "Monto",
-    "earnings": "Ganancias"
+    "earnings": "Ganancias",
+    "commissionBreakdown": "Desglose de Comisiones",
+    "level": "Nivel {{n}}",
+    "directReferrals": "Referidos Directos",
+    "rate": "Tasa",
+    "referrals": "Referidos",
+    "bonuses": "Bonificaciones",
+    "totalEarnings": "Total Ganancias",
+    "commissionByLevel": "Comisiones por Nivel"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -508,6 +519,13 @@
     "level2": "Referidos Nivel 2",
     "level3": "Referidos Nivel 3",
     "level4": "Referidos Nivel 4"
+  },
+  "tours": {
+    "spotsAvailable": "{{count}} plazas disponibles",
+    "spotsOf": "{{available}} de {{total}} plazas",
+    "soldOut": "Agotado",
+    "nextAvailableDate": "Próxima fecha: {{date}}",
+    "almostFull": "¡Últimas plazas!"
   },
   "catalog": {
     "bookNow": "Reservar ahora",

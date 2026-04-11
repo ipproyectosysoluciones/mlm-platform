@@ -13,6 +13,7 @@ import QRDisplay from '../components/QRDisplay';
 import { StatsCards } from '../components/dashboard/StatsCards';
 import { ReferralChart } from '../components/dashboard/ReferralChart';
 import { CommissionChart } from '../components/dashboard/CommissionChart';
+import { CommissionTierBreakdown } from '../components/dashboard/CommissionTierBreakdown';
 import { RecentActivity } from '../components/dashboard/RecentActivity';
 
 export default function Dashboard() {
@@ -113,6 +114,9 @@ export default function Dashboard() {
           isMounted={isMounted}
         />
       </div>
+
+      {/* Commission Tier Breakdown — MLM Unilevel structure visualization */}
+      <CommissionTierBreakdown commissions={data.recentCommissions} isMounted={isMounted} />
 
       {/* Network & Referral section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

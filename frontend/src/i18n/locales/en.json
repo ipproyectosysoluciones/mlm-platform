@@ -93,7 +93,14 @@
     "noReferrals": "No referrals yet",
     "noReferralsHint": "Share your link to invite people",
     "amount": "Amount",
-    "earnings": "Earnings"
+    "earnings": "Earnings",
+    "commissionBreakdown": "Commission Breakdown",
+    "level": "Level {{n}}",
+    "rate": "Rate",
+    "referrals": "Referrals",
+    "bonuses": "Bonuses",
+    "totalEarnings": "Total Earnings",
+    "commissionByLevel": "Commissions by Level"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -516,6 +523,13 @@
     "level2": "Level 2 Referrals",
     "level3": "Level 3 Referrals",
     "level4": "Level 4 Referrals"
+  },
+  "tours": {
+    "spotsAvailable": "{{count}} spots available",
+    "spotsOf": "{{available}} of {{total}} spots",
+    "soldOut": "Sold Out",
+    "nextAvailableDate": "Next date: {{date}}",
+    "almostFull": "Almost full!"
   },
   "catalog": {
     "bookNow": "Book Now",
