@@ -155,7 +155,7 @@ export function computePriceBreakdown(wizardData: WizardData | null): PriceBreak
 
   if (wizardData.type === 'property') {
     const totalNights = daysBetween(wizardData.checkIn, wizardData.checkOut);
-    const pricePerUnit = wizardData.property.price;
+    const pricePerUnit = Number(wizardData.property.price);
     const currency = wizardData.property.currency;
     const guestCount = wizardData.guests;
     const subtotal = pricePerUnit * totalNights;
@@ -173,7 +173,7 @@ export function computePriceBreakdown(wizardData: WizardData | null): PriceBreak
   }
 
   // Tour: price is per person, 1 "night"
-  const pricePerUnit = wizardData.tour.price;
+  const pricePerUnit = Number(wizardData.tour.price);
   const currency = wizardData.tour.currency;
   const guestCount = wizardData.guests;
   const totalNights = 1;

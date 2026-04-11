@@ -40,21 +40,31 @@ export interface TourAvailability {
  * Tour package interface matching backend TourPackage model
  * Interfaz de paquete de tour que coincide con el modelo de backend
  */
+/**
+ * Tour package interface matching backend TourPackage model (actual API response)
+ * Interfaz de paquete de tour que coincide con el modelo real de backend
+ */
 export interface TourPackage {
   id: string;
+  type: TourCategory;
   title: string;
+  titleEn?: string;
   description: string;
-  category: TourCategory;
+  descriptionEn?: string;
   destination: string;
-  duration: number;
-  price: number;
+  country?: string;
+  durationDays: number;
+  price: number | string;
   currency: string;
-  maxGuests: number;
+  priceIncludes: string[];
+  priceExcludes: string[];
   images: string[];
-  includes: string[];
-  excludes: string[];
-  isActive: boolean;
+  maxCapacity: number;
+  minGroupSize?: number;
+  status: 'active' | 'inactive';
+  vendorId?: string | null;
   availabilities?: TourAvailability[];
+  deletedAt?: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -103,15 +113,16 @@ export const tourService = {
    * @returns {Promise<TourListResponse>} Paginated tour list / Listado paginado de tours
    */
   getTours: async (params?: TourListParams): Promise<TourListResponse> => {
-    const response = await api.get<{ success: boolean; data: TourListResponse }>('/tours', {
-      params,
-    });
-    return (
-      response.data.data ?? {
-        data: [],
-        pagination: { total: 0, page: 1, limit: 10, totalPages: 0 },
-      }
-    );
+    const response = await api.get<{
+      success: boolean;
+      data: TourPackage[];
+      pagination: TourListResponse['pagination'];
+    }>('/tours', { params });
+    const raw = response.data;
+    return {
+      data: Array.isArray(raw?.data) ? raw.data : [],
+      pagination: raw?.pagination ?? { total: 0, page: 1, limit: 10, totalPages: 0 },
+    };
   },
 
   /**
@@ -122,7 +133,7 @@ export const tourService = {
    */
   getTour: async (id: string): Promise<TourPackage> => {
     const response = await api.get<{ success: boolean; data: TourPackage }>(`/tours/${id}`);
-    return response.data.data ?? ({} as TourPackage);
+    return response.data?.data ?? ({} as TourPackage);
   },
 };
 

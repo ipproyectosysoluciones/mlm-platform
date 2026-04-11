@@ -58,12 +58,12 @@ const TYPE_BADGE: Record<PropertyType, { label: string; classes: string }> = {
  * Formats a price with its currency.
  * Formatea un precio con su moneda.
  */
-function formatPrice(price: number, currency: string): string {
+function formatPrice(price: string, currency: string): string {
   return new Intl.NumberFormat('es-AR', {
     style: 'currency',
     currency,
     maximumFractionDigits: 0,
-  }).format(price);
+  }).format(Number(price));
 }
 
 // ============================================
@@ -140,15 +140,15 @@ export function PropertyCard({ property, variant = 'grid', className }: Property
                 {property.bathrooms}
               </span>
             )}
-            {property.area != null && (
+            {property.areaM2 != null && (
               <span className="flex items-center gap-1">
                 <Maximize className="w-3.5 h-3.5" />
-                {property.area} m²
+                {property.areaM2} m²
               </span>
             )}
           </div>
           <p className="text-emerald-400 font-bold text-lg">
-            {formatPrice(property.price, property.currency)}
+            {formatPrice(String(property.price), property.currency)}
           </p>
         </div>
       </Link>
@@ -216,17 +216,17 @@ export function PropertyCard({ property, variant = 'grid', className }: Property
               {property.bathrooms}
             </span>
           )}
-          {property.area != null && (
+          {property.areaM2 != null && (
             <span className="flex items-center gap-1">
               <Maximize className="w-3.5 h-3.5" />
-              {property.area} m²
+              {property.areaM2} m²
             </span>
           )}
         </div>
 
         {/* Price */}
         <p className="text-emerald-400 font-bold text-xl">
-          {formatPrice(property.price, property.currency)}
+          {formatPrice(String(property.price), property.currency)}
         </p>
       </div>
     </Link>

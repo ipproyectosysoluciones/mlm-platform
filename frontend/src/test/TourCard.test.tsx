@@ -20,16 +20,16 @@ const baseTour: TourPackage = {
   id: 'tour-1',
   title: 'Patagonia Extrema',
   description: 'Aventura en el fin del mundo',
-  category: 'adventure',
+  type: 'adventure',
   destination: 'Ushuaia, Argentina',
-  duration: 7,
-  price: 85000,
+  durationDays: 7,
+  price: '85000',
   currency: 'ARS',
-  maxGuests: 12,
+  maxCapacity: 12,
   images: [],
-  includes: ['guía', 'traslados'],
-  excludes: ['vuelos'],
-  isActive: true,
+  priceIncludes: ['guía', 'traslados'],
+  priceExcludes: ['vuelos'],
+  status: 'active',
   createdAt: '2024-01-01T00:00:00Z',
   updatedAt: '2024-01-01T00:00:00Z',
 };
@@ -64,27 +64,27 @@ describe('TourCard — grid variant', () => {
   });
 
   it('renders the "Cultural" badge for category cultural', () => {
-    renderCard({ ...baseTour, category: 'cultural' });
+    renderCard({ ...baseTour, type: 'cultural' });
     expect(screen.getByText('Cultural')).toBeInTheDocument();
   });
 
   it('renders the "Relajación" badge for category relaxation', () => {
-    renderCard({ ...baseTour, category: 'relaxation' });
+    renderCard({ ...baseTour, type: 'relaxation' });
     expect(screen.getByText('Relajación')).toBeInTheDocument();
   });
 
   it('renders the "Gastronómico" badge for category gastronomic', () => {
-    renderCard({ ...baseTour, category: 'gastronomic' });
+    renderCard({ ...baseTour, type: 'gastronomic' });
     expect(screen.getByText('Gastronómico')).toBeInTheDocument();
   });
 
   it('renders the "Ecoturismo" badge for category ecotourism', () => {
-    renderCard({ ...baseTour, category: 'ecotourism' });
+    renderCard({ ...baseTour, type: 'ecotourism' });
     expect(screen.getByText('Ecoturismo')).toBeInTheDocument();
   });
 
   it('renders the "Lujo" badge for category luxury', () => {
-    renderCard({ ...baseTour, category: 'luxury' });
+    renderCard({ ...baseTour, type: 'luxury' });
     expect(screen.getByText('Lujo')).toBeInTheDocument();
   });
 

@@ -268,12 +268,12 @@ export default function TourDetailPage() {
    * Meta description combinando categoría, duración, personas y fragmento de descripción.
    */
   const seoDescription = [
-    CATEGORY_LABELS[tour.category],
+    CATEGORY_LABELS[tour.type],
     'en',
     tour.destination,
-    `· ${tour.duration} ${tour.duration === 1 ? 'día' : 'días'}`,
-    `· Hasta ${tour.maxGuests} personas`,
-    `· ${tour.currency} ${tour.price.toLocaleString('es-AR')} por persona`,
+    `· ${tour.durationDays} ${tour.durationDays === 1 ? 'día' : 'días'}`,
+    `· Hasta ${tour.maxCapacity} personas`,
+    `· ${tour.currency} ${Number(tour.price).toLocaleString('es-AR')} por persona`,
     tour.description ? `— ${tour.description.slice(0, 120)}` : '',
   ]
     .filter(Boolean)
@@ -299,7 +299,7 @@ export default function TourDetailPage() {
     description: tour.description ?? seoDescription,
     url: canonicalUrl,
     image: tour.images?.length ? tour.images : [ogImage],
-    touristType: CATEGORY_LABELS[tour.category],
+    touristType: CATEGORY_LABELS[tour.type],
     geo: {
       '@type': 'GeoCoordinates',
       name: tour.destination,
@@ -308,8 +308,9 @@ export default function TourDetailPage() {
       '@type': 'Offer',
       price: tour.price,
       priceCurrency: tour.currency,
-      availability: tour.isActive ? 'https://schema.org/InStock' : 'https://schema.org/SoldOut',
-      description: `Tour de ${tour.duration} ${tour.duration === 1 ? 'día' : 'días'} — hasta ${tour.maxGuests} personas`,
+      availability:
+        tour.status === 'active' ? 'https://schema.org/InStock' : 'https://schema.org/SoldOut',
+      description: `Tour de ${tour.durationDays} ${tour.durationDays === 1 ? 'día' : 'días'} — hasta ${tour.maxCapacity} personas`,
     },
   };
 
@@ -361,10 +362,10 @@ export default function TourDetailPage() {
                   <span
                     className={cn(
                       'shrink-0 px-3 py-1 rounded-full text-sm font-semibold',
-                      CATEGORY_COLORS[tour.category]
+                      CATEGORY_COLORS[tour.type]
                     )}
                   >
-                    {CATEGORY_LABELS[tour.category]}
+                    {CATEGORY_LABELS[tour.type]}
                   </span>
                 </div>
                 <p className="flex items-center gap-1 text-slate-500">
@@ -378,14 +379,14 @@ export default function TourDetailPage() {
                 <div className="flex items-center gap-2 text-slate-700">
                   <Clock className="w-5 h-5 text-emerald-500" />
                   <span>
-                    <span className="font-semibold">{tour.duration}</span>{' '}
-                    {tour.duration === 1 ? 'día' : 'días'}
+                    <span className="font-semibold">{tour.durationDays}</span>{' '}
+                    {tour.durationDays === 1 ? 'día' : 'días'}
                   </span>
                 </div>
                 <div className="flex items-center gap-2 text-slate-700">
                   <Users className="w-5 h-5 text-emerald-500" />
                   <span>
-                    Hasta <span className="font-semibold">{tour.maxGuests}</span> personas
+                    Hasta <span className="font-semibold">{tour.maxCapacity}</span> personas
                   </span>
                 </div>
               </div>
@@ -406,8 +407,8 @@ export default function TourDetailPage() {
                   return best;
                 }, null);
 
-                const totalSpots = bestSlot?.total ?? tour.maxGuests;
-                const availableSpots = bestSlot?.available ?? tour.maxGuests;
+                const totalSpots = bestSlot?.total ?? tour.maxCapacity;
+                const availableSpots = bestSlot?.available ?? tour.maxCapacity;
                 const bookedSpots = totalSpots - availableSpots;
                 const occupancyPct =
                   totalSpots > 0 ? Math.round((bookedSpots / totalSpots) * 100) : 0;
@@ -486,11 +487,11 @@ export default function TourDetailPage() {
 
               {/* Includes / Excludes */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {tour.includes && tour.includes.length > 0 && (
+                {tour.priceIncludes && tour.priceIncludes.length > 0 && (
                   <div>
                     <h2 className="text-base font-semibold text-slate-800 mb-2">Incluye</h2>
                     <ul className="space-y-1">
-                      {tour.includes.map((item) => (
+                      {tour.priceIncludes.map((item) => (
                         <li key={item} className="flex items-center gap-2 text-sm text-slate-600">
                           <Check className="w-4 h-4 text-emerald-500 shrink-0" />
                           {item}
@@ -499,11 +500,11 @@ export default function TourDetailPage() {
                     </ul>
                   </div>
                 )}
-                {tour.excludes && tour.excludes.length > 0 && (
+                {tour.priceExcludes && tour.priceExcludes.length > 0 && (
                   <div>
                     <h2 className="text-base font-semibold text-slate-800 mb-2">No incluye</h2>
                     <ul className="space-y-1">
-                      {tour.excludes.map((item) => (
+                      {tour.priceExcludes.map((item) => (
                         <li key={item} className="flex items-center gap-2 text-sm text-slate-500">
                           <X className="w-4 h-4 text-red-400 shrink-0" />
                           {item}
@@ -529,7 +530,8 @@ export default function TourDetailPage() {
             <div className="lg:col-span-1">
               <div className="sticky top-6 bg-white rounded-xl border border-slate-200 shadow-sm p-6">
                 <p className="text-3xl font-bold text-emerald-600 mb-1">
-                  {tour.currency} {tour.price.toLocaleString('es-AR', { minimumFractionDigits: 0 })}
+                  {tour.currency}{' '}
+                  {Number(tour.price).toLocaleString('es-AR', { minimumFractionDigits: 0 })}
                 </p>
                 <p className="text-sm text-slate-400 mb-4">por persona</p>
 

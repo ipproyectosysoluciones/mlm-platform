@@ -239,8 +239,8 @@ export default function PropertyDetailPage() {
     property.city,
     property.bedrooms ? `· ${property.bedrooms} hab.` : '',
     property.bathrooms ? `· ${property.bathrooms} baños` : '',
-    property.area ? `· ${property.area} m²` : '',
-    `· ${property.currency} ${property.price.toLocaleString('es-AR')}`,
+    property.areaM2 ? `· ${property.areaM2} m²` : '',
+    `· ${property.currency} ${Number(property.price).toLocaleString('es-AR')}`,
     property.description ? `— ${property.description.slice(0, 120)}` : '',
   ]
     .filter(Boolean)
@@ -280,8 +280,8 @@ export default function PropertyDetailPage() {
       addressCountry: property.country ?? 'CO',
     },
     ...(property.bedrooms != null && { numberOfRooms: property.bedrooms }),
-    ...(property.area != null && {
-      floorSize: { '@type': 'QuantitativeValue', value: property.area, unitCode: 'MTK' },
+    ...(property.areaM2 != null && {
+      floorSize: { '@type': 'QuantitativeValue', value: property.areaM2, unitCode: 'MTK' },
     }),
   };
 
@@ -365,11 +365,11 @@ export default function PropertyDetailPage() {
                     </span>
                   </div>
                 )}
-                {property.area != null && (
+                {property.areaM2 != null && (
                   <div className="flex items-center gap-2 text-slate-700">
                     <Maximize2 className="w-5 h-5 text-emerald-500" />
                     <span>
-                      <span className="font-semibold">{property.area}</span> m²
+                      <span className="font-semibold">{property.areaM2}</span> m²
                     </span>
                   </div>
                 )}
@@ -404,7 +404,7 @@ export default function PropertyDetailPage() {
               <div className="sticky top-6 bg-white rounded-xl border border-slate-200 shadow-sm p-6">
                 <p className="text-3xl font-bold text-emerald-600 mb-1">
                   {property.currency}{' '}
-                  {property.price.toLocaleString('es-AR', { minimumFractionDigits: 0 })}
+                  {Number(property.price).toLocaleString('es-AR', { minimumFractionDigits: 0 })}
                 </p>
                 {property.type === 'rental' && (
                   <p className="text-sm text-slate-400 mb-4">por mes</p>

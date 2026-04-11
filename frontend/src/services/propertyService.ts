@@ -30,20 +30,27 @@ export type PropertyStatus = 'active' | 'inactive' | 'sold' | 'rented';
  */
 export interface Property {
   id: string;
-  title: string;
-  description: string;
   type: PropertyType;
-  status: PropertyStatus;
-  price: number;
+  title: string;
+  titleEn?: string;
+  description: string;
+  descriptionEn?: string;
+  price: number | string;
   currency: string;
+  priceNegotiable?: boolean;
+  bedrooms?: number;
+  bathrooms?: number;
+  areaM2?: number;
   address: string;
   city: string;
   country: string;
-  bedrooms?: number;
-  bathrooms?: number;
-  area?: number;
-  images: string[];
+  lat?: number | null;
+  lng?: number | null;
   amenities: string[];
+  images: string[];
+  status: PropertyStatus;
+  vendorId?: string | null;
+  deletedAt?: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -92,16 +99,16 @@ export const propertyService = {
    * @returns {Promise<PropertyListResponse>} Paginated property list / Listado paginado de propiedades
    */
   getProperties: async (params?: PropertyListParams): Promise<PropertyListResponse> => {
-    const response = await api.get<{ success: boolean; data: PropertyListResponse }>(
-      '/properties',
-      { params }
-    );
-    return (
-      response.data.data ?? {
-        data: [],
-        pagination: { total: 0, page: 1, limit: 10, totalPages: 0 },
-      }
-    );
+    const response = await api.get<{
+      success: boolean;
+      data: Property[];
+      pagination: PropertyListResponse['pagination'];
+    }>('/properties', { params });
+    const raw = response.data;
+    return {
+      data: Array.isArray(raw?.data) ? raw.data : [],
+      pagination: raw?.pagination ?? { total: 0, page: 1, limit: 10, totalPages: 0 },
+    };
   },
 
   /**
@@ -112,7 +119,7 @@ export const propertyService = {
    */
   getProperty: async (id: string): Promise<Property> => {
     const response = await api.get<{ success: boolean; data: Property }>(`/properties/${id}`);
-    return response.data.data ?? ({} as Property);
+    return response.data?.data ?? ({} as Property);
   },
 };
 
