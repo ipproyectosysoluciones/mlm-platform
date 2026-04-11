@@ -19,6 +19,7 @@ import {
   Compass,
   Eye,
   CalendarCheck,
+  AlertTriangle,
 } from 'lucide-react';
 import { tourService } from '../services/tourService';
 import type { TourPackage, TourListParams, TourCategory } from '../services/tourService';
@@ -39,6 +40,21 @@ import { APP_URL } from '../config/app.config';
 function getSocialProofViews(id: string): number {
   const hash = id.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
   return 3 + (hash % 24);
+}
+
+/**
+ * Generates deterministic available spots for a tour card (demo/pitch).
+ * Since the listing API doesn't include availability data, we derive a
+ * stable number from the tour ID and maxGuests to simulate occupancy.
+ *
+ * Genera plazas disponibles determinísticas para card de tour (demo/pitch).
+ * Como la API de listado no incluye datos de disponibilidad, derivamos un
+ * número estable del ID del tour y maxGuests para simular ocupación.
+ */
+function getDemoAvailableSpots(id: string, maxGuests: number): number {
+  const hash = id.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+  // Produce a number between 0 and maxGuests with bias toward mid-range
+  return Math.min(maxGuests, hash % (maxGuests + 3));
 }
 
 // ============================================
@@ -77,6 +93,17 @@ function TourCard({ tour, onClick }: TourCardProps) {
   const navigate = useNavigate();
   const mainImage = tour.images?.[0];
 
+  // Availability: use real data if present, otherwise derive demo spots
+  const availableSpots = tour.availabilities?.length
+    ? tour.availabilities.reduce((best, a) => Math.max(best, a.availableSpots), 0)
+    : getDemoAvailableSpots(tour.id, tour.maxGuests);
+
+  const isSoldOut = availableSpots === 0;
+  const isAlmostFull = availableSpots > 0 && availableSpots <= 5;
+
+  /** Badge color: emerald > 5, amber 1-5, red 0 */
+  const badgeBg = isSoldOut ? 'bg-red-500' : isAlmostFull ? 'bg-amber-500' : 'bg-emerald-500';
+
   return (
     <article
       onClick={() => onClick(tour.id)}
@@ -102,6 +129,25 @@ function TourCard({ tour, onClick }: TourCardProps) {
           )}
         >
           {CATEGORY_LABELS[tour.category]}
+        </span>
+
+        {/* Occupancy badge / Badge de ocupación */}
+        <span
+          className={cn(
+            'absolute top-3 right-3 flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold text-white',
+            badgeBg
+          )}
+        >
+          {isSoldOut ? (
+            t('tours.soldOut')
+          ) : isAlmostFull ? (
+            <>
+              <AlertTriangle className="w-3 h-3" />
+              {t('tours.almostFull')}
+            </>
+          ) : (
+            t('tours.spotsAvailable', { count: availableSpots })
+          )}
         </span>
 
         {/* Social proof badge / Badge de prueba social */}
@@ -137,17 +183,27 @@ function TourCard({ tour, onClick }: TourCardProps) {
             {tour.currency} {tour.price.toLocaleString('es-AR', { minimumFractionDigits: 0 })}
             <span className="text-sm font-normal text-slate-400"> / persona</span>
           </p>
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              navigate(`/reservations/new?tourPackageId=${tour.id}`);
-            }}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500 text-white text-sm font-medium hover:bg-emerald-600 transition-colors shrink-0"
-          >
-            <CalendarCheck className="w-3.5 h-3.5" />
-            {t('catalog.bookNow')}
-          </button>
+          {isSoldOut ? (
+            <button
+              type="button"
+              disabled
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-300 text-slate-500 text-sm font-medium cursor-not-allowed shrink-0"
+            >
+              {t('tours.soldOut')}
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate(`/reservations/new?tourPackageId=${tour.id}`);
+              }}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500 text-white text-sm font-medium hover:bg-emerald-600 transition-colors shrink-0"
+            >
+              <CalendarCheck className="w-3.5 h-3.5" />
+              {t('catalog.bookNow')}
+            </button>
+          )}
         </div>
       </div>
     </article>
