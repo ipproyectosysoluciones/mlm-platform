@@ -13,7 +13,6 @@ import adminRoutes from './routes/admin.routes';
 import crmRoutes from './routes/crm.routes';
 import publicRoutes from './routes/public.routes';
 import landingRoutes from './routes/landing.routes';
-import commissionConfigRoutes from './routes/commission-config.routes';
 import paymentRoutes from './routes/payment.routes';
 import { resolveShortCode } from './controllers/GiftCardController';
 import { asyncHandler } from './middleware/asyncHandler';
@@ -209,7 +208,6 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/crm', crmRoutes);
 app.use('/api/public', publicRoutes);
 app.use('/api', landingRoutes);
-app.use('/api/admin/commissions', commissionConfigRoutes);
 app.use('/api/payment', paymentRoutes);
 
 // ============================================
