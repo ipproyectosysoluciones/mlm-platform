@@ -65,16 +65,16 @@ export const config = {
 
   /** JWT authentication configuration / Configuración de autenticación JWT */
   jwt: {
-    /** JWT secret key - CHANGE IN PRODUCTION / Clave secreta JWT - CAMBIAR EN PRODUCCIÓN */
-    secret: process.env.JWT_SECRET || 'default-secret-change-in-production',
+    /** JWT secret key (required) / Clave secreta JWT (requerida) */
+    secret: process.env.JWT_SECRET as string,
     /** JWT token expiration / Expiración del token JWT */
     expiresIn: process.env.JWT_EXPIRES_IN || '7d',
   },
 
   /** Two-Factor Authentication configuration / Configuración de autenticación de dos factores */
   twoFactor: {
-    /** 2FA secret key - CHANGE IN PRODUCTION / Clave secreta 2FA - CAMBIAR EN PRODUCCIÓN */
-    secretKey: process.env.TWO_FACTOR_SECRET_KEY || '',
+    /** 2FA secret key (required) / Clave secreta 2FA (requerida) */
+    secretKey: process.env.TWO_FACTOR_SECRET_KEY as string,
   },
 
   /** Application URLs / URLs de la aplicación */
@@ -171,3 +171,26 @@ export const config = {
     webhookSecret: process.env.MERCADOPAGO_WEBHOOK_SECRET || '',
   },
 };
+
+/**
+ * Fail-fast validation for critical security secrets
+ * Validación fail-fast para secretos de seguridad críticos
+ *
+ * Crashes the process immediately on startup if required secrets are missing.
+ * This prevents the application from running with undefined/empty JWT or 2FA keys,
+ * which would be a critical security vulnerability.
+ *
+ * Detiene el proceso inmediatamente al iniciar si faltan secretos requeridos.
+ * Esto previene que la aplicación corra con claves JWT o 2FA indefinidas/vacías,
+ * lo cual sería una vulnerabilidad de seguridad crítica.
+ */
+if (!config.jwt.secret) {
+  throw new Error(
+    'FATAL: JWT_SECRET environment variable is required. Server cannot start without it.'
+  );
+}
+if (!config.twoFactor.secretKey) {
+  throw new Error(
+    'FATAL: TWO_FACTOR_SECRET_KEY environment variable is required. Server cannot start without it.'
+  );
+}
