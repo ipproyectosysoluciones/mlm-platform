@@ -13,6 +13,8 @@ module.exports = {
   collectCoverageFrom: ['src/**/*.ts', '!src/**/*.d.ts'],
   coverageDirectory: 'coverage',
   verbose: true,
+  // setupFiles runs BEFORE test framework — bootstraps env vars for config modules
+  setupFiles: ['<rootDir>/src/__tests__/env-setup.ts'],
   // setupFilesAfterEnv runs AFTER test framework is installed
   setupFilesAfterEnv: ['<rootDir>/src/__tests__/setup.ts'],
   testTimeout: 300000, // 5 minutes per test
