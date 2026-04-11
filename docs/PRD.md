@@ -491,7 +491,7 @@ PATCH  /api/admin/vendors/:id/commission-rate
 | KPI                       | Target        | Actual |
 | ------------------------- | ------------- | ------ |
 | Test Coverage             | >= 90%        | ~70%   |
-| Tests Totales             | ~550          | 967    |
+| Tests Totales             | ~550          | ~1,236 |
 | API Response Time         | < 200ms (p95) | TBD    |
 | System Uptime             | >= 99.5%      | TBD    |
 | Payment Success Rate      | >= 95%        | N/A    |
@@ -517,7 +517,7 @@ PATCH  /api/admin/vendors/:id/commission-rate
 
 | Version | Date       | Author         | Changes                                                                                                                                                                                                                                                                          |
 | ------- | ---------- | -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 2.4.0   | 2026-04-10 | Nexo Real Team | Sprint 8 RBAC completo: 9 roles (super_admin, admin, finance, sales, advisor, vendor, user, guest, bot), endpoints register/guest y updateUserRole. Seed Nexo Real colombiano (Unilevel). Tests 967.                                                                             |
+| 2.4.0   | 2026-04-10 | Nexo Real Team | Sprint 8 RBAC completo: 9 roles (super_admin, admin, finance, sales, advisor, vendor, user, guest, bot), endpoints register/guest y updateUserRole. Seed Nexo Real colombiano (Unilevel). Tests ~1,236.                                                                          |
 | 2.0.0   | 2026-04-05 | Nexo Real Team | Reescritura completa. Proyecto renombrado de `mlm-platform` a **Nexo Real**. Foco en servicios inmobiliarios + turismo/hospitalidad. Nexo Bot documentado. Modelo MLM definido como Unilevel con bonos. Eliminado: streaming, delivery DiDi/Uber, productos genéricos como foco. |
 | 1.8.0   | 2026-04-03 | MLM Team       | Multi-vendor + delivery scope                                                                                                                                                                                                                                                    |
 | 1.3.0   | 2026-03-30 | MLM Team       | MVP streaming e-commerce                                                                                                                                                                                                                                                         |

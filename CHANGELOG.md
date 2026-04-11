@@ -14,8 +14,10 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 
 ### Tests
 
-- Backend: 39 suites / 535 tests ✅
-- Frontend: 33 suites / 432 tests ✅
+- Backend: 39 suites / 528 tests (1 skipped) ✅
+- Frontend Unit: 34 files / ~446 tests (Vitest) ✅
+- Frontend E2E: 22 specs / ~262 tests (Playwright) ✅
+- **Total: ~1,236 tests**
 
 ---
 
