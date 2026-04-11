@@ -97,6 +97,8 @@ export function PropertyCard({ property, variant = 'grid', className }: Property
             <img
               src={coverImage}
               alt={property.title}
+              crossOrigin="anonymous"
+              referrerPolicy="no-referrer"
               className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
           ) : (
@@ -171,6 +173,8 @@ export function PropertyCard({ property, variant = 'grid', className }: Property
           <img
             src={coverImage}
             alt={property.title}
+            crossOrigin="anonymous"
+            referrerPolicy="no-referrer"
             className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
         ) : (

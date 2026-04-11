@@ -37,7 +37,7 @@ export async function getDashboardCommissions(
       status: 'completed',
       createdAt: { [Op.gte]: sixMonthsAgo },
     },
-    attributes: ['amount', 'createdAt'],
+    attributes: ['amount', ['created_at', 'createdAt']],
   });
 
   const commissionsChart = Array.from({ length: 6 }, (_, i) => {

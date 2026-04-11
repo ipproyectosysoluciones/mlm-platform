@@ -50,7 +50,7 @@ export async function getDashboardReferrals(
       sponsorId: fullUser.id,
       createdAt: { [Op.gte]: sixMonthsAgo },
     },
-    attributes: ['createdAt'],
+    attributes: [['created_at', 'createdAt']],
   });
 
   const referralsChart = Array.from({ length: 6 }, (_, i) => {
