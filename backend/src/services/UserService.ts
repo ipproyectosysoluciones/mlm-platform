@@ -261,9 +261,9 @@ export class UserService {
     const user = await User.findByPk(id);
     if (!user) return null;
 
-    if (data.firstName !== undefined) (user as any).firstName = data.firstName;
-    if (data.lastName !== undefined) (user as any).lastName = data.lastName;
-    if (data.phone !== undefined) (user as any).phone = data.phone;
+    if (data.firstName !== undefined) user.firstName = data.firstName;
+    if (data.lastName !== undefined) user.lastName = data.lastName;
+    if (data.phone !== undefined) user.phone = data.phone;
 
     await user.save();
     return user;
@@ -286,7 +286,7 @@ export class UserService {
     const user = await User.findByPk(id);
     if (!user) return null;
 
-    (user as any).passwordHash = passwordHash;
+    user.passwordHash = passwordHash;
     await user.save();
     return user;
   }

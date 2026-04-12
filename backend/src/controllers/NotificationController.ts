@@ -18,11 +18,12 @@
  * POST   /api/users/me/2fa/verify    - Verify 2FA code
  * POST   /api/users/me/2fa/disable   - Disable 2FA
  */
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { User } from '../models/User';
 import { smsService } from '../services/SMSService';
 import { ResponseUtil } from '../utils/response.util';
 import { logger } from '../utils/logger';
+import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
 
 // In-memory store for 2FA codes (use Redis in production)
 // Almacenamiento en memoria para códigos 2FA (usar Redis en producción)
@@ -36,9 +37,12 @@ const twoFactorCodes = new Map<string, { code: string; expiry: Date }>();
  *
  * @returns {object} Notification preferences object
  */
-export async function getNotificationPreferences(req: Request, res: Response): Promise<void> {
+export async function getNotificationPreferences(
+  req: AuthenticatedRequest,
+  res: Response
+): Promise<void> {
   try {
-    const userId = (req as any).user?.id;
+    const userId = req.user?.id;
 
     if (!userId) {
       res.status(401).json(ResponseUtil.error('UNAUTHORIZED', 'Unauthorized', 401));
@@ -76,9 +80,12 @@ export async function getNotificationPreferences(req: Request, res: Response): P
  *
  * @param {object} body - Preferences to update
  */
-export async function updateNotificationPreferences(req: Request, res: Response): Promise<void> {
+export async function updateNotificationPreferences(
+  req: AuthenticatedRequest,
+  res: Response
+): Promise<void> {
   try {
-    const userId = (req as any).user?.id;
+    const userId = req.user?.id;
     const { emailNotifications, smsNotifications, weeklyDigest } = req.body;
 
     if (!userId) {
@@ -130,9 +137,9 @@ export async function updateNotificationPreferences(req: Request, res: Response)
  *
  * @param {string} body.phone - Phone number in E.164 format
  */
-export async function enable2FA(req: Request, res: Response): Promise<void> {
+export async function enable2FA(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
-    const userId = (req as any).user?.id;
+    const userId = req.user?.id;
     const { phone } = req.body;
 
     if (!userId) {
@@ -200,9 +207,9 @@ export async function enable2FA(req: Request, res: Response): Promise<void> {
  *
  * @param {string} body.code - 6-digit verification code
  */
-export async function verify2FA(req: Request, res: Response): Promise<void> {
+export async function verify2FA(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
-    const userId = (req as any).user?.id;
+    const userId = req.user?.id;
     const { code, phone } = req.body;
 
     if (!userId) {
@@ -275,9 +282,9 @@ export async function verify2FA(req: Request, res: Response): Promise<void> {
  *
  * @param {string} body.code - 6-digit verification code (optional for disable)
  */
-export async function disable2FA(req: Request, res: Response): Promise<void> {
+export async function disable2FA(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
-    const userId = (req as any).user?.id;
+    const userId = req.user?.id;
 
     if (!userId) {
       res.status(401).json(ResponseUtil.error('UNAUTHORIZED', 'Unauthorized', 401));

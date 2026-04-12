@@ -38,6 +38,12 @@ export class User extends Model<UserAttributes, UserCreation> {
   declare status: 'active' | 'inactive';
   declare role: UserRole;
   declare currency: 'USD' | 'COP' | 'MXN';
+  /** User first name / Nombre del usuario */
+  declare firstName: string | null;
+  /** User last name / Apellido del usuario */
+  declare lastName: string | null;
+  /** User phone number / Teléfono del usuario */
+  declare phone: string | null;
   // Notification preferences
   declare emailNotifications: boolean;
   declare smsNotifications: boolean;
@@ -105,6 +111,20 @@ User.init(
     role: {
       type: DataTypes.ENUM(...(USER_ROLES as unknown as [string, ...string[]])),
       defaultValue: 'user',
+    },
+    firstName: {
+      type: DataTypes.STRING(100),
+      allowNull: true,
+      field: 'first_name',
+    },
+    lastName: {
+      type: DataTypes.STRING(100),
+      allowNull: true,
+      field: 'last_name',
+    },
+    phone: {
+      type: DataTypes.STRING(20),
+      allowNull: true,
     },
     // Notification preferences / Preferencias de notificación
     emailNotifications: {

@@ -21,7 +21,9 @@
 import { Op, WhereOptions } from 'sequelize';
 import { Lead, LeadStatus, LeadSource } from '../models/Lead';
 import Task from '../models/Task';
+import type { TaskType } from '../models/Task.js';
 import Communication from '../models/Communication';
+import type { CommunicationType, CommunicationDirection } from '../models/Communication.js';
 import { User } from '../models';
 
 /**
@@ -549,7 +551,7 @@ export class CRMService {
     return Task.create({
       leadId: data.leadId,
       userId: data.userId,
-      type: data.type as any,
+      type: data.type as TaskType,
       title: data.title,
       description: data.description || null,
       status: 'pending',
@@ -594,8 +596,8 @@ export class CRMService {
     const comm = await Communication.create({
       leadId: data.leadId,
       userId: data.userId,
-      type: data.type as any,
-      direction: data.direction as any,
+      type: data.type as CommunicationType,
+      direction: data.direction as CommunicationDirection,
       subject: data.subject || null,
       content: data.content,
       metadata: data.metadata || {},
@@ -891,7 +893,7 @@ export class CRMService {
         title: `Tarea vencida: ${task.title}`,
         description: `Vencida hace ${daysOverdue} días`,
         leadId: task.leadId,
-        leadName: (task as any).lead?.contactName,
+        leadName: (task as Task & { lead?: Lead }).lead?.contactName,
         taskId: task.id,
         taskTitle: task.title,
         daysOverdue,

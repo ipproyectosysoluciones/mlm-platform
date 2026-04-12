@@ -20,6 +20,7 @@ import type { AuthenticatedRequest } from '../middleware/auth.middleware';
 import { body, validationResult } from 'express-validator';
 import { Product } from '../models';
 import { logger } from '../utils/logger';
+import { hasStatusCode, getErrorMessage } from '../utils/HttpError.js';
 
 // Validation rules
 export const vendorValidationRules = {
@@ -76,13 +77,15 @@ export const registerVendor = [
         success: true,
         data: vendor,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = getErrorMessage(error, 'Failed to register vendor');
+      const statusCode = hasStatusCode(error) ? error.statusCode : 500;
       logger.error({ err: error }, 'Register vendor error');
-      res.status(error.statusCode || 500).json({
+      res.status(statusCode).json({
         success: false,
         error: {
-          code: error.code || 'SERVER_ERROR',
-          message: error.message || 'Failed to register vendor',
+          code: 'SERVER_ERROR',
+          message,
         },
       });
     }
@@ -119,13 +122,14 @@ export const getVendorProfile = [
         success: true,
         data: vendor,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = getErrorMessage(error, 'Failed to get vendor profile');
       logger.error({ err: error }, 'Get vendor profile error');
       res.status(500).json({
         success: false,
         error: {
-          code: error.code || 'SERVER_ERROR',
-          message: error.message || 'Failed to get vendor profile',
+          code: 'SERVER_ERROR',
+          message,
         },
       });
     }
@@ -179,13 +183,14 @@ export const getVendorProducts = [
           totalPages: Math.ceil(count / limit),
         },
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = getErrorMessage(error, 'Failed to get vendor products');
       logger.error({ err: error }, 'Get vendor products error');
       res.status(500).json({
         success: false,
         error: {
-          code: error.code || 'SERVER_ERROR',
-          message: error.message || 'Failed to get vendor products',
+          code: 'SERVER_ERROR',
+          message,
         },
       });
     }
@@ -224,13 +229,14 @@ export const getVendorDashboard = [
         success: true,
         data: dashboard,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = getErrorMessage(error, 'Failed to get vendor dashboard');
       logger.error({ err: error }, 'Get vendor dashboard error');
       res.status(500).json({
         success: false,
         error: {
-          code: error.code || 'SERVER_ERROR',
-          message: error.message || 'Failed to get vendor dashboard',
+          code: 'SERVER_ERROR',
+          message,
         },
       });
     }
@@ -284,13 +290,15 @@ export const requestPayout = [
         success: true,
         data: payout,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = getErrorMessage(error, 'Failed to request payout');
+      const statusCode = hasStatusCode(error) ? error.statusCode : 500;
       logger.error({ err: error }, 'Request payout error');
-      res.status(error.statusCode || 500).json({
+      res.status(statusCode).json({
         success: false,
         error: {
-          code: error.code || 'SERVER_ERROR',
-          message: error.message || 'Failed to request payout',
+          code: 'SERVER_ERROR',
+          message,
         },
       });
     }

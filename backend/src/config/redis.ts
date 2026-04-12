@@ -46,7 +46,7 @@ export function getRedis(): Redis | null {
       host: process.env.REDIS_HOST || 'localhost',
       port: parseInt(process.env.REDIS_PORT || '6379'),
       password: process.env.REDIS_PASSWORD || undefined,
-      retryStrategy: (times) => {
+      retryStrategy: (times: number) => {
         if (times > 3) return null;
         return Math.min(times * 100, 3000);
       },
@@ -57,7 +57,7 @@ export function getRedis(): Redis | null {
       logger.info('Redis connected');
     });
 
-    redis.on('error', (err) => {
+    redis.on('error', (err: Error) => {
       logger.error({ err }, 'Redis error');
       redis = null;
     });

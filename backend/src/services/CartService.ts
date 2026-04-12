@@ -29,6 +29,7 @@ import { sequelize } from '../config/database';
 import { Cart, CartItem, CartRecoveryToken, Product, User } from '../models';
 import { CART_STATUS, CART_RECOVERY_TOKEN_STATUS } from '../types';
 import type { CartStatus } from '../types';
+import { HttpError } from '../utils/HttpError.js';
 
 /**
  * Default abandonment threshold in minutes (≈16.6 hours)
@@ -128,9 +129,7 @@ export class CartService {
 
     const product = await Product.findByPk(productId);
     if (!product) {
-      const error = new Error('Product not found');
-      (error as any).statusCode = 404;
-      throw error;
+      throw new HttpError('Product not found', 404);
     }
 
     return await sequelize.transaction(async (t) => {
@@ -229,9 +228,7 @@ export class CartService {
       });
 
       if (!cart) {
-        const error = new Error('Cart not found');
-        (error as any).statusCode = 404;
-        throw error;
+        throw new HttpError('Cart not found', 404);
       }
 
       const item = await CartItem.findOne({
@@ -240,9 +237,7 @@ export class CartService {
       });
 
       if (!item) {
-        const error = new Error('Cart item not found');
-        (error as any).statusCode = 404;
-        throw error;
+        throw new HttpError('Cart item not found', 404);
       }
 
       await item.destroy({ transaction: t });
@@ -292,9 +287,7 @@ export class CartService {
       });
 
       if (!cart) {
-        const error = new Error('Cart not found');
-        (error as any).statusCode = 404;
-        throw error;
+        throw new HttpError('Cart not found', 404);
       }
 
       const item = await CartItem.findOne({
@@ -303,9 +296,7 @@ export class CartService {
       });
 
       if (!item) {
-        const error = new Error('Cart item not found');
-        (error as any).statusCode = 404;
-        throw error;
+        throw new HttpError('Cart item not found', 404);
       }
 
       const newSubtotal = Number(item.unitPrice) * newQuantity;
@@ -565,23 +556,17 @@ export class CartService {
 
       // Step 2: No token matched at all → truly invalid
       if (!matchedToken) {
-        const error = new Error('Invalid or expired recovery token');
-        (error as any).statusCode = 400;
-        throw error;
+        throw new HttpError('Invalid or expired recovery token', 400);
       }
 
       // Step 3: Token found but already used → 410 Gone (replay prevention)
       if (matchedToken.status === CART_RECOVERY_TOKEN_STATUS.USED || matchedToken.usedAt !== null) {
-        const error = new Error('Token already used');
-        (error as any).statusCode = 410;
-        throw error;
+        throw new HttpError('Token already used', 410);
       }
 
       // Step 4: Token found but not PENDING (e.g. expired status) → invalid
       if (matchedToken.status !== CART_RECOVERY_TOKEN_STATUS.PENDING) {
-        const error = new Error('Invalid or expired recovery token');
-        (error as any).statusCode = 400;
-        throw error;
+        throw new HttpError('Invalid or expired recovery token', 400);
       }
 
       // Mark token as used

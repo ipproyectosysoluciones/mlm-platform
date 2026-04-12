@@ -60,12 +60,12 @@ export class CartRecoveryEmailService {
       throw new Error(`Cart not found: ${cartId}`);
     }
 
-    const user = (cart as any).user;
+    const user = cart.user;
     if (!user || !user.email) {
       throw new Error(`User not found for cart: ${cartId}`);
     }
 
-    const items = ((cart as any).items || []) as Array<
+    const items = (cart.items ?? []) as Array<
       CartItem & { product?: { name: string; price: number; platform: string } }
     >;
 

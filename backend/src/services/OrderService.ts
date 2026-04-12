@@ -19,7 +19,7 @@ import { CommissionService } from './CommissionService';
 import { AchievementService } from './AchievementService';
 import { LeaderboardService } from './LeaderboardService';
 import { body } from 'express-validator';
-import type { ProductType, ShippingStatus } from '../types';
+import type { ShippingStatus } from '../types';
 import { logger } from '../utils/logger';
 
 const achievementService = new AchievementService();
@@ -125,7 +125,7 @@ export class OrderService {
     }
 
     // Validate shipping address for physical products
-    const productType = (product as any).type as ProductType | undefined;
+    const productType = product.type;
     const isPhysical = productType === 'physical';
 
     if (isPhysical && !data.shippingAddressId) {
@@ -205,7 +205,7 @@ export class OrderService {
       } else {
         try {
           // Calculate vendor commission split (3-way split)
-          const vendorId = (product as any).vendorId || null;
+          const vendorId = product.vendorId ?? null;
           const commissionResult = await commissionService.calculateVendorCommission(
             totalAmount,
             vendorId,

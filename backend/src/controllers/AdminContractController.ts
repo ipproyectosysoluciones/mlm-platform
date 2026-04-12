@@ -13,6 +13,7 @@ import {
 } from '../services/ContractService';
 import { requireAdmin, type AuthenticatedRequest } from '../middleware/auth.middleware';
 import { logger } from '../utils/logger';
+import { hasStatusCode, getErrorMessage } from '../utils/HttpError.js';
 
 const contractService = new ContractService();
 
@@ -190,12 +191,12 @@ export async function updateTemplate(req: AuthenticatedRequest, res: Response): 
       message: 'New contract version created',
       data: template,
     });
-  } catch (error: any) {
-    if (error.statusCode === 404) {
+  } catch (error: unknown) {
+    if (hasStatusCode(error) && error.statusCode === 404) {
       res.status(404).json({
         success: false,
         error: {
-          code: error.code,
+          code: error.code || error.name,
           message: error.message,
         },
       });
@@ -306,12 +307,12 @@ export async function revokeUserContract(req: AuthenticatedRequest, res: Respons
       message: 'Contract revoked successfully',
       data: result,
     });
-  } catch (error: any) {
-    if (error.statusCode === 404) {
+  } catch (error: unknown) {
+    if (hasStatusCode(error) && error.statusCode === 404) {
       res.status(404).json({
         success: false,
         error: {
-          code: error.code,
+          code: error.code || error.name,
           message: error.message,
         },
       });

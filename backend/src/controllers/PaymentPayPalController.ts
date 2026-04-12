@@ -4,11 +4,12 @@
  * @module controllers/PaymentPayPalController
  */
 
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { asyncHandler } from '../middleware/asyncHandler.js';
 import { paypalService } from '../services/PayPalService.js';
 import { ResponseUtil } from '../utils/response.util.js';
 import { logger } from '../utils/logger';
+import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
 
 /**
  * PayPal order ID format: alphanumeric, 17 characters
@@ -21,9 +22,9 @@ export class PaymentPayPalController {
    * POST /api/payment/paypal/create
    * Create a new PayPal order
    */
-  static createOrder = asyncHandler(async (req: Request, res: Response) => {
+  static createOrder = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
     const { amount, currency = 'USD', description, orderId } = req.body;
-    const userId = (req as any).user?.id;
+    const userId = req.user?.id;
 
     if (!amount || amount <= 0) {
       return res

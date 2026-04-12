@@ -96,7 +96,7 @@ export const listCategories = asyncHandler(
 
     const response: ApiResponse<Category[]> = {
       success: true,
-      data: categories.map((c) => c.toJSON() as Category),
+      data: categories.map((c: Category) => c.toJSON() as Category),
     };
 
     res.json(response);
@@ -236,7 +236,7 @@ export const listCategoriesAdmin = asyncHandler(
 
     const response: ApiResponse<Category[]> = {
       success: true,
-      data: categories.map((c) => c.toJSON() as Category),
+      data: categories.map((c: Category) => c.toJSON() as Category),
     };
 
     res.json(response);

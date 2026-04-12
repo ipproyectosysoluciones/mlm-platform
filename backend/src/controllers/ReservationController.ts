@@ -18,6 +18,7 @@
 import { Request, Response } from 'express';
 import { reservationService } from '../services/ReservationService';
 import { logger } from '../utils/logger';
+import { hasStatusCode, getErrorMessage } from '../utils/HttpError.js';
 
 // ============================================
 // HANDLERS
@@ -56,13 +57,15 @@ export const getReservations = async (req: Request, res: Response): Promise<void
         totalPages: result.totalPages,
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = getErrorMessage(error, 'Failed to get reservations');
+    const statusCode = hasStatusCode(error) ? error.statusCode : 500;
     logger.error({ err: error }, 'Get reservations error');
-    res.status(error.statusCode || 500).json({
+    res.status(statusCode).json({
       success: false,
       error: {
-        code: error.code || 'SERVER_ERROR',
-        message: error.message || 'Failed to get reservations',
+        code: 'SERVER_ERROR',
+        message,
       },
     });
   }
@@ -83,13 +86,15 @@ export const getReservation = async (req: Request, res: Response): Promise<void>
       success: true,
       data: reservation,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = getErrorMessage(error, 'Failed to get reservation');
+    const statusCode = hasStatusCode(error) ? error.statusCode : 500;
     logger.error({ err: error }, 'Get reservation error');
-    res.status(error.statusCode || 500).json({
+    res.status(statusCode).json({
       success: false,
       error: {
-        code: error.code || 'SERVER_ERROR',
-        message: error.message || 'Failed to get reservation',
+        code: 'SERVER_ERROR',
+        message,
       },
     });
   }
@@ -110,13 +115,15 @@ export const createReservation = async (req: Request, res: Response): Promise<vo
       success: true,
       data: reservation,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = getErrorMessage(error, 'Failed to create reservation');
+    const statusCode = hasStatusCode(error) ? error.statusCode : 500;
     logger.error({ err: error }, 'Create reservation error');
-    res.status(error.statusCode || 500).json({
+    res.status(statusCode).json({
       success: false,
       error: {
-        code: error.code || 'SERVER_ERROR',
-        message: error.message || 'Failed to create reservation',
+        code: 'SERVER_ERROR',
+        message,
       },
     });
   }
@@ -137,13 +144,15 @@ export const updateReservation = async (req: Request, res: Response): Promise<vo
       success: true,
       data: reservation,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = getErrorMessage(error, 'Failed to update reservation');
+    const statusCode = hasStatusCode(error) ? error.statusCode : 500;
     logger.error({ err: error }, 'Update reservation error');
-    res.status(error.statusCode || 500).json({
+    res.status(statusCode).json({
       success: false,
       error: {
-        code: error.code || 'SERVER_ERROR',
-        message: error.message || 'Failed to update reservation',
+        code: 'SERVER_ERROR',
+        message,
       },
     });
   }
@@ -164,13 +173,15 @@ export const cancelReservation = async (req: Request, res: Response): Promise<vo
       success: true,
       data: reservation,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = getErrorMessage(error, 'Failed to cancel reservation');
+    const statusCode = hasStatusCode(error) ? error.statusCode : 500;
     logger.error({ err: error }, 'Cancel reservation error');
-    res.status(error.statusCode || 500).json({
+    res.status(statusCode).json({
       success: false,
       error: {
-        code: error.code || 'SERVER_ERROR',
-        message: error.message || 'Failed to cancel reservation',
+        code: 'SERVER_ERROR',
+        message,
       },
     });
   }
@@ -191,13 +202,15 @@ export const confirmReservation = async (req: Request, res: Response): Promise<v
       success: true,
       data: reservation,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = getErrorMessage(error, 'Failed to confirm reservation');
+    const statusCode = hasStatusCode(error) ? error.statusCode : 500;
     logger.error({ err: error }, 'Confirm reservation error');
-    res.status(error.statusCode || 500).json({
+    res.status(statusCode).json({
       success: false,
       error: {
-        code: error.code || 'SERVER_ERROR',
-        message: error.message || 'Failed to confirm reservation',
+        code: 'SERVER_ERROR',
+        message,
       },
     });
   }

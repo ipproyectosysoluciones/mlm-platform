@@ -64,6 +64,10 @@ export class Achievement extends Model<AchievementAttributes, AchievementCreatio
   declare status: AchievementStatus;
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
+
+  // Associations / Asociaciones
+  declare userAchievements?: import('./UserAchievement').UserAchievement[];
+  declare badge?: import('./Badge').Badge | null;
 }
 
 Achievement.init(

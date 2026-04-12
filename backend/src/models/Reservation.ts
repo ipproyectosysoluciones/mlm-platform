@@ -175,6 +175,12 @@ export class Reservation
   declare deletedAt: Date | null;
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
+
+  // Associations / Asociaciones
+  declare user?: import('./User').User | null;
+  declare property?: import('./Property').Property | null;
+  declare tourPackage?: import('./TourPackage').TourPackage | null;
+  declare vendor?: import('./Vendor').Vendor | null;
 }
 
 Reservation.init(

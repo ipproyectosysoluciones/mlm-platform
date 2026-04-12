@@ -8,6 +8,7 @@
 
 import { User, UserClosure } from '../models';
 import { sequelize } from '../config/database';
+import { QueryTypes, type CreationAttributes } from 'sequelize';
 import bcrypt from 'bcryptjs';
 import { generateToken } from '../services/AuthService';
 import type { UserRole } from '../types';
@@ -34,6 +35,8 @@ export async function createTestUser(
   const passwordHash = await bcrypt.hash(password, 12);
   const unique = Math.random().toString(36).substring(7);
 
+  // Model requires notification booleans but DB provides defaults — safe to omit in tests
+  // El modelo requiere booleanos de notificación pero la DB provee defaults — seguro omitir en tests
   const user = await User.create({
     email: overrides.email || `test_${Date.now()}_${unique}@mlm.test`,
     passwordHash,
@@ -44,7 +47,7 @@ export async function createTestUser(
     status: 'active',
     role: overrides.role || 'user',
     currency: 'USD',
-  } as any);
+  } as unknown as CreationAttributes<User>);
 
   // Populate closure table if sponsorId is provided
   // This is required for tree-related tests to work
@@ -57,7 +60,7 @@ export async function createTestUser(
         `SELECT ancestor_id, depth FROM user_closure WHERE descendant_id = :sponsorId`,
         {
           replacements: { sponsorId: overrides.sponsorId },
-          type: 'SELECT' as any,
+          type: QueryTypes.SELECT,
         }
       );
 

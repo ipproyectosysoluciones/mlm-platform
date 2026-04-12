@@ -22,6 +22,7 @@ import { authenticate, requireAdmin } from '../middleware/auth.middleware';
 import { tourPackageService } from '../services/TourPackageService';
 import { R2Service } from '../services/R2Service';
 import { logger } from '../utils/logger';
+import { hasStatusCode, getErrorMessage } from '../utils/HttpError.js';
 
 // ============================================
 // VALIDATION RULES
@@ -172,13 +173,15 @@ export const getTourPackages = [
           totalPages: Math.ceil(count / parsedLimit),
         },
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = getErrorMessage(error, 'Failed to get tour packages');
+      const statusCode = hasStatusCode(error) ? error.statusCode : 500;
       logger.error({ err: error }, 'Get tour packages error');
-      res.status(error.statusCode || 500).json({
+      res.status(statusCode).json({
         success: false,
         error: {
-          code: error.code || 'SERVER_ERROR',
-          message: error.message || 'Failed to get tour packages',
+          code: 'SERVER_ERROR',
+          message,
         },
       });
     }
@@ -215,13 +218,15 @@ export const getTourPackage = [
         success: true,
         data: tourPackage,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = getErrorMessage(error, 'Failed to get tour package');
+      const statusCode = hasStatusCode(error) ? error.statusCode : 500;
       logger.error({ err: error }, 'Get tour package error');
-      res.status(error.statusCode || 500).json({
+      res.status(statusCode).json({
         success: false,
         error: {
-          code: error.code || 'SERVER_ERROR',
-          message: error.message || 'Failed to get tour package',
+          code: 'SERVER_ERROR',
+          message,
         },
       });
     }
@@ -260,13 +265,15 @@ export const createTourPackage = [
         success: true,
         data: tourPackage,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = getErrorMessage(error, 'Failed to create tour package');
+      const statusCode = hasStatusCode(error) ? error.statusCode : 500;
       logger.error({ err: error }, 'Create tour package error');
-      res.status(error.statusCode || 500).json({
+      res.status(statusCode).json({
         success: false,
         error: {
-          code: error.code || 'SERVER_ERROR',
-          message: error.message || 'Failed to create tour package',
+          code: 'SERVER_ERROR',
+          message,
         },
       });
     }
@@ -305,13 +312,15 @@ export const updateTourPackage = [
         success: true,
         data: tourPackage,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = getErrorMessage(error, 'Failed to update tour package');
+      const statusCode = hasStatusCode(error) ? error.statusCode : 500;
       logger.error({ err: error }, 'Update tour package error');
-      res.status(error.statusCode || 500).json({
+      res.status(statusCode).json({
         success: false,
         error: {
-          code: error.code || 'SERVER_ERROR',
-          message: error.message || 'Failed to update tour package',
+          code: 'SERVER_ERROR',
+          message,
         },
       });
     }
@@ -347,13 +356,15 @@ export const deleteTourPackage = [
       await tourPackageService.remove(req.params.id);
 
       res.status(204).send();
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = getErrorMessage(error, 'Failed to delete tour package');
+      const statusCode = hasStatusCode(error) ? error.statusCode : 500;
       logger.error({ err: error }, 'Delete tour package error');
-      res.status(error.statusCode || 500).json({
+      res.status(statusCode).json({
         success: false,
         error: {
-          code: error.code || 'SERVER_ERROR',
-          message: error.message || 'Failed to delete tour package',
+          code: 'SERVER_ERROR',
+          message,
         },
       });
     }

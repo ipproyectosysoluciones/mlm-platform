@@ -6,6 +6,7 @@
 import axios from 'axios';
 import { config } from '../config/env';
 import { logger } from '../utils/logger';
+import { getErrorMessage } from '../utils/HttpError.js';
 
 /**
  * SMSService - Brevo SMS delivery
@@ -56,14 +57,21 @@ export class SMSService {
       // SMS sent successfully - code would be stored for verification elsewhere
       // (storage logic would be in NotificationService or AuthController)
       return { success: true };
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const responseData = axios.isAxiosError(error) ? error.response?.data : undefined;
       logger.error(
-        { service: 'SMSService', err: error, responseData: error.response?.data },
+        { service: 'SMSService', err: error, responseData },
         'SMS send failed (Brevo API)'
       );
+      const apiMessage = axios.isAxiosError(error)
+        ? (error.response?.data as Record<string, unknown>)?.message
+        : undefined;
       return {
         success: false,
-        error: error.response?.data?.message || 'Unknown error sending SMS',
+        error:
+          typeof apiMessage === 'string'
+            ? apiMessage
+            : getErrorMessage(error, 'Unknown error sending SMS'),
       };
     }
   }

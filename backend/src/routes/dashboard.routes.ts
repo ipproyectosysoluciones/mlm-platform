@@ -1,6 +1,7 @@
 import { Router, Router as ExpressRouter } from 'express';
 import { getDashboard } from '../controllers/DashboardController';
 import { authenticateToken } from '../middleware/auth.middleware';
+import type { AuthenticatedRequest } from '../middleware/auth.middleware';
 import { asyncHandler } from '../middleware/asyncHandler';
 import { cacheMiddleware, CACHE_KEYS, CACHE_TTL } from '../middleware/cache.middleware';
 
@@ -55,7 +56,7 @@ router.get(
   '/',
   authenticateToken,
   cacheMiddleware({
-    key: (req: any) => CACHE_KEYS.dashboard(req.user!.id),
+    key: (req) => CACHE_KEYS.dashboard((req as AuthenticatedRequest).user!.id),
     ttl: CACHE_TTL.short,
   }),
   asyncHandler(getDashboard)

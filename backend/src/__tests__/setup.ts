@@ -6,16 +6,16 @@
  */
 
 import supertest from 'supertest';
+import { QueryTypes, type Sequelize } from 'sequelize';
 
 // Import the singleton sequelize - it already reads TEST_DB_* env vars
 import { sequelize } from '../config/database';
 
 // Global test agent - used by all integration tests
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export let testAgent: any;
+// Agente de test global — usado por todos los tests de integración
+export let testAgent: supertest.SuperTest<supertest.Test>;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let sequelizeInstance: any = null;
+let sequelizeInstance: Sequelize | null = null;
 
 beforeAll(async () => {
   console.log('=== SETUP: Starting integration test setup ===');
@@ -106,11 +106,11 @@ beforeAll(async () => {
 
   // Seed commission_configs if empty
   try {
-    const existingConfigs = await sequelizeInstance?.query(
+    const existingConfigs = await sequelizeInstance?.query<{ count: string }>(
       'SELECT COUNT(*) as count FROM "commission_configs"',
-      { type: 'SELECT' }
+      { type: QueryTypes.SELECT }
     );
-    if (parseInt((existingConfigs as any)?.[0]?.count || '0') === 0) {
+    if (parseInt(existingConfigs?.[0]?.count || '0') === 0) {
       const businessTypes = ['suscripcion', 'producto', 'membresia', 'servicio', 'otro'];
       const levels = ['direct', 'level_1', 'level_2', 'level_3', 'level_4'];
       const defaultRates: Record<string, Record<string, number>> = {
