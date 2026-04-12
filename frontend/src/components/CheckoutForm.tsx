@@ -17,6 +17,15 @@ const PAYPAL_CLIENT_ID = import.meta.env.VITE_PAYPAL_CLIENT_ID || '';
 const MP_SANDBOX = import.meta.env.VITE_MP_SANDBOX === 'true' || import.meta.env.DEV;
 
 /**
+ * Data returned after a successful PayPal capture
+ * Datos devueltos después de una captura exitosa de PayPal
+ */
+interface PayPalSuccessData {
+  orderId: string;
+  internalOrderId?: string;
+}
+
+/**
  * CheckoutForm props
  */
 interface CheckoutFormProps {
@@ -26,7 +35,7 @@ interface CheckoutFormProps {
   className?: string;
   total?: number;
   currency?: string;
-  onPayPalSuccess?: (paymentMethod: PaymentMethod) => void;
+  onPayPalSuccess?: (data: PayPalSuccessData) => void;
   /** Product data needed to build MP preference items */
   productId?: string;
   productName?: string;
@@ -40,7 +49,7 @@ interface PayPalButtonProps {
   agreedToTerms: boolean;
   currency: string;
   total: number;
-  onPayPalSuccess?: (paymentMethod: PaymentMethod) => void;
+  onPayPalSuccess?: (data: PayPalSuccessData) => void;
   onError?: (error: string) => void;
 }
 
@@ -77,30 +86,30 @@ const PayPalButton = React.memo(function PayPalButton({
       <PayPalButtons
         style={{ layout: 'vertical', color: 'blue', shape: 'rect' }}
         disabled={isProcessing || !agreedToTerms}
-        createOrder={(_data, actions) => {
-          return actions.order.create({
-            intent: 'CAPTURE',
-            purchase_units: [
-              {
-                amount: {
-                  currency_code: currency,
-                  value: total.toFixed(2),
-                },
-                description: t('checkout.paypalDescription'),
-              },
-            ],
+        createOrder={async () => {
+          // Route through our backend so custom_id (userId) is set on the PayPal order.
+          // Without this, the webhook cannot identify the user.
+          // Se enruta por nuestro backend para que custom_id (userId) se establezca en la orden de PayPal.
+          const response = await paymentService.createPayPalOrder({
+            amount: total,
+            currency,
+            description: t('checkout.paypalDescription'),
           });
+          return response.data.orderId;
         }}
         onApprove={async (data, _actions) => {
           try {
-            // IMPORTANT: capture must go through our backend for validation.
+            // Capture must go through our backend for validation.
             // Never trust a client-side capture result — the backend verifies
             // the payment status with PayPal before updating the order.
             const result = await paymentService.completeWithPayPal({
               orderId: data.orderID,
             });
             if (result.success) {
-              onPayPalSuccess?.('paypal');
+              onPayPalSuccess?.({
+                orderId: result.data.orderId,
+                internalOrderId: result.data.internalOrderId,
+              });
             } else {
               onError?.(t('checkout.paypalCaptureError'));
             }

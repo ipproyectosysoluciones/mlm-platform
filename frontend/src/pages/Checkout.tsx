@@ -191,7 +191,16 @@ export default function Checkout() {
               error={submitError}
               total={product.price}
               currency={product.currency}
-              onPayPalSuccess={handleConfirmPurchase}
+              onPayPalSuccess={(data) => {
+                // Navigate directly to the OrderProcessing page — the webhook
+                // handles Purchase + Order creation, so no confirmation modal needed.
+                // Se navega directo a la página de procesamiento — el webhook
+                // maneja la creación de Purchase + Order, no se necesita modal.
+                navigate(
+                  '/checkout/success?status=approved&payment_method=paypal&paypal_order_id=' +
+                    data.orderId
+                );
+              }}
               productId={product.id}
               productName={product.name}
             />
