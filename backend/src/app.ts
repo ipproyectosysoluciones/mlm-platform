@@ -89,11 +89,24 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // Security headers with Helmet
+// CSP: allow Unsplash images used in seed/demo data
 app.use(
   helmet({
     noSniff: true,
     xssFilter: true,
     frameguard: { action: 'deny' },
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'", 'data:', 'https://images.unsplash.com', 'https://plus.unsplash.com'],
+        connectSrc: ["'self'"],
+        fontSrc: ["'self'"],
+        objectSrc: ["'none'"],
+        frameAncestors: ["'none'"],
+      },
+    },
   })
 );
 
