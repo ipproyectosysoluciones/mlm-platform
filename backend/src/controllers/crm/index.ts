@@ -38,3 +38,6 @@ export {
   getCRMAlerts,
   exportAnalyticsReport,
 } from './AnalyticsController';
+
+// Automation Controller exports
+export { getAutomationStatus, getAutomationExecutions } from './AutomationController';
