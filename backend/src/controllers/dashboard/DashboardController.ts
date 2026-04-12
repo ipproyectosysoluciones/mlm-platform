@@ -58,7 +58,7 @@ export async function getDashboard(req: AuthenticatedRequest, res: Response): Pr
   const referralsByMonth = await User.findAll({
     where: {
       sponsorId: fullUser.id,
-      createdAt: { [Op.gte]: sixMonthsAgo },
+      created_at: { [Op.gte]: sixMonthsAgo },
     },
     attributes: [['created_at', 'createdAt']],
   });
@@ -79,7 +79,7 @@ export async function getDashboard(req: AuthenticatedRequest, res: Response): Pr
     where: {
       userId: fullUser.id,
       status: 'completed',
-      createdAt: { [Op.gte]: sixMonthsAgo },
+      created_at: { [Op.gte]: sixMonthsAgo },
     },
     attributes: ['amount', ['created_at', 'createdAt']],
   });

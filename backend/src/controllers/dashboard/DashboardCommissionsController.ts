@@ -35,7 +35,7 @@ export async function getDashboardCommissions(
     where: {
       userId,
       status: 'completed',
-      createdAt: { [Op.gte]: sixMonthsAgo },
+      created_at: { [Op.gte]: sixMonthsAgo },
     },
     attributes: ['amount', ['created_at', 'createdAt']],
   });
