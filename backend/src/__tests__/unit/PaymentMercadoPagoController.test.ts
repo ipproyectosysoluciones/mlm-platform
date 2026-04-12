@@ -28,6 +28,10 @@ jest.mock('../../models/index', () => ({
   Product: { findByPk: jest.fn(), findOne: jest.fn() },
 }));
 
+jest.mock('../../models/WebhookEvent', () => ({
+  WebhookEvent: { findOne: jest.fn(), create: jest.fn() },
+}));
+
 jest.mock('../../config/env', () => ({
   config: {
     app: { url: 'http://localhost:3000', frontendUrl: 'http://localhost:4200' },

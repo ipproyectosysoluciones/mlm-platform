@@ -7,6 +7,8 @@
 import axios from 'axios';
 import { config } from '../config/env.js';
 import { AppError } from '../middleware/error.middleware.js';
+import { WebhookEvent } from '../models/WebhookEvent.js';
+import type { WebhookProvider } from '../models/WebhookEvent.js';
 
 const PAYPAL_API_BASE =
   config.paypal.mode === 'sandbox'
@@ -281,52 +283,56 @@ class PayPalService {
     }
   }
 
-  // ── Idempotency guard ────────────────────────────────────────────────────────
+  // ── Idempotency guard (persistent via WebhookEvent table) ─────────────────
 
   /**
-   * Set of already-processed PayPal webhook event IDs.
-   * Capped at MAX_PROCESSED_EVENTS to prevent unbounded memory growth.
+   * Check whether a webhook event has already been processed.
+   * Uses the WebhookEvent table for persistent, crash-safe idempotency
+   * (replaces the previous in-memory Set).
    *
-   * Conjunto de IDs de eventos de webhook ya procesados.
-   * Limitado a MAX_PROCESSED_EVENTS para evitar crecimiento ilimitado de memoria.
-   */
-  private readonly processedEvents: Set<string> = new Set();
-  private static readonly MAX_PROCESSED_EVENTS = 10_000;
-
-  /**
-   * Check whether a PayPal webhook event has already been processed.
-   * Used to implement idempotent webhook handling.
+   * Verifica si un evento de webhook ya fue procesado.
+   * Usa la tabla WebhookEvent para idempotencia persistente (reemplaza
+   * el Set en memoria anterior).
    *
-   * Verifica si un evento de webhook de PayPal ya fue procesado.
-   *
-   * @param eventId - PayPal event ID (e.g. from event.id)
+   * @param eventId  - Provider-assigned event ID (e.g. PayPal event.id)
+   * @param provider - Payment provider name
    * @returns true if the event was already processed
+   *
+   * ES: Retorna true si el evento ya fue procesado anteriormente.
+   * EN: Returns true if the event was already processed.
    */
-  isIdempotent(eventId: string): boolean {
-    return this.processedEvents.has(eventId);
+  async isEventProcessed(eventId: string, provider: WebhookProvider): Promise<boolean> {
+    const existing = await WebhookEvent.findOne({
+      where: { eventId, provider },
+    });
+    return existing !== null;
   }
 
   /**
-   * Mark a PayPal webhook event as processed.
-   * Evicts the oldest entry if the set exceeds MAX_PROCESSED_EVENTS.
+   * Mark a webhook event as processed by inserting it into the WebhookEvent table.
+   * The composite unique index (event_id, provider) prevents double-inserts.
    *
-   * Marca un evento de webhook de PayPal como procesado.
-   * Elimina la entrada más antigua si el set supera MAX_PROCESSED_EVENTS.
+   * Marca un evento de webhook como procesado insertándolo en la tabla WebhookEvent.
+   * El índice único compuesto (event_id, provider) previene doble inserción.
    *
-   * @param eventId - PayPal event ID to mark as processed
+   * @param eventId   - Provider-assigned event ID
+   * @param provider  - Payment provider name
+   * @param eventType - Event type string (e.g. "PAYMENT.CAPTURE.COMPLETED")
+   *
+   * ES: Inserta el evento en la tabla de idempotencia.
+   * EN: Inserts the event into the idempotency table.
    */
-  markAsProcessed(eventId: string): void {
-    if (this.processedEvents.has(eventId)) return;
-
-    // Evict oldest entry if at capacity
-    if (this.processedEvents.size >= PayPalService.MAX_PROCESSED_EVENTS) {
-      const oldest = this.processedEvents.values().next().value;
-      if (oldest !== undefined) {
-        this.processedEvents.delete(oldest);
-      }
-    }
-
-    this.processedEvents.add(eventId);
+  async markEventProcessed(
+    eventId: string,
+    provider: WebhookProvider,
+    eventType: string
+  ): Promise<void> {
+    await WebhookEvent.create({
+      eventId,
+      provider,
+      eventType,
+      processedAt: new Date(),
+    });
   }
 }
 

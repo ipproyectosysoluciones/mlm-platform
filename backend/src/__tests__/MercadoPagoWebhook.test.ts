@@ -85,6 +85,17 @@ jest.mock('../models/index.js', () => ({
   },
 }));
 
+// ─── Mock WebhookEvent model (persistent idempotency) ────────────────────────
+const mockWebhookEventFindOne = jest.fn();
+const mockWebhookEventCreate = jest.fn();
+
+jest.mock('../models/WebhookEvent.js', () => ({
+  WebhookEvent: {
+    findOne: (...args: unknown[]) => mockWebhookEventFindOne(...args),
+    create: (...args: unknown[]) => mockWebhookEventCreate(...args),
+  },
+}));
+
 // ─── Mock CommissionService ───────────────────────────────────────────────────
 const mockCalculateCommissions = jest.fn().mockResolvedValue([]);
 
@@ -279,8 +290,18 @@ describe('MercadoPago — webhook handler', () => {
     // Default: signature verification passes
     mockVerifyWebhookSignature.mockReturnValue(true);
 
-    // Default: no existing order (idempotency not triggered)
+    // Default: no existing order (secondary reference check)
     (Order.findOne as jest.Mock).mockResolvedValue(null);
+
+    // Default: no existing WebhookEvent (idempotency not triggered)
+    mockWebhookEventFindOne.mockResolvedValue(null);
+
+    // Default: WebhookEvent.create succeeds
+    mockWebhookEventCreate.mockResolvedValue({
+      id: 'we-uuid',
+      eventId: PAYMENT_ID,
+      provider: 'mercadopago',
+    });
 
     // Default: product exists
     (Product.findOne as jest.Mock).mockResolvedValue(mockProduct);
@@ -356,19 +377,22 @@ describe('MercadoPago — webhook handler', () => {
   });
 
   /**
-   * Test 5: idempotency — if Order.findOne returns an existing order → skips creation
+   * Test 5: idempotency — if WebhookEvent.findOne returns an existing record → skips creation
    */
-  it('should skip Purchase/Order creation if order already exists (idempotency)', async () => {
+  it('should skip Purchase/Order creation if WebhookEvent already exists (idempotency)', async () => {
     mockGetPayment.mockResolvedValue(mockApprovedPayment);
-    (Order.findOne as jest.Mock).mockResolvedValue({
-      id: 'existing-order',
-      notes: `mercadopago:${PAYMENT_ID}`,
+    mockWebhookEventFindOne.mockResolvedValue({
+      id: 'we-existing',
+      eventId: String(PAYMENT_ID),
+      provider: 'mercadopago',
     });
 
     const { req, res } = buildReqRes({
       query: { topic: 'payment' },
       body: { id: PAYMENT_ID, topic: 'payment' },
-      headers: { 'x-signature': 'ts=123456,v1=abc' },
+      headers: {
+        'x-signature': `ts=123456,v1=abc`,
+      },
     });
 
     await (PaymentMercadoPagoController.webhook as (...args: unknown[]) => Promise<void>)(req, res);

@@ -9,6 +9,8 @@ import { asyncHandler } from '../middleware/asyncHandler.js';
 import { paypalService } from '../services/PayPalService.js';
 import { ResponseUtil } from '../utils/response.util.js';
 import { logger } from '../utils/logger';
+import { Purchase, Order, Product } from '../models/index.js';
+import { CommissionService } from '../services/CommissionService.js';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
 
 /**
@@ -104,7 +106,14 @@ export class PaymentPayPalController {
 
   /**
    * POST /api/payment/paypal/webhook
-   * Handle PayPal webhook events
+   * Handle PayPal webhook events.
+   * Processes PAYMENT.CAPTURE.COMPLETED (creates Purchase + Order + commissions)
+   * and PAYMENT.CAPTURE.REFUNDED (marks Order failed + Purchase refunded).
+   *
+   * Maneja eventos de webhook de PayPal.
+   * Procesa PAYMENT.CAPTURE.COMPLETED (crea Purchase + Order + comisiones)
+   * y PAYMENT.CAPTURE.REFUNDED (marca Order como fallida + Purchase reembolsada).
+   *
    * @see https://developer.paypal.com/docs/api-basics/notifications/webhooks/
    */
   static webhook = asyncHandler(async (req: Request, res: Response) => {
@@ -129,46 +138,230 @@ export class PaymentPayPalController {
     }
 
     const event = req.body;
+    const eventId: string | undefined = event.id;
 
-    // Check idempotency
-    if (paypalService.isIdempotent(event.resource?.id)) {
-      logger.info(
-        { component: 'PayPal Webhook', resourceId: event.resource?.id },
-        'Duplicate event, skipping'
-      );
+    // ── Global idempotency check (persistent via WebhookEvent table) ──
+    if (eventId && (await paypalService.isEventProcessed(eventId, 'paypal'))) {
+      logger.info({ component: 'PayPal Webhook', eventId }, 'Duplicate event, skipping');
       return res.status(200).json({ received: true, duplicate: true });
     }
 
     logger.info(
-      { component: 'PayPal Webhook', eventType: event.event_type, resourceId: event.resource?.id },
+      { component: 'PayPal Webhook', eventType: event.event_type, eventId },
       'Webhook event received'
     );
 
     switch (event.event_type) {
       case 'CHECKOUT.ORDER.APPROVED':
-        // Order was approved by user
-        logger.info({ component: 'PayPal', resourceId: event.resource?.id }, 'Order approved');
+        // Order was approved by user — no action needed
+        logger.info({ component: 'PayPal', eventId }, 'Order approved');
         break;
 
-      case 'PAYMENT.CAPTURE.COMPLETED':
-        // Payment successfully captured
-        logger.info({ component: 'PayPal', resourceId: event.resource?.id }, 'Payment completed');
-        // TODO: Trigger commission calculation
-        break;
+      case 'PAYMENT.CAPTURE.COMPLETED': {
+        /**
+         * Payment successfully captured — create Purchase + Order + commissions.
+         * Follows the same pattern as the MercadoPago webhook for consistency.
+         *
+         * Pago capturado exitosamente — crea Purchase + Order + comisiones.
+         * Sigue el mismo patrón del webhook de MercadoPago por consistencia.
+         */
+        try {
+          const resource = event.resource;
+          const captureId: string = resource?.id ?? '';
+          const amount: number = parseFloat(resource?.amount?.value ?? '0');
+          const currency: string = resource?.amount?.currency_code ?? 'USD';
 
-      case 'PAYMENT.CAPTURE.REFUNDED':
-        // Payment was refunded
-        logger.info({ component: 'PayPal', resourceId: event.resource?.id }, 'Payment refunded');
-        // TODO: Reverse commissions if applicable
+          // Extract userId from custom_id (set during createOrder as JSON)
+          let userId: string | undefined;
+          let internalOrderId: string | undefined;
+          const customId: string | undefined =
+            resource?.custom_id ?? event.resource?.supplementary_data?.related_ids?.order_id;
+
+          if (customId) {
+            try {
+              const parsed: { userId?: string; internalOrderId?: string } = JSON.parse(
+                customId
+              ) as { userId?: string; internalOrderId?: string };
+              userId = parsed.userId;
+              internalOrderId = parsed.internalOrderId;
+            } catch {
+              // custom_id may be a plain string (userId) — use it directly
+              userId = customId;
+            }
+          }
+
+          if (!userId) {
+            logger.error(
+              { component: 'PayPal Webhook', eventId, captureId },
+              'No userId found in PayPal webhook payload (custom_id)'
+            );
+            break;
+          }
+
+          // ── Additional idempotency: check if Order already exists for this capture ──
+          const existingOrder = await Order.findOne({
+            where: { notes: `paypal:${captureId}` },
+          });
+          if (existingOrder) {
+            logger.info(
+              { component: 'PayPal Webhook', captureId },
+              'Order already exists for capture — skipping'
+            );
+            break;
+          }
+
+          // ── Resolve productId from internalOrderId or fallback to first active product ──
+          let productId: string = '';
+          if (internalOrderId) {
+            const existingInternalOrder = await Order.findByPk(internalOrderId);
+            if (existingInternalOrder) {
+              productId = existingInternalOrder.productId;
+            }
+          }
+          if (!productId) {
+            const fallbackProduct = await Product.findOne({ where: { isActive: true } });
+            productId = fallbackProduct?.id ?? '';
+          }
+
+          if (!productId) {
+            logger.error(
+              { component: 'PayPal Webhook', eventId },
+              'Could not resolve productId for payment'
+            );
+            break;
+          }
+
+          // ── Create Purchase record ──
+          const purchase = await Purchase.create({
+            userId,
+            productId,
+            businessType: 'producto',
+            amount,
+            currency,
+            description: `PayPal payment ${captureId}`,
+            status: 'completed',
+          });
+
+          // ── Create Order record ──
+          const orderNumber =
+            'ORD-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+
+          await Order.create({
+            orderNumber,
+            userId,
+            productId,
+            purchaseId: purchase.id,
+            totalAmount: amount,
+            currency,
+            status: 'completed',
+            paymentMethod: 'paypal',
+            notes: `paypal:${captureId}`,
+          });
+
+          logger.info(
+            { component: 'PayPal Webhook', captureId },
+            'Purchase & Order created for payment'
+          );
+
+          // ── Trigger commission calculation (fire-and-forget, don't break 200) ──
+          try {
+            const commissionService = new CommissionService();
+            await commissionService.calculateCommissions(purchase.id);
+            logger.info(
+              { component: 'PayPal Webhook', purchaseId: purchase.id },
+              'Commissions calculated for purchase'
+            );
+          } catch (commissionError) {
+            logger.error(
+              { err: commissionError, component: 'PayPal Webhook' },
+              'Commission calculation failed'
+            );
+            // Non-fatal — PayPal still gets 200
+          }
+        } catch (orderError) {
+          logger.error(
+            { err: orderError, component: 'PayPal Webhook' },
+            'Error creating Purchase/Order'
+          );
+          // Non-fatal — PayPal must receive 200 regardless
+        }
         break;
+      }
+
+      case 'PAYMENT.CAPTURE.REFUNDED': {
+        /**
+         * Payment was refunded — update Order to 'failed' + Purchase to 'refunded'.
+         * NO commission reversal (this is a business decision).
+         *
+         * Pago reembolsado — actualiza Order a 'failed' + Purchase a 'refunded'.
+         * NO se revierten comisiones (decisión de negocio).
+         */
+        try {
+          const resource = event.resource;
+          const refundId: string = resource?.id ?? '';
+
+          // The refund resource links back to the original capture via links
+          // Find the original capture ID from the refund payload
+          const captureLink = resource?.links?.find(
+            (link: { rel: string; href: string }) => link.rel === 'up'
+          );
+          const captureId: string | undefined = captureLink?.href?.split('/').pop();
+
+          if (!captureId) {
+            logger.error(
+              { component: 'PayPal Webhook', refundId },
+              'Could not extract original capture ID from refund event'
+            );
+            break;
+          }
+
+          // Find the original Order by notes pattern
+          const originalOrder = await Order.findOne({
+            where: { notes: `paypal:${captureId}` },
+          });
+
+          if (!originalOrder) {
+            logger.warn(
+              { component: 'PayPal Webhook', captureId },
+              'Original order not found for refund — may not have been processed by us'
+            );
+            break;
+          }
+
+          // Update Order status to 'failed' (no 'refunded' in Order ENUM)
+          originalOrder.status = 'failed';
+          await originalOrder.save();
+
+          // Update related Purchase status to 'refunded'
+          if (originalOrder.purchaseId) {
+            const purchase = await Purchase.findByPk(originalOrder.purchaseId);
+            if (purchase) {
+              purchase.status = 'refunded';
+              await purchase.save();
+            }
+          }
+
+          logger.info(
+            { component: 'PayPal Webhook', captureId, refundId, orderId: originalOrder.id },
+            'Order marked as failed and Purchase as refunded'
+          );
+        } catch (refundError) {
+          logger.error(
+            { err: refundError, component: 'PayPal Webhook' },
+            'Error processing refund'
+          );
+          // Non-fatal — PayPal must receive 200 regardless
+        }
+        break;
+      }
 
       default:
         logger.info({ component: 'PayPal', eventType: event.event_type }, 'Unhandled event');
     }
 
-    // Mark as processed for idempotency
-    if (event.resource?.id) {
-      paypalService.markAsProcessed(event.resource.id);
+    // Mark as processed for idempotency (persistent)
+    if (eventId) {
+      await paypalService.markEventProcessed(eventId, 'paypal', event.event_type ?? 'unknown');
     }
 
     return res.status(200).json({ received: true });
