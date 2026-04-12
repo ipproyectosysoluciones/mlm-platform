@@ -1715,3 +1715,68 @@ export interface AffiliateContractCreationAttributes {
   revokedAt?: Date | null;
   revokedBy?: string | null;
 }
+
+// ============================================
+// INVOICES — Invoice System (#153)
+// FACTURAS — Sistema de facturas (#153)
+// ============================================
+
+/**
+ * Tipo de factura / Invoice type
+ */
+export type InvoiceType = 'subscription' | 'purchase' | 'upgrade';
+
+/**
+ * Estado de factura / Invoice status
+ */
+export type InvoiceStatus = 'draft' | 'issued' | 'paid' | 'cancelled' | 'overdue' | 'refunded';
+
+/**
+ * Ítem de línea de factura / Invoice line item
+ */
+export interface InvoiceItem {
+  description: string;
+  quantity: number;
+  unitPrice: number;
+  total: number;
+}
+
+/**
+ * Atributos completos de factura / Full invoice attributes
+ */
+export interface InvoiceAttributes {
+  id: string;
+  orderId: string | null;
+  userId: string;
+  invoiceNumber: string;
+  type: InvoiceType;
+  status: InvoiceStatus;
+  amount: number;
+  tax: number;
+  currency: string;
+  items: InvoiceItem[];
+  metadata: Record<string, unknown> | null;
+  issuedAt: Date | null;
+  dueAt: Date | null;
+  paidAt: Date | null;
+  cancelledAt: Date | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+/**
+ * Atributos para creación de factura / Invoice creation attributes
+ */
+export interface InvoiceCreationAttributes extends Omit<
+  InvoiceAttributes,
+  | 'id'
+  | 'invoiceNumber'
+  | 'status'
+  | 'issuedAt'
+  | 'paidAt'
+  | 'cancelledAt'
+  | 'createdAt'
+  | 'updatedAt'
+> {
+  status?: InvoiceStatus;
+}

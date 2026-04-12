@@ -1,7 +1,7 @@
 /**
  * @fileoverview InvoicePdfController - PDF generation for invoices
- * @description Controlador de PDF de facturas
- *              Handles invoice PDF generation and download
+ * @description Controlador de PDF de facturas — delega a InvoiceService.
+ *              Handles invoice PDF generation and download via InvoiceService.
  * @module controllers/invoices/InvoicePdfController
  * @author MLM Development Team
  *
@@ -15,7 +15,7 @@
 import { Response } from 'express';
 import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
 import { asyncHandler } from '../../middleware/asyncHandler';
-import { invoiceStore, InvoiceStatus } from './store';
+import { invoiceService } from '../../services/InvoiceService';
 import { config } from '../../config/env';
 
 /**
@@ -37,10 +37,41 @@ const COMPANY_INFO = {
 };
 
 /**
- * Generate HTML content for invoice PDF
- * Generar contenido HTML para PDF de factura
+ * Shape of invoice data used for HTML generation.
+ * Forma de datos de factura usados para generación HTML.
+ *
+ * Accepts both the Sequelize model instance and legacy compat fields.
  */
-const generateInvoiceHtml = (invoice: InvoiceData): string => {
+interface InvoiceForHtml {
+  invoiceNumber: string;
+  userId: string;
+  userName?: string;
+  userEmail?: string;
+  type: string;
+  status: string;
+  amount: number;
+  currency: string;
+  description?: string;
+  items: Array<{
+    description: string;
+    quantity: number;
+    unitPrice: number;
+    total: number;
+  }>;
+  createdAt: Date;
+  dueDate?: Date;
+  dueAt?: Date | null;
+  paidAt?: Date | null;
+}
+
+/**
+ * Generate HTML content for invoice PDF.
+ * Generar contenido HTML para PDF de factura.
+ *
+ * @param {InvoiceForHtml} invoice - Invoice data / Datos de factura
+ * @returns {string} HTML string / Cadena HTML
+ */
+const generateInvoiceHtml = (invoice: InvoiceForHtml): string => {
   const formatDate = (date: Date): string => {
     return new Date(date).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -69,14 +100,21 @@ const generateInvoiceHtml = (invoice: InvoiceData): string => {
     )
     .join('');
 
+  // Status color mapping — supports both old enum and new string literals
+  const statusLower = invoice.status.toLowerCase();
   const statusColor =
-    invoice.status === InvoiceStatus.PAID
+    statusLower === 'paid'
       ? '#22c55e'
-      : invoice.status === InvoiceStatus.PENDING
+      : statusLower === 'draft' || statusLower === 'issued' || statusLower === 'pending'
         ? '#f59e0b'
-        : invoice.status === InvoiceStatus.OVERDUE
+        : statusLower === 'overdue'
           ? '#ef4444'
           : '#6b7280';
+
+  // Support both legacy (dueDate) and new (dueAt) field names
+  const dueDate = invoice.dueDate ?? invoice.dueAt;
+  const userName = invoice.userName ?? `User ${invoice.userId}`;
+  const userEmail = invoice.userEmail ?? '';
 
   return `
     <!DOCTYPE html>
@@ -212,14 +250,14 @@ const generateInvoiceHtml = (invoice: InvoiceData): string => {
       <div class="parties">
         <div class="party">
           <h3>Bill To</h3>
-          <p><strong>${invoice.userName}</strong></p>
-          <p>${invoice.userEmail}</p>
+          <p><strong>${userName}</strong></p>
+          <p>${userEmail}</p>
           <p>User ID: ${invoice.userId}</p>
         </div>
         <div class="party">
           <h3>Invoice Details</h3>
           <p><strong>Date:</strong> ${formatDate(invoice.createdAt)}</p>
-          <p><strong>Due Date:</strong> ${formatDate(invoice.dueDate)}</p>
+          ${dueDate ? `<p><strong>Due Date:</strong> ${formatDate(dueDate)}</p>` : ''}
           <p><strong>Type:</strong> ${invoice.type}</p>
           ${invoice.paidAt ? `<p><strong>Paid On:</strong> ${formatDate(invoice.paidAt)}</p>` : ''}
         </div>
@@ -264,46 +302,16 @@ const generateInvoiceHtml = (invoice: InvoiceData): string => {
 };
 
 /**
- * Generate and preview invoice as HTML
- * Generar y previsualizar factura como HTML
+ * Generate and preview invoice as HTML.
+ * Generar y previsualizar factura como HTML.
  *
  * @route GET /api/invoices/:id/preview
  * @access Authenticated (owner or admin)
- * @param {AuthenticatedRequest} req - Express request with invoice ID
- * @param {Response} res - Express response
- * @returns {string} HTML content
- *
- * @swagger
- * /invoices/{id}/preview:
- *   get:
- *     summary: Previsualizar factura / Preview invoice
- *     description: Genera una previsualización HTML de la factura.
- *     tags: [invoices]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *           format: uuid
- *         description: ID de la factura / Invoice ID
- *     responses:
- *       200:
- *         description: HTML de previsualización / HTML preview
- *       400:
- *         description: ID inválido / Invalid ID format
- *       401:
- *         description: No autorizado / Unauthorized
- *       404:
- *         description: Factura no encontrada / Invoice not found
  */
 export const generateInvoicePdf = asyncHandler(
   async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     const { id } = req.params;
 
-    // Validate UUID format
     if (!UUID_REGEX.test(id)) {
       res.status(400).json({
         success: false,
@@ -315,85 +323,29 @@ export const generateInvoicePdf = asyncHandler(
       return;
     }
 
-    // Find invoice (mock - replace with actual service call)
-    const invoice = invoiceStore.find((inv) => inv.id === id);
+    const userId = req.user?.id as string;
+    const role = req.user?.role as string;
 
-    if (!invoice) {
-      res.status(404).json({
-        success: false,
-        error: {
-          code: 'NOT_FOUND',
-          message: 'Invoice not found',
-        },
-      });
-      return;
-    }
+    const invoice = await invoiceService.findByIdForUser(id, userId, role);
 
-    // Check ownership (mock - implement actual authorization)
-    // const userId = req.user?.id;
-    // if (invoice.userId !== userId && req.user?.role !== 'admin') {
-    //   res.status(403).json({
-    //     success: false,
-    //     error: {
-    //       code: 'FORBIDDEN',
-    //       message: 'Access denied to this invoice',
-    //     },
-    //   });
-    //   return;
-    // }
+    const htmlContent = generateInvoiceHtml(invoice as unknown as InvoiceForHtml);
 
-    // Generate HTML content
-    const htmlContent = generateInvoiceHtml(invoice);
-
-    // Set content type to HTML
     res.setHeader('Content-Type', 'text/html');
     res.send(htmlContent);
   }
 );
 
 /**
- * Download invoice as PDF
- * Descargar factura como PDF
+ * Download invoice as PDF.
+ * Descargar factura como PDF.
  *
  * @route GET /api/invoices/:id/pdf
  * @access Authenticated (owner or admin)
- * @param {AuthenticatedRequest} req - Express request with invoice ID
- * @param {Response} res - Express response
- * @returns {Buffer} PDF file
- *
- * @swagger
- * /invoices/{id}/pdf:
- *   get:
- *     summary: Descargar PDF de factura / Download invoice PDF
- *     description: Descarga la factura en formato PDF.
- *     tags: [invoices]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *           format: uuid
- *         description: ID de la factura / Invoice ID
- *     responses:
- *       200:
- *         description: Archivo PDF / PDF file
- *       400:
- *         description: ID inválido / Invalid ID format
- *       401:
- *         description: No autorizado / Unauthorized
- *       404:
- *         description: Factura no encontrada / Invoice not found
- *       500:
- *         description: Error al generar PDF / PDF generation error
  */
 export const downloadInvoicePdf = asyncHandler(
   async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     const { id } = req.params;
 
-    // Validate UUID format
     if (!UUID_REGEX.test(id)) {
       res.status(400).json({
         success: false,
@@ -405,51 +357,20 @@ export const downloadInvoicePdf = asyncHandler(
       return;
     }
 
-    // Find invoice (mock - replace with actual service call)
-    const invoice = invoiceStore.find((inv) => inv.id === id);
+    const userId = req.user?.id as string;
+    const role = req.user?.role as string;
 
-    if (!invoice) {
-      res.status(404).json({
-        success: false,
-        error: {
-          code: 'NOT_FOUND',
-          message: 'Invoice not found',
-        },
-      });
-      return;
-    }
+    const invoice = await invoiceService.findByIdForUser(id, userId, role);
 
-    // Check ownership (mock - implement actual authorization)
-    // const userId = req.user?.id;
-    // if (invoice.userId !== userId && req.user?.role !== 'admin') {
-    //   res.status(403).json({
-    //     success: false,
-    //     error: {
-    //       code: 'FORBIDDEN',
-    //       message: 'Access denied to this invoice',
-    //     },
-    //   });
-    //   return;
-    // }
+    const htmlContent = generateInvoiceHtml(invoice as unknown as InvoiceForHtml);
 
-    // Generate HTML content
-    const htmlContent = generateInvoiceHtml(invoice);
-
-    // NOTE: For production, integrate a PDF library like:
-    // - puppeteer (headless Chrome)
-    // - pdfkit
-    // - wkhtmltopdf
-    // For now, return HTML as downloadable file
-    // In a real implementation:
-    // const pdfBuffer = await generatePdfFromHtml(htmlContent);
-
+    // NOTE: For production, integrate a PDF library like puppeteer or pdfkit.
+    // For now, return HTML content as PDF placeholder.
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader(
       'Content-Disposition',
-      `attachment; filename="invoice-${invoice.invoiceNumber}.html"`
+      `attachment; filename="invoice-${invoice.invoiceNumber}.pdf"`
     );
-
-    // Sending HTML as placeholder - in production, convert to PDF
     res.send(Buffer.from(htmlContent));
   }
 );

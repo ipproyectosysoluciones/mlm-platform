@@ -28,6 +28,7 @@ import addressRoutes from './address.routes';
 import shippingRoutes from './shipping.routes';
 import achievementRoutes from './achievement.routes';
 import leaderboardRoutes from './leaderboard.routes';
+import invoiceRoutes from './invoices.routes';
 
 // Sprint 9 — previously orphaned routes (fix #126)
 // Sprint 9 — rutas previamente huérfanas (fix #126)
@@ -92,6 +93,10 @@ router.use('/achievements', achievementRoutes);
 
 // Leaderboard routes
 router.use('/leaderboard', leaderboardRoutes);
+
+// Invoice routes (Issue #153 — DB migration)
+// Rutas de facturas (Issue #153 — migración a DB)
+router.use('/invoices', invoiceRoutes);
 
 // Sprint 9 — Admin reservation routes (previously orphaned)
 // Sprint 9 — Rutas admin de reservas (previamente huérfanas)

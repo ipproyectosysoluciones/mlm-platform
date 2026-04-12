@@ -1,14 +1,18 @@
 /**
- * @fileoverview InvoiceStore - Centralized mock data store for invoices
- * @description Almacenamiento centralizado de datos mock para facturas
- *              This ensures all invoice controllers share the same data
+ * @fileoverview InvoiceStore - Legacy types from in-memory invoice store
+ * @description Tipos legacy del almacenamiento en memoria de facturas.
+ *              The invoiceStore array has been removed. All persistence is now
+ *              handled by the Invoice Sequelize model via InvoiceService.
  * @module controllers/invoices/store
  * @author MLM Development Team
+ *
+ * @deprecated Use types from `../../types/index.ts` and `InvoiceService` instead.
+ *             Usar tipos de `../../types/index.ts` y `InvoiceService` en su lugar.
  */
 
 /**
- * Invoice status enum
- * Enum de estados de factura
+ * @deprecated Use `InvoiceStatus` type from `../../types/index.ts` instead.
+ *             Usar tipo `InvoiceStatus` de `../../types/index.ts`.
  */
 export enum InvoiceStatus {
   PENDING = 'pending',
@@ -18,8 +22,8 @@ export enum InvoiceStatus {
 }
 
 /**
- * Invoice type enum
- * Enum de tipos de factura
+ * @deprecated Use `InvoiceType` type from `../../types/index.ts` instead.
+ *             Usar tipo `InvoiceType` de `../../types/index.ts`.
  */
 export enum InvoiceType {
   SUBSCRIPTION = 'subscription',
@@ -28,8 +32,8 @@ export enum InvoiceType {
 }
 
 /**
- * Invoice item interface
- * Interfaz de ítem de factura
+ * @deprecated Use `InvoiceItem` interface from `../../types/index.ts` instead.
+ *             Usar interfaz `InvoiceItem` de `../../types/index.ts`.
  */
 export interface InvoiceItem {
   description: string;
@@ -39,8 +43,8 @@ export interface InvoiceItem {
 }
 
 /**
- * Invoice data structure
- * Estructura de datos de factura
+ * @deprecated Use `InvoiceAttributes` interface from `../../types/index.ts` instead.
+ *             Usar interfaz `InvoiceAttributes` de `../../types/index.ts`.
  */
 export interface InvoiceData {
   id: string;
@@ -59,10 +63,3 @@ export interface InvoiceData {
   dueDate: Date;
   paidAt?: Date;
 }
-
-/**
- * Shared invoice storage
- * Almacenamiento compartido de facturas
- * This array is shared across all invoice controllers
- */
-export const invoiceStore: InvoiceData[] = [];
