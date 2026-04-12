@@ -18,6 +18,7 @@ import {
   LogOut,
   Wallet,
 } from 'lucide-react';
+import { featureFlags } from '../../utils/featureFlags';
 
 // Navigation items
 const NAV_ITEMS = [
@@ -45,7 +46,9 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   const { t } = useTranslation();
 
   const isAdmin = (user as any)?.role === 'admin';
-  const allNavItems = isAdmin ? [...NAV_ITEMS, ...ADMIN_ITEMS] : NAV_ITEMS;
+  const allNavItems = (isAdmin ? [...NAV_ITEMS, ...ADMIN_ITEMS] : NAV_ITEMS).filter(
+    (item) => item.path !== '/wallet' || featureFlags.cryptoWallet
+  );
   const currentLang = getCurrentLanguage();
 
   const handleLanguageChange = (code: 'en' | 'es') => {

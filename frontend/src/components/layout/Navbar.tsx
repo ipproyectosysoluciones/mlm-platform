@@ -30,6 +30,7 @@ import {
 } from 'lucide-react';
 import { LanguageSelector } from './LanguageSelector';
 import { UserMenu } from './UserMenu';
+import { featureFlags } from '../../utils/featureFlags';
 
 /** Navigation items shown to authenticated users / Ítems de navegación para usuarios autenticados */
 const NAV_ITEMS = [
@@ -76,7 +77,9 @@ export function Navbar({ onMobileMenuToggle, mobileMenuOpen }: NavbarProps) {
   const { t } = useTranslation();
 
   const isAdmin = (user as { role?: string })?.role === 'admin';
-  const allNavItems = isAdmin ? [...NAV_ITEMS, ...ADMIN_ITEMS] : NAV_ITEMS;
+  const allNavItems = (isAdmin ? [...NAV_ITEMS, ...ADMIN_ITEMS] : NAV_ITEMS).filter(
+    (item) => item.path !== '/wallet' || featureFlags.cryptoWallet
+  );
 
   return (
     <nav className="sticky top-0 z-50 bg-slate-900/80 backdrop-blur-xl border-b border-slate-700/50">

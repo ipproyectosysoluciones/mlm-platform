@@ -71,8 +71,16 @@ export class SchedulerService {
       return;
     }
 
-    // Daily payout job at midnight UTC
+    // Daily payout job at midnight UTC (only if crypto wallet feature is enabled)
+    // Job de pagos diarios a medianoche UTC (solo si la funcionalidad de crypto wallet está habilitada)
     this.job = cron.schedule(config.wallet.cronTime, async () => {
+      if (!config.features.cryptoWallet) {
+        logger.debug(
+          { service: 'SchedulerService' },
+          'Skipping daily payout — cryptoWallet feature disabled'
+        );
+        return;
+      }
       logger.info({ service: 'SchedulerService' }, 'Running daily payout job');
       try {
         const processed = await walletService.processDailyPayouts();
@@ -183,6 +191,15 @@ export class SchedulerService {
    * @returns Number of processed withdrawals / Número de retiros procesados
    */
   async triggerPayout(): Promise<number> {
+    // Guard: skip if crypto wallet feature is disabled
+    // Guardia: omitir si la funcionalidad de crypto wallet está deshabilitada
+    if (!config.features.cryptoWallet) {
+      logger.info(
+        { service: 'SchedulerService' },
+        'Skipping manual payout — cryptoWallet feature disabled'
+      );
+      return 0;
+    }
     logger.info({ service: 'SchedulerService' }, 'Manually triggered daily payout processing');
     try {
       const processed = await walletService.processDailyPayouts();

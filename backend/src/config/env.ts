@@ -185,6 +185,15 @@ export const config = {
     webhookId: process.env.PAYPAL_WEBHOOK_ID || '',
   },
 
+  /**
+   * Feature flags — toggle features without code changes
+   * Flags de funcionalidad — activar/desactivar features sin cambios de código
+   */
+  features: {
+    /** Crypto wallet feature / Funcionalidad de wallet crypto */
+    cryptoWallet: process.env.FEATURE_CRYPTO_WALLET === 'true',
+  },
+
   /** MercadoPago configuration / Configuración de MercadoPago */
   mercadopago: {
     /** MercadoPago access token / Access token de MercadoPago */
