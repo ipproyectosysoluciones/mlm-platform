@@ -60,7 +60,14 @@ interface CreateOrderRequest {
 
 interface CaptureOrderRequest {
   orderId: string; // PayPal order ID
-  internalOrderId: string; // Our internal order ID
+  /**
+   * Our internal order ID — optional since PayPal SDK flow
+   * captures before a local Order exists (webhook creates it).
+   *
+   * Nuestro order ID interno — opcional ya que el flujo del SDK de PayPal
+   * captura antes de que exista una Order local (el webhook la crea).
+   */
+  internalOrderId?: string;
 }
 
 class PayPalService {

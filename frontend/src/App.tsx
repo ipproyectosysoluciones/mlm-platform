@@ -253,6 +253,24 @@ function App() {
               }
             />
 
+            {/* PayPal return URL routes — shown after PayPal redirect */}
+            <Route
+              path="/checkout/success"
+              element={
+                <Suspense fallback={<PageLoader />}>
+                  <OrderProcessing />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/checkout/cancel"
+              element={
+                <Suspense fallback={<PageLoader />}>
+                  <OrderProcessing />
+                </Suspense>
+              }
+            />
+
             {/* Wallet Digital Route */}
             <Route
               path="/wallet"
