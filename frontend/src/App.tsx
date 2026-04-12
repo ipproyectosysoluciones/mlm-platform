@@ -24,6 +24,7 @@ import { AppLayout } from './components/layout/AppLayout';
 import { ProtectedRoute, AdminRoute, PublicRoute, PublicProfileRoute } from './components/routes';
 import { preloadData } from './lib/preload';
 import { dashboardService, authService } from './services/api';
+import { featureFlags } from './utils/featureFlags';
 
 // Lazy loaded pages for Real Estate & Tourism landing (Sprint 7)
 const NexoRealLanding = lazy(() => import('./pages/landing/NexoRealLanding'));
@@ -271,17 +272,19 @@ function App() {
               }
             />
 
-            {/* Wallet Digital Route */}
-            <Route
-              path="/wallet"
-              element={
-                <ProtectedRoute>
-                  <Suspense fallback={<PageLoader />}>
-                    <WalletPage />
-                  </Suspense>
-                </ProtectedRoute>
-              }
-            />
+            {/* Wallet Digital Route — hidden when crypto wallet feature is disabled */}
+            {featureFlags.cryptoWallet && (
+              <Route
+                path="/wallet"
+                element={
+                  <ProtectedRoute>
+                    <Suspense fallback={<PageLoader />}>
+                      <WalletPage />
+                    </Suspense>
+                  </ProtectedRoute>
+                }
+              />
+            )}
 
             {/* Cart Recovery Route - Public (no auth, uses one-time token) */}
             <Route

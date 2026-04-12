@@ -7,6 +7,7 @@ import dashboardRoutes from './dashboard.routes';
 import productRoutes from './product.routes';
 import orderRoutes from './order.routes';
 import walletRoutes from './wallet.routes';
+import { featureGuard } from '../middleware/featureGuard';
 import twoFactorRoutes from './twoFactor.routes';
 import pushRoutes from './push.routes';
 import publicRoutes from './public.routes';
@@ -53,8 +54,8 @@ router.use('/commissions', commissionRoutes);
 router.use('/dashboard', dashboardRoutes);
 router.use('/products', productRoutes);
 router.use('/orders', orderRoutes);
-router.use('/wallet', walletRoutes);
-router.use('/wallets', walletRoutes); // Alias for test compatibility
+router.use('/wallet', featureGuard('cryptoWallet'), walletRoutes);
+router.use('/wallets', featureGuard('cryptoWallet'), walletRoutes); // Alias for test compatibility
 router.use('/push', pushRoutes);
 router.use('/gift-cards', giftCardRoutes);
 router.use('/email-templates', emailTemplateRoutes);

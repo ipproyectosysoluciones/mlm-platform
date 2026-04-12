@@ -27,6 +27,7 @@ import type { BusinessType, CommissionLevel } from '../types/index.js';
 import { walletService } from './WalletService';
 import { emailService } from './EmailService';
 import { logger } from '../utils/logger';
+import { config } from '../config/env';
 
 export class CommissionService {
   /**
@@ -237,14 +238,17 @@ export class CommissionService {
     commission.status = 'approved';
     await commission.save();
 
-    // Credit to wallet
-    await walletService.creditCommission(
-      commission.userId,
-      Number(commission.amount),
-      commission.currency,
-      commission.id,
-      `${commission.type} commission from referral`
-    );
+    // Credit to wallet only if crypto wallet feature is enabled
+    // Acreditar a wallet solo si la funcionalidad de crypto wallet está habilitada
+    if (config.features.cryptoWallet) {
+      await walletService.creditCommission(
+        commission.userId,
+        Number(commission.amount),
+        commission.currency,
+        commission.id,
+        `${commission.type} commission from referral`
+      );
+    }
 
     return commission;
   }

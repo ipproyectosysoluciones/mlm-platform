@@ -29,6 +29,7 @@ import type { WizardStep, PriceBreakdown } from '../stores/reservationStore';
 import { paymentService } from '../services/paymentService';
 import { useWalletBalance } from '../stores/walletStore';
 import { cn } from '../lib/utils';
+import { featureFlags } from '../utils/featureFlags';
 
 // ============================================
 // Constants / Constantes
@@ -679,45 +680,47 @@ function StepPayment({ onDone, onGoToReservations, breakdown }: StepPaymentProps
           )}
         </button>
 
-        {/* Wallet */}
-        <button
-          onClick={onDone}
-          disabled={!hasEnoughBalance || isProcessingPayment}
-          className={cn(
-            'w-full flex items-center gap-4 p-4 rounded-xl border transition-all group',
-            hasEnoughBalance
-              ? 'border-slate-200 hover:border-emerald-300 hover:bg-emerald-50/30'
-              : 'border-slate-100 bg-slate-50 opacity-60 cursor-not-allowed'
-          )}
-        >
-          <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center shrink-0">
-            <Wallet className="w-6 h-6 text-emerald-600" />
-          </div>
-          <div className="flex-1 text-left">
-            <span
-              className={cn(
-                'font-semibold',
-                hasEnoughBalance
-                  ? 'text-slate-800 group-hover:text-emerald-700 transition-colors'
-                  : 'text-slate-500'
-              )}
-            >
-              {t('reservation.payWithWallet')}
-            </span>
-            <p className="text-xs text-slate-400 mt-0.5">
-              {hasEnoughBalance
-                ? t('reservation.walletBalance', {
-                    balance: formatPrice(walletBalance, walletCurrency),
-                  })
-                : t('reservation.insufficientBalance')}
-            </p>
-          </div>
-          {hasEnoughBalance ? (
-            <ChevronRight className="w-5 h-5 text-slate-300 group-hover:text-emerald-500 transition-colors" />
-          ) : (
-            <AlertCircle className="w-5 h-5 text-slate-300" />
-          )}
-        </button>
+        {/* Wallet (hidden when crypto wallet feature is disabled) */}
+        {featureFlags.cryptoWallet && (
+          <button
+            onClick={onDone}
+            disabled={!hasEnoughBalance || isProcessingPayment}
+            className={cn(
+              'w-full flex items-center gap-4 p-4 rounded-xl border transition-all group',
+              hasEnoughBalance
+                ? 'border-slate-200 hover:border-emerald-300 hover:bg-emerald-50/30'
+                : 'border-slate-100 bg-slate-50 opacity-60 cursor-not-allowed'
+            )}
+          >
+            <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center shrink-0">
+              <Wallet className="w-6 h-6 text-emerald-600" />
+            </div>
+            <div className="flex-1 text-left">
+              <span
+                className={cn(
+                  'font-semibold',
+                  hasEnoughBalance
+                    ? 'text-slate-800 group-hover:text-emerald-700 transition-colors'
+                    : 'text-slate-500'
+                )}
+              >
+                {t('reservation.payWithWallet')}
+              </span>
+              <p className="text-xs text-slate-400 mt-0.5">
+                {hasEnoughBalance
+                  ? t('reservation.walletBalance', {
+                      balance: formatPrice(walletBalance, walletCurrency),
+                    })
+                  : t('reservation.insufficientBalance')}
+              </p>
+            </div>
+            {hasEnoughBalance ? (
+              <ChevronRight className="w-5 h-5 text-slate-300 group-hover:text-emerald-500 transition-colors" />
+            ) : (
+              <AlertCircle className="w-5 h-5 text-slate-300" />
+            )}
+          </button>
+        )}
       </div>
 
       {/* Security note */}
