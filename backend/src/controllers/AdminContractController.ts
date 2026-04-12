@@ -196,7 +196,7 @@ export async function updateTemplate(req: AuthenticatedRequest, res: Response): 
       res.status(404).json({
         success: false,
         error: {
-          code: error.name,
+          code: error.code || error.name,
           message: error.message,
         },
       });
@@ -312,7 +312,7 @@ export async function revokeUserContract(req: AuthenticatedRequest, res: Respons
       res.status(404).json({
         success: false,
         error: {
-          code: error.name,
+          code: error.code || error.name,
           message: error.message,
         },
       });

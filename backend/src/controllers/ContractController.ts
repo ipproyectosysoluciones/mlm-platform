@@ -115,7 +115,7 @@ export async function getContract(req: Request, res: Response): Promise<void> {
       res.status(404).json({
         success: false,
         error: {
-          code: error.name,
+          code: error.code || error.name,
           message: error.message,
         },
       });
@@ -188,7 +188,7 @@ export async function acceptContract(req: AuthenticatedRequest, res: Response): 
       res.status(400).json({
         success: false,
         error: {
-          code: error.name,
+          code: error.code || error.name,
           message: error.message,
         },
       });
@@ -199,7 +199,7 @@ export async function acceptContract(req: AuthenticatedRequest, res: Response): 
       res.status(404).json({
         success: false,
         error: {
-          code: error.name,
+          code: error.code || error.name,
           message: error.message,
         },
       });
@@ -261,7 +261,7 @@ export async function declineContract(req: AuthenticatedRequest, res: Response):
       res.status(404).json({
         success: false,
         error: {
-          code: error.name,
+          code: error.code || error.name,
           message: error.message,
         },
       });
