@@ -13,6 +13,7 @@
  * import { r2Client, R2_BUCKET } from './config/r2';
  */
 import { S3Client } from '@aws-sdk/client-s3';
+import { config } from './env';
 
 /**
  * S3-compatible client configured to use Cloudflare R2
@@ -35,4 +36,4 @@ export const R2_BUCKET = process.env.R2_BUCKET ?? 'nexoreal-media';
 /**
  * Public base URL for serving R2 assets / URL base pública para servir activos de R2
  */
-export const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL ?? 'https://media.nexoreal.xyz';
+export const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL ?? `https://media.${config.platform.domain}`;

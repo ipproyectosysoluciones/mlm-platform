@@ -3,7 +3,7 @@ import './instrument';
 
 import app from './app';
 import { connectDatabase, syncDatabase } from './config/database';
-import { config } from './config/env';
+import { config, platformDomain } from './config/env';
 import { logger } from './utils/logger';
 import { initModels, User, Product, CommissionConfig, UserClosure } from './models';
 import { achievementService } from './services/AchievementService';
@@ -250,7 +250,7 @@ async function autoSeed(): Promise<void> {
 
     const superAdmin = await createUserWithClosure(
       '00000000-0000-0000-0000-000000000001',
-      'superadmin@nexoreal.xyz',
+      `superadmin@${platformDomain}`,
       'NXR-SA-001',
       'super_admin',
       null,
@@ -259,7 +259,7 @@ async function autoSeed(): Promise<void> {
 
     const admin = await createUserWithClosure(
       '00000000-0000-0000-0000-000000000002',
-      'admin@nexoreal.xyz',
+      `admin@${platformDomain}`,
       'NXR-AD-002',
       'admin',
       superAdmin.id,
@@ -268,7 +268,7 @@ async function autoSeed(): Promise<void> {
 
     const advisor = await createUserWithClosure(
       '00000000-0000-0000-0000-000000000003',
-      'valentina.ospina@nexoreal.xyz',
+      `valentina.ospina@${platformDomain}`,
       'NXR-AV-003',
       'advisor',
       admin.id,
@@ -277,7 +277,7 @@ async function autoSeed(): Promise<void> {
 
     await createUserWithClosure(
       '00000000-0000-0000-0000-000000000004',
-      'andres.martinez@nexoreal.xyz',
+      `andres.martinez@${platformDomain}`,
       'NXR-US-004',
       'user',
       advisor.id,
@@ -286,7 +286,7 @@ async function autoSeed(): Promise<void> {
 
     await createUserWithClosure(
       '00000000-0000-0000-0000-000000000005',
-      'invitado@nexoreal.xyz',
+      `invitado@${platformDomain}`,
       'NXR-GT-005',
       'guest',
       null,
@@ -294,11 +294,11 @@ async function autoSeed(): Promise<void> {
     );
 
     logger.info('Nexo Real — Test Credentials:');
-    logger.info('  superadmin@nexoreal.xyz  /  Nexo2024!  (super_admin)');
-    logger.info('  admin@nexoreal.xyz       /  Nexo2024!  (admin)');
+    logger.info(`  superadmin@${platformDomain}  /  Nexo2024!  (super_admin)`);
+    logger.info(`  admin@${platformDomain}       /  Nexo2024!  (admin)`);
     logger.info('  valentina.ospina@...     /  Nexo2024!  (advisor)');
     logger.info('  andres.martinez@...      /  Nexo2024!  (user)');
-    logger.info('  invitado@nexoreal.xyz    /  Nexo2024!  (guest)');
+    logger.info(`  invitado@${platformDomain}    /  Nexo2024!  (guest)`);
   } catch (error) {
     logger.error({ err: error }, 'Auto-seed failed');
   }

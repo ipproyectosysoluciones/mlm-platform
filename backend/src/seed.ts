@@ -27,6 +27,7 @@ import { connectDatabase, syncDatabase } from './config/database';
 import { initModels, User, UserClosure, CommissionConfig, Product } from './models';
 import { hashPassword } from './services/AuthService';
 import { seedDemoProperties, seedDemoTours, seedDemoTourAvailabilities } from './seed-demo';
+import { platformDomain } from './config/env';
 
 // ─── Tipos auxiliares ─────────────────────────────────────────────────────────
 
@@ -385,7 +386,7 @@ async function seedUsers(): Promise<void> {
   // Nivel 0 — raíz del sistema / System root
   const superAdmin = await createUser(
     SEED_IDS.SUPER_ADMIN,
-    'superadmin@nexoreal.xyz',
+    `superadmin@${platformDomain}`,
     'Nexo2024!',
     'NXR-SA-001',
     'super_admin',
@@ -397,7 +398,7 @@ async function seedUsers(): Promise<void> {
   // Nivel 1 — admin general / General admin
   const admin = await createUser(
     SEED_IDS.ADMIN,
-    'admin@nexoreal.xyz',
+    `admin@${platformDomain}`,
     'Nexo2024!',
     'NXR-AD-002',
     'admin',
@@ -409,7 +410,7 @@ async function seedUsers(): Promise<void> {
   // Nivel 2 — roles operativos bajo admin / Operational roles under admin
   const finance = await createUser(
     SEED_IDS.FINANCE,
-    'finanzas@nexoreal.xyz',
+    `finanzas@${platformDomain}`,
     'Nexo2024!',
     'NXR-FN-003',
     'finance',
@@ -420,7 +421,7 @@ async function seedUsers(): Promise<void> {
 
   const sales = await createUser(
     SEED_IDS.SALES,
-    'ventas@nexoreal.xyz',
+    `ventas@${platformDomain}`,
     'Nexo2024!',
     'NXR-SL-004',
     'sales',
@@ -431,7 +432,7 @@ async function seedUsers(): Promise<void> {
 
   const vendor1 = await createUser(
     SEED_IDS.VENDOR_1,
-    'camilo.restrepo@nexoreal.xyz',
+    `camilo.restrepo@${platformDomain}`,
     'Nexo2024!',
     'NXR-VD-007',
     'vendor',
@@ -443,7 +444,7 @@ async function seedUsers(): Promise<void> {
   // Nivel 3 — asesores comerciales bajo ventas / Sales advisors under sales
   const advisor1 = await createUser(
     SEED_IDS.ADVISOR_1,
-    'valentina.ospina@nexoreal.xyz',
+    `valentina.ospina@${platformDomain}`,
     'Nexo2024!',
     'NXR-AV-005',
     'advisor',
@@ -454,7 +455,7 @@ async function seedUsers(): Promise<void> {
 
   const advisor2 = await createUser(
     SEED_IDS.ADVISOR_2,
-    'santiago.gomez@nexoreal.xyz',
+    `santiago.gomez@${platformDomain}`,
     'Nexo2024!',
     'NXR-AV-006',
     'advisor',
@@ -465,7 +466,7 @@ async function seedUsers(): Promise<void> {
 
   const vendor2 = await createUser(
     SEED_IDS.VENDOR_2,
-    'isabella.vargas@nexoreal.xyz',
+    `isabella.vargas@${platformDomain}`,
     'Nexo2024!',
     'NXR-VD-008',
     'vendor',
@@ -477,7 +478,7 @@ async function seedUsers(): Promise<void> {
   // Nivel 4 — usuarios finales bajo asesores / End users under advisors
   await createUser(
     SEED_IDS.USER_1,
-    'andres.martinez@nexoreal.xyz',
+    `andres.martinez@${platformDomain}`,
     'usuario123',
     'NXR-US-009',
     'user',
@@ -488,7 +489,7 @@ async function seedUsers(): Promise<void> {
 
   await createUser(
     SEED_IDS.USER_2,
-    'luisa.fernandez@nexoreal.xyz',
+    `luisa.fernandez@${platformDomain}`,
     'usuario123',
     'NXR-US-010',
     'user',
@@ -499,7 +500,7 @@ async function seedUsers(): Promise<void> {
 
   await createUser(
     SEED_IDS.USER_3,
-    'miguel.torres@nexoreal.xyz',
+    `miguel.torres@${platformDomain}`,
     'usuario123',
     'NXR-US-011',
     'user',
@@ -511,7 +512,7 @@ async function seedUsers(): Promise<void> {
   // Guest — sin sponsor (invitado registrado via link) / Guest — no sponsor (registered via link)
   await createUser(
     SEED_IDS.GUEST,
-    'invitado@nexoreal.xyz',
+    `invitado@${platformDomain}`,
     'invitado123',
     'NXR-GT-012',
     'guest',
@@ -525,18 +526,18 @@ async function seedUsers(): Promise<void> {
 
   console.log('\n✅ Árbol Unilevel seeded');
   console.log('\n📋 Estructura del árbol / Tree Structure:');
-  console.log('   super_admin (superadmin@nexoreal.xyz)');
-  console.log('   └── admin (admin@nexoreal.xyz)');
-  console.log('       ├── finance (finanzas@nexoreal.xyz)');
-  console.log('       ├── sales (ventas@nexoreal.xyz)');
-  console.log('       │   ├── advisor_1 (valentina.ospina@nexoreal.xyz)');
-  console.log('       │   │   ├── user_1 (andres.martinez@nexoreal.xyz)');
-  console.log('       │   │   └── user_2 (luisa.fernandez@nexoreal.xyz)');
-  console.log('       │   └── advisor_2 (santiago.gomez@nexoreal.xyz)');
-  console.log('       │       └── user_3 (miguel.torres@nexoreal.xyz)');
-  console.log('       └── vendor_1 (camilo.restrepo@nexoreal.xyz)');
-  console.log('           └── vendor_2 (isabella.vargas@nexoreal.xyz)');
-  console.log('   + guest (invitado@nexoreal.xyz) — sin red');
+  console.log(`   super_admin (superadmin@${platformDomain})`);
+  console.log(`   └── admin (admin@${platformDomain})`);
+  console.log(`       ├── finance (finanzas@${platformDomain})`);
+  console.log(`       ├── sales (ventas@${platformDomain})`);
+  console.log(`       │   ├── advisor_1 (valentina.ospina@${platformDomain})`);
+  console.log(`       │   │   ├── user_1 (andres.martinez@${platformDomain})`);
+  console.log(`       │   │   └── user_2 (luisa.fernandez@${platformDomain})`);
+  console.log(`       │   └── advisor_2 (santiago.gomez@${platformDomain})`);
+  console.log(`       │       └── user_3 (miguel.torres@${platformDomain})`);
+  console.log(`       └── vendor_1 (camilo.restrepo@${platformDomain})`);
+  console.log(`           └── vendor_2 (isabella.vargas@${platformDomain})`);
+  console.log(`   + guest (invitado@${platformDomain}) — sin red`);
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
@@ -573,10 +574,10 @@ async function seed(): Promise<void> {
     console.log('╠═══════════════════════════════════════════════════════════╣');
     console.log('║  Credenciales de prueba / Test credentials:               ║');
     console.log('║                                                           ║');
-    console.log('║  superadmin@nexoreal.xyz  /  Nexo2024!  (super_admin)     ║');
-    console.log('║  admin@nexoreal.xyz       /  Nexo2024!  (admin)           ║');
-    console.log('║  finanzas@nexoreal.xyz    /  Nexo2024!  (finance)         ║');
-    console.log('║  ventas@nexoreal.xyz      /  Nexo2024!  (sales)           ║');
+    console.log(`║  superadmin@${platformDomain.padEnd(16)} /  Nexo2024!  (super_admin)     ║`);
+    console.log(`║  admin@${platformDomain.padEnd(21)} /  Nexo2024!  (admin)           ║`);
+    console.log(`║  finanzas@${platformDomain.padEnd(18)} /  Nexo2024!  (finance)         ║`);
+    console.log(`║  ventas@${platformDomain.padEnd(20)} /  Nexo2024!  (sales)           ║`);
     console.log('║  valentina.ospina@...     /  Nexo2024!  (advisor)         ║');
     console.log('║  santiago.gomez@...       /  Nexo2024!  (advisor)         ║');
     console.log('║  camilo.restrepo@...      /  Nexo2024!  (vendor)          ║');
@@ -584,7 +585,7 @@ async function seed(): Promise<void> {
     console.log('║  andres.martinez@...      /  usuario123 (user)            ║');
     console.log('║  luisa.fernandez@...      /  usuario123 (user)            ║');
     console.log('║  miguel.torres@...        /  usuario123 (user)            ║');
-    console.log('║  invitado@nexoreal.xyz    /  invitado123 (guest)          ║');
+    console.log(`║  invitado@${platformDomain.padEnd(18)} /  invitado123 (guest)          ║`);
     console.log('║                                                           ║');
     console.log('║  📊 Demo data:                                            ║');
     console.log('║  20 propiedades (CO + MX) • 12 tours • 36 disponibilidades║');
