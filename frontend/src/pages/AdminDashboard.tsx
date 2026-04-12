@@ -1,7 +1,22 @@
+/**
+ * AdminDashboard - Panel principal de administración con acceso rápido a sub-páginas.
+ *
+ * AdminDashboard - Main admin panel with quick-access cards to sub-pages.
+ *
+ * @module pages/AdminDashboard
+ */
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, Crown, RefreshCw } from 'lucide-react';
+import {
+  ArrowLeft,
+  Crown,
+  RefreshCw,
+  Building2,
+  MapPin,
+  CalendarDays,
+  DollarSign,
+} from 'lucide-react';
 import { adminService } from '../services/api';
 import { StatsOverview, UserFilters, UsersTable } from '../components/admin';
 
@@ -15,6 +30,42 @@ interface UserData {
   referralCode: string;
   createdAt: string;
 }
+
+/** Quick-access cards for admin sub-pages / Tarjetas de acceso rápido a sub-páginas admin */
+const QUICK_ACCESS_CARDS = [
+  {
+    path: '/admin/properties',
+    titleKey: 'nav.adminProperties',
+    descriptionKey: 'admin.manageProperties',
+    icon: Building2,
+    gradient: 'from-blue-500 to-indigo-500',
+    shadow: 'shadow-blue-500/25',
+  },
+  {
+    path: '/admin/tours',
+    titleKey: 'nav.adminTours',
+    descriptionKey: 'admin.manageTours',
+    icon: MapPin,
+    gradient: 'from-emerald-500 to-teal-500',
+    shadow: 'shadow-emerald-500/25',
+  },
+  {
+    path: '/admin/reservations',
+    titleKey: 'nav.adminReservations',
+    descriptionKey: 'admin.manageReservations',
+    icon: CalendarDays,
+    gradient: 'from-purple-500 to-pink-500',
+    shadow: 'shadow-purple-500/25',
+  },
+  {
+    path: '/admin/commissions',
+    titleKey: 'nav.commissionConfig',
+    descriptionKey: 'admin.manageCommissions',
+    icon: DollarSign,
+    gradient: 'from-amber-500 to-orange-500',
+    shadow: 'shadow-amber-500/25',
+  },
+];
 
 export default function AdminDashboard() {
   const { t } = useTranslation();
@@ -92,6 +143,34 @@ export default function AdminDashboard() {
             <h1 className="text-2xl font-bold text-slate-900">{t('admin.title')}</h1>
             <p className="text-slate-500 text-sm">{t('admin.subtitle')}</p>
           </div>
+        </div>
+      </div>
+
+      {/* Quick Access Cards */}
+      <div>
+        <h2 className="text-lg font-semibold text-slate-900 mb-3">{t('admin.quickAccess')}</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {QUICK_ACCESS_CARDS.map((card) => {
+            const Icon = card.icon;
+            return (
+              <Link
+                key={card.path}
+                to={card.path}
+                className={`
+                  group relative overflow-hidden rounded-xl bg-white border border-slate-200 p-5
+                  hover:shadow-lg ${card.shadow} transition-all duration-300 hover:-translate-y-0.5
+                `}
+              >
+                <div
+                  className={`w-10 h-10 bg-gradient-to-br ${card.gradient} rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300`}
+                >
+                  <Icon className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-sm font-semibold text-slate-900 mb-1">{t(card.titleKey)}</h3>
+                <p className="text-xs text-slate-500 leading-relaxed">{t(card.descriptionKey)}</p>
+              </Link>
+            );
+          })}
         </div>
       </div>
 

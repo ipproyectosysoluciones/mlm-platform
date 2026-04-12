@@ -116,6 +116,11 @@
     "profile": "Profile",
     "admin": "Admin",
     "commissionConfig": "Commissions",
+    "adminUsers": "Users",
+    "adminProperties": "Properties",
+    "adminTours": "Tours",
+    "adminReservations": "Reservations",
+    "administration": "Administration",
     "logout": "Logout",
     "myProfile": "My Profile",
     "twoFactor": "Two-Factor Authentication",
@@ -266,7 +271,12 @@
     "activate": "Activate",
     "deactivate": "Deactivate",
     "promote": "Promote to Admin",
-    "role": "Role"
+    "role": "Role",
+    "quickAccess": "Quick Access",
+    "manageProperties": "Manage real estate properties",
+    "manageTours": "Manage tour packages",
+    "manageReservations": "Manage client reservations",
+    "manageCommissions": "Configure network commissions"
   },
   "landingPages": {
     "title": "Landing Pages",
