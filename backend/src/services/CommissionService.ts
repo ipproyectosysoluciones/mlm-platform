@@ -23,6 +23,7 @@
 import { sequelize } from '../config/database';
 import { User, Commission, Purchase, CommissionConfig } from '../models';
 import { COMMISSION_RATES } from '../types';
+import type { BusinessType, CommissionLevel } from '../types/index.js';
 import { walletService } from './WalletService';
 import { emailService } from './EmailService';
 import { logger } from '../utils/logger';
@@ -35,8 +36,8 @@ export class CommissionService {
   private async getCommissionRate(businessType: string, level: string): Promise<number> {
     const config = await CommissionConfig.findOne({
       where: {
-        businessType: businessType as any,
-        level: level as any,
+        businessType: businessType as BusinessType,
+        level: level as CommissionLevel,
         isActive: true,
       },
     });

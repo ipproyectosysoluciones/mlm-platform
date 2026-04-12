@@ -68,6 +68,12 @@ export interface UserAttributes {
   status: 'active' | 'inactive';
   role: UserRole;
   currency: 'USD' | 'COP' | 'MXN';
+  /** User first name / Nombre del usuario */
+  firstName: string | null;
+  /** User last name / Apellido del usuario */
+  lastName: string | null;
+  /** User phone number / Teléfono del usuario */
+  phone: string | null;
   // Notification preferences
   emailNotifications: boolean;
   smsNotifications: boolean;
@@ -88,6 +94,9 @@ export interface UserCreationAttributes {
   status?: 'active' | 'inactive';
   role?: UserRole;
   currency?: 'USD' | 'COP' | 'MXN';
+  firstName?: string | null;
+  lastName?: string | null;
+  phone?: string | null;
 }
 
 export interface UserClosureAttributes {

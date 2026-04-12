@@ -11,6 +11,7 @@ import { body } from 'express-validator';
 import { crmService } from '../../services/CRMService';
 import { AppError } from '../../middleware/error.middleware';
 import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
+import type { LeadStatus, LeadSource } from '../../models/Lead.js';
 
 /**
  * Validation rules for creating a new lead
@@ -51,8 +52,8 @@ export const updateLeadValidation = [
 export async function getLeads(req: AuthenticatedRequest, res: Response) {
   const userId = req.user!.id;
   const leads = await crmService.getLeads(userId, {
-    status: req.query.status as any,
-    source: req.query.source as any,
+    status: req.query.status as LeadStatus | undefined,
+    source: req.query.source as LeadSource | undefined,
     search: req.query.search as string,
     createdAtFrom: req.query.createdAtFrom as string,
     createdAtTo: req.query.createdAtTo as string,
@@ -124,8 +125,8 @@ export async function importLeads(req: AuthenticatedRequest, res: Response) {
  */
 export async function exportLeads(req: AuthenticatedRequest, res: Response) {
   const filters = {
-    status: req.query.status as any,
-    source: req.query.source as any,
+    status: req.query.status as LeadStatus | undefined,
+    source: req.query.source as LeadSource | undefined,
     search: req.query.search as string,
     createdAtFrom: req.query.createdAtFrom as string,
     createdAtTo: req.query.createdAtTo as string,

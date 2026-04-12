@@ -17,6 +17,7 @@ import { authenticate, requireAdmin } from '../middleware/auth.middleware';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware';
 import { body, validationResult } from 'express-validator';
 import { logger } from '../utils/logger';
+import { hasStatusCode, getErrorMessage } from '../utils/HttpError.js';
 
 /**
  * List vendors with pagination and filters
@@ -47,13 +48,14 @@ export const listVendors = [
           totalPages: Math.ceil(count / limit),
         },
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = getErrorMessage(error, 'Failed to list vendors');
       logger.error({ err: error }, 'List vendors error');
       res.status(500).json({
         success: false,
         error: {
-          code: error.code || 'SERVER_ERROR',
-          message: error.message || 'Failed to list vendors',
+          code: 'SERVER_ERROR',
+          message,
         },
       });
     }
@@ -78,13 +80,15 @@ export const getVendor = [
         success: true,
         data: vendor,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = getErrorMessage(error, 'Failed to get vendor');
+      const statusCode = hasStatusCode(error) ? error.statusCode : 500;
       logger.error({ err: error }, 'Get vendor error');
-      res.status(error.statusCode || 500).json({
+      res.status(statusCode).json({
         success: false,
         error: {
-          code: error.code || 'SERVER_ERROR',
-          message: error.message || 'Failed to get vendor',
+          code: 'SERVER_ERROR',
+          message,
         },
       });
     }
@@ -111,13 +115,15 @@ export const approveVendor = [
         data: vendor,
         message: 'Vendor approved successfully',
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = getErrorMessage(error, 'Failed to approve vendor');
+      const statusCode = hasStatusCode(error) ? error.statusCode : 500;
       logger.error({ err: error }, 'Approve vendor error');
-      res.status(error.statusCode || 500).json({
+      res.status(statusCode).json({
         success: false,
         error: {
-          code: error.code || 'SERVER_ERROR',
-          message: error.message || 'Failed to approve vendor',
+          code: 'SERVER_ERROR',
+          message,
         },
       });
     }
@@ -159,13 +165,15 @@ export const rejectVendor = [
         data: vendor,
         message: 'Vendor rejected',
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = getErrorMessage(error, 'Failed to reject vendor');
+      const statusCode = hasStatusCode(error) ? error.statusCode : 500;
       logger.error({ err: error }, 'Reject vendor error');
-      res.status(error.statusCode || 500).json({
+      res.status(statusCode).json({
         success: false,
         error: {
-          code: error.code || 'SERVER_ERROR',
-          message: error.message || 'Failed to reject vendor',
+          code: 'SERVER_ERROR',
+          message,
         },
       });
     }
@@ -207,13 +215,15 @@ export const suspendVendor = [
         data: vendor,
         message: 'Vendor suspended',
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = getErrorMessage(error, 'Failed to suspend vendor');
+      const statusCode = hasStatusCode(error) ? error.statusCode : 500;
       logger.error({ err: error }, 'Suspend vendor error');
-      res.status(error.statusCode || 500).json({
+      res.status(statusCode).json({
         success: false,
         error: {
-          code: error.code || 'SERVER_ERROR',
-          message: error.message || 'Failed to suspend vendor',
+          code: 'SERVER_ERROR',
+          message,
         },
       });
     }
@@ -258,13 +268,15 @@ export const updateCommissionRate = [
         data: vendor,
         message: 'Commission rate updated',
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = getErrorMessage(error, 'Failed to update commission rate');
+      const statusCode = hasStatusCode(error) ? error.statusCode : 500;
       logger.error({ err: error }, 'Update commission rate error');
-      res.status(error.statusCode || 500).json({
+      res.status(statusCode).json({
         success: false,
         error: {
-          code: error.code || 'SERVER_ERROR',
-          message: error.message || 'Failed to update commission rate',
+          code: 'SERVER_ERROR',
+          message,
         },
       });
     }

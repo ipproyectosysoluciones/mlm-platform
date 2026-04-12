@@ -126,13 +126,13 @@ export const register: RequestHandler = asyncHandler(
         referralCode: user.referralCode,
         referralLink,
       })
-      .catch((err) => logger.error({ err }, 'Welcome email failed'));
+      .catch((err: unknown) => logger.error({ err }, 'Welcome email failed'));
 
     // If user has sponsor, notify sponsor about new downline
     // Si el usuario tiene patrocinador, notificar al patrocinador sobre nuevo downline
     if (user.sponsorId) {
       const sponsor = await userService.findById(user.sponsorId);
-      if (sponsor && (sponsor as any).emailNotifications) {
+      if (sponsor && sponsor.emailNotifications) {
         emailService
           .sendDownline({
             email: sponsor.email,
@@ -140,7 +140,7 @@ export const register: RequestHandler = asyncHandler(
             newUserEmail: user.email,
             position: user.position || 'unknown',
           })
-          .catch((err) => logger.error({ err }, 'Downline email failed'));
+          .catch((err: unknown) => logger.error({ err }, 'Downline email failed'));
       }
     }
 
@@ -216,7 +216,9 @@ export const login: RequestHandler = asyncHandler(
     // Fire-and-forget: check login achievements (future-ready for consistency_30)
     achievementService
       .checkAndUnlock(user.id, 'login')
-      .catch((err) => logger.error({ err, component: 'Achievements' }, 'Achievement check failed'));
+      .catch((err: unknown) =>
+        logger.error({ err, component: 'Achievements' }, 'Achievement check failed')
+      );
 
     const response: ApiResponse<{
       user: Partial<UserAttributes>;

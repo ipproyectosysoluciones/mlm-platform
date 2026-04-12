@@ -19,6 +19,7 @@ import { authenticate, requireAdmin } from '../middleware/auth.middleware';
 import { propertyService } from '../services/PropertyService';
 import { R2Service } from '../services/R2Service';
 import { logger } from '../utils/logger';
+import { hasStatusCode, getErrorMessage } from '../utils/HttpError.js';
 
 // ============================================
 // VALIDATION RULES
@@ -157,13 +158,15 @@ export const getProperties = [
           totalPages: Math.ceil(count / parsedLimit),
         },
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = getErrorMessage(error, 'Failed to get properties');
+      const statusCode = hasStatusCode(error) ? error.statusCode : 500;
       logger.error({ err: error }, 'Get properties error');
-      res.status(error.statusCode || 500).json({
+      res.status(statusCode).json({
         success: false,
         error: {
-          code: error.code || 'SERVER_ERROR',
-          message: error.message || 'Failed to get properties',
+          code: 'SERVER_ERROR',
+          message,
         },
       });
     }
@@ -200,13 +203,15 @@ export const getProperty = [
         success: true,
         data: property,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = getErrorMessage(error, 'Failed to get property');
+      const statusCode = hasStatusCode(error) ? error.statusCode : 500;
       logger.error({ err: error }, 'Get property error');
-      res.status(error.statusCode || 500).json({
+      res.status(statusCode).json({
         success: false,
         error: {
-          code: error.code || 'SERVER_ERROR',
-          message: error.message || 'Failed to get property',
+          code: 'SERVER_ERROR',
+          message,
         },
       });
     }
@@ -245,13 +250,15 @@ export const createProperty = [
         success: true,
         data: property,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = getErrorMessage(error, 'Failed to create property');
+      const statusCode = hasStatusCode(error) ? error.statusCode : 500;
       logger.error({ err: error }, 'Create property error');
-      res.status(error.statusCode || 500).json({
+      res.status(statusCode).json({
         success: false,
         error: {
-          code: error.code || 'SERVER_ERROR',
-          message: error.message || 'Failed to create property',
+          code: 'SERVER_ERROR',
+          message,
         },
       });
     }
@@ -290,13 +297,15 @@ export const updateProperty = [
         success: true,
         data: property,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = getErrorMessage(error, 'Failed to update property');
+      const statusCode = hasStatusCode(error) ? error.statusCode : 500;
       logger.error({ err: error }, 'Update property error');
-      res.status(error.statusCode || 500).json({
+      res.status(statusCode).json({
         success: false,
         error: {
-          code: error.code || 'SERVER_ERROR',
-          message: error.message || 'Failed to update property',
+          code: 'SERVER_ERROR',
+          message,
         },
       });
     }
@@ -335,13 +344,15 @@ export const deleteProperty = [
         success: true,
         message: 'Property deleted successfully',
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = getErrorMessage(error, 'Failed to delete property');
+      const statusCode = hasStatusCode(error) ? error.statusCode : 500;
       logger.error({ err: error }, 'Delete property error');
-      res.status(error.statusCode || 500).json({
+      res.status(statusCode).json({
         success: false,
         error: {
-          code: error.code || 'SERVER_ERROR',
-          message: error.message || 'Failed to delete property',
+          code: 'SERVER_ERROR',
+          message,
         },
       });
     }

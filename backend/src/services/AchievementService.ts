@@ -173,7 +173,7 @@ export class AchievementService {
    */
   async seedAchievements(): Promise<void> {
     for (const data of ACHIEVEMENTS_SEED) {
-      await (Achievement as any).upsert(
+      await Achievement.upsert(
         {
           key: data.key,
           name: data.name,
@@ -185,7 +185,7 @@ export class AchievementService {
           points: data.points,
           status: data.status,
         },
-        { conflictFields: ['key'] }
+        { conflictFields: ['key'] as const }
       );
     }
     logger.info({ service: 'AchievementService' }, 'Achievements seeded (8 records upserted)');
@@ -382,8 +382,8 @@ export class AchievementService {
     const results: AchievementWithProgress[] = [];
 
     for (const achievement of achievements) {
-      const userAchievements = (achievement as any).userAchievements as UserAchievement[];
-      const unlocked = userAchievements && userAchievements.length > 0 ? userAchievements[0] : null;
+      const userAchievements = achievement.userAchievements ?? [];
+      const unlocked = userAchievements.length > 0 ? userAchievements[0] : null;
 
       let current = 0;
       if (achievement.status === 'active') {
@@ -392,7 +392,7 @@ export class AchievementService {
 
       results.push({
         achievement,
-        badge: (achievement as any).badge ?? null,
+        badge: achievement.badge ?? null,
         unlockedAt: unlocked?.unlockedAt ?? null,
         progress: {
           current,

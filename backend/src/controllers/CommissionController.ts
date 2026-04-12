@@ -8,6 +8,7 @@
 import { Response } from 'express';
 import { CommissionService } from '../services/CommissionService';
 import { Purchase } from '../models';
+import type { Commission } from '../models/Commission';
 import type { ApiResponse } from '../types';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware';
 import { logger } from '../utils/logger';
@@ -49,7 +50,7 @@ export async function getCommissions(req: AuthenticatedRequest, res: Response): 
     status,
   });
 
-  const data: CommissionResponse[] = rows.map((c) => ({
+  const data: CommissionResponse[] = rows.map((c: Commission) => ({
     id: c.id,
     type: c.type,
     amount: Number(c.amount),

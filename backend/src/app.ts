@@ -1,4 +1,4 @@
-import express, { Application } from 'express';
+import express, { Application, type Request, type Response, type NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import { pinoHttp } from 'pino-http';
@@ -17,6 +17,7 @@ import paymentRoutes from './routes/payment.routes';
 import { resolveShortCode } from './controllers/GiftCardController';
 import { asyncHandler } from './middleware/asyncHandler';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
+import type { AuthenticatedRequest } from './middleware/auth.middleware.js';
 
 const app: Application = express();
 const isTest = process.env.NODE_ENV === 'test';
@@ -159,8 +160,8 @@ const orderLimiter = rateLimit({
   legacyHeaders: false,
   keyGenerator: (req) => {
     // Use user ID if authenticated, otherwise use IP
-    const user = (req as any).user;
-    return user?.id || req.ip || 'anonymous';
+    const user = (req as AuthenticatedRequest).user;
+    return user?.id?.toString() || req.ip || 'anonymous';
   },
 });
 
@@ -186,8 +187,8 @@ const twoFALimiter = rateLimit({
   legacyHeaders: false,
   keyGenerator: (req) => {
     // Use user ID if authenticated, otherwise use IP
-    const user = (req as any).user;
-    return user?.id || req.ip || 'anonymous';
+    const user = (req as AuthenticatedRequest).user;
+    return user?.id?.toString() || req.ip || 'anonymous';
   },
 });
 
@@ -218,7 +219,18 @@ app.use('/api/payment', paymentRoutes);
 // Public QR short code resolver (no auth required)
 // Resolver público de código corto QR (sin autenticación)
 // ============================================
-app.get('/q/:shortCode', asyncHandler(resolveShortCode as any));
+// Public endpoint: AuthenticatedRequest extends Request — no auth fields are used here
+// Endpoint público: AuthenticatedRequest extiende Request — no se usan campos de auth aquí
+app.get(
+  '/q/:shortCode',
+  asyncHandler(
+    resolveShortCode as unknown as (
+      req: Request,
+      res: Response,
+      next: NextFunction
+    ) => Promise<void>
+  )
+);
 
 // Sentry debug route (only in non-production)
 if (config.nodeEnv !== 'production') {
@@ -236,12 +248,16 @@ if (process.env.SENTRY_DSN && process.env.NODE_ENV !== 'test') {
 // Debug: Show all routes
 app.get('/debug/routes', (req, res) => {
   const routes: string[] = [];
+  // Express internal router stack has no public type definitions
+  // Los tipos internos del router de Express no tienen definiciones públicas
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   app._router?.stack?.forEach((middleware: any) => {
     if (middleware.route) {
       routes.push(
         `${Object.keys(middleware.route.methods).join(', ').toUpperCase()} ${middleware.route.path}`
       );
     } else if (middleware.name === 'router') {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       middleware.handle?.stack?.forEach((handler: any) => {
         if (handler.route) {
           routes.push(

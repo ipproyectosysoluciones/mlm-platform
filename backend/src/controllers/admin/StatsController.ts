@@ -146,11 +146,11 @@ export async function getCommissionsReport(
           type: c.type,
           amount: Number(c.amount),
           status: c.status,
-          userEmail: (c as any).user?.email,
-          fromUserEmail: (c as any).fromUser?.email,
+          userEmail: c.user?.email,
+          fromUserEmail: c.fromUser?.email,
           createdAt: c.createdAt,
         })),
-        byType: byType.map((b: any) => ({
+        byType: byType.map((b: { type: string; total: string | number }) => ({
           type: b.type,
           total: Number(b.total),
         })),

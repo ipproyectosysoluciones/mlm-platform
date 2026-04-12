@@ -9,6 +9,7 @@ import { Request, Response } from 'express';
 import { ContractService } from '../services/ContractService';
 import { type AuthenticatedRequest } from '../middleware/auth.middleware';
 import { logger } from '../utils/logger';
+import { hasStatusCode, getErrorMessage } from '../utils/HttpError.js';
 
 const contractService = new ContractService();
 
@@ -109,12 +110,12 @@ export async function getContract(req: Request, res: Response): Promise<void> {
       success: true,
       data: contract,
     });
-  } catch (error: any) {
-    if (error.statusCode === 404) {
+  } catch (error: unknown) {
+    if (hasStatusCode(error) && error.statusCode === 404) {
       res.status(404).json({
         success: false,
         error: {
-          code: error.code,
+          code: error.name,
           message: error.message,
         },
       });
@@ -182,23 +183,23 @@ export async function acceptContract(req: AuthenticatedRequest, res: Response): 
       message: 'Contract accepted successfully',
       data: acceptance,
     });
-  } catch (error: any) {
-    if (error.statusCode === 400) {
+  } catch (error: unknown) {
+    if (hasStatusCode(error) && error.statusCode === 400) {
       res.status(400).json({
         success: false,
         error: {
-          code: error.code,
+          code: error.name,
           message: error.message,
         },
       });
       return;
     }
 
-    if (error.statusCode === 404) {
+    if (hasStatusCode(error) && error.statusCode === 404) {
       res.status(404).json({
         success: false,
         error: {
-          code: error.code,
+          code: error.name,
           message: error.message,
         },
       });
@@ -255,12 +256,12 @@ export async function declineContract(req: AuthenticatedRequest, res: Response):
       message: 'Contract declined',
       data: decline,
     });
-  } catch (error: any) {
-    if (error.statusCode === 404) {
+  } catch (error: unknown) {
+    if (hasStatusCode(error) && error.statusCode === 404) {
       res.status(404).json({
         success: false,
         error: {
-          code: error.code,
+          code: error.name,
           message: error.message,
         },
       });
