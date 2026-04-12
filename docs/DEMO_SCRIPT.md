@@ -1,4 +1,4 @@
-# DEMO_SCRIPT.md — Nexo Real v2.3.0
+# DEMO_SCRIPT.md — Nexo Real v2.6.1
 
 > **Audiencia**: Inversores y equipo de ventas  
 > **Duración estimada**: 15–20 minutos  

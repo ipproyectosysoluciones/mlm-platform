@@ -2,9 +2,9 @@
 
 ## Nexo Real — Plataforma SaaS de Servicios Inmobiliarios, Turismo y Afiliaciones
 
-**Version**: 2.4.0  
-**Status**: ✅ v2.4.0 Released  
-**Last Updated**: 2026-04-10  
+**Version**: 2.6.1  
+**Status**: ✅ v2.6.1 Released  
+**Last Updated**: 2026-04-12  
 **Document Owner**: Nexo Real Development Team  
 **Tagline**: _"Conectamos tu negocio con el mundo."_
 
@@ -33,7 +33,7 @@ Las agencias inmobiliarias, hoteles, hosterías y operadores turísticos en LATA
 3. **CRM integrado** — Gestión de leads, tareas, comunicaciones, y agendamiento
 4. **Integraciones n8n** — Google Calendar, Notion, notificación a agente humano
 
-> **Status**: v2.2.0 RELEASED ✅
+> **Status**: v2.6.1 RELEASED ✅
 
 ---
 
@@ -325,7 +325,7 @@ ORM:        Sequelize 6
 Email:      Brevo (SMTP + API)
 SMS:        Brevo SMS
 Payments:   PayPal SDK + MercadoPago SDK
-Testing:    Jest (307+ tests)
+Testing:    Jest (667 tests, 49 suites) + Bot Vitest (62 tests)
 ```
 
 ## Frontend
@@ -541,13 +541,13 @@ _Nexo Real — "Conectamos tu negocio con el mundo."_
 
 ## Sprint Status
 
-| Sprint     | Versión | Descripción                                                                                                          | Estado         | Fecha      |
-| ---------- | ------- | -------------------------------------------------------------------------------------------------------------------- | -------------- | ---------- |
-| Sprint 1-3 | v1.11.0 | Auth, MLM, CRM, E-commerce, Security, Marketplace                                                                    | ✅ Completado  | 2026-04-04 |
-| Sprint 4   | v2.0.0  | Nexo Bot WhatsApp, n8n Automation, Gamificación                                                                      | ✅ Completado  | 2026-04-06 |
-| Sprint 5   | v2.1.0  | Real Estate Frontend, Tourism Frontend, Reservation Wizard                                                           | ✅ Completado  | 2026-04-07 |
-| Sprint 6   | v2.2.0  | Admin Dashboard CRUD, Nexo Bot Flows (properties+tours), SEO Frontend, Build Hardening, i18n cleanup, CodeQL fixes   | ✅ Completado  | 2026-04-07 |
-| Sprint 7   | v2.3.5  | UI/UX Rebranding completo (landing Nexo Real, auth skin, AppLayout), Vitest 90%+ coverage, E2E Playwright, PWA       | ✅ Completado  | 2026-04-09 |
-| Sprint 8   | v2.4.0  | RBAC 9 roles + endpoints register/guest y updateUserRole + Seed Nexo Real colombiano (Unilevel)                      | ✅ Completado  | 2026-04-10 |
-| Sprint 9   | v3.0.0  | Bot Completo: flows de ventas, onboarding, gestión de reservas, WhatsApp Business API                                | 📋 Planificado | —          |
-| Sprint 8   | v2.4.0  | Bot completo: Knowledge Base FAQ, n8n workflows (Calendar+Notion), captación leads, onboarding afiliados, objeciones | 📋 Planificado | —          |
+| Sprint     | Versión | Descripción                                                                                                                         | Estado         | Fecha      |
+| ---------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------- | -------------- | ---------- |
+| Sprint 1-3 | v1.11.0 | Auth, MLM, CRM, E-commerce, Security, Marketplace                                                                                   | ✅ Completado  | 2026-04-04 |
+| Sprint 4   | v2.0.0  | Nexo Bot WhatsApp, n8n Automation, Gamificación                                                                                     | ✅ Completado  | 2026-04-06 |
+| Sprint 5   | v2.1.0  | Real Estate Frontend, Tourism Frontend, Reservation Wizard                                                                          | ✅ Completado  | 2026-04-07 |
+| Sprint 6   | v2.2.0  | Admin Dashboard CRUD, Nexo Bot Flows (properties+tours), SEO Frontend, Build Hardening, i18n cleanup, CodeQL fixes                  | ✅ Completado  | 2026-04-07 |
+| Sprint 7   | v2.3.5  | UI/UX Rebranding completo (landing Nexo Real, auth skin, AppLayout), Vitest 90%+ coverage, E2E Playwright, PWA                      | ✅ Completado  | 2026-04-09 |
+| Sprint 8   | v2.4.0  | Bot Production-Ready, RBAC 9 roles, PostgreSQL adapter, Docker Hub, n8n workflows, seed Nexo Real                                   | ✅ Completado  | 2026-04-10 |
+| Sprint 9   | v2.6.1  | Technical Debt — Pino logger, eliminate `any` types, bot Vitest (62 tests), PLATFORM_DOMAIN, controller tests (667), pitch deck     | ✅ Completado  | 2026-04-12 |
+| Sprint 10  | v3.0.0  | Stabilization — Payment webhooks, invoices DB migration, disable crypto wallet, admin CRUD, 2FA testing, commission model migration | 📋 Planificado | —          |

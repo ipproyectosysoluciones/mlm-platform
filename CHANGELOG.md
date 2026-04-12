@@ -4,6 +4,48 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
+## [2.5.0] - 2026-04-12
+
+### Added — Sprint 9: Technical Debt & Quality
+
+- **Pino Logger Migration** — Winston → Pino structured JSON logging across entire backend; all `console.log` and Winston calls replaced with Pino logger
+- **Eliminate all explicit `any` types** — removed every explicit `any` from backend production code (39 files audited and fixed)
+- **Bot Vitest Test Infrastructure** — 8 test files, 62 tests covering all bot flows and services (Vitest)
+- **PLATFORM_DOMAIN environment variable** — removed all hardcoded `nexoreal.xyz` references; domain now configurable via env var
+- **Controller Test Coverage Expansion** — 9 new test files, backend tests expanded from 540 → 667 tests (49 suites)
+- **Investor Pitch Deck** — 12-slide HTML presentation for investor demos
+
+### Tests
+
+- Backend: 49 suites / 667 tests (Jest) ✅
+- Bot: 8 files / 62 tests (Vitest) ✅
+- **Total platform: ~729 backend+bot tests**
+
+---
+
+## [2.4.0] - 2026-04-10
+
+### Added — Sprint 8: Bot Migration & Docker Hub
+
+- **Bot PostgreSQL Adapter Migration** — MemoryDB → PostgreSQL; bot conversation history persists across container restarts
+- **Docker Hub Image Publishing** — `ipproyectos/mlm-backend` and `ipproyectos/mlm-bot` images published to Docker Hub via CD workflows
+- **Bot Conversation Persistence** — conversations survive bot restarts thanks to PostgreSQL adapter
+- **Docker Compose Profiles** — selective service startup with `--profile` flag (backend, bot, n8n, all)
+- **RBAC 9 Roles** — super_admin, admin, finance, sales, advisor, vendor, user, guest, bot
+- **Bot Knowledge Base** — prompt_kb/ with FAQ, objection handling, onboarding, lead capture guides baked into Docker image
+- **n8n Workflows** — Google Calendar (schedule-visit) + Notion CRM (human-handoff) fully wired
+- **Bot Lead Capture** — email + area of interest captured in welcome flow, persisted to DB
+- **Seed Nexo Real Colombiano** — Unilevel tree with 12 Colombian users, 6 products, CommissionConfig
+
+### Tests
+
+- Backend: 39 suites / 540 tests (Jest) ✅
+- Frontend Unit: 34 files / ~446 tests (Vitest) ✅
+- Frontend E2E: 22 specs / ~262 tests (Playwright) ✅
+- **Total: ~1,248 tests**
+
+---
+
 ## [2.3.5] - 2026-04-09
 
 ### Fixed
