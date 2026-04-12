@@ -10,6 +10,7 @@ import type {
   LoginRequest,
   RegisterRequest,
   AuthResponse,
+  AuthLoginResponse,
   DashboardData,
   TreeNode,
   User,
@@ -97,13 +98,13 @@ export const authService = {
   },
 
   /**
-   * Register new user
-   * Registrar nuevo usuario
+   * Register new user — always returns token + user (no 2FA on registration)
+   * Registrar nuevo usuario — siempre retorna token + usuario (no 2FA en registro)
    * @param {RegisterRequest} data - Registration data / Datos de registro
-   * @returns {Promise<AuthResponse>} Auth response with token and user / Respuesta con token y usuario
+   * @returns {Promise<AuthLoginResponse>} Auth response with token and user / Respuesta con token y usuario
    */
-  register: async (data: RegisterRequest): Promise<AuthResponse> => {
-    const response = await api.post<{ success: boolean; data: AuthResponse }>(
+  register: async (data: RegisterRequest): Promise<AuthLoginResponse> => {
+    const response = await api.post<{ success: boolean; data: AuthLoginResponse }>(
       '/auth/register',
       data
     );

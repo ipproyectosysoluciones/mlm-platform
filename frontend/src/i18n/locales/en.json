@@ -161,7 +161,14 @@
     "recoveryCodesTitle": "Recovery Codes",
     "recoveryCodesSubtitle": "Save these codes in a safe place",
     "recoveryCodesWarning": "These codes are the only way to access your account if you lose your device. Each code can only be used once.",
-    "continue": "I understand"
+    "continue": "I understand",
+    "loginTitle": "Two-Step Verification",
+    "loginSubtitle": "Enter the 6-digit code from your authenticator app",
+    "loginEnterCode": "Verification code",
+    "loginVerify": "Verify",
+    "loginLockedOut": "Too many failed attempts. Please sign in again.",
+    "loginInvalidCode": "Invalid code. Please try again.",
+    "loginRecoveryHint": "If you lost access to your authenticator, use a recovery code."
   },
   "position": {
     "left": "Left",
