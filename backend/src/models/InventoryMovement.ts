@@ -71,7 +71,8 @@ InventoryMovement.init(
     type: {
       type: DataTypes.ENUM('initial', 'reserve', 'release', 'adjust', 'return'),
       allowNull: false,
-      comment: 'Movement type: initial, reserve, release, adjust, return',
+      // NOTE: no `comment` on ENUM columns — Sequelize v6 generates invalid SQL
+      // with USING clause inside COMMENT ON during sync({ force: true })
     },
     quantity: {
       type: DataTypes.INTEGER,

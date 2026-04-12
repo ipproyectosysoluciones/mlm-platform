@@ -75,7 +75,8 @@ WebhookEvent.init(
     provider: {
       type: DataTypes.ENUM('paypal', 'mercadopago', 'stripe'),
       allowNull: false,
-      comment: 'Payment provider that sent the webhook',
+      // NOTE: no `comment` on ENUM columns — Sequelize v6 generates invalid SQL
+      // with USING clause inside COMMENT ON during sync({ force: true })
     },
     eventType: {
       type: DataTypes.STRING(100),

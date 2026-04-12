@@ -131,7 +131,8 @@ Order.init(
       allowNull: true,
       defaultValue: 'not_required',
       field: 'shipping_status',
-      comment: 'Shipping status for the order',
+      // NOTE: no `comment` on ENUM columns — Sequelize v6 generates invalid SQL
+      // with USING clause inside COMMENT ON during sync({ force: true })
     },
   },
   {

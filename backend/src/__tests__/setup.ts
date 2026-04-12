@@ -59,6 +59,7 @@ beforeAll(async () => {
     InventoryMovement,
     ContractTemplate,
     AffiliateContract,
+    WorkflowExecution,
   } = await import('../models');
 
   // Models imported for side-effect: registering with sequelize instance
@@ -91,6 +92,7 @@ beforeAll(async () => {
   void InventoryMovement;
   void ContractTemplate;
   void AffiliateContract;
+  void WorkflowExecution;
 
   console.log('Models registered');
 
@@ -174,6 +176,7 @@ beforeEach(async () => {
     'gift_cards',
     'communications',
     'tasks',
+    'workflow_executions',
     'leads',
     'purchases',
     'commissions',
