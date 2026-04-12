@@ -6,13 +6,13 @@
 
 La plataforma MLM está construida con una arquitectura de API RESTful, separando claramente el backend (Node.js + Express + TypeScript + Sequelize + PostgreSQL) del frontend (React + Vite + TypeScript + Tailwind CSS). A partir de la v2.0.0 se incorpora un canal de atención por WhatsApp (Nexo Bot) orquestado por n8n para automatizaciones externas.
 
-**Estado del Proyecto**: v2.3.5 — Sprint 7 Completado ✅
+**Estado del Proyecto**: v2.6.1 — Sprint 9 Completado ✅
 
 **Características Implementadas**:
 
 - Autenticación JWT con rate limiting
-- Árbol binario con Closure Table
-- Sistema de comisiones de 5 niveles (configurable)
+- Árbol binario con Closure Table ⚠️ _Migration planned: Binary → Unilevel (10 levels) in Sprint 10_
+- Sistema de comisiones de 5 niveles (configurable) ⚠️ _Migrating to 10-level Unilevel in Sprint 10_
 - Dashboard con estadísticas y gráficos
 - Generación de códigos QR
 - Panel de administración
@@ -29,7 +29,7 @@ La plataforma MLM está construida con una arquitectura de API RESTful, separand
 - **Marketplace Multi-vendor**: Vendor, VendorProduct, VendorOrder, split de comisiones 3-way
 - **Delivery Integration**: ShippingAddress, DeliveryProvider, ShipmentTracking
 - **Affiliate Contracts MVP**: ContractTemplate, AffiliateContract con versionado y hash
-- 307 tests automatizados
+- Backend: 49 suites, 667 tests (Jest) | Bot: 8 files, 62 tests (Vitest) | Total: ~729 automated tests
 - **WhatsApp Bot (Nexo Bot)**: BuilderBot + Baileys, 7 flujos conversacionales, IA (GPT-4o)
 - **n8n Automation**: orquestación de webhooks → Google Calendar + Notion CRM
 - **Sprint 4 Tests**: cobertura frontend de 155 → 210 tests
@@ -135,13 +135,13 @@ backend/src/
 
 The MLM platform is built with a RESTful API architecture, clearly separating the backend (Node.js + Express + TypeScript + Sequelize + PostgreSQL) from the frontend (React + Vite + TypeScript + Tailwind CSS).
 
-**Project Status**: v2.3.5 — Sprint 7 Completed ✅
+**Project Status**: v2.6.1 — Sprint 9 Completed ✅
 
 **Implemented Features**:
 
 - JWT Authentication with rate limiting
-- Binary Tree with Closure Table
-- 5-level Commission System (configurable)
+- Binary Tree with Closure Table ⚠️ _Migration planned: Binary → Unilevel (10 levels) in Sprint 10_
+- 5-level Commission System (configurable) ⚠️ _Migrating to 10-level Unilevel in Sprint 10_
 - Dashboard with stats and charts
 - QR Code Generation
 - Admin Panel
@@ -158,7 +158,7 @@ The MLM platform is built with a RESTful API architecture, clearly separating th
 - **Marketplace Multi-vendor**: Vendor, VendorProduct, VendorOrder, 3-way commission split
 - **Delivery Integration**: ShippingAddress, DeliveryProvider, ShipmentTracking
 - **Affiliate Contracts MVP**: ContractTemplate, AffiliateContract with versioning and hash
-- 307 automated tests
+- Backend: 49 suites, 667 tests (Jest) | Bot: 8 files, 62 tests (Vitest) | Total: ~729 automated tests
 - **WhatsApp Bot (Nexo Bot)**: BuilderBot + Baileys, 7 conversation flows, AI (GPT-4o)
 - **n8n Automation**: webhook orchestration → Google Calendar + Notion CRM
 - **Sprint 4 Tests**: frontend coverage from 155 → 210 tests
@@ -842,8 +842,8 @@ Content-Type: application/json
 | Sophia | Spanish  | Cálida asesora de Nexo Real |
 | Max    | English  | Friendly Nexo Real advisor  |
 
-Both agents use **GPT-4o** with a shared conversation history stored in bot state (MemoryDB).  
-Can be upgraded to PostgreSQLDB in a future sprint for persistence across restarts.
+Both agents use **GPT-4o** with a shared conversation history stored in **PostgreSQLDB** (migrated from MemoryDB in Sprint 8).  
+Persistence survives across bot restarts.
 
 ---
 
@@ -877,11 +877,12 @@ export default defineConfig({
 });
 ```
 
-### Overall Test Summary (v2.0.0)
+### Overall Test Summary (v2.6.1)
 
-| Layer          | Count   | Framework        |
-| -------------- | ------- | ---------------- |
-| Backend tests  | 307     | Jest + Supertest |
-| Frontend tests | 210     | Vitest + RTL     |
-| E2E tests      | 37      | Playwright       |
-| **TOTAL**      | **554** | **All passing**  |
+| Layer          | Count     | Framework        |
+| -------------- | --------- | ---------------- |
+| Backend tests  | 667       | Jest + Supertest |
+| Bot tests      | 62        | Vitest           |
+| Frontend tests | 446       | Vitest + RTL     |
+| E2E tests      | 262       | Playwright       |
+| **TOTAL**      | **1,437** | **All passing**  |
