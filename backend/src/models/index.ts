@@ -36,6 +36,7 @@ import { DeliveryProvider } from './DeliveryProvider';
 import { ShipmentTracking } from './ShipmentTracking';
 import { ContractTemplate } from './ContractTemplate';
 import { AffiliateContract } from './AffiliateContract';
+import { Invoice } from './Invoice';
 import { Achievement } from './Achievement';
 import { Badge } from './Badge';
 import { UserAchievement } from './UserAchievement';
@@ -413,6 +414,18 @@ AffiliateContract.belongsTo(User, {
   targetKey: 'id',
 });
 
+// ============================================
+// INVOICES — Invoice System (#153)
+// ============================================
+
+// User - Invoice (one user, many invoices)
+User.hasMany(Invoice, { foreignKey: 'userId', sourceKey: 'id' });
+Invoice.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
+
+// Order - Invoice (one order, many invoices)
+Order.hasMany(Invoice, { foreignKey: 'orderId', sourceKey: 'id' });
+Invoice.belongsTo(Order, { as: 'order', foreignKey: 'orderId', targetKey: 'id' });
+
 // ── Achievement / Badge / UserAchievement associations ────────────────────────
 Achievement.hasOne(Badge, { as: 'badge', foreignKey: 'achievementId', sourceKey: 'id' });
 Badge.belongsTo(Achievement, { foreignKey: 'achievementId', targetKey: 'id' });
@@ -524,6 +537,7 @@ export {
   ShipmentTracking,
   ContractTemplate,
   AffiliateContract,
+  Invoice,
   Achievement,
   Badge,
   UserAchievement,
