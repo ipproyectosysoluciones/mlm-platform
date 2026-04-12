@@ -20,6 +20,7 @@ import { AchievementService } from './AchievementService';
 import { LeaderboardService } from './LeaderboardService';
 import { body } from 'express-validator';
 import type { ProductType, ShippingStatus } from '../types';
+import { logger } from '../utils/logger';
 
 const achievementService = new AchievementService();
 const leaderboardService = new LeaderboardService();
@@ -243,7 +244,10 @@ export class OrderService {
           }
         } catch (commissionError) {
           // Log and throw AppError so that transaction is rolled back and error is propagated
-          console.error('Commission calculation failed:', commissionError);
+          logger.error(
+            { service: 'OrderService', err: commissionError },
+            'Commission calculation failed'
+          );
           throw new AppError(
             500,
             'COMMISSION_ERROR',
@@ -258,7 +262,12 @@ export class OrderService {
       // Fire-and-forget achievement check after successful order creation
       achievementService
         .checkAndUnlock(userId, 'sale_completed')
-        .catch((err) => console.error('[Achievements]', err));
+        .catch((err) =>
+          logger.error(
+            { service: 'OrderService', err },
+            'Achievement check failed after order creation'
+          )
+        );
 
       // Reload order with associations
       return (await Order.findByPk(order.id, {
@@ -423,7 +432,12 @@ export class OrderService {
       // Fire-and-forget achievement check — never blocks main flow
       achievementService
         .checkAndUnlock(order.userId, 'sale_completed')
-        .catch((err) => console.error('[Achievements]', err));
+        .catch((err) =>
+          logger.error(
+            { service: 'OrderService', err },
+            'Achievement check failed after status update'
+          )
+        );
     }
 
     return order;

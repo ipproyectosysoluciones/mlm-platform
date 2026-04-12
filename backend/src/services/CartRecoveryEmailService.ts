@@ -18,6 +18,7 @@
 import { Cart, CartItem, CartRecoveryToken, Product, User } from '../models';
 import { emailService } from './EmailService';
 import { config } from '../config/env';
+import { logger } from '../utils/logger';
 
 /**
  * CartRecoveryEmailService - Composes and sends abandoned cart recovery emails
@@ -109,7 +110,10 @@ export class CartRecoveryEmailService {
       { where: { cartId, usedAt: null } }
     );
 
-    console.log(`[CartRecoveryEmail] Sent recovery email to ${user.email} for cart ${cartId}`);
+    logger.info(
+      { service: 'CartRecoveryEmailService', email: user.email, cartId },
+      'Sent recovery email'
+    );
   }
 
   /**

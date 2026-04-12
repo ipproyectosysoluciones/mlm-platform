@@ -21,6 +21,7 @@ import { body, param, query, validationResult } from 'express-validator';
 import { authenticate, requireAdmin } from '../middleware/auth.middleware';
 import { tourPackageService } from '../services/TourPackageService';
 import { R2Service } from '../services/R2Service';
+import { logger } from '../utils/logger';
 
 // ============================================
 // VALIDATION RULES
@@ -172,7 +173,7 @@ export const getTourPackages = [
         },
       });
     } catch (error: any) {
-      console.error('Get tour packages error:', error);
+      logger.error({ err: error }, 'Get tour packages error');
       res.status(error.statusCode || 500).json({
         success: false,
         error: {
@@ -215,7 +216,7 @@ export const getTourPackage = [
         data: tourPackage,
       });
     } catch (error: any) {
-      console.error('Get tour package error:', error);
+      logger.error({ err: error }, 'Get tour package error');
       res.status(error.statusCode || 500).json({
         success: false,
         error: {
@@ -260,7 +261,7 @@ export const createTourPackage = [
         data: tourPackage,
       });
     } catch (error: any) {
-      console.error('Create tour package error:', error);
+      logger.error({ err: error }, 'Create tour package error');
       res.status(error.statusCode || 500).json({
         success: false,
         error: {
@@ -305,7 +306,7 @@ export const updateTourPackage = [
         data: tourPackage,
       });
     } catch (error: any) {
-      console.error('Update tour package error:', error);
+      logger.error({ err: error }, 'Update tour package error');
       res.status(error.statusCode || 500).json({
         success: false,
         error: {
@@ -347,7 +348,7 @@ export const deleteTourPackage = [
 
       res.status(204).send();
     } catch (error: any) {
-      console.error('Delete tour package error:', error);
+      logger.error({ err: error }, 'Delete tour package error');
       res.status(error.statusCode || 500).json({
         success: false,
         error: {

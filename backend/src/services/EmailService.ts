@@ -15,6 +15,7 @@
  */
 import nodemailer from 'nodemailer';
 import { config } from '../config/env';
+import { logger } from '../utils/logger';
 
 /**
  * EmailService - Brevo SMTP email delivery
@@ -54,7 +55,7 @@ export class EmailService {
       });
       return true;
     } catch (error) {
-      console.error('Email send failed (Brevo SMTP):', error);
+      logger.error({ service: 'EmailService', err: error }, 'Email send failed (Brevo SMTP)');
       return false;
     }
   }

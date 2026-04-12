@@ -5,6 +5,7 @@
  */
 import axios from 'axios';
 import { config } from '../config/env';
+import { logger } from '../utils/logger';
 
 /**
  * SMSService - Brevo SMS delivery
@@ -56,7 +57,10 @@ export class SMSService {
       // (storage logic would be in NotificationService or AuthController)
       return { success: true };
     } catch (error: any) {
-      console.error('SMS send failed (Brevo API):', error.response?.data || error.message);
+      logger.error(
+        { service: 'SMSService', err: error, responseData: error.response?.data },
+        'SMS send failed (Brevo API)'
+      );
       return {
         success: false,
         error: error.response?.data?.message || 'Unknown error sending SMS',

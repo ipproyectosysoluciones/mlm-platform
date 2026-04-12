@@ -11,6 +11,23 @@
 // MOCKS — Deben ir ANTES de los imports
 // ============================================
 
+// Mock logger (must come BEFORE imports that use it)
+jest.mock('../../utils/logger', () => ({
+  logger: {
+    info: jest.fn(),
+    error: jest.fn(),
+    warn: jest.fn(),
+    debug: jest.fn(),
+    fatal: jest.fn(),
+    child: jest.fn().mockReturnValue({
+      info: jest.fn(),
+      error: jest.fn(),
+      warn: jest.fn(),
+      debug: jest.fn(),
+    }),
+  },
+}));
+
 // Mock config/env
 jest.mock('../../config/env', () => ({
   config: {
@@ -39,7 +56,10 @@ const mockFetch = jest.fn();
 global.fetch = mockFetch;
 
 import { BrevoEmailService, brevoEmailService } from '../../services/BrevoEmailService';
+import { logger } from '../../utils/logger';
 import nodemailer from 'nodemailer';
+
+const mockedLogger = logger as jest.Mocked<typeof logger>;
 
 // ============================================
 // TEST HELPERS
@@ -66,15 +86,8 @@ describe('BrevoEmailService', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.spyOn(console, 'log').mockImplementation();
-    jest.spyOn(console, 'error').mockImplementation();
-    jest.spyOn(console, 'warn').mockImplementation();
     // Create fresh instance to reset circuit breaker
     service = new BrevoEmailService();
-  });
-
-  afterEach(() => {
-    jest.restoreAllMocks();
   });
 
   // ============================================
@@ -264,15 +277,17 @@ describe('BrevoEmailService', () => {
 
       await service.sendEmail(defaultParams);
 
-      expect(console.error).toHaveBeenCalledWith(
-        expect.stringContaining('[BrevoEmailService] REST API failed:')
-        // Not checking exact message — just that error was logged
+      expect(mockedLogger.error).toHaveBeenCalledWith(
+        expect.objectContaining({ err: expect.any(Error), service: 'BrevoEmailService' }),
+        'REST API failed'
       );
-      expect(console.log).toHaveBeenCalledWith(
-        expect.stringContaining('[BrevoEmailService] Falling back to SMTP')
+      expect(mockedLogger.info).toHaveBeenCalledWith(
+        expect.objectContaining({ service: 'BrevoEmailService' }),
+        'Falling back to SMTP'
       );
-      expect(console.log).toHaveBeenCalledWith(
-        expect.stringContaining('[BrevoEmailService] Circuit breaker:')
+      expect(mockedLogger.info).toHaveBeenCalledWith(
+        expect.objectContaining({ service: 'BrevoEmailService', failures: expect.any(Number) }),
+        'Circuit breaker failure count incremented'
       );
     });
 

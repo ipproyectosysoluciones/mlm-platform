@@ -13,6 +13,7 @@
 import cron from 'node-cron';
 import { User, Commission } from '../models';
 import { emailService } from './EmailService';
+import { logger } from '../utils/logger';
 
 /**
  * Weekly digest cron schedule - Every Sunday at 9:00 AM UTC
@@ -62,7 +63,7 @@ export class NotificationService {
    * Enviar resumen semanal a todos los usuarios con weeklyDigest habilitado
    */
   async sendWeeklyDigestEmails(): Promise<void> {
-    console.log('[NotificationService] Starting weekly digest job...');
+    logger.info({ service: 'NotificationService' }, 'Starting weekly digest job');
 
     try {
       // Get all users with weekly digest enabled
@@ -73,7 +74,10 @@ export class NotificationService {
         },
       });
 
-      console.log(`[NotificationService] Sending weekly digest to ${users.length} users`);
+      logger.info(
+        { service: 'NotificationService', userCount: users.length },
+        'Sending weekly digest to users'
+      );
 
       let sentCount = 0;
       let failedCount = 0;
@@ -98,19 +102,20 @@ export class NotificationService {
 
           sentCount++;
         } catch (error) {
-          console.error(
-            `[NotificationService] Failed to send weekly digest to ${user.email}:`,
-            error
+          logger.error(
+            { err: error, service: 'NotificationService', email: user.email },
+            'Failed to send weekly digest'
           );
           failedCount++;
         }
       }
 
-      console.log(
-        `[NotificationService] Weekly digest job completed. Sent: ${sentCount}, Failed: ${failedCount}`
+      logger.info(
+        { service: 'NotificationService', sentCount, failedCount },
+        'Weekly digest job completed'
       );
     } catch (error) {
-      console.error('[NotificationService] Weekly digest job failed:', error);
+      logger.error({ err: error, service: 'NotificationService' }, 'Weekly digest job failed');
     }
   }
 
@@ -120,17 +125,20 @@ export class NotificationService {
    */
   startWeeklyDigest(): void {
     if (this.weeklyDigestJob) {
-      console.log('[NotificationService] Weekly digest job already running');
+      logger.warn({ service: 'NotificationService' }, 'Weekly digest job already running');
       return;
     }
 
-    console.log(`[NotificationService] Starting weekly digest cron: ${WEEKLY_DIGEST_CRON}`);
+    logger.info(
+      { service: 'NotificationService', cron: WEEKLY_DIGEST_CRON },
+      'Starting weekly digest cron'
+    );
 
     this.weeklyDigestJob = cron.schedule(WEEKLY_DIGEST_CRON, async () => {
       await this.sendWeeklyDigestEmails();
     });
 
-    console.log('[NotificationService] Weekly digest job started');
+    logger.info({ service: 'NotificationService' }, 'Weekly digest job started');
   }
 
   /**
@@ -141,7 +149,7 @@ export class NotificationService {
     if (this.weeklyDigestJob) {
       this.weeklyDigestJob.stop();
       this.weeklyDigestJob = null;
-      console.log('[NotificationService] Weekly digest job stopped');
+      logger.info({ service: 'NotificationService' }, 'Weekly digest job stopped');
     }
   }
 }

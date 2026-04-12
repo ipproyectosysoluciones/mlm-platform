@@ -23,6 +23,7 @@ import crypto from 'crypto';
 import { sequelize } from '../config/database';
 import { GiftCard, QrMapping, GiftCardTransaction, User } from '../models';
 import { qrService } from './QRService';
+import { logger } from '../utils/logger';
 import {
   GIFT_CARD_STATUS,
   GIFT_CARD_TRANSACTION_TYPE,
@@ -85,7 +86,10 @@ export class GiftCardService {
         qrCodeData = await qrService.generateGiftCardQR(shortCode);
       } catch {
         // QR generation failure — continue with null (placeholder)
-        console.error('QR generation failed, continuing without QR code data');
+        logger.error(
+          { service: 'GiftCardService' },
+          'QR generation failed, continuing without QR code data'
+        );
       }
 
       // Create gift card

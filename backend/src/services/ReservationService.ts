@@ -18,6 +18,7 @@ import { WhereOptions } from 'sequelize';
 import { Reservation, Property, TourPackage, TourAvailability, User } from '../models';
 import type { ReservationAttributes, ReservationCreationAttributes } from '../models/Reservation';
 import { CalendarService } from './CalendarService';
+import { logger } from '../utils/logger';
 
 // ============================================
 // TYPES
@@ -306,7 +307,7 @@ export class ReservationService {
       vendorId: reservation.vendorId ?? null,
     };
     calendarService.notifyReservationConfirmed(payload).catch((err: unknown) => {
-      console.error('[ReservationService] Calendar sync error:', err);
+      logger.error({ service: 'ReservationService', err }, 'Calendar sync error');
     });
 
     return reservation;

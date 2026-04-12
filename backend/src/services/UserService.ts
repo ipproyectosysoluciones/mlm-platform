@@ -12,6 +12,7 @@ import { TreeService } from './TreeService';
 import { AppError } from '../middleware/error.middleware';
 import { leaderboardService } from './LeaderboardService';
 import { achievementService } from './AchievementService';
+import { logger } from '../utils/logger';
 
 const treeService = new TreeService();
 
@@ -104,7 +105,9 @@ export class UserService {
     if (sponsorId) {
       achievementService
         .checkAndUnlock(sponsorId, 'referral_added')
-        .catch((err: unknown) => console.error('[Achievements]', err));
+        .catch((err: unknown) =>
+          logger.error({ service: 'UserService', err }, 'Achievement check failed for sponsor')
+        );
     }
 
     return user;

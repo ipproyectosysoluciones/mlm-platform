@@ -25,6 +25,7 @@ import { User, Commission, Purchase, CommissionConfig } from '../models';
 import { COMMISSION_RATES } from '../types';
 import { walletService } from './WalletService';
 import { emailService } from './EmailService';
+import { logger } from '../utils/logger';
 
 export class CommissionService {
   /**
@@ -92,7 +93,9 @@ export class CommissionService {
           amount: Number(directCommission.amount),
           currency: purchase.currency,
         })
-        .catch((err) => console.error('Commission email failed:', err));
+        .catch((err) =>
+          logger.error({ service: 'CommissionService', err }, 'Commission email failed')
+        );
     }
 
     const commissionTypeMap: Record<number, 'level_1' | 'level_2' | 'level_3' | 'level_4'> = {
@@ -260,7 +263,10 @@ export class CommissionService {
         const commission = await this.approveCommission(id);
         approved.push(commission);
       } catch (error) {
-        console.error(`Error approving commission ${id}:`, error);
+        logger.error(
+          { service: 'CommissionService', err: error, commissionId: id },
+          'Error approving commission'
+        );
       }
     }
 
@@ -392,8 +398,9 @@ export class CommissionService {
     // Verify: vendorAmount + platformNet + sum(mlm) === price
     const verification = this.roundDecimal(vendorAmount + platformNet + totalMlm, 2);
     if (verification !== this.roundDecimal(price, 2)) {
-      console.warn(
-        `[CommissionService] Commission math verification failed: ${verification} !== ${this.roundDecimal(price, 2)}`
+      logger.warn(
+        { service: 'CommissionService', verification, expected: this.roundDecimal(price, 2) },
+        'Commission math verification failed'
       );
     }
 

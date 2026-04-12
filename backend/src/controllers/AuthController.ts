@@ -35,6 +35,7 @@ import { achievementService } from '../services/AchievementService';
 import { config } from '../config/env';
 import type { ApiResponse, UserAttributes } from '../types';
 import { AppError } from '../middleware/error.middleware';
+import { logger } from '../utils/logger';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware';
 import { asyncHandler } from '../middleware/asyncHandler';
 import { Lead } from '../models/Lead';
@@ -125,7 +126,7 @@ export const register: RequestHandler = asyncHandler(
         referralCode: user.referralCode,
         referralLink,
       })
-      .catch((err) => console.error('Welcome email failed:', err));
+      .catch((err) => logger.error({ err }, 'Welcome email failed'));
 
     // If user has sponsor, notify sponsor about new downline
     // Si el usuario tiene patrocinador, notificar al patrocinador sobre nuevo downline
@@ -139,7 +140,7 @@ export const register: RequestHandler = asyncHandler(
             newUserEmail: user.email,
             position: user.position || 'unknown',
           })
-          .catch((err) => console.error('Downline email failed:', err));
+          .catch((err) => logger.error({ err }, 'Downline email failed'));
       }
     }
 
@@ -215,7 +216,7 @@ export const login: RequestHandler = asyncHandler(
     // Fire-and-forget: check login achievements (future-ready for consistency_30)
     achievementService
       .checkAndUnlock(user.id, 'login')
-      .catch((err) => console.error('[Achievements]', err));
+      .catch((err) => logger.error({ err, component: 'Achievements' }, 'Achievement check failed'));
 
     const response: ApiResponse<{
       user: Partial<UserAttributes>;

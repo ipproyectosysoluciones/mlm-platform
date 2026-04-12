@@ -1,4 +1,5 @@
 import { sequelize } from '../config/database';
+import { logger } from '../utils/logger';
 import { User } from './User';
 import { UserClosure } from './UserClosure';
 import { Commission } from './Commission';
@@ -534,5 +535,5 @@ export {
 };
 
 export function initModels(): void {
-  console.log('✅ Models initialized');
+  logger.info('Models initialized');
 }

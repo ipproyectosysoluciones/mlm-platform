@@ -32,6 +32,7 @@ import { EmailCampaign } from '../models';
 import { Op } from 'sequelize';
 import { EMAIL_CAMPAIGN_STATUS } from '../types';
 import { config } from '../config/env';
+import { logger } from '../utils/logger';
 
 /**
  * Abandoned cart detection cron: every 15 minutes
@@ -66,31 +67,43 @@ export class SchedulerService {
    */
   start(): void {
     if (this.isRunning) {
-      console.log('⚠️  Scheduler already running');
+      logger.warn({ service: 'SchedulerService' }, 'Scheduler already running');
       return;
     }
 
     // Daily payout job at midnight UTC
     this.job = cron.schedule(config.wallet.cronTime, async () => {
-      console.log('📋 Running daily payout job...');
+      logger.info({ service: 'SchedulerService' }, 'Running daily payout job');
       try {
         const processed = await walletService.processDailyPayouts();
-        console.log(`✅ Processed ${processed.length} withdrawal requests`);
+        logger.info(
+          { service: 'SchedulerService', count: processed.length },
+          'Processed withdrawal requests'
+        );
       } catch (error) {
-        console.error('❌ Error processing daily payouts:', error);
+        logger.error({ err: error, service: 'SchedulerService' }, 'Error processing daily payouts');
       }
     });
 
     // Abandoned cart detection job every 15 minutes
     this.abandonedCartJob = cron.schedule(ABANDONED_CART_CRON, async () => {
-      console.log('🛒 Running abandoned cart detection job...');
+      logger.info({ service: 'SchedulerService' }, 'Running abandoned cart detection job');
       try {
         const result = await this.runAbandonedCartJob();
-        console.log(
-          `✅ Abandoned cart job: ${result.processed} processed, ${result.emailsSent} emails sent, ${result.errors} errors`
+        logger.info(
+          {
+            service: 'SchedulerService',
+            processed: result.processed,
+            emailsSent: result.emailsSent,
+            errors: result.errors,
+          },
+          'Abandoned cart job completed'
         );
       } catch (error) {
-        console.error('❌ Error running abandoned cart job:', error);
+        logger.error(
+          { err: error, service: 'SchedulerService' },
+          'Error running abandoned cart job'
+        );
       }
     });
 
@@ -102,7 +115,10 @@ export class SchedulerService {
       try {
         await this.emailCampaignSchedulerJob();
       } catch (error) {
-        console.error('❌ Error running email campaign scheduler job:', error);
+        logger.error(
+          { err: error, service: 'SchedulerService' },
+          'Error running email campaign scheduler job'
+        );
       }
     });
 
@@ -111,16 +127,24 @@ export class SchedulerService {
       try {
         await this.emailQueueProcessorJob();
       } catch (error) {
-        console.error('❌ Error running email queue processor job:', error);
+        logger.error(
+          { err: error, service: 'SchedulerService' },
+          'Error running email queue processor job'
+        );
       }
     });
 
-    console.log('📋 Scheduler initialized');
-    console.log(`   Daily payout: ${config.wallet.cronTime}`);
-    console.log(`   Abandoned cart detection: ${ABANDONED_CART_CRON}`);
-    console.log(`   Email campaign scheduler: ${EMAIL_CAMPAIGN_CRON}`);
-    console.log(`   Email queue processor: ${EMAIL_QUEUE_CRON}`);
-    console.log(`   Weekly digest: Every Sunday at 9:00 AM UTC`);
+    logger.info(
+      {
+        service: 'SchedulerService',
+        dailyPayout: config.wallet.cronTime,
+        abandonedCart: ABANDONED_CART_CRON,
+        emailCampaign: EMAIL_CAMPAIGN_CRON,
+        emailQueue: EMAIL_QUEUE_CRON,
+        weeklyDigest: 'Every Sunday at 9:00 AM UTC',
+      },
+      'Scheduler initialized'
+    );
 
     this.isRunning = true;
   }
@@ -149,7 +173,7 @@ export class SchedulerService {
     // Stop weekly digest job
     notificationService.stopWeeklyDigest();
     this.isRunning = false;
-    console.log('🛑 Scheduler stopped');
+    logger.info({ service: 'SchedulerService' }, 'Scheduler stopped');
   }
 
   /**
@@ -159,13 +183,16 @@ export class SchedulerService {
    * @returns Number of processed withdrawals / Número de retiros procesados
    */
   async triggerPayout(): Promise<number> {
-    console.log('📋 Manually triggered daily payout processing...');
+    logger.info({ service: 'SchedulerService' }, 'Manually triggered daily payout processing');
     try {
       const processed = await walletService.processDailyPayouts();
-      console.log(`✅ Processed ${processed.length} withdrawal requests`);
+      logger.info(
+        { service: 'SchedulerService', count: processed.length },
+        'Processed withdrawal requests'
+      );
       return processed.length;
     } catch (error) {
-      console.error('❌ Error processing daily payouts:', error);
+      logger.error({ err: error, service: 'SchedulerService' }, 'Error processing daily payouts');
       throw error;
     }
   }
@@ -196,7 +223,10 @@ export class SchedulerService {
         return stats;
       }
 
-      console.log(`[AbandonedCartJob] Found ${abandonedCarts.length} abandoned carts`);
+      logger.info(
+        { service: 'AbandonedCartJob', count: abandonedCarts.length },
+        'Found abandoned carts'
+      );
 
       // 2. Process each cart individually (graceful degradation)
       for (const cart of abandonedCarts) {
@@ -213,18 +243,24 @@ export class SchedulerService {
             await cartRecoveryEmailService.sendRecoveryEmail(cart.id, token.tokenPlain);
             stats.emailsSent++;
           } catch (emailError) {
-            console.error(`[AbandonedCartJob] Email failed for cart ${cart.id}:`, emailError);
+            logger.error(
+              { err: emailError, service: 'AbandonedCartJob', cartId: cart.id },
+              'Email failed for cart'
+            );
             stats.errors++;
             // Cart already marked abandoned — email can be retried manually or on next cycle
             // if the cart is re-activated by user and abandoned again
           }
         } catch (cartError) {
-          console.error(`[AbandonedCartJob] Error processing cart ${cart.id}:`, cartError);
+          logger.error(
+            { err: cartError, service: 'AbandonedCartJob', cartId: cart.id },
+            'Error processing cart'
+          );
           stats.errors++;
         }
       }
     } catch (error) {
-      console.error('[AbandonedCartJob] Fatal error:', error);
+      logger.error({ err: error, service: 'AbandonedCartJob' }, 'Fatal error');
       throw error;
     }
 
@@ -242,7 +278,7 @@ export class SchedulerService {
     emailsSent: number;
     errors: number;
   }> {
-    console.log('🛒 Manually triggered abandoned cart detection...');
+    logger.info({ service: 'SchedulerService' }, 'Manually triggered abandoned cart detection');
     return this.runAbandonedCartJob();
   }
 
@@ -281,8 +317,9 @@ export class SchedulerService {
       return 0;
     }
 
-    console.log(
-      `[EmailCampaignScheduler] Found ${scheduledCampaigns.length} scheduled campaigns to send`
+    logger.info(
+      { service: 'EmailCampaignScheduler', count: scheduledCampaigns.length },
+      'Found scheduled campaigns to send'
     );
 
     let triggered = 0;
@@ -290,11 +327,19 @@ export class SchedulerService {
       try {
         await emailCampaignService.sendCampaign(campaign.id);
         triggered++;
-        console.log(
-          `[EmailCampaignScheduler] Triggered campaign ${campaign.id} (${campaign.name})`
+        logger.info(
+          {
+            service: 'EmailCampaignScheduler',
+            campaignId: campaign.id,
+            campaignName: campaign.name,
+          },
+          'Triggered campaign'
         );
       } catch (error) {
-        console.error(`[EmailCampaignScheduler] Error triggering campaign ${campaign.id}:`, error);
+        logger.error(
+          { err: error, service: 'EmailCampaignScheduler', campaignId: campaign.id },
+          'Error triggering campaign'
+        );
         // Graceful degradation: continue with next campaign
       }
     }

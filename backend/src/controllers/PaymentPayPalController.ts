@@ -8,6 +8,7 @@ import { Request, Response } from 'express';
 import { asyncHandler } from '../middleware/asyncHandler.js';
 import { paypalService } from '../services/PayPalService.js';
 import { ResponseUtil } from '../utils/response.util.js';
+import { logger } from '../utils/logger';
 
 /**
  * PayPal order ID format: alphanumeric, 17 characters
@@ -118,7 +119,7 @@ export class PaymentPayPalController {
     // Verify webhook signature
     const isValid = await paypalService.verifyWebhookSignature(headers, body);
     if (!isValid) {
-      console.error('[PayPal Webhook] Invalid signature');
+      logger.error({ component: 'PayPal Webhook' }, 'Invalid signature');
       return res
         .status(403)
         .json(
@@ -130,32 +131,38 @@ export class PaymentPayPalController {
 
     // Check idempotency
     if (paypalService.isIdempotent(event.resource?.id)) {
-      console.log('[PayPal Webhook] Duplicate event, skipping:', event.resource?.id);
+      logger.info(
+        { component: 'PayPal Webhook', resourceId: event.resource?.id },
+        'Duplicate event, skipping'
+      );
       return res.status(200).json({ received: true, duplicate: true });
     }
 
-    console.log('[PayPal Webhook]', event.event_type, event.resource?.id);
+    logger.info(
+      { component: 'PayPal Webhook', eventType: event.event_type, resourceId: event.resource?.id },
+      'Webhook event received'
+    );
 
     switch (event.event_type) {
       case 'CHECKOUT.ORDER.APPROVED':
         // Order was approved by user
-        console.log('[PayPal] Order approved:', event.resource?.id);
+        logger.info({ component: 'PayPal', resourceId: event.resource?.id }, 'Order approved');
         break;
 
       case 'PAYMENT.CAPTURE.COMPLETED':
         // Payment successfully captured
-        console.log('[PayPal] Payment completed:', event.resource?.id);
+        logger.info({ component: 'PayPal', resourceId: event.resource?.id }, 'Payment completed');
         // TODO: Trigger commission calculation
         break;
 
       case 'PAYMENT.CAPTURE.REFUNDED':
         // Payment was refunded
-        console.log('[PayPal] Payment refunded:', event.resource?.id);
+        logger.info({ component: 'PayPal', resourceId: event.resource?.id }, 'Payment refunded');
         // TODO: Reverse commissions if applicable
         break;
 
       default:
-        console.log('[PayPal] Unhandled event:', event.event_type);
+        logger.info({ component: 'PayPal', eventType: event.event_type }, 'Unhandled event');
     }
 
     // Mark as processed for idempotency

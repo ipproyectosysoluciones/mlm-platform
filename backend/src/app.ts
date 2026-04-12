@@ -1,8 +1,8 @@
 import express, { Application } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-import pino from 'pino';
 import { pinoHttp } from 'pino-http';
+import { logger } from './utils/logger';
 import rateLimit from 'express-rate-limit';
 import swaggerUi from 'swagger-ui-express';
 import * as Sentry from '@sentry/node';
@@ -25,17 +25,8 @@ const isProduction = process.env.NODE_ENV === 'production';
 // Trust proxy for ngrok/reverse proxy support
 app.set('trust proxy', 1);
 
-/**
- * HTTP request logger — pino-http (ESM-native replacement for morgan)
- * Logger de requests HTTP — pino-http (reemplazo ESM-nativo de morgan)
- * - Production: JSON structured logs (Grafana/Loki-ready)
- * - Development: pino-pretty colorized output
- */
-const logger = pino({
-  level: isProduction ? 'info' : 'debug',
-  ...(isProduction ? {} : { transport: { target: 'pino-pretty' } }),
-});
-
+// HTTP request logger — pino-http powered by centralized logger
+// Logger de requests HTTP — pino-http con logger centralizado
 if (!isTest) {
   app.use(pinoHttp({ logger }));
 }
