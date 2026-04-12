@@ -17,6 +17,7 @@ import { orderService } from '../../services/OrderService';
 import type { ApiResponse, OrderAttributes } from '../../types';
 import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
 import { asyncHandler } from '../../middleware/asyncHandler';
+import { logger } from '../../utils/logger';
 
 /**
  * UUID validation regex
@@ -73,7 +74,7 @@ const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12
  */
 export const createOrder: RequestHandler = asyncHandler(
   async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-    console.log('[DEBUG] createOrder called, req.user:', req.user?.id);
+    logger.debug({ userId: req.user?.id }, 'createOrder called');
 
     // Check authentication
     if (!req.user) {

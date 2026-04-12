@@ -17,6 +17,7 @@
  */
 import { Request, Response } from 'express';
 import { reservationService } from '../services/ReservationService';
+import { logger } from '../utils/logger';
 
 // ============================================
 // HANDLERS
@@ -56,7 +57,7 @@ export const getReservations = async (req: Request, res: Response): Promise<void
       },
     });
   } catch (error: any) {
-    console.error('Get reservations error:', error);
+    logger.error({ err: error }, 'Get reservations error');
     res.status(error.statusCode || 500).json({
       success: false,
       error: {
@@ -83,7 +84,7 @@ export const getReservation = async (req: Request, res: Response): Promise<void>
       data: reservation,
     });
   } catch (error: any) {
-    console.error('Get reservation error:', error);
+    logger.error({ err: error }, 'Get reservation error');
     res.status(error.statusCode || 500).json({
       success: false,
       error: {
@@ -110,7 +111,7 @@ export const createReservation = async (req: Request, res: Response): Promise<vo
       data: reservation,
     });
   } catch (error: any) {
-    console.error('Create reservation error:', error);
+    logger.error({ err: error }, 'Create reservation error');
     res.status(error.statusCode || 500).json({
       success: false,
       error: {
@@ -137,7 +138,7 @@ export const updateReservation = async (req: Request, res: Response): Promise<vo
       data: reservation,
     });
   } catch (error: any) {
-    console.error('Update reservation error:', error);
+    logger.error({ err: error }, 'Update reservation error');
     res.status(error.statusCode || 500).json({
       success: false,
       error: {
@@ -164,7 +165,7 @@ export const cancelReservation = async (req: Request, res: Response): Promise<vo
       data: reservation,
     });
   } catch (error: any) {
-    console.error('Cancel reservation error:', error);
+    logger.error({ err: error }, 'Cancel reservation error');
     res.status(error.statusCode || 500).json({
       success: false,
       error: {
@@ -191,7 +192,7 @@ export const confirmReservation = async (req: Request, res: Response): Promise<v
       data: reservation,
     });
   } catch (error: any) {
-    console.error('Confirm reservation error:', error);
+    logger.error({ err: error }, 'Confirm reservation error');
     res.status(error.statusCode || 500).json({
       success: false,
       error: {

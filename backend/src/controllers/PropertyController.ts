@@ -18,6 +18,7 @@ import { body, param, query, validationResult } from 'express-validator';
 import { authenticate, requireAdmin } from '../middleware/auth.middleware';
 import { propertyService } from '../services/PropertyService';
 import { R2Service } from '../services/R2Service';
+import { logger } from '../utils/logger';
 
 // ============================================
 // VALIDATION RULES
@@ -157,7 +158,7 @@ export const getProperties = [
         },
       });
     } catch (error: any) {
-      console.error('Get properties error:', error);
+      logger.error({ err: error }, 'Get properties error');
       res.status(error.statusCode || 500).json({
         success: false,
         error: {
@@ -200,7 +201,7 @@ export const getProperty = [
         data: property,
       });
     } catch (error: any) {
-      console.error('Get property error:', error);
+      logger.error({ err: error }, 'Get property error');
       res.status(error.statusCode || 500).json({
         success: false,
         error: {
@@ -245,7 +246,7 @@ export const createProperty = [
         data: property,
       });
     } catch (error: any) {
-      console.error('Create property error:', error);
+      logger.error({ err: error }, 'Create property error');
       res.status(error.statusCode || 500).json({
         success: false,
         error: {
@@ -290,7 +291,7 @@ export const updateProperty = [
         data: property,
       });
     } catch (error: any) {
-      console.error('Update property error:', error);
+      logger.error({ err: error }, 'Update property error');
       res.status(error.statusCode || 500).json({
         success: false,
         error: {
@@ -335,7 +336,7 @@ export const deleteProperty = [
         message: 'Property deleted successfully',
       });
     } catch (error: any) {
-      console.error('Delete property error:', error);
+      logger.error({ err: error }, 'Delete property error');
       res.status(error.statusCode || 500).json({
         success: false,
         error: {

@@ -17,6 +17,8 @@
  * await calendarService.notifyReservationConfirmed({ reservationId: '123', ... });
  */
 
+import { logger } from '../utils/logger';
+
 // ============================================
 // TYPES / TIPOS
 // ============================================
@@ -86,7 +88,10 @@ export class CalendarService {
    */
   async notifyReservationConfirmed(payload: CalendarEventPayload): Promise<void> {
     if (!this.webhookUrl) {
-      console.warn('[CalendarService] N8N_CALENDAR_WEBHOOK_URL not set, skipping calendar sync');
+      logger.warn(
+        { service: 'CalendarService' },
+        'N8N_CALENDAR_WEBHOOK_URL not set, skipping calendar sync'
+      );
       return;
     }
 
@@ -101,14 +106,17 @@ export class CalendarService {
       });
 
       if (!response.ok) {
-        console.error(`[CalendarService] n8n webhook returned ${response.status}`);
+        logger.error(
+          { service: 'CalendarService', statusCode: response.status },
+          'n8n webhook returned non-OK status'
+        );
       }
     } catch (error) {
       // Non-blocking — log error but don't throw
       // (calendar sync failure should not break booking flow)
       // No bloqueante — registrar error pero no lanzar
       // (el fallo de sincronización no debe romper el flujo de reserva)
-      console.error('[CalendarService] Failed to notify n8n webhook:', error);
+      logger.error({ service: 'CalendarService', err: error }, 'Failed to notify n8n webhook');
     }
   }
 }

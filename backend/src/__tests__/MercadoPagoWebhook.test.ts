@@ -13,6 +13,23 @@
 
 import { createHmac } from 'crypto';
 
+// ─── Mock logger (must come before controller import) ────────────────────────
+jest.mock('../utils/logger', () => ({
+  logger: {
+    info: jest.fn(),
+    error: jest.fn(),
+    warn: jest.fn(),
+    debug: jest.fn(),
+    fatal: jest.fn(),
+    child: jest.fn().mockReturnValue({
+      info: jest.fn(),
+      error: jest.fn(),
+      warn: jest.fn(),
+      debug: jest.fn(),
+    }),
+  },
+}));
+
 // ─── Mock database (must come before any model import) ───────────────────────
 jest.mock('../config/database', () => ({
   sequelize: {
@@ -126,6 +143,9 @@ jest.mock('../utils/response.util.js', () => ({
 // ─── Now import the real service and controller (after all mocks) ─────────────
 import { PaymentMercadoPagoController } from '../controllers/PaymentMercadoPagoController.js';
 import { Order, Purchase, Product } from '../models/index.js';
+import { logger } from '../utils/logger';
+
+const mockedLogger = logger as jest.Mocked<typeof logger>;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -411,8 +431,6 @@ describe('MercadoPago — webhook handler', () => {
 
     mockGetPayment.mockResolvedValue(mockApprovedPayment);
 
-    const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-
     const { req, res } = buildReqRes({
       query: { topic: 'payment' },
       body: { id: PAYMENT_ID, topic: 'payment' },
@@ -422,7 +440,8 @@ describe('MercadoPago — webhook handler', () => {
     await (PaymentMercadoPagoController.webhook as (...args: unknown[]) => Promise<void>)(req, res);
 
     // Should have logged a warning about missing secret
-    expect(consoleSpy).toHaveBeenCalledWith(
+    expect(mockedLogger.warn).toHaveBeenCalledWith(
+      expect.objectContaining({ component: 'MercadoPago Webhook' }),
       expect.stringContaining('MERCADOPAGO_WEBHOOK_SECRET not configured')
     );
 
@@ -432,8 +451,6 @@ describe('MercadoPago — webhook handler', () => {
 
     // Returns 200
     expect(res.status).toHaveBeenCalledWith(200);
-
-    consoleSpy.mockRestore();
   });
 
   /**

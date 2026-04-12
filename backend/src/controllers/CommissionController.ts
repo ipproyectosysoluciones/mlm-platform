@@ -10,6 +10,7 @@ import { CommissionService } from '../services/CommissionService';
 import { Purchase } from '../models';
 import type { ApiResponse } from '../types';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware';
+import { logger } from '../utils/logger';
 
 const commissionService = new CommissionService();
 
@@ -128,7 +129,7 @@ export async function createPurchase(req: AuthenticatedRequest, res: Response): 
   try {
     await commissionService.calculateCommissions(purchase.id);
   } catch (error) {
-    console.error('Error calculating commissions:', error);
+    logger.error({ err: error }, 'Error calculating commissions');
   }
 
   const response: ApiResponse<{

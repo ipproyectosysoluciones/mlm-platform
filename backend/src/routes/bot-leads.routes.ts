@@ -11,6 +11,7 @@ import { Router, Request, Response } from 'express';
 import { asyncHandler } from '../middleware/asyncHandler';
 import { sequelize } from '../config/database';
 import { v4 as uuidv4 } from 'uuid';
+import { logger } from '../utils/logger';
 
 const router = Router();
 
@@ -46,7 +47,10 @@ router.post(
 
     const systemUserId = process.env.BOT_SYSTEM_USER_ID;
     if (!systemUserId) {
-      console.error('[BotLeads] BOT_SYSTEM_USER_ID is not set — cannot persist lead');
+      logger.error(
+        { component: 'BotLeads' },
+        'BOT_SYSTEM_USER_ID is not set — cannot persist lead'
+      );
       res.status(500).json({ success: false, message: 'Server misconfiguration' });
       return;
     }

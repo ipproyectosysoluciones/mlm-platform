@@ -16,6 +16,7 @@ import { vendorService } from '../services/VendorService';
 import { authenticate, requireAdmin } from '../middleware/auth.middleware';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware';
 import { body, validationResult } from 'express-validator';
+import { logger } from '../utils/logger';
 
 /**
  * List vendors with pagination and filters
@@ -47,7 +48,7 @@ export const listVendors = [
         },
       });
     } catch (error: any) {
-      console.error('List vendors error:', error);
+      logger.error({ err: error }, 'List vendors error');
       res.status(500).json({
         success: false,
         error: {
@@ -78,7 +79,7 @@ export const getVendor = [
         data: vendor,
       });
     } catch (error: any) {
-      console.error('Get vendor error:', error);
+      logger.error({ err: error }, 'Get vendor error');
       res.status(error.statusCode || 500).json({
         success: false,
         error: {
@@ -111,7 +112,7 @@ export const approveVendor = [
         message: 'Vendor approved successfully',
       });
     } catch (error: any) {
-      console.error('Approve vendor error:', error);
+      logger.error({ err: error }, 'Approve vendor error');
       res.status(error.statusCode || 500).json({
         success: false,
         error: {
@@ -159,7 +160,7 @@ export const rejectVendor = [
         message: 'Vendor rejected',
       });
     } catch (error: any) {
-      console.error('Reject vendor error:', error);
+      logger.error({ err: error }, 'Reject vendor error');
       res.status(error.statusCode || 500).json({
         success: false,
         error: {
@@ -207,7 +208,7 @@ export const suspendVendor = [
         message: 'Vendor suspended',
       });
     } catch (error: any) {
-      console.error('Suspend vendor error:', error);
+      logger.error({ err: error }, 'Suspend vendor error');
       res.status(error.statusCode || 500).json({
         success: false,
         error: {
@@ -258,7 +259,7 @@ export const updateCommissionRate = [
         message: 'Commission rate updated',
       });
     } catch (error: any) {
-      console.error('Update commission rate error:', error);
+      logger.error({ err: error }, 'Update commission rate error');
       res.status(error.statusCode || 500).json({
         success: false,
         error: {

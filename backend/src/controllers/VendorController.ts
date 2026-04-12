@@ -19,6 +19,7 @@ import { authenticate, requireVendor } from '../middleware/auth.middleware';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware';
 import { body, validationResult } from 'express-validator';
 import { Product } from '../models';
+import { logger } from '../utils/logger';
 
 // Validation rules
 export const vendorValidationRules = {
@@ -76,7 +77,7 @@ export const registerVendor = [
         data: vendor,
       });
     } catch (error: any) {
-      console.error('Register vendor error:', error);
+      logger.error({ err: error }, 'Register vendor error');
       res.status(error.statusCode || 500).json({
         success: false,
         error: {
@@ -119,7 +120,7 @@ export const getVendorProfile = [
         data: vendor,
       });
     } catch (error: any) {
-      console.error('Get vendor profile error:', error);
+      logger.error({ err: error }, 'Get vendor profile error');
       res.status(500).json({
         success: false,
         error: {
@@ -179,7 +180,7 @@ export const getVendorProducts = [
         },
       });
     } catch (error: any) {
-      console.error('Get vendor products error:', error);
+      logger.error({ err: error }, 'Get vendor products error');
       res.status(500).json({
         success: false,
         error: {
@@ -224,7 +225,7 @@ export const getVendorDashboard = [
         data: dashboard,
       });
     } catch (error: any) {
-      console.error('Get vendor dashboard error:', error);
+      logger.error({ err: error }, 'Get vendor dashboard error');
       res.status(500).json({
         success: false,
         error: {
@@ -284,7 +285,7 @@ export const requestPayout = [
         data: payout,
       });
     } catch (error: any) {
-      console.error('Request payout error:', error);
+      logger.error({ err: error }, 'Request payout error');
       res.status(error.statusCode || 500).json({
         success: false,
         error: {

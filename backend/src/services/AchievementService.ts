@@ -18,6 +18,7 @@ import { QueryTypes } from 'sequelize';
 import { sequelize } from '../config/database';
 import { Achievement, Badge, UserAchievement } from '../models';
 import type { AchievementConditionType } from '../models/Achievement';
+import { logger } from '../utils/logger';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -187,7 +188,7 @@ export class AchievementService {
         { conflictFields: ['key'] }
       );
     }
-    console.log('✅ Achievements seeded (8 records upserted)');
+    logger.info({ service: 'AchievementService' }, 'Achievements seeded (8 records upserted)');
   }
 
   // ── Progress helpers ───────────────────────────────────────────────────────
@@ -332,14 +333,20 @@ export class AchievementService {
           });
 
           if (created) {
-            console.log(
-              `[Achievements] 🏆 User ${userId} unlocked "${achievement.name}" (${achievement.key})`
+            logger.info(
+              {
+                service: 'AchievementService',
+                userId,
+                achievementName: achievement.name,
+                achievementKey: achievement.key,
+              },
+              'User unlocked achievement'
             );
           }
         }
       }
     } catch (err) {
-      console.error('[Achievements] checkAndUnlock error:', err);
+      logger.error({ service: 'AchievementService', err }, 'checkAndUnlock error');
       // Never propagate — fire-and-forget safety
     }
   }

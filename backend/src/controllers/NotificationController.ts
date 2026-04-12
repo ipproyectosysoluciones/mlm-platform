@@ -22,6 +22,7 @@ import { Request, Response } from 'express';
 import { User } from '../models/User';
 import { smsService } from '../services/SMSService';
 import { ResponseUtil } from '../utils/response.util';
+import { logger } from '../utils/logger';
 
 // In-memory store for 2FA codes (use Redis in production)
 // Almacenamiento en memoria para códigos 2FA (usar Redis en producción)
@@ -62,7 +63,7 @@ export async function getNotificationPreferences(req: Request, res: Response): P
       },
     });
   } catch (error) {
-    console.error('Error getting notification preferences:', error);
+    logger.error({ err: error }, 'Error getting notification preferences');
     res.status(500).json(ResponseUtil.error('INTERNAL_ERROR', 'Internal server error', 500));
   }
 }
@@ -116,7 +117,7 @@ export async function updateNotificationPreferences(req: Request, res: Response)
       },
     });
   } catch (error) {
-    console.error('Error updating notification preferences:', error);
+    logger.error({ err: error }, 'Error updating notification preferences');
     res.status(500).json(ResponseUtil.error('INTERNAL_ERROR', 'Internal server error', 500));
   }
 }
@@ -186,7 +187,7 @@ export async function enable2FA(req: Request, res: Response): Promise<void> {
       maskedPhone,
     });
   } catch (error) {
-    console.error('Error enabling 2FA:', error);
+    logger.error({ err: error }, 'Error enabling 2FA');
     res.status(500).json(ResponseUtil.error('INTERNAL_ERROR', 'Internal server error', 500));
   }
 }
@@ -261,7 +262,7 @@ export async function verify2FA(req: Request, res: Response): Promise<void> {
       message: '2FA enabled successfully',
     });
   } catch (error) {
-    console.error('Error verifying 2FA:', error);
+    logger.error({ err: error }, 'Error verifying 2FA');
     res.status(500).json(ResponseUtil.error('INTERNAL_ERROR', 'Internal server error', 500));
   }
 }
@@ -300,7 +301,7 @@ export async function disable2FA(req: Request, res: Response): Promise<void> {
       message: '2FA disabled successfully',
     });
   } catch (error) {
-    console.error('Error disabling 2FA:', error);
+    logger.error({ err: error }, 'Error disabling 2FA');
     res.status(500).json(ResponseUtil.error('INTERNAL_ERROR', 'Internal server error', 500));
   }
 }

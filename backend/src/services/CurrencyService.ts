@@ -6,6 +6,8 @@
  * @author MLM Development Team
  */
 
+import { logger } from '../utils/logger';
+
 const FRANKFURTER_API = 'https://api.frankfurter.dev';
 
 /**
@@ -56,7 +58,7 @@ async function fetchExchangeRates(): Promise<Record<string, number>> {
       ...data.rates,
     };
   } catch (error) {
-    console.error('CurrencyService: Failed to fetch exchange rates:', error);
+    logger.error({ err: error, service: 'CurrencyService' }, 'Failed to fetch exchange rates');
     throw error;
   }
 }
@@ -107,7 +109,7 @@ export async function convertToUSD(amount: number, fromCurrency: string): Promis
     if (from === CURRENCY.EUR) {
       const usdRate = rates[CURRENCY.USD];
       if (!usdRate) {
-        console.warn('CurrencyService: USD rate not found, using 1:1 fallback');
+        logger.warn({ service: 'CurrencyService' }, 'USD rate not found, using 1:1 fallback');
         return amount;
       }
       return amount * usdRate;
@@ -120,7 +122,10 @@ export async function convertToUSD(amount: number, fromCurrency: string): Promis
     const eurToUsd = rates[CURRENCY.USD];
 
     if (!sourceToEur || !eurToUsd) {
-      console.warn(`CurrencyService: Missing rate for ${from} or USD, using 1:1 fallback`);
+      logger.warn(
+        { service: 'CurrencyService', fromCurrency: from },
+        'Missing rate, using 1:1 fallback'
+      );
       return amount;
     }
 
@@ -131,7 +136,7 @@ export async function convertToUSD(amount: number, fromCurrency: string): Promis
 
     return Math.round(amountInUSD * 100) / 100;
   } catch (error) {
-    console.error('CurrencyService: Conversion failed, using fallback:', error);
+    logger.error({ err: error, service: 'CurrencyService' }, 'Conversion failed, using fallback');
     // Fallback: return 1:1 if API fails
     return amount;
   }
@@ -166,7 +171,10 @@ export async function convertCurrency(
     const toRate = rates[to];
 
     if (!fromRate || !toRate) {
-      console.warn(`CurrencyService: Missing rate for ${from} or ${to}, using 1:1 fallback`);
+      logger.warn(
+        { service: 'CurrencyService', fromCurrency: from, toCurrency: to },
+        'Missing rate, using 1:1 fallback'
+      );
       return amount;
     }
 
@@ -176,7 +184,7 @@ export async function convertCurrency(
 
     return Math.round(converted * 100) / 100;
   } catch (error) {
-    console.error('CurrencyService: Conversion failed, using fallback:', error);
+    logger.error({ err: error, service: 'CurrencyService' }, 'Conversion failed, using fallback');
     return amount;
   }
 }

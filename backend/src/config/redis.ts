@@ -7,6 +7,7 @@
  */
 
 import Redis from 'ioredis';
+import { logger } from '../utils/logger';
 
 let redis: Redis | null = null;
 
@@ -36,7 +37,7 @@ export function getRedis(): Redis | null {
 
   // Skip Redis if not configured
   if (process.env.REDIS_ENABLED !== 'true') {
-    console.log('⚠️ Redis disabled (set REDIS_ENABLED=true to enable)');
+    logger.warn('Redis disabled (set REDIS_ENABLED=true to enable)');
     return null;
   }
 
@@ -53,17 +54,17 @@ export function getRedis(): Redis | null {
     });
 
     redis.on('connect', () => {
-      console.log('✅ Redis connected');
+      logger.info('Redis connected');
     });
 
     redis.on('error', (err) => {
-      console.error('❌ Redis error:', err.message);
+      logger.error({ err }, 'Redis error');
       redis = null;
     });
 
     return redis;
   } catch (error) {
-    console.error('❌ Redis init failed:', error);
+    logger.error({ err: error }, 'Redis init failed');
     return null;
   }
 }

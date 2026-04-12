@@ -22,6 +22,7 @@
 import webpush from 'web-push';
 import { PushSubscription } from '../models';
 import { getWebPush, validateVapid } from '../utils/vapid';
+import { logger } from '../utils/logger';
 
 export interface PushNotificationPayload {
   title: string;
@@ -65,7 +66,7 @@ export class PushService {
     });
 
     if (subscriptions.length === 0) {
-      console.log(`[PushService] No subscriptions found for user ${userId}`);
+      logger.info({ service: 'PushService', userId }, 'No subscriptions found for user');
       return 0;
     }
 
@@ -94,27 +95,35 @@ export class PushService {
       } catch (error) {
         // Handle specific web-push errors
         if (error instanceof webpush.WebPushError) {
-          console.error(
-            `[PushService] Failed to send to endpoint: ${subscription.endpoint.slice(0, 50)}...`
+          logger.error(
+            { service: 'PushService', endpoint: subscription.endpoint.slice(0, 50) },
+            'Failed to send to endpoint'
           );
 
           // 410 Gone - Subscription is no longer valid, delete it
           if (error.statusCode === 410) {
-            console.log(`[PushService] Subscription expired, deleting: ${subscription.id}`);
+            logger.info(
+              { service: 'PushService', subscriptionId: subscription.id },
+              'Subscription expired, deleting'
+            );
             await subscription.destroy();
           }
           // 401 or 403 - VAPID keys might be invalid
           else if (error.statusCode === 401 || error.statusCode === 403) {
-            console.error('[PushService] VAPID authentication failed, check keys');
+            logger.error({ service: 'PushService' }, 'VAPID authentication failed, check keys');
           }
         } else {
-          console.error('[PushService] Unknown error sending notification:', error);
+          logger.error(
+            { err: error, service: 'PushService' },
+            'Unknown error sending notification'
+          );
         }
       }
     }
 
-    console.log(
-      `[PushService] Sent ${successCount}/${subscriptions.length} notifications to user ${userId}`
+    logger.info(
+      { service: 'PushService', successCount, totalCount: subscriptions.length, userId },
+      'Sent notifications to user'
     );
     return successCount;
   }
@@ -144,13 +153,14 @@ export class PushService {
           totalFailed++;
         }
       } catch (error) {
-        console.error(`[PushService] Error broadcasting to user ${userId}:`, error);
+        logger.error({ err: error, service: 'PushService', userId }, 'Error broadcasting to user');
         totalFailed++;
       }
     }
 
-    console.log(
-      `[PushService] Broadcast completed: ${totalSuccessful} sent, ${totalFailed} failed`
+    logger.info(
+      { service: 'PushService', successful: totalSuccessful, failed: totalFailed },
+      'Broadcast completed'
     );
 
     return {
@@ -194,8 +204,14 @@ export class PushService {
     if (existing) {
       // Update existing subscription with new user
       if (existing.userId !== userId) {
-        console.log(
-          `[PushService] Updating subscription ownership: ${existing.id} (user: ${existing.userId} -> ${userId})`
+        logger.info(
+          {
+            service: 'PushService',
+            subscriptionId: existing.id,
+            previousUserId: existing.userId,
+            newUserId: userId,
+          },
+          'Updating subscription ownership'
         );
         await existing.update({ userId, browser });
       }
@@ -210,7 +226,10 @@ export class PushService {
       browser,
     });
 
-    console.log(`[PushService] New subscription created: ${newSubscription.id}`);
+    logger.info(
+      { service: 'PushService', subscriptionId: newSubscription.id },
+      'New subscription created'
+    );
     return newSubscription;
   }
 
@@ -227,12 +246,18 @@ export class PushService {
     });
 
     if (!subscription) {
-      console.log(`[PushService] Subscription not found: ${endpoint.slice(0, 50)}...`);
+      logger.info(
+        { service: 'PushService', endpoint: endpoint.slice(0, 50) },
+        'Subscription not found'
+      );
       return false;
     }
 
     await subscription.destroy();
-    console.log(`[PushService] Subscription removed: ${subscription.id}`);
+    logger.info(
+      { service: 'PushService', subscriptionId: subscription.id },
+      'Subscription removed'
+    );
     return true;
   }
 
