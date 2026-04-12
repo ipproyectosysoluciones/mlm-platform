@@ -19,6 +19,9 @@ export type LeadSource =
   | 'other'
   | 'whatsapp_bot';
 
+/** Automation tracking status: manual | automated | mixed */
+export type AutomationStatus = 'manual' | 'automated' | 'mixed';
+
 interface LeadAttributes {
   id: string;
   userId: string; // User who owns this lead (affiliate)
@@ -36,11 +39,18 @@ interface LeadAttributes {
   lastContactAt: Date | null;
   nextFollowUpAt: Date | null;
   metadata: Record<string, unknown>;
+  /** Automation tracking: manual | automated | mixed */
+  automationStatus: AutomationStatus;
+  /** FK to the most recent WorkflowExecution for this lead */
+  lastWorkflowActionId: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
 
-type LeadCreationAttributes = Optional<LeadAttributes, 'id' | 'createdAt' | 'updatedAt'>;
+type LeadCreationAttributes = Optional<
+  LeadAttributes,
+  'id' | 'automationStatus' | 'lastWorkflowActionId' | 'createdAt' | 'updatedAt'
+>;
 
 export class Lead extends Model<LeadAttributes, LeadCreationAttributes> implements LeadAttributes {
   public id!: string;
@@ -59,6 +69,8 @@ export class Lead extends Model<LeadAttributes, LeadCreationAttributes> implemen
   public lastContactAt!: Date | null;
   public nextFollowUpAt!: Date | null;
   public metadata!: Record<string, unknown>;
+  public automationStatus!: AutomationStatus;
+  public lastWorkflowActionId!: string | null;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 }
@@ -154,6 +166,20 @@ Lead.init(
     metadata: {
       type: DataTypes.JSON,
       defaultValue: {},
+    },
+    automationStatus: {
+      type: DataTypes.STRING(20),
+      allowNull: false,
+      defaultValue: 'manual',
+      field: 'automation_status',
+      comment: 'Automation tracking: manual | automated | mixed',
+    },
+    lastWorkflowActionId: {
+      type: DataTypes.UUID,
+      allowNull: true,
+      field: 'last_workflow_action_id',
+      references: { model: 'workflow_executions', key: 'id' },
+      comment: 'FK to the most recent WorkflowExecution for this lead',
     },
     createdAt: {
       type: DataTypes.DATE,
