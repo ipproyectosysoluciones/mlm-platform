@@ -168,15 +168,42 @@ describe('PaymentPayPalController', () => {
       expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ success: false }));
     });
 
-    it('returns 400 when internalOrderId is missing', async () => {
-      // Valid PayPal order ID: 17 uppercase alphanumeric chars
+    it('succeeds when internalOrderId is missing (optional field)', async () => {
+      const mockCaptured = {
+        id: 'ABCDEFGHIJ1234567',
+        status: 'COMPLETED',
+        purchase_units: [
+          {
+            payments: {
+              captures: [{ id: 'cap-002', amount: { value: '50.00', currency_code: 'USD' } }],
+            },
+          },
+        ],
+      };
+      (paypalService.captureOrder as jest.Mock).mockResolvedValue(mockCaptured);
+
+      // Valid PayPal order ID: 17 uppercase alphanumeric chars, no internalOrderId
       const req = createMockReq({ body: { orderId: 'ABCDEFGHIJ1234567' } });
       const res = createMockRes();
       const next = jest.fn();
 
       await PaymentPayPalController.captureOrder(req, res, next);
 
-      expect(res.status).toHaveBeenCalledWith(400);
+      expect(paypalService.captureOrder).toHaveBeenCalledWith({
+        orderId: 'ABCDEFGHIJ1234567',
+        internalOrderId: '',
+      });
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: true,
+          data: expect.objectContaining({
+            orderId: 'ABCDEFGHIJ1234567',
+            status: 'COMPLETED',
+            captureId: 'cap-002',
+          }),
+        })
+      );
     });
 
     it('captures order and returns 200 on success', async () => {
