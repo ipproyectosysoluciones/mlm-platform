@@ -26,6 +26,7 @@ jest.mock('../../models', () => ({
   WorkflowExecution: {
     findOrCreate: jest.fn(),
     findOne: jest.fn(),
+    create: jest.fn(),
   },
   Lead: {
     findByPk: jest.fn(),
@@ -36,6 +37,9 @@ jest.mock('../../models', () => ({
 
 import { WorkflowService } from '../../services/WorkflowService';
 import { WorkflowExecution, Lead } from '../../models';
+import { logger } from '../../utils/logger';
+
+const mockedLogger = logger as jest.Mocked<typeof logger>;
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -255,6 +259,147 @@ describe('WorkflowService', () => {
 
       // findOrCreate should never be called when lead doesn't exist
       expect(WorkflowExecution.findOrCreate).not.toHaveBeenCalled();
+    });
+  });
+
+  // ──────────────────────────────────────────────────────────────────────────
+  // T-2.1: triggerLeadCreated — Outbound n8n trigger
+  // ──────────────────────────────────────────────────────────────────────────
+  describe('triggerLeadCreated() — outbound trigger', () => {
+    const mockFetch = jest.fn();
+    const WEBHOOK_URL = 'https://n8n.example.com/webhook/lead-created';
+
+    beforeEach(() => {
+      global.fetch = mockFetch;
+      mockFetch.mockReset();
+      process.env.N8N_LEAD_CREATED_WEBHOOK_URL = WEBHOOK_URL;
+    });
+
+    afterEach(() => {
+      delete process.env.N8N_LEAD_CREATED_WEBHOOK_URL;
+    });
+
+    const mockLead = {
+      id: LEAD_UUID,
+      contactName: 'Juan Pérez',
+      contactEmail: 'juan@example.com',
+      contactPhone: '+549111234567',
+      status: 'new',
+      source: 'website',
+      toJSON: () => ({
+        id: LEAD_UUID,
+        contactName: 'Juan Pérez',
+        contactEmail: 'juan@example.com',
+        contactPhone: '+549111234567',
+        status: 'new',
+        source: 'website',
+      }),
+    };
+
+    it('should POST lead data to N8N_LEAD_CREATED_WEBHOOK_URL and log success execution', async () => {
+      mockFetch.mockResolvedValueOnce({ ok: true, status: 200 });
+      (WorkflowExecution.create as jest.Mock).mockResolvedValueOnce({ id: EXEC_UUID });
+
+      await service.triggerLeadCreated(mockLead as never);
+
+      // Verify fetch was called with correct URL and lead payload
+      expect(mockFetch).toHaveBeenCalledTimes(1);
+      expect(mockFetch).toHaveBeenCalledWith(
+        WEBHOOK_URL,
+        expect.objectContaining({
+          method: 'POST',
+          headers: expect.objectContaining({
+            'Content-Type': 'application/json',
+          }),
+          body: JSON.stringify(mockLead.toJSON()),
+          signal: expect.any(AbortSignal),
+        })
+      );
+
+      // Verify WorkflowExecution logged with status: 'success'
+      expect(WorkflowExecution.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          leadId: LEAD_UUID,
+          workflowName: 'crm-lead-created',
+          actionType: 'lead_trigger',
+          status: 'success',
+          n8nExecutionId: expect.stringContaining('trigger-'),
+        })
+      );
+    });
+
+    it('should log WorkflowExecution with status "failed" when fetch throws', async () => {
+      mockFetch.mockRejectedValueOnce(new Error('Network timeout'));
+      (WorkflowExecution.create as jest.Mock).mockResolvedValueOnce({ id: EXEC_UUID });
+
+      // Must not throw — fire-and-forget
+      await expect(service.triggerLeadCreated(mockLead as never)).resolves.toBeUndefined();
+
+      // Verify WorkflowExecution logged with status: 'failed'
+      expect(WorkflowExecution.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          leadId: LEAD_UUID,
+          workflowName: 'crm-lead-created',
+          actionType: 'lead_trigger',
+          status: 'failed',
+          errorMessage: expect.stringContaining('Network timeout'),
+        })
+      );
+    });
+
+    it('should log WorkflowExecution with status "failed" when n8n returns non-ok status', async () => {
+      mockFetch.mockResolvedValueOnce({ ok: false, status: 502 });
+      (WorkflowExecution.create as jest.Mock).mockResolvedValueOnce({ id: EXEC_UUID });
+
+      await service.triggerLeadCreated(mockLead as never);
+
+      expect(WorkflowExecution.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          leadId: LEAD_UUID,
+          status: 'failed',
+          errorMessage: expect.stringContaining('502'),
+        })
+      );
+    });
+  });
+
+  // ──────────────────────────────────────────────────────────────────────────
+  // T-2.3: triggerLeadCreated — Env var guard
+  // ──────────────────────────────────────────────────────────────────────────
+  describe('triggerLeadCreated() — env var guard', () => {
+    const mockFetch = jest.fn();
+
+    beforeEach(() => {
+      global.fetch = mockFetch;
+      mockFetch.mockReset();
+    });
+
+    const mockLead = {
+      id: LEAD_UUID,
+      contactName: 'Test Lead',
+      contactEmail: 'test@example.com',
+      toJSON: () => ({ id: LEAD_UUID, contactName: 'Test Lead', contactEmail: 'test@example.com' }),
+    };
+
+    it('should skip trigger and log warning when N8N_LEAD_CREATED_WEBHOOK_URL is not set', async () => {
+      delete process.env.N8N_LEAD_CREATED_WEBHOOK_URL;
+
+      await service.triggerLeadCreated(mockLead as never);
+
+      expect(mockFetch).not.toHaveBeenCalled();
+      expect(WorkflowExecution.create).not.toHaveBeenCalled();
+      expect(mockedLogger.warn).toHaveBeenCalledWith(
+        expect.stringContaining('N8N_LEAD_CREATED_WEBHOOK_URL')
+      );
+    });
+
+    it('should skip trigger when N8N_LEAD_CREATED_WEBHOOK_URL is empty string', async () => {
+      process.env.N8N_LEAD_CREATED_WEBHOOK_URL = '';
+
+      await service.triggerLeadCreated(mockLead as never);
+
+      expect(mockFetch).not.toHaveBeenCalled();
+      expect(WorkflowExecution.create).not.toHaveBeenCalled();
     });
   });
 });

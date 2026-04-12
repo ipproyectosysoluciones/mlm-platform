@@ -1,13 +1,16 @@
 /**
- * @fileoverview WorkflowService — n8n inbound action processing
+ * @fileoverview WorkflowService — n8n inbound action processing + outbound triggers
  * @description Processes n8n webhook actions: persists WorkflowExecutions with idempotency,
  *   syncs lead statuses with a human-guard, validates lead existence.
+ *   Also triggers n8n workflows on lead creation (fire-and-forget).
  *
  * ES: Procesa acciones webhook de n8n: persiste WorkflowExecutions con idempotencia,
  *   sincroniza estados de leads con guardia humana, valida existencia de leads.
+ *   También dispara workflows de n8n al crear un lead (fire-and-forget).
  *
  * EN: Processes n8n webhook actions: persists WorkflowExecutions with idempotency,
  *   syncs lead statuses with a human-guard, validates lead existence.
+ *   Also triggers n8n workflows on lead creation (fire-and-forget).
  *
  * @module services/WorkflowService
  * @author MLM Development Team
@@ -24,6 +27,12 @@ import { logger } from '../utils/logger';
  *   de esta ventana, se omiten los cambios de estado por automatización.
  */
 const HUMAN_GUARD_MS = 5 * 60 * 1000;
+
+/**
+ * Timeout for outbound n8n trigger requests in milliseconds (3 seconds).
+ * ES: Timeout para requests outbound de trigger n8n en ms (3 segundos).
+ */
+const TRIGGER_TIMEOUT_MS = 3000;
 
 /**
  * Valid lead statuses that n8n can set via status_changed action.
@@ -148,5 +157,90 @@ export class WorkflowService {
       leadId,
       idempotent: false,
     };
+  }
+
+  /**
+   * Trigger n8n workflow when a new lead is created. Fire-and-forget: never blocks
+   * the caller, never throws. Logs a WorkflowExecution record on success or failure.
+   *
+   * ES: Dispara workflow de n8n cuando se crea un lead nuevo. Fire-and-forget: nunca
+   *   bloquea al llamador, nunca lanza. Registra WorkflowExecution en éxito o fallo.
+   *
+   * @param lead - The newly created lead (with toJSON method) / El lead recién creado
+   */
+  async triggerLeadCreated(lead: {
+    id: string;
+    toJSON: () => Record<string, unknown>;
+  }): Promise<void> {
+    const webhookUrl = process.env.N8N_LEAD_CREATED_WEBHOOK_URL;
+
+    if (!webhookUrl) {
+      logger.warn('N8N_LEAD_CREATED_WEBHOOK_URL not set, skipping lead-created trigger');
+      return;
+    }
+
+    const n8nExecutionId = `trigger-${lead.id}-${Date.now()}`;
+
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), TRIGGER_TIMEOUT_MS);
+
+      try {
+        const response = await fetch(webhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(lead.toJSON()),
+          signal: controller.signal,
+        });
+
+        clearTimeout(timeout);
+
+        if (!response.ok) {
+          await WorkflowExecution.create({
+            leadId: lead.id,
+            workflowName: 'crm-lead-created',
+            actionType: 'lead_trigger',
+            status: 'failed',
+            n8nExecutionId,
+            errorMessage: `n8n returned HTTP ${response.status}`,
+            payload: {},
+          });
+          logger.error(
+            `Outbound trigger failed for lead ${lead.id}: n8n returned HTTP ${response.status}`
+          );
+          return;
+        }
+
+        await WorkflowExecution.create({
+          leadId: lead.id,
+          workflowName: 'crm-lead-created',
+          actionType: 'lead_trigger',
+          status: 'success',
+          n8nExecutionId,
+          payload: {},
+        });
+
+        logger.info(`Outbound trigger sent for lead ${lead.id}`);
+      } catch (fetchError) {
+        clearTimeout(timeout);
+        throw fetchError;
+      }
+    } catch (error) {
+      const errMsg = error instanceof Error ? error.message : String(error);
+      try {
+        await WorkflowExecution.create({
+          leadId: lead.id,
+          workflowName: 'crm-lead-created',
+          actionType: 'lead_trigger',
+          status: 'failed',
+          n8nExecutionId,
+          errorMessage: errMsg,
+          payload: {},
+        });
+      } catch (logError) {
+        logger.error(`Failed to log WorkflowExecution for lead ${lead.id}: ${logError}`);
+      }
+      logger.error(`Outbound trigger failed for lead ${lead.id}: ${errMsg}`);
+    }
   }
 }
