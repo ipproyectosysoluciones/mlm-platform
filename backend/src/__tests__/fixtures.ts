@@ -228,6 +228,36 @@ export function getAuthHeaders(user: User): Record<string, string> {
 }
 
 /**
+ * Create a chain of N users where each sponsors the next.
+ * User[0] has no sponsor, User[1] sponsored by User[0], etc.
+ * Closure table rows are populated automatically via createTestUser.
+ *
+ * Crea una cadena de N usuarios donde cada uno patrocina al siguiente.
+ * User[0] no tiene sponsor, User[1] patrocinado por User[0], etc.
+ * Las filas de la tabla de cierre se llenan automáticamente vía createTestUser.
+ *
+ * @param n Number of users in the chain (>= 2)
+ * @returns Array of Users ordered root-first [root, child1, ..., childN-1]
+ */
+export async function createUplineChain(n: number): Promise<User[]> {
+  if (n < 2) throw new Error('createUplineChain requires at least 2 users');
+
+  const chain: User[] = [];
+
+  // Root user has no sponsor
+  const root = await createTestUser();
+  chain.push(root);
+
+  // Each subsequent user is sponsored by the previous
+  for (let i = 1; i < n; i++) {
+    const user = await createTestUser({ sponsorId: chain[i - 1].id });
+    chain.push(user);
+  }
+
+  return chain;
+}
+
+/**
  * Cleanup test users - deletes all test users created during tests
  */
 export async function cleanupTestUsers(): Promise<void> {

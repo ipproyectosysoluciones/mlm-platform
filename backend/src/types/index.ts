@@ -105,12 +105,37 @@ export interface UserClosureAttributes {
   depth: number;
 }
 
+/**
+ * Commission type — open-ended string to support N-level unilevel model.
+ * Values: 'direct' | 'level_1' | ... | 'level_N'
+ * @see generateLevelKey for depth-to-key mapping
+ */
+export type CommissionType = string;
+
+/**
+ * Maps a closure-table depth to a commission level key.
+ * depth 0 → 'direct' (sponsor), depth > 0 → 'level_N'
+ *
+ * @param depth — ancestor depth from user_closure table (0 = direct sponsor)
+ * @returns level key string
+ *
+ * @example
+ * generateLevelKey(0)  // → 'direct'
+ * generateLevelKey(1)  // → 'level_1'
+ * generateLevelKey(9)  // → 'level_9'
+ */
+export function generateLevelKey(depth: number): string {
+  if (depth === 0) return 'direct';
+  return `level_${depth}`;
+}
+
 export interface CommissionAttributes {
   id: string;
   userId: string;
   fromUserId: string;
   purchaseId: string | null;
-  type: 'direct' | 'level_1' | 'level_2' | 'level_3' | 'level_4';
+  type: CommissionType;
+  model?: string;
   amount: number;
   currency: string;
   status: 'pending' | 'approved' | 'paid';
@@ -189,13 +214,18 @@ export interface TreeNode {
  * // Español: Aplicar comisión nivel 2 (3%)
  * const level2Commission = purchaseAmount * COMMISSION_RATES.level_2;
  */
-export const COMMISSION_RATES = {
-  direct: 0.1, // 10% / 10 por ciento - Direct referral commission
-  level_1: 0.05, // 5% / 5 por ciento - Level 1 downline commission
-  level_2: 0.03, // 3% / 3 por ciento - Level 2 downline commission
-  level_3: 0.02, // 2% / 2 por ciento - Level 3 downline commission
-  level_4: 0.01, // 1% / 1 por ciento - Level 4 downline commission
-} as const;
+export const COMMISSION_RATES: Record<string, number> = {
+  direct: 0.1, // 10% - Direct referral commission / Comisión referido directo
+  level_1: 0.08, //  8% - Level 1 downline / Nivel 1
+  level_2: 0.06, //  6% - Level 2 downline / Nivel 2
+  level_3: 0.05, //  5% - Level 3 downline / Nivel 3
+  level_4: 0.04, //  4% - Level 4 downline / Nivel 4
+  level_5: 0.03, //  3% - Level 5 downline / Nivel 5
+  level_6: 0.03, //  3% - Level 6 downline / Nivel 6
+  level_7: 0.02, //  2% - Level 7 downline / Nivel 7
+  level_8: 0.02, //  2% - Level 8 downline / Nivel 8
+  level_9: 0.02, //  2% - Level 9 downline / Nivel 9
+};
 
 // ============================================
 // Business Types - Tipos de Negocio
@@ -210,26 +240,6 @@ export const BUSINESS_TYPES = {
 } as const;
 
 export type BusinessType = (typeof BUSINESS_TYPES)[keyof typeof BUSINESS_TYPES];
-
-// Commission levels
-export const COMMISSION_LEVELS = {
-  DIRECT: 'direct',
-  LEVEL_1: 'level_1',
-  LEVEL_2: 'level_2',
-  LEVEL_3: 'level_3',
-  LEVEL_4: 'level_4',
-} as const;
-
-export type CommissionLevel = (typeof COMMISSION_LEVELS)[keyof typeof COMMISSION_LEVELS];
-
-// Map level names to display
-export const COMMISSION_LEVEL_NAMES: Record<CommissionLevel, string> = {
-  direct: 'Directo',
-  level_1: 'Nivel 1',
-  level_2: 'Nivel 2',
-  level_3: 'Nivel 3',
-  level_4: 'Nivel 4',
-};
 
 // Map business types to display names
 export const BUSINESS_TYPE_NAMES: Record<BusinessType, string> = {
