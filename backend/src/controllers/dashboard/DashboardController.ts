@@ -78,7 +78,7 @@ export async function getDashboard(req: AuthenticatedRequest, res: Response): Pr
   const commissionsByMonth = await Commission.findAll({
     where: {
       userId: fullUser.id,
-      status: 'completed',
+      status: 'paid',
       created_at: { [Op.gte]: sixMonthsAgo },
     },
     attributes: ['amount', ['created_at', 'createdAt']],
