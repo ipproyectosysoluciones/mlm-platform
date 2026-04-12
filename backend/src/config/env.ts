@@ -31,6 +31,24 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 /**
+ * Platform domain used across all config defaults (emails, URLs, VAPID).
+ * Set PLATFORM_DOMAIN env var in production to override.
+ *
+ * Dominio de la plataforma usado en todos los valores por defecto de config.
+ * Establecer la variable PLATFORM_DOMAIN en producción para sobreescribir.
+ */
+const platformDomain: string = process.env.PLATFORM_DOMAIN || 'nexoreal.xyz';
+
+/**
+ * Exported for use in seed scripts and modules that cannot import config
+ * due to circular dependencies or initialization order.
+ *
+ * Exportado para uso en scripts de seed y módulos que no pueden importar config
+ * por dependencias circulares u orden de inicialización.
+ */
+export { platformDomain };
+
+/**
  * Main configuration object / Objeto de configuración principal
  * @constant {Object}
  *
@@ -48,6 +66,16 @@ export const config = {
   nodeEnv: process.env.NODE_ENV || 'development',
   /** Server port / Puerto del servidor */
   port: parseInt(process.env.PORT || '3000', 10),
+
+  /**
+   * Platform identity / Identidad de la plataforma
+   * Single source of truth for the platform domain used in emails, URLs, and VAPID.
+   * Fuente única de verdad para el dominio de la plataforma usado en emails, URLs y VAPID.
+   */
+  platform: {
+    /** Platform domain (set via PLATFORM_DOMAIN env var) / Dominio de la plataforma */
+    domain: platformDomain,
+  },
 
   /** Database configuration / Configuración de base de datos */
   db: {
@@ -118,7 +146,7 @@ export const config = {
     /** Brevo API key for transactional emails / Clave API de Brevo para correos transaccionales */
     apiKey: process.env.BREVO_API_KEY || '',
     /** Sender email address / Correo del remitente */
-    senderEmail: process.env.BREVO_SENDER_EMAIL || 'noreply@nexoreal.xyz', // TODO: domain pending
+    senderEmail: process.env.BREVO_SENDER_EMAIL || `noreply@${platformDomain}`,
     /** Sender display name / Nombre del remitente */
     senderName: process.env.BREVO_SENDER_NAME || 'Nexo Real',
     /** SMS sender ID / ID del remitente SMS */
@@ -142,7 +170,7 @@ export const config = {
     /** VAPID private key / Clave privada VAPID */
     privateKey: process.env.VAPID_PRIVATE_KEY || '',
     /** VAPID subject (mailto or URL) / Asunto VAPID (mailto o URL) */
-    subject: process.env.VAPID_SUBJECT || 'mailto:admin@nexoreal.xyz', // TODO: domain pending
+    subject: process.env.VAPID_SUBJECT || `mailto:admin@${platformDomain}`,
   },
 
   /** PayPal configuration / Configuración de PayPal */
@@ -192,5 +220,15 @@ if (!config.jwt.secret) {
 if (!config.twoFactor.secretKey) {
   throw new Error(
     'FATAL: TWO_FACTOR_SECRET_KEY environment variable is required. Server cannot start without it.'
+  );
+}
+
+/**
+ * Warn if PLATFORM_DOMAIN is not explicitly set (uses default).
+ * Advertir si PLATFORM_DOMAIN no está configurado explícitamente (usa default).
+ */
+if (!process.env.PLATFORM_DOMAIN) {
+  console.warn(
+    `⚠️  PLATFORM_DOMAIN is not set — defaulting to '${config.platform.domain}'. Set it in production.`
   );
 }

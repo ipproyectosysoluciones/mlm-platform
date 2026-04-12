@@ -84,7 +84,7 @@ export class R2Service {
    *   entityId: 'prop-uuid',
    *   filename: 'facade.jpg',
    * });
-   * // returns 'https://media.nexoreal.xyz/properties/prop-uuid/550e8400.webp'
+   * // returns 'https://media.<PLATFORM_DOMAIN>/properties/prop-uuid/550e8400.webp'
    */
   async uploadImage(params: UploadImageParams): Promise<string> {
     const { buffer, entityType, entityId } = params;
@@ -123,7 +123,7 @@ export class R2Service {
    * @returns Promise that resolves when deletion is complete / Promesa que resuelve cuando la eliminación completa
    *
    * @example
-   * await r2Service.deleteImage('https://media.nexoreal.xyz/properties/uuid/550e8400.webp');
+   * await r2Service.deleteImage('https://media.<PLATFORM_DOMAIN>/properties/uuid/550e8400.webp');
    */
   async deleteImage(imageUrl: string): Promise<void> {
     // Extract key by removing the base URL prefix
@@ -154,7 +154,7 @@ export class R2Service {
    *   entityType: 'properties',
    *   entityId: 'prop-uuid',
    * });
-   * // returns ['https://media.nexoreal.xyz/properties/uuid/a.webp', ...]
+   * // returns ['https://media.<PLATFORM_DOMAIN>/properties/uuid/a.webp', ...]
    */
   async uploadImages(params: UploadImagesParams): Promise<string[]> {
     const { files, entityType, entityId } = params;

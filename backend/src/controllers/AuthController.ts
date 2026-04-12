@@ -114,7 +114,7 @@ export const register: RequestHandler = asyncHandler(
     const token = generateToken(user);
 
     // Send welcome email / Enviar email de bienvenida
-    const referralLink = `${config.app.frontendUrl || 'https://nexoreal.xyz'}/register?ref=${user.referralCode}`; // TODO: domain pending
+    const referralLink = `${config.app.frontendUrl || `https://${config.platform.domain}`}/register?ref=${user.referralCode}`;
     const firstName = user.email.split('@')[0];
 
     // Fire and forget - don't block registration response

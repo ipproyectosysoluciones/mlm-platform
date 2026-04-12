@@ -16,6 +16,7 @@ import { Response } from 'express';
 import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
 import { asyncHandler } from '../../middleware/asyncHandler';
 import { invoiceStore, InvoiceStatus } from './store';
+import { config } from '../../config/env';
 
 /**
  * UUID validation regex
@@ -31,7 +32,7 @@ const COMPANY_INFO = {
   name: 'Nexo Real',
   address: '123 Business Street, City, Country',
   phone: '+1 (555) 123-4567',
-  email: 'billing@nexoreal.xyz', // TODO: domain pending
+  email: `billing@${config.platform.domain}`,
   taxId: 'TAX-12345678',
 };
 
