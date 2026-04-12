@@ -11,6 +11,7 @@ import { ResponseUtil } from '../utils/response.util.js';
 import { config } from '../config/env.js';
 import { logger } from '../utils/logger';
 import { Purchase, Order, Product } from '../models/index.js';
+import { WebhookEvent } from '../models/WebhookEvent.js';
 import { CommissionService } from '../services/CommissionService.js';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
 
@@ -240,14 +241,14 @@ export class PaymentMercadoPagoController {
                   break;
                 }
 
-                // ── Step 2: Idempotency check — skip if Order already exists for this MP payment ──
-                const existingOrder = await Order.findOne({
-                  where: { notes: `mercadopago:${payment.id}` },
+                // ── Step 2: Idempotency check — skip if WebhookEvent already exists for this MP payment ──
+                const existingEvent = await WebhookEvent.findOne({
+                  where: { eventId: String(payment.id), provider: 'mercadopago' },
                 });
-                if (existingOrder) {
+                if (existingEvent) {
                   logger.info(
                     { component: 'MercadoPago Webhook', paymentId: payment.id },
-                    'Order already exists for payment — skipping'
+                    'WebhookEvent already exists for payment — skipping'
                   );
                   break;
                 }
@@ -322,6 +323,14 @@ export class PaymentMercadoPagoController {
                   );
                   // Non-fatal — MP still gets 200
                 }
+
+                // ── Step 7: Mark event as processed in WebhookEvent table (persistent idempotency) ──
+                await WebhookEvent.create({
+                  eventId: String(payment.id),
+                  provider: 'mercadopago',
+                  eventType: 'payment.approved',
+                  processedAt: new Date(),
+                });
               } catch (orderError) {
                 logger.error(
                   { err: orderError, component: 'MercadoPago Webhook' },

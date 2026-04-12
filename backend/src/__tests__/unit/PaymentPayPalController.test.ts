@@ -12,13 +12,25 @@ jest.mock('../../services/PayPalService', () => ({
     captureOrder: jest.fn(),
     getOrder: jest.fn(),
     verifyWebhookSignature: jest.fn(),
-    isIdempotent: jest.fn(),
-    markAsProcessed: jest.fn(),
+    isEventProcessed: jest.fn(),
+    markEventProcessed: jest.fn(),
   },
 }));
 
 jest.mock('../../utils/logger', () => ({
   logger: { info: jest.fn(), warn: jest.fn(), error: jest.fn(), debug: jest.fn() },
+}));
+
+jest.mock('../../services/CommissionService', () => ({
+  CommissionService: jest.fn().mockImplementation(() => ({
+    calculateCommissions: jest.fn(),
+  })),
+}));
+
+jest.mock('../../models/index', () => ({
+  Purchase: { create: jest.fn() },
+  Order: { create: jest.fn(), findOne: jest.fn(), findByPk: jest.fn() },
+  Product: { findByPk: jest.fn(), findOne: jest.fn() },
 }));
 
 // ── Imports ───────────────────────────────────────────────────────────────────
@@ -27,6 +39,12 @@ import { PaymentPayPalController } from '../../controllers/PaymentPayPalControll
 import { paypalService } from '../../services/PayPalService';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
+
+/**
+ * Flush microtask queue — required for asyncHandler wrapper.
+ * Vacía la cola de microtareas — requerido por el wrapper asyncHandler.
+ */
+const flushPromises = (): Promise<void> => new Promise((r) => setImmediate(r));
 
 function createMockReq(overrides: Record<string, unknown> = {}) {
   return {
@@ -263,34 +281,45 @@ describe('PaymentPayPalController', () => {
 
     it('returns 200 and marks processed on valid signature', async () => {
       (paypalService.verifyWebhookSignature as jest.Mock).mockResolvedValue(true);
-      (paypalService.isIdempotent as jest.Mock).mockReturnValue(false);
+      (paypalService.isEventProcessed as jest.Mock).mockResolvedValue(false);
+      (paypalService.markEventProcessed as jest.Mock).mockResolvedValue(undefined);
 
       const req = createMockReq({
-        body: { event_type: 'PAYMENT.CAPTURE.COMPLETED', resource: { id: 'res-002' } },
+        body: { id: 'evt-002', event_type: 'CHECKOUT.ORDER.APPROVED', resource: { id: 'res-002' } },
         headers: {},
       });
       const res = createMockRes();
       const next = jest.fn();
 
       await PaymentPayPalController.webhook(req, res, next);
+      await flushPromises();
 
-      expect(paypalService.markAsProcessed).toHaveBeenCalledWith('res-002');
+      expect(paypalService.markEventProcessed).toHaveBeenCalledWith(
+        'evt-002',
+        'paypal',
+        'CHECKOUT.ORDER.APPROVED'
+      );
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({ received: true });
     });
 
     it('returns 200 with duplicate flag on idempotent event', async () => {
       (paypalService.verifyWebhookSignature as jest.Mock).mockResolvedValue(true);
-      (paypalService.isIdempotent as jest.Mock).mockReturnValue(true);
+      (paypalService.isEventProcessed as jest.Mock).mockResolvedValue(true);
 
       const req = createMockReq({
-        body: { event_type: 'PAYMENT.CAPTURE.COMPLETED', resource: { id: 'res-dup' } },
+        body: {
+          id: 'evt-dup',
+          event_type: 'PAYMENT.CAPTURE.COMPLETED',
+          resource: { id: 'res-dup' },
+        },
         headers: {},
       });
       const res = createMockRes();
       const next = jest.fn();
 
       await PaymentPayPalController.webhook(req, res, next);
+      await flushPromises();
 
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({ received: true, duplicate: true });
