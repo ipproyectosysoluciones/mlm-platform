@@ -6,6 +6,7 @@ import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { hasAuthToken } from './lib/authGuard';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import TwoFactorLoginPage from './pages/TwoFactorLoginPage';
 import Dashboard from './pages/Dashboard';
 import TreeView from './pages/TreeView';
 import Profile from './pages/Profile';
@@ -95,6 +96,14 @@ function App() {
               element={
                 <PublicRoute>
                   <Register />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/login/2fa"
+              element={
+                <PublicRoute>
+                  <TwoFactorLoginPage />
                 </PublicRoute>
               }
             />

@@ -5,6 +5,7 @@
  */
 
 import api from './api';
+import type { User } from '../types';
 
 /**
  * Types for 2FA responses
@@ -102,6 +103,37 @@ export const twoFactorService = {
       '/auth/2fa/disable',
       { code }
     );
+    return response.data.data!;
+  },
+
+  /**
+   * Verify 2FA code during login using a temporary token (not the stored auth token).
+   * Verifica código 2FA durante login usando un token temporal (no el token de auth almacenado).
+   *
+   * @param {string} code - 6-digit TOTP code / Código TOTP de 6 dígitos
+   * @param {string} tempToken - Temporary JWT from initial login / JWT temporal del login inicial
+   * @returns {Promise<TwoFactorVerifyResponse>} Verification result / Resultado de la verificación
+   */
+  verifyLogin: async (code: string, tempToken: string): Promise<TwoFactorVerifyResponse> => {
+    const response = await api.post<{ success: boolean; data: TwoFactorVerifyResponse }>(
+      '/auth/2fa/verify',
+      { code },
+      { headers: { Authorization: `Bearer ${tempToken}` } }
+    );
+    return response.data.data!;
+  },
+
+  /**
+   * Fetch user data using a temporary token (before full login).
+   * Obtiene datos del usuario usando un token temporal (antes del login completo).
+   *
+   * @param {string} tempToken - Temporary JWT from initial login / JWT temporal del login inicial
+   * @returns {Promise<User>} User data / Datos del usuario
+   */
+  getUserWithToken: async (tempToken: string): Promise<User> => {
+    const response = await api.get<{ success: boolean; data: User }>('/auth/me', {
+      headers: { Authorization: `Bearer ${tempToken}` },
+    });
     return response.data.data!;
   },
 };

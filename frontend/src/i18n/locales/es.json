@@ -157,7 +157,14 @@
     "recoveryCodesTitle": "Códigos de Recuperación",
     "recoveryCodesSubtitle": "Guarda estos códigos en un lugar seguro",
     "recoveryCodesWarning": "Estos códigos son la única forma de acceder a tu cuenta si pierdes tu dispositivo. Cada código solo puede usarse una vez.",
-    "continue": "Entendido"
+    "continue": "Entendido",
+    "loginTitle": "Verificación en Dos Pasos",
+    "loginSubtitle": "Ingresá el código de 6 dígitos de tu aplicación autenticadora",
+    "loginEnterCode": "Código de verificación",
+    "loginVerify": "Verificar",
+    "loginLockedOut": "Demasiados intentos fallidos. Por favor iniciá sesión de nuevo.",
+    "loginInvalidCode": "Código inválido. Intentá de nuevo.",
+    "loginRecoveryHint": "Si perdiste acceso a tu autenticador, usá un código de recuperación."
   },
   "position": {
     "left": "Izquierda",
