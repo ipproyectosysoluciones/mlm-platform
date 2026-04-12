@@ -34,7 +34,7 @@ export async function getDashboardCommissions(
   const commissionsByMonth = await Commission.findAll({
     where: {
       userId,
-      status: 'completed',
+      status: 'paid',
       created_at: { [Op.gte]: sixMonthsAgo },
     },
     attributes: ['amount', ['created_at', 'createdAt']],
