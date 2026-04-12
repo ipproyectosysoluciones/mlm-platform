@@ -20,17 +20,6 @@ export const BUSINESS_TYPES = {
 
 export type BusinessType = (typeof BUSINESS_TYPES)[keyof typeof BUSINESS_TYPES];
 
-// Commission levels
-export const COMMISSION_LEVELS = {
-  DIRECT: 'direct',
-  LEVEL_1: 'level_1',
-  LEVEL_2: 'level_2',
-  LEVEL_3: 'level_3',
-  LEVEL_4: 'level_4',
-} as const;
-
-export type CommissionLevel = (typeof COMMISSION_LEVELS)[keyof typeof COMMISSION_LEVELS];
-
 /**
  * CommissionConfig attributes
  */
@@ -38,7 +27,7 @@ export interface CommissionConfigAttributes {
   id: string;
   businessType: BusinessType;
   customBusinessName?: string;
-  level: CommissionLevel;
+  level: string;
   percentage: number;
   isActive: boolean;
 }
@@ -55,7 +44,7 @@ export class CommissionConfig
   declare id: string;
   declare businessType: BusinessType;
   declare customBusinessName?: string;
-  declare level: CommissionLevel;
+  declare level: string;
   declare percentage: number;
   declare isActive: boolean;
   declare readonly createdAt: Date;
@@ -87,13 +76,7 @@ CommissionConfig.init(
       comment: 'Custom name when business_type is "otro"',
     },
     level: {
-      type: DataTypes.ENUM(
-        COMMISSION_LEVELS.DIRECT,
-        COMMISSION_LEVELS.LEVEL_1,
-        COMMISSION_LEVELS.LEVEL_2,
-        COMMISSION_LEVELS.LEVEL_3,
-        COMMISSION_LEVELS.LEVEL_4
-      ),
+      type: DataTypes.STRING(20),
       allowNull: false,
     },
     percentage: {

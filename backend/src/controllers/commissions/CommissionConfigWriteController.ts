@@ -7,7 +7,7 @@
  */
 import { Response } from 'express';
 import { CommissionConfig } from '../../models';
-import { BUSINESS_TYPES, COMMISSION_LEVELS } from '../../types';
+import { BUSINESS_TYPES } from '../../types';
 import type { ApiResponse } from '../../types';
 import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
 
@@ -33,13 +33,14 @@ export async function createConfig(req: AuthenticatedRequest, res: Response): Pr
       return;
     }
 
-    // Validate level
-    if (!level || !Object.values(COMMISSION_LEVELS).includes(level)) {
+    // Validate level — must match 'direct' or 'level_N' pattern (N ≥ 1)
+    // Validar nivel — debe coincidir con patrón 'direct' o 'level_N' (N ≥ 1)
+    if (!level || !/^(direct|level_\d+)$/.test(level)) {
       const response: ApiResponse<never> = {
         success: false,
         error: {
           code: 'INVALID_LEVEL',
-          message: 'Invalid level. Must be: direct, level_1, level_2, level_3, or level_4',
+          message: 'Invalid level. Must be "direct" or "level_N" (e.g. level_1, level_5, level_10)',
         },
       };
       res.status(400).json(response);
