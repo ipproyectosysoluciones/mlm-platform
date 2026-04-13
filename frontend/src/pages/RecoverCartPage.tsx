@@ -13,7 +13,6 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { ShoppingCart, AlertTriangle, Loader2, ArrowRight, RefreshCw } from 'lucide-react';
 import { CartPreview } from '../components/Cart/CartPreview';
 import { useCartRecovery } from '../stores/cartStore';
-import { cn } from '../utils/cn';
 import { Button } from '../components/ui/button';
 
 // ============================================

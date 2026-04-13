@@ -24,7 +24,6 @@ import {
   ArrowLeft,
   ChevronLeft,
   ChevronRight,
-  CalendarDays,
   Check,
   Lock,
 } from 'lucide-react';
@@ -438,6 +437,29 @@ export default function PropertyDetailPage() {
               </div>
             </div>
           </div>
+
+          {/* Spacer for mobile sticky CTA / Espacio para CTA fijo en móvil */}
+          <div className="h-20 lg:h-0" />
+        </div>
+      </div>
+
+      {/* Mobile sticky CTA bar / Barra CTA fija en móvil */}
+      <div
+        className="fixed bottom-0 inset-x-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur-sm px-4 py-3 lg:hidden"
+        data-testid="mobile-sticky-cta"
+      >
+        <div className="flex items-center justify-between gap-4 max-w-4xl mx-auto">
+          <div>
+            <p className="text-lg font-bold text-emerald-600">
+              {property.currency}{' '}
+              {Number(property.price).toLocaleString('es-AR', { minimumFractionDigits: 0 })}
+            </p>
+            {property.type === 'rental' && <p className="text-xs text-slate-400">por mes</p>}
+          </div>
+          <Button onClick={handleReserve} className="shrink-0">
+            <Lock className="h-4 w-4 mr-2" />
+            {t('cta.securePayment')}
+          </Button>
         </div>
       </div>
     </>

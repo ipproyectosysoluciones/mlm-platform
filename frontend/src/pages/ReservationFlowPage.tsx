@@ -196,7 +196,7 @@ function StepIndicator({ currentStep, visibleSteps }: StepIndicatorProps) {
   const currentIndex = visibleOrder.indexOf(currentStep);
 
   return (
-    <div className="flex items-center justify-center gap-0 mb-8">
+    <div className="flex items-center justify-center gap-0 mb-8 overflow-x-auto">
       {visibleSteps.map((step, i) => {
         const isDone = i < currentIndex;
         const isCurrent = i === currentIndex;
@@ -206,7 +206,7 @@ function StepIndicator({ currentStep, visibleSteps }: StepIndicatorProps) {
             <div className="flex flex-col items-center">
               <div
                 className={cn(
-                  'w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold border-2 transition-all',
+                  'w-9 h-9 shrink-0 rounded-full flex items-center justify-center text-sm font-semibold border-2 transition-all',
                   isDone && 'bg-emerald-500 border-emerald-500 text-white',
                   isCurrent && 'bg-white border-emerald-500 text-emerald-600',
                   !isDone && !isCurrent && 'bg-white border-slate-200 text-slate-400'
@@ -216,7 +216,7 @@ function StepIndicator({ currentStep, visibleSteps }: StepIndicatorProps) {
               </div>
               <span
                 className={cn(
-                  'text-xs mt-1 whitespace-nowrap',
+                  'text-xs mt-1 whitespace-nowrap min-w-0',
                   isCurrent ? 'text-emerald-600 font-medium' : 'text-slate-400'
                 )}
               >
@@ -380,7 +380,7 @@ function StepGuests() {
             variant="outline"
             size="icon"
             onClick={() => updateWizardData({ guests: Math.max(1, wizardData.guests - 1) })}
-            className="w-9 h-9 rounded-lg text-lg font-medium"
+            className="h-11 w-11 rounded-lg text-lg font-medium"
           >
             −
           </Button>
@@ -391,7 +391,7 @@ function StepGuests() {
             variant="outline"
             size="icon"
             onClick={() => updateWizardData({ guests: Math.min(maxGuests, wizardData.guests + 1) })}
-            className="w-9 h-9 rounded-lg text-lg font-medium"
+            className="h-11 w-11 rounded-lg text-lg font-medium"
           >
             +
           </Button>
@@ -632,7 +632,7 @@ function StepPayment({ onDone, onGoToReservations, breakdown }: StepPaymentProps
       )}
 
       {/* Payment methods */}
-      <div className="space-y-3">
+      <div className="relative space-y-3">
         {/* PayPal */}
         <Button
           variant="outline"
@@ -720,6 +720,17 @@ function StepPayment({ onDone, onGoToReservations, breakdown }: StepPaymentProps
               <AlertCircle className="w-5 h-5 text-slate-300" />
             )}
           </Button>
+        )}
+
+        {/* Payment processing overlay / Overlay de procesamiento de pago */}
+        {isProcessingPayment && (
+          <div
+            data-testid="payment-loading-overlay"
+            className="absolute inset-0 z-10 flex flex-col items-center justify-center rounded-xl bg-white/80 backdrop-blur-sm"
+          >
+            <Loader2 className="h-8 w-8 animate-spin text-emerald-500 mb-3" />
+            <p className="text-sm font-medium text-slate-700">{t('loading.processingPayment')}</p>
+          </div>
         )}
       </div>
 
