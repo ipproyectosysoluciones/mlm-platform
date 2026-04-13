@@ -601,6 +601,13 @@
     "secure": "Pago seguro",
     "secureDesc": "Todas las transacciones están encriptadas y protegidas."
   },
+  "cta": {
+    "securePayment": "Pago seguro",
+    "confirmPayment": "Confirmar pago",
+    "cancel": "Cancelar",
+    "back": "Volver",
+    "continue": "Continuar"
+  },
   "landing": {
     "hero": {
       "badge": "Plataforma #1 en América Latina",

@@ -334,21 +334,21 @@ describe('Properties flow (listing → detail)', () => {
       expect(screen.queryByText('por mes')).not.toBeInTheDocument();
     });
 
-    it('shows "Solicitar visita" CTA for rental properties', async () => {
+    it('shows "Pago seguro" CTA for rental properties', async () => {
       vi.mocked(propertyService.getProperty).mockResolvedValueOnce(mockProperty);
       renderDetailPage();
 
       await waitFor(() => {
-        expect(screen.getByRole('button', { name: /solicitar visita/i })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /pago seguro/i })).toBeInTheDocument();
       });
     });
 
-    it('shows "Consultar" CTA for sale properties', async () => {
+    it('shows "Pago seguro" CTA for sale properties', async () => {
       vi.mocked(propertyService.getProperty).mockResolvedValueOnce(mockSaleProperty);
       renderDetailPage('prop-456');
 
       await waitFor(() => {
-        expect(screen.getByRole('button', { name: /consultar/i })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /pago seguro/i })).toBeInTheDocument();
       });
     });
 
@@ -357,10 +357,10 @@ describe('Properties flow (listing → detail)', () => {
       renderDetailPage();
 
       await waitFor(() => {
-        expect(screen.getByRole('button', { name: /solicitar visita/i })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /pago seguro/i })).toBeInTheDocument();
       });
 
-      fireEvent.click(screen.getByRole('button', { name: /solicitar visita/i }));
+      fireEvent.click(screen.getByRole('button', { name: /pago seguro/i }));
 
       const storeWizardData = useReservationStore.getState().wizardData;
       expect(storeWizardData?.type).toBe('property');

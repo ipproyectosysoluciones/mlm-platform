@@ -605,6 +605,13 @@
     "secure": "Secure payment",
     "secureDesc": "All transactions are encrypted and protected."
   },
+  "cta": {
+    "securePayment": "Secure Payment",
+    "confirmPayment": "Confirm Payment",
+    "cancel": "Cancel",
+    "back": "Back",
+    "continue": "Continue"
+  },
   "landing": {
     "hero": {
       "badge": "#1 Platform in Latin America",

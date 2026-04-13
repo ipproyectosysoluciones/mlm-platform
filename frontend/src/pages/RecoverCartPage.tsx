@@ -14,6 +14,7 @@ import { ShoppingCart, AlertTriangle, Loader2, ArrowRight, RefreshCw } from 'luc
 import { CartPreview } from '../components/Cart/CartPreview';
 import { useCartRecovery } from '../stores/cartStore';
 import { cn } from '../utils/cn';
+import { Button } from '../components/ui/button';
 
 // ============================================
 // Component / Componente
@@ -91,16 +92,10 @@ export function RecoverCartPage() {
           <p className="text-slate-400 mb-6">
             This page requires a valid recovery token. Please use the link from your email.
           </p>
-          <button
-            onClick={() => navigate('/products')}
-            className={cn(
-              'inline-flex items-center gap-2 rounded-lg px-6 py-3 text-sm font-medium',
-              'bg-purple-600 text-white transition-colors hover:bg-purple-500'
-            )}
-          >
+          <Button onClick={() => navigate('/products')}>
             Browse Products
             <ArrowRight className="h-4 w-4" />
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -160,27 +155,15 @@ export function RecoverCartPage() {
           <p className="text-slate-400 mb-6">{errorDescription}</p>
           <div className="flex items-center justify-center gap-3">
             {!isExpired && !isUsed && (
-              <button
-                onClick={handleRetry}
-                className={cn(
-                  'inline-flex items-center gap-2 rounded-lg border border-slate-600 px-4 py-2.5 text-sm font-medium',
-                  'text-white transition-colors hover:bg-slate-700'
-                )}
-              >
+              <Button variant="outline" onClick={handleRetry}>
                 <RefreshCw className="h-4 w-4" />
                 Try Again
-              </button>
+              </Button>
             )}
-            <button
-              onClick={() => navigate('/products')}
-              className={cn(
-                'inline-flex items-center gap-2 rounded-lg px-6 py-2.5 text-sm font-medium',
-                'bg-purple-600 text-white transition-colors hover:bg-purple-500'
-              )}
-            >
+            <Button onClick={() => navigate('/products')}>
               Browse Products
               <ArrowRight className="h-4 w-4" />
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -214,16 +197,10 @@ export function RecoverCartPage() {
 
         {/* Action Buttons */}
         <div className="flex flex-col gap-3">
-          <button
+          <Button
             onClick={handleProceedToCheckout}
             disabled={isRecovering}
-            className={cn(
-              'flex w-full items-center justify-center gap-2 rounded-xl px-6 py-3.5 text-base font-semibold',
-              'bg-purple-600 text-white transition-colors',
-              'hover:bg-purple-500',
-              'disabled:bg-slate-600 disabled:cursor-not-allowed',
-              'focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-slate-900'
-            )}
+            className="w-full py-3.5 text-base"
             aria-label="Proceed to checkout with recovered cart"
           >
             {isRecovering ? (
@@ -237,17 +214,11 @@ export function RecoverCartPage() {
                 <ArrowRight className="h-5 w-5" />
               </>
             )}
-          </button>
+          </Button>
 
-          <button
-            onClick={() => navigate('/products')}
-            className={cn(
-              'flex w-full items-center justify-center gap-2 rounded-xl border border-slate-600 px-6 py-3 text-sm font-medium',
-              'text-slate-300 transition-colors hover:bg-slate-800 hover:text-white'
-            )}
-          >
+          <Button variant="outline" onClick={() => navigate('/products')} className="w-full">
             Continue Browsing
-          </button>
+          </Button>
         </div>
 
         {/* Recovery Error (if confirmation fails) */}

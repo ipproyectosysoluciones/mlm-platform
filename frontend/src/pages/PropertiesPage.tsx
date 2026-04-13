@@ -24,6 +24,7 @@ import { propertyService } from '../services/propertyService';
 import type { Property, PropertyListParams, PropertyType } from '../services/propertyService';
 import { cn } from '../lib/utils';
 import { APP_URL } from '../config/app.config';
+import { Button } from '@/components/ui/button';
 
 // ============================================
 // Helpers / Utilidades
@@ -146,17 +147,18 @@ function PropertyCard({ property, onClick }: PropertyCardProps) {
               <span className="text-sm font-normal text-slate-400"> / mes</span>
             )}
           </p>
-          <button
+          <Button
             type="button"
+            size="sm"
             onClick={(e) => {
               e.stopPropagation();
               navigate(`/reservations/new?propertyId=${property.id}`);
             }}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500 text-white text-sm font-medium hover:bg-emerald-600 transition-colors shrink-0"
+            className="shrink-0"
           >
             <CalendarCheck className="w-3.5 h-3.5" />
             {t('catalog.bookNow')}
-          </button>
+          </Button>
         </div>
       </div>
     </article>
@@ -325,22 +327,15 @@ export default function PropertiesPage() {
                 className="w-36 px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:border-emerald-400"
               />
 
-              <button
-                type="submit"
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-500 text-white text-sm font-medium hover:bg-emerald-600 transition-colors"
-              >
+              <Button type="submit">
                 <SlidersHorizontal className="w-4 h-4" />
                 Filtrar
-              </button>
+              </Button>
 
               {hasActiveFilters && (
-                <button
-                  type="button"
-                  onClick={clearFilters}
-                  className="px-4 py-2 rounded-lg border border-slate-200 text-sm text-slate-600 hover:bg-slate-50 transition-colors"
-                >
+                <Button type="button" variant="outline" onClick={clearFilters}>
                   Limpiar
-                </button>
+                </Button>
               )}
             </form>
           </div>
@@ -396,23 +391,23 @@ export default function PropertiesPage() {
               {/* Pagination */}
               {pagination && pagination.totalPages > 1 && (
                 <div className="flex justify-center gap-2 mt-8">
-                  <button
+                  <Button
+                    variant="outline"
                     onClick={() => setPage((p) => Math.max(1, p - 1))}
                     disabled={page === 1}
-                    className="px-4 py-2 rounded-lg border border-slate-200 text-sm disabled:opacity-40 hover:bg-slate-50 transition-colors"
                   >
                     Anterior
-                  </button>
+                  </Button>
                   <span className="px-4 py-2 text-sm text-slate-600">
                     Página {page} de {pagination.totalPages}
                   </span>
-                  <button
+                  <Button
+                    variant="outline"
                     onClick={() => setPage((p) => Math.min(pagination.totalPages, p + 1))}
                     disabled={page === pagination.totalPages}
-                    className="px-4 py-2 rounded-lg border border-slate-200 text-sm disabled:opacity-40 hover:bg-slate-50 transition-colors"
                   >
                     Siguiente
-                  </button>
+                  </Button>
                 </div>
               )}
             </>

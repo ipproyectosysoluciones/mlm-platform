@@ -7,6 +7,7 @@
 import { useTranslation } from 'react-i18next';
 import { Package, RefreshCw, Search } from 'lucide-react';
 import { cn } from '../utils/cn';
+import { Button } from '@/components/ui/button';
 
 /**
  * EmptyState props
@@ -83,19 +84,11 @@ export function EmptyState({
         )}
       </div>
 
-      {/* Action Button */}
+      {/* Action Button — shadcn Button (D1: primary → default variant) */}
       {actionLabel && onAction && (
-        <button
-          onClick={onAction}
-          className={cn(
-            'mt-2 rounded-lg px-4 py-2 text-sm font-medium',
-            'bg-purple-600 text-white transition-colors',
-            'hover:bg-purple-500',
-            'focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-slate-800'
-          )}
-        >
+        <Button onClick={onAction} className="mt-2">
           {actionLabel}
-        </button>
+        </Button>
       )}
     </div>
   );

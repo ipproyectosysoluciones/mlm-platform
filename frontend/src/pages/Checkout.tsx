@@ -7,13 +7,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Loader2, AlertCircle, ArrowLeft, Check, X } from 'lucide-react';
+import { Loader2, AlertCircle, ArrowLeft, Check, Lock, X } from 'lucide-react';
 import { OrderSummary } from '../components/OrderSummary';
 import { CheckoutForm } from '../components/CheckoutForm';
 import { EmptyState } from '../components/EmptyState';
 import { productService, orderService } from '../services/api';
 import type { Product, PaymentMethod } from '../types';
 import { cn } from '../utils/cn';
+import { Button } from '../components/ui/button';
 
 /**
  * Checkout page component
@@ -164,12 +165,9 @@ export default function Checkout() {
       <div className="mx-auto max-w-4xl">
         {/* Page Header */}
         <div className="mb-8 flex items-center gap-4">
-          <button
-            onClick={handleBackToProducts}
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-800 text-white transition-colors hover:bg-slate-700"
-          >
+          <Button variant="ghost" size="icon" onClick={handleBackToProducts}>
             <ArrowLeft className="h-5 w-5" />
-          </button>
+          </Button>
           <div>
             <h1 className="text-3xl font-bold text-white">{t('checkout.title')}</h1>
             <p className="mt-1 text-slate-400">{t('checkout.subtitle')}</p>
@@ -221,13 +219,14 @@ export default function Checkout() {
                 <h2 className="text-xl font-semibold text-white">
                   {t('checkout.confirmPurchase')}
                 </h2>
-                <button
+                <Button
+                  variant="ghost"
+                  size="icon"
                   onClick={handleCloseModal}
                   disabled={isSubmitting}
-                  className="rounded-full p-1 text-slate-400 transition-colors hover:bg-slate-700 hover:text-white disabled:opacity-50"
                 >
                   <X className="h-5 w-5" />
-                </button>
+                </Button>
               </div>
 
               {/* Modal Content */}
@@ -266,25 +265,18 @@ export default function Checkout() {
 
                 {/* Modal Actions */}
                 <div className="flex gap-3 pt-2">
-                  <button
+                  <Button
+                    variant="outline"
                     onClick={handleCloseModal}
                     disabled={isSubmitting}
-                    className={cn(
-                      'flex-1 rounded-xl py-3 font-semibold transition-colors',
-                      'border border-slate-600 text-white hover:bg-slate-700',
-                      'disabled:opacity-50 disabled:cursor-not-allowed'
-                    )}
+                    className="flex-1"
                   >
                     {t('common.cancel')}
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     onClick={() => handleConfirmPurchase(pendingPaymentMethod)}
                     disabled={isSubmitting}
-                    className={cn(
-                      'flex flex-1 items-center justify-center gap-2 rounded-xl py-3 font-semibold',
-                      'bg-purple-600 text-white transition-all hover:bg-purple-500',
-                      'disabled:bg-slate-600 disabled:cursor-not-allowed'
-                    )}
+                    className="flex-1 gap-2"
                   >
                     {isSubmitting ? (
                       <>
@@ -293,11 +285,11 @@ export default function Checkout() {
                       </>
                     ) : (
                       <>
-                        <Check className="h-5 w-5" />
+                        <Lock className="h-4 w-4" />
                         {t('checkout.confirmPurchase')}
                       </>
                     )}
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>

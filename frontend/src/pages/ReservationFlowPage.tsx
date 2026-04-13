@@ -22,7 +22,9 @@ import {
   Wallet,
   Shield,
   Clock,
+  Lock,
 } from 'lucide-react';
+import { Button } from '../components/ui/button';
 import { useReservationWizard } from '../stores/reservationStore';
 import { computePriceBreakdown, formatPrice } from '../stores/reservationStore';
 import type { WizardStep, PriceBreakdown } from '../stores/reservationStore';
@@ -302,14 +304,14 @@ function StepDates() {
       {/* Running total after selecting dates */}
       {breakdown && breakdown.totalNights > 0 && <PriceBadge breakdown={breakdown} />}
 
-      <button
+      <Button
         onClick={() => setWizardStep('guests')}
         disabled={!canContinue}
-        className="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-emerald-500 text-white font-semibold hover:bg-emerald-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+        className="w-full gap-2 py-3"
       >
         {t('reservation.continue')}
         <ChevronRight className="w-5 h-5" />
-      </button>
+      </Button>
     </div>
   );
 }
@@ -374,21 +376,25 @@ function StepGuests() {
           {t('reservation.numberOfGuests')}
         </label>
         <div className="flex items-center gap-3 ml-auto">
-          <button
+          <Button
+            variant="outline"
+            size="icon"
             onClick={() => updateWizardData({ guests: Math.max(1, wizardData.guests - 1) })}
-            className="w-9 h-9 rounded-lg border border-slate-200 flex items-center justify-center hover:bg-slate-50 transition-colors text-lg font-medium"
+            className="w-9 h-9 rounded-lg text-lg font-medium"
           >
             −
-          </button>
+          </Button>
           <span className="w-10 text-center font-semibold text-lg text-slate-800">
             {wizardData.guests}
           </span>
-          <button
+          <Button
+            variant="outline"
+            size="icon"
             onClick={() => updateWizardData({ guests: Math.min(maxGuests, wizardData.guests + 1) })}
-            className="w-9 h-9 rounded-lg border border-slate-200 flex items-center justify-center hover:bg-slate-50 transition-colors text-lg font-medium"
+            className="w-9 h-9 rounded-lg text-lg font-medium"
           >
             +
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -420,19 +426,16 @@ function StepGuests() {
 
       <div className="flex gap-3">
         {wizardData.type === 'property' && (
-          <button
+          <Button
+            variant="outline"
             onClick={() => setWizardStep('dates')}
-            className="flex items-center gap-2 px-4 py-3 rounded-lg border border-slate-200 text-slate-600 text-sm hover:bg-slate-50 transition-colors"
+            className="gap-2 px-4 py-3"
           >
             <ArrowLeft className="w-4 h-4" />
             {t('reservation.back')}
-          </button>
+          </Button>
         )}
-        <button
-          onClick={handleConfirm}
-          disabled={isCreating}
-          className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg bg-emerald-500 text-white font-semibold hover:bg-emerald-600 transition-colors disabled:opacity-60"
-        >
+        <Button onClick={handleConfirm} disabled={isCreating} className="flex-1 gap-2 py-3">
           {isCreating ? (
             <>
               <Loader2 className="w-5 h-5 animate-spin" />
@@ -444,7 +447,7 @@ function StepGuests() {
               <ChevronRight className="w-5 h-5" />
             </>
           )}
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -508,21 +511,15 @@ function StepConfirm({ onGoToPayment, onGoToReservations, breakdown }: StepConfi
 
       {/* Action buttons */}
       <div className="flex flex-col gap-3">
-        <button
-          onClick={onGoToPayment}
-          className="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-emerald-500 text-white font-semibold hover:bg-emerald-600 transition-colors"
-        >
-          <CreditCard className="w-5 h-5" />
+        <Button onClick={onGoToPayment} className="w-full gap-2 py-3">
+          <Lock className="mr-2 h-4 w-4" />
           {t('reservation.selectPayment')}
           <ChevronRight className="w-5 h-5" />
-        </button>
-        <button
-          onClick={onGoToReservations}
-          className="w-full py-3 rounded-lg border border-slate-200 text-slate-600 font-medium hover:bg-slate-50 transition-colors text-sm"
-        >
+        </Button>
+        <Button variant="ghost" onClick={onGoToReservations} className="w-full py-3 text-sm">
           {t('reservation.payLater')}
           <span className="ml-2 text-slate-400">— {t('reservation.payLaterHint')}</span>
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -637,10 +634,11 @@ function StepPayment({ onDone, onGoToReservations, breakdown }: StepPaymentProps
       {/* Payment methods */}
       <div className="space-y-3">
         {/* PayPal */}
-        <button
+        <Button
+          variant="outline"
           onClick={handlePayPal}
           disabled={isProcessingPayment}
-          className="w-full flex items-center gap-4 p-4 rounded-xl border border-slate-200 hover:border-emerald-300 hover:bg-emerald-50/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed group"
+          className="w-full flex items-center gap-4 p-4 rounded-xl h-auto hover:border-emerald-300 hover:bg-emerald-50/30 group"
         >
           <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center shrink-0">
             <span className="text-blue-600 font-bold text-lg">PP</span>
@@ -656,13 +654,14 @@ function StepPayment({ onDone, onGoToReservations, breakdown }: StepPaymentProps
           ) : (
             <ChevronRight className="w-5 h-5 text-slate-300 group-hover:text-emerald-500 transition-colors" />
           )}
-        </button>
+        </Button>
 
         {/* MercadoPago */}
-        <button
+        <Button
+          variant="outline"
           onClick={handleMercadoPago}
           disabled={isProcessingPayment}
-          className="w-full flex items-center gap-4 p-4 rounded-xl border border-slate-200 hover:border-emerald-300 hover:bg-emerald-50/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed group"
+          className="w-full flex items-center gap-4 p-4 rounded-xl h-auto hover:border-emerald-300 hover:bg-emerald-50/30 group"
         >
           <div className="w-12 h-12 bg-sky-50 rounded-xl flex items-center justify-center shrink-0">
             <span className="text-sky-600 font-bold text-lg">MP</span>
@@ -678,17 +677,18 @@ function StepPayment({ onDone, onGoToReservations, breakdown }: StepPaymentProps
           ) : (
             <ChevronRight className="w-5 h-5 text-slate-300 group-hover:text-emerald-500 transition-colors" />
           )}
-        </button>
+        </Button>
 
         {/* Wallet (hidden when crypto wallet feature is disabled) */}
         {featureFlags.cryptoWallet && (
-          <button
+          <Button
+            variant="outline"
             onClick={onDone}
             disabled={!hasEnoughBalance || isProcessingPayment}
             className={cn(
-              'w-full flex items-center gap-4 p-4 rounded-xl border transition-all group',
+              'w-full flex items-center gap-4 p-4 rounded-xl h-auto group',
               hasEnoughBalance
-                ? 'border-slate-200 hover:border-emerald-300 hover:bg-emerald-50/30'
+                ? 'hover:border-emerald-300 hover:bg-emerald-50/30'
                 : 'border-slate-100 bg-slate-50 opacity-60 cursor-not-allowed'
             )}
           >
@@ -719,7 +719,7 @@ function StepPayment({ onDone, onGoToReservations, breakdown }: StepPaymentProps
             ) : (
               <AlertCircle className="w-5 h-5 text-slate-300" />
             )}
-          </button>
+          </Button>
         )}
       </div>
 
@@ -733,13 +733,14 @@ function StepPayment({ onDone, onGoToReservations, breakdown }: StepPaymentProps
 
       {/* Pay later link */}
       <div className="text-center">
-        <button
+        <Button
+          variant="ghost"
           onClick={onGoToReservations}
-          className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-emerald-600 transition-colors"
+          className="gap-2 text-sm text-slate-500 hover:text-emerald-600"
         >
           <Clock className="w-4 h-4" />
           {t('reservation.payLater')}
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -803,12 +804,13 @@ export default function ReservationFlowPage() {
             <span className="font-medium line-clamp-1">{contextLabel}</span>
           </div>
           {showCancelBtn && (
-            <button
+            <Button
+              variant="ghost"
               onClick={handleCancel}
-              className="text-xs text-slate-400 hover:text-slate-600 transition-colors"
+              className="text-xs text-slate-400 hover:text-slate-600"
             >
               {t('reservation.cancel')}
-            </button>
+            </Button>
           )}
         </div>
 
