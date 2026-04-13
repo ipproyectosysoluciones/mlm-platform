@@ -182,7 +182,7 @@ export default function Checkout() {
           </div>
 
           {/* Payment Form */}
-          <div>
+          <div className="relative">
             <CheckoutForm
               onSubmit={handlePayment}
               isProcessing={isSubmitting}
@@ -202,6 +202,17 @@ export default function Checkout() {
               productId={product.id}
               productName={product.name}
             />
+
+            {/* Payment processing overlay / Overlay de procesamiento de pago */}
+            {isSubmitting && (
+              <div
+                data-testid="payment-loading-overlay"
+                className="absolute inset-0 z-10 flex flex-col items-center justify-center rounded-xl bg-slate-900/80 backdrop-blur-sm"
+              >
+                <Loader2 className="h-8 w-8 animate-spin text-purple-400 mb-3" />
+                <p className="text-sm font-medium text-white">{t('loading.processingPayment')}</p>
+              </div>
+            )}
           </div>
         </div>
 

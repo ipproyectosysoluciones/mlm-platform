@@ -25,6 +25,8 @@ import type { Property, PropertyListParams, PropertyType } from '../services/pro
 import { cn } from '../lib/utils';
 import { APP_URL } from '../config/app.config';
 import { Button } from '@/components/ui/button';
+import { ListingSkeleton } from '@/components/ui/skeletons';
+import { EmptyState } from '@/components/EmptyState';
 
 // ============================================
 // Helpers / Utilidades
@@ -347,33 +349,11 @@ export default function PropertiesPage() {
             </div>
           )}
 
-          {/* Loading skeleton */}
-          {isLoading && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {Array.from({ length: 8 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="rounded-xl border border-slate-200 bg-white overflow-hidden"
-                >
-                  <div className="h-52 bg-slate-200 animate-pulse" />
-                  <div className="p-4 space-y-3">
-                    <div className="h-4 bg-slate-200 rounded animate-pulse" />
-                    <div className="h-3 bg-slate-200 rounded w-3/4 animate-pulse" />
-                    <div className="h-5 bg-slate-200 rounded w-1/2 animate-pulse" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+          {/* Loading skeleton / Esqueleto de carga */}
+          {isLoading && <ListingSkeleton variant="property" count={8} />}
 
-          {/* Empty state */}
-          {!isLoading && !error && properties.length === 0 && (
-            <div className="text-center py-20 text-slate-400">
-              <MapPin className="w-12 h-12 mx-auto mb-4 opacity-30" />
-              <p className="text-lg font-medium">No se encontraron propiedades</p>
-              <p className="text-sm mt-1">Probá ajustando los filtros</p>
-            </div>
-          )}
+          {/* Empty state / Estado vacío */}
+          {!isLoading && !error && properties.length === 0 && <EmptyState type="search" />}
 
           {/* Property grid */}
           {!isLoading && properties.length > 0 && (

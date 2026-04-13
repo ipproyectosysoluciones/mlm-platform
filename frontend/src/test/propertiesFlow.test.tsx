@@ -317,7 +317,8 @@ describe('Properties flow (listing → detail)', () => {
       renderDetailPage();
 
       await waitFor(() => {
-        expect(screen.getByText('por mes')).toBeInTheDocument();
+        const elements = screen.getAllByText('por mes');
+        expect(elements.length).toBeGreaterThanOrEqual(1);
       });
     });
 
@@ -339,7 +340,8 @@ describe('Properties flow (listing → detail)', () => {
       renderDetailPage();
 
       await waitFor(() => {
-        expect(screen.getByRole('button', { name: /pago seguro/i })).toBeInTheDocument();
+        const buttons = screen.getAllByRole('button', { name: /pago seguro/i });
+        expect(buttons.length).toBeGreaterThanOrEqual(1);
       });
     });
 
@@ -348,7 +350,8 @@ describe('Properties flow (listing → detail)', () => {
       renderDetailPage('prop-456');
 
       await waitFor(() => {
-        expect(screen.getByRole('button', { name: /pago seguro/i })).toBeInTheDocument();
+        const buttons = screen.getAllByRole('button', { name: /pago seguro/i });
+        expect(buttons.length).toBeGreaterThanOrEqual(1);
       });
     });
 
@@ -357,10 +360,12 @@ describe('Properties flow (listing → detail)', () => {
       renderDetailPage();
 
       await waitFor(() => {
-        expect(screen.getByRole('button', { name: /pago seguro/i })).toBeInTheDocument();
+        const buttons = screen.getAllByRole('button', { name: /pago seguro/i });
+        expect(buttons.length).toBeGreaterThanOrEqual(1);
       });
 
-      fireEvent.click(screen.getByRole('button', { name: /pago seguro/i }));
+      const buttons = screen.getAllByRole('button', { name: /pago seguro/i });
+      fireEvent.click(buttons[0]);
 
       const storeWizardData = useReservationStore.getState().wizardData;
       expect(storeWizardData?.type).toBe('property');

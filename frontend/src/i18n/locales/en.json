@@ -605,6 +605,32 @@
     "secure": "Secure payment",
     "secureDesc": "All transactions are encrypted and protected."
   },
+  "emptyStates": {
+    "tours": {
+      "title": "No tours found",
+      "description": "Try adjusting your filters or explore all available options."
+    },
+    "properties": {
+      "title": "No properties found",
+      "description": "Try adjusting your filters or explore all available properties."
+    },
+    "cart": {
+      "title": "Your cart is empty",
+      "description": "Explore available tours and properties to get started."
+    },
+    "reservation": {
+      "title": "No reservations yet",
+      "description": "Explore properties and tours to make your first reservation."
+    },
+    "order": {
+      "title": "No orders yet",
+      "description": "Your purchases will appear here once you place your first order."
+    }
+  },
+  "loading": {
+    "processingPayment": "Processing payment...",
+    "fetchingData": "Loading data..."
+  },
   "cta": {
     "securePayment": "Secure Payment",
     "confirmPayment": "Confirm Payment",
