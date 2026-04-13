@@ -80,7 +80,7 @@ Achievement.init(
     key: {
       type: DataTypes.STRING(50),
       allowNull: false,
-      unique: true,
+      // unique constraint managed via indexes (Sequelize v6 sync bug workaround)
       comment: 'Unique identifier for the achievement (e.g. first_sale, team_10)',
     },
     name: {

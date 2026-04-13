@@ -42,13 +42,13 @@ QrMapping.init(
     shortCode: {
       type: DataTypes.STRING(10),
       allowNull: false,
-      unique: true,
+      // unique constraint managed via indexes (Sequelize v6 sync bug workaround)
       field: 'short_code',
     },
     giftCardId: {
       type: DataTypes.UUID,
       allowNull: false,
-      unique: true,
+      // unique constraint managed via indexes (Sequelize v6 sync bug workaround)
       field: 'gift_card_id',
     },
     scanCount: {

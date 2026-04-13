@@ -93,7 +93,7 @@ Invoice.init(
     invoiceNumber: {
       type: DataTypes.STRING(20),
       allowNull: false,
-      unique: true,
+      // unique constraint managed via indexes (Sequelize v6 sync bug workaround)
       field: 'invoice_number',
     },
     type: {

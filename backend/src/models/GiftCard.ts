@@ -49,7 +49,7 @@ GiftCard.init(
     code: {
       type: DataTypes.STRING(50),
       allowNull: false,
-      unique: true,
+      // unique constraint managed via indexes (Sequelize v6 sync bug workaround)
     },
     qrCodeData: {
       type: DataTypes.TEXT,

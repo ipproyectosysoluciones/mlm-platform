@@ -52,7 +52,7 @@ Vendor.init(
     userId: {
       type: DataTypes.UUID,
       allowNull: false,
-      unique: true,
+      // unique constraint managed via indexes (Sequelize v6 sync bug workaround)
       field: 'user_id',
       references: {
         model: 'users',
@@ -70,7 +70,7 @@ Vendor.init(
     slug: {
       type: DataTypes.STRING(255),
       allowNull: false,
-      unique: true,
+      // unique constraint managed via indexes (Sequelize v6 sync bug workaround)
       validate: {
         len: [1, 255],
       },

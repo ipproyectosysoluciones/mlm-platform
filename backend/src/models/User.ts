@@ -70,7 +70,7 @@ User.init(
     email: {
       type: DataTypes.STRING(255),
       allowNull: false,
-      unique: true,
+      // unique constraint managed via indexes (Sequelize v6 sync bug workaround)
       validate: {
         isEmail: true,
         len: [1, 255],
@@ -84,7 +84,7 @@ User.init(
     referralCode: {
       type: DataTypes.STRING(15),
       allowNull: false,
-      unique: true,
+      // unique constraint managed via indexes (Sequelize v6 sync bug workaround)
       field: 'referral_code',
     },
     sponsorId: {
