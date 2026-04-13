@@ -28,7 +28,9 @@ import {
   X,
   Compass,
   AlertTriangle,
+  Lock,
 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { tourService } from '../services/tourService';
 import type { TourPackage, TourCategory, TourAvailability } from '../services/tourService';
 import { useReservationStore } from '../stores/reservationStore';
@@ -86,27 +88,33 @@ function ImageGallery({ images, title }: ImageGalleryProps) {
       />
       {images.length > 1 && (
         <>
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => setCurrent((c) => (c === 0 ? images.length - 1 : c - 1))}
-            className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/40 text-white flex items-center justify-center hover:bg-black/60 transition-colors"
+            className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/40 text-white hover:bg-black/60"
             aria-label="Imagen anterior"
           >
             <ChevronLeft className="w-5 h-5" />
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => setCurrent((c) => (c === images.length - 1 ? 0 : c + 1))}
-            className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/40 text-white flex items-center justify-center hover:bg-black/60 transition-colors"
+            className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/40 text-white hover:bg-black/60"
             aria-label="Imagen siguiente"
           >
             <ChevronRight className="w-5 h-5" />
-          </button>
+          </Button>
           <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
             {images.map((_, i) => (
-              <button
+              <Button
                 key={i}
+                variant="ghost"
+                size="icon"
                 onClick={() => setCurrent(i)}
                 className={cn(
-                  'w-2 h-2 rounded-full transition-colors',
+                  'w-2 h-2 rounded-full p-0 min-w-0 h-auto',
                   i === current ? 'bg-white' : 'bg-white/50'
                 )}
               />
@@ -142,12 +150,13 @@ function AvailabilityPicker({ availabilities, selected, onSelect }: Availability
         });
 
         return (
-          <button
+          <Button
             key={a.id}
+            variant="outline"
             onClick={() => !isFull && onSelect(a)}
             disabled={isFull}
             className={cn(
-              'px-3 py-2 rounded-lg text-sm border transition-all',
+              'px-3 py-2 h-auto text-sm',
               isSelected && 'border-emerald-500 bg-emerald-50 text-emerald-700 font-semibold',
               !isSelected && !isFull && 'border-slate-200 hover:border-emerald-300 text-slate-700',
               isFull && 'border-slate-100 text-slate-300 line-through cursor-not-allowed'
@@ -157,7 +166,7 @@ function AvailabilityPicker({ availabilities, selected, onSelect }: Availability
             <span className="block text-xs text-current opacity-70">
               {isFull ? 'Completo' : `${a.availableSpots} lugares`}
             </span>
-          </button>
+          </Button>
         );
       })}
     </div>
@@ -239,12 +248,13 @@ export default function TourDetailPage() {
     return (
       <div className="max-w-5xl mx-auto px-4 py-20 text-center">
         <p className="text-red-500 mb-4">{error ?? 'Tour no encontrado'}</p>
-        <button
+        <Button
+          variant="ghost"
           onClick={() => navigate('/tours')}
           className="text-emerald-600 hover:underline text-sm"
         >
           Volver al listado
-        </button>
+        </Button>
       </div>
     );
   }
@@ -340,13 +350,14 @@ export default function TourDetailPage() {
       <div className="min-h-screen bg-slate-50 pb-12">
         <div className="max-w-5xl mx-auto px-4 py-8">
           {/* Back button */}
-          <button
+          <Button
+            variant="ghost"
             onClick={() => navigate('/tours')}
-            className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 mb-6 transition-colors"
+            className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 mb-6"
           >
             <ArrowLeft className="w-4 h-4" />
             Volver a tours
-          </button>
+          </Button>
 
           {/* Gallery */}
           <ImageGallery images={tour.images} title={tour.title} />
@@ -547,13 +558,9 @@ export default function TourDetailPage() {
                         <div className="text-sm bg-red-50 border border-red-200 rounded-lg px-3 py-2 mb-4 text-red-700 font-semibold text-center">
                           {t('tours.soldOut')}
                         </div>
-                        <button
-                          type="button"
-                          disabled
-                          className="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-slate-300 text-slate-500 font-semibold cursor-not-allowed"
-                        >
+                        <Button type="button" disabled className="w-full">
                           {t('tours.soldOut')}
-                        </button>
+                        </Button>
                       </>
                     );
                   }
@@ -576,14 +583,14 @@ export default function TourDetailPage() {
                         </p>
                       )}
 
-                      <button
+                      <Button
                         onClick={handleReserve}
                         disabled={!selectedAvailability}
-                        className="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-emerald-500 text-white font-semibold hover:bg-emerald-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                        className="w-full"
                       >
-                        <CalendarDays className="w-5 h-5" />
-                        Reservar este tour
-                      </button>
+                        <Lock className="h-4 w-4 mr-2" />
+                        {t('cta.securePayment')}
+                      </Button>
                     </>
                   );
                 })()}
@@ -594,6 +601,29 @@ export default function TourDetailPage() {
               </div>
             </div>
           </div>
+
+          {/* Spacer for mobile sticky CTA / Espacio para CTA fijo en móvil */}
+          <div className="h-20 lg:h-0" />
+        </div>
+      </div>
+
+      {/* Mobile sticky CTA bar / Barra CTA fija en móvil */}
+      <div
+        className="fixed bottom-0 inset-x-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur-sm px-4 py-3 lg:hidden"
+        data-testid="mobile-sticky-cta"
+      >
+        <div className="flex items-center justify-between gap-4 max-w-4xl mx-auto">
+          <div>
+            <p className="text-lg font-bold text-emerald-600">
+              {tour.currency}{' '}
+              {Number(tour.price).toLocaleString('es-AR', { minimumFractionDigits: 0 })}
+            </p>
+            <p className="text-xs text-slate-400">por persona</p>
+          </div>
+          <Button onClick={handleReserve} disabled={!selectedAvailability} className="shrink-0">
+            <Lock className="h-4 w-4 mr-2" />
+            {t('cta.securePayment')}
+          </Button>
         </div>
       </div>
     </>

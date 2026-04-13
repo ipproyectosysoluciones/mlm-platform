@@ -122,6 +122,46 @@ const mockT = (key: string, _options?: Record<string, unknown>) => {
     'reservation.subtotal': 'Subtotal',
     'reservation.total': 'Total',
     'reservation.priceBreakdown': 'Desglose de precio',
+    // CTA keys (Issue #159 — UX Polish)
+    'cta.securePayment': 'Pago seguro',
+    'cta.confirmPayment': 'Confirmar pago',
+    'cta.cancel': 'Cancelar',
+    'cta.back': 'Volver',
+    'cta.continue': 'Continuar',
+    // EmptyState keys (Issue #159 — Phase 2)
+    'emptyStates.tours.title': 'No se encontraron tours',
+    'emptyStates.tours.description':
+      'Probá ajustando los filtros o explorá todas las opciones disponibles.',
+    'emptyStates.properties.title': 'No se encontraron propiedades',
+    'emptyStates.properties.description':
+      'Probá ajustando los filtros o explorá todas las propiedades disponibles.',
+    'emptyStates.cart.title': 'Tu carrito está vacío',
+    'emptyStates.cart.description': 'Explorá tours y propiedades disponibles para comenzar.',
+    'emptyStates.reservation.title': 'No tenés reservas todavía',
+    'emptyStates.reservation.description':
+      'Explorá propiedades y tours disponibles para hacer tu primera reserva.',
+    'emptyStates.order.title': 'No tenés órdenes todavía',
+    'emptyStates.order.description':
+      'Tus compras aparecerán aquí cuando realices tu primera orden.',
+    // Loading keys (Issue #159 — Phase 2)
+    'loading.processingPayment': 'Procesando pago...',
+    'loading.fetchingData': 'Cargando datos...',
+    // Checkout flow
+    'checkout.title': 'Checkout',
+    'checkout.subtitle': 'Completá tu compra',
+    'checkout.confirmPurchase': 'Confirmar compra',
+    'checkout.total': 'Total',
+    'checkout.processing': 'Procesando...',
+    'checkout.success': '¡Compra exitosa!',
+    'checkout.simulatedWarning': 'Este es un pago simulado',
+    'checkout.productUnavailable': 'Producto no disponible',
+    'checkout.productNotFound': 'Producto no encontrado',
+    'checkout.backToProducts': 'Volver a productos',
+    'checkout.error': 'Error al procesar la compra',
+    'common.cancel': 'Cancelar',
+    'products.loading': 'Cargando productos...',
+    'products.error': 'Error al cargar productos',
+    'products.days': 'días',
   };
   return translations[key] || key;
 };

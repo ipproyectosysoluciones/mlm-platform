@@ -317,7 +317,8 @@ describe('Properties flow (listing → detail)', () => {
       renderDetailPage();
 
       await waitFor(() => {
-        expect(screen.getByText('por mes')).toBeInTheDocument();
+        const elements = screen.getAllByText('por mes');
+        expect(elements.length).toBeGreaterThanOrEqual(1);
       });
     });
 
@@ -334,21 +335,23 @@ describe('Properties flow (listing → detail)', () => {
       expect(screen.queryByText('por mes')).not.toBeInTheDocument();
     });
 
-    it('shows "Solicitar visita" CTA for rental properties', async () => {
+    it('shows "Pago seguro" CTA for rental properties', async () => {
       vi.mocked(propertyService.getProperty).mockResolvedValueOnce(mockProperty);
       renderDetailPage();
 
       await waitFor(() => {
-        expect(screen.getByRole('button', { name: /solicitar visita/i })).toBeInTheDocument();
+        const buttons = screen.getAllByRole('button', { name: /pago seguro/i });
+        expect(buttons.length).toBeGreaterThanOrEqual(1);
       });
     });
 
-    it('shows "Consultar" CTA for sale properties', async () => {
+    it('shows "Pago seguro" CTA for sale properties', async () => {
       vi.mocked(propertyService.getProperty).mockResolvedValueOnce(mockSaleProperty);
       renderDetailPage('prop-456');
 
       await waitFor(() => {
-        expect(screen.getByRole('button', { name: /consultar/i })).toBeInTheDocument();
+        const buttons = screen.getAllByRole('button', { name: /pago seguro/i });
+        expect(buttons.length).toBeGreaterThanOrEqual(1);
       });
     });
 
@@ -357,10 +360,12 @@ describe('Properties flow (listing → detail)', () => {
       renderDetailPage();
 
       await waitFor(() => {
-        expect(screen.getByRole('button', { name: /solicitar visita/i })).toBeInTheDocument();
+        const buttons = screen.getAllByRole('button', { name: /pago seguro/i });
+        expect(buttons.length).toBeGreaterThanOrEqual(1);
       });
 
-      fireEvent.click(screen.getByRole('button', { name: /solicitar visita/i }));
+      const buttons = screen.getAllByRole('button', { name: /pago seguro/i });
+      fireEvent.click(buttons[0]);
 
       const storeWizardData = useReservationStore.getState().wizardData;
       expect(storeWizardData?.type).toBe('property');

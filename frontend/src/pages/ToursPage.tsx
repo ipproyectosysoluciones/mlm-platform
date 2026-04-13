@@ -25,6 +25,9 @@ import { tourService } from '../services/tourService';
 import type { TourPackage, TourListParams, TourCategory } from '../services/tourService';
 import { cn } from '../lib/utils';
 import { APP_URL } from '../config/app.config';
+import { Button } from '@/components/ui/button';
+import { ListingSkeleton } from '@/components/ui/skeletons';
+import { EmptyState } from '@/components/EmptyState';
 
 // ============================================
 // Helpers / Utilidades
@@ -190,25 +193,22 @@ function TourCard({ tour, onClick }: TourCardProps) {
             <span className="text-sm font-normal text-slate-400"> / persona</span>
           </p>
           {isSoldOut ? (
-            <button
-              type="button"
-              disabled
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-300 text-slate-500 text-sm font-medium cursor-not-allowed shrink-0"
-            >
+            <Button type="button" disabled variant="outline" size="sm" className="shrink-0">
               {t('tours.soldOut')}
-            </button>
+            </Button>
           ) : (
-            <button
+            <Button
               type="button"
+              size="sm"
               onClick={(e) => {
                 e.stopPropagation();
                 navigate(`/reservations/new?tourPackageId=${tour.id}`);
               }}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500 text-white text-sm font-medium hover:bg-emerald-600 transition-colors shrink-0"
+              className="shrink-0"
             >
               <CalendarCheck className="w-3.5 h-3.5" />
               {t('catalog.bookNow')}
-            </button>
+            </Button>
           )}
         </div>
       </div>
@@ -378,22 +378,15 @@ export default function ToursPage() {
                 className="w-36 px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:border-emerald-400"
               />
 
-              <button
-                type="submit"
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-500 text-white text-sm font-medium hover:bg-emerald-600 transition-colors"
-              >
+              <Button type="submit">
                 <SlidersHorizontal className="w-4 h-4" />
                 Filtrar
-              </button>
+              </Button>
 
               {hasActiveFilters && (
-                <button
-                  type="button"
-                  onClick={clearFilters}
-                  className="px-4 py-2 rounded-lg border border-slate-200 text-sm text-slate-600 hover:bg-slate-50 transition-colors"
-                >
+                <Button type="button" variant="outline" onClick={clearFilters}>
                   Limpiar
-                </button>
+                </Button>
               )}
             </form>
           </div>
@@ -405,33 +398,11 @@ export default function ToursPage() {
             </div>
           )}
 
-          {/* Loading skeleton */}
-          {isLoading && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {Array.from({ length: 8 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="rounded-xl border border-slate-200 bg-white overflow-hidden"
-                >
-                  <div className="h-52 bg-slate-200 animate-pulse" />
-                  <div className="p-4 space-y-3">
-                    <div className="h-4 bg-slate-200 rounded animate-pulse" />
-                    <div className="h-3 bg-slate-200 rounded w-3/4 animate-pulse" />
-                    <div className="h-5 bg-slate-200 rounded w-1/2 animate-pulse" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+          {/* Loading skeleton / Esqueleto de carga */}
+          {isLoading && <ListingSkeleton variant="tour" count={8} />}
 
-          {/* Empty state */}
-          {!isLoading && !error && tours.length === 0 && (
-            <div className="text-center py-20 text-slate-400">
-              <Compass className="w-12 h-12 mx-auto mb-4 opacity-30" />
-              <p className="text-lg font-medium">No se encontraron tours</p>
-              <p className="text-sm mt-1">Probá ajustando los filtros</p>
-            </div>
-          )}
+          {/* Empty state / Estado vacío */}
+          {!isLoading && !error && tours.length === 0 && <EmptyState type="search" />}
 
           {/* Tours grid */}
           {!isLoading && tours.length > 0 && (
@@ -445,23 +416,23 @@ export default function ToursPage() {
               {/* Pagination */}
               {pagination && pagination.totalPages > 1 && (
                 <div className="flex justify-center gap-2 mt-8">
-                  <button
+                  <Button
+                    variant="outline"
                     onClick={() => setPage((p) => Math.max(1, p - 1))}
                     disabled={page === 1}
-                    className="px-4 py-2 rounded-lg border border-slate-200 text-sm disabled:opacity-40 hover:bg-slate-50 transition-colors"
                   >
                     Anterior
-                  </button>
+                  </Button>
                   <span className="px-4 py-2 text-sm text-slate-600">
                     Página {page} de {pagination.totalPages}
                   </span>
-                  <button
+                  <Button
+                    variant="outline"
                     onClick={() => setPage((p) => Math.min(pagination.totalPages, p + 1))}
                     disabled={page === pagination.totalPages}
-                    className="px-4 py-2 rounded-lg border border-slate-200 text-sm disabled:opacity-40 hover:bg-slate-50 transition-colors"
                   >
                     Siguiente
-                  </button>
+                  </Button>
                 </div>
               )}
             </>

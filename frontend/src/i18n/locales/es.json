@@ -601,6 +601,39 @@
     "secure": "Pago seguro",
     "secureDesc": "Todas las transacciones están encriptadas y protegidas."
   },
+  "emptyStates": {
+    "tours": {
+      "title": "No se encontraron tours",
+      "description": "Probá ajustando los filtros o explorá todas las opciones disponibles."
+    },
+    "properties": {
+      "title": "No se encontraron propiedades",
+      "description": "Probá ajustando los filtros o explorá todas las propiedades disponibles."
+    },
+    "cart": {
+      "title": "Tu carrito está vacío",
+      "description": "Explorá tours y propiedades disponibles para comenzar."
+    },
+    "reservation": {
+      "title": "No tenés reservas todavía",
+      "description": "Explorá propiedades y tours disponibles para hacer tu primera reserva."
+    },
+    "order": {
+      "title": "No tenés órdenes todavía",
+      "description": "Tus compras aparecerán aquí cuando realices tu primera orden."
+    }
+  },
+  "loading": {
+    "processingPayment": "Procesando pago...",
+    "fetchingData": "Cargando datos..."
+  },
+  "cta": {
+    "securePayment": "Pago seguro",
+    "confirmPayment": "Confirmar pago",
+    "cancel": "Cancelar",
+    "back": "Volver",
+    "continue": "Continuar"
+  },
   "landing": {
     "hero": {
       "badge": "Plataforma #1 en América Latina",

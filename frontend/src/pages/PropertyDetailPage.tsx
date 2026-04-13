@@ -14,6 +14,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
 import {
   MapPin,
@@ -23,9 +24,10 @@ import {
   ArrowLeft,
   ChevronLeft,
   ChevronRight,
-  CalendarDays,
   Check,
+  Lock,
 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { propertyService } from '../services/propertyService';
 import type { Property, PropertyType } from '../services/propertyService';
 import { useReservationStore } from '../stores/reservationStore';
@@ -78,29 +80,35 @@ function ImageGallery({ images, title }: ImageGalleryProps) {
 
       {images.length > 1 && (
         <>
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => setCurrent((c) => (c === 0 ? images.length - 1 : c - 1))}
-            className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/40 text-white flex items-center justify-center hover:bg-black/60 transition-colors"
+            className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/40 text-white hover:bg-black/60"
             aria-label="Imagen anterior"
           >
             <ChevronLeft className="w-5 h-5" />
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => setCurrent((c) => (c === images.length - 1 ? 0 : c + 1))}
-            className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/40 text-white flex items-center justify-center hover:bg-black/60 transition-colors"
+            className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/40 text-white hover:bg-black/60"
             aria-label="Imagen siguiente"
           >
             <ChevronRight className="w-5 h-5" />
-          </button>
+          </Button>
 
           {/* Dots */}
           <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
             {images.map((_, i) => (
-              <button
+              <Button
                 key={i}
+                variant="ghost"
+                size="icon"
                 onClick={() => setCurrent(i)}
                 className={cn(
-                  'w-2 h-2 rounded-full transition-colors',
+                  'w-2 h-2 rounded-full p-0 min-w-0 h-auto',
                   i === current ? 'bg-white' : 'bg-white/50'
                 )}
                 aria-label={`Ir a imagen ${i + 1}`}
@@ -114,18 +122,20 @@ function ImageGallery({ images, title }: ImageGalleryProps) {
       {images.length > 1 && (
         <div className="flex gap-2 mt-2 px-1">
           {images.map((img, i) => (
-            <button
+            <Button
               key={i}
+              variant="ghost"
+              size="icon"
               onClick={() => setCurrent(i)}
               className={cn(
-                'w-16 h-12 rounded-lg overflow-hidden border-2 shrink-0 transition-all',
+                'w-16 h-12 rounded-lg overflow-hidden border-2 shrink-0 p-0',
                 i === current
                   ? 'border-emerald-500'
                   : 'border-transparent opacity-60 hover:opacity-100'
               )}
             >
               <img src={img} alt={`Miniatura ${i + 1}`} className="w-full h-full object-cover" />
-            </button>
+            </Button>
           ))}
         </div>
       )}
@@ -165,6 +175,7 @@ function PropertyDetailSkeleton() {
 export default function PropertyDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const startPropertyReservation = useReservationStore((s) => s.startPropertyReservation);
 
   const [property, setProperty] = useState<Property | null>(null);
@@ -206,12 +217,13 @@ export default function PropertyDetailPage() {
     return (
       <div className="max-w-5xl mx-auto px-4 py-20 text-center">
         <p className="text-red-500 mb-4">{error ?? 'Propiedad no encontrada'}</p>
-        <button
+        <Button
+          variant="ghost"
           onClick={() => navigate('/properties')}
           className="text-emerald-600 hover:underline text-sm"
         >
           Volver al listado
-        </button>
+        </Button>
       </div>
     );
   }
@@ -311,13 +323,14 @@ export default function PropertyDetailPage() {
       <div className="min-h-screen bg-slate-50 pb-12">
         <div className="max-w-5xl mx-auto px-4 py-8">
           {/* Back button */}
-          <button
+          <Button
+            variant="ghost"
             onClick={() => navigate('/properties')}
-            className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 mb-6 transition-colors"
+            className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 mb-6"
           >
             <ArrowLeft className="w-4 h-4" />
             Volver a propiedades
-          </button>
+          </Button>
 
           {/* Gallery */}
           <ImageGallery images={property.images} title={property.title} />
@@ -410,13 +423,13 @@ export default function PropertyDetailPage() {
                   <p className="text-sm text-slate-400 mb-4">por mes</p>
                 )}
 
-                <button
+                <Button
                   onClick={handleReserve}
-                  className="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-emerald-500 text-white font-semibold hover:bg-emerald-600 transition-colors"
+                  className="w-full flex items-center justify-center gap-2 py-3"
                 >
-                  <CalendarDays className="w-5 h-5" />
-                  {property.type === 'rental' ? 'Solicitar visita' : 'Consultar'}
-                </button>
+                  <Lock className="h-4 w-4 mr-2" />
+                  {t('cta.securePayment')}
+                </Button>
 
                 <p className="text-xs text-slate-400 text-center mt-3">
                   Sin compromiso — te contactamos a la brevedad
@@ -424,6 +437,29 @@ export default function PropertyDetailPage() {
               </div>
             </div>
           </div>
+
+          {/* Spacer for mobile sticky CTA / Espacio para CTA fijo en móvil */}
+          <div className="h-20 lg:h-0" />
+        </div>
+      </div>
+
+      {/* Mobile sticky CTA bar / Barra CTA fija en móvil */}
+      <div
+        className="fixed bottom-0 inset-x-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur-sm px-4 py-3 lg:hidden"
+        data-testid="mobile-sticky-cta"
+      >
+        <div className="flex items-center justify-between gap-4 max-w-4xl mx-auto">
+          <div>
+            <p className="text-lg font-bold text-emerald-600">
+              {property.currency}{' '}
+              {Number(property.price).toLocaleString('es-AR', { minimumFractionDigits: 0 })}
+            </p>
+            {property.type === 'rental' && <p className="text-xs text-slate-400">por mes</p>}
+          </div>
+          <Button onClick={handleReserve} className="shrink-0">
+            <Lock className="h-4 w-4 mr-2" />
+            {t('cta.securePayment')}
+          </Button>
         </div>
       </div>
     </>
