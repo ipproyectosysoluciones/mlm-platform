@@ -10,6 +10,8 @@ import { Response } from 'express';
 import { body } from 'express-validator';
 import { crmService } from '../../services/CRMService';
 import { AppError } from '../../middleware/error.middleware';
+import { WorkflowService } from '../../services/WorkflowService';
+import { logger } from '../../utils/logger';
 import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
 import type { LeadStatus, LeadSource } from '../../models/Lead.js';
 
@@ -17,6 +19,9 @@ import type { LeadStatus, LeadSource } from '../../models/Lead.js';
  * Validation rules for creating a new lead
  * Reglas de validación para crear un nuevo lead
  */
+
+const workflowService = new WorkflowService();
+
 export const createLeadValidation = [
   body('contactName').notEmpty().withMessage('Contact name is required'),
   body('contactEmail').isEmail().withMessage('Valid email is required'),
@@ -99,6 +104,12 @@ export async function createLead(req: AuthenticatedRequest, res: Response) {
     ...req.body,
   });
   res.status(201).json({ success: true, data: lead });
+
+  // Fire-and-forget: trigger n8n after response is sent
+  // ES: Fire-and-forget: disparar n8n después de enviar la respuesta
+  workflowService.triggerLeadCreated(lead).catch((err: unknown) => {
+    logger.error(`Failed to trigger n8n for lead ${lead.id}: ${err}`);
+  });
 }
 
 /**

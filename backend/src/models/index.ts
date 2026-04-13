@@ -45,6 +45,7 @@ import { TourPackage } from './TourPackage';
 import { TourAvailability } from './TourAvailability';
 import { Reservation } from './Reservation';
 import { WebhookEvent } from './WebhookEvent';
+import { WorkflowExecution } from './WorkflowExecution';
 
 // User relationships
 User.hasMany(User, { as: 'children', foreignKey: 'sponsorId', sourceKey: 'id' });
@@ -74,6 +75,10 @@ Task.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 Lead.hasMany(Communication, { foreignKey: 'leadId', as: 'communications' });
 Communication.belongsTo(Lead, { foreignKey: 'leadId', as: 'lead' });
 Communication.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+
+// CRM Workflow Execution relationships (#158 — n8n Integration)
+Lead.hasMany(WorkflowExecution, { foreignKey: 'leadId', as: 'workflowExecutions' });
+WorkflowExecution.belongsTo(Lead, { foreignKey: 'leadId', as: 'lead' });
 
 User.hasMany(LandingPage, { foreignKey: 'userId', sourceKey: 'id' });
 LandingPage.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
@@ -542,6 +547,7 @@ export {
   Badge,
   UserAchievement,
   WebhookEvent,
+  WorkflowExecution,
   Property,
   TourPackage,
   TourAvailability,

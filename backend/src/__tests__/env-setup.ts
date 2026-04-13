@@ -17,3 +17,5 @@
 process.env.JWT_SECRET = process.env.JWT_SECRET || 'test-secret-for-jest';
 process.env.TWO_FACTOR_SECRET_KEY = process.env.TWO_FACTOR_SECRET_KEY || 'test-2fa-key-for-jest';
 process.env.FEATURE_CRYPTO_WALLET = process.env.FEATURE_CRYPTO_WALLET || 'true';
+process.env.INTERNAL_WEBHOOK_SECRET =
+  process.env.INTERNAL_WEBHOOK_SECRET || 'test-internal-secret-for-jest';

@@ -18,7 +18,7 @@ import {
   DollarSign,
 } from 'lucide-react';
 import { adminService } from '../services/api';
-import { StatsOverview, UserFilters, UsersTable } from '../components/admin';
+import { StatsOverview, UserFilters, UsersTable, CRMAutomationWidget } from '../components/admin';
 
 interface UserData {
   id: string;
@@ -176,6 +176,11 @@ export default function AdminDashboard() {
 
       <div>
         <StatsOverview stats={stats} />
+
+        {/* CRM Automation Widget / Widget de automatización CRM */}
+        <div className="mb-8">
+          <CRMAutomationWidget />
+        </div>
 
         <div className="bg-white rounded-xl shadow-sm border border-slate-200">
           <div className="p-4 border-b border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4">

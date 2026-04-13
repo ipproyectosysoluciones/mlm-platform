@@ -68,7 +68,7 @@ CartRecoveryToken.init(
     tokenHash: {
       type: DataTypes.STRING(255),
       allowNull: false,
-      unique: true,
+      // unique constraint managed via indexes (Sequelize v6 sync bug workaround)
       field: 'token_hash',
     },
     status: {

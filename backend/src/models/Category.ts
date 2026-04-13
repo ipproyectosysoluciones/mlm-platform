@@ -73,7 +73,8 @@ Category.init(
     slug: {
       type: DataTypes.STRING(255),
       allowNull: false,
-      unique: true,
+      // NOTE: unique constraint managed via indexes (not inline) to avoid
+      // Sequelize v6 generating invalid ALTER COLUMN ... TYPE ... UNIQUE SQL
       comment: 'URL-friendly slug / Slug amigable para URL',
       validate: {
         notEmpty: {
@@ -113,7 +114,7 @@ Category.init(
     indexes: [
       { fields: ['parent_id'] },
       { fields: ['is_active', 'sort_order'] },
-      { fields: ['slug'] },
+      { fields: ['slug'], unique: true },
     ],
   }
 );

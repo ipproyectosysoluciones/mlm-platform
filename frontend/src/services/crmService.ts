@@ -41,6 +41,46 @@ export interface LeadFilters {
   limit?: number;
 }
 
+/**
+ * Automation status summary from n8n workflow executions.
+ * Resumen de estado de automatización de ejecuciones de workflows n8n.
+ */
+export interface AutomationStatus {
+  totalExecutions: number;
+  pendingFollowUps: number;
+  lastActionAt: string | null;
+}
+
+/**
+ * Single workflow execution record with optional lead data.
+ * Registro de ejecución de workflow con datos opcionales del lead.
+ */
+export interface WorkflowExecutionRecord {
+  id: string;
+  leadId: string;
+  workflowName: string;
+  actionType: string;
+  status: string;
+  n8nExecutionId: string;
+  errorMessage: string | null;
+  createdAt: string;
+  Lead?: {
+    contactName: string;
+    contactPhone: string | null;
+  };
+}
+
+/**
+ * Paginated response for workflow executions.
+ * Respuesta paginada de ejecuciones de workflows.
+ */
+export interface AutomationExecutionsResponse {
+  data: WorkflowExecutionRecord[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
 class CRMService {
   async getLeads(filters?: LeadFilters): Promise<{ leads: Lead[]; pagination: any }> {
     const params = new URLSearchParams();
@@ -112,6 +152,28 @@ class CRMService {
   async getUpcomingTasks() {
     const { data } = await api.get('/crm/tasks');
     return data.data;
+  }
+
+  /**
+   * Get automation status summary (total executions, pending follow-ups, last action).
+   * Obtener resumen de estado de automatización (total ejecuciones, seguimientos pendientes, última acción).
+   */
+  async getAutomationStatus(): Promise<AutomationStatus> {
+    const { data } = await api.get('/crm/automation/status');
+    return data.data;
+  }
+
+  /**
+   * Get paginated list of workflow executions.
+   * Obtener lista paginada de ejecuciones de workflows.
+   * @param page - Page number (default 1) / Número de página (default 1)
+   * @param limit - Items per page (default 20, max 100) / Items por página (default 20, máx 100)
+   */
+  async getAutomationExecutions(page = 1, limit = 20): Promise<AutomationExecutionsResponse> {
+    const { data } = await api.get('/crm/automation/executions', {
+      params: { page, limit },
+    });
+    return { data: data.data, total: data.total, page: data.page, limit: data.limit };
   }
 }
 
