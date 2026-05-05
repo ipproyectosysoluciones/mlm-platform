@@ -3,7 +3,7 @@
 > Guía completa para configurar n8n desde cero en el stack de Nexo Real.
 > Incluye workflows de `schedule-visit` y `human-handoff`.
 >
-> **Última actualización:** 2026-04-06
+> **Última actualización:** 2026-04-13 (v3.0.0)
 > **n8n version:** 2.14.2 (Self Hosted)
 
 ---
@@ -34,8 +34,12 @@ Nexo Bot (builderbot)
    ├── POST /webhook/schedule-visit ──► n8n ──► Google Calendar (crear evento)
    │                                       └──► Notion CRM (Status: Visit Scheduled)
    │
-   └── POST /webhook/human-handoff ───► n8n ──► Notion CRM (Status: Needs Human)
+   ├── POST /webhook/human-handoff ───► n8n ──► Notion CRM (Status: Needs Human)
+   │
+   └── POST /api/webhooks/n8n ────────► Backend ──► WorkflowService (Sprint 10)
 ```
+
+> **Sprint 10 Update (v3.0.0):** Nuevo endpoint `POST /api/webhooks/n8n` que permite a n8n enviar eventos al backend para tracking via WorkflowService y WorkflowExecution model.
 
 - n8n corre en Docker en la red interna `mlm-network`
 - Los webhooks NO son públicos — solo accesibles desde otros containers

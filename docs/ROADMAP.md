@@ -3,16 +3,16 @@
 > Hoja de ruta completa para la plataforma **Nexo Real** — Servicios Inmobiliarios, Turismo/Hospitalidad y Afiliaciones.  
 > _"Conectamos tu negocio con el mundo."_
 
-**Versión actual**: v2.6.1 — Sprint 9 Completado ✅  
-**Última actualización**: 2026-04-12  
-**Estado**: Activo - Desarrollo intensivo  
-**Meta**: v3.0.0 — expansión México + Argentina
+**Versión actual**: v3.0.0 — Sprint 10 Completado ✅  
+**Última actualización**: 2026-04-13  
+**Estado**: Activo - Producción  
+**Meta**: v3.1.0 — expansión México + Argentina
 
 ---
 
 ## 📊 Estado Actual del Proyecto
 
-### ✅ Lo que YA está implementado (v2.6.1)
+### ✅ Lo que YA está implementado (v3.0.0)
 
 | Área                     | Funcionalidad                                                                        | Estado |
 | ------------------------ | ------------------------------------------------------------------------------------ | ------ |
@@ -50,25 +50,39 @@
 | **Register Guest**       | `POST /api/auth/register/guest` — registro público sin sponsor                       | ✅     |
 | **Update User Role**     | `PATCH /api/admin/users/:id/role` — solo super_admin/admin                           | ✅     |
 | **Seed Nexo Real**       | Datos colombianos (Medellín, Bogotá, Cartagena), árbol Unilevel completo             | ✅     |
+| **Payment Webhooks**     | WebhookEvent model + MercadoPago + PayPal webhook handlers                           | ✅     |
+| **Invoice System**       | Invoice model + InvoiceService + PDF generation + CRUD routes                        | ✅     |
+| **Commission Unilevel**  | Migración Binary→Unilevel, 10 niveles configurables, Closure Table                   | ✅     |
+| **n8n CRM Integration**  | WorkflowService + WorkflowExecution + N8nWebhookController + Automation routes       | ✅     |
+| **2FA Frontend**         | TwoFactorLoginPage + twoFactorService + códigos de recuperación                      | ✅     |
+| **UX Polish**            | EmptyState 6 tipos + Skeleton loaders + Mobile responsive + Sonner toast             | ✅     |
+| **Feature Guard**        | Middleware para feature flags (FEATURE_CRYPTO_ENABLED=false por defecto)             | ✅     |
+| **Tests**                | Backend: 65+ suites, 600+ tests · Frontend: 35+ suites, 600+ tests · Total: 1,200+   | ✅     |
 
 ---
 
-## 🚀 Sprint 6 — v2.2.0 (Completado 2026-04-07)
+## 🚀 Sprint 10 — v3.0.0 (Completado 2026-04-13)
 
 ### Objetivos cumplidos
 
-| Fase   | Área                                                             | Estado        |
-| ------ | ---------------------------------------------------------------- | ------------- |
-| Fase 0 | Setup: Issues + ramas                                            | ✅            |
-| Fase 9 | Security: CodeQL #39 #40 fix                                     | ✅ PR #88     |
-| Fase 1 | Migration + Build hardening                                      | ✅ PR #89     |
-| Fase 2 | i18n cleanup + DashboardStreaming removal                        | ✅ PR #90     |
-| Fase 3 | Backend bot endpoints (incluido en PR #89)                       | ✅            |
-| Fase 4 | Admin Dashboard CRUD frontend                                    | ✅ PR #91     |
-| Fase 5 | Nexo Bot flows (properties + tours)                              | ✅ PR #92     |
-| Fase 6 | Documentación (Swagger v2.2.0 + CHANGELOG)                       | ✅            |
-| Fase 7 | Testing: migration tests + AdminPropertiesPage integration tests | ✅ PR commits |
-| Fase 8 | SEO/Content: meta tags + JSON-LD + social proof badges           | ✅ PR #95     |
+| #    | Issue                      | Área                                                       | PR   |
+| ---- | -------------------------- | ---------------------------------------------------------- | ---- |
+| #151 | Payment Webhooks           | MercadoPago + PayPal webhook handling + WebhookEvent model | #160 |
+| #152 | PayPal Checkout Redirect   | PayPalService rework + checkout flow                       | #161 |
+| #153 | Invoices DB Migration      | Invoice model + InvoiceService + PDF + routes              | #162 |
+| #154 | Disable Crypto Wallet      | Feature flag + middleware                                  | #163 |
+| #155 | Admin CRUD Pages           | Full admin management + CRM widgets                        | #164 |
+| #156 | 2FA Frontend Testing + Fix | TwoFactorLoginPage + twoFactorService                      | #165 |
+| #157 | Commission Unilevel        | Binary→Unilevel migration + 10 levels + Closure Table      | #166 |
+| #158 | n8n CRM Integration        | WorkflowService + N8nWebhookController + automation        | #167 |
+| #159 | UX Polish                  | Buttons, EmptyState, Skeletons, mobile, Sonner             | #168 |
+
+### Métricas
+
+- 9 issues completados
+- 154 archivos cambiados
+- ~12,110 líneas agregadas
+- 1,200+ tests automatizados
 
 ---
 
@@ -141,29 +155,29 @@ Integraciones: n8n → Google Calendar + Notion + Notificación humana
 
 ```
 ╔══════════════════════════════════════════════════════════════════════╗
-║                    MES 1: HASTA 2026-05-03                         ║
+║                    MES 1: HASTA 2026-05-03                           ║
 ╠══════════════════════════════════════════════════════════════════════╣
-║  ✅ SEMANA 1 (Mar 30 - Abr 5): MONETIZACIÓN — v1.9.0             ║
-║  ├── ✅ Pagos: PayPal SDK                                         ║
-║  ├── ✅ Pagos: MercadoPago SDK                                    ║
-║  └── ✅ Gamificación: Leaderboards + Achievements                 ║
+║  ✅ SEMANA 1 (Mar 30 - Abr 5): MONETIZACIÓN — v1.9.0                  ║
+║  ├── ✅ Pagos: PayPal SDK                                             ║
+║  ├── ✅ Pagos: MercadoPago SDK                                        ║
+║  └── ✅ Gamificación: Leaderboards + Achievements                     ║
 ╠══════════════════════════════════════════════════════════════════════╣
-║  ✅ SEMANA 2 (Abr 6 - Abr 12): E-COMMERCE + AUTOMATION — v1.10.0 ║
-║  ├── ✅ Gift Cards (#23)                                          ║
-║  ├── ✅ Carrito Abandonado (#21)                                   ║
-║  └── ✅ Email Automation (#22)                                     ║
+║  ✅ SEMANA 2 (Abr 6 - Abr 12): E-COMMERCE + AUTOMATION — v1.10.0      ║
+║  ├── ✅ Gift Cards (#23)                                              ║
+║  ├── ✅ Carrito Abandonado (#21)                                      ║
+║  └── ✅ Email Automation (#22)                                        ║
 ╠══════════════════════════════════════════════════════════════════════╣
-║  ✅ SEMANA 3 (Abr 13 - Abr 19): MULTI-VENDOR + DELIVERY — v1.11.0║
-║  ├── ✅ Security Hardening (#29, #30, #36)                        ║
-║  ├── ✅ Productos Genéricos + Inventario                          ║
-║  ├── ✅ Multi-vendor Support + Affiliate Contracts                ║
-║  └── ✅ Delivery: Shipping Addresses + Tracking                   ║
+║  ✅ SEMANA 3 (Abr 13 - Abr 19): MULTI-VENDOR + DELIVERY — v1.11.0     ║
+║  ├── ✅ Security Hardening (#29, #30, #36)                            ║
+║  ├── ✅ Productos Genéricos + Inventario                              ║
+║  ├── ✅ Multi-vendor Support + Affiliate Contracts                    ║
+║  └── ✅ Delivery: Shipping Addresses + Tracking                       ║
 ╠══════════════════════════════════════════════════════════════════════╣
-║  SEMANA 4 (Abr 20 - Abr 26): QA + RELEASE                        ║
-║  ├── Test Coverage Expansion (90%+)                                ║
-║  ├── Integration Testing                                           ║
-║  ├── Documentation                                                 ║
-║  └── v2.0.0 RELEASE (Abr 27)                                      ║
+║  SEMANA 4 (Abr 20 - Abr 26): QA + RELEASE                            ║
+║  ├── Test Coverage Expansion (90%+)                                  ║
+║  ├── Integration Testing                                             ║
+║  ├── Documentation                                                   ║
+║  └── v2.0.0 RELEASE (Abr 27)                                         ║
 ╚══════════════════════════════════════════════════════════════════════╝
 ```
 

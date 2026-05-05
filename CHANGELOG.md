@@ -4,6 +4,82 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
+## [3.0.0] - 2026-04-13
+
+### Added — Sprint 10: Payments, Invoices, Unilevel & UX Polish
+
+**Major Release** — Significant architectural changes including commission model migration and new invoice system.
+
+#### Payment Infrastructure
+
+- **Payment Webhooks** — Complete webhook handling for MercadoPago and PayPal; `WebhookEvent` model for event tracking and idempotency
+- **PayPal Checkout Redirect Flow** — Replaced redirect URLs with proper checkout flow; `PayPalService` refactored with `createOrder()`, `captureOrder()`, return/cancel handling
+- **Invoice System** — Complete invoice management: `Invoice` model, `InvoiceService`, PDF generation controller, invoice routes with CRUD operations
+
+#### Commission Model Migration
+
+- **Binary → Unilevel Migration** — Commission model migrated from binary to unilevel with Closure Table; `generateLevelKey()` function for multi-level tracking
+- **CommissionConfig Refactor** — Dynamic 10-level commission configuration; `CommissionConfigWriteController` for admin management
+- **Database Migrations** — Two migrations: `20260412000001-commission-type-to-varchar.js` and `20260412000002-seed-unilevel-commission-configs.js`
+
+#### CRM & Automation (n8n)
+
+- **WorkflowService** — Complete workflow orchestration with execution tracking
+- **WorkflowExecution Model** — Track workflow runs: status, start/end times, input/output payloads
+- **N8nWebhookController** — Receive and process n8n webhook events
+- **CRM Automation Routes** — AutomationController for trigger-based CRM actions; Lead automation fields added to database
+- **Admin CRM Widgets** — `CRMAutomationWidget`, `PendingFollowUps`, `RecentActions` components for admin dashboard
+
+#### Frontend Features
+
+- **2FA Frontend** — `TwoFactorLoginPage` with TOTP verification; `twoFactorService` for authentication flow; recovery codes support
+- **Admin Dashboard CRUD** — Full admin management pages for Properties, Tours, and Reservations
+- **UX Polish** — Button standardization (shadcn/ui), EmptyState component (6 types), Skeleton loaders (`TourCardSkeleton`, `PropertyCardSkeleton`, `ListingSkeleton`), mobile responsive fixes, Sonner toast migration
+- **Feature Guard Middleware** — `featureGuard.ts` middleware with `FEATURE_CRYPTO_ENABLED` flag to disable crypto wallet functionality
+
+#### New Routes & Endpoints
+
+- `POST /api/invoices` — Create invoice
+- `GET /api/invoices` — List invoices
+- `GET /api/invoices/:id` — Get invoice detail
+- `PATCH /api/invoices/:id` — Update invoice
+- `DELETE /api/invoices/:id` — Delete invoice
+- `GET /api/invoices/:id/pdf` — Generate invoice PDF
+- `POST /api/webhooks/mercadopago` — MercadoPago webhook handler
+- `POST /api/webhooks/paypal` — PayPal webhook handler
+- `POST /api/webhooks/n8n` — n8n webhook handler
+- `POST /api/crm/automation/trigger` — Trigger CRM automation
+- `GET /api/workflow/executions` — List workflow executions
+- `POST /api/commission-config` — Update commission configuration
+
+#### Models Added
+
+- `Invoice` — Invoice entity with PDF support
+- `WorkflowExecution` — Workflow execution tracking
+
+#### Environment Variables Added
+
+- `N8N_WEBHOOK_URL` — n8n webhook endpoint
+- `N8N_API_KEY` — n8n API authentication
+- `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET`, `PAYPAL_MODE` — PayPal configuration
+- `FEATURE_CRYPTO_ENABLED` — Feature flag for crypto wallet (default: false)
+- `MERCADO_PAGO_WEBHOOK_SECRET` — MercadoPago webhook verification
+
+### Tests
+
+- Backend: 65+ test suites / 600+ tests (Jest) ✅
+- Frontend: 35+ test suites / 600+ tests (Vitest) ✅
+- **Total platform: 1,200+ automated tests**
+
+### Infrastructure
+
+- **154 files changed** across Sprint 10
+- **~12,110 insertions** / ~1,900 deletions
+- PostgreSQL migrations for invoices, workflow executions, lead automation fields
+- Feature flag system for progressive feature rollout
+
+---
+
 ## [2.5.0] - 2026-04-12
 
 ### Added — Sprint 9: Technical Debt & Quality

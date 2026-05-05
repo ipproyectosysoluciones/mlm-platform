@@ -7,7 +7,7 @@
 
 Conectamos tu negocio con el mundo. Plataforma de afiliaciones Unilevel con comisiones por niveles y visualización de árbol genealógico.
 
-**Versión actual: v2.4.0** — Sprint 8 completado (2026-04-10)
+**Versión actual: v3.0.0** — Sprint 10 completado (2026-04-13)
 
 ## 🚀 Características / Features
 
@@ -40,6 +40,13 @@ Conectamos tu negocio con el mundo. Plataforma de afiliaciones Unilevel con comi
   - **Bot Stability** — Health check endpoint (`GET /api/bot/health`), `withRetry<T>()` con backoff exponencial, disconnect handler configurable
   - **SEO Avanzado** — Meta tags dinámicos + JSON-LD schema markup (RealEstateListing / TouristAttraction) + social proof badges
   - **network_balance** — Campo migrado desde `binary_balance` en el modelo Achievement
+  - **Payment Webhooks** — WebhookEvent model + MercadoPago + PayPal webhook handlers
+  - **Invoice System** — Invoice model + InvoiceService + PDF generation + CRUD routes
+  - **Commission Unilevel** — Migración Binary→Unilevel, 10 niveles configurables, Closure Table
+  - **n8n CRM Integration** — WorkflowService + WorkflowExecution + N8nWebhookController
+  - **2FA Frontend** — TwoFactorLoginPage + twoFactorService + códigos de recuperación
+  - **UX Polish** — EmptyState 6 tipos + Skeleton loaders + Mobile responsive + Sonner toast
+  - **Feature Guard** — Middleware con FEATURE_CRYPTO_ENABLED (deshabilitado por defecto)
 
 ## 📊 Estado de Implementación / Implementation Status
 
