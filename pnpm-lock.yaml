@@ -5,13 +5,14 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  lodash: '>=4.18.0'
+  lodash: '>=4.17.21'
   serialize-javascript: '>=7.0.5'
   brace-expansion@<1.1.13: '>=1.1.13'
   brace-expansion@>=2.0.0 <2.0.3: '>=2.0.3'
   brace-expansion@>=4.0.0 <5.0.5: '>=5.0.5'
   file-type: '>=21.3.1'
   minimatch: '>=9.0.0'
+  nodemailer: '>=8.0.7'
 
 importers:
 
@@ -87,8 +88,8 @@ importers:
         specifier: ^4.2.1
         version: 4.2.1
       nodemailer:
-        specifier: ^8.0.5
-        version: 8.0.5
+        specifier: '>=8.0.7'
+        version: 8.0.7
       pg:
         specifier: ^8.11.3
         version: 8.20.0
@@ -6433,8 +6434,8 @@ packages:
   node-releases@2.0.37:
     resolution: {integrity: sha512-1h5gKZCF+pO/o3Iqt5Jp7wc9rH3eJJ0+nh/CIoiRwjRxde/hAHyLPXYN4V3CqKAbiZPSeJFSWHmJsbkicta0Eg==}
 
-  nodemailer@8.0.5:
-    resolution: {integrity: sha512-0PF8Yb1yZuQfQbq+5/pZJrtF6WQcjTd5/S4JOHs9PGFxuTqoB/icwuB44pOdURHJbRKX1PPoJZtY7R4VUoCC8w==}
+  nodemailer@8.0.7:
+    resolution: {integrity: sha512-pkjE4mkBzQjdJT4/UmlKl3pX0rC9fZmjh7c6C9o7lv66Ac6w9WCnzPzhbPNxwZAzlF4mdq4CSWB5+FbK6FWCow==}
     engines: {node: '>=6.0.0'}
 
   nodemon@3.1.14:
@@ -15637,7 +15638,7 @@ snapshots:
 
   node-releases@2.0.37: {}
 
-  nodemailer@8.0.5: {}
+  nodemailer@8.0.7: {}
 
   nodemon@3.1.14:
     dependencies:
