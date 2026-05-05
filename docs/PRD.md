@@ -2,9 +2,9 @@
 
 ## Nexo Real — Plataforma SaaS de Servicios Inmobiliarios, Turismo y Afiliaciones
 
-**Version**: 2.6.1  
-**Status**: ✅ v2.6.1 Released  
-**Last Updated**: 2026-04-12  
+**Version**: 3.0.0  
+**Status**: ✅ v3.0.0 Released  
+**Last Updated**: 2026-04-13  
 **Document Owner**: Nexo Real Development Team  
 **Tagline**: _"Conectamos tu negocio con el mundo."_
 
@@ -33,7 +33,7 @@ Las agencias inmobiliarias, hoteles, hosterías y operadores turísticos en LATA
 3. **CRM integrado** — Gestión de leads, tareas, comunicaciones, y agendamiento
 4. **Integraciones n8n** — Google Calendar, Notion, notificación a agente humano
 
-> **Status**: v2.6.1 RELEASED ✅
+> **Status**: v3.0.0 RELEASED ✅
 
 ---
 
@@ -47,35 +47,45 @@ Las agencias inmobiliarias, hoteles, hosterías y operadores turísticos en LATA
 ├──────────────────────────────────────────────────────────────────────┤
 │                                                                      │
 │  SERVICIOS PRINCIPALES                                               │
-│  ├── Real Estate (Bienes Raíces)                                    │
-│  │   ├── Rentals (arrendamiento de aptos, casas, fincas)           │
-│  │   ├── Sales (venta de inmuebles)                                 │
-│  │   └── Property Management (administración y mantenimiento)       │
-│  └── Tourism & Hospitality                                          │
-│      ├── Hospitality (hoteles, hosterías, posadas)                  │
-│      └── Travel Packages (paquetes turísticos)                      │
+│  ├── Real Estate (Bienes Raíces)                                     │
+│  │   ├── Rentals (arrendamiento de aptos, casas, fincas)             │
+│  │   ├── Sales (venta de inmuebles)                                  │
+│  │   └── Property Management (administración y mantenimiento)        │
+│  └── Tourism & Hospitality                                           │
+│      ├── Hospitality (hoteles, hosterías, posadas)                   │
+│      └── Travel Packages (paquetes turísticos)                       │
 │                                                                      │
 │  SISTEMA MLM                                                         │
-│  └── Unilevel con bonos estructurados                               │
-│      ├── Comisiones por cierre de servicio (directo)                │
-│      ├── Bonos por equipo (niveles 1-10)                            │
-│      └── Bonos por desempeño (rendimiento de red)                   │
+│  └── Unilevel con bonos estructurados                                │
+│      ├── Comisiones por cierre de servicio (directo)                 │
+│      ├── Bonos por equipo (niveles 1-10)                             │
+│      └── Bonos por desempeño (rendimiento de red)                    │
 │                                                                      │
-│  NEXO BOT (AI WhatsApp)                                             │
-│  ├── Agente Sophia (atiende hombres)                                │
-│  ├── Agente Max (atiende mujeres)                                   │
-│  ├── Detección de idioma ES/EN                                      │
-│  ├── Knowledge Base configurable por tenant                         │
-│  └── Escalación a agente humano siempre disponible                  │
+│  NEXO BOT (AI WhatsApp)                                              │
+│  ├── Agente Sophia (atiende hombres)                                 │
+│  ├── Agente Max (atiende mujeres)                                    │
+│  ├── Detección de idioma ES/EN                                       │
+│  ├── Knowledge Base configurable por tenant                          │
+│  └── Escalación a agente humano siempre disponible                   │
 │                                                                      │
-│  PLATAFORMA MULTI-TENANT (Fase 2)                                   │
-│  ├── Nexo Line 1 (Free/Demo): número compartido, KB genérica       │
-│  ├── Nexo Line 2 (Managed): número propio, KB personalizada        │
-│  └── Enterprise: onboarding self-service, API propia               │
+│  PLATAFORMA MULTI-TENANT (Fase 2)                                    │
+│  ├── Nexo Line 1 (Free/Demo): número compartido, KB genérica         │
+│  ├── Nexo Line 2 (Managed): número propio, KB personalizada          │
+│  └── Enterprise: onboarding self-service, API propia                 │
 │                                                                      │
-│  PAGOS (LATAM-Friendly)                                             │
-│  ├── PayPal ✅ (Colombia, México, Argentina)                        │
-│  └── MercadoPago ✅ (optimizado para LATAM)                        │
+│  PAGOS (LATAM-Friendly)                                              │
+│  ├── PayPal ✅ (Colombia, México, Argentina)                          │
+│  ├── MercadoPago ✅ (optimizado para LATAM)                           │
+│  └── Webhooks ✅ (idempotencia, eventos, facturación)                 │
+│                                                                      │
+│  N8N AUTOMATION (Sprint 10)                                           │
+│  ├── WorkflowService + WorkflowExecution                            │
+│  ├── N8nWebhookController                                            │
+│  └── CRM Automation triggers                                         │
+│                                                                      │
+│  INVOICING (Sprint 10)                                                │
+│  ├── Invoice model + PDF generation                                  │
+│  └── InvoiceService + CRUD routes                                    │
 │                                                                      │
 └──────────────────────────────────────────────────────────────────────┘
 ```
@@ -418,14 +428,14 @@ PATCH  /api/admin/vendors/:id/commission-rate
 
 ```
                ┌─────────────────────────────────┐
-               │         Nexo Real Core           │
+               │         Nexo Real Core          │
                │   (Orchestrator + KB Manager)   │
                └───────┬─────────────┬───────────┘
                        │             │
            ┌───────────▼──┐   ┌──────▼──────────┐
-           │  Agencia A   │   │   Hostería B     │
-           │  (WA #001)   │   │   (WA #002)      │
-           │  KB: Inmob.  │   │   KB: Turismo    │
+           │  Agencia A   │   │   Hostería B    │
+           │  (WA #001)   │   │   (WA #002)     │
+           │  KB: Inmob.  │   │   KB: Turismo   │
            └──────────────┘   └─────────────────┘
 ```
 

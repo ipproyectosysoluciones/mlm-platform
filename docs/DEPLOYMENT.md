@@ -21,11 +21,11 @@ The platform uses a **hybrid deployment model**:
 
 ## 🔗 Production URLs / URLs de Producción
 
-| Service  | URL                                                                   | Purpose                |
-| -------- | --------------------------------------------------------------------- | ---------------------- |
-| Frontend | https://nexoreal.xyz _(TODO: domain pending — actualmente en Vercel)_ | Production (principal) |
-| Backend  | https://backend.lordastaroth77.cloudflareaccess.com                   | API Backend            |
-| Docker   | https://hub.docker.com/r/ipproyectos/mlm-backend                      | Container Registry     |
+| Service  | URL                                              | Purpose                |
+| -------- | ------------------------------------------------ | ---------------------- |
+| Frontend | https://nexoreal.xyz                             | Production (principal) |
+| Backend  | https://api.nexoreal.xyz                         | API Backend            |
+| Docker   | https://hub.docker.com/r/ipproyectos/mlm-backend | Container Registry     |
 
 > **Note**: Backup/internal URL: `https://frontend-beta-rosy-89.vercel.app`
 
