@@ -60,6 +60,7 @@ beforeAll(async () => {
     ContractTemplate,
     AffiliateContract,
     WorkflowExecution,
+    PushSubscription,
   } = await import('../models');
 
   // Models imported for side-effect: registering with sequelize instance
@@ -93,6 +94,7 @@ beforeAll(async () => {
   void ContractTemplate;
   void AffiliateContract;
   void WorkflowExecution;
+  void PushSubscription;
 
   console.log('Models registered');
 

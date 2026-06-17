@@ -16,17 +16,27 @@ describe('Push Integration Tests', () => {
 
   beforeEach(async () => {
     // Create test user and get auth headers
-    testUser = await createTestUser({
-      email: 'push-test@test.mlm',
-      password: 'TestPass123!',
-      referralCode: 'PUSHTEST',
-    });
+    try {
+      testUser = await createTestUser({
+        email: 'push-test@test.mlm',
+        password: 'TestPass123!',
+        referralCode: 'PUSHTEST',
+      });
+    } catch (err: any) {
+      console.error('CREATE USER ERROR:', err.message);
+      if (err.parent) {
+        console.error('PARENT:', err.parent.message || err.parent);
+      }
+      if (err.sql) {
+        console.error('SQL:', err.sql);
+      }
+      throw err;
+    }
     authHeaders = getAuthHeaders(testUser);
   });
 
   describe('POST /api/push/subscribe', () => {
-    // TODO: Pre-existing failure — push subscribe returns 500 in CI (PushSubscription model issue)
-    it.skip('should create push subscription with valid data', async () => {
+    it('should create push subscription with valid data', async () => {
       const subscriptionData = {
         endpoint: 'https://fcm.googleapis.com/fcm/send/test-endpoint-123',
         keys: {
@@ -126,8 +136,7 @@ describe('Push Integration Tests', () => {
       expect(res.body.success).toBe(false);
     });
 
-    // TODO: Pre-existing failure — push subscribe returns 500 in CI (PushSubscription model issue)
-    it.skip('should create subscription with user agent', async () => {
+    it('should create subscription with user agent', async () => {
       const subscriptionData = {
         endpoint: 'https://fcm.googleapis.com/fcm/send/test-with-ua',
         keys: {
@@ -146,8 +155,7 @@ describe('Push Integration Tests', () => {
       expect(res.body.success).toBe(true);
     });
 
-    // TODO: Pre-existing failure — push subscribe returns 500 in CI (PushSubscription model issue)
-    it.skip('should update existing subscription when endpoint already exists', async () => {
+    it('should update existing subscription when endpoint already exists', async () => {
       const subscriptionData = {
         endpoint: 'https://fcm.googleapis.com/fcm/send/duplicate-endpoint',
         keys: {
@@ -183,8 +191,7 @@ describe('Push Integration Tests', () => {
   });
 
   describe('DELETE /api/push/unsubscribe', () => {
-    // TODO: Pre-existing failure — push subscribe returns 500 in CI (PushSubscription model issue)
-    it.skip('should unsubscribe with valid endpoint', async () => {
+    it('should unsubscribe with valid endpoint', async () => {
       // First subscribe
       const subscriptionData = {
         endpoint: 'https://fcm.googleapis.com/fcm/send/unsubscribe-test',
