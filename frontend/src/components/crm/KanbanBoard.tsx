@@ -1,23 +1,19 @@
 /**
- * KanbanBoard - CRM Kanban Board Component
- * Tablero Kanban para gestión de leads
+ * KanbanBoard - CRM Kanban Board with drag-and-drop columns
+ * Tablero Kanban para gestión de leads con arrastrar y soltar
  *
  * @module components/crm/KanbanBoard
  */
-import { useState, useEffect } from 'react';
-import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
-import type {
-  DropResult,
-  DroppableProvided,
-  DroppableStateSnapshot,
-  DraggableProvided,
-  DraggableStateSnapshot,
-} from '@hello-pangea/dnd';
-import { Phone, Mail, Calendar, DollarSign, Plus, Eye, Edit } from 'lucide-react';
-import { crmService } from '../../services/crmService';
-import type { Lead, LeadStatus, LeadStats } from '../../services/crmService';
+import { useState } from 'react';
+import { DragDropContext } from '@hello-pangea/dnd';
+import type { DropResult } from '@hello-pangea/dnd';
+import { Plus } from 'lucide-react';
+import { useCRMKanban } from '@/hooks/useCRMKanban';
+import { KanbanColumn } from './KanbanColumn';
+import type { Lead, LeadStatus } from '@/services/crmService';
+import { LEAD_STATUSES } from '@/features/crm/constants';
 
-const STATUS_CONFIG: Record<LeadStatus, { label: string; color: string }> = {
+const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
   new: { label: 'Nuevo', color: 'bg-gray-100 border-gray-300' },
   contacted: { label: 'Contactado', color: 'bg-blue-50 border-blue-300' },
   qualified: { label: 'Calificado', color: 'bg-yellow-50 border-yellow-300' },
@@ -27,138 +23,20 @@ const STATUS_CONFIG: Record<LeadStatus, { label: string; color: string }> = {
   lost: { label: 'Perdido', color: 'bg-red-50 border-red-300' },
 };
 
-const STATUS_ORDER: LeadStatus[] = [
-  'new',
-  'contacted',
-  'qualified',
-  'proposal',
-  'negotiation',
-  'won',
-  'lost',
-];
-
-interface LeadCardProps {
-  lead: Lead;
-  onView: (lead: Lead) => void;
-  onEdit: (lead: Lead) => void;
-}
-
-function LeadCard({ lead, onView, onEdit }: LeadCardProps) {
-  return (
-    <div className="bg-white rounded-lg shadow-sm border p-3 mb-2 hover:shadow-md transition-shadow">
-      <div className="flex justify-between items-start mb-2">
-        <h4 className="font-medium text-gray-900 text-sm truncate">{lead.contactName}</h4>
-        <div className="flex gap-1">
-          <button onClick={() => onView(lead)} className="text-gray-400 hover:text-indigo-600">
-            <Eye className="w-4 h-4" />
-          </button>
-          <button onClick={() => onEdit(lead)} className="text-gray-400 hover:text-indigo-600">
-            <Edit className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-
-      {lead.company && <p className="text-xs text-gray-500 mb-2">{lead.company}</p>}
-
-      <div className="space-y-1">
-        <div className="flex items-center gap-1 text-xs text-gray-500">
-          <Mail className="w-3 h-3" />
-          <span className="truncate">{lead.contactEmail}</span>
-        </div>
-        {lead.contactPhone && (
-          <div className="flex items-center gap-1 text-xs text-gray-500">
-            <Phone className="w-3 h-3" />
-            <span>{lead.contactPhone}</span>
-          </div>
-        )}
-        {lead.value > 0 && (
-          <div className="flex items-center gap-1 text-xs text-green-600 font-medium">
-            <DollarSign className="w-3 h-3" />
-            <span>${lead.value}</span>
-          </div>
-        )}
-      </div>
-
-      {lead.nextFollowUpAt && (
-        <div className="mt-2 pt-2 border-t flex items-center gap-1 text-xs text-orange-600">
-          <Calendar className="w-3 h-3" />
-          <span>Seguimiento pendiente</span>
-        </div>
-      )}
-    </div>
-  );
-}
-
-export default function KanbanBoard() {
-  const [leads, setLeads] = useState<Lead[]>([]);
-  const [stats, setStats] = useState<LeadStats | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+export function KanbanBoard() {
+  const { stats, isLoading, getLeadsByStatus, handleDragEnd: kanbanDragEnd } = useCRMKanban();
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
-  const [, setShowNewLead] = useState(false);
   const [showTaskForm, setShowTaskForm] = useState(false);
   const [taskFormData, setTaskFormData] = useState({
     title: '',
     type: 'follow_up',
     description: '',
   });
-  const [isCreatingTask, setIsCreatingTask] = useState(false);
+  const [isCreatingTask] = useState(false);
 
-  useEffect(() => {
-    loadCRMData();
-  }, []);
-
-  const loadCRMData = async () => {
-    setIsLoading(true);
-    try {
-      const [leadsData, statsData] = await Promise.all([
-        crmService.getLeads({ limit: 100 }),
-        crmService.getStats(),
-      ]);
-      setLeads(leadsData.leads);
-      setStats(statsData);
-    } catch (error) {
-      console.error('Failed to load CRM data:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const getLeadsByStatus = (status: LeadStatus) => {
-    return leads.filter((lead) => lead.status === status);
-  };
-
-  const handleDragEnd = async (result: DropResult) => {
+  const onDragEnd = async (result: DropResult) => {
     if (!result.destination) return;
-
-    const leadId = result.draggableId;
-    const newStatus = result.destination.droppableId as LeadStatus;
-
-    try {
-      await crmService.updateLeadStatus(leadId, newStatus);
-      setLeads(leads.map((lead) => (lead.id === leadId ? { ...lead, status: newStatus } : lead)));
-    } catch (error) {
-      console.error('Failed to update lead status:', error);
-    }
-  };
-
-  const handleCreateTask = async () => {
-    if (!selectedLead || !taskFormData.title.trim()) return;
-
-    setIsCreatingTask(true);
-    try {
-      await crmService.createTask(selectedLead.id, taskFormData);
-      setShowTaskForm(false);
-      setTaskFormData({ title: '', type: 'follow_up', description: '' });
-      // Refresh lead details
-      const leadRes = await crmService.getLeadById(selectedLead.id);
-      if (leadRes) {
-        setSelectedLead(leadRes);
-      }
-    } catch (error) {
-      console.error('Failed to create task:', error);
-    } finally {
-      setIsCreatingTask(false);
-    }
+    await kanbanDragEnd(result.draggableId, result.destination.droppableId as LeadStatus);
   };
 
   if (isLoading) {
@@ -199,67 +77,25 @@ export default function KanbanBoard() {
 
       {/* Add Lead Button */}
       <div className="mb-4">
-        <button
-          onClick={() => setShowNewLead(true)}
-          className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
-        >
+        <button className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
           <Plus className="w-4 h-4" />
           Nuevo Lead
         </button>
       </div>
 
       {/* Kanban Board */}
-      <DragDropContext onDragEnd={handleDragEnd}>
+      <DragDropContext onDragEnd={onDragEnd}>
         <div className="flex gap-4 overflow-x-auto pb-4">
-          {STATUS_ORDER.map((status) => {
-            const statusLeads = getLeadsByStatus(status);
-            const config = STATUS_CONFIG[status];
-
-            return (
-              <div key={status} className="flex-shrink-0 w-72">
-                <div className={`rounded-t-lg p-3 border-t border-l border-r ${config.color}`}>
-                  <div className="flex justify-between items-center">
-                    <h3 className="font-semibold text-gray-700">{config.label}</h3>
-                    <span className="bg-white px-2 py-0.5 rounded-full text-sm text-gray-600">
-                      {statusLeads.length}
-                    </span>
-                  </div>
-                </div>
-
-                <Droppable droppableId={status}>
-                  {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.droppableProps}
-                      className={`min-h-[200px] bg-gray-50 p-2 rounded-b-lg border-x border-b ${
-                        snapshot.isDraggingOver ? 'bg-indigo-50' : ''
-                      }`}
-                    >
-                      {statusLeads.map((lead, index) => (
-                        <Draggable key={lead.id} draggableId={lead.id} index={index}>
-                          {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
-                            <div
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                              className={snapshot.isDragging ? 'opacity-75' : ''}
-                            >
-                              <LeadCard
-                                lead={lead}
-                                onView={setSelectedLead}
-                                onEdit={setSelectedLead}
-                              />
-                            </div>
-                          )}
-                        </Draggable>
-                      ))}
-                      {provided.placeholder}
-                    </div>
-                  )}
-                </Droppable>
-              </div>
-            );
-          })}
+          {LEAD_STATUSES.map((status) => (
+            <KanbanColumn
+              key={status}
+              status={status}
+              leads={getLeadsByStatus(status)}
+              statusConfig={STATUS_CONFIG[status]}
+              onViewLead={setSelectedLead}
+              onEditLead={setSelectedLead}
+            />
+          ))}
         </div>
       </DragDropContext>
 
@@ -328,89 +164,104 @@ export default function KanbanBoard() {
 
       {/* Task Form Modal */}
       {showTaskForm && selectedLead && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              <div className="flex justify-between items-start mb-4">
-                <h2 className="text-xl font-bold text-gray-900">Nueva Tarea</h2>
-                <button
-                  onClick={() => {
-                    setShowTaskForm(false);
-                    setTaskFormData({ title: '', type: 'follow_up', description: '' });
-                  }}
-                  className="text-gray-400 hover:text-gray-600"
-                >
-                  ×
-                </button>
-              </div>
-
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Título *</label>
-                  <input
-                    type="text"
-                    value={taskFormData.title}
-                    onChange={(e) => setTaskFormData({ ...taskFormData, title: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                    placeholder="Título de la tarea"
-                    autoFocus
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Tipo</label>
-                  <select
-                    value={taskFormData.type}
-                    onChange={(e) => setTaskFormData({ ...taskFormData, type: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                  >
-                    <option value="call">Llamada</option>
-                    <option value="email">Email</option>
-                    <option value="meeting">Reunión</option>
-                    <option value="follow_up">Seguimiento</option>
-                    <option value="note">Nota</option>
-                    <option value="other">Otro</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Descripción
-                  </label>
-                  <textarea
-                    value={taskFormData.description}
-                    onChange={(e) =>
-                      setTaskFormData({ ...taskFormData, description: e.target.value })
-                    }
-                    rows={3}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                    placeholder="Descripción de la tarea"
-                  />
-                </div>
-              </div>
-
-              <div className="flex gap-2 mt-6">
-                <button
-                  onClick={() => {
-                    setShowTaskForm(false);
-                    setTaskFormData({ title: '', type: 'follow_up', description: '' });
-                  }}
-                  className="flex-1 bg-gray-100 text-gray-700 py-2 rounded-lg hover:bg-gray-200"
-                >
-                  Cancelar
-                </button>
-                <button
-                  onClick={handleCreateTask}
-                  disabled={!taskFormData.title.trim() || isCreatingTask}
-                  className="flex-1 bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isCreatingTask ? 'Creando...' : 'Crear Tarea'}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <KanbanTaskForm
+          lead={selectedLead}
+          taskFormData={taskFormData}
+          setTaskFormData={setTaskFormData}
+          isCreatingTask={isCreatingTask}
+          onClose={() => {
+            setShowTaskForm(false);
+            setTaskFormData({ title: '', type: 'follow_up', description: '' });
+          }}
+        />
       )}
     </div>
   );
 }
+
+interface KanbanTaskFormProps {
+  lead: Lead;
+  taskFormData: { title: string; type: string; description: string };
+  setTaskFormData: (data: { title: string; type: string; description: string }) => void;
+  isCreatingTask: boolean;
+  onClose: () => void;
+}
+
+function KanbanTaskForm({
+  lead,
+  taskFormData,
+  setTaskFormData,
+  isCreatingTask,
+  onClose,
+}: KanbanTaskFormProps) {
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-xl max-w-md w-full max-h-[90vh] overflow-y-auto p-6">
+        <div className="flex justify-between items-start mb-4">
+          <h2 className="text-xl font-bold text-gray-900">Nueva Tarea — {lead.contactName}</h2>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+            ×
+          </button>
+        </div>
+
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Título *</label>
+            <input
+              type="text"
+              value={taskFormData.title}
+              onChange={(e) => setTaskFormData({ ...taskFormData, title: e.target.value })}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="Título de la tarea"
+              autoFocus
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Tipo</label>
+            <select
+              value={taskFormData.type}
+              onChange={(e) => setTaskFormData({ ...taskFormData, type: e.target.value })}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            >
+              <option value="call">Llamada</option>
+              <option value="email">Email</option>
+              <option value="meeting">Reunión</option>
+              <option value="follow_up">Seguimiento</option>
+              <option value="note">Nota</option>
+              <option value="other">Otro</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+            <textarea
+              value={taskFormData.description}
+              onChange={(e) => setTaskFormData({ ...taskFormData, description: e.target.value })}
+              rows={3}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="Descripción de la tarea"
+            />
+          </div>
+        </div>
+
+        <div className="flex gap-2 mt-6">
+          <button
+            onClick={onClose}
+            className="flex-1 bg-gray-100 text-gray-700 py-2 rounded-lg hover:bg-gray-200"
+          >
+            Cancelar
+          </button>
+          <button
+            disabled={!taskFormData.title.trim() || isCreatingTask}
+            className="flex-1 bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isCreatingTask ? 'Creando...' : 'Crear Tarea'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default KanbanBoard;

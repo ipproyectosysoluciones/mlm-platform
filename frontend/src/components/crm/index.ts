@@ -5,8 +5,13 @@
  * @module components/crm
  */
 
-export { default as KanbanBoard } from './KanbanBoard';
-export { default as LeadCard } from './LeadCard';
+export { LeadCard } from './LeadCard';
+export { LeadList } from './LeadList';
+export { KanbanBoard } from './KanbanBoard';
+export { KanbanColumn } from './KanbanColumn';
+export { TaskList } from './TaskList';
+export { StatsOverview } from './StatsOverview';
+export { AnalyticsPanel } from './AnalyticsPanel';
 export { default as LeadModal } from './LeadModal';
 export type { LeadFormData } from './LeadModal';
 export { initialLeadFormData } from './leadFormData';
