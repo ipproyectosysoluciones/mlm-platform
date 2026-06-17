@@ -1,13 +1,13 @@
 /**
- * LeadCard - Lead card component for list view
+ * LeadCard - Individual lead card for the list view
  * Tarjeta de lead para vista de lista
  *
  * @module components/crm/LeadCard
  */
 import { Building, MessageSquare, Users, Filter, Edit } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import type { Lead } from '../../types';
-import { STATUS_COLORS } from '../../features/crm/constants';
+import type { Lead } from '@/types';
+import { STATUS_COLORS } from '@/features/crm/constants';
 
 const SOURCE_ICONS: Record<string, React.ReactNode> = {
   website: <MessageSquare className="w-4 h-4" />,
@@ -23,7 +23,7 @@ interface LeadCardProps {
   onClick?: () => void;
 }
 
-export default function LeadCard({ lead, onClick }: LeadCardProps) {
+export function LeadCard({ lead, onClick }: LeadCardProps) {
   const { t } = useTranslation();
 
   return (
@@ -64,3 +64,5 @@ export default function LeadCard({ lead, onClick }: LeadCardProps) {
     </div>
   );
 }
+
+export default LeadCard;
