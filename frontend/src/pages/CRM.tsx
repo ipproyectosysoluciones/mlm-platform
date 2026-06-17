@@ -38,68 +38,9 @@ import { crmService } from '../services/api';
 import { KanbanBoard, LeadCard, LeadModal, TaskCard, initialLeadFormData } from '../components/crm';
 import type { LeadFormData } from '../components/crm';
 import type { Lead, Task, Communication, CRMStats } from '../types';
+import { STATUS_COLORS, EMAIL_TEMPLATES } from '../features/crm/constants';
 
-// Status colors for lead details panel
-const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
-  new: { bg: 'bg-blue-100', text: 'text-blue-700' },
-  contacted: { bg: 'bg-yellow-100', text: 'text-yellow-700' },
-  qualified: { bg: 'bg-purple-100', text: 'text-purple-700' },
-  proposal: { bg: 'bg-indigo-100', text: 'text-indigo-700' },
-  negotiation: { bg: 'bg-orange-100', text: 'text-orange-700' },
-  won: { bg: 'bg-green-100', text: 'text-green-700' },
-  lost: { bg: 'bg-red-100', text: 'text-red-700' },
-};
-
-// Status names now use i18n - t('crm.status.xxx')
-
-// Email templates / Plantillas de email
-const EMAIL_TEMPLATES = [
-  {
-    id: 'welcome',
-    name: { es: 'Bienvenida', en: 'Welcome' },
-    subject: { es: '¡Bienvenido a nuestra plataforma!', en: 'Welcome to our platform!' },
-    content: {
-      es: 'Hola {{name}},\n\n¡Gracias por tu interés en nuestra plataforma! Nos encantaría mostrarte cómo funciona y cómo puedes empezar a ganar comisiones.\n\n¿Tienes alguna pregunta?\n\nSaludos,\n{{myName}}',
-      en: 'Hi {{name}},\n\nThank you for your interest in our platform! We would love to show you how it works and how you can start earning commissions.\n\nDo you have any questions?\n\nBest regards,\n{{myName}}',
-    },
-  },
-  {
-    id: 'followup',
-    name: { es: 'Seguimiento', en: 'Follow-up' },
-    subject: { es: '¿Cómo va tu experiencia?', en: 'How is your experience going?' },
-    content: {
-      es: 'Hola {{name}},\n\nSolo quería hacer seguimiento para ver cómo va tu experiencia con nuestra plataforma.\n\n¿Hay algo en lo que pueda ayudarte?\n\nSaludos,\n{{myName}}',
-      en: 'Hi {{name}},\n\nJust wanted to follow up on how your experience with our platform is going.\n\nIs there anything I can help you with?\n\nBest regards,\n{{myName}}',
-    },
-  },
-  {
-    id: 'presentation',
-    name: { es: 'Presentación de producto', en: 'Product Presentation' },
-    subject: { es: 'Conoce más sobre nuestro producto', en: 'Learn more about our product' },
-    content: {
-      es: 'Hola {{name}},\n\nTe envío información sobre nuestro producto/servicio que creo que puede interesarte.\n\n[Descripción del producto]\n\n¿Te gustaría agendar una llamada para explicar más detalles?\n\nSaludos,\n{{myName}}',
-      en: "Hi {{name}},\n\nI'm sending you information about our product/service that I think might interest you.\n\n[Product description]\n\nWould you like to schedule a call to explain more details?\n\nBest regards,\n{{myName}}",
-    },
-  },
-  {
-    id: 'closing',
-    name: { es: 'Cierre de venta', en: 'Closing Sale' },
-    subject: { es: 'Último paso para unirte', en: 'Last step to join' },
-    content: {
-      es: 'Hola {{name}},\n\n¡Nos alegra que hayas decidido unirte a nuestra comunidad!\n\nPara completar tu registro, solo necesitas [acción requerida].\n\nSi tienes cualquier duda, estoy aquí para ayudarte.\n\nSaludos,\n{{myName}}',
-      en: "Hi {{name}},\n\nWe are glad you decided to join our community!\n\nTo complete your registration, you just need to [required action].\n\nIf you have any questions, I'm here to help.\n\nBest regards,\n{{myName}}",
-    },
-  },
-  {
-    id: 'support',
-    name: { es: 'Soporte técnico', en: 'Technical Support' },
-    subject: { es: 'Estoy aquí para ayudarte', en: "I'm here to help you" },
-    content: {
-      es: 'Hola {{name}},\n\nRecibí tu mensaje sobre [tema]. Estoy aquí para ayudarte.\n\n[Solución o siguiente paso]\n\n¿Necesitas algo más?\n\nSaludos,\n{{myName}}',
-      en: "Hi {{name}},\n\nI received your message about [topic]. I'm here to help you.\n\n[Solution or next step]\n\nDo you need anything else?\n\nBest regards,\n{{myName}}",
-    },
-  },
-];
+// EMAIL_TEMPLATES imported from features/crm/constants.ts
 
 type Tab = 'leads' | 'kanban' | 'tasks' | 'stats';
 
