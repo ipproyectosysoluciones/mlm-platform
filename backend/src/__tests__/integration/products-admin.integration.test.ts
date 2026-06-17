@@ -240,24 +240,45 @@ describe('Products Admin Integration Tests', () => {
   // 4. DELETE /api/admin/products/:id — Soft delete product
   // ============================================================
   describe('DELETE /api/admin/products/:id (Delete Product)', () => {
-    // FIXME: This test is flaky in CI due to test isolation issues with
-    // createTestProduct() DB state leaking between describe blocks.
-    // The product created here may not be visible to the API call due to
-    // transaction isolation or cleanup timing. Skipping until test suite
-    // is restructured for proper isolation.
-    // See issue #191: https://github.com/ipproyectosysoluciones/mlm-platform/issues/191
-    it.skip('should soft delete product successfully', async () => {
-      const product = await createTestProduct();
+    // Create product via API to ensure consistent transaction visibility
+    // Creating via createTestProduct() (direct DB insert) can cause
+    // transaction isolation issues where the API call doesn't see the product
+    async function createProductViaApi(): Promise<{ id: string }> {
+      const res = await testAgent
+        .post('/api/admin/products')
+        .set(adminHeaders)
+        .send({
+          name: 'Deletable Product',
+          platform: 'netflix',
+          price: 29.99,
+          currency: 'USD',
+          durationDays: 30,
+          type: 'subscription',
+          isActive: true,
+        })
+        .expect(201);
+
+      expect(res.body.success).toBe(true);
+      return { id: res.body.data.id };
+    }
+
+    it('should soft delete product successfully', async () => {
+      const { id: productId } = await createProductViaApi();
+
+      // Verify product exists before delete
+      const beforeDelete = await Product.findByPk(productId);
+      expect(beforeDelete).not.toBeNull();
+      expect(beforeDelete?.isActive).toBe(true);
 
       const res = await testAgent
-        .delete(`/api/admin/products/${product.id}`)
+        .delete(`/api/admin/products/${productId}`)
         .set(adminHeaders)
         .expect(200);
 
       expect(res.body.success).toBe(true);
 
       // Verify product is deactivated
-      const updatedProduct = await Product.findByPk(product.id);
+      const updatedProduct = await Product.findByPk(productId);
       expect(updatedProduct?.isActive).toBe(false);
     });
 
