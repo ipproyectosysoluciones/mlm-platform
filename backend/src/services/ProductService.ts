@@ -291,11 +291,13 @@ export class ProductService {
   /**
    * Delete a product (soft delete by deactivating)
    * @param {string} id - Product UUID
-   * @returns {Promise<void>}
+   * @returns {Promise<boolean>} true if deleted, false if not found
    */
-  async delete(id: string): Promise<void> {
+  async delete(id: string): Promise<boolean> {
     const product = await this.findById(id);
+    if (!product) return false;
     await product.update({ isActive: false });
+    return true;
   }
 
   /**

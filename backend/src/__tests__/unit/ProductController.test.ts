@@ -423,7 +423,7 @@ describe('ProductWriteController - deleteProduct', () => {
   });
 
   it('returns 404 when product not found', async () => {
-    (productService.delete as jest.Mock).mockResolvedValue(null);
+    (productService.delete as jest.Mock).mockResolvedValue(false);
 
     const req = makeReq({ params: { id: VALID_UUID } });
     const res = makeRes();
