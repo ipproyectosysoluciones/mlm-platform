@@ -1,8 +1,8 @@
 /**
  * @fileoverview InvoiceController - Invoice API endpoints
- * @description Controlador principal de facturas
- *              Handles all invoice-related API endpoints
- *              This file re-exports from sub-controllers
+ * @description Controlador principal de facturas — re-exporta sub-controladores.
+ *              Handles all invoice-related API endpoints.
+ *              This file re-exports from sub-controllers.
  * @module controllers/InvoiceController
  * @author MLM Development Team
  *
@@ -18,8 +18,12 @@
 // Read operations
 export { getInvoices, getInvoiceById } from './invoices/InvoiceReadController';
 
-// Write operations
-export { createInvoice, updateInvoice, deleteInvoice } from './invoices/InvoiceWriteController';
+// Write operations (create, status update, cancellation)
+export {
+  createInvoice,
+  updateInvoiceStatus,
+  cancelInvoice,
+} from './invoices/InvoiceWriteController';
 
 // PDF operations
 export { generateInvoicePdf, downloadInvoicePdf } from './invoices/InvoicePdfController';

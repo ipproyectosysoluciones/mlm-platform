@@ -14,10 +14,11 @@
  * // Español: Buscar todas las reservas de propiedad pendientes
  * const result = await reservationService.findAll({ type: 'property', status: 'pending' });
  */
-import { WhereOptions } from 'sequelize';
+import { Includeable, WhereOptions } from 'sequelize';
 import { Reservation, Property, TourPackage, TourAvailability, User } from '../models';
 import type { ReservationAttributes, ReservationCreationAttributes } from '../models/Reservation';
 import { CalendarService } from './CalendarService';
+import { logger } from '../utils/logger';
 
 // ============================================
 // TYPES
@@ -106,7 +107,7 @@ export class ReservationService {
     }
 
     // Build includes based on type filter / Construir includes según el tipo
-    const include: any[] = [
+    const include: Includeable[] = [
       {
         model: User,
         as: 'user',
@@ -295,8 +296,8 @@ export class ReservationService {
       guestPhone: reservation.guestPhone ?? null,
       title:
         reservation.type === 'property'
-          ? ((reservation as any).property?.title ?? 'Propiedad')
-          : ((reservation as any).tourPackage?.title ?? 'Tour'),
+          ? (reservation.property?.title ?? 'Propiedad')
+          : (reservation.tourPackage?.title ?? 'Tour'),
       startDate:
         reservation.type === 'property'
           ? (reservation.checkIn ?? '')
@@ -306,7 +307,7 @@ export class ReservationService {
       vendorId: reservation.vendorId ?? null,
     };
     calendarService.notifyReservationConfirmed(payload).catch((err: unknown) => {
-      console.error('[ReservationService] Calendar sync error:', err);
+      logger.error({ service: 'ReservationService', err }, 'Calendar sync error');
     });
 
     return reservation;

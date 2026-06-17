@@ -13,6 +13,8 @@ module.exports = {
   collectCoverageFrom: ['src/**/*.ts', '!src/**/*.d.ts'],
   coverageDirectory: 'coverage',
   verbose: true,
+  // setupFiles runs BEFORE test framework — bootstraps env vars for config modules
+  setupFiles: ['<rootDir>/src/__tests__/env-setup.ts'],
   // setupFilesAfterEnv runs AFTER test framework is installed
   setupFilesAfterEnv: ['<rootDir>/src/__tests__/setup.ts'],
   testTimeout: 300000, // 5 minutes per test
@@ -20,9 +22,11 @@ module.exports = {
   detectOpenHandles: true,
   workerIdleMemoryLimit: '512MB',
   // Mock Sentry to prevent hanging (Sentry v10 hangs on import with fake DSN)
+  // Mock uuid v14 (ESM-only) with CJS-compatible mock
   // Rewrite .js extensions to .ts for ts-jest compatibility with NodeNext imports
   moduleNameMapper: {
     '^@sentry/node$': '<rootDir>/src/__tests__/__mocks__/sentry.ts',
+    '^uuid$': '<rootDir>/src/__tests__/__mocks__/uuid.ts',
     '^(\\.{1,2}/.*)\\.js$': '$1',
   },
 };

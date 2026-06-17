@@ -35,6 +35,7 @@ import { achievementService } from '../services/AchievementService';
 import { config } from '../config/env';
 import type { ApiResponse, UserAttributes } from '../types';
 import { AppError } from '../middleware/error.middleware';
+import { logger } from '../utils/logger';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware';
 import { asyncHandler } from '../middleware/asyncHandler';
 import { Lead } from '../models/Lead';
@@ -113,7 +114,7 @@ export const register: RequestHandler = asyncHandler(
     const token = generateToken(user);
 
     // Send welcome email / Enviar email de bienvenida
-    const referralLink = `${config.app.frontendUrl || 'https://nexoreal.xyz'}/register?ref=${user.referralCode}`; // TODO: domain pending
+    const referralLink = `${config.app.frontendUrl || `https://${config.platform.domain}`}/register?ref=${user.referralCode}`;
     const firstName = user.email.split('@')[0];
 
     // Fire and forget - don't block registration response
@@ -125,13 +126,13 @@ export const register: RequestHandler = asyncHandler(
         referralCode: user.referralCode,
         referralLink,
       })
-      .catch((err) => console.error('Welcome email failed:', err));
+      .catch((err: unknown) => logger.error({ err }, 'Welcome email failed'));
 
     // If user has sponsor, notify sponsor about new downline
     // Si el usuario tiene patrocinador, notificar al patrocinador sobre nuevo downline
     if (user.sponsorId) {
       const sponsor = await userService.findById(user.sponsorId);
-      if (sponsor && (sponsor as any).emailNotifications) {
+      if (sponsor && sponsor.emailNotifications) {
         emailService
           .sendDownline({
             email: sponsor.email,
@@ -139,7 +140,7 @@ export const register: RequestHandler = asyncHandler(
             newUserEmail: user.email,
             position: user.position || 'unknown',
           })
-          .catch((err) => console.error('Downline email failed:', err));
+          .catch((err: unknown) => logger.error({ err }, 'Downline email failed'));
       }
     }
 
@@ -215,7 +216,9 @@ export const login: RequestHandler = asyncHandler(
     // Fire-and-forget: check login achievements (future-ready for consistency_30)
     achievementService
       .checkAndUnlock(user.id, 'login')
-      .catch((err) => console.error('[Achievements]', err));
+      .catch((err: unknown) =>
+        logger.error({ err, component: 'Achievements' }, 'Achievement check failed')
+      );
 
     const response: ApiResponse<{
       user: Partial<UserAttributes>;

@@ -141,7 +141,8 @@ Product.init(
       allowNull: true,
       defaultValue: 'subscription',
       field: 'type',
-      comment: 'Product type: physical, digital, subscription, service',
+      // comment removed: Sequelize v6 generates invalid SQL (USING cast in COMMENT ON)
+      // when a column has both DataTypes.ENUM and comment during sync({ force: true })
     },
     sku: {
       type: DataTypes.STRING(100),

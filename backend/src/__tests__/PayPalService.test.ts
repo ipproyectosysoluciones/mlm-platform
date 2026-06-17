@@ -1,9 +1,9 @@
 /**
  * @fileoverview Unit tests for PayPalService
- * @description Tests covering previously uncovered methods:
+ * @description Tests covering:
  *              - verifyWebhookSignature(): SUCCESS, FAILURE, dev-mode bypass (no webhookId)
- *              - isIdempotent(): found (true), not found (false)
- *              - markAsProcessed(): adds event to processed set
+ *              - isEventProcessed(): found (true), not found (false) via WebhookEvent table
+ *              - markEventProcessed(): inserts into WebhookEvent table, propagates errors
  *              - createOrder(): order creation flow
  *              - captureOrder(): capture flow, SSRF validation
  * @module __tests__/PayPalService
@@ -50,6 +50,17 @@ jest.mock('../config/database', () => ({
     authenticate: jest.fn().mockResolvedValue(undefined),
   },
   resetSequelize: jest.fn(),
+}));
+
+// ── Mock WebhookEvent model (used by isEventProcessed / markEventProcessed) ──
+const mockWebhookEventFindOne = jest.fn();
+const mockWebhookEventCreate = jest.fn();
+
+jest.mock('../models/WebhookEvent', () => ({
+  WebhookEvent: {
+    findOne: (...args: unknown[]) => mockWebhookEventFindOne(...args),
+    create: (...args: unknown[]) => mockWebhookEventCreate(...args),
+  },
 }));
 
 // ── Import after mocks ────────────────────────────────────────────────────────
@@ -187,66 +198,84 @@ describe('PayPalService', () => {
     });
   });
 
-  // ── isIdempotent ───────────────────────────────────────────────────────────
+  // ── isEventProcessed (persistent via WebhookEvent table) ────────────────────
 
-  describe('isIdempotent()', () => {
-    it('should return false for an event that has not been processed', () => {
+  describe('isEventProcessed()', () => {
+    it('should return false when WebhookEvent.findOne returns null (not processed)', async () => {
+      // Arrange
+      mockWebhookEventFindOne.mockResolvedValue(null);
+
       // Act
-      const result = paypalService.isIdempotent('event-never-seen-xyz');
+      const result = await paypalService.isEventProcessed('event-never-seen', 'paypal');
 
       // Assert
       expect(result).toBe(false);
+      expect(mockWebhookEventFindOne).toHaveBeenCalledWith({
+        where: { eventId: 'event-never-seen', provider: 'paypal' },
+      });
     });
 
-    it('should return true for an event that has been processed', () => {
-      // Arrange — mark it first
-      const eventId = `idempotent-test-${Date.now()}-${Math.random()}`;
-      paypalService.markAsProcessed(eventId);
+    it('should return true when WebhookEvent.findOne returns a record (already processed)', async () => {
+      // Arrange
+      mockWebhookEventFindOne.mockResolvedValue({
+        id: 'uuid-1',
+        eventId: 'evt-abc',
+        provider: 'paypal',
+      });
 
       // Act
-      const result = paypalService.isIdempotent(eventId);
+      const result = await paypalService.isEventProcessed('evt-abc', 'paypal');
 
       // Assert
       expect(result).toBe(true);
     });
 
-    it('should not affect other events when one is marked', () => {
+    it('should query with the correct provider for mercadopago', async () => {
       // Arrange
-      const ts = Date.now();
-      const eventA = `event-a-${ts}`;
-      const eventB = `event-b-${ts}`;
-      paypalService.markAsProcessed(eventA);
+      mockWebhookEventFindOne.mockResolvedValue(null);
 
-      // Act & Assert
-      expect(paypalService.isIdempotent(eventA)).toBe(true);
-      expect(paypalService.isIdempotent(eventB)).toBe(false);
+      // Act
+      await paypalService.isEventProcessed('mp-event-123', 'mercadopago');
+
+      // Assert
+      expect(mockWebhookEventFindOne).toHaveBeenCalledWith({
+        where: { eventId: 'mp-event-123', provider: 'mercadopago' },
+      });
     });
   });
 
-  // ── markAsProcessed ────────────────────────────────────────────────────────
+  // ── markEventProcessed (persistent via WebhookEvent table) ─────────────────
 
-  describe('markAsProcessed()', () => {
-    it('should mark event so subsequent isIdempotent returns true', () => {
+  describe('markEventProcessed()', () => {
+    it('should insert a record into WebhookEvent with eventId, provider, and eventType', async () => {
       // Arrange
-      const eventId = `mark-test-${Date.now()}-${Math.random()}`;
-      expect(paypalService.isIdempotent(eventId)).toBe(false);
+      mockWebhookEventCreate.mockResolvedValue({
+        id: 'uuid-new',
+        eventId: 'evt-new',
+        provider: 'paypal',
+        eventType: 'PAYMENT.CAPTURE.COMPLETED',
+      });
 
       // Act
-      paypalService.markAsProcessed(eventId);
+      await paypalService.markEventProcessed('evt-new', 'paypal', 'PAYMENT.CAPTURE.COMPLETED');
 
       // Assert
-      expect(paypalService.isIdempotent(eventId)).toBe(true);
+      expect(mockWebhookEventCreate).toHaveBeenCalledWith({
+        eventId: 'evt-new',
+        provider: 'paypal',
+        eventType: 'PAYMENT.CAPTURE.COMPLETED',
+        processedAt: expect.any(Date),
+      });
     });
 
-    it('should be idempotent itself — marking same event twice does not throw', () => {
+    it('should propagate database errors to the caller', async () => {
       // Arrange
-      const eventId = `dup-mark-${Date.now()}-${Math.random()}`;
+      mockWebhookEventCreate.mockRejectedValue(new Error('Unique constraint violation'));
 
-      // Act & Assert — no throw expected
-      expect(() => {
-        paypalService.markAsProcessed(eventId);
-        paypalService.markAsProcessed(eventId);
-      }).not.toThrow();
+      // Act & Assert
+      await expect(
+        paypalService.markEventProcessed('dup-evt', 'paypal', 'PAYMENT.CAPTURE.COMPLETED')
+      ).rejects.toThrow('Unique constraint violation');
     });
   });
 
@@ -520,34 +549,6 @@ describe('PayPalService', () => {
 
       // Act & Assert
       await expect(paypalService.getOrder('VALID-ORDER-ID')).rejects.toThrow('Order not found');
-    });
-  });
-
-  // ── markAsProcessed (eviction at 10k) ─────────────────────────────────────
-
-  describe('markAsProcessed() — set size limit', () => {
-    it('should evict the oldest entry when the set exceeds 10,000 events', () => {
-      // Arrange — fill set to exactly 10,000 unique events
-      const prefix = `bulk-event-${Date.now()}-`;
-      // We only need to add enough to trigger eviction (the set already has some entries)
-      // So we fill until size > 10,000
-      const currentSize = (paypalService as any).processedEvents.size;
-      const toAdd = 10_001 - currentSize;
-
-      // Add entries up to the limit first
-      for (let i = 0; i < toAdd - 1; i++) {
-        (paypalService as any).processedEvents.add(`${prefix}${i}`);
-      }
-      const firstEntry = `${prefix}0`;
-
-      // Sanity check — first entry is in set
-      expect((paypalService as any).processedEvents.has(firstEntry)).toBe(true);
-
-      // Act — adding one more should trigger eviction
-      paypalService.markAsProcessed(`${prefix}${toAdd}`);
-
-      // Assert — set size should still be ≤ 10,001 (one was evicted)
-      expect((paypalService as any).processedEvents.size).toBeLessThanOrEqual(10_001);
     });
   });
 });

@@ -18,6 +18,7 @@ import { body } from 'express-validator';
 import { pushService } from '../services/PushService';
 import { getVapidPublicKey } from '../utils/vapid';
 import { authenticateToken } from '../middleware/auth.middleware';
+import type { AuthenticatedRequest } from '../middleware/auth.middleware';
 import { validate } from '../middleware/validate.middleware';
 import { asyncHandler } from '../middleware/asyncHandler';
 import type { ApiResponse } from '../types';
@@ -126,8 +127,8 @@ router.post(
   '/subscribe',
   authenticateToken,
   validate(subscribeValidation),
-  asyncHandler(async (req: Request, res: Response) => {
-    const userId = (req as any).user?.id;
+  asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
+    const userId = req.user?.id;
     const { endpoint, keys, userAgent } = req.body;
 
     const subscription = await pushService.handleSubscription(

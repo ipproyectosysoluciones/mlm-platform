@@ -1,8 +1,8 @@
-import express, { Application } from 'express';
+import express, { Application, type Request, type Response, type NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-import pino from 'pino';
 import { pinoHttp } from 'pino-http';
+import { logger } from './utils/logger';
 import rateLimit from 'express-rate-limit';
 import swaggerUi from 'swagger-ui-express';
 import * as Sentry from '@sentry/node';
@@ -13,11 +13,11 @@ import adminRoutes from './routes/admin.routes';
 import crmRoutes from './routes/crm.routes';
 import publicRoutes from './routes/public.routes';
 import landingRoutes from './routes/landing.routes';
-import commissionConfigRoutes from './routes/commission-config.routes';
 import paymentRoutes from './routes/payment.routes';
 import { resolveShortCode } from './controllers/GiftCardController';
 import { asyncHandler } from './middleware/asyncHandler';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
+import type { AuthenticatedRequest } from './middleware/auth.middleware.js';
 
 const app: Application = express();
 const isTest = process.env.NODE_ENV === 'test';
@@ -26,17 +26,8 @@ const isProduction = process.env.NODE_ENV === 'production';
 // Trust proxy for ngrok/reverse proxy support
 app.set('trust proxy', 1);
 
-/**
- * HTTP request logger — pino-http (ESM-native replacement for morgan)
- * Logger de requests HTTP — pino-http (reemplazo ESM-nativo de morgan)
- * - Production: JSON structured logs (Grafana/Loki-ready)
- * - Development: pino-pretty colorized output
- */
-const logger = pino({
-  level: isProduction ? 'info' : 'debug',
-  ...(isProduction ? {} : { transport: { target: 'pino-pretty' } }),
-});
-
+// HTTP request logger — pino-http powered by centralized logger
+// Logger de requests HTTP — pino-http con logger centralizado
 if (!isTest) {
   app.use(pinoHttp({ logger }));
 }
@@ -90,11 +81,24 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // Security headers with Helmet
+// CSP: allow Unsplash images used in seed/demo data
 app.use(
   helmet({
     noSniff: true,
     xssFilter: true,
     frameguard: { action: 'deny' },
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'", 'data:', 'https://images.unsplash.com', 'https://plus.unsplash.com'],
+        connectSrc: ["'self'"],
+        fontSrc: ["'self'"],
+        objectSrc: ["'none'"],
+        frameAncestors: ["'none'"],
+      },
+    },
   })
 );
 
@@ -156,8 +160,8 @@ const orderLimiter = rateLimit({
   legacyHeaders: false,
   keyGenerator: (req) => {
     // Use user ID if authenticated, otherwise use IP
-    const user = (req as any).user;
-    return user?.id || req.ip || 'anonymous';
+    const user = (req as AuthenticatedRequest).user;
+    return user?.id?.toString() || req.ip || 'anonymous';
   },
 });
 
@@ -183,8 +187,8 @@ const twoFALimiter = rateLimit({
   legacyHeaders: false,
   keyGenerator: (req) => {
     // Use user ID if authenticated, otherwise use IP
-    const user = (req as any).user;
-    return user?.id || req.ip || 'anonymous';
+    const user = (req as AuthenticatedRequest).user;
+    return user?.id?.toString() || req.ip || 'anonymous';
   },
 });
 
@@ -209,14 +213,24 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/crm', crmRoutes);
 app.use('/api/public', publicRoutes);
 app.use('/api', landingRoutes);
-app.use('/api/admin/commissions', commissionConfigRoutes);
 app.use('/api/payment', paymentRoutes);
 
 // ============================================
 // Public QR short code resolver (no auth required)
 // Resolver público de código corto QR (sin autenticación)
 // ============================================
-app.get('/q/:shortCode', asyncHandler(resolveShortCode as any));
+// Public endpoint: AuthenticatedRequest extends Request — no auth fields are used here
+// Endpoint público: AuthenticatedRequest extiende Request — no se usan campos de auth aquí
+app.get(
+  '/q/:shortCode',
+  asyncHandler(
+    resolveShortCode as unknown as (
+      req: Request,
+      res: Response,
+      next: NextFunction
+    ) => Promise<void>
+  )
+);
 
 // Sentry debug route (only in non-production)
 if (config.nodeEnv !== 'production') {
@@ -234,12 +248,16 @@ if (process.env.SENTRY_DSN && process.env.NODE_ENV !== 'test') {
 // Debug: Show all routes
 app.get('/debug/routes', (req, res) => {
   const routes: string[] = [];
+  // Express internal router stack has no public type definitions
+  // Los tipos internos del router de Express no tienen definiciones públicas
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   app._router?.stack?.forEach((middleware: any) => {
     if (middleware.route) {
       routes.push(
         `${Object.keys(middleware.route.methods).join(', ').toUpperCase()} ${middleware.route.path}`
       );
     } else if (middleware.name === 'router') {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       middleware.handle?.stack?.forEach((handler: any) => {
         if (handler.route) {
           routes.push(

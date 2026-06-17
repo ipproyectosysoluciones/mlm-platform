@@ -28,6 +28,7 @@
 
 import nodemailer from 'nodemailer';
 import { config } from '../config/env';
+import { logger } from '../utils/logger';
 
 // ============================================
 // TYPES — Tipos
@@ -118,7 +119,7 @@ export class BrevoEmailService {
   async sendEmail(params: SendEmailParams): Promise<SendEmailResult> {
     // If circuit breaker has tripped, go directly to SMTP
     if (this.circuitBreaker.fallbackToSMTP) {
-      console.log('[BrevoEmailService] Circuit breaker active — sending via SMTP');
+      logger.info({ service: 'BrevoEmailService' }, 'Circuit breaker active — sending via SMTP');
       return this.sendViaSMTP(params);
     }
 
@@ -128,22 +129,29 @@ export class BrevoEmailService {
       this.circuitBreaker.failures = 0;
       return result;
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown REST API error';
-      console.error(`[BrevoEmailService] REST API failed: ${errorMessage}`);
+      logger.error({ err: error, service: 'BrevoEmailService' }, 'REST API failed');
 
       // Increment circuit breaker
       this.circuitBreaker.failures++;
-      console.log(
-        `[BrevoEmailService] Circuit breaker: ${this.circuitBreaker.failures}/${this.circuitBreaker.threshold} failures`
+      logger.info(
+        {
+          service: 'BrevoEmailService',
+          failures: this.circuitBreaker.failures,
+          threshold: this.circuitBreaker.threshold,
+        },
+        'Circuit breaker failure count incremented'
       );
 
       if (this.circuitBreaker.failures >= this.circuitBreaker.threshold) {
         this.circuitBreaker.fallbackToSMTP = true;
-        console.warn('[BrevoEmailService] Circuit breaker TRIPPED — switching to SMTP permanently');
+        logger.warn(
+          { service: 'BrevoEmailService' },
+          'Circuit breaker TRIPPED — switching to SMTP permanently'
+        );
       }
 
       // Fallback to SMTP
-      console.log('[BrevoEmailService] Falling back to SMTP');
+      logger.info({ service: 'BrevoEmailService' }, 'Falling back to SMTP');
       return this.sendViaSMTP(params);
     }
   }
@@ -155,7 +163,7 @@ export class BrevoEmailService {
   resetCircuitBreaker(): void {
     this.circuitBreaker.failures = 0;
     this.circuitBreaker.fallbackToSMTP = false;
-    console.log('[BrevoEmailService] Circuit breaker reset — REST API re-enabled');
+    logger.info({ service: 'BrevoEmailService' }, 'Circuit breaker reset — REST API re-enabled');
   }
 
   /**
@@ -254,7 +262,7 @@ export class BrevoEmailService {
       html: params.htmlContent,
     });
 
-    console.log(`[BrevoEmailService] SMTP sent: ${info.messageId}`);
+    logger.info({ service: 'BrevoEmailService', messageId: info.messageId }, 'SMTP sent');
     return { messageId: info.messageId || `smtp-${Date.now()}` };
   }
 }

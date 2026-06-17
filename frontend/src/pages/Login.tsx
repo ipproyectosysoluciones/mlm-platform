@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { Loader2, Eye, EyeOff, Building2 } from 'lucide-react';
 import { useAuth } from '../context/useAuth';
 import { authService } from '../services/api';
+import { is2FARequired, TWO_FA_TEMP_TOKEN_KEY, TWO_FA_USER_ID_KEY } from '../types';
 
 /**
  * Login page component with Nexo Real brand identity.
@@ -35,6 +36,12 @@ export default function Login() {
 
     try {
       const response = await authService.login({ email, password });
+      if (is2FARequired(response)) {
+        sessionStorage.setItem(TWO_FA_TEMP_TOKEN_KEY, response.tempToken);
+        sessionStorage.setItem(TWO_FA_USER_ID_KEY, response.userId);
+        navigate('/login/2fa');
+        return;
+      }
       login(response.token, response.user);
       navigate('/dashboard');
     } catch (err: unknown) {

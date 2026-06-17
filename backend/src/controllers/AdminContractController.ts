@@ -12,6 +12,8 @@ import {
   UpdateTemplateData,
 } from '../services/ContractService';
 import { requireAdmin, type AuthenticatedRequest } from '../middleware/auth.middleware';
+import { logger } from '../utils/logger';
+import { hasStatusCode, getErrorMessage } from '../utils/HttpError.js';
 
 const contractService = new ContractService();
 
@@ -44,7 +46,7 @@ export async function getTemplates(req: AuthenticatedRequest, res: Response): Pr
       data: contracts,
     });
   } catch (error) {
-    console.error('Error fetching templates:', error);
+    logger.error({ err: error }, 'Error fetching templates');
     res.status(500).json({
       success: false,
       error: {
@@ -120,7 +122,7 @@ export async function createTemplate(req: AuthenticatedRequest, res: Response): 
       data: template,
     });
   } catch (error) {
-    console.error('Error creating template:', error);
+    logger.error({ err: error }, 'Error creating template');
     res.status(500).json({
       success: false,
       error: {
@@ -189,19 +191,19 @@ export async function updateTemplate(req: AuthenticatedRequest, res: Response): 
       message: 'New contract version created',
       data: template,
     });
-  } catch (error: any) {
-    if (error.statusCode === 404) {
+  } catch (error: unknown) {
+    if (hasStatusCode(error) && error.statusCode === 404) {
       res.status(404).json({
         success: false,
         error: {
-          code: error.code,
+          code: error.code || error.name,
           message: error.message,
         },
       });
       return;
     }
 
-    console.error('Error updating template:', error);
+    logger.error({ err: error }, 'Error updating template');
     res.status(500).json({
       success: false,
       error: {
@@ -249,7 +251,7 @@ export async function getUserContracts(req: AuthenticatedRequest, res: Response)
       data: contracts,
     });
   } catch (error) {
-    console.error('Error fetching user contracts:', error);
+    logger.error({ err: error }, 'Error fetching user contracts');
     res.status(500).json({
       success: false,
       error: {
@@ -305,19 +307,19 @@ export async function revokeUserContract(req: AuthenticatedRequest, res: Respons
       message: 'Contract revoked successfully',
       data: result,
     });
-  } catch (error: any) {
-    if (error.statusCode === 404) {
+  } catch (error: unknown) {
+    if (hasStatusCode(error) && error.statusCode === 404) {
       res.status(404).json({
         success: false,
         error: {
-          code: error.code,
+          code: error.code || error.name,
           message: error.message,
         },
       });
       return;
     }
 
-    console.error('Error revoking contract:', error);
+    logger.error({ err: error }, 'Error revoking contract');
     res.status(500).json({
       success: false,
       error: {

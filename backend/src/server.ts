@@ -3,7 +3,8 @@ import './instrument';
 
 import app from './app';
 import { connectDatabase, syncDatabase } from './config/database';
-import { config } from './config/env';
+import { config, platformDomain } from './config/env';
+import { logger } from './utils/logger';
 import { initModels, User, Product, CommissionConfig, UserClosure } from './models';
 import { achievementService } from './services/AchievementService';
 import bcrypt from 'bcryptjs';
@@ -23,11 +24,11 @@ async function autoSeed(): Promise<void> {
     // Verificar si ya hay datos / Check if data already exists
     const userCount = await User.count();
     if (userCount > 0) {
-      console.log('✅ Database already seeded (' + userCount + ' users)');
+      logger.info({ userCount }, 'Database already seeded');
       return;
     }
 
-    console.log('🌱 Database empty — running Nexo Real auto-seed...');
+    logger.info('Database empty — running Nexo Real auto-seed...');
 
     // ── Comisiones / Commission configs ─────────────────────────────────────
     const commissionData: Array<{
@@ -75,7 +76,7 @@ async function autoSeed(): Promise<void> {
         });
       }
     }
-    console.log('  ✅ Commission configs seeded (5 types × 5 levels)');
+    logger.info('Commission configs seeded (5 types × 5 levels)');
 
     // ── Productos / Products ─────────────────────────────────────────────────
     const products: Array<{
@@ -205,7 +206,7 @@ async function autoSeed(): Promise<void> {
 
     for (const prod of products) {
       await Product.create(prod);
-      console.log('  ✅ Created product: ' + prod.name);
+      logger.info({ product: prod.name }, 'Created product');
     }
 
     // ── Árbol Unilevel mínimo / Minimal Unilevel tree ────────────────────────
@@ -243,13 +244,13 @@ async function autoSeed(): Promise<void> {
           });
         }
       }
-      console.log('  ✅ Created [' + role + ']: ' + email);
+      logger.info({ role, email }, 'Created user');
       return user;
     }
 
     const superAdmin = await createUserWithClosure(
       '00000000-0000-0000-0000-000000000001',
-      'superadmin@nexoreal.xyz',
+      `superadmin@${platformDomain}`,
       'NXR-SA-001',
       'super_admin',
       null,
@@ -258,7 +259,7 @@ async function autoSeed(): Promise<void> {
 
     const admin = await createUserWithClosure(
       '00000000-0000-0000-0000-000000000002',
-      'admin@nexoreal.xyz',
+      `admin@${platformDomain}`,
       'NXR-AD-002',
       'admin',
       superAdmin.id,
@@ -267,7 +268,7 @@ async function autoSeed(): Promise<void> {
 
     const advisor = await createUserWithClosure(
       '00000000-0000-0000-0000-000000000003',
-      'valentina.ospina@nexoreal.xyz',
+      `valentina.ospina@${platformDomain}`,
       'NXR-AV-003',
       'advisor',
       admin.id,
@@ -276,7 +277,7 @@ async function autoSeed(): Promise<void> {
 
     await createUserWithClosure(
       '00000000-0000-0000-0000-000000000004',
-      'andres.martinez@nexoreal.xyz',
+      `andres.martinez@${platformDomain}`,
       'NXR-US-004',
       'user',
       advisor.id,
@@ -285,23 +286,21 @@ async function autoSeed(): Promise<void> {
 
     await createUserWithClosure(
       '00000000-0000-0000-0000-000000000005',
-      'invitado@nexoreal.xyz',
+      `invitado@${platformDomain}`,
       'NXR-GT-005',
       'guest',
       null,
       1
     );
 
-    console.log('');
-    console.log('📋 Nexo Real — Test Credentials:');
-    console.log('   superadmin@nexoreal.xyz  /  Nexo2024!  (super_admin)');
-    console.log('   admin@nexoreal.xyz       /  Nexo2024!  (admin)');
-    console.log('   valentina.ospina@...     /  Nexo2024!  (advisor)');
-    console.log('   andres.martinez@...      /  Nexo2024!  (user)');
-    console.log('   invitado@nexoreal.xyz    /  Nexo2024!  (guest)');
-    console.log('');
+    logger.info('Nexo Real — Test Credentials:');
+    logger.info(`  superadmin@${platformDomain}  /  Nexo2024!  (super_admin)`);
+    logger.info(`  admin@${platformDomain}       /  Nexo2024!  (admin)`);
+    logger.info('  valentina.ospina@...     /  Nexo2024!  (advisor)');
+    logger.info('  andres.martinez@...      /  Nexo2024!  (user)');
+    logger.info(`  invitado@${platformDomain}    /  Nexo2024!  (guest)`);
   } catch (error) {
-    console.error('❌ Auto-seed failed:', error);
+    logger.error({ err: error }, 'Auto-seed failed');
   }
 }
 
@@ -314,32 +313,33 @@ async function startServer(): Promise<void> {
     const forceSync = process.argv.includes('--force-sync');
     if (forceSync) {
       await syncDatabase(true);
-      console.log('⚠️  Database synced with force=true (drop tables)');
+      logger.warn('Database synced with force=true (drop tables)');
     } else {
       await syncDatabase(false);
-      console.log('✅ Database schema synced (alter mode)');
+      logger.info('Database schema synced (alter mode)');
     }
 
     // Auto-seed if database is empty
     await autoSeed();
 
     // Seed achievements (idempotent — safe on every restart)
-    achievementService.seedAchievements().catch((err) => console.error('[Achievements seed]', err));
+    achievementService
+      .seedAchievements()
+      .catch((err) => logger.error({ err }, 'Achievements seed failed'));
 
     app.listen(config.port, () => {
-      console.log(`
-╔═══════════════════════════════════════════════════════════╗
-║                 Nexo Real — Backend Server                 ║
-╠═══════════════════════════════════════════════════════════╣
-║  Environment: ${config.nodeEnv.padEnd(40)}║
-║  Port:        ${config.port.toString().padEnd(40)}║
-║  Database:    ${config.db.name.padEnd(41)}║
-║  Frontend:    ${config.app.frontendUrl.padEnd(41)}║
-╚═══════════════════════════════════════════════════════════╝
-      `);
+      logger.info(
+        {
+          environment: config.nodeEnv,
+          port: config.port,
+          database: config.db.name,
+          frontend: config.app.frontendUrl,
+        },
+        'Nexo Real — Backend Server started'
+      );
     });
   } catch (error) {
-    console.error('❌ Failed to start server:', error);
+    logger.fatal({ err: error }, 'Failed to start server');
     process.exit(1);
   }
 }

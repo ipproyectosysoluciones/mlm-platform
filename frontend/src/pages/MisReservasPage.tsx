@@ -25,6 +25,7 @@ import {
 import { useMyReservations } from '../stores/reservationStore';
 import type { Reservation, ReservationStatus } from '../services/reservationService';
 import { cn } from '../lib/utils';
+import { Button } from '../components/ui/button';
 
 // ============================================
 // Constants / Constantes
@@ -201,15 +202,12 @@ function ReservationCard({ reservation, isCancelling, onCancel }: ReservationCar
         <span className="text-xs text-slate-400 font-mono truncate">#{reservation.id}</span>
 
         {canCancel && (
-          <button
+          <Button
+            variant="destructive"
+            size="sm"
             onClick={handleCancelClick}
             disabled={isCancelling}
-            className={cn(
-              'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors shrink-0',
-              confirmingCancel
-                ? 'bg-red-500 text-white hover:bg-red-600'
-                : 'border border-red-200 text-red-600 hover:bg-red-50'
-            )}
+            className="shrink-0"
           >
             {isCancelling ? (
               <>
@@ -227,7 +225,7 @@ function ReservationCard({ reservation, isCancelling, onCancel }: ReservationCar
                 Cancelar
               </>
             )}
-          </button>
+          </Button>
         )}
       </div>
     </div>
@@ -297,29 +295,20 @@ function EmptyState({ hasFilter, onClear }: EmptyStateProps) {
           : 'Explorá propiedades y tours disponibles para hacer tu primera reserva.'}
       </p>
       {hasFilter ? (
-        <button
-          onClick={onClear}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-200 text-sm text-slate-600 hover:bg-slate-50 transition-colors"
-        >
+        <Button variant="outline" onClick={onClear}>
           <RefreshCw className="w-4 h-4" />
           Limpiar filtro
-        </button>
+        </Button>
       ) : (
         <div className="flex gap-3">
-          <button
-            onClick={() => navigate('/properties')}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-500 text-white text-sm font-medium hover:bg-emerald-600 transition-colors"
-          >
+          <Button onClick={() => navigate('/properties')}>
             <MapPin className="w-4 h-4" />
             Ver propiedades
-          </button>
-          <button
-            onClick={() => navigate('/tours')}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-200 text-sm text-slate-600 hover:bg-slate-50 transition-colors"
-          >
+          </Button>
+          <Button variant="outline" onClick={() => navigate('/tours')}>
             <Compass className="w-4 h-4" />
             Ver tours
-          </button>
+          </Button>
         </div>
       )}
     </div>
@@ -394,18 +383,15 @@ export default function MisReservasPage() {
               { value: 'completed', label: 'Completadas' },
             ] as { value: ReservationStatus | ''; label: string }[]
           ).map((option) => (
-            <button
+            <Button
               key={option.value}
+              variant={statusFilter === option.value ? 'default' : 'outline'}
+              size="sm"
               onClick={() => handleStatusChange(option.value)}
-              className={cn(
-                'px-4 py-2 rounded-full text-sm font-medium border transition-colors',
-                statusFilter === option.value
-                  ? 'bg-emerald-500 border-emerald-500 text-white'
-                  : 'bg-white border-slate-200 text-slate-600 hover:border-emerald-300 hover:text-emerald-600'
-              )}
+              className="rounded-full"
             >
               {option.label}
-            </button>
+            </Button>
           ))}
         </div>
 
@@ -429,7 +415,7 @@ export default function MisReservasPage() {
             <AlertCircle className="w-10 h-10 text-red-400 mb-3" />
             <p className="text-slate-600 font-medium mb-1">Error al cargar las reservas</p>
             <p className="text-sm text-slate-500 mb-4">{reservationsError}</p>
-            <button
+            <Button
               onClick={() =>
                 fetchMyReservations({
                   page: currentPage,
@@ -437,11 +423,10 @@ export default function MisReservasPage() {
                   status: statusFilter || undefined,
                 })
               }
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-500 text-white text-sm font-medium hover:bg-emerald-600 transition-colors"
             >
               <RefreshCw className="w-4 h-4" />
               Reintentar
-            </button>
+            </Button>
           </div>
         ) : myReservations.length === 0 ? (
           <EmptyState hasFilter={Boolean(statusFilter)} onClear={() => handleStatusChange('')} />
@@ -471,22 +456,22 @@ export default function MisReservasPage() {
                   )}
                 </p>
                 <div className="flex gap-2">
-                  <button
+                  <Button
+                    variant="outline"
                     onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                     disabled={currentPage === 1}
-                    className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-slate-200 text-sm text-slate-600 hover:bg-slate-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     <ChevronLeft className="w-4 h-4" />
                     Anterior
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant="outline"
                     onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                     disabled={currentPage === totalPages}
-                    className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-slate-200 text-sm text-slate-600 hover:bg-slate-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     Siguiente
                     <ChevronRight className="w-4 h-4" />
-                  </button>
+                  </Button>
                 </div>
               </div>
             )}

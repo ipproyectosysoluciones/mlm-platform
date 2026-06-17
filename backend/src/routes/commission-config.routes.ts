@@ -85,7 +85,8 @@ router.get(
  *                 type: string
  *               level:
  *                 type: string
- *                 enum: [direct, level_1, level_2, level_3, level_4]
+ *                 pattern: '^(direct|level_\\d+)$'
+ *                 description: 'direct or level_N (e.g. level_1 through level_9+)'
  *               percentage:
  *                 type: number
  *                 minimum: 0
@@ -101,8 +102,8 @@ router.post(
       .isIn(['suscripcion', 'producto', 'membresia', 'servicio', 'otro'])
       .withMessage('Invalid business type'),
     body('level')
-      .isIn(['direct', 'level_1', 'level_2', 'level_3', 'level_4'])
-      .withMessage('Invalid level'),
+      .matches(/^(direct|level_\d+)$/)
+      .withMessage('Invalid level — must be "direct" or "level_N" (e.g. level_1, level_9)'),
     body('percentage')
       .isFloat({ min: 0, max: 1 })
       .withMessage('Percentage must be between 0 and 1'),

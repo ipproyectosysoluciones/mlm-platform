@@ -6,8 +6,11 @@ We currently support the following versions with security updates:
 
 | Version | Supported          |
 | ------- | ------------------ |
+| 2.6.x   | :white_check_mark: |
+| 2.5.x   | :white_check_mark: |
+| 2.4.x   | :white_check_mark: |
 | 2.3.x   | :white_check_mark: |
-| 2.2.x   | :white_check_mark: |
+| 2.2.x   | :x:                |
 | 2.1.x   | :x:                |
 | 2.0.x   | :x:                |
 | < 2.0   | :x:                |
@@ -19,7 +22,7 @@ We take security vulnerabilities seriously. If you discover a security issue, pl
 **Please report security vulnerabilities by:**
 
 - Opening a private security advisory on GitHub
-- Emailing us directly at **security@nexoreal.xyz** <!-- TODO: domain pending -->
+- Emailing us directly at **security@nexoreal.xyz**
 
 ### Response Timeline
 
@@ -223,5 +226,5 @@ This prevents type confusion attacks where an attacker could manipulate the `fil
 
 ---
 
-_Last updated: 2026-04-09_
-_Version: 2.3.5_
+_Last updated: 2026-04-12_
+_Version: 2.6.1_

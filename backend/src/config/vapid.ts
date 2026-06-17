@@ -27,6 +27,7 @@
  * const publicKey = vapidConfig.publicKey;
  */
 import webpush from 'web-push';
+import { config } from './env';
 
 /**
  * VAPID keys structure
@@ -49,14 +50,14 @@ export interface VapidKeys {
  * // Add to .env:
  * // VAPID_PUBLIC_KEY=<publicKey>
  * // VAPID_PRIVATE_KEY=<privateKey>
- * // VAPID_SUBJECT=mailto:admin@nexoreal.xyz
+ * // VAPID_SUBJECT=mailto:admin@<PLATFORM_DOMAIN>
  *
  * // Español: Generar claves y guardar en .env
  * const keys = generateKeys();
  * // Agregar a .env:
  * // VAPID_PUBLIC_KEY=<publicKey>
  * // VAPID_PRIVATE_KEY=<privateKey>
- * // VAPID_SUBJECT=mailto:admin@nexoreal.xyz
+ * // VAPID_SUBJECT=mailto:admin@<PLATFORM_DOMAIN>
  */
 export function generateKeys(): VapidKeys {
   const keys = webpush.generateVAPIDKeys();
@@ -87,7 +88,7 @@ export const vapidConfig = {
   /** Private key for server-side push / Clave privada para push del servidor */
   privateKey: process.env.VAPID_PRIVATE_KEY || '',
   /** Subject for VAPID (mailto or URL) / Asunto para VAPID (mailto o URL) */
-  subject: process.env.VAPID_SUBJECT || 'mailto:admin@nexoreal.xyz', // TODO: domain pending
+  subject: process.env.VAPID_SUBJECT || `mailto:admin@${config.platform.domain}`,
 };
 
 /**

@@ -1,4 +1,5 @@
 import swaggerJsdoc from 'swagger-jsdoc';
+import { config } from './env';
 
 /**
  * Swagger/OpenAPI Configuration for Nexo Real API
@@ -60,7 +61,7 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
       `,
       contact: {
         name: 'Nexo Real Support',
-        email: 'support@nexoreal.xyz', // TODO: domain pending
+        email: `support@${config.platform.domain}`,
       },
     },
     servers: [

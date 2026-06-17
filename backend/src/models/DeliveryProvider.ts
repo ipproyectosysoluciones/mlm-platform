@@ -54,7 +54,7 @@ DeliveryProvider.init(
     slug: {
       type: DataTypes.STRING(100),
       allowNull: false,
-      unique: true,
+      // unique constraint managed via indexes (Sequelize v6 sync bug workaround)
     },
     trackingUrlTemplate: {
       type: DataTypes.STRING(500),

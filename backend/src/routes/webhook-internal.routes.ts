@@ -21,6 +21,7 @@
 
 import { Router, Request, Response, NextFunction } from 'express';
 import { ReservationService } from '../services/ReservationService';
+import { handleN8nAction } from '../controllers/N8nWebhookController';
 
 const router = Router();
 
@@ -82,5 +83,19 @@ router.post(
     }
   }
 );
+
+/**
+ * POST /webhooks/internal/n8n-action
+ * @description Process inbound n8n workflow action — idempotent execution persistence
+ *              Procesar acción de workflow n8n entrante — persistencia idempotente de ejecución
+ * @security X-Internal-Secret header required / Requiere encabezado X-Internal-Secret
+ * @body {{ leadId: string, workflowName: string, actionType: string, n8nExecutionId: string,
+ *          status: string, payload?: object, errorMessage?: string }}
+ * @returns 201 {{ success: true, executionId: string, leadId: string, idempotent: false }}
+ * @returns 200 {{ success: true, executionId: string, leadId: string, idempotent: true }}
+ * @returns 400 {{ success: false, error: string }} — missing required fields
+ * @returns 422 {{ success: false, error: string }} — unknown lead
+ */
+router.post('/n8n-action', verifyInternalSecret, handleN8nAction);
 
 export default router;

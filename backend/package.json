@@ -48,7 +48,8 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1027.0",
     "@sentry/node": "^10.46.0",
-    "axios": "^1.15.0",
+    "@types/multer": "^2.1.0",
+    "axios": "^1.16.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.6",
     "csv-parse": "^6.2.1",
@@ -60,9 +61,10 @@
     "ioredis": "^5.10.1",
     "jsonwebtoken": "^9.0.3",
     "mercadopago": "^2.12.0",
+    "multer": "^2.1.1",
     "mysql2": "^3.20.0",
     "node-cron": "^4.2.1",
-    "nodemailer": "^8.0.5",
+    "nodemailer": "^9.0.0",
     "pg": "^8.11.3",
     "pg-hstore": "^2.3.4",
     "pino": "^10.3.1",
@@ -73,7 +75,7 @@
     "speakeasy": "^2.0.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
-    "uuid": "^9.0.1",
+    "uuid": "^14.0.0",
     "web-push": "^3.6.7"
   },
   "devDependencies": {
@@ -95,7 +97,7 @@
     "@types/swagger-ui-express": "^4.1.8",
     "@types/uuid": "^9.0.8",
     "@types/web-push": "^3.6.4",
-    "esbuild": "^0.27.4",
+    "esbuild": "^0.28.1",
     "eslint": "^10.1.0",
     "eslint-config-prettier": "^10.1.8",
     "globals": "^17.4.0",
@@ -108,14 +110,8 @@
     "supertest": "^7.2.2",
     "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
-    "tsx": "^4.21.0",
+    "tsx": "^4.22.4",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.57.2"
-  },
-  "pnpm": {
-    "ignoredBuiltDependencies": [
-      "@scarf/scarf",
-      "sqlite3"
-    ]
   }
 }

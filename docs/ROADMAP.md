@@ -3,72 +3,86 @@
 > Hoja de ruta completa para la plataforma **Nexo Real** — Servicios Inmobiliarios, Turismo/Hospitalidad y Afiliaciones.  
 > _"Conectamos tu negocio con el mundo."_
 
-**Versión actual**: v2.4.0 — Sprint 8 Completado ✅  
-**Última actualización**: 2026-04-10  
-**Estado**: Activo - Desarrollo intensivo  
-**Meta**: v3.0.0 — expansión México + Argentina
+**Versión actual**: v3.0.0 — Sprint 10 Completado ✅  
+**Última actualización**: 2026-04-13  
+**Estado**: Activo - Producción  
+**Meta**: v3.1.0 — expansión México + Argentina
 
 ---
 
 ## 📊 Estado Actual del Proyecto
 
-### ✅ Lo que YA está implementado (v2.4.0)
+### ✅ Lo que YA está implementado (v3.0.0)
 
-| Área                     | Funcionalidad                                                               | Estado |
-| ------------------------ | --------------------------------------------------------------------------- | ------ |
-| **Auth**                 | JWT, 2FA, Roles                                                             | ✅     |
-| **MLM**                  | Unilevel con Closure Table                                                  | ✅     |
-| **Comisiones**           | 5 niveles configurables                                                     | ✅     |
-| **E-commerce**           | Productos streaming (MVP ejemplo)                                           | ✅     |
-| **Wallet**               | Balance, transacciones, retiros                                             | ✅     |
-| **CRM**                  | Leads, Tasks, Communications                                                | ✅     |
-| **Notificaciones**       | Email (Brevo), Push (Web)                                                   | ✅     |
-| **PWA**                  | Offline, instalable, shortcuts                                              | ✅     |
-| **Landing Pages**        | Productos con SEO                                                           | ✅     |
-| **Dashboard**            | Stats, tree view, perfil                                                    | ✅     |
-| **i18n**                 | Español + Inglés (sin claves huérfanas)                                     | ✅     |
-| **Pagos**                | PayPal + MercadoPago                                                        | ✅     |
-| **Gamificación**         | Leaderboards + Achievements                                                 | ✅     |
-| **Gift Cards**           | CRUD, redeem, balance, admin                                                | ✅     |
-| **Cart Recovery**        | Persistence, tokens, emails                                                 | ✅     |
-| **Email Auto**           | Templates, campaigns, scheduling                                            | ✅     |
-| **Security**             | SSRF, XSS, pino-http, Docker hardening, CodeQL fixes                        | ✅     |
-| **Products**             | Generic products + inventory + categories                                   | ✅     |
-| **Marketplace**          | Multi-vendor, commission split 3-way                                        | ✅     |
-| **Delivery**             | Shipping addresses, providers, tracking                                     | ✅     |
-| **Contracts**            | Affiliate contracts MVP con hash/IP                                         | ✅     |
-| **Real Estate Frontend** | PropertiesPage, PropertyDetailPage, filtros, galería                        | ✅     |
-| **Tourism Frontend**     | ToursPage, TourDetailPage, itinerario, disponibilidad                       | ✅     |
-| **Reservation Wizard**   | Wizard 3 pasos + MisReservasPage + reservationStore                         | ✅     |
-| **Admin Dashboard CRUD** | AdminPropertiesPage + AdminToursPage + AdminReservationsPage                | ✅     |
-| **Nexo Bot Flows**       | propertiesFlow + toursFlow (ES/EN, limit 5)                                 | ✅     |
-| **network_balance**      | Migración `binary_balance` → `network_balance`                              | ✅     |
-| **Build Hardening**      | Sin `.map` en producción, logs de tamaño                                    | ✅     |
-| **SEO Frontend**         | Helmet dinámico + OG tags + JSON-LD (Property + Tour) + social proof badges | ✅     |
-| **Tests**                | ~1,236 tests (Backend 39/528 + Frontend Unit 34/446 + E2E 22/262)           | ✅     |
-| **RBAC 9 Roles**         | super_admin, admin, finance, sales, advisor, vendor, user, guest, bot       | ✅     |
-| **Register Guest**       | `POST /api/auth/register/guest` — registro público sin sponsor              | ✅     |
-| **Update User Role**     | `PATCH /api/admin/users/:id/role` — solo super_admin/admin                  | ✅     |
-| **Seed Nexo Real**       | Datos colombianos (Medellín, Bogotá, Cartagena), árbol Unilevel completo    | ✅     |
+| Área                     | Funcionalidad                                                                        | Estado |
+| ------------------------ | ------------------------------------------------------------------------------------ | ------ |
+| **Auth**                 | JWT, 2FA, Roles                                                                      | ✅     |
+| **MLM**                  | Unilevel con Closure Table                                                           | ✅     |
+| **Comisiones**           | 5 niveles configurables                                                              | ✅     |
+| **E-commerce**           | Productos streaming (MVP ejemplo)                                                    | ✅     |
+| **Wallet**               | Balance, transacciones, retiros                                                      | ✅     |
+| **CRM**                  | Leads, Tasks, Communications                                                         | ✅     |
+| **Notificaciones**       | Email (Brevo), Push (Web)                                                            | ✅     |
+| **PWA**                  | Offline, instalable, shortcuts                                                       | ✅     |
+| **Landing Pages**        | Productos con SEO                                                                    | ✅     |
+| **Dashboard**            | Stats, tree view, perfil                                                             | ✅     |
+| **i18n**                 | Español + Inglés (sin claves huérfanas)                                              | ✅     |
+| **Pagos**                | PayPal + MercadoPago                                                                 | ✅     |
+| **Gamificación**         | Leaderboards + Achievements                                                          | ✅     |
+| **Gift Cards**           | CRUD, redeem, balance, admin                                                         | ✅     |
+| **Cart Recovery**        | Persistence, tokens, emails                                                          | ✅     |
+| **Email Auto**           | Templates, campaigns, scheduling                                                     | ✅     |
+| **Security**             | SSRF, XSS, pino-http, Docker hardening, CodeQL fixes                                 | ✅     |
+| **Products**             | Generic products + inventory + categories                                            | ✅     |
+| **Marketplace**          | Multi-vendor, commission split 3-way                                                 | ✅     |
+| **Delivery**             | Shipping addresses, providers, tracking                                              | ✅     |
+| **Contracts**            | Affiliate contracts MVP con hash/IP                                                  | ✅     |
+| **Real Estate Frontend** | PropertiesPage, PropertyDetailPage, filtros, galería                                 | ✅     |
+| **Tourism Frontend**     | ToursPage, TourDetailPage, itinerario, disponibilidad                                | ✅     |
+| **Reservation Wizard**   | Wizard 3 pasos + MisReservasPage + reservationStore                                  | ✅     |
+| **Admin Dashboard CRUD** | AdminPropertiesPage + AdminToursPage + AdminReservationsPage                         | ✅     |
+| **Nexo Bot Flows**       | propertiesFlow + toursFlow (ES/EN, limit 5)                                          | ✅     |
+| **network_balance**      | Migración `binary_balance` → `network_balance`                                       | ✅     |
+| **Build Hardening**      | Sin `.map` en producción, logs de tamaño                                             | ✅     |
+| **SEO Frontend**         | Helmet dinámico + OG tags + JSON-LD (Property + Tour) + social proof badges          | ✅     |
+| **Tests**                | Backend: 49 suites, 667 tests (Jest) · Bot: 8 files, 62 tests (Vitest) · Total: ~729 | ✅     |
+| **RBAC 9 Roles**         | super_admin, admin, finance, sales, advisor, vendor, user, guest, bot                | ✅     |
+| **Register Guest**       | `POST /api/auth/register/guest` — registro público sin sponsor                       | ✅     |
+| **Update User Role**     | `PATCH /api/admin/users/:id/role` — solo super_admin/admin                           | ✅     |
+| **Seed Nexo Real**       | Datos colombianos (Medellín, Bogotá, Cartagena), árbol Unilevel completo             | ✅     |
+| **Payment Webhooks**     | WebhookEvent model + MercadoPago + PayPal webhook handlers                           | ✅     |
+| **Invoice System**       | Invoice model + InvoiceService + PDF generation + CRUD routes                        | ✅     |
+| **Commission Unilevel**  | Migración Binary→Unilevel, 10 niveles configurables, Closure Table                   | ✅     |
+| **n8n CRM Integration**  | WorkflowService + WorkflowExecution + N8nWebhookController + Automation routes       | ✅     |
+| **2FA Frontend**         | TwoFactorLoginPage + twoFactorService + códigos de recuperación                      | ✅     |
+| **UX Polish**            | EmptyState 6 tipos + Skeleton loaders + Mobile responsive + Sonner toast             | ✅     |
+| **Feature Guard**        | Middleware para feature flags (FEATURE_CRYPTO_ENABLED=false por defecto)             | ✅     |
+| **Tests**                | Backend: 65+ suites, 600+ tests · Frontend: 35+ suites, 600+ tests · Total: 1,200+   | ✅     |
 
 ---
 
-## 🚀 Sprint 6 — v2.2.0 (Completado 2026-04-07)
+## 🚀 Sprint 10 — v3.0.0 (Completado 2026-04-13)
 
 ### Objetivos cumplidos
 
-| Fase   | Área                                                             | Estado        |
-| ------ | ---------------------------------------------------------------- | ------------- |
-| Fase 0 | Setup: Issues + ramas                                            | ✅            |
-| Fase 9 | Security: CodeQL #39 #40 fix                                     | ✅ PR #88     |
-| Fase 1 | Migration + Build hardening                                      | ✅ PR #89     |
-| Fase 2 | i18n cleanup + DashboardStreaming removal                        | ✅ PR #90     |
-| Fase 3 | Backend bot endpoints (incluido en PR #89)                       | ✅            |
-| Fase 4 | Admin Dashboard CRUD frontend                                    | ✅ PR #91     |
-| Fase 5 | Nexo Bot flows (properties + tours)                              | ✅ PR #92     |
-| Fase 6 | Documentación (Swagger v2.2.0 + CHANGELOG)                       | ✅            |
-| Fase 7 | Testing: migration tests + AdminPropertiesPage integration tests | ✅ PR commits |
-| Fase 8 | SEO/Content: meta tags + JSON-LD + social proof badges           | ✅ PR #95     |
+| #    | Issue                      | Área                                                       | PR   |
+| ---- | -------------------------- | ---------------------------------------------------------- | ---- |
+| #151 | Payment Webhooks           | MercadoPago + PayPal webhook handling + WebhookEvent model | #160 |
+| #152 | PayPal Checkout Redirect   | PayPalService rework + checkout flow                       | #161 |
+| #153 | Invoices DB Migration      | Invoice model + InvoiceService + PDF + routes              | #162 |
+| #154 | Disable Crypto Wallet      | Feature flag + middleware                                  | #163 |
+| #155 | Admin CRUD Pages           | Full admin management + CRM widgets                        | #164 |
+| #156 | 2FA Frontend Testing + Fix | TwoFactorLoginPage + twoFactorService                      | #165 |
+| #157 | Commission Unilevel        | Binary→Unilevel migration + 10 levels + Closure Table      | #166 |
+| #158 | n8n CRM Integration        | WorkflowService + N8nWebhookController + automation        | #167 |
+| #159 | UX Polish                  | Buttons, EmptyState, Skeletons, mobile, Sonner             | #168 |
+
+### Métricas
+
+- 9 issues completados
+- 154 archivos cambiados
+- ~12,110 líneas agregadas
+- 1,200+ tests automatizados
 
 ---
 
@@ -141,29 +155,29 @@ Integraciones: n8n → Google Calendar + Notion + Notificación humana
 
 ```
 ╔══════════════════════════════════════════════════════════════════════╗
-║                    MES 1: HASTA 2026-05-03                         ║
+║                    MES 1: HASTA 2026-05-03                           ║
 ╠══════════════════════════════════════════════════════════════════════╣
-║  ✅ SEMANA 1 (Mar 30 - Abr 5): MONETIZACIÓN — v1.9.0             ║
-║  ├── ✅ Pagos: PayPal SDK                                         ║
-║  ├── ✅ Pagos: MercadoPago SDK                                    ║
-║  └── ✅ Gamificación: Leaderboards + Achievements                 ║
+║  ✅ SEMANA 1 (Mar 30 - Abr 5): MONETIZACIÓN — v1.9.0                  ║
+║  ├── ✅ Pagos: PayPal SDK                                             ║
+║  ├── ✅ Pagos: MercadoPago SDK                                        ║
+║  └── ✅ Gamificación: Leaderboards + Achievements                     ║
 ╠══════════════════════════════════════════════════════════════════════╣
-║  ✅ SEMANA 2 (Abr 6 - Abr 12): E-COMMERCE + AUTOMATION — v1.10.0 ║
-║  ├── ✅ Gift Cards (#23)                                          ║
-║  ├── ✅ Carrito Abandonado (#21)                                   ║
-║  └── ✅ Email Automation (#22)                                     ║
+║  ✅ SEMANA 2 (Abr 6 - Abr 12): E-COMMERCE + AUTOMATION — v1.10.0      ║
+║  ├── ✅ Gift Cards (#23)                                              ║
+║  ├── ✅ Carrito Abandonado (#21)                                      ║
+║  └── ✅ Email Automation (#22)                                        ║
 ╠══════════════════════════════════════════════════════════════════════╣
-║  ✅ SEMANA 3 (Abr 13 - Abr 19): MULTI-VENDOR + DELIVERY — v1.11.0║
-║  ├── ✅ Security Hardening (#29, #30, #36)                        ║
-║  ├── ✅ Productos Genéricos + Inventario                          ║
-║  ├── ✅ Multi-vendor Support + Affiliate Contracts                ║
-║  └── ✅ Delivery: Shipping Addresses + Tracking                   ║
+║  ✅ SEMANA 3 (Abr 13 - Abr 19): MULTI-VENDOR + DELIVERY — v1.11.0     ║
+║  ├── ✅ Security Hardening (#29, #30, #36)                            ║
+║  ├── ✅ Productos Genéricos + Inventario                              ║
+║  ├── ✅ Multi-vendor Support + Affiliate Contracts                    ║
+║  └── ✅ Delivery: Shipping Addresses + Tracking                       ║
 ╠══════════════════════════════════════════════════════════════════════╣
-║  SEMANA 4 (Abr 20 - Abr 26): QA + RELEASE                        ║
-║  ├── Test Coverage Expansion (90%+)                                ║
-║  ├── Integration Testing                                           ║
-║  ├── Documentation                                                 ║
-║  └── v2.0.0 RELEASE (Abr 27)                                      ║
+║  SEMANA 4 (Abr 20 - Abr 26): QA + RELEASE                            ║
+║  ├── Test Coverage Expansion (90%+)                                  ║
+║  ├── Integration Testing                                             ║
+║  ├── Documentation                                                   ║
+║  └── v2.0.0 RELEASE (Abr 27)                                         ║
 ╚══════════════════════════════════════════════════════════════════════╝
 ```
 
@@ -470,16 +484,56 @@ Batch 8.8 — Documentación:
   ✅ docs: Postman — colección y environment renombrados a Nexo Real + carpeta RBAC
 ```
 
-#### Sprint 9 — v3.0.0 — TBD 📋
+#### Sprint 9 — v2.5.0 → v2.6.1 — Technical Debt & Quality ✅
 
 ```
-Branch:    TBD
-Estado:    No iniciado — pendiente definición de alcance post-auditoría v2.4.0
+Branch:    feature/sprint9-* (multiple feature branches)
+Estado:    Completado 2026-04-12 (6 issues closed, all PRs merged)
 
-Nota: Los ítems que estaban listados aquí (KB FAQ, n8n Google Calendar,
-n8n Notion CRM, lead capture, onboarding, objection handling) fueron
-TODOS completados en Sprint 8 (PRs #107-#125). Sprint 9 se definirá
-en el próximo ciclo SDD.
+Issue #150 — Pino Logger Migration:
+  ✅ Winston → Pino structured JSON logging across entire backend
+  ✅ All console.log and Winston calls replaced with Pino logger
+
+Issue #151 — Eliminate all explicit `any` types:
+  ✅ 39 backend production files audited and fixed
+  ✅ Zero explicit `any` remaining in production code
+
+Issue #152 — Bot Vitest Test Infrastructure:
+  ✅ 8 test files, 62 tests covering all bot flows and services
+
+Issue #148 — PLATFORM_DOMAIN Environment Variable:
+  ✅ Removed all hardcoded nexoreal.xyz references
+  ✅ Domain now fully configurable via PLATFORM_DOMAIN env var
+
+Issue #149 — Controller Test Coverage Expansion:
+  ✅ 9 new controller test files added
+  ✅ Backend tests expanded from 540 → 667 tests (49 suites)
+
+Issue #153 — Investor Pitch Deck:
+  ✅ 12-slide HTML presentation for investor demos
+
+Tests (post-Sprint 9):
+  Backend: 49 suites / 667 tests (Jest) ✅
+  Bot: 8 files / 62 tests (Vitest) ✅
+  Total platform: ~729 backend+bot tests
+```
+
+#### Sprint 10 — v3.0.0 — Stabilization & Commission Migration 📋
+
+```
+Branch:    feature/sprint10-*
+Estado:    Planned — not started
+
+9 Issues:
+  1. Payment Webhooks Complete (PayPal + MercadoPago)         — 🔴 BLOCKER
+  2. PayPal Checkout Redirect Fix                             — 🔴 BLOCKER
+  3. Invoices → Migrate to DB                                 — 🔴 BLOCKER
+  4. Disable Crypto Wallet                                    — 🟠 HIGH
+  5. Admin CRUD Functional                                    — 🟠 HIGH
+  6. 2FA Frontend Testing + Fix                               — 🟠 HIGH
+  7. Commission Model: Binary → Unilevel (10 levels)          — 🟠 HIGH
+  8. n8n CRM Integration → Frontend                           — 🟡 MEDIUM
+  9. UX Polish — Purchase/Reservation Flow                    — 🟡 MEDIUM
 ```
 
 ### Fase 2 — Multi-Tenant (1–2 meses post v2.0.0)
@@ -517,7 +571,7 @@ Email: Brevo (SMTP + API)
 SMS: Brevo SMS
 Pagos: PayPal + MercadoPago
 Delivery: Providers via webhooks
-Testing: Jest (39 suites / 528 tests)
+Testing: Jest (49 suites / 667 tests) + Bot Vitest (8 files / 62 tests)
 ```
 
 ### Frontend Stack
@@ -539,7 +593,7 @@ Testing: Vitest (34 files / 446 tests) + Playwright (22 specs / 262 E2E)
 | Métrica       | Actual (v2.4.0)                                                  | Objetivo                 |
 | ------------- | ---------------------------------------------------------------- | ------------------------ |
 | Test Coverage | ~70%                                                             | **90%+**                 |
-| Tests Totales | ~1,236 (Backend 528 + Frontend Unit 446 + E2E 262)               | **~550** ✅ superado     |
+| Tests Totales | ~1,375 (Backend 667 + Bot 62 + Frontend Unit 446 + E2E 262)      | **~550** ✅ superado     |
 | Features      | Pagos + Gamif + E-commerce + Multi-vendor + Delivery + Contracts | **Release v2.0.0**       |
 | Delivery      | Shipping addresses + tracking                                    | **+ DiDi/Uber/InDriver** |
 | Pagos         | PayPal + MP                                                      | **+ Gift Cards** ✅      |
@@ -570,11 +624,11 @@ sprint:3             - Sprint 3
 sprint:4             - Sprint 4
 sprint:7             - Sprint 7 — v2.3.0 → v2.3.5
 sprint:8             - Sprint 8 — v2.4.0
-sprint:9             - Sprint 9 — v3.0.0
+sprint:9             - Sprint 9 — v2.5.0 → v2.6.1
 ```
 
 ---
 
-**Última actualización**: 2026-04-10  
+**Última actualización**: 2026-04-12  
 **Proyecto**: https://github.com/users/ipproyectosysoluciones/projects/4  
 **Producto**: Nexo Real — _"Conectamos tu negocio con el mundo."_

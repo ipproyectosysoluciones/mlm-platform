@@ -12,26 +12,26 @@
     "dev": "tsx watch src/app.ts",
     "build": "tsc",
     "start": "node dist/app.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "lint": "eslint \"src/**/*.ts\"",
     "format": "prettier --write \"src/**/*.ts\""
   },
   "dependencies": {
-    "@builderbot/bot": "latest",
+    "@builderbot/bot": "^1.4.2",
     "@builderbot/database-postgres": "^1.4.1",
-    "@builderbot/provider-baileys": "latest",
-    "axios": "^1.15.0",
+    "@builderbot/provider-baileys": "^1.4.2",
+    "axios": "^1.16.0",
     "dotenv": "^16.6.1",
     "openai": "^4.91.1"
   },
   "devDependencies": {
     "@types/node": "^20.19.37",
+    "@vitest/coverage-v8": "^4.1.9",
     "prettier": "^3.8.1",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
-  },
-  "pnpm": {
-    "ignoredBuiltDependencies": [
-      "@scarf/scarf"
-    ]
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.9"
   }
 }

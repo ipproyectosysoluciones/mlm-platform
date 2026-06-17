@@ -1,11 +1,14 @@
 /**
- * AppLayout - Layout principal con navbar horizontal
+ * AppLayout - Layout principal con navbar horizontal.
+ * El Navbar maneja internamente su propio menú móvil con lógica de auth.
+ *
+ * AppLayout - Main layout with horizontal navbar.
+ * Navbar handles its own mobile menu internally with auth logic.
  *
  * @module components/layout/AppLayout
  */
 import { useState } from 'react';
 import { Navbar } from './Navbar';
-import { MobileMenu } from './MobileMenu';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -20,7 +23,6 @@ export default function AppLayout({ children }: AppLayoutProps) {
         onMobileMenuToggle={() => setMobileMenuOpen(!mobileMenuOpen)}
         mobileMenuOpen={mobileMenuOpen}
       />
-      <MobileMenu isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">{children}</main>
     </div>
   );

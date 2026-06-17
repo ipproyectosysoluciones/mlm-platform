@@ -30,6 +30,10 @@ import {
   updateLeadValidation,
   createTaskValidation,
 } from '../controllers/CRMController';
+import {
+  getAutomationStatus,
+  getAutomationExecutions,
+} from '../controllers/crm/AutomationController';
 import { authenticateToken } from '../middleware/auth.middleware';
 import { validate } from '../middleware/validate.middleware';
 import { asyncHandler } from '../middleware/asyncHandler';
@@ -122,6 +126,71 @@ router.get('/analytics/report', asyncHandler(getAnalyticsReport));
  *         description: Lista de alertas / Alerts list
  */
 router.get('/alerts', asyncHandler(getCRMAlerts));
+
+/**
+ * @swagger
+ * /crm/automation/status:
+ *   get:
+ *     summary: Resumen de automatización n8n / n8n automation status summary
+ *     description: Retorna total de ejecuciones, seguimientos pendientes y último timestamp.
+ *     tags: [crm]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Estado de automatización / Automation status
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success: { type: boolean }
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     totalExecutions: { type: integer }
+ *                     pendingFollowUps: { type: integer }
+ *                     lastActionAt: { type: string, format: date-time, nullable: true }
+ */
+router.get('/automation/status', asyncHandler(getAutomationStatus));
+
+/**
+ * @swagger
+ * /crm/automation/executions:
+ *   get:
+ *     summary: Lista paginada de ejecuciones / Paginated executions list
+ *     description: Retorna ejecuciones de workflow con datos del lead asociado.
+ *     tags: [crm]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Número de página / Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 20
+ *         description: Resultados por página (max 100) / Results per page (max 100)
+ *     responses:
+ *       200:
+ *         description: Ejecuciones paginadas / Paginated executions
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success: { type: boolean }
+ *                 data: { type: array }
+ *                 total: { type: integer }
+ *                 page: { type: integer }
+ *                 limit: { type: integer }
+ */
+router.get('/automation/executions', asyncHandler(getAutomationExecutions));
 
 /**
  * @swagger

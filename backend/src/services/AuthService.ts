@@ -53,7 +53,7 @@ export function generateToken(user: UserAttributes): string {
   const payload: JwtPayload = {
     userId: user.id,
     email: user.email,
-    role: (user as any).role || 'user',
+    role: user.role || 'user',
   };
 
   return jwt.sign(payload, config.jwt.secret, {

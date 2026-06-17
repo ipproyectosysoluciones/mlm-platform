@@ -64,6 +64,10 @@ export class Achievement extends Model<AchievementAttributes, AchievementCreatio
   declare status: AchievementStatus;
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
+
+  // Associations / Asociaciones
+  declare userAchievements?: import('./UserAchievement').UserAchievement[];
+  declare badge?: import('./Badge').Badge | null;
 }
 
 Achievement.init(
@@ -76,7 +80,7 @@ Achievement.init(
     key: {
       type: DataTypes.STRING(50),
       allowNull: false,
-      unique: true,
+      // unique constraint managed via indexes (Sequelize v6 sync bug workaround)
       comment: 'Unique identifier for the achievement (e.g. first_sale, team_10)',
     },
     name: {

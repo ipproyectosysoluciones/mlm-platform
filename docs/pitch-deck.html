@@ -1,0 +1,2237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexo Real — Investor Pitch Deck</title>
+<meta name="description" content="Nexo Real: Conectamos tu negocio con el mundo. Plataforma Open Source para bienes raíces, turismo y comunidades en LATAM.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   NEXO REAL — INVESTOR PITCH DECK
+   Design: Dark editorial, emerald accents
+   ═══════════════════════════════════════════ */
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Brand palette */
+  --emerald-50: #ecfdf5;
+  --emerald-100: #d1fae5;
+  --emerald-200: #a7f3d0;
+  --emerald-300: #6ee7b7;
+  --emerald-400: #34d399;
+  --emerald-500: #10b981;
+  --emerald-600: #059669;
+  --emerald-700: #047857;
+  --emerald-800: #065f46;
+
+  /* Slate palette */
+  --slate-950: #020617;
+  --slate-900: #0f172a;
+  --slate-800: #1e293b;
+  --slate-700: #334155;
+  --slate-600: #475569;
+  --slate-500: #64748b;
+  --slate-400: #94a3b8;
+  --slate-300: #cbd5e1;
+  --slate-200: #e2e8f0;
+  --slate-100: #f1f5f9;
+  --slate-50: #f8fafc;
+
+  /* Functional tokens */
+  --bg-deep: var(--slate-950);
+  --bg-base: var(--slate-900);
+  --bg-card: var(--slate-800);
+  --bg-elevated: var(--slate-700);
+  --text-primary: var(--slate-50);
+  --text-secondary: var(--slate-400);
+  --text-muted: var(--slate-500);
+  --accent: var(--emerald-500);
+  --accent-dark: var(--emerald-600);
+  --accent-light: var(--emerald-400);
+  --accent-glow: rgba(16, 185, 129, 0.15);
+
+  /* Typography */
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+
+  /* Spacing scale */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+  --space-4xl: 6rem;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Slide Base ─── */
+.slide {
+  width: 100vw;
+  min-height: 100vh;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: clamp(2rem, 5vw, 4rem);
+}
+
+.slide-inner {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+/* ─── Slide backgrounds ─── */
+.slide::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.slide:nth-child(odd) {
+  background: var(--bg-deep);
+}
+
+.slide:nth-child(even) {
+  background: var(--bg-base);
+}
+
+/* Subtle grain texture */
+.slide::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* ─── Typography ─── */
+h1 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+p {
+  font-family: var(--font-body);
+  font-weight: 400;
+}
+
+.section-label {
+  font-family: var(--font-display);
+  font-size: clamp(0.7rem, 1vw, 0.8rem);
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: var(--space-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.section-label::before {
+  content: '';
+  width: 2rem;
+  height: 2px;
+  background: var(--accent);
+  display: inline-block;
+}
+
+.slide-title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  color: var(--text-primary);
+  margin-bottom: var(--space-lg);
+}
+
+.slide-subtitle {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: var(--text-secondary);
+  max-width: 640px;
+  line-height: 1.7;
+}
+
+/* ─── Accent underline ─── */
+.accent-word {
+  color: var(--accent);
+  position: relative;
+}
+
+.accent-word::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 3px;
+  background: var(--accent);
+  border-radius: 2px;
+  opacity: 0.4;
+}
+
+/* ─── Stat blocks ─── */
+.stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-number {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-top: var(--space-xs);
+  line-height: 1.4;
+}
+
+/* ─── Cards ─── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid rgba(148, 163, 184, 0.08);
+  border-radius: 12px;
+  padding: var(--space-xl);
+  transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+.card:hover {
+  border-color: rgba(16, 185, 129, 0.2);
+  transform: translateY(-2px);
+}
+
+/* ─── Grid layouts ─── */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-xl);
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-lg);
+}
+
+/* ─── Scroll Animations ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+.reveal-delay-5 { transition-delay: 0.5s; }
+.reveal-delay-6 { transition-delay: 0.6s; }
+.reveal-delay-7 { transition-delay: 0.7s; }
+.reveal-delay-8 { transition-delay: 0.8s; }
+
+/* ─── Navigation ─── */
+.nav-controls {
+  position: fixed;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nav-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--slate-700);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+}
+
+.nav-dot.active {
+  background: var(--accent);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+  transform: scale(1.3);
+}
+
+.nav-dot:hover:not(.active) {
+  background: var(--slate-500);
+}
+
+.slide-counter {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 100;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+.slide-counter .current {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--emerald-600), var(--emerald-400));
+  z-index: 100;
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+}
+
+/* ─── Keyboard hint ─── */
+.keyboard-hint {
+  position: fixed;
+  bottom: 2rem;
+  left: 2rem;
+  z-index: 100;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  opacity: 0.6;
+  transition: opacity 0.5s ease;
+}
+
+.keyboard-hint kbd {
+  display: inline-block;
+  padding: 2px 6px;
+  border: 1px solid var(--slate-600);
+  border-radius: 4px;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  background: var(--bg-card);
+  margin: 0 1px;
+}
+
+
+/* ═══════════════════════════════════════════
+   SLIDE 1 — COVER
+   ═══════════════════════════════════════════ */
+
+#slide-cover {
+  background: var(--bg-deep);
+  text-align: left;
+  justify-content: center;
+  padding-bottom: 4rem;
+}
+
+#slide-cover::before {
+  content: '';
+  position: absolute;
+  top: -30%;
+  right: -20%;
+  width: 70vw;
+  height: 70vw;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.cover-brand {
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 10vw, 8rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  color: var(--text-primary);
+  margin-bottom: var(--space-lg);
+}
+
+.cover-brand span {
+  color: var(--accent);
+}
+
+.cover-tagline {
+  font-family: var(--font-body);
+  font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+  font-weight: 300;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-xl);
+  letter-spacing: 0.01em;
+}
+
+.cover-description {
+  font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+  color: var(--text-muted);
+  max-width: 600px;
+  line-height: 1.7;
+  margin-bottom: var(--space-2xl);
+}
+
+.cover-url {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 0.6rem 1.2rem;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.cover-url:hover {
+  background: var(--accent-glow);
+  border-color: var(--accent);
+}
+
+.cover-line {
+  width: 80px;
+  height: 4px;
+  background: var(--accent);
+  border-radius: 2px;
+  margin-bottom: var(--space-2xl);
+}
+
+
+/* ═══════════════════════════════════════════
+   SLIDE 2 — EL PROBLEMA
+   ═══════════════════════════════════════════ */
+
+.problem-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2xl);
+  align-items: start;
+  margin-top: var(--space-2xl);
+}
+
+.problem-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.problem-list li {
+  display: flex;
+  gap: var(--space-md);
+  align-items: flex-start;
+  font-size: clamp(0.9rem, 1.3vw, 1rem);
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.problem-list li .icon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.problem-stat-box {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(16, 185, 129, 0.02));
+  border: 1px solid rgba(16, 185, 129, 0.15);
+  border-radius: 16px;
+  padding: var(--space-2xl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 280px;
+}
+
+.problem-stat-box .stat-number {
+  font-size: clamp(3rem, 6vw, 4.5rem);
+  margin-bottom: var(--space-md);
+}
+
+.problem-stat-box .stat-label {
+  font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+  max-width: 280px;
+}
+
+
+/* ═══════════════════════════════════════════
+   SLIDE 3 — LA SOLUCIÓN
+   ═══════════════════════════════════════════ */
+
+.solution-equation {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  margin: var(--space-2xl) 0;
+  padding: var(--space-xl) 0;
+}
+
+.solution-block {
+  background: var(--bg-card);
+  border: 1px solid rgba(148, 163, 184, 0.08);
+  border-radius: 10px;
+  padding: var(--space-md) var(--space-xl);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+  color: var(--text-primary);
+}
+
+.solution-plus {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--accent);
+  font-weight: 300;
+}
+
+.pillars {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-lg);
+  margin-top: var(--space-xl);
+}
+
+.pillar {
+  text-align: center;
+  padding: var(--space-xl) var(--space-md);
+}
+
+.pillar-icon {
+  font-size: 2rem;
+  margin-bottom: var(--space-md);
+  display: block;
+}
+
+.pillar h3 {
+  font-size: clamp(0.85rem, 1.2vw, 1rem);
+  margin-bottom: var(--space-sm);
+  color: var(--text-primary);
+}
+
+.pillar p {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+
+/* ═══════════════════════════════════════════
+   SLIDE 4 — CÓMO FUNCIONA
+   ═══════════════════════════════════════════ */
+
+.flow-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  margin-top: var(--space-2xl);
+  position: relative;
+}
+
+.flow-step {
+  text-align: center;
+  padding: var(--space-xl);
+  position: relative;
+}
+
+.flow-step::after {
+  content: '→';
+  position: absolute;
+  right: -0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  color: var(--accent);
+  font-family: var(--font-display);
+}
+
+.flow-step:last-child::after {
+  display: none;
+}
+
+.flow-number {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--emerald-600), var(--emerald-500));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--slate-950);
+  margin-bottom: var(--space-lg);
+}
+
+.flow-step h3 {
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  margin-bottom: var(--space-sm);
+}
+
+.flow-step p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-width: 280px;
+  margin: 0 auto;
+}
+
+.flywheel {
+  margin-top: var(--space-2xl);
+  text-align: center;
+  padding: var(--space-xl) var(--space-2xl);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.06), transparent);
+  border: 1px solid rgba(16, 185, 129, 0.12);
+  border-radius: 12px;
+}
+
+.flywheel p {
+  font-size: clamp(0.9rem, 1.3vw, 1.05rem);
+  color: var(--text-secondary);
+}
+
+.flywheel strong {
+  color: var(--accent);
+}
+
+
+/* ═══════════════════════════════════════════
+   SLIDE 5 — PRODUCTO
+   ═══════════════════════════════════════════ */
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-md);
+  margin-top: var(--space-xl);
+}
+
+.product-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(148, 163, 184, 0.06);
+  border-radius: 10px;
+  padding: var(--space-lg);
+  transition: all 0.3s ease;
+}
+
+.product-card:hover {
+  border-color: rgba(16, 185, 129, 0.2);
+  transform: translateY(-2px);
+}
+
+.product-card .emoji {
+  font-size: 1.5rem;
+  margin-bottom: var(--space-sm);
+  display: block;
+}
+
+.product-card h3 {
+  font-size: clamp(0.8rem, 1.1vw, 0.95rem);
+  margin-bottom: var(--space-xs);
+  color: var(--text-primary);
+}
+
+.product-card p {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.product-footer {
+  margin-top: var(--space-xl);
+  text-align: center;
+  padding: var(--space-md);
+  background: rgba(16, 185, 129, 0.06);
+  border-radius: 8px;
+  border: 1px solid rgba(16, 185, 129, 0.1);
+}
+
+.product-footer span {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--accent);
+}
+
+
+/* ═══════════════════════════════════════════
+   SLIDE 6 — NEXO BOT
+   ═══════════════════════════════════════════ */
+
+.bot-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2xl);
+  align-items: center;
+  margin-top: var(--space-xl);
+}
+
+.bot-agents {
+  display: flex;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+
+.bot-agent {
+  flex: 1;
+  background: var(--bg-card);
+  border: 1px solid rgba(148, 163, 184, 0.08);
+  border-radius: 12px;
+  padding: var(--space-lg);
+  text-align: center;
+}
+
+.bot-agent .emoji {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: var(--space-sm);
+}
+
+.bot-agent h3 {
+  font-size: 1rem;
+  margin-bottom: var(--space-xs);
+}
+
+.bot-agent p {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.bot-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.bot-features li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.bot-features li .check {
+  color: var(--accent);
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.bot-phone {
+  background: var(--bg-card);
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  border-radius: 24px;
+  padding: var(--space-xl);
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.bot-phone-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+  margin-bottom: var(--space-md);
+}
+
+.bot-phone-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--emerald-600), var(--emerald-400));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.bot-phone-name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.bot-phone-status {
+  font-size: 0.7rem;
+  color: var(--accent);
+}
+
+.chat-messages {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.chat-msg {
+  max-width: 85%;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: 12px;
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.chat-msg.bot {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.15);
+  color: var(--emerald-200);
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+}
+
+.chat-msg.user {
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
+}
+
+
+/* ═══════════════════════════════════════════
+   SLIDE 7 — MODELO DE NEGOCIO
+   ═══════════════════════════════════════════ */
+
+.revenue-streams {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+  margin-top: var(--space-xl);
+}
+
+.revenue-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(148, 163, 184, 0.06);
+  border-radius: 12px;
+  padding: var(--space-xl);
+  position: relative;
+  overflow: hidden;
+}
+
+.revenue-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--emerald-600), var(--emerald-400));
+}
+
+.revenue-card .emoji {
+  font-size: 1.5rem;
+  display: block;
+  margin-bottom: var(--space-md);
+}
+
+.revenue-card h3 {
+  font-size: clamp(0.9rem, 1.2vw, 1.05rem);
+  margin-bottom: var(--space-sm);
+}
+
+.revenue-card p {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.mlm-note {
+  margin-top: var(--space-xl);
+  padding: var(--space-lg) var(--space-xl);
+  background: rgba(16, 185, 129, 0.05);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+
+/* ═══════════════════════════════════════════
+   SLIDE 8 — MERCADO
+   ═══════════════════════════════════════════ */
+
+.market-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2xl);
+  margin-top: var(--space-xl);
+  align-items: center;
+}
+
+.market-stats {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.market-stat {
+  border-left: 3px solid var(--accent);
+  padding-left: var(--space-lg);
+}
+
+.market-stat .stat-number {
+  font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+}
+
+/* TAM/SAM/SOM Pyramid */
+.pyramid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.pyramid-level {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--slate-950);
+  position: relative;
+  border-radius: 6px;
+}
+
+.pyramid-level:nth-child(1) {
+  width: 60%;
+  padding: var(--space-lg) var(--space-md);
+  background: linear-gradient(135deg, var(--emerald-700), var(--emerald-600));
+  font-size: clamp(0.7rem, 1vw, 0.85rem);
+}
+
+.pyramid-level:nth-child(2) {
+  width: 78%;
+  padding: var(--space-lg) var(--space-md);
+  background: linear-gradient(135deg, var(--emerald-600), var(--emerald-500));
+  font-size: clamp(0.75rem, 1.1vw, 0.9rem);
+}
+
+.pyramid-level:nth-child(3) {
+  width: 100%;
+  padding: var(--space-xl) var(--space-md);
+  background: linear-gradient(135deg, var(--emerald-500), var(--emerald-400));
+  font-size: clamp(0.8rem, 1.2vw, 0.95rem);
+}
+
+.pyramid-amount {
+  display: block;
+  font-size: clamp(1rem, 1.8vw, 1.3rem);
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.target-countries {
+  margin-top: var(--space-xl);
+  text-align: center;
+}
+
+.country-tags {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  margin-top: var(--space-md);
+}
+
+.country-tag {
+  background: var(--bg-card);
+  border: 1px solid rgba(148, 163, 184, 0.08);
+  border-radius: 6px;
+  padding: var(--space-sm) var(--space-md);
+  font-size: 0.8rem;
+  font-family: var(--font-display);
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+
+/* ═══════════════════════════════════════════
+   SLIDE 9 — TECNOLOGÍA
+   ═══════════════════════════════════════════ */
+
+.tech-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: var(--space-2xl);
+  margin-top: var(--space-xl);
+  align-items: start;
+}
+
+.tech-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.tech-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  background: var(--bg-card);
+  border: 1px solid rgba(148, 163, 184, 0.06);
+  border-radius: 10px;
+}
+
+.tech-row-label {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  min-width: 90px;
+  flex-shrink: 0;
+}
+
+.tech-row-value {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.tech-highlights {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.tech-highlight {
+  padding-left: var(--space-lg);
+  border-left: 2px solid var(--accent);
+}
+
+.tech-highlight h3 {
+  font-size: 0.95rem;
+  margin-bottom: var(--space-xs);
+}
+
+.tech-highlight p {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+
+/* ═══════════════════════════════════════════
+   SLIDE 10 — TRACCIÓN
+   ═══════════════════════════════════════════ */
+
+.traction-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+  margin-top: var(--space-xl);
+}
+
+.traction-item {
+  background: var(--bg-card);
+  border: 1px solid rgba(148, 163, 184, 0.06);
+  border-radius: 10px;
+  padding: var(--space-xl);
+  text-align: center;
+}
+
+.traction-item .emoji {
+  font-size: 1.5rem;
+  display: block;
+  margin-bottom: var(--space-sm);
+}
+
+.traction-item .value {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 700;
+  color: var(--accent);
+  display: block;
+  margin-bottom: var(--space-xs);
+}
+
+.traction-item .label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.traction-bottom {
+  margin-top: var(--space-xl);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+}
+
+.traction-fact {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  background: rgba(16, 185, 129, 0.04);
+  border-radius: 8px;
+  border: 1px solid rgba(16, 185, 129, 0.08);
+}
+
+.traction-fact .check {
+  color: var(--accent);
+  font-size: 1.2rem;
+}
+
+.traction-fact p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+
+/* ═══════════════════════════════════════════
+   SLIDE 11 — EQUIPO & VISIÓN
+   ═══════════════════════════════════════════ */
+
+.team-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2xl);
+  margin-top: var(--space-xl);
+  align-items: start;
+}
+
+.team-current {
+  background: var(--bg-card);
+  border: 1px solid rgba(148, 163, 184, 0.08);
+  border-radius: 12px;
+  padding: var(--space-xl);
+}
+
+.team-current h3 {
+  font-size: 1.1rem;
+  margin-bottom: var(--space-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.team-current p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: var(--space-lg);
+}
+
+.seeking-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.seeking-list li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+}
+
+.seeking-list li .icon {
+  color: var(--accent);
+}
+
+.vision-box {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(16, 185, 129, 0.02));
+  border: 1px solid rgba(16, 185, 129, 0.15);
+  border-radius: 16px;
+  padding: var(--space-2xl);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 320px;
+}
+
+.vision-quote {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 2vw, 1.6rem);
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.4;
+  margin-bottom: var(--space-lg);
+}
+
+.vision-quote em {
+  color: var(--accent);
+  font-style: normal;
+}
+
+.vision-box p {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  max-width: 360px;
+  line-height: 1.6;
+}
+
+
+/* ═══════════════════════════════════════════
+   SLIDE 12 — THE ASK
+   ═══════════════════════════════════════════ */
+
+#slide-ask {
+  text-align: center;
+}
+
+.ask-amount {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -0.03em;
+  margin: var(--space-xl) 0 var(--space-sm);
+}
+
+.ask-label {
+  font-size: clamp(0.9rem, 1.3vw, 1.1rem);
+  color: var(--text-muted);
+  margin-bottom: var(--space-2xl);
+}
+
+.ask-allocation {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-xl);
+  margin-bottom: var(--space-2xl);
+}
+
+.allocation-item {
+  text-align: center;
+}
+
+.allocation-percent {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  display: block;
+}
+
+.allocation-label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-top: var(--space-xs);
+  display: block;
+}
+
+.ask-timeline {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-2xl);
+  margin-bottom: var(--space-2xl);
+  padding: var(--space-lg) 0;
+  border-top: 1px solid rgba(148, 163, 184, 0.08);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+}
+
+.timeline-item {
+  text-align: center;
+}
+
+.timeline-item .period {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  display: block;
+  margin-bottom: var(--space-xs);
+}
+
+.timeline-item .milestone {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+}
+
+.ask-cta {
+  margin-top: var(--space-xl);
+}
+
+.ask-cta p {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-lg);
+}
+
+.ask-cta a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 0.8rem 2rem;
+  background: linear-gradient(135deg, var(--emerald-600), var(--emerald-500));
+  color: var(--slate-950);
+  text-decoration: none;
+  border-radius: 10px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.25);
+}
+
+.ask-cta a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 30px rgba(16, 185, 129, 0.35);
+}
+
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════ */
+
+@media (max-width: 900px) {
+  .grid-2, .grid-3, .grid-4,
+  .problem-grid, .bot-layout,
+  .revenue-streams, .market-layout,
+  .tech-layout, .traction-grid,
+  .team-layout, .traction-bottom {
+    grid-template-columns: 1fr;
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .flow-steps {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  .flow-step::after {
+    content: '↓';
+    right: auto;
+    bottom: -1.2rem;
+    top: auto;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .flow-step:last-child::after {
+    display: none;
+  }
+
+  .pillars {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .pyramid-level:nth-child(1) { width: 70%; }
+  .pyramid-level:nth-child(2) { width: 85%; }
+
+  .ask-allocation {
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .ask-timeline {
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .nav-controls {
+    right: 0.5rem;
+  }
+
+  .nav-dot {
+    width: 7px;
+    height: 7px;
+  }
+
+  .solution-equation {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 600px) {
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bot-agents {
+    flex-direction: column;
+  }
+
+  .country-tags {
+    justify-content: flex-start;
+  }
+
+  .slide {
+    padding: clamp(1.5rem, 4vw, 3rem);
+  }
+}
+
+
+/* ═══════════════════════════════════════════
+   PRINT
+   ═══════════════════════════════════════════ */
+
+@media print {
+  html {
+    scroll-snap-type: none;
+  }
+
+  .slide {
+    min-height: auto;
+    page-break-after: always;
+    padding: 2cm;
+    scroll-snap-align: none;
+  }
+
+  .nav-controls, .slide-counter, .progress-bar, .keyboard-hint {
+    display: none !important;
+  }
+
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  body {
+    background: white;
+    color: #0f172a;
+  }
+
+  .slide:nth-child(odd),
+  .slide:nth-child(even) {
+    background: white;
+  }
+
+  .card, .product-card, .traction-item, .revenue-card, .tech-row, .bot-agent {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+  }
+
+  .section-label, .accent-word, .stat-number, .accent {
+    color: #059669 !important;
+  }
+
+  .section-label::before {
+    background: #059669;
+  }
+
+  .slide-title, h1, h2, h3, .cover-brand {
+    color: #0f172a !important;
+  }
+
+  .cover-brand span {
+    color: #059669 !important;
+  }
+
+  p, li, .text-secondary {
+    color: #475569 !important;
+  }
+
+  .problem-stat-box, .flywheel, .vision-box, .mlm-note {
+    background: #ecfdf5;
+    border-color: #a7f3d0;
+  }
+
+  .pyramid-level {
+    color: white !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .ask-cta a {
+    background: #059669;
+    color: white;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Progress Bar -->
+<div class="progress-bar" id="progressBar" style="width: 0%"></div>
+
+<!-- Navigation Dots -->
+<nav class="nav-controls" id="navDots" aria-label="Slide navigation"></nav>
+
+<!-- Slide Counter -->
+<div class="slide-counter" id="slideCounter">
+  <span class="current">1</span> / 12
+</div>
+
+<!-- Keyboard Hint -->
+<div class="keyboard-hint" id="keyboardHint">
+  <kbd>←</kbd> <kbd>→</kbd> navegar &nbsp;·&nbsp; <kbd>Space</kbd> siguiente
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 1 — COVER
+     ═══════════════════════════════════════════ -->
+<section class="slide" id="slide-cover" data-slide="1">
+  <div class="slide-inner">
+    <div class="cover-line reveal"></div>
+    <h1 class="cover-brand reveal reveal-delay-1">Nexo<span> Real</span></h1>
+    <p class="cover-tagline reveal reveal-delay-2">Conectamos tu negocio con el mundo.</p>
+    <p class="cover-description reveal reveal-delay-3">
+      Plataforma Open Source de Bienes Raíces, Turismo y Comunidades
+      diseñada para LATAM. CRM, marketplace, bot con IA y red de comisiones
+      — todo en un solo lugar.
+    </p>
+    <a href="https://nexoreal.xyz" class="cover-url reveal reveal-delay-4" target="_blank" rel="noopener">
+      nexoreal.xyz →
+    </a>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 2 — EL PROBLEMA
+     ═══════════════════════════════════════════ -->
+<section class="slide" id="slide-problem" data-slide="2">
+  <div class="slide-inner">
+    <span class="section-label reveal">El Problema</span>
+    <h2 class="slide-title reveal reveal-delay-1">LATAM opera en Excel<br>y <span class="accent-word">WhatsApp</span></h2>
+
+    <div class="problem-grid">
+      <ul class="problem-list reveal reveal-delay-2">
+        <li>
+          <span class="icon">📊</span>
+          <span>Agentes inmobiliarios y operadores turísticos gestionan todo manualmente: Excel, libretas, grupos de WhatsApp.</span>
+        </li>
+        <li>
+          <span class="icon">💸</span>
+          <span>Sin acceso a CRM, automatización de marketing o herramientas de reservas a precio accesible.</span>
+        </li>
+        <li>
+          <span class="icon">📈</span>
+          <span>No pueden escalar sin contratar más personas. El crecimiento depende de horas-hombre.</span>
+        </li>
+        <li>
+          <span class="icon">🏷️</span>
+          <span>Airbnb y Booking cobran 15-20% de comisión y no atienden al operador pequeño de LATAM.</span>
+        </li>
+      </ul>
+
+      <div class="problem-stat-box reveal reveal-delay-3">
+        <span class="stat-number">+2.5M</span>
+        <span class="stat-label">Pequeños negocios de bienes raíces y turismo en LATAM sin herramientas digitales</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 3 — LA SOLUCIÓN
+     ═══════════════════════════════════════════ -->
+<section class="slide" id="slide-solution" data-slide="3">
+  <div class="slide-inner">
+    <span class="section-label reveal">La Solución</span>
+    <h2 class="slide-title reveal reveal-delay-1">Todo en <span class="accent-word">una</span> plataforma</h2>
+    <p class="slide-subtitle reveal reveal-delay-2">Nexo Real unifica las herramientas que necesita un negocio inmobiliario o turístico para crecer — sin depender de plataformas que cobran comisiones abusivas.</p>
+
+    <div class="solution-equation reveal reveal-delay-3">
+      <div class="solution-block">🏠 CRM</div>
+      <span class="solution-plus">+</span>
+      <div class="solution-block">🌐 Marketplace</div>
+      <span class="solution-plus">+</span>
+      <div class="solution-block">🤖 Bot AI</div>
+      <span class="solution-plus">+</span>
+      <div class="solution-block">💰 Red MLM</div>
+    </div>
+
+    <div class="pillars">
+      <div class="pillar reveal reveal-delay-3">
+        <span class="pillar-icon">🔓</span>
+        <h3>Open Source</h3>
+        <p>Confianza y transparencia total. Sin vendor lock-in.</p>
+      </div>
+      <div class="pillar reveal reveal-delay-4">
+        <span class="pillar-icon">💵</span>
+        <h3>Bajo Costo</h3>
+        <p>Accesible para operadores pequeños. Tier gratuito incluido.</p>
+      </div>
+      <div class="pillar reveal reveal-delay-5">
+        <span class="pillar-icon">🌎</span>
+        <h3>LATAM-First</h3>
+        <p>MercadoPago, WhatsApp, español/inglés nativos.</p>
+      </div>
+      <div class="pillar reveal reveal-delay-6">
+        <span class="pillar-icon">🤝</span>
+        <h3>Comunidad</h3>
+        <p>Construido por la comunidad, para la comunidad.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 4 — CÓMO FUNCIONA
+     ═══════════════════════════════════════════ -->
+<section class="slide" id="slide-how" data-slide="4">
+  <div class="slide-inner">
+    <span class="section-label reveal">¿Cómo funciona?</span>
+    <h2 class="slide-title reveal reveal-delay-1">Tres pasos. Un <span class="accent-word">flywheel</span>.</h2>
+
+    <div class="flow-steps">
+      <div class="flow-step reveal reveal-delay-2">
+        <div class="flow-number">1</div>
+        <h3>Registrate</h3>
+        <p>Creá tus publicaciones de propiedades o paquetes turísticos en minutos. Sin código, sin complicaciones.</p>
+      </div>
+      <div class="flow-step reveal reveal-delay-3">
+        <div class="flow-number">2</div>
+        <h3>Compartí</h3>
+        <p>Tu red de contactos promociona tus publicaciones. Cada miembro de tu red Unilevel amplifica tu alcance.</p>
+      </div>
+      <div class="flow-step reveal reveal-delay-4">
+        <div class="flow-number">3</div>
+        <h3>Ganá</h3>
+        <p>Comisiones automáticas en cada operación cerrada. 10 niveles de profundidad. Pagos directos.</p>
+      </div>
+    </div>
+
+    <div class="flywheel reveal reveal-delay-5">
+      <p>
+        ⚡ <strong>Efecto flywheel:</strong> más usuarios → más listings → más tráfico → más conversiones → más comisiones → más usuarios. El crecimiento se alimenta solo.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 5 — PRODUCTO
+     ═══════════════════════════════════════════ -->
+<section class="slide" id="slide-product" data-slide="5">
+  <div class="slide-inner">
+    <span class="section-label reveal">Producto</span>
+    <h2 class="slide-title reveal reveal-delay-1">MVP <span class="accent-word">completo</span></h2>
+
+    <div class="product-grid">
+      <div class="product-card reveal reveal-delay-2">
+        <span class="emoji">🏠</span>
+        <h3>Propiedades</h3>
+        <p>Alquiler, venta y administración de inmuebles con galería, mapa y filtros avanzados.</p>
+      </div>
+      <div class="product-card reveal reveal-delay-2">
+        <span class="emoji">✈️</span>
+        <h3>Tours</h3>
+        <p>6 tipos de paquetes turísticos con calendario de disponibilidad y reservas online.</p>
+      </div>
+      <div class="product-card reveal reveal-delay-3">
+        <span class="emoji">📅</span>
+        <h3>Reservas & Booking</h3>
+        <p>Sistema completo de reservas con confirmación, pagos parciales y gestión de fechas.</p>
+      </div>
+      <div class="product-card reveal reveal-delay-3">
+        <span class="emoji">🤖</span>
+        <h3>Nexo Bot</h3>
+        <p>IA en WhatsApp con agentes Sophia y Max. Atención 24/7 con escalamiento humano.</p>
+      </div>
+      <div class="product-card reveal reveal-delay-4">
+        <span class="emoji">💳</span>
+        <h3>Pagos</h3>
+        <p>PayPal, MercadoPago y billetera crypto integrados. Pagos seguros para LATAM.</p>
+      </div>
+      <div class="product-card reveal reveal-delay-4">
+        <span class="emoji">📊</span>
+        <h3>CRM</h3>
+        <p>Leads, tareas, comunicaciones y pipeline completo para gestionar tu negocio.</p>
+      </div>
+      <div class="product-card reveal reveal-delay-5">
+        <span class="emoji">💰</span>
+        <h3>Comisiones MLM</h3>
+        <p>Red Unilevel de 10 niveles con cálculo automático y bonificaciones por rendimiento.</p>
+      </div>
+      <div class="product-card reveal reveal-delay-5">
+        <span class="emoji">📈</span>
+        <h3>Dashboard</h3>
+        <p>Analytics en tiempo real: ventas, comisiones, rendimiento de red y métricas clave.</p>
+      </div>
+    </div>
+
+    <div class="product-footer reveal reveal-delay-6">
+      <span>34 rutas funcionales · MVP v2.4.0 · 100% operativo</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 6 — NEXO BOT
+     ═══════════════════════════════════════════ -->
+<section class="slide" id="slide-bot" data-slide="6">
+  <div class="slide-inner">
+    <span class="section-label reveal">Nexo Bot — El Factor WOW</span>
+    <h2 class="slide-title reveal reveal-delay-1">IA nativa en <span class="accent-word">WhatsApp</span></h2>
+
+    <div class="bot-layout">
+      <div>
+        <div class="bot-agents reveal reveal-delay-2">
+          <div class="bot-agent">
+            <span class="emoji">👩</span>
+            <h3>Sophia</h3>
+            <p>Agente femenina — atiende usuarios masculinos</p>
+          </div>
+          <div class="bot-agent">
+            <span class="emoji">👨</span>
+            <h3>Max</h3>
+            <p>Agente masculino — atiende usuarios femeninos</p>
+          </div>
+        </div>
+
+        <ul class="bot-features reveal reveal-delay-3">
+          <li><span class="check">✓</span> WhatsApp nativo — BuilderBot + Baileys + GPT-4o</li>
+          <li><span class="check">✓</span> Detección automática de idioma (ES/EN)</li>
+          <li><span class="check">✓</span> Knowledge Base personalizable por tenant</li>
+          <li><span class="check">✓</span> Escalamiento inteligente a agente humano</li>
+          <li><span class="check">✓</span> Integraciones n8n: Google Calendar, Notion, alertas</li>
+          <li><span class="check">✓</span> Atención 24/7 sin incrementar headcount</li>
+        </ul>
+      </div>
+
+      <div class="bot-phone reveal reveal-delay-4">
+        <div class="bot-phone-header">
+          <div class="bot-phone-avatar">🤖</div>
+          <div>
+            <div class="bot-phone-name">Sophia · Nexo Real</div>
+            <div class="bot-phone-status">● en línea</div>
+          </div>
+        </div>
+        <div class="chat-messages">
+          <div class="chat-msg bot">¡Hola! 👋 Soy Sophia de Nexo Real. ¿En qué puedo ayudarte hoy?</div>
+          <div class="chat-msg user">Busco departamento en Medellín, 2 habitaciones</div>
+          <div class="chat-msg bot">¡Tengo 3 opciones que te van a encantar! 🏠 Te comparto las fichas con fotos, precios y ubicación. ¿Querés agendar una visita?</div>
+          <div class="chat-msg user">Sí, para el viernes</div>
+          <div class="chat-msg bot">Perfecto ✅ Visita agendada para viernes 15:00. Te envié confirmación por correo. ¿Algo más?</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 7 — MODELO DE NEGOCIO
+     ═══════════════════════════════════════════ -->
+<section class="slide" id="slide-business" data-slide="7">
+  <div class="slide-inner">
+    <span class="section-label reveal">Modelo de Negocio</span>
+    <h2 class="slide-title reveal reveal-delay-1">Múltiples flujos de <span class="accent-word">ingreso</span></h2>
+
+    <div class="revenue-streams">
+      <div class="revenue-card reveal reveal-delay-2">
+        <span class="emoji">🔄</span>
+        <h3>Transaction Fees</h3>
+        <p>Porcentaje sobre cada operación cerrada en la plataforma. Modelo aligned con el éxito del usuario — si ellos ganan, nosotros ganamos.</p>
+      </div>
+      <div class="revenue-card reveal reveal-delay-3">
+        <span class="emoji">📦</span>
+        <h3>Suscripciones SaaS</h3>
+        <p><strong>Nexo Line 1:</strong> Gratis (community)<br><strong>Nexo Line 2:</strong> Managed — CRM avanzado, bot personalizado<br><strong>Enterprise:</strong> White-label + API</p>
+      </div>
+      <div class="revenue-card reveal reveal-delay-4">
+        <span class="emoji">⭐</span>
+        <h3>Premium Features</h3>
+        <p>Analytics avanzados, CRM enterprise, white-label, prioridad en marketplace y herramientas de automatización.</p>
+      </div>
+    </div>
+
+    <div class="mlm-note reveal reveal-delay-5">
+      <strong>💰 Red de Comisiones Unilevel</strong> — 10 niveles de profundidad con bonificaciones por rendimiento. 
+      Pagos via PayPal + MercadoPago. El modelo MLM no solo monetiza — <em>es el motor de distribución orgánica</em>.
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 8 — MERCADO
+     ═══════════════════════════════════════════ -->
+<section class="slide" id="slide-market" data-slide="8">
+  <div class="slide-inner">
+    <span class="section-label reveal">Mercado</span>
+    <h2 class="slide-title reveal reveal-delay-1">Un mercado de <span class="accent-word">$300B+</span></h2>
+
+    <div class="market-layout">
+      <div class="market-stats reveal reveal-delay-2">
+        <div class="market-stat">
+          <span class="stat-number">$200B+</span>
+          <span class="stat-label">Mercado inmobiliario LATAM (anual)</span>
+        </div>
+        <div class="market-stat">
+          <span class="stat-number">$100B+</span>
+          <span class="stat-label">Turismo en LATAM (anual)</span>
+        </div>
+        <div class="market-stat">
+          <span class="stat-number">+2.5M</span>
+          <span class="stat-label">Agentes independientes, agencias pequeñas, hosteles y operadores comunitarios</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="pyramid reveal reveal-delay-3">
+          <div class="pyramid-level">
+            <div>SOM<br><span class="pyramid-amount">$50M</span>15 ciudades · 3 países</div>
+          </div>
+          <div class="pyramid-level">
+            <div>SAM<br><span class="pyramid-amount">$2B</span>Agentes LATAM digitalizados</div>
+          </div>
+          <div class="pyramid-level">
+            <div>TAM<br><span class="pyramid-amount">$300B</span>Real Estate + Turismo LATAM</div>
+          </div>
+        </div>
+
+        <div class="target-countries reveal reveal-delay-4">
+          <div class="country-tags">
+            <span class="country-tag">🇨🇴 Colombia</span>
+            <span class="country-tag">🇲🇽 México</span>
+            <span class="country-tag">🇦🇷 Argentina</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 9 — TECNOLOGÍA
+     ═══════════════════════════════════════════ -->
+<section class="slide" id="slide-tech" data-slide="9">
+  <div class="slide-inner">
+    <span class="section-label reveal">Tecnología</span>
+    <h2 class="slide-title reveal reveal-delay-1">Stack <span class="accent-word">moderno</span>, diseño LATAM</h2>
+
+    <div class="tech-layout">
+      <div class="tech-stack reveal reveal-delay-2">
+        <div class="tech-row">
+          <span class="tech-row-label">Frontend</span>
+          <span class="tech-row-value">React 19 + Vite + TailwindCSS</span>
+        </div>
+        <div class="tech-row">
+          <span class="tech-row-label">Backend</span>
+          <span class="tech-row-value">Express + PostgreSQL + Sequelize ORM</span>
+        </div>
+        <div class="tech-row">
+          <span class="tech-row-label">Bot</span>
+          <span class="tech-row-value">BuilderBot + Baileys + GPT-4o</span>
+        </div>
+        <div class="tech-row">
+          <span class="tech-row-label">Monorepo</span>
+          <span class="tech-row-value">pnpm workspaces (frontend + backend + bot)</span>
+        </div>
+        <div class="tech-row">
+          <span class="tech-row-label">Deploy</span>
+          <span class="tech-row-value">Vercel (FE) + Docker / Cloudflare Tunnel (BE)</span>
+        </div>
+        <div class="tech-row">
+          <span class="tech-row-label">Automation</span>
+          <span class="tech-row-value">n8n workflows · GitHub Actions CI/CD</span>
+        </div>
+      </div>
+
+      <div class="tech-highlights reveal reveal-delay-3">
+        <div class="tech-highlight">
+          <h3>🔓 Open Source</h3>
+          <p>Código abierto, licencia MIT. Transparencia total para generar confianza en LATAM.</p>
+        </div>
+        <div class="tech-highlight">
+          <h3>📱 Mobile-First</h3>
+          <p>Diseñado para infraestructura LATAM: bajo bandwidth, navegación por datos móviles, UX táctil.</p>
+        </div>
+        <div class="tech-highlight">
+          <h3>🧩 API-First</h3>
+          <p>Arquitectura modular con 34 rutas REST. Preparado para integraciones y white-label.</p>
+        </div>
+        <div class="tech-highlight">
+          <h3>🛡️ Multi-tenant</h3>
+          <p>Cada negocio opera su propio espacio con datos aislados, bot personalizado y branding propio.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 10 — TRACCIÓN
+     ═══════════════════════════════════════════ -->
+<section class="slide" id="slide-traction" data-slide="10">
+  <div class="slide-inner">
+    <span class="section-label reveal">Tracción</span>
+    <h2 class="slide-title reveal reveal-delay-1">De idea a <span class="accent-word">producto</span></h2>
+
+    <div class="traction-grid reveal reveal-delay-2">
+      <div class="traction-item">
+        <span class="emoji">🚀</span>
+        <span class="value">v2.4.0</span>
+        <span class="label">MVP completo y desplegado</span>
+      </div>
+      <div class="traction-item">
+        <span class="emoji">🛤️</span>
+        <span class="value">34</span>
+        <span class="label">Rutas funcionales</span>
+      </div>
+      <div class="traction-item">
+        <span class="emoji">🌎</span>
+        <span class="value">3 / 15</span>
+        <span class="label">Países / Ciudades seeded</span>
+      </div>
+    </div>
+
+    <div class="traction-bottom reveal reveal-delay-3">
+      <div class="traction-fact">
+        <span class="check">✅</span>
+        <p>Bot activo en WhatsApp con agentes IA</p>
+      </div>
+      <div class="traction-fact">
+        <span class="check">✅</span>
+        <p>CRM completo con pipeline de leads</p>
+      </div>
+      <div class="traction-fact">
+        <span class="check">✅</span>
+        <p>Comisiones MLM 10 niveles integradas</p>
+      </div>
+      <div class="traction-fact">
+        <span class="check">✅</span>
+        <p>Pagos PayPal + MercadoPago + Crypto</p>
+      </div>
+    </div>
+
+    <div class="flywheel reveal reveal-delay-4" style="margin-top: var(--space-xl);">
+      <p>
+        🧑‍💻 <strong>Construido por un solo desarrollador.</strong> Ahora buscamos equipo y financiamiento para escalar lo que ya funciona.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 11 — EQUIPO & VISIÓN
+     ═══════════════════════════════════════════ -->
+<section class="slide" id="slide-team" data-slide="11">
+  <div class="slide-inner">
+    <span class="section-label reveal">Equipo & Visión</span>
+    <h2 class="slide-title reveal reveal-delay-1">De solo founder a <span class="accent-word">equipo</span></h2>
+
+    <div class="team-layout">
+      <div class="team-current reveal reveal-delay-2">
+        <h3>🧑‍💻 Hoy</h3>
+        <p>
+          Solo developer, full-stack. Diseñé, construí y desplegué toda la plataforma:
+          frontend, backend, bot de WhatsApp, sistema de comisiones y CRM.
+          Apasionado por resolver problemas reales de LATAM con tecnología.
+        </p>
+
+        <h3 style="font-size: 1rem; margin-bottom: var(--space-md); margin-top: var(--space-lg);">🔍 Buscamos</h3>
+        <ul class="seeking-list">
+          <li><span class="icon">→</span> Co-founder (Business / Growth)</li>
+          <li><span class="icon">→</span> 2 Developers (Full-stack / Bot)</li>
+          <li><span class="icon">→</span> 1 Community Manager (LATAM)</li>
+        </ul>
+      </div>
+
+      <div class="vision-box reveal reveal-delay-3">
+        <p class="vision-quote">
+          Ser el <em>"Shopify para bienes raíces y turismo en LATAM"</em>
+        </p>
+        <p>
+          La plataforma Open Source que democratiza las herramientas digitales
+          para millones de operadores pequeños en Latinoamérica. 
+          Comunidad primero, crecimiento orgánico, impacto real.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 12 — THE ASK
+     ═══════════════════════════════════════════ -->
+<section class="slide" id="slide-ask" data-slide="12">
+  <div class="slide-inner">
+    <span class="section-label reveal" style="justify-content: center;">El Ask</span>
+    <h2 class="slide-title reveal reveal-delay-1" style="text-align: center;">Ronda <span class="accent-word">Seed</span></h2>
+
+    <div class="ask-amount reveal reveal-delay-2">USD $150K</div>
+    <p class="ask-label reveal reveal-delay-2">Ronda pre-seed para llevar el MVP al mercado</p>
+
+    <div class="ask-allocation reveal reveal-delay-3">
+      <div class="allocation-item">
+        <span class="allocation-percent">60%</span>
+        <span class="allocation-label">Equipo<br><small style="color: var(--text-muted); font-size: 0.7rem;">CTO, devs, community</small></span>
+      </div>
+      <div class="allocation-item" style="padding: 0 var(--space-xl); border-left: 1px solid rgba(148,163,184,0.1); border-right: 1px solid rgba(148,163,184,0.1);">
+        <span class="allocation-percent">20%</span>
+        <span class="allocation-label">Infraestructura<br><small style="color: var(--text-muted); font-size: 0.7rem;">Servers, APIs, seguridad</small></span>
+      </div>
+      <div class="allocation-item">
+        <span class="allocation-percent">20%</span>
+        <span class="allocation-label">Marketing<br><small style="color: var(--text-muted); font-size: 0.7rem;">Comunidad, LATAM growth</small></span>
+      </div>
+    </div>
+
+    <div class="ask-timeline reveal reveal-delay-4">
+      <div class="timeline-item">
+        <span class="period">6 meses</span>
+        <span class="milestone">Primeros usuarios pagos</span>
+      </div>
+      <div class="timeline-item">
+        <span class="period">12 meses</span>
+        <span class="milestone">Revenue recurrente</span>
+      </div>
+      <div class="timeline-item">
+        <span class="period">18 meses</span>
+        <span class="milestone">Serie A ready</span>
+      </div>
+    </div>
+
+    <div class="ask-cta reveal reveal-delay-5">
+      <p>¿Listo para conectar tu negocio con el mundo?</p>
+      <a href="https://nexoreal.xyz" target="_blank" rel="noopener">
+        nexoreal.xyz →
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     JAVASCRIPT — Navigation, Animations, Touch
+     ═══════════════════════════════════════════ -->
+<script>
+(function() {
+  'use strict';
+
+  const TOTAL_SLIDES = 12;
+  let currentSlide = 1;
+  let isScrolling = false;
+
+  // ─── DOM References ───
+  const slides = document.querySelectorAll('.slide');
+  const navDotsContainer = document.getElementById('navDots');
+  const progressBar = document.getElementById('progressBar');
+  const slideCounter = document.getElementById('slideCounter');
+  const keyboardHint = document.getElementById('keyboardHint');
+
+  // ─── Build navigation dots ───
+  for (let i = 1; i <= TOTAL_SLIDES; i++) {
+    const dot = document.createElement('button');
+    dot.className = 'nav-dot' + (i === 1 ? ' active' : '');
+    dot.setAttribute('aria-label', 'Ir a slide ' + i);
+    dot.dataset.slide = i;
+    dot.addEventListener('click', function() {
+      goToSlide(parseInt(this.dataset.slide));
+    });
+    navDotsContainer.appendChild(dot);
+  }
+
+  // ─── Go to slide ───
+  function goToSlide(n) {
+    if (n < 1 || n > TOTAL_SLIDES || isScrolling) return;
+    currentSlide = n;
+    const target = document.querySelector('[data-slide="' + n + '"]');
+    if (target) {
+      isScrolling = true;
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(function() { isScrolling = false; }, 600);
+    }
+    updateUI();
+  }
+
+  // ─── Update UI state ───
+  function updateUI() {
+    // Progress bar
+    const progress = ((currentSlide - 1) / (TOTAL_SLIDES - 1)) * 100;
+    progressBar.style.width = progress + '%';
+
+    // Counter
+    slideCounter.innerHTML = '<span class="current">' + currentSlide + '</span> / ' + TOTAL_SLIDES;
+
+    // Dots
+    const dots = navDotsContainer.querySelectorAll('.nav-dot');
+    dots.forEach(function(dot) {
+      dot.classList.toggle('active', parseInt(dot.dataset.slide) === currentSlide);
+    });
+
+    // Hide keyboard hint after first navigation
+    if (currentSlide > 1) {
+      keyboardHint.style.opacity = '0';
+    }
+  }
+
+  // ─── Intersection Observer for reveals & current slide detection ───
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.4
+  };
+
+  const slideObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        const slideNum = parseInt(entry.target.dataset.slide);
+        if (slideNum && slideNum !== currentSlide) {
+          currentSlide = slideNum;
+          updateUI();
+        }
+
+        // Trigger reveal animations
+        const reveals = entry.target.querySelectorAll('.reveal');
+        reveals.forEach(function(el) {
+          el.classList.add('visible');
+        });
+      }
+    });
+  }, observerOptions);
+
+  slides.forEach(function(slide) {
+    slideObserver.observe(slide);
+  });
+
+  // ─── Keyboard navigation ───
+  document.addEventListener('keydown', function(e) {
+    switch(e.key) {
+      case 'ArrowDown':
+      case 'ArrowRight':
+      case ' ':
+        e.preventDefault();
+        goToSlide(currentSlide + 1);
+        break;
+      case 'ArrowUp':
+      case 'ArrowLeft':
+        e.preventDefault();
+        goToSlide(currentSlide - 1);
+        break;
+      case 'Home':
+        e.preventDefault();
+        goToSlide(1);
+        break;
+      case 'End':
+        e.preventDefault();
+        goToSlide(TOTAL_SLIDES);
+        break;
+    }
+  });
+
+  // ─── Touch / Swipe support ───
+  let touchStartY = 0;
+  let touchStartX = 0;
+
+  document.addEventListener('touchstart', function(e) {
+    touchStartY = e.changedTouches[0].screenY;
+    touchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+
+  document.addEventListener('touchend', function(e) {
+    const touchEndY = e.changedTouches[0].screenY;
+    const touchEndX = e.changedTouches[0].screenX;
+    const diffY = touchStartY - touchEndY;
+    const diffX = touchStartX - touchEndX;
+
+    // Only handle vertical swipes (ignore horizontal)
+    if (Math.abs(diffY) > Math.abs(diffX) && Math.abs(diffY) > 50) {
+      if (diffY > 0) {
+        goToSlide(currentSlide + 1);
+      } else {
+        goToSlide(currentSlide - 1);
+      }
+    }
+  }, { passive: true });
+
+  // ─── Initial state ───
+  // Trigger reveals for first slide
+  var firstSlideReveals = slides[0].querySelectorAll('.reveal');
+  setTimeout(function() {
+    firstSlideReveals.forEach(function(el) {
+      el.classList.add('visible');
+    });
+  }, 200);
+
+  updateUI();
+})();
+</script>
+
+</body>
+</html>

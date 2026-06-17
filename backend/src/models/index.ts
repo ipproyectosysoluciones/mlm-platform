@@ -1,4 +1,5 @@
 import { sequelize } from '../config/database';
+import { logger } from '../utils/logger';
 import { User } from './User';
 import { UserClosure } from './UserClosure';
 import { Commission } from './Commission';
@@ -35,6 +36,7 @@ import { DeliveryProvider } from './DeliveryProvider';
 import { ShipmentTracking } from './ShipmentTracking';
 import { ContractTemplate } from './ContractTemplate';
 import { AffiliateContract } from './AffiliateContract';
+import { Invoice } from './Invoice';
 import { Achievement } from './Achievement';
 import { Badge } from './Badge';
 import { UserAchievement } from './UserAchievement';
@@ -43,6 +45,7 @@ import { TourPackage } from './TourPackage';
 import { TourAvailability } from './TourAvailability';
 import { Reservation } from './Reservation';
 import { WebhookEvent } from './WebhookEvent';
+import { WorkflowExecution } from './WorkflowExecution';
 
 // User relationships
 User.hasMany(User, { as: 'children', foreignKey: 'sponsorId', sourceKey: 'id' });
@@ -72,6 +75,10 @@ Task.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 Lead.hasMany(Communication, { foreignKey: 'leadId', as: 'communications' });
 Communication.belongsTo(Lead, { foreignKey: 'leadId', as: 'lead' });
 Communication.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+
+// CRM Workflow Execution relationships (#158 — n8n Integration)
+Lead.hasMany(WorkflowExecution, { foreignKey: 'leadId', as: 'workflowExecutions' });
+WorkflowExecution.belongsTo(Lead, { foreignKey: 'leadId', as: 'lead' });
 
 User.hasMany(LandingPage, { foreignKey: 'userId', sourceKey: 'id' });
 LandingPage.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
@@ -412,6 +419,18 @@ AffiliateContract.belongsTo(User, {
   targetKey: 'id',
 });
 
+// ============================================
+// INVOICES — Invoice System (#153)
+// ============================================
+
+// User - Invoice (one user, many invoices)
+User.hasMany(Invoice, { foreignKey: 'userId', sourceKey: 'id' });
+Invoice.belongsTo(User, { as: 'user', foreignKey: 'userId', targetKey: 'id' });
+
+// Order - Invoice (one order, many invoices)
+Order.hasMany(Invoice, { foreignKey: 'orderId', sourceKey: 'id' });
+Invoice.belongsTo(Order, { as: 'order', foreignKey: 'orderId', targetKey: 'id' });
+
 // ── Achievement / Badge / UserAchievement associations ────────────────────────
 Achievement.hasOne(Badge, { as: 'badge', foreignKey: 'achievementId', sourceKey: 'id' });
 Badge.belongsTo(Achievement, { foreignKey: 'achievementId', targetKey: 'id' });
@@ -523,10 +542,12 @@ export {
   ShipmentTracking,
   ContractTemplate,
   AffiliateContract,
+  Invoice,
   Achievement,
   Badge,
   UserAchievement,
   WebhookEvent,
+  WorkflowExecution,
   Property,
   TourPackage,
   TourAvailability,
@@ -534,5 +555,5 @@ export {
 };
 
 export function initModels(): void {
-  console.log('✅ Models initialized');
+  logger.info('Models initialized');
 }

@@ -1,5 +1,6 @@
 import { Sequelize } from 'sequelize';
 import { config } from './env';
+import { logger } from '../utils/logger';
 
 // Allow test override
 let _sequelize: Sequelize | null = null;
@@ -59,9 +60,9 @@ export async function resetSequelize(): Promise<void> {
 export async function connectDatabase(): Promise<void> {
   try {
     await sequelize.authenticate();
-    console.log('✅ Database connection established successfully.');
+    logger.info('Database connection established successfully');
   } catch (error) {
-    console.error('❌ Unable to connect to the database:', error);
+    logger.error({ err: error }, 'Unable to connect to the database');
     throw error;
   }
 }
@@ -69,9 +70,9 @@ export async function connectDatabase(): Promise<void> {
 export async function syncDatabase(force: boolean = false): Promise<void> {
   try {
     await sequelize.sync({ force });
-    console.log('✅ Database synchronized.');
+    logger.info('Database synchronized');
   } catch (error) {
-    console.error('❌ Error synchronizing database:', error);
+    logger.error({ err: error }, 'Error synchronizing database');
     throw error;
   }
 }

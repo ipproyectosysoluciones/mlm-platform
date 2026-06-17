@@ -1,9 +1,9 @@
 /**
  * @fileoverview CommissionService - MLM commission calculation and management
- * @description Calculates and manages commissions for binary MLM structure including
- *              direct commissions and up to 4 levels of upline commissions.
- *              Calcula y gestiona comisiones para estructura MLM binaria incluyendo
- *              comisiones directas y hasta 4 niveles de comisiones de upline.
+ * @description Calculates and manages commissions for unilevel MLM structure including
+ *              direct commissions and up to N config-driven levels of upline commissions.
+ *              Calcula y gestiona comisiones para estructura MLM unilevel incluyendo
+ *              comisiones directas y hasta N niveles configurables de comisiones de upline.
  * @module services/CommissionService
  * @author MLM Development Team
  *
@@ -22,9 +22,12 @@
  */
 import { sequelize } from '../config/database';
 import { User, Commission, Purchase, CommissionConfig } from '../models';
-import { COMMISSION_RATES } from '../types';
+import { COMMISSION_RATES, generateLevelKey } from '../types';
+import type { BusinessType } from '../types/index.js';
 import { walletService } from './WalletService';
 import { emailService } from './EmailService';
+import { logger } from '../utils/logger';
+import { config } from '../config/env';
 
 export class CommissionService {
   /**
@@ -32,28 +35,55 @@ export class CommissionService {
    * Falls back to static rates if no config exists
    */
   private async getCommissionRate(businessType: string, level: string): Promise<number> {
-    const config = await CommissionConfig.findOne({
+    const configRecord = await CommissionConfig.findOne({
       where: {
-        businessType: businessType as any,
-        level: level as any,
+        businessType: businessType as BusinessType,
+        level,
         isActive: true,
       },
     });
 
-    if (config) {
-      return Number(config.percentage);
+    if (configRecord) {
+      return Number(configRecord.percentage);
     }
 
     // Fallback to static rates if no config found
-    return COMMISSION_RATES[level as keyof typeof COMMISSION_RATES] || 0;
+    return COMMISSION_RATES[level] || 0;
   }
 
   /**
-   * Calcula comisiones por una compra
-   * Calculates commissions for a purchase
+   * Get max configured depth for a business type.
+   * Returns the count of active CommissionConfig rows (excluding 'direct').
+   * Falls back to the number of level_N keys in COMMISSION_RATES.
+   */
+  private async getMaxConfiguredDepth(businessType: string): Promise<number> {
+    try {
+      const count = await CommissionConfig.count({
+        where: {
+          businessType: businessType as BusinessType,
+          isActive: true,
+        },
+      });
+      // count includes 'direct', so max depth = count - 1 (levels 1..N)
+      // But if no configs exist, fallback to static rates
+      if (count > 0) {
+        return count - 1; // e.g. 10 configs (direct + 9 levels) → max depth 9
+      }
+    } catch {
+      // CommissionConfig.count not available in test mocks — fall through
+    }
+
+    // Fallback: count level_N keys in COMMISSION_RATES
+    const levelKeys = Object.keys(COMMISSION_RATES).filter((k) => k.startsWith('level_'));
+    return levelKeys.length; // 9 (level_1 through level_9)
+  }
+
+  /**
+   * Calcula comisiones por una compra — modelo unilevel N niveles
+   * Calculates commissions for a purchase — N-level unilevel model
    *
-   * Crea comisión directa para el patrocinador y hasta 4 niveles de comisiones.
-   * Creates direct commission for sponsor and up to 4 levels of commissions.
+   * Crea comisión directa para el patrocinador y hasta N niveles de comisiones.
+   * Creates direct commission for sponsor and up to N levels of commissions.
    */
   async calculateCommissions(purchaseId: string): Promise<Commission[]> {
     const purchase = await Purchase.findByPk(purchaseId);
@@ -68,6 +98,9 @@ export class CommissionService {
     // Get business type from purchase (defaults to 'producto')
     const businessType = purchase.businessType || 'producto';
 
+    // Get max configured depth (config-driven, not hardcoded)
+    const maxDepth = await this.getMaxConfiguredDepth(businessType);
+
     // Calculate direct commission for sponsor
     const sponsor = await User.findByPk(buyer.sponsorId);
     if (sponsor) {
@@ -77,6 +110,7 @@ export class CommissionService {
         fromUserId: buyer.id,
         purchaseId: purchase.id,
         type: 'direct',
+        model: 'unilevel',
         amount: Number(purchase.amount) * rate,
         currency: purchase.currency,
         status: 'pending',
@@ -92,22 +126,24 @@ export class CommissionService {
           amount: Number(directCommission.amount),
           currency: purchase.currency,
         })
-        .catch((err) => console.error('Commission email failed:', err));
+        .catch((err) =>
+          logger.error({ service: 'CommissionService', err }, 'Commission email failed')
+        );
     }
 
-    const commissionTypeMap: Record<number, 'level_1' | 'level_2' | 'level_3' | 'level_4'> = {
-      1: 'level_1',
-      2: 'level_2',
-      3: 'level_3',
-      4: 'level_4',
-    };
-
+    // Upline loop: sponsor (depth=1) already got 'direct' above, so we skip it.
+    // Use a level counter starting at 1 for the first non-sponsor ancestor → level_1, level_2, ...
+    // Break when counter exceeds maxDepth (config count - 1 = number of level_N configs).
+    // Loop upline: el sponsor (depth=1) ya recibió 'direct' arriba, se skipea.
+    // Usa un contador de nivel empezando en 1 para el primer ancestro no-sponsor → level_1, level_2, ...
+    // Corta cuando el contador excede maxDepth (configs - 1 = cantidad de configs level_N).
+    let levelCounter = 1;
     for (const ancestor of upline) {
-      if (ancestor.depth > 4) break;
+      if (levelCounter > maxDepth) break;
       if (ancestor.id === buyer.sponsorId) continue;
 
-      const type = commissionTypeMap[ancestor.depth];
-      if (!type) continue;
+      const type = generateLevelKey(levelCounter);
+      levelCounter++;
 
       const rate = await this.getCommissionRate(businessType, type);
       const amount = Number(purchase.amount) * rate;
@@ -117,6 +153,7 @@ export class CommissionService {
         fromUserId: buyer.id,
         purchaseId: purchase.id,
         type,
+        model: 'unilevel',
         amount,
         currency: purchase.currency,
         status: 'pending',
@@ -128,7 +165,7 @@ export class CommissionService {
   }
 
   private async getUplineWithDepth(userId: string): Promise<Array<User & { depth: number }>> {
-    const [results] = await sequelize.query(
+    const results = await sequelize.query(
       `SELECT u.*, uc.depth
        FROM user_closure uc
        JOIN users u ON uc.ancestor_id = u.id
@@ -137,7 +174,7 @@ export class CommissionService {
        ORDER BY uc.depth ASC`,
       {
         replacements: { userId },
-        type: 'SELECT',
+        type: 'SELECT' as const,
       }
     );
 
@@ -233,14 +270,17 @@ export class CommissionService {
     commission.status = 'approved';
     await commission.save();
 
-    // Credit to wallet
-    await walletService.creditCommission(
-      commission.userId,
-      Number(commission.amount),
-      commission.currency,
-      commission.id,
-      `${commission.type} commission from referral`
-    );
+    // Credit to wallet only if crypto wallet feature is enabled
+    // Acreditar a wallet solo si la funcionalidad de crypto wallet está habilitada
+    if (config.features.cryptoWallet) {
+      await walletService.creditCommission(
+        commission.userId,
+        Number(commission.amount),
+        commission.currency,
+        commission.id,
+        `${commission.type} commission from referral`
+      );
+    }
 
     return commission;
   }
@@ -260,7 +300,10 @@ export class CommissionService {
         const commission = await this.approveCommission(id);
         approved.push(commission);
       } catch (error) {
-        console.error(`Error approving commission ${id}:`, error);
+        logger.error(
+          { service: 'CommissionService', err: error, commissionId: id },
+          'Error approving commission'
+        );
       }
     }
 
@@ -303,18 +346,12 @@ export class CommissionService {
       const upline = await this.getUplineWithDepth(buyerId);
       const mlmCommissions: Array<{ userId: string; level: string; amount: number }> = [];
 
-      const commissionTypeMap: Record<number, 'level_1' | 'level_2' | 'level_3' | 'level_4'> = {
-        1: 'level_1',
-        2: 'level_2',
-        3: 'level_3',
-        4: 'level_4',
-      };
+      const maxDepth = await this.getMaxConfiguredDepth(businessType);
 
       for (const ancestor of upline) {
-        if (ancestor.depth > 4) break;
+        if (ancestor.depth > maxDepth) break;
 
-        const type = commissionTypeMap[ancestor.depth];
-        if (!type) continue;
+        const type = generateLevelKey(ancestor.depth);
 
         const rate = await this.getCommissionRate(businessType, type);
         const amount = this.roundDecimal(price * rate, 2);
@@ -366,19 +403,16 @@ export class CommissionService {
     const upline = await this.getUplineWithDepth(buyerId);
     const mlmCommissions: Array<{ userId: string; level: string; amount: number }> = [];
 
-    const commissionTypeMap: Record<number, 'level_1' | 'level_2' | 'level_3' | 'level_4'> = {
-      1: 'level_1',
-      2: 'level_2',
-      3: 'level_3',
-      4: 'level_4',
-    };
+    const maxDepth = await this.getMaxConfiguredDepth(businessType);
 
+    let levelCounter = 1;
     for (const ancestor of upline) {
-      if (ancestor.depth > 4) break;
+      if (levelCounter > maxDepth) break;
       if (ancestor.id === buyer.sponsorId) continue; // Skip direct sponsor (handled separately)
 
-      const type = commissionTypeMap[ancestor.depth];
-      if (!type) continue;
+      // Sponsor skipped → use counter so first non-sponsor ancestor gets level_1
+      const type = generateLevelKey(levelCounter);
+      levelCounter++;
 
       const rate = await this.getCommissionRate(businessType, type);
       // MLM commission is calculated from platform fee, not full price
@@ -392,8 +426,9 @@ export class CommissionService {
     // Verify: vendorAmount + platformNet + sum(mlm) === price
     const verification = this.roundDecimal(vendorAmount + platformNet + totalMlm, 2);
     if (verification !== this.roundDecimal(price, 2)) {
-      console.warn(
-        `[CommissionService] Commission math verification failed: ${verification} !== ${this.roundDecimal(price, 2)}`
+      logger.warn(
+        { service: 'CommissionService', verification, expected: this.roundDecimal(price, 2) },
+        'Commission math verification failed'
       );
     }
 
@@ -437,7 +472,8 @@ export class CommissionService {
         userId: commission.userId,
         fromUserId: buyerId,
         purchaseId,
-        type: commission.level as 'level_1' | 'level_2' | 'level_3' | 'level_4',
+        type: commission.level,
+        model: 'unilevel',
         amount: commission.amount,
         currency: buyer?.currency || 'USD',
         status: 'pending',

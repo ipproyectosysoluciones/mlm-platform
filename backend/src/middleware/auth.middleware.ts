@@ -6,6 +6,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { config } from '../config/env';
 import { UserRole, ADMIN_ROLES, FINANCE_ROLES, CRM_ROLES, PROPERTY_MGMT_ROLES } from '../types';
+import { logger } from '../utils/logger';
 
 // ============================================
 // TYPES
@@ -60,13 +61,13 @@ export function extractTokenFromHeader(authHeader?: string): string | null {
 // ============================================
 
 export function authenticate(req: AuthenticatedRequest, res: Response, next: NextFunction): void {
-  console.log('[DEBUG] authenticate middleware called');
+  logger.debug('authenticate middleware called');
   try {
     const token = extractTokenFromHeader(req.headers.authorization);
-    console.log('[DEBUG] token extracted:', token ? 'yes' : 'no');
+    logger.debug({ hasToken: !!token }, 'Token extraction result');
 
     if (!token) {
-      console.log('[DEBUG] No token - returning 401');
+      logger.debug('No token present, returning 401');
       res.status(401).json({
         success: false,
         error: {
@@ -78,10 +79,10 @@ export function authenticate(req: AuthenticatedRequest, res: Response, next: Nex
     }
 
     const decoded = verifyToken(token);
-    console.log('[DEBUG] token decoded:', decoded ? 'yes' : 'no');
+    logger.debug({ decoded: !!decoded }, 'Token verification result');
 
     if (!decoded) {
-      console.log('[DEBUG] Invalid token - returning 401');
+      logger.debug('Invalid token, returning 401');
       res.status(401).json({
         success: false,
         error: {
@@ -100,10 +101,10 @@ export function authenticate(req: AuthenticatedRequest, res: Response, next: Nex
     };
     req.userId = decoded.userId;
 
-    console.log('[DEBUG] Calling next()');
+    logger.debug('Authentication successful, calling next()');
     next();
   } catch (e) {
-    console.log('[DEBUG] Error in authenticate:', e);
+    logger.error({ err: e }, 'Error in authenticate middleware');
     res.status(500).json({
       success: false,
       error: {
@@ -364,7 +365,7 @@ export async function logAccess(entry: Omit<AuditLogEntry, 'timestamp'>): Promis
   };
 
   if (process.env.NODE_ENV !== 'production') {
-    console.log('[AUDIT]', JSON.stringify(fullEntry));
+    logger.debug({ audit: fullEntry }, 'Audit log entry');
   }
 }
 

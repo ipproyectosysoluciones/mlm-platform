@@ -7,6 +7,7 @@ import dashboardRoutes from './dashboard.routes';
 import productRoutes from './product.routes';
 import orderRoutes from './order.routes';
 import walletRoutes from './wallet.routes';
+import { featureGuard } from '../middleware/featureGuard';
 import twoFactorRoutes from './twoFactor.routes';
 import pushRoutes from './push.routes';
 import publicRoutes from './public.routes';
@@ -28,6 +29,20 @@ import addressRoutes from './address.routes';
 import shippingRoutes from './shipping.routes';
 import achievementRoutes from './achievement.routes';
 import leaderboardRoutes from './leaderboard.routes';
+import invoiceRoutes from './invoices.routes';
+
+// Sprint 9 — previously orphaned routes (fix #126)
+// Sprint 9 — rutas previamente huérfanas (fix #126)
+import adminReservationRoutes from './admin-reservation.routes';
+import adminTourRoutes from './admin-tour.routes';
+import adminPropertyRoutes from './admin-property.routes';
+import propertyRoutes from './property.routes';
+import tourRoutes from './tour.routes';
+import botLeadsRoutes from './bot-leads.routes';
+
+// Relocated from app.ts → centralised in router index (fix #126)
+// Reubicado de app.ts → centralizado en índice de rutas (fix #126)
+import commissionConfigRoutes from './commission-config.routes';
 
 const router: ExpressRouter = Router();
 
@@ -39,8 +54,8 @@ router.use('/commissions', commissionRoutes);
 router.use('/dashboard', dashboardRoutes);
 router.use('/products', productRoutes);
 router.use('/orders', orderRoutes);
-router.use('/wallet', walletRoutes);
-router.use('/wallets', walletRoutes); // Alias for test compatibility
+router.use('/wallet', featureGuard('cryptoWallet'), walletRoutes);
+router.use('/wallets', featureGuard('cryptoWallet'), walletRoutes); // Alias for test compatibility
 router.use('/push', pushRoutes);
 router.use('/gift-cards', giftCardRoutes);
 router.use('/email-templates', emailTemplateRoutes);
@@ -79,6 +94,38 @@ router.use('/achievements', achievementRoutes);
 
 // Leaderboard routes
 router.use('/leaderboard', leaderboardRoutes);
+
+// Invoice routes (Issue #153 — DB migration)
+// Rutas de facturas (Issue #153 — migración a DB)
+router.use('/invoices', invoiceRoutes);
+
+// Sprint 9 — Admin reservation routes (previously orphaned)
+// Sprint 9 — Rutas admin de reservas (previamente huérfanas)
+router.use('/admin/reservations', adminReservationRoutes);
+
+// Sprint 9 — Admin tour routes (previously orphaned)
+// Sprint 9 — Rutas admin de tours (previamente huérfanas)
+router.use('/admin/tours', adminTourRoutes);
+
+// Sprint 9 — Admin property routes (previously orphaned)
+// Sprint 9 — Rutas admin de propiedades (previamente huérfanas)
+router.use('/admin/properties', adminPropertyRoutes);
+
+// Sprint 9 — Public property routes (previously orphaned)
+// Sprint 9 — Rutas públicas de propiedades (previamente huérfanas)
+router.use('/properties', propertyRoutes);
+
+// Sprint 9 — Public tour routes (previously orphaned)
+// Sprint 9 — Rutas públicas de tours (previamente huérfanas)
+router.use('/tours', tourRoutes);
+
+// Sprint 9 — Bot leads routes (previously orphaned)
+// Sprint 9 — Rutas de leads del bot (previamente huérfanas)
+router.use('/bot/leads', botLeadsRoutes);
+
+// Sprint 9 — Commission config (relocated from app.ts)
+// Sprint 9 — Config de comisiones (reubicado de app.ts)
+router.use('/admin/commissions', commissionConfigRoutes);
 
 // Profile public routes (MUST be before publicRoutes to avoid /profile/:code conflict)
 import profilePublicRoutes from './profile-public.routes';

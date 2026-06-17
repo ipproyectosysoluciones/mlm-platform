@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import type { ApiResponse } from '../types';
+import { logger } from '../utils/logger';
 
 export class AppError extends Error {
   constructor(
@@ -59,9 +60,9 @@ export function errorHandler(err: Error, req: Request, res: Response, _next: Nex
 
   // Log based on status code
   if (statusCode >= 500) {
-    console.error('Server Error:', err);
+    logger.error({ err, statusCode }, 'Server error');
   } else {
-    console.warn('Client Error:', err.message);
+    logger.warn({ statusCode }, err.message);
   }
 
   res.status(statusCode).json(response);

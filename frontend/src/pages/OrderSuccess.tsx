@@ -21,6 +21,7 @@ import { OrderStatus } from '../components/OrderStatus';
 import { orderService } from '../services/api';
 import type { Order } from '../types';
 import { cn } from '../utils/cn';
+import { Button } from '../components/ui/button';
 
 /**
  * Commission breakdown by level
@@ -255,12 +256,9 @@ export default function OrderSuccess() {
       <div className="min-h-screen bg-slate-900 px-4 py-8">
         <div className="mx-auto max-w-md text-center">
           <h1 className="text-2xl font-bold text-white">{error || t('orders.error')}</h1>
-          <button
-            onClick={handleContinueShopping}
-            className="mt-6 rounded-xl bg-purple-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-purple-500"
-          >
+          <Button onClick={handleContinueShopping} className="mt-6">
             {t('checkout.backToProducts')}
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -287,9 +285,10 @@ export default function OrderSuccess() {
             </div>
             <div className="flex items-center gap-2">
               <span className="font-mono text-lg text-white">{order.orderNumber}</span>
-              <button
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={handleCopyOrderNumber}
-                className="rounded-full p-1 text-slate-400 transition-colors hover:bg-slate-700 hover:text-white"
                 title={t('common.copy')}
               >
                 {copiedOrderNumber ? (
@@ -297,7 +296,7 @@ export default function OrderSuccess() {
                 ) : (
                   <Copy className="h-4 w-4" />
                 )}
-              </button>
+              </Button>
             </div>
           </div>
           <div className="flex items-center justify-between px-5 py-4">
@@ -320,26 +319,14 @@ export default function OrderSuccess() {
 
         {/* CTA Buttons */}
         <div className="flex flex-col gap-3 sm:flex-row">
-          <button
-            onClick={handleContinueShopping}
-            className={cn(
-              'flex flex-1 items-center justify-center gap-2 rounded-xl py-3 font-semibold',
-              'border border-slate-600 text-white transition-colors hover:bg-slate-800'
-            )}
-          >
+          <Button variant="outline" onClick={handleContinueShopping} className="flex-1 gap-2">
             <ShoppingBag className="h-5 w-5" />
             {t('orders.continueShopping')}
-          </button>
-          <button
-            onClick={handleGoToDashboard}
-            className={cn(
-              'flex flex-1 items-center justify-center gap-2 rounded-xl py-3 font-semibold',
-              'bg-purple-600 text-white transition-all hover:bg-purple-500 hover:shadow-lg hover:shadow-purple-500/25'
-            )}
-          >
+          </Button>
+          <Button onClick={handleGoToDashboard} className="flex-1 gap-2">
             <Home className="h-5 w-5" />
             {t('orders.goToDashboard')}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

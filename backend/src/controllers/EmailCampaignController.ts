@@ -16,6 +16,7 @@
 import { Response } from 'express';
 import { emailCampaignService } from '../services/EmailCampaignService';
 import { EmailCampaignLog } from '../models';
+import type { EmailTemplate } from '../models/EmailTemplate';
 import type { ApiResponse } from '../types';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware';
 
@@ -89,7 +90,7 @@ export async function listTemplates(req: AuthenticatedRequest, res: Response): P
   try {
     const { rows, count } = await emailCampaignService.listTemplates({ page, limit });
 
-    const data = rows.map((t) => ({
+    const data = rows.map((t: EmailTemplate) => ({
       id: t.id,
       name: t.name,
       subjectLine: t.subjectLine,
@@ -415,7 +416,7 @@ export async function previewCampaign(req: AuthenticatedRequest, res: Response):
     }
 
     // Access template through eager-loaded association
-    const template = (campaign as any).emailTemplate;
+    const template = campaign.emailTemplate;
     if (!template) {
       const response: ApiResponse<never> = {
         success: false,

@@ -7,6 +7,7 @@
 
 import { Response, NextFunction } from 'express';
 import { ContractService } from '../services/ContractService';
+import { logger } from '../utils/logger';
 import type { AuthenticatedRequest } from './auth.middleware';
 import type { ContractType } from '../types';
 
@@ -69,7 +70,7 @@ export function requireContractAccepted(contractTypes: ContractType[]) {
 
       next();
     } catch (error) {
-      console.error('Error in requireContractAccepted middleware:', error);
+      logger.error({ error }, 'Error in requireContractAccepted middleware');
       res.status(500).json({
         success: false,
         error: {

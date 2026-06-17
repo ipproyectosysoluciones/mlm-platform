@@ -18,6 +18,7 @@ import { QueryTypes } from 'sequelize';
 import { sequelize } from '../config/database';
 import { Achievement, Badge, UserAchievement } from '../models';
 import type { AchievementConditionType } from '../models/Achievement';
+import { logger } from '../utils/logger';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -172,7 +173,7 @@ export class AchievementService {
    */
   async seedAchievements(): Promise<void> {
     for (const data of ACHIEVEMENTS_SEED) {
-      await (Achievement as any).upsert(
+      await Achievement.upsert(
         {
           key: data.key,
           name: data.name,
@@ -184,10 +185,10 @@ export class AchievementService {
           points: data.points,
           status: data.status,
         },
-        { conflictFields: ['key'] }
+        { conflictFields: ['key'] as const }
       );
     }
-    console.log('✅ Achievements seeded (8 records upserted)');
+    logger.info({ service: 'AchievementService' }, 'Achievements seeded (8 records upserted)');
   }
 
   // ── Progress helpers ───────────────────────────────────────────────────────
@@ -332,14 +333,20 @@ export class AchievementService {
           });
 
           if (created) {
-            console.log(
-              `[Achievements] 🏆 User ${userId} unlocked "${achievement.name}" (${achievement.key})`
+            logger.info(
+              {
+                service: 'AchievementService',
+                userId,
+                achievementName: achievement.name,
+                achievementKey: achievement.key,
+              },
+              'User unlocked achievement'
             );
           }
         }
       }
     } catch (err) {
-      console.error('[Achievements] checkAndUnlock error:', err);
+      logger.error({ service: 'AchievementService', err }, 'checkAndUnlock error');
       // Never propagate — fire-and-forget safety
     }
   }
@@ -375,8 +382,8 @@ export class AchievementService {
     const results: AchievementWithProgress[] = [];
 
     for (const achievement of achievements) {
-      const userAchievements = (achievement as any).userAchievements as UserAchievement[];
-      const unlocked = userAchievements && userAchievements.length > 0 ? userAchievements[0] : null;
+      const userAchievements = achievement.userAchievements ?? [];
+      const unlocked = userAchievements.length > 0 ? userAchievements[0] : null;
 
       let current = 0;
       if (achievement.status === 'active') {
@@ -385,7 +392,7 @@ export class AchievementService {
 
       results.push({
         achievement,
-        badge: (achievement as any).badge ?? null,
+        badge: achievement.badge ?? null,
         unlockedAt: unlocked?.unlockedAt ?? null,
         progress: {
           current,

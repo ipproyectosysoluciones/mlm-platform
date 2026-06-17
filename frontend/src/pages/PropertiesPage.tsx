@@ -8,12 +8,25 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
-import { MapPin, BedDouble, Bath, Maximize2, Search, SlidersHorizontal, Eye } from 'lucide-react';
+import {
+  MapPin,
+  BedDouble,
+  Bath,
+  Maximize2,
+  Search,
+  SlidersHorizontal,
+  Eye,
+  CalendarCheck,
+} from 'lucide-react';
 import { propertyService } from '../services/propertyService';
 import type { Property, PropertyListParams, PropertyType } from '../services/propertyService';
 import { cn } from '../lib/utils';
 import { APP_URL } from '../config/app.config';
+import { Button } from '@/components/ui/button';
+import { ListingSkeleton } from '@/components/ui/skeletons';
+import { EmptyState } from '@/components/EmptyState';
 
 // ============================================
 // Helpers / Utilidades
@@ -57,6 +70,8 @@ interface PropertyCardProps {
 }
 
 function PropertyCard({ property, onClick }: PropertyCardProps) {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
   const mainImage = property.images?.[0];
 
   return (
@@ -89,7 +104,7 @@ function PropertyCard({ property, onClick }: PropertyCardProps) {
         {/* Social proof badge / Badge de prueba social */}
         <span className="absolute bottom-3 right-3 flex items-center gap-1 px-2 py-1 rounded-full bg-black/50 text-white text-xs backdrop-blur-sm">
           <Eye className="w-3 h-3" />
-          {getSocialProofViews(property.id)} personas vieron esto hoy
+          {t('catalog.viewedToday', { count: getSocialProofViews(property.id) })}
         </span>
       </div>
 
@@ -117,21 +132,36 @@ function PropertyCard({ property, onClick }: PropertyCardProps) {
               {property.bathrooms}
             </span>
           )}
-          {property.area != null && (
+          {property.areaM2 != null && (
             <span className="flex items-center gap-1">
               <Maximize2 className="w-4 h-4" />
-              {property.area} m²
+              {property.areaM2} m²
             </span>
           )}
         </div>
 
-        {/* Price */}
-        <p className="text-lg font-bold text-emerald-600">
-          {property.currency} {property.price.toLocaleString('es-AR', { minimumFractionDigits: 0 })}
-          {property.type === 'rental' && (
-            <span className="text-sm font-normal text-slate-400"> / mes</span>
-          )}
-        </p>
+        {/* Price + CTA */}
+        <div className="flex items-center justify-between gap-2">
+          <p className="text-lg font-bold text-emerald-600">
+            {property.currency}{' '}
+            {Number(property.price).toLocaleString('es-AR', { minimumFractionDigits: 0 })}
+            {property.type === 'rental' && (
+              <span className="text-sm font-normal text-slate-400"> / mes</span>
+            )}
+          </p>
+          <Button
+            type="button"
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/reservations/new?propertyId=${property.id}`);
+            }}
+            className="shrink-0"
+          >
+            <CalendarCheck className="w-3.5 h-3.5" />
+            {t('catalog.bookNow')}
+          </Button>
+        </div>
       </div>
     </article>
   );
@@ -169,8 +199,8 @@ export default function PropertiesPage() {
     setError(null);
     try {
       const result = await propertyService.getProperties(params);
-      setProperties(result.data);
-      setPagination(result.pagination);
+      setProperties(Array.isArray(result?.data) ? result.data : []);
+      setPagination(result?.pagination ?? null);
     } catch {
       setError('No se pudieron cargar las propiedades. Intentá de nuevo.');
     } finally {
@@ -299,22 +329,15 @@ export default function PropertiesPage() {
                 className="w-36 px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:border-emerald-400"
               />
 
-              <button
-                type="submit"
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-500 text-white text-sm font-medium hover:bg-emerald-600 transition-colors"
-              >
+              <Button type="submit">
                 <SlidersHorizontal className="w-4 h-4" />
                 Filtrar
-              </button>
+              </Button>
 
               {hasActiveFilters && (
-                <button
-                  type="button"
-                  onClick={clearFilters}
-                  className="px-4 py-2 rounded-lg border border-slate-200 text-sm text-slate-600 hover:bg-slate-50 transition-colors"
-                >
+                <Button type="button" variant="outline" onClick={clearFilters}>
                   Limpiar
-                </button>
+                </Button>
               )}
             </form>
           </div>
@@ -326,33 +349,11 @@ export default function PropertiesPage() {
             </div>
           )}
 
-          {/* Loading skeleton */}
-          {isLoading && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {Array.from({ length: 8 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="rounded-xl border border-slate-200 bg-white overflow-hidden"
-                >
-                  <div className="h-52 bg-slate-200 animate-pulse" />
-                  <div className="p-4 space-y-3">
-                    <div className="h-4 bg-slate-200 rounded animate-pulse" />
-                    <div className="h-3 bg-slate-200 rounded w-3/4 animate-pulse" />
-                    <div className="h-5 bg-slate-200 rounded w-1/2 animate-pulse" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+          {/* Loading skeleton / Esqueleto de carga */}
+          {isLoading && <ListingSkeleton variant="property" count={8} />}
 
-          {/* Empty state */}
-          {!isLoading && !error && properties.length === 0 && (
-            <div className="text-center py-20 text-slate-400">
-              <MapPin className="w-12 h-12 mx-auto mb-4 opacity-30" />
-              <p className="text-lg font-medium">No se encontraron propiedades</p>
-              <p className="text-sm mt-1">Probá ajustando los filtros</p>
-            </div>
-          )}
+          {/* Empty state / Estado vacío */}
+          {!isLoading && !error && properties.length === 0 && <EmptyState type="search" />}
 
           {/* Property grid */}
           {!isLoading && properties.length > 0 && (
@@ -370,23 +371,23 @@ export default function PropertiesPage() {
               {/* Pagination */}
               {pagination && pagination.totalPages > 1 && (
                 <div className="flex justify-center gap-2 mt-8">
-                  <button
+                  <Button
+                    variant="outline"
                     onClick={() => setPage((p) => Math.max(1, p - 1))}
                     disabled={page === 1}
-                    className="px-4 py-2 rounded-lg border border-slate-200 text-sm disabled:opacity-40 hover:bg-slate-50 transition-colors"
                   >
                     Anterior
-                  </button>
+                  </Button>
                   <span className="px-4 py-2 text-sm text-slate-600">
                     Página {page} de {pagination.totalPages}
                   </span>
-                  <button
+                  <Button
+                    variant="outline"
                     onClick={() => setPage((p) => Math.min(pagination.totalPages, p + 1))}
                     disabled={page === pagination.totalPages}
-                    className="px-4 py-2 rounded-lg border border-slate-200 text-sm disabled:opacity-40 hover:bg-slate-50 transition-colors"
                   >
                     Siguiente
-                  </button>
+                  </Button>
                 </div>
               )}
             </>

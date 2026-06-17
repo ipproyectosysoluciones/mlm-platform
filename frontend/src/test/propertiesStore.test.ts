@@ -43,7 +43,7 @@ const mockResponse: PropertyListResponse = {
       country: 'Argentina',
       bedrooms: 3,
       bathrooms: 2,
-      area: 120,
+      areaM2: 120,
       images: [],
       amenities: [],
       createdAt: '2024-01-01T00:00:00Z',

@@ -13,6 +13,23 @@
 
 import { createHmac } from 'crypto';
 
+// ─── Mock logger (must come before controller import) ────────────────────────
+jest.mock('../utils/logger', () => ({
+  logger: {
+    info: jest.fn(),
+    error: jest.fn(),
+    warn: jest.fn(),
+    debug: jest.fn(),
+    fatal: jest.fn(),
+    child: jest.fn().mockReturnValue({
+      info: jest.fn(),
+      error: jest.fn(),
+      warn: jest.fn(),
+      debug: jest.fn(),
+    }),
+  },
+}));
+
 // ─── Mock database (must come before any model import) ───────────────────────
 jest.mock('../config/database', () => ({
   sequelize: {
@@ -65,6 +82,17 @@ jest.mock('../models/index.js', () => ({
     init: jest.fn(),
     hasMany: jest.fn(),
     belongsTo: jest.fn(),
+  },
+}));
+
+// ─── Mock WebhookEvent model (persistent idempotency) ────────────────────────
+const mockWebhookEventFindOne = jest.fn();
+const mockWebhookEventCreate = jest.fn();
+
+jest.mock('../models/WebhookEvent.js', () => ({
+  WebhookEvent: {
+    findOne: (...args: unknown[]) => mockWebhookEventFindOne(...args),
+    create: (...args: unknown[]) => mockWebhookEventCreate(...args),
   },
 }));
 
@@ -126,6 +154,9 @@ jest.mock('../utils/response.util.js', () => ({
 // ─── Now import the real service and controller (after all mocks) ─────────────
 import { PaymentMercadoPagoController } from '../controllers/PaymentMercadoPagoController.js';
 import { Order, Purchase, Product } from '../models/index.js';
+import { logger } from '../utils/logger';
+
+const mockedLogger = logger as jest.Mocked<typeof logger>;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -259,8 +290,18 @@ describe('MercadoPago — webhook handler', () => {
     // Default: signature verification passes
     mockVerifyWebhookSignature.mockReturnValue(true);
 
-    // Default: no existing order (idempotency not triggered)
+    // Default: no existing order (secondary reference check)
     (Order.findOne as jest.Mock).mockResolvedValue(null);
+
+    // Default: no existing WebhookEvent (idempotency not triggered)
+    mockWebhookEventFindOne.mockResolvedValue(null);
+
+    // Default: WebhookEvent.create succeeds
+    mockWebhookEventCreate.mockResolvedValue({
+      id: 'we-uuid',
+      eventId: PAYMENT_ID,
+      provider: 'mercadopago',
+    });
 
     // Default: product exists
     (Product.findOne as jest.Mock).mockResolvedValue(mockProduct);
@@ -336,19 +377,22 @@ describe('MercadoPago — webhook handler', () => {
   });
 
   /**
-   * Test 5: idempotency — if Order.findOne returns an existing order → skips creation
+   * Test 5: idempotency — if WebhookEvent.findOne returns an existing record → skips creation
    */
-  it('should skip Purchase/Order creation if order already exists (idempotency)', async () => {
+  it('should skip Purchase/Order creation if WebhookEvent already exists (idempotency)', async () => {
     mockGetPayment.mockResolvedValue(mockApprovedPayment);
-    (Order.findOne as jest.Mock).mockResolvedValue({
-      id: 'existing-order',
-      notes: `mercadopago:${PAYMENT_ID}`,
+    mockWebhookEventFindOne.mockResolvedValue({
+      id: 'we-existing',
+      eventId: String(PAYMENT_ID),
+      provider: 'mercadopago',
     });
 
     const { req, res } = buildReqRes({
       query: { topic: 'payment' },
       body: { id: PAYMENT_ID, topic: 'payment' },
-      headers: { 'x-signature': 'ts=123456,v1=abc' },
+      headers: {
+        'x-signature': `ts=123456,v1=abc`,
+      },
     });
 
     await (PaymentMercadoPagoController.webhook as (...args: unknown[]) => Promise<void>)(req, res);
@@ -411,8 +455,6 @@ describe('MercadoPago — webhook handler', () => {
 
     mockGetPayment.mockResolvedValue(mockApprovedPayment);
 
-    const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-
     const { req, res } = buildReqRes({
       query: { topic: 'payment' },
       body: { id: PAYMENT_ID, topic: 'payment' },
@@ -422,7 +464,8 @@ describe('MercadoPago — webhook handler', () => {
     await (PaymentMercadoPagoController.webhook as (...args: unknown[]) => Promise<void>)(req, res);
 
     // Should have logged a warning about missing secret
-    expect(consoleSpy).toHaveBeenCalledWith(
+    expect(mockedLogger.warn).toHaveBeenCalledWith(
+      expect.objectContaining({ component: 'MercadoPago Webhook' }),
       expect.stringContaining('MERCADOPAGO_WEBHOOK_SECRET not configured')
     );
 
@@ -432,8 +475,6 @@ describe('MercadoPago — webhook handler', () => {
 
     // Returns 200
     expect(res.status).toHaveBeenCalledWith(200);
-
-    consoleSpy.mockRestore();
   });
 
   /**

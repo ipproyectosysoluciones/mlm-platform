@@ -8,12 +8,26 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
-import { MapPin, Clock, Users, Search, SlidersHorizontal, Compass, Eye } from 'lucide-react';
+import {
+  MapPin,
+  Clock,
+  Users,
+  Search,
+  SlidersHorizontal,
+  Compass,
+  Eye,
+  CalendarCheck,
+  AlertTriangle,
+} from 'lucide-react';
 import { tourService } from '../services/tourService';
 import type { TourPackage, TourListParams, TourCategory } from '../services/tourService';
 import { cn } from '../lib/utils';
 import { APP_URL } from '../config/app.config';
+import { Button } from '@/components/ui/button';
+import { ListingSkeleton } from '@/components/ui/skeletons';
+import { EmptyState } from '@/components/EmptyState';
 
 // ============================================
 // Helpers / Utilidades
@@ -29,6 +43,21 @@ import { APP_URL } from '../config/app.config';
 function getSocialProofViews(id: string): number {
   const hash = id.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
   return 3 + (hash % 24);
+}
+
+/**
+ * Generates deterministic available spots for a tour card (demo/pitch).
+ * Since the listing API doesn't include availability data, we derive a
+ * stable number from the tour ID and maxGuests to simulate occupancy.
+ *
+ * Genera plazas disponibles determinísticas para card de tour (demo/pitch).
+ * Como la API de listado no incluye datos de disponibilidad, derivamos un
+ * número estable del ID del tour y maxGuests para simular ocupación.
+ */
+function getDemoAvailableSpots(id: string, maxCapacity: number): number {
+  const hash = id.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+  // Produce a number between 0 and maxCapacity with bias toward mid-range
+  return Math.min(maxCapacity, hash % (maxCapacity + 3));
 }
 
 // ============================================
@@ -63,7 +92,25 @@ interface TourCardProps {
 }
 
 function TourCard({ tour, onClick }: TourCardProps) {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
   const mainImage = tour.images?.[0];
+
+  // Availability: use real data if present, otherwise derive demo spots
+  const availableSpots = tour.availabilities?.length
+    ? tour.availabilities.reduce((best, a) => Math.max(best, a.availableSpots), 0)
+    : getDemoAvailableSpots(tour.id, tour.maxCapacity);
+
+  const isSoldOut = availableSpots === 0;
+  const isAlmostFull = availableSpots > 0 && availableSpots <= 5;
+
+  /** Badge color: emerald > 5, amber 1-5, red 0 */
+  const badgeBg = isSoldOut ? 'bg-red-500' : isAlmostFull ? 'bg-amber-500' : 'bg-emerald-500';
+
+  /** Safely resolve category label/color from `tour.type` */
+  const tourCategory = tour.type as TourCategory;
+  const categoryLabel = CATEGORY_LABELS[tourCategory] ?? tour.type;
+  const categoryColor = CATEGORY_COLORS[tourCategory] ?? 'bg-slate-100 text-slate-700';
 
   return (
     <article
@@ -86,16 +133,35 @@ function TourCard({ tour, onClick }: TourCardProps) {
         <span
           className={cn(
             'absolute top-3 left-3 px-2 py-1 rounded-full text-xs font-semibold',
-            CATEGORY_COLORS[tour.category]
+            categoryColor
           )}
         >
-          {CATEGORY_LABELS[tour.category]}
+          {categoryLabel}
+        </span>
+
+        {/* Occupancy badge / Badge de ocupación */}
+        <span
+          className={cn(
+            'absolute top-3 right-3 flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold text-white',
+            badgeBg
+          )}
+        >
+          {isSoldOut ? (
+            t('tours.soldOut')
+          ) : isAlmostFull ? (
+            <>
+              <AlertTriangle className="w-3 h-3" />
+              {t('tours.almostFull')}
+            </>
+          ) : (
+            t('tours.spotsAvailable', { count: availableSpots })
+          )}
         </span>
 
         {/* Social proof badge / Badge de prueba social */}
         <span className="absolute bottom-3 right-3 flex items-center gap-1 px-2 py-1 rounded-full bg-black/50 text-white text-xs backdrop-blur-sm">
           <Eye className="w-3 h-3" />
-          {getSocialProofViews(tour.id)} personas vieron esto hoy
+          {t('catalog.viewedToday', { count: getSocialProofViews(tour.id) })}
         </span>
       </div>
 
@@ -111,19 +177,40 @@ function TourCard({ tour, onClick }: TourCardProps) {
         <div className="flex items-center gap-4 text-sm text-slate-600 mb-4">
           <span className="flex items-center gap-1">
             <Clock className="w-4 h-4" />
-            {tour.duration} {tour.duration === 1 ? 'día' : 'días'}
+            {tour.durationDays} {tour.durationDays === 1 ? 'día' : 'días'}
           </span>
           <span className="flex items-center gap-1">
             <Users className="w-4 h-4" />
-            Hasta {tour.maxGuests}
+            Hasta {tour.maxCapacity}
           </span>
         </div>
 
-        {/* Price */}
-        <p className="text-lg font-bold text-emerald-600">
-          {tour.currency} {tour.price.toLocaleString('es-AR', { minimumFractionDigits: 0 })}
-          <span className="text-sm font-normal text-slate-400"> / persona</span>
-        </p>
+        {/* Price + CTA */}
+        <div className="flex items-center justify-between gap-2">
+          <p className="text-lg font-bold text-emerald-600">
+            {tour.currency}{' '}
+            {Number(tour.price).toLocaleString('es-AR', { minimumFractionDigits: 0 })}
+            <span className="text-sm font-normal text-slate-400"> / persona</span>
+          </p>
+          {isSoldOut ? (
+            <Button type="button" disabled variant="outline" size="sm" className="shrink-0">
+              {t('tours.soldOut')}
+            </Button>
+          ) : (
+            <Button
+              type="button"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate(`/reservations/new?tourPackageId=${tour.id}`);
+              }}
+              className="shrink-0"
+            >
+              <CalendarCheck className="w-3.5 h-3.5" />
+              {t('catalog.bookNow')}
+            </Button>
+          )}
+        </div>
       </div>
     </article>
   );
@@ -161,8 +248,8 @@ export default function ToursPage() {
     setError(null);
     try {
       const result = await tourService.getTours(params);
-      setTours(result.data);
-      setPagination(result.pagination);
+      setTours(Array.isArray(result?.data) ? result.data : []);
+      setPagination(result?.pagination ?? null);
     } catch {
       setError('No se pudieron cargar los tours. Intentá de nuevo.');
     } finally {
@@ -291,22 +378,15 @@ export default function ToursPage() {
                 className="w-36 px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:border-emerald-400"
               />
 
-              <button
-                type="submit"
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-500 text-white text-sm font-medium hover:bg-emerald-600 transition-colors"
-              >
+              <Button type="submit">
                 <SlidersHorizontal className="w-4 h-4" />
                 Filtrar
-              </button>
+              </Button>
 
               {hasActiveFilters && (
-                <button
-                  type="button"
-                  onClick={clearFilters}
-                  className="px-4 py-2 rounded-lg border border-slate-200 text-sm text-slate-600 hover:bg-slate-50 transition-colors"
-                >
+                <Button type="button" variant="outline" onClick={clearFilters}>
                   Limpiar
-                </button>
+                </Button>
               )}
             </form>
           </div>
@@ -318,33 +398,11 @@ export default function ToursPage() {
             </div>
           )}
 
-          {/* Loading skeleton */}
-          {isLoading && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {Array.from({ length: 8 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="rounded-xl border border-slate-200 bg-white overflow-hidden"
-                >
-                  <div className="h-52 bg-slate-200 animate-pulse" />
-                  <div className="p-4 space-y-3">
-                    <div className="h-4 bg-slate-200 rounded animate-pulse" />
-                    <div className="h-3 bg-slate-200 rounded w-3/4 animate-pulse" />
-                    <div className="h-5 bg-slate-200 rounded w-1/2 animate-pulse" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+          {/* Loading skeleton / Esqueleto de carga */}
+          {isLoading && <ListingSkeleton variant="tour" count={8} />}
 
-          {/* Empty state */}
-          {!isLoading && !error && tours.length === 0 && (
-            <div className="text-center py-20 text-slate-400">
-              <Compass className="w-12 h-12 mx-auto mb-4 opacity-30" />
-              <p className="text-lg font-medium">No se encontraron tours</p>
-              <p className="text-sm mt-1">Probá ajustando los filtros</p>
-            </div>
-          )}
+          {/* Empty state / Estado vacío */}
+          {!isLoading && !error && tours.length === 0 && <EmptyState type="search" />}
 
           {/* Tours grid */}
           {!isLoading && tours.length > 0 && (
@@ -358,23 +416,23 @@ export default function ToursPage() {
               {/* Pagination */}
               {pagination && pagination.totalPages > 1 && (
                 <div className="flex justify-center gap-2 mt-8">
-                  <button
+                  <Button
+                    variant="outline"
                     onClick={() => setPage((p) => Math.max(1, p - 1))}
                     disabled={page === 1}
-                    className="px-4 py-2 rounded-lg border border-slate-200 text-sm disabled:opacity-40 hover:bg-slate-50 transition-colors"
                   >
                     Anterior
-                  </button>
+                  </Button>
                   <span className="px-4 py-2 text-sm text-slate-600">
                     Página {page} de {pagination.totalPages}
                   </span>
-                  <button
+                  <Button
+                    variant="outline"
                     onClick={() => setPage((p) => Math.min(pagination.totalPages, p + 1))}
                     disabled={page === pagination.totalPages}
-                    className="px-4 py-2 rounded-lg border border-slate-200 text-sm disabled:opacity-40 hover:bg-slate-50 transition-colors"
                   >
                     Siguiente
-                  </button>
+                  </Button>
                 </div>
               )}
             </>

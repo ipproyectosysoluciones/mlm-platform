@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { Users, DollarSign, TrendingUp, Wallet } from 'lucide-react';
 import type { DashboardData } from '../../types';
 import { useWalletBalance } from '../../stores/walletStore';
+import { featureFlags } from '../../utils/featureFlags';
 
 interface StatsCardsProps {
   data: DashboardData;
@@ -37,32 +38,34 @@ export function StatsCards({ data }: StatsCardsProps) {
         value={`$${data.stats.pendingEarnings.toFixed(2)}`}
         color="bg-amber-500"
       />
-      {/* Wallet Card - Links to full wallet page */}
-      <Link
-        to="/wallet"
-        className="bg-gradient-to-br from-emerald-500 to-cyan-600 rounded-2xl p-6 text-white hover:from-emerald-600 hover:to-cyan-700 transition-all shadow-lg hover:shadow-xl"
-      >
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-emerald-100 text-sm font-medium">
-              {t('wallet.balance') || 'Wallet Balance'}
-            </p>
-            <p className="text-2xl font-bold mt-1">
-              {walletLoading ? (
-                <span className="opacity-70">...</span>
-              ) : balance ? (
-                `$${Number(balance.balance).toFixed(2)}`
-              ) : (
-                '$0.00'
-              )}
-            </p>
-            <p className="text-xs text-emerald-200 mt-1">
-              {t('wallet.clickToView') || 'Click to view details →'}
-            </p>
+      {/* Wallet Card - Links to full wallet page (hidden when crypto wallet feature is disabled) */}
+      {featureFlags.cryptoWallet && (
+        <Link
+          to="/wallet"
+          className="bg-gradient-to-br from-emerald-500 to-cyan-600 rounded-2xl p-6 text-white hover:from-emerald-600 hover:to-cyan-700 transition-all shadow-lg hover:shadow-xl"
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-emerald-100 text-sm font-medium">
+                {t('wallet.balance') || 'Wallet Balance'}
+              </p>
+              <p className="text-2xl font-bold mt-1">
+                {walletLoading ? (
+                  <span className="opacity-70">...</span>
+                ) : balance ? (
+                  `$${Number(balance.balance).toFixed(2)}`
+                ) : (
+                  '$0.00'
+                )}
+              </p>
+              <p className="text-xs text-emerald-200 mt-1">
+                {t('wallet.clickToView') || 'Click to view details →'}
+              </p>
+            </div>
+            <Wallet className="w-8 h-8 text-emerald-200" />
           </div>
-          <Wallet className="w-8 h-8 text-emerald-200" />
-        </div>
-      </Link>
+        </Link>
+      )}
     </div>
   );
 }

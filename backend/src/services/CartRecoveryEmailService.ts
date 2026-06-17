@@ -18,6 +18,7 @@
 import { Cart, CartItem, CartRecoveryToken, Product, User } from '../models';
 import { emailService } from './EmailService';
 import { config } from '../config/env';
+import { logger } from '../utils/logger';
 
 /**
  * CartRecoveryEmailService - Composes and sends abandoned cart recovery emails
@@ -59,12 +60,12 @@ export class CartRecoveryEmailService {
       throw new Error(`Cart not found: ${cartId}`);
     }
 
-    const user = (cart as any).user;
+    const user = cart.user;
     if (!user || !user.email) {
       throw new Error(`User not found for cart: ${cartId}`);
     }
 
-    const items = ((cart as any).items || []) as Array<
+    const items = (cart.items ?? []) as Array<
       CartItem & { product?: { name: string; price: number; platform: string } }
     >;
 
@@ -109,7 +110,10 @@ export class CartRecoveryEmailService {
       { where: { cartId, usedAt: null } }
     );
 
-    console.log(`[CartRecoveryEmail] Sent recovery email to ${user.email} for cart ${cartId}`);
+    logger.info(
+      { service: 'CartRecoveryEmailService', email: user.email, cartId },
+      'Sent recovery email'
+    );
   }
 
   /**

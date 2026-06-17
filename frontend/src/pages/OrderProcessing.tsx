@@ -121,9 +121,17 @@ export default function OrderProcessing() {
   /**
    * Infer status from current pathname for named routes:
    * /orders/success → approved, /orders/pending → pending
+   * /checkout/success → approved (PayPal return URL)
+   * /checkout/cancel → rejected (PayPal cancel URL)
+   *
+   * Infiere el estado desde el pathname actual para rutas nombradas:
+   * /checkout/success → approved (URL de retorno de PayPal)
+   * /checkout/cancel → rejected (URL de cancelación de PayPal)
    */
   function inferStatusFromPath(): string | null {
     const path = window.location.pathname;
+    if (path.includes('/checkout/success')) return 'approved';
+    if (path.includes('/checkout/cancel')) return 'rejected';
     if (path.includes('/orders/success')) return 'approved';
     if (path.includes('/orders/pending')) return 'pending';
     return null;

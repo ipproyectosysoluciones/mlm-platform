@@ -7,6 +7,7 @@
  */
 
 import axios from 'axios';
+import { logger } from '../utils/logger';
 
 // CoinGecko API URL
 const COINGECKO_API = 'https://api.coingecko.com/api/v3';
@@ -81,7 +82,7 @@ export async function getCryptoPrices(): Promise<CryptoPrices> {
 
     return prices;
   } catch (error) {
-    console.error('Error fetching crypto prices:', error);
+    logger.error({ service: 'CryptoPriceService', err: error }, 'Error fetching crypto prices');
 
     // Return cached data if available, otherwise fallback
     if (priceCache.data) {

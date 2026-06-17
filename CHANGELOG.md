@@ -4,6 +4,140 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
+## [3.0.1] - 2026-06-16
+
+### Fixed — Sprint 11: Quick Wins
+
+#### Push Notification Integration Tests
+
+- **Habilitados 4 tests de push previamente ignorados** — `push.test.ts`: tests de create, unsubscribe, VAPID key con datos inválidos ahora se ejecutan y pasan
+- **Registro de PushSubscription en setup.ts** — Agregado modelo `PushSubscription` al sync de Sequelize para que la tabla `push_subscriptions` se cree durante los tests de integración
+- **Mock de uuid para Jest CJS** — Creado `__mocks__/uuid.ts` con implementación CJS-compatible de uuid v4 que genera UUIDs válidos para PostgreSQL; necesario porque uuid v14 es ESM-only y Jest no puede resolverlo con `require()`
+
+#### Centralized Logger
+
+- **Reemplazado `console.warn` por Pino logger** en `backend/src/config/env.ts` — Ahora usa el logger centralizado desde `../utils/logger` para mantener consistencia en el logging de la aplicación
+
+---
+
+## [3.0.0] - 2026-04-13
+
+### Added — Sprint 10: Payments, Invoices, Unilevel & UX Polish
+
+**Major Release** — Significant architectural changes including commission model migration and new invoice system.
+
+#### Payment Infrastructure
+
+- **Payment Webhooks** — Complete webhook handling for MercadoPago and PayPal; `WebhookEvent` model for event tracking and idempotency
+- **PayPal Checkout Redirect Flow** — Replaced redirect URLs with proper checkout flow; `PayPalService` refactored with `createOrder()`, `captureOrder()`, return/cancel handling
+- **Invoice System** — Complete invoice management: `Invoice` model, `InvoiceService`, PDF generation controller, invoice routes with CRUD operations
+
+#### Commission Model Migration
+
+- **Binary → Unilevel Migration** — Commission model migrated from binary to unilevel with Closure Table; `generateLevelKey()` function for multi-level tracking
+- **CommissionConfig Refactor** — Dynamic 10-level commission configuration; `CommissionConfigWriteController` for admin management
+- **Database Migrations** — Two migrations: `20260412000001-commission-type-to-varchar.js` and `20260412000002-seed-unilevel-commission-configs.js`
+
+#### CRM & Automation (n8n)
+
+- **WorkflowService** — Complete workflow orchestration with execution tracking
+- **WorkflowExecution Model** — Track workflow runs: status, start/end times, input/output payloads
+- **N8nWebhookController** — Receive and process n8n webhook events
+- **CRM Automation Routes** — AutomationController for trigger-based CRM actions; Lead automation fields added to database
+- **Admin CRM Widgets** — `CRMAutomationWidget`, `PendingFollowUps`, `RecentActions` components for admin dashboard
+
+#### Frontend Features
+
+- **2FA Frontend** — `TwoFactorLoginPage` with TOTP verification; `twoFactorService` for authentication flow; recovery codes support
+- **Admin Dashboard CRUD** — Full admin management pages for Properties, Tours, and Reservations
+- **UX Polish** — Button standardization (shadcn/ui), EmptyState component (6 types), Skeleton loaders (`TourCardSkeleton`, `PropertyCardSkeleton`, `ListingSkeleton`), mobile responsive fixes, Sonner toast migration
+- **Feature Guard Middleware** — `featureGuard.ts` middleware with `FEATURE_CRYPTO_ENABLED` flag to disable crypto wallet functionality
+
+#### New Routes & Endpoints
+
+- `POST /api/invoices` — Create invoice
+- `GET /api/invoices` — List invoices
+- `GET /api/invoices/:id` — Get invoice detail
+- `PATCH /api/invoices/:id` — Update invoice
+- `DELETE /api/invoices/:id` — Delete invoice
+- `GET /api/invoices/:id/pdf` — Generate invoice PDF
+- `POST /api/webhooks/mercadopago` — MercadoPago webhook handler
+- `POST /api/webhooks/paypal` — PayPal webhook handler
+- `POST /api/webhooks/n8n` — n8n webhook handler
+- `POST /api/crm/automation/trigger` — Trigger CRM automation
+- `GET /api/workflow/executions` — List workflow executions
+- `POST /api/commission-config` — Update commission configuration
+
+#### Models Added
+
+- `Invoice` — Invoice entity with PDF support
+- `WorkflowExecution` — Workflow execution tracking
+
+#### Environment Variables Added
+
+- `N8N_WEBHOOK_URL` — n8n webhook endpoint
+- `N8N_API_KEY` — n8n API authentication
+- `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET`, `PAYPAL_MODE` — PayPal configuration
+- `FEATURE_CRYPTO_ENABLED` — Feature flag for crypto wallet (default: false)
+- `MERCADO_PAGO_WEBHOOK_SECRET` — MercadoPago webhook verification
+
+### Tests
+
+- Backend: 65+ test suites / 600+ tests (Jest) ✅
+- Frontend: 35+ test suites / 600+ tests (Vitest) ✅
+- **Total platform: 1,200+ automated tests**
+
+### Infrastructure
+
+- **154 files changed** across Sprint 10
+- **~12,110 insertions** / ~1,900 deletions
+- PostgreSQL migrations for invoices, workflow executions, lead automation fields
+- Feature flag system for progressive feature rollout
+
+---
+
+## [2.5.0] - 2026-04-12
+
+### Added — Sprint 9: Technical Debt & Quality
+
+- **Pino Logger Migration** — Winston → Pino structured JSON logging across entire backend; all `console.log` and Winston calls replaced with Pino logger
+- **Eliminate all explicit `any` types** — removed every explicit `any` from backend production code (39 files audited and fixed)
+- **Bot Vitest Test Infrastructure** — 8 test files, 62 tests covering all bot flows and services (Vitest)
+- **PLATFORM_DOMAIN environment variable** — removed all hardcoded `nexoreal.xyz` references; domain now configurable via env var
+- **Controller Test Coverage Expansion** — 9 new test files, backend tests expanded from 540 → 667 tests (49 suites)
+- **Investor Pitch Deck** — 12-slide HTML presentation for investor demos
+
+### Tests
+
+- Backend: 49 suites / 667 tests (Jest) ✅
+- Bot: 8 files / 62 tests (Vitest) ✅
+- **Total platform: ~729 backend+bot tests**
+
+---
+
+## [2.4.0] - 2026-04-10
+
+### Added — Sprint 8: Bot Migration & Docker Hub
+
+- **Bot PostgreSQL Adapter Migration** — MemoryDB → PostgreSQL; bot conversation history persists across container restarts
+- **Docker Hub Image Publishing** — `ipproyectos/mlm-backend` and `ipproyectos/mlm-bot` images published to Docker Hub via CD workflows
+- **Bot Conversation Persistence** — conversations survive bot restarts thanks to PostgreSQL adapter
+- **Docker Compose Profiles** — selective service startup with `--profile` flag (backend, bot, n8n, all)
+- **RBAC 9 Roles** — super_admin, admin, finance, sales, advisor, vendor, user, guest, bot
+- **Bot Knowledge Base** — prompt_kb/ with FAQ, objection handling, onboarding, lead capture guides baked into Docker image
+- **n8n Workflows** — Google Calendar (schedule-visit) + Notion CRM (human-handoff) fully wired
+- **Bot Lead Capture** — email + area of interest captured in welcome flow, persisted to DB
+- **Seed Nexo Real Colombiano** — Unilevel tree with 12 Colombian users, 6 products, CommissionConfig
+
+### Tests
+
+- Backend: 39 suites / 540 tests (Jest) ✅
+- Frontend Unit: 34 files / ~446 tests (Vitest) ✅
+- Frontend E2E: 22 specs / ~262 tests (Playwright) ✅
+- **Total: ~1,248 tests**
+
+---
+
 ## [2.3.5] - 2026-04-09
 
 ### Fixed

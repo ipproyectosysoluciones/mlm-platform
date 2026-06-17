@@ -15,7 +15,27 @@
  * @module __tests__/CalendarService
  */
 
+// Mock logger (must come BEFORE imports that use it)
+jest.mock('../utils/logger', () => ({
+  logger: {
+    info: jest.fn(),
+    error: jest.fn(),
+    warn: jest.fn(),
+    debug: jest.fn(),
+    fatal: jest.fn(),
+    child: jest.fn().mockReturnValue({
+      info: jest.fn(),
+      error: jest.fn(),
+      warn: jest.fn(),
+      debug: jest.fn(),
+    }),
+  },
+}));
+
 import { CalendarService, CalendarEventPayload } from '../services/CalendarService';
+import { logger } from '../utils/logger';
+
+const mockedLogger = logger as jest.Mocked<typeof logger>;
 
 // ============================================
 // HELPERS / AYUDANTES
@@ -121,19 +141,16 @@ describe('CalendarService', () => {
       // Preparar — N8N_CALENDAR_WEBHOOK_URL no está configurada
       delete process.env.N8N_CALENDAR_WEBHOOK_URL;
 
-      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-
       const service = new CalendarService();
 
       // Act & Assert — should resolve without calling fetch
       // Actuar y Afirmar — debe resolver sin llamar a fetch
       await expect(service.notifyReservationConfirmed(buildPayload())).resolves.toBeUndefined();
       expect(mockFetch).not.toHaveBeenCalled();
-      expect(warnSpy).toHaveBeenCalledWith(
-        '[CalendarService] N8N_CALENDAR_WEBHOOK_URL not set, skipping calendar sync'
+      expect(mockedLogger.warn).toHaveBeenCalledWith(
+        { service: 'CalendarService' },
+        'N8N_CALENDAR_WEBHOOK_URL not set, skipping calendar sync'
       );
-
-      warnSpy.mockRestore();
     });
 
     it('should not throw when fetch fails (non-blocking)', async () => {
@@ -143,19 +160,15 @@ describe('CalendarService', () => {
 
       mockFetch.mockRejectedValueOnce(new Error('Network error'));
 
-      const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-
       const service = new CalendarService();
 
       // Act & Assert — should resolve even when fetch throws
       // Actuar y Afirmar — debe resolver incluso cuando fetch lanza error
       await expect(service.notifyReservationConfirmed(buildPayload())).resolves.toBeUndefined();
-      expect(errorSpy).toHaveBeenCalledWith(
-        '[CalendarService] Failed to notify n8n webhook:',
-        expect.any(Error)
+      expect(mockedLogger.error).toHaveBeenCalledWith(
+        { service: 'CalendarService', err: expect.any(Error) },
+        'Failed to notify n8n webhook'
       );
-
-      errorSpy.mockRestore();
     });
 
     it('should log error when n8n returns non-ok status', async () => {
@@ -168,8 +181,6 @@ describe('CalendarService', () => {
         status: 500,
       });
 
-      const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-
       const service = new CalendarService();
 
       // Act / Actuar
@@ -177,9 +188,10 @@ describe('CalendarService', () => {
 
       // Assert — should log error but NOT throw
       // Afirmar — debe registrar error pero NO lanzar
-      expect(errorSpy).toHaveBeenCalledWith('[CalendarService] n8n webhook returned 500');
-
-      errorSpy.mockRestore();
+      expect(mockedLogger.error).toHaveBeenCalledWith(
+        { service: 'CalendarService', statusCode: 500 },
+        'n8n webhook returned non-OK status'
+      );
     });
   });
 });

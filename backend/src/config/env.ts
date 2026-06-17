@@ -27,8 +27,27 @@
  * // Vars requeridas: BREVO_SMTP_*, BREVO_API_KEY
  */
 import dotenv from 'dotenv';
+import { logger } from '../utils/logger';
 
 dotenv.config();
+
+/**
+ * Platform domain used across all config defaults (emails, URLs, VAPID).
+ * Set PLATFORM_DOMAIN env var in production to override.
+ *
+ * Dominio de la plataforma usado en todos los valores por defecto de config.
+ * Establecer la variable PLATFORM_DOMAIN en producción para sobreescribir.
+ */
+const platformDomain: string = process.env.PLATFORM_DOMAIN || 'nexoreal.xyz';
+
+/**
+ * Exported for use in seed scripts and modules that cannot import config
+ * due to circular dependencies or initialization order.
+ *
+ * Exportado para uso en scripts de seed y módulos que no pueden importar config
+ * por dependencias circulares u orden de inicialización.
+ */
+export { platformDomain };
 
 /**
  * Main configuration object / Objeto de configuración principal
@@ -49,6 +68,16 @@ export const config = {
   /** Server port / Puerto del servidor */
   port: parseInt(process.env.PORT || '3000', 10),
 
+  /**
+   * Platform identity / Identidad de la plataforma
+   * Single source of truth for the platform domain used in emails, URLs, and VAPID.
+   * Fuente única de verdad para el dominio de la plataforma usado en emails, URLs y VAPID.
+   */
+  platform: {
+    /** Platform domain (set via PLATFORM_DOMAIN env var) / Dominio de la plataforma */
+    domain: platformDomain,
+  },
+
   /** Database configuration / Configuración de base de datos */
   db: {
     /** Database host / Host de base de datos */
@@ -65,16 +94,16 @@ export const config = {
 
   /** JWT authentication configuration / Configuración de autenticación JWT */
   jwt: {
-    /** JWT secret key - CHANGE IN PRODUCTION / Clave secreta JWT - CAMBIAR EN PRODUCCIÓN */
-    secret: process.env.JWT_SECRET || 'default-secret-change-in-production',
+    /** JWT secret key (required) / Clave secreta JWT (requerida) */
+    secret: process.env.JWT_SECRET as string,
     /** JWT token expiration / Expiración del token JWT */
     expiresIn: process.env.JWT_EXPIRES_IN || '7d',
   },
 
   /** Two-Factor Authentication configuration / Configuración de autenticación de dos factores */
   twoFactor: {
-    /** 2FA secret key - CHANGE IN PRODUCTION / Clave secreta 2FA - CAMBIAR EN PRODUCCIÓN */
-    secretKey: process.env.TWO_FACTOR_SECRET_KEY || '',
+    /** 2FA secret key (required) / Clave secreta 2FA (requerida) */
+    secretKey: process.env.TWO_FACTOR_SECRET_KEY as string,
   },
 
   /** Application URLs / URLs de la aplicación */
@@ -118,7 +147,7 @@ export const config = {
     /** Brevo API key for transactional emails / Clave API de Brevo para correos transaccionales */
     apiKey: process.env.BREVO_API_KEY || '',
     /** Sender email address / Correo del remitente */
-    senderEmail: process.env.BREVO_SENDER_EMAIL || 'noreply@nexoreal.xyz', // TODO: domain pending
+    senderEmail: process.env.BREVO_SENDER_EMAIL || `noreply@${platformDomain}`,
     /** Sender display name / Nombre del remitente */
     senderName: process.env.BREVO_SENDER_NAME || 'Nexo Real',
     /** SMS sender ID / ID del remitente SMS */
@@ -142,7 +171,7 @@ export const config = {
     /** VAPID private key / Clave privada VAPID */
     privateKey: process.env.VAPID_PRIVATE_KEY || '',
     /** VAPID subject (mailto or URL) / Asunto VAPID (mailto o URL) */
-    subject: process.env.VAPID_SUBJECT || 'mailto:admin@nexoreal.xyz', // TODO: domain pending
+    subject: process.env.VAPID_SUBJECT || `mailto:admin@${platformDomain}`,
   },
 
   /** PayPal configuration / Configuración de PayPal */
@@ -155,6 +184,15 @@ export const config = {
     clientSecret: process.env.PAYPAL_CLIENT_SECRET || '',
     /** PayPal webhook ID for signature verification / Webhook ID de PayPal para verificación de firma */
     webhookId: process.env.PAYPAL_WEBHOOK_ID || '',
+  },
+
+  /**
+   * Feature flags — toggle features without code changes
+   * Flags de funcionalidad — activar/desactivar features sin cambios de código
+   */
+  features: {
+    /** Crypto wallet feature / Funcionalidad de wallet crypto */
+    cryptoWallet: process.env.FEATURE_CRYPTO_WALLET === 'true',
   },
 
   /** MercadoPago configuration / Configuración de MercadoPago */
@@ -171,3 +209,36 @@ export const config = {
     webhookSecret: process.env.MERCADOPAGO_WEBHOOK_SECRET || '',
   },
 };
+
+/**
+ * Fail-fast validation for critical security secrets
+ * Validación fail-fast para secretos de seguridad críticos
+ *
+ * Crashes the process immediately on startup if required secrets are missing.
+ * This prevents the application from running with undefined/empty JWT or 2FA keys,
+ * which would be a critical security vulnerability.
+ *
+ * Detiene el proceso inmediatamente al iniciar si faltan secretos requeridos.
+ * Esto previene que la aplicación corra con claves JWT o 2FA indefinidas/vacías,
+ * lo cual sería una vulnerabilidad de seguridad crítica.
+ */
+if (!config.jwt.secret) {
+  throw new Error(
+    'FATAL: JWT_SECRET environment variable is required. Server cannot start without it.'
+  );
+}
+if (!config.twoFactor.secretKey) {
+  throw new Error(
+    'FATAL: TWO_FACTOR_SECRET_KEY environment variable is required. Server cannot start without it.'
+  );
+}
+
+/**
+ * Warn if PLATFORM_DOMAIN is not explicitly set (uses default).
+ * Advertir si PLATFORM_DOMAIN no está configurado explícitamente (usa default).
+ */
+if (!process.env.PLATFORM_DOMAIN) {
+  logger.warn(
+    `PLATFORM_DOMAIN is not set — defaulting to '${config.platform.domain}'. Set it in production.`
+  );
+}

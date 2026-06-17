@@ -2,8 +2,11 @@ import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Analytics } from '@vercel/analytics/react';
 import { AuthProvider } from './context/AuthContext';
+import { ErrorBoundary } from './components/common/ErrorBoundary';
+import { hasAuthToken } from './lib/authGuard';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import TwoFactorLoginPage from './pages/TwoFactorLoginPage';
 import Dashboard from './pages/Dashboard';
 import TreeView from './pages/TreeView';
 import Profile from './pages/Profile';
@@ -22,6 +25,7 @@ import { AppLayout } from './components/layout/AppLayout';
 import { ProtectedRoute, AdminRoute, PublicRoute, PublicProfileRoute } from './components/routes';
 import { preloadData } from './lib/preload';
 import { dashboardService, authService } from './services/api';
+import { featureFlags } from './utils/featureFlags';
 
 // Lazy loaded pages for Real Estate & Tourism landing (Sprint 7)
 const NexoRealLanding = lazy(() => import('./pages/landing/NexoRealLanding'));
@@ -64,339 +68,370 @@ function PageLoader() {
 }
 
 function App() {
-  // Preload critical data on app init
+  // Preload critical data on app init — ONLY when authenticated
+  // Precargar datos críticos al iniciar la app — SOLO cuando está autenticado
   useEffect(() => {
-    // Preload dashboard data on app init
-    preloadData('dashboard', () => dashboardService.getDashboard());
-    // Preload current user data
-    preloadData('currentUser', () => authService.getProfile());
+    if (hasAuthToken()) {
+      preloadData('dashboard', () => dashboardService.getDashboard());
+      preloadData('currentUser', () => authService.getProfile());
+    }
   }, []);
 
   return (
-    <AuthProvider>
-      <OfflineBanner />
-      <BrowserRouter>
-        <Routes>
-          <Route
-            path="/login"
-            element={
-              <PublicRoute>
-                <Login />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/register"
-            element={
-              <PublicRoute>
-                <Register />
-              </PublicRoute>
-            }
-          />
-          {/* Landing page - Nexo Real home */}
-          <Route
-            path="/"
-            element={
-              <AppLayout>
-                <Suspense fallback={<PageLoader />}>
-                  <NexoRealLanding />
-                </Suspense>
-              </AppLayout>
-            }
-          />
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/tree"
-            element={
-              <ProtectedRoute>
-                <TreeView />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/crm"
-            element={
-              <ProtectedRoute>
-                <CRM />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/leaderboard"
-            element={
-              <ProtectedRoute>
-                <LeaderboardPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/achievements"
-            element={
-              <ProtectedRoute>
-                <AchievementsPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile/2fa"
-            element={
-              <ProtectedRoute>
-                <TwoFactor />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin"
-            element={
-              <AdminRoute>
-                <AdminDashboard />
-              </AdminRoute>
-            }
-          />
-          <Route
-            path="/admin/commissions"
-            element={
-              <AdminRoute>
-                <CommissionConfigPage />
-              </AdminRoute>
-            }
-          />
-          <Route
-            path="/ref/:code"
-            element={
-              <PublicProfileRoute>
-                <PublicProfile />
-              </PublicProfileRoute>
-            }
-          />
-          <Route
-            path="/landing-pages"
-            element={
-              <ProtectedRoute>
-                <LandingPages />
-              </ProtectedRoute>
-            }
-          />
+    <ErrorBoundary>
+      <AuthProvider>
+        <OfflineBanner />
+        <BrowserRouter>
+          <Routes>
+            <Route
+              path="/login"
+              element={
+                <PublicRoute>
+                  <Login />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/register"
+              element={
+                <PublicRoute>
+                  <Register />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/login/2fa"
+              element={
+                <PublicRoute>
+                  <TwoFactorLoginPage />
+                </PublicRoute>
+              }
+            />
+            {/* Landing page - Nexo Real home */}
+            <Route
+              path="/"
+              element={
+                <AppLayout>
+                  <Suspense fallback={<PageLoader />}>
+                    <NexoRealLanding />
+                  </Suspense>
+                </AppLayout>
+              }
+            />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/tree"
+              element={
+                <ProtectedRoute>
+                  <TreeView />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/crm"
+              element={
+                <ProtectedRoute>
+                  <CRM />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/leaderboard"
+              element={
+                <ProtectedRoute>
+                  <LeaderboardPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/achievements"
+              element={
+                <ProtectedRoute>
+                  <AchievementsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile/2fa"
+              element={
+                <ProtectedRoute>
+                  <TwoFactor />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                <AdminRoute>
+                  <AdminDashboard />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/commissions"
+              element={
+                <AdminRoute>
+                  <CommissionConfigPage />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/ref/:code"
+              element={
+                <PublicProfileRoute>
+                  <PublicProfile />
+                </PublicProfileRoute>
+              }
+            />
+            <Route
+              path="/landing-pages"
+              element={
+                <ProtectedRoute>
+                  <LandingPages />
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Legacy E-Commerce Routes — kept for backward compatibility */}
-          <Route
-            path="/products"
-            element={
-              <Suspense fallback={<PageLoader />}>
-                <ProductCatalog />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/checkout/:productId"
-            element={
-              <ProtectedRoute>
+            {/* Legacy E-Commerce Routes — kept for backward compatibility */}
+            <Route
+              path="/products"
+              element={
                 <Suspense fallback={<PageLoader />}>
-                  <Checkout />
+                  <ProductCatalog />
                 </Suspense>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/orders/:orderId/success"
-            element={
-              <ProtectedRoute>
-                <Suspense fallback={<PageLoader />}>
-                  <OrderSuccess />
-                </Suspense>
-              </ProtectedRoute>
-            }
-          />
+              }
+            />
+            <Route
+              path="/checkout/:productId"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<PageLoader />}>
+                    <Checkout />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/orders/:orderId/success"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<PageLoader />}>
+                    <OrderSuccess />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
 
-          {/* MercadoPago back_url routes — shown after MP Checkout Pro redirect */}
-          <Route
-            path="/order-processing"
-            element={
-              <Suspense fallback={<PageLoader />}>
-                <OrderProcessing />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/orders/success"
-            element={
-              <Suspense fallback={<PageLoader />}>
-                <OrderProcessing />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/orders/pending"
-            element={
-              <Suspense fallback={<PageLoader />}>
-                <OrderProcessing />
-              </Suspense>
-            }
-          />
+            {/* MercadoPago back_url routes — shown after MP Checkout Pro redirect */}
+            <Route
+              path="/order-processing"
+              element={
+                <Suspense fallback={<PageLoader />}>
+                  <OrderProcessing />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/orders/success"
+              element={
+                <Suspense fallback={<PageLoader />}>
+                  <OrderProcessing />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/orders/pending"
+              element={
+                <Suspense fallback={<PageLoader />}>
+                  <OrderProcessing />
+                </Suspense>
+              }
+            />
 
-          {/* Wallet Digital Route */}
-          <Route
-            path="/wallet"
-            element={
-              <ProtectedRoute>
+            {/* PayPal return URL routes — shown after PayPal redirect */}
+            <Route
+              path="/checkout/success"
+              element={
                 <Suspense fallback={<PageLoader />}>
-                  <WalletPage />
+                  <OrderProcessing />
                 </Suspense>
-              </ProtectedRoute>
-            }
-          />
+              }
+            />
+            <Route
+              path="/checkout/cancel"
+              element={
+                <Suspense fallback={<PageLoader />}>
+                  <OrderProcessing />
+                </Suspense>
+              }
+            />
 
-          {/* Cart Recovery Route - Public (no auth, uses one-time token) */}
-          <Route
-            path="/recover-cart"
-            element={
-              <Suspense fallback={<PageLoader />}>
-                <RecoverCartPage />
-              </Suspense>
-            }
-          />
+            {/* Wallet Digital Route — hidden when crypto wallet feature is disabled */}
+            {featureFlags.cryptoWallet && (
+              <Route
+                path="/wallet"
+                element={
+                  <ProtectedRoute>
+                    <Suspense fallback={<PageLoader />}>
+                      <WalletPage />
+                    </Suspense>
+                  </ProtectedRoute>
+                }
+              />
+            )}
 
-          {/* Email Campaign Management - Admin */}
-          <Route
-            path="/admin/email-campaigns"
-            element={
-              <AdminRoute>
+            {/* Cart Recovery Route - Public (no auth, uses one-time token) */}
+            <Route
+              path="/recover-cart"
+              element={
                 <Suspense fallback={<PageLoader />}>
-                  <EmailCampaignPage />
+                  <RecoverCartPage />
                 </Suspense>
-              </AdminRoute>
-            }
-          />
+              }
+            />
 
-          {/* Real Estate & Tourism Routes (Sprint 5) */}
-          <Route
-            path="/properties"
-            element={
-              <AppLayout>
-                <Suspense fallback={<PageLoader />}>
-                  <PropertiesPage />
-                </Suspense>
-              </AppLayout>
-            }
-          />
-          <Route
-            path="/properties/:id"
-            element={
-              <AppLayout>
-                <Suspense fallback={<PageLoader />}>
-                  <PropertyDetailPage />
-                </Suspense>
-              </AppLayout>
-            }
-          />
-          <Route
-            path="/tours"
-            element={
-              <AppLayout>
-                <Suspense fallback={<PageLoader />}>
-                  <ToursPage />
-                </Suspense>
-              </AppLayout>
-            }
-          />
-          <Route
-            path="/tours/:id"
-            element={
-              <AppLayout>
-                <Suspense fallback={<PageLoader />}>
-                  <TourDetailPage />
-                </Suspense>
-              </AppLayout>
-            }
-          />
-          <Route
-            path="/reservations/new"
-            element={
-              <ProtectedRoute>
-                <Suspense fallback={<PageLoader />}>
-                  <ReservationFlowPage />
-                </Suspense>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/mis-reservas"
-            element={
-              <ProtectedRoute>
-                <Suspense fallback={<PageLoader />}>
-                  <MisReservasPage />
-                </Suspense>
-              </ProtectedRoute>
-            }
-          />
+            {/* Email Campaign Management - Admin */}
+            <Route
+              path="/admin/email-campaigns"
+              element={
+                <AdminRoute>
+                  <Suspense fallback={<PageLoader />}>
+                    <EmailCampaignPage />
+                  </Suspense>
+                </AdminRoute>
+              }
+            />
 
-          {/* Admin Real Estate & Tourism CRUD Routes (Sprint 6) */}
-          <Route
-            path="/admin/properties"
-            element={
-              <AdminRoute>
-                <Suspense fallback={<PageLoader />}>
-                  <AdminPropertiesPage />
-                </Suspense>
-              </AdminRoute>
-            }
-          />
-          <Route
-            path="/admin/tours"
-            element={
-              <AdminRoute>
-                <Suspense fallback={<PageLoader />}>
-                  <AdminToursPage />
-                </Suspense>
-              </AdminRoute>
-            }
-          />
-          <Route
-            path="/admin/reservations"
-            element={
-              <AdminRoute>
-                <Suspense fallback={<PageLoader />}>
-                  <AdminReservationsPage />
-                </Suspense>
-              </AdminRoute>
-            }
-          />
+            {/* Real Estate & Tourism Routes (Sprint 5) */}
+            <Route
+              path="/properties"
+              element={
+                <AppLayout>
+                  <Suspense fallback={<PageLoader />}>
+                    <PropertiesPage />
+                  </Suspense>
+                </AppLayout>
+              }
+            />
+            <Route
+              path="/properties/:id"
+              element={
+                <AppLayout>
+                  <Suspense fallback={<PageLoader />}>
+                    <PropertyDetailPage />
+                  </Suspense>
+                </AppLayout>
+              }
+            />
+            <Route
+              path="/tours"
+              element={
+                <AppLayout>
+                  <Suspense fallback={<PageLoader />}>
+                    <ToursPage />
+                  </Suspense>
+                </AppLayout>
+              }
+            />
+            <Route
+              path="/tours/:id"
+              element={
+                <AppLayout>
+                  <Suspense fallback={<PageLoader />}>
+                    <TourDetailPage />
+                  </Suspense>
+                </AppLayout>
+              }
+            />
+            <Route
+              path="/reservations/new"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<PageLoader />}>
+                    <ReservationFlowPage />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/mis-reservas"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<PageLoader />}>
+                    <MisReservasPage />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Error Pages */}
-          <Route path="/404" element={<NotFound />} />
-          <Route path="/offline" element={<Offline />} />
+            {/* Admin Real Estate & Tourism CRUD Routes (Sprint 6) */}
+            <Route
+              path="/admin/properties"
+              element={
+                <AdminRoute>
+                  <Suspense fallback={<PageLoader />}>
+                    <AdminPropertiesPage />
+                  </Suspense>
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/tours"
+              element={
+                <AdminRoute>
+                  <Suspense fallback={<PageLoader />}>
+                    <AdminToursPage />
+                  </Suspense>
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/reservations"
+              element={
+                <AdminRoute>
+                  <Suspense fallback={<PageLoader />}>
+                    <AdminReservationsPage />
+                  </Suspense>
+                </AdminRoute>
+              }
+            />
 
-          {/* Product Landing Page - Public */}
-          <Route
-            path="/landing/product/:id"
-            element={
-              <Suspense fallback={<PageLoader />}>
-                <ProductLanding />
-              </Suspense>
-            }
-          />
+            {/* Error Pages */}
+            <Route path="/404" element={<NotFound />} />
+            <Route path="/offline" element={<Offline />} />
 
-          {/* Catch-all: Redirect unknown routes to 404 */}
-          <Route path="*" element={<Navigate to="/404" replace />} />
-        </Routes>
-      </BrowserRouter>
-      <Analytics />
-    </AuthProvider>
+            {/* Product Landing Page - Public */}
+            <Route
+              path="/landing/product/:id"
+              element={
+                <Suspense fallback={<PageLoader />}>
+                  <ProductLanding />
+                </Suspense>
+              }
+            />
+
+            {/* Catch-all: Redirect unknown routes to 404 */}
+            <Route path="*" element={<Navigate to="/404" replace />} />
+          </Routes>
+        </BrowserRouter>
+        <Analytics />
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
 

@@ -5,6 +5,23 @@
  * @module __tests__/unit/GiftCardService
  */
 
+// Mock logger (must come BEFORE imports that use it)
+jest.mock('../../utils/logger', () => ({
+  logger: {
+    info: jest.fn(),
+    error: jest.fn(),
+    warn: jest.fn(),
+    debug: jest.fn(),
+    fatal: jest.fn(),
+    child: jest.fn().mockReturnValue({
+      info: jest.fn(),
+      error: jest.fn(),
+      warn: jest.fn(),
+      debug: jest.fn(),
+    }),
+  },
+}));
+
 // Mock config/database
 jest.mock('../../config/database', () => ({
   sequelize: {
@@ -129,8 +146,6 @@ describe('GiftCardService', () => {
       (GiftCard.create as jest.Mock).mockResolvedValue(mockGiftCard);
       (QrMapping.create as jest.Mock).mockResolvedValue({ id: 'qr-uuid-2' });
 
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-
       const result = await giftCardService.createGiftCard(50, 'admin-uuid');
 
       expect(result).toEqual(mockGiftCard);
@@ -138,7 +153,6 @@ describe('GiftCardService', () => {
         expect.objectContaining({ qrCodeData: null }),
         expect.anything()
       );
-      consoleSpy.mockRestore();
     });
 
     it('should use custom expiresInDays when provided', async () => {

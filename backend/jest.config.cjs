@@ -2,6 +2,8 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
+  // Runs BEFORE any module import — provides test secrets so env.ts fail-fast doesn't crash Jest
+  setupFiles: ['<rootDir>/src/__tests__/env-setup.ts'],
   roots: ['<rootDir>/src'],
   testMatch: ['**/__tests__/**/*.test.ts'],
   testPathIgnorePatterns: ['/integration/'],

@@ -54,7 +54,7 @@ router.use(authenticateToken);
  *                         type: string
  *                       type:
  *                         type: string
- *                         enum: [direct, level_1, level_2, level_3, level_4]
+ *                         description: 'direct or level_N (e.g. level_1 through level_9+)'
  *                       amount:
  *                         type: number
  *                       currency:

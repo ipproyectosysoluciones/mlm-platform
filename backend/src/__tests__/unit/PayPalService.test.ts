@@ -26,6 +26,13 @@ jest.mock('../../config/env', () => ({
 
 jest.mock('axios');
 
+jest.mock('../../models/WebhookEvent', () => ({
+  WebhookEvent: {
+    findOne: jest.fn(),
+    create: jest.fn(),
+  },
+}));
+
 import axios from 'axios';
 import { AppError } from '../../middleware/error.middleware';
 

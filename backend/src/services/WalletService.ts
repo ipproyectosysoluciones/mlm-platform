@@ -23,6 +23,7 @@ import { Wallet, WalletTransaction, WithdrawalRequest } from '../models';
 import { config } from '../config/env';
 import { WALLET_TRANSACTION_TYPE, WITHDRAWAL_STATUS } from '../types';
 import { Op } from 'sequelize';
+import { logger } from '../utils/logger';
 
 // Simple exchange rates to USD (in production, use an external API)
 const EXCHANGE_RATES: Record<string, number> = {
@@ -365,7 +366,10 @@ export class WalletService {
         await withdrawal.save();
         processed.push(withdrawal);
       } catch (error) {
-        console.error(`Error processing withdrawal ${withdrawal.id}:`, error);
+        logger.error(
+          { service: 'WalletService', err: error, withdrawalId: withdrawal.id },
+          'Error processing withdrawal'
+        );
         withdrawal.status = WITHDRAWAL_STATUS.FAILED;
         await withdrawal.save();
       }

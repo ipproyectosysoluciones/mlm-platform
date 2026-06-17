@@ -50,6 +50,7 @@ jobs:
           DB_USER: test
           DB_PASSWORD: test
           JWT_SECRET: ci-test-secret
+          TWO_FACTOR_SECRET_KEY: ci-test-2fa-key
 
       - name: Integration tests
         run: cd backend && pnpm test:integration
@@ -61,6 +62,7 @@ jobs:
           TEST_DB_USER: test
           TEST_DB_PASSWORD: test
           JWT_SECRET: ci-test-secret
+          TWO_FACTOR_SECRET_KEY: ci-test-2fa-key
           NODE_ENV: test
           VAPID_PUBLIC_KEY: BEueSTlTOD2y1tdK7YoKXPdgNqOaVeTYxW0XRSRp6zj0RCJfAAmTUWT4y-7Nlam3FhJdXXFtJSPfQSFi1Y_-O-Y
           VAPID_PRIVATE_KEY: yTkAndYTiEvEvZ4brY98pn1741cHKtdnBIELcRSlr3Y

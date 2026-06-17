@@ -22,6 +22,7 @@ import { Op } from 'sequelize';
 import { EmailQueue, EmailCampaign, EmailCampaignLog } from '../models';
 import { brevoEmailService } from './BrevoEmailService';
 import { EMAIL_QUEUE_STATUS, EMAIL_CAMPAIGN_STATUS } from '../types';
+import { logger } from '../utils/logger';
 
 // ============================================
 // CONSTANTS — Constantes
@@ -207,9 +208,9 @@ export class EmailQueueService {
     try {
       await EmailCampaign.increment(field, { where: { id: campaignId } });
     } catch (error) {
-      console.error(
-        `[EmailQueueService] Error incrementing ${field} for campaign ${campaignId}:`,
-        error
+      logger.error(
+        { err: error, service: 'EmailQueueService', campaignId, field },
+        'Error incrementing campaign stat'
       );
     }
   }
@@ -235,9 +236,9 @@ export class EmailQueueService {
 
         await EmailCampaign.update({ deferredCount }, { where: { id: campaignId } });
       } catch (error) {
-        console.error(
-          `[EmailQueueService] Error updating deferred count for campaign ${campaignId}:`,
-          error
+        logger.error(
+          { err: error, service: 'EmailQueueService', campaignId },
+          'Error updating deferred count for campaign'
         );
       }
     }
@@ -283,9 +284,9 @@ export class EmailQueueService {
           }
         }
       } catch (error) {
-        console.error(
-          `[EmailQueueService] Error checking completion for campaign ${campaignId}:`,
-          error
+        logger.error(
+          { err: error, service: 'EmailQueueService', campaignId },
+          'Error checking completion for campaign'
         );
       }
     }
@@ -315,7 +316,7 @@ export class EmailQueueService {
         details,
       });
     } catch (error) {
-      console.error(`[EmailQueueService] Error logging event '${eventType}':`, error);
+      logger.error({ err: error, service: 'EmailQueueService', eventType }, 'Error logging event');
     }
   }
 }

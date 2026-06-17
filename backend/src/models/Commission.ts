@@ -28,7 +28,8 @@ export class Commission extends Model<CommissionAttributes, CommissionCreation> 
   declare userId: ForeignKey<User['id']>;
   declare fromUserId: ForeignKey<User['id']>;
   declare purchaseId: string | null;
-  declare type: 'direct' | 'level_1' | 'level_2' | 'level_3' | 'level_4';
+  declare type: string;
+  declare model?: string;
   declare amount: number;
   declare currency: string;
   declare status: 'pending' | 'approved' | 'paid';
@@ -63,8 +64,13 @@ Commission.init(
       field: 'purchase_id',
     },
     type: {
-      type: DataTypes.ENUM('direct', 'level_1', 'level_2', 'level_3', 'level_4'),
+      type: DataTypes.STRING(20),
       allowNull: false,
+    },
+    model: {
+      type: DataTypes.STRING(10),
+      allowNull: false,
+      defaultValue: 'unilevel',
     },
     amount: {
       type: DataTypes.DECIMAL(10, 2),

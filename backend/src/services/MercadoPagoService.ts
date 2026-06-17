@@ -49,6 +49,11 @@ export interface PaymentResult {
   transaction_amount?: number;
   currency_id?: string;
   external_reference?: string;
+  /** Additional info from MercadoPago (items, payer, etc.) / Info adicional de MercadoPago */
+  additional_info?: {
+    items?: Array<{ id?: string; title?: string; quantity?: string; unit_price?: string }>;
+    [key: string]: unknown;
+  };
 }
 
 class MercadoPagoService {
@@ -107,6 +112,7 @@ class MercadoPagoService {
       transaction_amount: result.transaction_amount ?? undefined,
       currency_id: result.currency_id ?? undefined,
       external_reference: result.external_reference ?? undefined,
+      additional_info: result.additional_info as PaymentResult['additional_info'],
     };
   }
 

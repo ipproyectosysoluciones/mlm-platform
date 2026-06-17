@@ -93,7 +93,14 @@
     "noReferrals": "No referrals yet",
     "noReferralsHint": "Share your link to invite people",
     "amount": "Amount",
-    "earnings": "Earnings"
+    "earnings": "Earnings",
+    "commissionBreakdown": "Commission Breakdown",
+    "level": "Level {{n}}",
+    "rate": "Rate",
+    "referrals": "Referrals",
+    "bonuses": "Bonuses",
+    "totalEarnings": "Total Earnings",
+    "commissionByLevel": "Commissions by Level"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -109,6 +116,11 @@
     "profile": "Profile",
     "admin": "Admin",
     "commissionConfig": "Commissions",
+    "adminUsers": "Users",
+    "adminProperties": "Properties",
+    "adminTours": "Tours",
+    "adminReservations": "Reservations",
+    "administration": "Administration",
     "logout": "Logout",
     "myProfile": "My Profile",
     "twoFactor": "Two-Factor Authentication",
@@ -149,7 +161,14 @@
     "recoveryCodesTitle": "Recovery Codes",
     "recoveryCodesSubtitle": "Save these codes in a safe place",
     "recoveryCodesWarning": "These codes are the only way to access your account if you lose your device. Each code can only be used once.",
-    "continue": "I understand"
+    "continue": "I understand",
+    "loginTitle": "Two-Step Verification",
+    "loginSubtitle": "Enter the 6-digit code from your authenticator app",
+    "loginEnterCode": "Verification code",
+    "loginVerify": "Verify",
+    "loginLockedOut": "Too many failed attempts. Please sign in again.",
+    "loginInvalidCode": "Invalid code. Please try again.",
+    "loginRecoveryHint": "If you lost access to your authenticator, use a recovery code."
   },
   "position": {
     "left": "Left",
@@ -259,7 +278,12 @@
     "activate": "Activate",
     "deactivate": "Deactivate",
     "promote": "Promote to Admin",
-    "role": "Role"
+    "role": "Role",
+    "quickAccess": "Quick Access",
+    "manageProperties": "Manage real estate properties",
+    "manageTours": "Manage tour packages",
+    "manageReservations": "Manage client reservations",
+    "manageCommissions": "Configure network commissions"
   },
   "landingPages": {
     "title": "Landing Pages",
@@ -374,7 +398,8 @@
       "leads": "Leads",
       "kanban": "Kanban",
       "tasks": "Tasks",
-      "stats": "Stats"
+      "stats": "Stats",
+      "analytics": "Analytics"
     },
     "analytics": {
       "title": "CRM Analytics",
@@ -517,6 +542,103 @@
     "level3": "Level 3 Referrals",
     "level4": "Level 4 Referrals"
   },
+  "tours": {
+    "spotsAvailable": "{{count}} spots available",
+    "spotsOf": "{{available}} of {{total}} spots",
+    "soldOut": "Sold Out",
+    "nextAvailableDate": "Next date: {{date}}",
+    "almostFull": "Almost full!"
+  },
+  "catalog": {
+    "bookNow": "Book Now",
+    "viewedToday": "{{count}} people viewed this today"
+  },
+  "reservation": {
+    "selectDates": "Select dates",
+    "dates": "Dates",
+    "guests": "Guests",
+    "confirmation": "Confirmation",
+    "payment": "Payment",
+    "property": "Property",
+    "tour": "Tour",
+    "pricePerNight": "Price per night",
+    "pricePerPerson": "Price per person",
+    "totalNights": "{{count}} night",
+    "totalNights_other": "{{count}} nights",
+    "totalGuests": "{{count}} guest",
+    "totalGuests_other": "{{count}} guests",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "priceBreakdown": "Price breakdown",
+    "estimatedTotal": "Estimated total",
+    "nightsCount": "{{nights}} nights × {{price}}",
+    "guestsMultiplier": "× {{guests}} guests",
+    "checkIn": "Check-in",
+    "checkOut": "Check-out",
+    "howManyGuests": "How many guests?",
+    "numberOfGuests": "Number of guests",
+    "additionalNotes": "Additional notes",
+    "additionalNotesHint": "Any special requests, preferences, etc.",
+    "optional": "optional",
+    "confirming": "Confirming...",
+    "confirmReservation": "Confirm reservation",
+    "reservationConfirmed": "Reservation confirmed!",
+    "reservationConfirmedDesc": "Your request has been submitted. The Nexo Real team will contact you shortly to coordinate the details.",
+    "reservationId": "Reservation ID",
+    "status": "Status",
+    "paymentMethod": "Payment method",
+    "selectPayment": "Choose how to pay",
+    "selectPaymentDesc": "Select your preferred payment method to complete the reservation.",
+    "payWithPaypal": "Pay with PayPal",
+    "payWithMercadopago": "Pay with MercadoPago",
+    "payWithWallet": "Pay with wallet",
+    "walletBalance": "Available balance: {{balance}}",
+    "payLater": "Pay later",
+    "payLaterHint": "You can pay from My Reservations",
+    "insufficientBalance": "Insufficient balance",
+    "processingPayment": "Processing payment...",
+    "viewMyReservations": "View my reservations",
+    "keepExploring": "Keep exploring",
+    "cancel": "Cancel",
+    "back": "Back",
+    "continue": "Continue",
+    "paymentError": "Failed to process payment. Please try again.",
+    "secure": "Secure payment",
+    "secureDesc": "All transactions are encrypted and protected."
+  },
+  "emptyStates": {
+    "tours": {
+      "title": "No tours found",
+      "description": "Try adjusting your filters or explore all available options."
+    },
+    "properties": {
+      "title": "No properties found",
+      "description": "Try adjusting your filters or explore all available properties."
+    },
+    "cart": {
+      "title": "Your cart is empty",
+      "description": "Explore available tours and properties to get started."
+    },
+    "reservation": {
+      "title": "No reservations yet",
+      "description": "Explore properties and tours to make your first reservation."
+    },
+    "order": {
+      "title": "No orders yet",
+      "description": "Your purchases will appear here once you place your first order."
+    }
+  },
+  "loading": {
+    "processingPayment": "Processing payment...",
+    "fetchingData": "Loading data..."
+  },
+  "cta": {
+    "securePayment": "Secure Payment",
+    "confirmPayment": "Confirm Payment",
+    "cancel": "Cancel",
+    "back": "Back",
+    "continue": "Continue"
+  },
   "landing": {
     "hero": {
       "badge": "#1 Platform in Latin America",
@@ -529,6 +651,69 @@
         "tours": "Tours available",
         "countries": "Countries",
         "clients": "Happy clients"
+      }
+    },
+    "howItWorks": {
+      "title": "How does it work?",
+      "subtitle": "Start generating income in 3 simple steps",
+      "step1": {
+        "title": "Sign Up",
+        "description": "Create your account and join a global real estate network with presence across Latin America."
+      },
+      "step2": {
+        "title": "Connect",
+        "description": "List properties, tours, or refer others to grow your network of contacts and opportunities."
+      },
+      "step3": {
+        "title": "Earn",
+        "description": "Receive commissions on every transaction in your network, up to 5 levels deep with transparent tracking."
+      }
+    },
+    "features": {
+      "title": "Everything you need in one platform",
+      "subtitle": "Tools designed to maximize your income potential",
+      "properties": {
+        "title": "Properties",
+        "description": "Catalog of rental, sale, and managed properties across all of Latin America."
+      },
+      "tours": {
+        "title": "Tours",
+        "description": "Curated tourism packages: adventure, cultural, gastronomic, and luxury."
+      },
+      "crm": {
+        "title": "Integrated CRM",
+        "description": "Manage leads, tasks, and communications in one place without external tools."
+      },
+      "commissions": {
+        "title": "Multi-Level Commissions",
+        "description": "Earn up to 5 levels deep with transparent, real-time commission tracking."
+      },
+
+      "payments": {
+        "title": "Global Payments",
+        "description": "PayPal, MercadoPago, and crypto wallet support to collect from anywhere."
+      }
+    },
+    "testimonials": {
+      "title": "What our agents say",
+      "subtitle": "Real stories from people who transformed their business with Nexo Real",
+      "t1": {
+        "quote": "In 6 months I built a network of 40 agents and commissions exceeded what I earned at my traditional agency. The platform is intuitive and the CRM saves me hours of work.",
+        "name": "Valentina Restrepo",
+        "role": "Real Estate Agency Owner",
+        "city": "Medellín, Colombia"
+      },
+      "t2": {
+        "quote": "Tourism packages sell themselves thanks to the quality of the presentation. My clients love booking directly and I earn commissions with no extra effort.",
+        "name": "Roberto Jiménez",
+        "role": "Tourism Operator",
+        "city": "Cancún, Mexico"
+      },
+      "t3": {
+        "quote": "I started as an independent agent with no experience. With the CRM and the platform tools, I already have a network of 15 people generating passive income.",
+        "name": "Camila Torres",
+        "role": "Independent Agent",
+        "city": "Buenos Aires, Argentina"
       }
     },
     "featuredProperties": {
@@ -546,9 +731,9 @@
       "empty": "No tours available"
     },
     "cta": {
-      "title": "Ready to invest in your future?",
-      "subtitle": "Join thousands of investors who already trust Nexo Real",
-      "button": "Create free account",
+      "title": "Ready to transform your business?",
+      "subtitle": "Join thousands of agents already generating passive income with Nexo Real. No upfront investment, no risk.",
+      "button": "Get started — It's free",
       "login": "I already have an account"
     },
     "footer": {

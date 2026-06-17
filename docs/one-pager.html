@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexo Real — One Pager</title>
+<style>
+  @page { size: A4; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #0f172a;
+    color: #f8fafc;
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 20mm 18mm;
+    line-height: 1.5;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 3px solid #10b981;
+  }
+  .logo {
+    font-size: 32px;
+    font-weight: 800;
+    color: #10b981;
+    letter-spacing: -0.5px;
+  }
+  .logo span { color: #f8fafc; }
+  .tagline {
+    font-size: 13px;
+    color: #94a3b8;
+    font-style: italic;
+  }
+  .qr-area {
+    text-align: center;
+  }
+  .qr-area img {
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
+  }
+  .qr-label {
+    font-size: 10px;
+    color: #10b981;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+
+  /* Sections */
+  h2 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #10b981;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-top: 16px;
+    margin-bottom: 6px;
+  }
+  p, li {
+    font-size: 12px;
+    color: #cbd5e1;
+  }
+  ul {
+    padding-left: 18px;
+  }
+  li {
+    margin-bottom: 3px;
+  }
+  li::marker {
+    color: #10b981;
+  }
+  strong {
+    color: #f8fafc;
+  }
+
+  /* Two columns */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 8px;
+  }
+
+  /* Stats bar */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 14px 0;
+  }
+  .stat {
+    background: #1e293b;
+    border-radius: 8px;
+    padding: 10px 12px;
+    text-align: center;
+    border: 1px solid #334155;
+  }
+  .stat .number {
+    font-size: 22px;
+    font-weight: 800;
+    color: #10b981;
+    display: block;
+  }
+  .stat .label {
+    font-size: 10px;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Features grid */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin: 8px 0;
+  }
+  .feature {
+    background: #1e293b;
+    border-radius: 6px;
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #334155;
+  }
+  .feature .icon {
+    font-size: 18px;
+    display: block;
+    margin-bottom: 3px;
+  }
+  .feature .name {
+    font-size: 10px;
+    color: #e2e8f0;
+    font-weight: 600;
+  }
+
+  /* Revenue model */
+  .revenue-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 8px 0;
+  }
+  .revenue-item {
+    background: #1e293b;
+    border-radius: 6px;
+    padding: 8px 10px;
+    border-left: 3px solid #10b981;
+  }
+  .revenue-item .title {
+    font-size: 11px;
+    font-weight: 700;
+    color: #f8fafc;
+  }
+  .revenue-item .desc {
+    font-size: 10px;
+    color: #94a3b8;
+  }
+
+  /* Ask section */
+  .ask-section {
+    background: linear-gradient(135deg, #064e3b 0%, #0f172a 100%);
+    border: 2px solid #10b981;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-top: 14px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+  }
+  .ask-item .amount {
+    font-size: 20px;
+    font-weight: 800;
+    color: #10b981;
+  }
+  .ask-item .detail {
+    font-size: 10px;
+    color: #94a3b8;
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 14px;
+    padding-top: 10px;
+    border-top: 1px solid #334155;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+    color: #64748b;
+  }
+  .footer a {
+    color: #10b981;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .open-source-badge {
+    background: #10b981;
+    color: #0f172a;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  @media print {
+    body { background: #0f172a; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div>
+    <div class="logo">Nexo <span>Real</span></div>
+    <div class="tagline">"Conectamos tu negocio con el mundo."</div>
+  </div>
+  <div class="qr-area">
+    <!-- QR placeholder — replace with actual QR code image -->
+    <div style="width:60px;height:60px;background:#1e293b;border:2px solid #10b981;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:8px;color:#10b981;font-weight:700;">QR<br>CODE</div>
+    <div class="qr-label">nexoreal.xyz</div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<h2>🔴 El Problema</h2>
+<p>
+  +2.5 millones de pequeñas agencias inmobiliarias, hoteles, hosterías y operadores turísticos en LATAM 
+  gestionan su negocio con <strong>Excel y WhatsApp</strong>. No tienen acceso a CRM, automatización, ni herramientas 
+  de captación digital. Airbnb y Booking cobran <strong>15-20% de comisión</strong> y no atienden al operador pequeño.
+</p>
+
+<!-- SOLUTION -->
+<h2>🟢 La Solución</h2>
+<p>
+  <strong>Nexo Real</strong> es una plataforma <strong>Open Source</strong> que combina Marketplace + CRM + Bot AI + Red MLM 
+  en un solo producto, diseñado para LATAM. Bajo costo, móvil primero, con pagos locales (MercadoPago, PayPal) 
+  y un agente AI en WhatsApp que atiende clientes 24/7.
+</p>
+
+<!-- KEY METRICS -->
+<div class="stats-bar">
+  <div class="stat">
+    <span class="number">34</span>
+    <span class="label">Rutas funcionales</span>
+  </div>
+  <div class="stat">
+    <span class="number">3</span>
+    <span class="label">Países en MVP</span>
+  </div>
+  <div class="stat">
+    <span class="number">15</span>
+    <span class="label">Ciudades</span>
+  </div>
+  <div class="stat">
+    <span class="number">v2.4</span>
+    <span class="label">Versión actual</span>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<h2>🚀 Producto — MVP Completo</h2>
+<div class="features-grid">
+  <div class="feature"><span class="icon">🏠</span><span class="name">Propiedades</span></div>
+  <div class="feature"><span class="icon">✈️</span><span class="name">Tours</span></div>
+  <div class="feature"><span class="icon">📅</span><span class="name">Reservas</span></div>
+  <div class="feature"><span class="icon">🤖</span><span class="name">Bot AI (WhatsApp)</span></div>
+  <div class="feature"><span class="icon">💳</span><span class="name">Pagos LATAM</span></div>
+  <div class="feature"><span class="icon">📊</span><span class="name">CRM</span></div>
+  <div class="feature"><span class="icon">💰</span><span class="name">Comisiones MLM</span></div>
+  <div class="feature"><span class="icon">📈</span><span class="name">Dashboard</span></div>
+</div>
+
+<!-- BUSINESS MODEL -->
+<h2>💼 Modelo de Negocio</h2>
+<div class="revenue-grid">
+  <div class="revenue-item">
+    <div class="title">Comisiones por transacción</div>
+    <div class="desc">% sobre cada venta/reserva cerrada a través de la plataforma</div>
+  </div>
+  <div class="revenue-item">
+    <div class="title">Suscripciones SaaS</div>
+    <div class="desc">Free → Managed → Enterprise (Bot dedicado, KB personalizada, API)</div>
+  </div>
+  <div class="revenue-item">
+    <div class="title">Servicios Premium</div>
+    <div class="desc">CRM avanzado, analytics, white-label para grandes operadores</div>
+  </div>
+</div>
+
+<!-- MARKET -->
+<div class="two-col">
+  <div>
+    <h2>🌎 Mercado</h2>
+    <ul>
+      <li><strong>Real Estate LATAM</strong>: USD $200B+/año</li>
+      <li><strong>Turismo LATAM</strong>: USD $100B+/año</li>
+      <li><strong>Target</strong>: Agentes independientes, pequeñas agencias, hosterías, operadores comunitarios</li>
+      <li><strong>Foco</strong>: Colombia 🇨🇴, México 🇲🇽, Argentina 🇦🇷</li>
+    </ul>
+  </div>
+  <div>
+    <h2>⚡ Tecnología</h2>
+    <ul>
+      <li><strong>Frontend</strong>: React 19 + TailwindCSS + Vite</li>
+      <li><strong>Backend</strong>: Express + PostgreSQL + Sequelize</li>
+      <li><strong>Bot</strong>: BuilderBot + GPT-4o + WhatsApp</li>
+      <li><strong>Infra</strong>: Vercel + Docker + Cloudflare</li>
+      <li><strong>Open Source</strong>: Transparencia total</li>
+    </ul>
+  </div>
+</div>
+
+<!-- THE ASK -->
+<h2>🎯 Ronda Seed</h2>
+<div class="ask-section">
+  <div class="ask-item">
+    <div class="amount">$150K</div>
+    <div class="detail">Ronda seed USD</div>
+  </div>
+  <div class="ask-item">
+    <div class="amount">60%</div>
+    <div class="detail">Equipo: CTO, 2 devs, community manager</div>
+  </div>
+  <div class="ask-item">
+    <div class="amount">12 meses</div>
+    <div class="detail">De MVP a revenue con usuarios pagos</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div>
+    <a href="https://nexoreal.xyz">nexoreal.xyz</a> &nbsp;|&nbsp; 
+    contacto@nexoreal.xyz &nbsp;|&nbsp;
+    🇨🇴 🇲🇽 🇦🇷
+  </div>
+  <span class="open-source-badge">Open Source 🌎</span>
+</div>
+
+</body>
+</html>

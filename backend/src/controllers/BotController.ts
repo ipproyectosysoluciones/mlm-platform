@@ -89,7 +89,7 @@ export async function getWalletInfo(req: Request, res: Response): Promise<void> 
     Wallet.findOne({ where: { userId } }),
     WithdrawalRequest.findAll({
       where: { userId, status: 'pending' },
-      attributes: ['amount'],
+      attributes: ['requestedAmount'],
     }),
     Commission.sum('amount', {
       where: { userId, status: 'paid' },
@@ -102,7 +102,7 @@ export async function getWalletInfo(req: Request, res: Response): Promise<void> 
   }
 
   const pendingTotal = pendingWithdrawals.reduce(
-    (sum: number, w: WithdrawalRequest) => sum + Number((w as any).amount),
+    (sum: number, w: WithdrawalRequest) => sum + Number(w.requestedAmount),
     0
   );
 

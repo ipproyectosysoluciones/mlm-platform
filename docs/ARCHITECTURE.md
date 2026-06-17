@@ -6,13 +6,13 @@
 
 La plataforma MLM está construida con una arquitectura de API RESTful, separando claramente el backend (Node.js + Express + TypeScript + Sequelize + PostgreSQL) del frontend (React + Vite + TypeScript + Tailwind CSS). A partir de la v2.0.0 se incorpora un canal de atención por WhatsApp (Nexo Bot) orquestado por n8n para automatizaciones externas.
 
-**Estado del Proyecto**: v2.3.5 — Sprint 7 Completado ✅
+**Estado del Proyecto**: v3.0.0 — Sprint 10 Completado ✅
 
 **Características Implementadas**:
 
 - Autenticación JWT con rate limiting
-- Árbol binario con Closure Table
-- Sistema de comisiones de 5 niveles (configurable)
+- MLM Unilevel con Closure Table (10 niveles configurables) — migrado de Binary en Sprint 10
+- Sistema de comisiones de 10 niveles configurables — migrado en Sprint 10
 - Dashboard con estadísticas y gráficos
 - Generación de códigos QR
 - Panel de administración
@@ -29,7 +29,7 @@ La plataforma MLM está construida con una arquitectura de API RESTful, separand
 - **Marketplace Multi-vendor**: Vendor, VendorProduct, VendorOrder, split de comisiones 3-way
 - **Delivery Integration**: ShippingAddress, DeliveryProvider, ShipmentTracking
 - **Affiliate Contracts MVP**: ContractTemplate, AffiliateContract con versionado y hash
-- 307 tests automatizados
+- Backend: 49 suites, 667 tests (Jest) | Bot: 8 files, 62 tests (Vitest) | Total: ~729 automated tests
 - **WhatsApp Bot (Nexo Bot)**: BuilderBot + Baileys, 7 flujos conversacionales, IA (GPT-4o)
 - **n8n Automation**: orquestación de webhooks → Google Calendar + Notion CRM
 - **Sprint 4 Tests**: cobertura frontend de 155 → 210 tests
@@ -42,41 +42,48 @@ La plataforma MLM está construida con una arquitectura de API RESTful, separand
 - **SEO Frontend**: react-helmet-async, meta tags dinámicos, JSON-LD RealEstateListing + TouristAttraction, social proof badges
 - **network_balance**: migración de binary_balance completada en DB + modelos + frontend
 - **Build Hardening Sprint 6**: producción sin archivos .map, logs de tamaño post-build
+- **Payment Webhooks (Sprint 10)**: WebhookEvent model + MercadoPago + PayPal webhook handlers con idempotencia
+- **Invoice System (Sprint 10)**: Invoice model, InvoiceService, PDF generation, CRUD routes
+- **Commission Unilevel Migration (Sprint 10)**: Binary→Unilevel con Closure Table, 10 niveles, generateLevelKey()
+- **n8n CRM Integration (Sprint 10)**: WorkflowService, WorkflowExecution model, N8nWebhookController, automation routes
+- **2FA Frontend (Sprint 10)**: TwoFactorLoginPage, twoFactorService, códigos de recuperación
+- **UX Polish (Sprint 10)**: EmptyState 6 tipos, skeleton loaders (TourCard, PropertyCard, Listing), mobile responsive, Sonner toast
+- **Feature Guard (Sprint 10)**: Middleware con FEATURE_CRYPTO_ENABLED (default: false)
 
 ```map
 ┌─────────────────────────────────────────────────────────────┐
-│                        CLIENTE / CLIENT                       │
-│                                                              │
+│                        CLIENTE / CLIENT                     │
+│                                                             │
 │   ┌─────────────────────────────────────────────────────┐   │
-│   │                  FRONTEND (React)                    │   │
+│   │                  FRONTEND (React)                   │   │
 │   │   - Vite Build System                               │   │
 │   │   - Tailwind CSS (Styling)                          │   │
 │   │   - React Router (Navigation)                       │   │
-│   │   - Axios (HTTP Client)                            │   │
+│   │   - Axios (HTTP Client)                             │   │
 │   └─────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────┘
                               │
                               │ HTTP/REST
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                        SERVIDOR / SERVER                      │
-│                                                              │
+│                        SERVIDOR / SERVER                    │
+│                                                             │
 │   ┌─────────────────────────────────────────────────────┐   │
-│   │                  BACKEND (Node.js)                    │   │
-│   │                                                       │   │
+│   │                  BACKEND (Node.js)                  │   │
+│   │                                                     │   │
 │   │   Routes → Controllers → Services → Models          │   │
-│   │                                                       │   │
-│   │   ┌─────────────┐  ┌─────────────┐  ┌───────────┐  │   │
-│   │   │ Controllers │  │  Services   │  │  Models   │  │   │
-│   │   │  (HTTP)     │  │  (Logic)    │  │   (DB)    │  │   │
-│   │   └─────────────┘  └─────────────┘  └───────────┘  │   │
-│   │                                                       │   │
+│   │                                                     │   │
+│   │   ┌─────────────┐  ┌─────────────┐  ┌───────────┐   │   │
+│   │   │ Controllers │  │  Services   │  │  Models   │   │   │
+│   │   │  (HTTP)     │  │  (Logic)    │  │   (DB)    │   │   │
+│   │   └─────────────┘  └─────────────┘  └───────────┘   │   │
+│   │                                                     │   │
 │   └─────────────────────────────────────────────────────┘   │
-│                              │                               │
-│                              ▼                               │
+│                              │                              │
+│                              ▼                              │
 │   ┌─────────────────────────────────────────────────────┐   │
-│   │                    DATABASE                           │   │
-│   │              PostgreSQL 16 + Sequelize ORM              │   │
+│   │                    DATABASE                         │   │
+│   │              PostgreSQL 16 + Sequelize ORM          │   │
 │   └─────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -135,13 +142,13 @@ backend/src/
 
 The MLM platform is built with a RESTful API architecture, clearly separating the backend (Node.js + Express + TypeScript + Sequelize + PostgreSQL) from the frontend (React + Vite + TypeScript + Tailwind CSS).
 
-**Project Status**: v2.3.5 — Sprint 7 Completed ✅
+**Project Status**: v2.6.1 — Sprint 9 Completed ✅
 
 **Implemented Features**:
 
 - JWT Authentication with rate limiting
-- Binary Tree with Closure Table
-- 5-level Commission System (configurable)
+- Binary Tree with Closure Table ⚠️ _Migration planned: Binary → Unilevel (10 levels) in Sprint 10_
+- 5-level Commission System (configurable) ⚠️ _Migrating to 10-level Unilevel in Sprint 10_
 - Dashboard with stats and charts
 - QR Code Generation
 - Admin Panel
@@ -158,7 +165,7 @@ The MLM platform is built with a RESTful API architecture, clearly separating th
 - **Marketplace Multi-vendor**: Vendor, VendorProduct, VendorOrder, 3-way commission split
 - **Delivery Integration**: ShippingAddress, DeliveryProvider, ShipmentTracking
 - **Affiliate Contracts MVP**: ContractTemplate, AffiliateContract with versioning and hash
-- 307 automated tests
+- Backend: 49 suites, 667 tests (Jest) | Bot: 8 files, 62 tests (Vitest) | Total: ~729 automated tests
 - **WhatsApp Bot (Nexo Bot)**: BuilderBot + Baileys, 7 conversation flows, AI (GPT-4o)
 - **n8n Automation**: webhook orchestration → Google Calendar + Notion CRM
 - **Sprint 4 Tests**: frontend coverage from 155 → 210 tests
@@ -302,14 +309,14 @@ Phase 3 implements an interactive binary tree visualization using React Flow (@x
 ┌─────────────────────────────────────────────────────────────┐
 │                    FRONTEND (React)                         │
 │  ┌─────────────────────────────────────────────────────┐    │
-│  │                  TreeView.tsx                        │    │
-│  │  ┌─────────────┐  ┌──────────────┐  ┌──────────┐  │    │
-│  │  │ SearchBar   │  │ ReactFlow    │  │ Details   │  │    │
-│  │  │             │  │ + Minimap    │  │ Panel     │  │    │
-│  │  └─────────────┘  └──────────────┘  └──────────┘  │    │
-│  │                                                       │    │
+│  │                  TreeView.tsx                       │    │
+│  │  ┌─────────────┐  ┌──────────────┐  ┌──────────┐    │    │
+│  │  │ SearchBar   │  │ ReactFlow    │  │ Details  │    │    │
+│  │  │             │  │ + Minimap    │  │ Panel    │    │    │
+│  │  └─────────────┘  └──────────────┘  └──────────┘    │    │
+│  │                                                     │    │
 │  │  ┌──────────────────────────────────────────────┐   │    │
-│  │  │         TreeNodeComponent (Custom Node)       │   │    │
+│  │  │         TreeNodeComponent (Custom Node)      │   │    │
 │  │  └──────────────────────────────────────────────┘   │    │
 │  └─────────────────────────────────────────────────────┘    │
 └─────────────────────────────────────────────────────────────┘
@@ -319,7 +326,7 @@ Phase 3 implements an interactive binary tree visualization using React Flow (@x
 ┌─────────────────────────────────────────────────────────────┐
 │                    BACKEND (Node.js)                        │
 │  ┌─────────────────────────────────────────────────────┐    │
-│  │              TreeService.ts                          │    │
+│  │              TreeService.ts                         │    │
 │  │  + Optimized pagination by depth                    │    │
 │  │  + Batch queries to avoid N+1                       │    │
 │  │  + getUserTree, getSubtreePaginated, getUserDetails │    │
@@ -344,11 +351,11 @@ Phase 3 implements an interactive binary tree visualization using React Flow (@x
        │                                        ▲
        │                                        │
        ▼                                        │
-┌─────────────┐                                  │
-│ UserClosure │ (Binary Tree Structure)          │
-└─────────────┘                                  │
-       │                                         │
-       ▼                                         │
+┌─────────────┐                                 │
+│ UserClosure │ (Binary Tree Structure)         │
+└─────────────┘                                 │
+       │                                        │
+       ▼                                        │
 ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
 │    Lead     │────▶│    Task     │     │Communication│
 └─────────────┘     └─────────────┘     └─────────────┘
@@ -486,34 +493,34 @@ getCurrentLanguage(): 'en' | 'es'
 ```map
 ┌─────────────────────────────────────────────────────────────┐
 │                    FRONTEND (React)                         │
-│  ┌─────────────────────────────────────────────────────┐  │
-│  │                   App.tsx                            │  │
-│  │  ┌─────────────────────────────────────────────┐   │  │
-│  │  │              i18n.init()                     │   │  │
-│  │  │  - Load saved language from localStorage    │   │  │
-│  │  │  - Or detect from navigator.language         │   │  │
-│  │  │  - Fallback to 'es'                         │   │  │
-│  │  └─────────────────────────────────────────────┘   │  │
-│  └─────────────────────────────────────────────────────┘  │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │                   App.tsx                           │    │
+│  │  ┌─────────────────────────────────────────────┐    │    │
+│  │  │              i18n.init()                    │    │    │
+│  │  │  - Load saved language from localStorage    │    │    │
+│  │  │  - Or detect from navigator.language        │    │    │
+│  │  │  - Fallback to 'es'                         │    │    │
+│  │  └─────────────────────────────────────────────┘    │    │
+│  └─────────────────────────────────────────────────────┘    │
 │                              │                              │
 │                              ▼                              │
-│  ┌─────────────────────────────────────────────────────┐  │
-│  │                   AppLayout.tsx                      │  │
-│  │  ┌─────────────┐  ┌─────────────┐  ┌──────────┐  │  │
-│  │  │   Navbar    │  │  Language   │  │   User   │  │  │
-│  │  │             │  │  Selector   │  │   Menu   │  │  │
-│  │  │  🇪🇸 🇺🇸  │  │  (ES/EN)   │  │          │  │  │
-│  │  └─────────────┘  └─────────────┘  └──────────┘  │  │
-│  └─────────────────────────────────────────────────────┘  │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │                   AppLayout.tsx                     │    │
+│  │  ┌─────────────┐  ┌─────────────┐  ┌──────────┐     │    │
+│  │  │   Navbar    │  │  Language   │  │   User   │     │    │
+│  │  │             │  │  Selector   │  │   Menu   │     │    │
+│  │  │  🇪🇸 🇺🇸    │  │  (ES/EN)    │  │          │     │    │
+│  │  └─────────────┘  └─────────────┘  └──────────┘     │    │
+│  └─────────────────────────────────────────────────────┘    │
 │                              │                              │
 │                              ▼                              │
-│  ┌─────────────────────────────────────────────────────┐  │
-│  │                   Pages (CRM, Dashboard, etc.)        │  │
-│  │  ┌─────────────────────────────────────────────────┐ │  │
-│  │  │  const { t } = useTranslation();                │ │  │
-│  │  │  <h1>{t('crm.title')}</h1>                    │ │  │
-│  │  └─────────────────────────────────────────────────┘ │  │
-│  └─────────────────────────────────────────────────────┘  │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │                   Pages (CRM, Dashboard, etc.)      │    │
+│  │  ┌─────────────────────────────────────────────────┐│    │
+│  │  │  const { t } = useTranslation();                ││    │
+│  │  │  <h1>{t('crm.title')}</h1>                      ││    │
+│  │  └─────────────────────────────────────────────────┘│    │
+│  └─────────────────────────────────────────────────────┘    │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -531,11 +538,11 @@ Reemplazo del sidebar lateral por un navbar horizontal moderno con menú hamburg
 
 ```map
 ┌─────────────────────────────────────────────────────────────────────┐
-│ [Logo]   [Dashboard] [Árbol] [CRM] [Landing Pages]  [ES|EN] [👤] │
+│ [Logo]   [Dashboard] [Árbol] [CRM] [Landing Pages]  [ES|EN] [👤]    │
 ├─────────────────────────────────────────────────────────────────────┤
 │                                                                     │
-│                         Main Content Area                            │
-│                         (with pt-16 padding)                         │
+│                         Main Content Area                           │
+│                         (with pt-16 padding)                        │
 │                                                                     │
 └─────────────────────────────────────────────────────────────────────┘
 ```
@@ -609,30 +616,30 @@ frontend/src/components/layout/
 
 ```map
 ┌─────────────────────────────────────────────────────┐
-│                    TESTING LAYERS                    │
+│                    TESTING LAYERS                   │
 ├─────────────────────────────────────────────────────┤
-│                                                      │
+│                                                     │
 │  ┌───────────────────────────────────────────────┐  │
 │  │  E2E TESTS (Playwright)                       │  │
 │  │  - Full application flow                      │  │
-│  │  - Browser automation                        │  │
-│  │  - Real HTTP requests                        │  │
+│  │  - Browser automation                         │  │
+│  │  - Real HTTP requests                         │  │
 │  └───────────────────────────────────────────────┘  │
-│                                                      │
+│                                                     │
 │  ┌───────────────────────────────────────────────┐  │
 │  │  INTEGRATION TESTS (Jest + Supertest)         │  │
 │  │  - API endpoint testing                       │  │
 │  │  - Database integration                       │  │
 │  │  - Service layer testing                      │  │
 │  └───────────────────────────────────────────────┘  │
-│                                                      │
+│                                                     │
 │  ┌───────────────────────────────────────────────┐  │
-│  │  UNIT TESTS (Jest)                           │  │
-│  │  - Individual functions                        │  │
+│  │  UNIT TESTS (Jest)                            │  │
+│  │  - Individual functions                       │  │
 │  │  - Isolated logic                             │  │
-│  │  - Mocked dependencies                         │  │
+│  │  - Mocked dependencies                        │  │
 │  └───────────────────────────────────────────────┘  │
-│                                                      │
+│                                                     │
 └─────────────────────────────────────────────────────┘
 ```
 
@@ -680,19 +687,19 @@ Sprint 4 añade un canal de atención por WhatsApp construido sobre **BuilderBot
 ```map
 ┌──────────────────────────────────────────────────────────────────────────┐
 │                           NEXO REAL v2.0.0                               │
-│                                                                           │
+│                                                                          │
 │  ┌─────────────┐     ┌─────────────────────────────────────────────────┐ │
 │  │  WhatsApp   │────▶│              Nexo Bot (BuilderBot)              │ │
 │  │  (User)     │     │              port 3002                          │ │
 │  └─────────────┘     │                                                 │ │
-│                       │  Flows:                                         │ │
-│                       │  welcome · balance · network · support          │ │
-│                       │  schedule · handoff · language · agent          │ │
-│                       └──────────────────┬──────────────────────────────┘ │
-│                                          │                                │
-│                    ┌─────────────────────┴────────────────────┐          │
-│                    │                                           │          │
-│                    ▼                                           ▼          │
+│                      │  Flows:                                         │ │
+│                      │  welcome · balance · network · support          │ │
+│                      │  schedule · handoff · language · agent          │ │
+│                      └──────────────────┬──────────────────────────────┘ │
+│                                         │                                │
+│                    ┌────────────────────┴────────────────────┐           │
+│                    │                                         │           │
+│                    ▼                                         ▼           │
 │         ┌──────────────────────┐               ┌──────────────────────┐  │
 │         │   Backend API        │               │       n8n            │  │
 │         │   port 3001          │               │   port 5678          │  │
@@ -701,8 +708,8 @@ Sprint 4 añade un canal de atención por WhatsApp construido sobre **BuilderBot
 │         │  (balance, network,  │               │  Webhooks:           │  │
 │         │   commissions)       │               │  /schedule-visit     │  │
 │         └──────────┬───────────┘               │  /human-handoff      │  │
-│                    │                            └───────┬──────────────┘  │
-│                    ▼                                    │                 │
+│                    │                           └───────┬──────────────┘  │
+│                    ▼                                   │                 │
 │         ┌──────────────────────┐         ┌─────────────┴──────────────┐  │
 │         │   PostgreSQL 16      │         │   External Services        │  │
 │         │   + Sequelize ORM    │         │                            │  │
@@ -842,8 +849,8 @@ Content-Type: application/json
 | Sophia | Spanish  | Cálida asesora de Nexo Real |
 | Max    | English  | Friendly Nexo Real advisor  |
 
-Both agents use **GPT-4o** with a shared conversation history stored in bot state (MemoryDB).  
-Can be upgraded to PostgreSQLDB in a future sprint for persistence across restarts.
+Both agents use **GPT-4o** with a shared conversation history stored in **PostgreSQLDB** (migrated from MemoryDB in Sprint 8).  
+Persistence survives across bot restarts.
 
 ---
 
@@ -877,11 +884,12 @@ export default defineConfig({
 });
 ```
 
-### Overall Test Summary (v2.0.0)
+### Overall Test Summary (v2.6.1)
 
-| Layer          | Count   | Framework        |
-| -------------- | ------- | ---------------- |
-| Backend tests  | 307     | Jest + Supertest |
-| Frontend tests | 210     | Vitest + RTL     |
-| E2E tests      | 37      | Playwright       |
-| **TOTAL**      | **554** | **All passing**  |
+| Layer          | Count     | Framework        |
+| -------------- | --------- | ---------------- |
+| Backend tests  | 667       | Jest + Supertest |
+| Bot tests      | 62        | Vitest           |
+| Frontend tests | 446       | Vitest + RTL     |
+| E2E tests      | 262       | Playwright       |
+| **TOTAL**      | **1,437** | **All passing**  |

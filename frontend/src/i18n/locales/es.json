@@ -74,6 +74,9 @@
     "binaryTree": "Árbol Binario",
     "leftLeg": "Pierna Izquierda",
     "rightLeg": "Pierna Derecha",
+    "myNetwork": "Mi Red Unilevel",
+    "directReferrals": "Referidos Directos",
+    "totalNetwork": "Red Total",
     "viewFullTree": "Ver Árbol Completo",
     "referralLink": "Tu Link de Referido",
     "copyLink": "Copiar Link",
@@ -88,7 +91,15 @@
     "noReferrals": "Aún no tenés referidos",
     "noReferralsHint": "Compartí tu link para invitar personas",
     "amount": "Monto",
-    "earnings": "Ganancias"
+    "earnings": "Ganancias",
+    "commissionBreakdown": "Desglose de Comisiones",
+    "level": "Nivel {{n}}",
+    "directReferrals": "Referidos Directos",
+    "rate": "Tasa",
+    "referrals": "Referidos",
+    "bonuses": "Bonificaciones",
+    "totalEarnings": "Total Ganancias",
+    "commissionByLevel": "Comisiones por Nivel"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -101,6 +112,11 @@
     "profile": "Perfil",
     "admin": "Admin",
     "commissionConfig": "Comisiones",
+    "adminUsers": "Usuarios",
+    "adminProperties": "Propiedades",
+    "adminTours": "Tours",
+    "adminReservations": "Reservas",
+    "administration": "Administración",
     "logout": "Cerrar Sesión",
     "myProfile": "Mi Perfil",
     "twoFactor": "Autenticación en 2 Pasos",
@@ -141,7 +157,14 @@
     "recoveryCodesTitle": "Códigos de Recuperación",
     "recoveryCodesSubtitle": "Guarda estos códigos en un lugar seguro",
     "recoveryCodesWarning": "Estos códigos son la única forma de acceder a tu cuenta si pierdes tu dispositivo. Cada código solo puede usarse una vez.",
-    "continue": "Entendido"
+    "continue": "Entendido",
+    "loginTitle": "Verificación en Dos Pasos",
+    "loginSubtitle": "Ingresá el código de 6 dígitos de tu aplicación autenticadora",
+    "loginEnterCode": "Código de verificación",
+    "loginVerify": "Verificar",
+    "loginLockedOut": "Demasiados intentos fallidos. Por favor iniciá sesión de nuevo.",
+    "loginInvalidCode": "Código inválido. Intentá de nuevo.",
+    "loginRecoveryHint": "Si perdiste acceso a tu autenticador, usá un código de recuperación."
   },
   "position": {
     "left": "Izquierda",
@@ -251,7 +274,12 @@
     "activate": "Activar",
     "deactivate": "Desactivar",
     "promote": "Hacer Admin",
-    "role": "Rol"
+    "role": "Rol",
+    "quickAccess": "Acceso Rápido",
+    "manageProperties": "Gestionar propiedades inmobiliarias",
+    "manageTours": "Gestionar paquetes turísticos",
+    "manageReservations": "Gestionar reservas de clientes",
+    "manageCommissions": "Configurar comisiones de la red"
   },
   "landingPages": {
     "title": "Landing Pages",
@@ -366,7 +394,8 @@
       "leads": "Leads",
       "kanban": "Kanban",
       "tasks": "Tareas",
-      "stats": "Estadísticas"
+      "stats": "Estadísticas",
+      "analytics": "Analítica"
     },
     "analytics": {
       "title": "Analítica de CRM",
@@ -509,6 +538,103 @@
     "level3": "Referidos Nivel 3",
     "level4": "Referidos Nivel 4"
   },
+  "tours": {
+    "spotsAvailable": "{{count}} plazas disponibles",
+    "spotsOf": "{{available}} de {{total}} plazas",
+    "soldOut": "Agotado",
+    "nextAvailableDate": "Próxima fecha: {{date}}",
+    "almostFull": "¡Últimas plazas!"
+  },
+  "catalog": {
+    "bookNow": "Reservar ahora",
+    "viewedToday": "{{count}} personas vieron esto hoy"
+  },
+  "reservation": {
+    "selectDates": "Seleccioná las fechas",
+    "dates": "Fechas",
+    "guests": "Huéspedes",
+    "confirmation": "Confirmación",
+    "payment": "Pago",
+    "property": "Propiedad",
+    "tour": "Tour",
+    "pricePerNight": "Precio por noche",
+    "pricePerPerson": "Precio por persona",
+    "totalNights": "{{count}} noche",
+    "totalNights_other": "{{count}} noches",
+    "totalGuests": "{{count}} persona",
+    "totalGuests_other": "{{count}} personas",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "priceBreakdown": "Desglose de precio",
+    "estimatedTotal": "Total estimado",
+    "nightsCount": "{{nights}} noches × {{price}}",
+    "guestsMultiplier": "× {{guests}} personas",
+    "checkIn": "Check-in",
+    "checkOut": "Check-out",
+    "howManyGuests": "¿Cuántas personas?",
+    "numberOfGuests": "Número de personas",
+    "additionalNotes": "Notas adicionales",
+    "additionalNotesHint": "Alguna solicitud especial, preferencias, etc.",
+    "optional": "opcional",
+    "confirming": "Confirmando...",
+    "confirmReservation": "Confirmar reserva",
+    "reservationConfirmed": "¡Reserva confirmada!",
+    "reservationConfirmedDesc": "Tu solicitud fue enviada. El equipo de Nexo Real se va a contactar con vos a la brevedad para coordinar los detalles.",
+    "reservationId": "ID de reserva",
+    "status": "Estado",
+    "paymentMethod": "Método de pago",
+    "selectPayment": "Elegí cómo querés pagar",
+    "selectPaymentDesc": "Seleccioná tu método de pago preferido para completar la reserva.",
+    "payWithPaypal": "Pagar con PayPal",
+    "payWithMercadopago": "Pagar con MercadoPago",
+    "payWithWallet": "Pagar con billetera",
+    "walletBalance": "Saldo disponible: {{balance}}",
+    "payLater": "Pagar después",
+    "payLaterHint": "Podés pagar desde Mis Reservas",
+    "insufficientBalance": "Saldo insuficiente",
+    "processingPayment": "Procesando pago...",
+    "viewMyReservations": "Ver mis reservas",
+    "keepExploring": "Seguir explorando",
+    "cancel": "Cancelar",
+    "back": "Atrás",
+    "continue": "Continuar",
+    "paymentError": "Error al procesar el pago. Por favor intentá de nuevo.",
+    "secure": "Pago seguro",
+    "secureDesc": "Todas las transacciones están encriptadas y protegidas."
+  },
+  "emptyStates": {
+    "tours": {
+      "title": "No se encontraron tours",
+      "description": "Probá ajustando los filtros o explorá todas las opciones disponibles."
+    },
+    "properties": {
+      "title": "No se encontraron propiedades",
+      "description": "Probá ajustando los filtros o explorá todas las propiedades disponibles."
+    },
+    "cart": {
+      "title": "Tu carrito está vacío",
+      "description": "Explorá tours y propiedades disponibles para comenzar."
+    },
+    "reservation": {
+      "title": "No tenés reservas todavía",
+      "description": "Explorá propiedades y tours disponibles para hacer tu primera reserva."
+    },
+    "order": {
+      "title": "No tenés órdenes todavía",
+      "description": "Tus compras aparecerán aquí cuando realices tu primera orden."
+    }
+  },
+  "loading": {
+    "processingPayment": "Procesando pago...",
+    "fetchingData": "Cargando datos..."
+  },
+  "cta": {
+    "securePayment": "Pago seguro",
+    "confirmPayment": "Confirmar pago",
+    "cancel": "Cancelar",
+    "back": "Volver",
+    "continue": "Continuar"
+  },
   "landing": {
     "hero": {
       "badge": "Plataforma #1 en América Latina",
@@ -521,6 +647,69 @@
         "tours": "Tours disponibles",
         "countries": "Países",
         "clients": "Clientes satisfechos"
+      }
+    },
+    "howItWorks": {
+      "title": "¿Cómo funciona?",
+      "subtitle": "Empezá a generar ingresos en 3 simples pasos",
+      "step1": {
+        "title": "Registrate",
+        "description": "Creá tu cuenta y unite a una red inmobiliaria global con presencia en toda América Latina."
+      },
+      "step2": {
+        "title": "Conectá",
+        "description": "Publicá propiedades, tours o referí a otros para hacer crecer tu red de contactos y oportunidades."
+      },
+      "step3": {
+        "title": "Ganá",
+        "description": "Recibí comisiones por cada transacción en tu red, hasta 5 niveles de profundidad con tracking transparente."
+      }
+    },
+    "features": {
+      "title": "Todo lo que necesitás en una plataforma",
+      "subtitle": "Herramientas diseñadas para maximizar tu potencial de ingresos",
+      "properties": {
+        "title": "Propiedades",
+        "description": "Catálogo de propiedades en alquiler, venta y administración en toda América Latina."
+      },
+      "tours": {
+        "title": "Tours",
+        "description": "Paquetes turísticos curados: aventura, cultural, gastronómico y de lujo."
+      },
+      "crm": {
+        "title": "CRM Integrado",
+        "description": "Gestioná leads, tareas y comunicaciones en un solo lugar sin herramientas externas."
+      },
+      "commissions": {
+        "title": "Comisiones Multinivel",
+        "description": "Ganá hasta 5 niveles de profundidad con tracking de comisiones transparente y en tiempo real."
+      },
+
+      "payments": {
+        "title": "Pagos Globales",
+        "description": "Soporte para PayPal, MercadoPago y billetera crypto para cobrar desde cualquier lugar."
+      }
+    },
+    "testimonials": {
+      "title": "Lo que dicen nuestros agentes",
+      "subtitle": "Historias reales de personas que transformaron su negocio con Nexo Real",
+      "t1": {
+        "quote": "En 6 meses construí una red de 40 agentes y las comisiones superaron lo que ganaba en mi agencia tradicional. La plataforma es intuitiva y el CRM me ahorra horas de trabajo.",
+        "name": "Valentina Restrepo",
+        "role": "Dueña de Agencia Inmobiliaria",
+        "city": "Medellín, Colombia"
+      },
+      "t2": {
+        "quote": "Los paquetes turísticos se venden solos gracias a la calidad de la presentación. Mis clientes aman reservar directamente y yo gano comisiones sin esfuerzo adicional.",
+        "name": "Roberto Jiménez",
+        "role": "Operador Turístico",
+        "city": "Cancún, México"
+      },
+      "t3": {
+        "quote": "Empecé como agente independiente sin experiencia. Con el CRM y las herramientas de la plataforma, ya tengo una red de 15 personas generando ingresos pasivos.",
+        "name": "Camila Torres",
+        "role": "Agente Independiente",
+        "city": "Buenos Aires, Argentina"
       }
     },
     "featuredProperties": {
@@ -538,9 +727,9 @@
       "empty": "No hay tours disponibles"
     },
     "cta": {
-      "title": "¿Listo para invertir en tu futuro?",
-      "subtitle": "Unite a miles de inversores que ya confían en Nexo Real",
-      "button": "Crear cuenta gratis",
+      "title": "¿Listo para transformar tu negocio?",
+      "subtitle": "Unite a miles de agentes que ya generan ingresos pasivos con Nexo Real. Sin inversión inicial, sin riesgo.",
+      "button": "Empezar ahora — Es gratis",
       "login": "Ya tengo cuenta"
     },
     "footer": {
