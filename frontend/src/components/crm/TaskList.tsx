@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Clock } from 'lucide-react';
 import { useCRMTasks } from '@/hooks/useCRMTasks';
-import { TaskCard } from './TaskCard';
+import TaskCard from './TaskCard';
 
 export function TaskList() {
   const { t } = useTranslation();

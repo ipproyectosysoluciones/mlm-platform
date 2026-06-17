@@ -34,8 +34,6 @@ import {
   LeadModal,
   initialLeadFormData,
 } from '../components/crm';
-import type { LeadFormData } from '../components/crm';
-import type { Lead } from '../types';
 import { useCRMLeads } from '../hooks/useCRMLeads';
 import { CRM_TABS, EMAIL_TEMPLATES, STATUS_COLORS } from '../features/crm/constants';
 import type { CRMTab } from '../features/crm/constants';
@@ -65,6 +63,7 @@ export default function CRM() {
     showAdvancedFilters,
     setShowAdvancedFilters,
     selectedLead,
+    setSelectedLead,
     leadTasks,
     leadCommunications,
     showLeadForm,
