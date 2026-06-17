@@ -29,6 +29,7 @@ vi.mock('react-router-dom', async () => {
 
 // ─── Import component under test ─────────────────────────────────────────────
 import OrderProcessing from '../pages/OrderProcessing';
+import { browserAPI } from '../lib/browser';
 
 // ─── Helper ──────────────────────────────────────────────────────────────────
 
@@ -49,11 +50,8 @@ function renderWithRouter(params: Record<string, string> = {}) {
 describe('OrderProcessing page', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    // Reset pathname so inferStatusFromPath() doesn't interfere
-    Object.defineProperty(window, 'location', {
-      writable: true,
-      value: { pathname: '/orders/processing' },
-    });
+    // Mock browserAPI.getPathname to return a neutral path (disables path-based inference)
+    vi.spyOn(browserAPI, 'getPathname').mockReturnValue('/orders/processing');
   });
 
   /**

@@ -5,16 +5,17 @@
  */
 import { useTranslation } from 'react-i18next';
 import { WifiOff, RefreshCw, ArrowLeft } from 'lucide-react';
+import { browserAPI } from '@/lib/browser';
 
 export default function Offline() {
   const { t } = useTranslation();
 
   const handleRetry = () => {
-    window.location.reload();
+    browserAPI.reload();
   };
 
   const handleGoBack = () => {
-    window.history.back();
+    browserAPI.back();
   };
 
   return (

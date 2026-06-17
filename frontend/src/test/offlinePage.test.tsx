@@ -10,6 +10,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import Offline from '../pages/Offline';
+import { browserAPI } from '../lib/browser';
 
 // ============================================
 // Mocks
@@ -31,21 +32,11 @@ describe('Offline', () => {
   let historyBackSpy: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
-    // Mock window.location.reload
+    // Mock browserAPI module instead of non-configurable window.location/window.history
     reloadSpy = vi.fn();
-    Object.defineProperty(window, 'location', {
-      configurable: true,
-      writable: true,
-      value: { ...window.location, reload: reloadSpy },
-    });
-
-    // Mock window.history.back
     historyBackSpy = vi.fn();
-    Object.defineProperty(window, 'history', {
-      configurable: true,
-      writable: true,
-      value: { ...window.history, back: historyBackSpy },
-    });
+    vi.spyOn(browserAPI, 'reload').mockImplementation(reloadSpy);
+    vi.spyOn(browserAPI, 'back').mockImplementation(historyBackSpy);
   });
 
   afterEach(() => {

@@ -10,6 +10,7 @@ import { useEffect } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { Check, Clock, XCircle, AlertCircle, Loader2, Home, ShoppingBag } from 'lucide-react';
 import { cn } from '../utils/cn';
+import { browserAPI } from '../lib/browser';
 
 // ──────────────────────────────────────────────
 // Types
@@ -129,7 +130,7 @@ export default function OrderProcessing() {
    * /checkout/cancel → rejected (URL de cancelación de PayPal)
    */
   function inferStatusFromPath(): string | null {
-    const path = window.location.pathname;
+    const path = browserAPI.getPathname();
     if (path.includes('/checkout/success')) return 'approved';
     if (path.includes('/checkout/cancel')) return 'rejected';
     if (path.includes('/orders/success')) return 'approved';
