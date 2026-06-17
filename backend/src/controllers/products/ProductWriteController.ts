@@ -122,7 +122,18 @@ export const deleteProduct = asyncHandler(
   async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     const { id } = req.params;
 
-    await productService.delete(id);
+    const deleted = await productService.delete(id);
+
+    if (!deleted) {
+      res.status(404).json({
+        success: false,
+        error: {
+          code: 'PRODUCT_NOT_FOUND',
+          message: 'Product not found',
+        },
+      });
+      return;
+    }
 
     const response: ApiResponse<{ id: string }> = {
       success: true,
