@@ -27,6 +27,7 @@
  * // Vars requeridas: BREVO_SMTP_*, BREVO_API_KEY
  */
 import dotenv from 'dotenv';
+import { logger } from '../utils/logger';
 
 dotenv.config();
 
@@ -237,7 +238,7 @@ if (!config.twoFactor.secretKey) {
  * Advertir si PLATFORM_DOMAIN no está configurado explícitamente (usa default).
  */
 if (!process.env.PLATFORM_DOMAIN) {
-  console.warn(
-    `⚠️  PLATFORM_DOMAIN is not set — defaulting to '${config.platform.domain}'. Set it in production.`
+  logger.warn(
+    `PLATFORM_DOMAIN is not set — defaulting to '${config.platform.domain}'. Set it in production.`
   );
 }
