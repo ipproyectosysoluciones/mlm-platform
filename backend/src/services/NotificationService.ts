@@ -59,6 +59,23 @@ export class NotificationService {
   }
 
   /**
+   * Count new referrals for a user in the last week
+   * Cuenta nuevos referidos de un usuario en la última semana
+   */
+  private async getNewReferralsCount(userId: string): Promise<number> {
+    const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+
+    const count = await User.count({
+      where: {
+        sponsorId: userId,
+        createdAt: { $gte: weekAgo },
+      },
+    });
+
+    return count;
+  }
+
+  /**
    * Send weekly digest to all users with weeklyDigest enabled
    * Enviar resumen semanal a todos los usuarios con weeklyDigest habilitado
    */
@@ -90,13 +107,14 @@ export class NotificationService {
           }
 
           const { weeklyEarnings } = await this.getUserCommissionStats(user.id);
+          const newReferrals = await this.getNewReferralsCount(user.id);
 
           const firstName = user.email.split('@')[0];
 
           await emailService.sendWeeklyDigest({
             email: user.email,
             firstName,
-            newReferrals: 0, // TODO: Calculate actual count
+            newReferrals,
             commissionsEarned: weeklyEarnings,
           });
 
