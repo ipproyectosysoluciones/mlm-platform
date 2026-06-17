@@ -4,59 +4,90 @@
  *
  * @module pages/CRM
  *
- * @description Bilingual component - Uses i18n for all user-facing text
- * / Componente bilingüe - Usa i18n para todo el texto visible
- *
- * @example
- * // All text uses t() function from react-i18next
- * const { t } = useTranslation();
- * <h1>{t('crm.title')}</h1>
+ * Thin orchestration layer — delegates to hooks and components.
+ * Tab state, active section rendering, and top-level layout only.
  */
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import i18n from 'i18next';
 import {
-  Users,
-  Phone,
-  Mail,
-  Building,
-  CheckCircle,
-  Clock,
-  AlertCircle,
+  ArrowLeft,
   Plus,
-  Search,
-  Filter,
+  Download,
+  Upload,
   X,
   Edit,
   Trash2,
-  ArrowLeft,
-  Upload,
-  Download,
+  Mail,
+  Phone,
+  Building,
+  CheckCircle,
 } from 'lucide-react';
 import { crmService } from '../services/api';
-import { KanbanBoard, LeadCard, LeadModal, TaskCard, initialLeadFormData } from '../components/crm';
+import {
+  KanbanBoard,
+  LeadList,
+  TaskList,
+  StatsOverview,
+  AnalyticsPanel,
+  LeadModal,
+  initialLeadFormData,
+} from '../components/crm';
 import type { LeadFormData } from '../components/crm';
-import type { Lead, Task, Communication, CRMStats } from '../types';
-import { STATUS_COLORS, EMAIL_TEMPLATES } from '../features/crm/constants';
-
-// EMAIL_TEMPLATES imported from features/crm/constants.ts
-
-type Tab = 'leads' | 'kanban' | 'tasks' | 'stats';
+import type { Lead } from '../types';
+import { useCRMLeads } from '../hooks/useCRMLeads';
+import { CRM_TABS, EMAIL_TEMPLATES, STATUS_COLORS } from '../features/crm/constants';
+import type { CRMTab } from '../features/crm/constants';
 
 export default function CRM() {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState<Tab>('leads');
-  const [leads, setLeads] = useState<Lead[]>([]);
-  const [leadsLoading, setLeadsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
-  const [sourceFilter, setSourceFilter] = useState('');
-  const [dateFrom, setDateFrom] = useState('');
-  const [dateTo, setDateTo] = useState('');
-  const [valueMin, setValueMin] = useState('');
-  const [valueMax, setValueMax] = useState('');
-  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+  const [activeTab, setActiveTab] = useState<CRMTab>('leads');
+
+  // ── Lead state ──────────────────────────────────────────────────────
+  const {
+    leads,
+    leadsLoading,
+    searchQuery,
+    setSearchQuery,
+    statusFilter,
+    setStatusFilter,
+    sourceFilter,
+    setSourceFilter,
+    dateFrom,
+    setDateFrom,
+    dateTo,
+    setDateTo,
+    valueMin,
+    setValueMin,
+    valueMax,
+    setValueMax,
+    showAdvancedFilters,
+    setShowAdvancedFilters,
+    selectedLead,
+    leadTasks,
+    leadCommunications,
+    showLeadForm,
+    setShowLeadForm,
+    leadFormData,
+    setLeadFormData,
+    editingLead,
+    setEditingLead,
+    selectedTemplate,
+    setSelectedTemplate,
+    showEmailTemplates,
+    setShowEmailTemplates,
+    loadLeads,
+    loadLeadDetails,
+    handleCreateLead,
+    handleUpdateLead,
+    handleDeleteLead,
+    handleStatusChange,
+    handleTaskComplete,
+    handleExportLeads,
+  } = useCRMLeads();
+
+  // ── Import modal state ──────────────────────────────────────────────
   const [showImportModal, setShowImportModal] = useState(false);
   const [importing, setImporting] = useState(false);
   const [importResult, setImportResult] = useState<{
@@ -64,185 +95,34 @@ export default function CRM() {
     errors: string[];
     total: number;
   } | null>(null);
-  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
-  const [leadTasks, setLeadTasks] = useState<Task[]>([]);
-  const [leadCommunications, setLeadCommunications] = useState<Communication[]>([]);
-  const [showLeadForm, setShowLeadForm] = useState(false);
-  const [leadFormData, setLeadFormData] = useState<LeadFormData>(initialLeadFormData);
-  const [editingLead, setEditingLead] = useState<Lead | null>(null);
-  const [stats, setStats] = useState<CRMStats | null>(null);
-  const [allTasks, setAllTasks] = useState<Task[]>([]);
-  const [tasksLoading, setTasksLoading] = useState(false);
-  const [selectedTemplate, setSelectedTemplate] = useState('');
-  const [showEmailTemplates, setShowEmailTemplates] = useState(false);
 
-  useEffect(() => {
+  const handleImportFile = async (file: File) => {
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      const csv = event.target?.result as string;
+      setImporting(true);
+      try {
+        const result = await crmService.importLeads(csv);
+        setImportResult(result.data);
+      } catch {
+        setImportResult({ imported: 0, errors: ['Import failed'], total: 0 });
+      } finally {
+        setImporting(false);
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  const closeImportModal = () => {
+    setShowImportModal(false);
+    setImportResult(null);
     loadLeads();
-  }, [statusFilter, sourceFilter, searchQuery, dateFrom, dateTo, valueMin, valueMax]);
-
-  useEffect(() => {
-    if (activeTab === 'stats') {
-      loadStats();
-    }
-    if (activeTab === 'tasks') {
-      loadAllTasks();
-    }
-  }, [activeTab]);
-
-  const loadAllTasks = async () => {
-    setTasksLoading(true);
-    try {
-      const response = await crmService.getUpcomingTasks();
-      if (response.success) {
-        setAllTasks(response.data || []);
-      }
-    } catch (error) {
-      console.error('Failed to load tasks:', error);
-    } finally {
-      setTasksLoading(false);
-    }
   };
-
-  const loadLeads = async () => {
-    setLeadsLoading(true);
-    try {
-      const params: {
-        status?: string;
-        source?: string;
-        search?: string;
-        createdAtFrom?: string;
-        createdAtTo?: string;
-        valueMin?: number;
-        valueMax?: number;
-        limit: number;
-      } = {
-        limit: 50,
-      };
-      if (statusFilter) params.status = statusFilter;
-      if (sourceFilter) params.source = sourceFilter;
-      if (searchQuery) params.search = searchQuery;
-      if (dateFrom) params.createdAtFrom = dateFrom;
-      if (dateTo) params.createdAtTo = dateTo;
-      if (valueMin) params.valueMin = parseFloat(valueMin);
-      if (valueMax) params.valueMax = parseFloat(valueMax);
-
-      const response = await crmService.getLeads(params);
-      if (response.success) {
-        setLeads(response.data.leads || []);
-      }
-    } catch (error) {
-      console.error('Failed to load leads:', error);
-    } finally {
-      setLeadsLoading(false);
-    }
-  };
-
-  const loadStats = async () => {
-    try {
-      const response = await crmService.getStats();
-      if (response.success) {
-        setStats(response.data);
-      }
-    } catch (error) {
-      console.error('Failed to load stats:', error);
-    }
-  };
-
-  const loadLeadDetails = async (leadId: string) => {
-    try {
-      const [leadRes, tasksRes, commsRes] = await Promise.all([
-        crmService.getLead(leadId),
-        crmService.getTasks(leadId),
-        crmService.getCommunications(leadId),
-      ]);
-
-      if (leadRes.success) setSelectedLead(leadRes.data);
-      if (tasksRes.success) setLeadTasks(tasksRes.data || []);
-      if (commsRes.success) setLeadCommunications(commsRes.data || []);
-    } catch (error) {
-      console.error('Failed to load lead details:', error);
-    }
-  };
-
-  const handleCreateLead = async () => {
-    try {
-      const response = await crmService.createLead(leadFormData);
-      if (response.success) {
-        await loadLeads();
-        setShowLeadForm(false);
-        setLeadFormData(initialLeadFormData);
-      }
-    } catch (error) {
-      console.error('Failed to create lead:', error);
-    }
-  };
-
-  const handleUpdateLead = async () => {
-    if (!editingLead) return;
-    try {
-      const response = await crmService.updateLead(editingLead.id, leadFormData);
-      if (response.success) {
-        await loadLeads();
-        setEditingLead(null);
-        setShowLeadForm(false);
-        setLeadFormData(initialLeadFormData);
-      }
-    } catch (error) {
-      console.error('Failed to update lead:', error);
-    }
-  };
-
-  const handleDeleteLead = async (leadId: string) => {
-    if (!confirm(t('crm.confirmDelete'))) return;
-    try {
-      const response = await crmService.deleteLead(leadId);
-      if (response.success) {
-        await loadLeads();
-        if (selectedLead?.id === leadId) {
-          setSelectedLead(null);
-        }
-      }
-    } catch (error) {
-      console.error('Failed to delete lead:', error);
-    }
-  };
-
-  const handleStatusChange = async (leadId: string, newStatus: string) => {
-    try {
-      const response = await crmService.updateLead(leadId, { status: newStatus });
-      if (response.success) {
-        await loadLeads();
-        if (selectedLead?.id === leadId) {
-          loadLeadDetails(leadId);
-        }
-      }
-    } catch (error) {
-      console.error('Failed to update lead status:', error);
-    }
-  };
-
-  const handleTaskComplete = async (taskId: string, completed: boolean) => {
-    try {
-      const response = await crmService.updateTask(taskId, {
-        status: completed ? 'completed' : 'pending',
-      });
-      if (response.success && selectedLead) {
-        loadLeadDetails(selectedLead.id);
-      }
-    } catch (error) {
-      console.error('Failed to update task:', error);
-    }
-  };
-
-  // Los filtros ya se aplican en el servidor
-  const filteredLeads = leads;
-
-  const statuses = [...new Set(leads.map((l) => l.status))];
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-4">
           <Link
             to="/dashboard"
@@ -255,56 +135,40 @@ export default function CRM() {
             <p className="text-slate-500 text-sm">{t('crm.subtitle')}</p>
           </div>
         </div>
-        <button
-          onClick={() => {
-            setShowLeadForm(true);
-            setEditingLead(null);
-            setLeadFormData(initialLeadFormData);
-          }}
-          className="flex items-center gap-2 px-4 py-2.5 bg-emerald-500 text-white rounded-xl hover:bg-emerald-600 transition-colors font-medium"
-        >
-          <Plus className="w-5 h-5" />
-          {t('crm.newLead')}
-        </button>
-        <button
-          onClick={async () => {
-            try {
-              const blob = await crmService.exportLeads({
-                status: statusFilter || undefined,
-                source: sourceFilter || undefined,
-                search: searchQuery || undefined,
-              });
-              const url = window.URL.createObjectURL(blob);
-              const a = document.createElement('a');
-              a.href = url;
-              a.download = `leads-${new Date().toISOString().split('T')[0]}.csv`;
-              document.body.appendChild(a);
-              a.click();
-              window.URL.revokeObjectURL(url);
-              document.body.removeChild(a);
-            } catch (error) {
-              console.error('Export failed:', error);
-            }
-          }}
-          className="flex items-center gap-2 px-4 py-2.5 bg-emerald-50 text-emerald-700 rounded-xl hover:bg-emerald-100 transition-colors font-medium"
-        >
-          <Download className="w-5 h-5" />
-          {t('crm.exportCSV')}
-        </button>
-        <button
-          onClick={() => setShowImportModal(true)}
-          className="flex items-center gap-2 px-4 py-2.5 bg-slate-100 text-slate-700 rounded-xl hover:bg-slate-200 transition-colors font-medium"
-        >
-          <Upload className="w-5 h-5" />
-          {t('crm.importCSV')}
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => {
+              setShowLeadForm(true);
+              setEditingLead(null);
+              setLeadFormData(initialLeadFormData);
+            }}
+            className="flex items-center gap-2 px-4 py-2.5 bg-emerald-500 text-white rounded-xl hover:bg-emerald-600 transition-colors font-medium"
+          >
+            <Plus className="w-5 h-5" />
+            {t('crm.newLead')}
+          </button>
+          <button
+            onClick={handleExportLeads}
+            className="flex items-center gap-2 px-4 py-2.5 bg-emerald-50 text-emerald-700 rounded-xl hover:bg-emerald-100 transition-colors font-medium"
+          >
+            <Download className="w-5 h-5" />
+            {t('crm.exportCSV')}
+          </button>
+          <button
+            onClick={() => setShowImportModal(true)}
+            className="flex items-center gap-2 px-4 py-2.5 bg-slate-100 text-slate-700 rounded-xl hover:bg-slate-200 transition-colors font-medium"
+          >
+            <Upload className="w-5 h-5" />
+            {t('crm.importCSV')}
+          </button>
+        </div>
       </div>
 
       {/* Tabs */}
       <div className="bg-white border-b border-slate-200 rounded-t-xl">
         <div className="px-4">
           <div className="flex gap-8">
-            {(['leads', 'kanban', 'tasks', 'stats'] as Tab[]).map((tab) => (
+            {CRM_TABS.map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -326,152 +190,32 @@ export default function CRM() {
         {/* Leads Tab */}
         {activeTab === 'leads' && (
           <div className="flex gap-6">
-            {/* Leads List */}
-            <div className="flex-1">
-              {/* Filters */}
-              <div className="flex gap-4 mb-6">
-                <div className="flex-1 relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                  <input
-                    type="text"
-                    placeholder={t('crm.searchPlaceholder')}
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                  />
-                </div>
-                <select
-                  value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value)}
-                  className="px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                >
-                  <option value="">{t('crm.allStatuses')}</option>
-                  {statuses.map((status) => (
-                    <option key={status} value={status}>
-                      {t(`crm.status.${status}`, { defaultValue: status })}
-                    </option>
-                  ))}
-                </select>
-                <select
-                  value={sourceFilter}
-                  onChange={(e) => setSourceFilter(e.target.value)}
-                  className="px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                >
-                  <option value="">{t('crm.allSources')}</option>
-                  <option value="website">{t('crm.sourceWebsite')}</option>
-                  <option value="referral">{t('crm.sourceReferral')}</option>
-                  <option value="social">{t('crm.sourceSocial')}</option>
-                  <option value="landing_page">{t('crm.sourceLandingPage')}</option>
-                  <option value="manual">{t('crm.sourceManual')}</option>
-                  <option value="other">{t('crm.sourceOther')}</option>
-                </select>
-                <button
-                  onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-                  className={`px-4 py-2.5 border rounded-xl transition-colors ${
-                    showAdvancedFilters
-                      ? 'bg-emerald-500 text-white border-emerald-500'
-                      : 'border-slate-200 text-slate-600 hover:bg-slate-50'
-                  }`}
-                >
-                  <Filter className="w-5 h-5 inline mr-1" />
-                  {t('crm.advancedFilters')}
-                </button>
-              </div>
-
-              {/* Filtros Avanzados */}
-              {showAdvancedFilters && (
-                <div className="mt-4 p-4 bg-slate-50 rounded-xl space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-slate-600 mb-1">
-                        {t('crm.dateFrom')}
-                      </label>
-                      <input
-                        type="date"
-                        value={dateFrom}
-                        onChange={(e) => setDateFrom(e.target.value)}
-                        className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-slate-600 mb-1">
-                        {t('crm.dateTo')}
-                      </label>
-                      <input
-                        type="date"
-                        value={dateTo}
-                        onChange={(e) => setDateTo(e.target.value)}
-                        className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-slate-600 mb-1">
-                        {t('crm.valueMin')}
-                      </label>
-                      <input
-                        type="number"
-                        placeholder="0"
-                        value={valueMin}
-                        onChange={(e) => setValueMin(e.target.value)}
-                        className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-slate-600 mb-1">
-                        {t('crm.valueMax')}
-                      </label>
-                      <input
-                        type="number"
-                        placeholder="1000"
-                        value={valueMax}
-                        onChange={(e) => setValueMax(e.target.value)}
-                        className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500"
-                      />
-                    </div>
-                  </div>
-                  <div className="flex justify-end">
-                    <button
-                      onClick={() => {
-                        setDateFrom('');
-                        setDateTo('');
-                        setValueMin('');
-                        setValueMax('');
-                      }}
-                      className="text-sm text-slate-500 hover:text-slate-700"
-                    >
-                      {t('crm.clearFilters')}
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* Leads Grid */}
-              {leadsLoading ? (
-                <div className="flex justify-center py-12">
-                  <div className="animate-spin w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full" />
-                </div>
-              ) : filteredLeads.length === 0 ? (
-                <div className="text-center py-12 bg-slate-50 rounded-xl">
-                  <Users className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-slate-900 mb-2">{t('crm.noLeads')}</h3>
-                  <p className="text-slate-500 mb-4">
-                    {searchQuery || statusFilter ? t('crm.noResults') : t('crm.addFirst')}
-                  </p>
-                  <button
-                    onClick={() => setShowLeadForm(true)}
-                    className="px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600"
-                  >
-                    {t('crm.addLead')}
-                  </button>
-                </div>
-              ) : (
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                  {filteredLeads.map((lead) => (
-                    <LeadCard key={lead.id} lead={lead} onClick={() => loadLeadDetails(lead.id)} />
-                  ))}
-                </div>
-              )}
-            </div>
+            <LeadList
+              leads={leads}
+              leadsLoading={leadsLoading}
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              statusFilter={statusFilter}
+              setStatusFilter={setStatusFilter}
+              sourceFilter={sourceFilter}
+              setSourceFilter={setSourceFilter}
+              dateFrom={dateFrom}
+              setDateFrom={setDateFrom}
+              dateTo={dateTo}
+              setDateTo={setDateTo}
+              valueMin={valueMin}
+              setValueMin={setValueMin}
+              valueMax={valueMax}
+              setValueMax={setValueMax}
+              showAdvancedFilters={showAdvancedFilters}
+              setShowAdvancedFilters={setShowAdvancedFilters}
+              onNewLead={() => {
+                setShowLeadForm(true);
+                setEditingLead(null);
+                setLeadFormData(initialLeadFormData);
+              }}
+              onLeadClick={loadLeadDetails}
+            />
 
             {/* Lead Details Panel */}
             {selectedLead && (
@@ -537,6 +281,7 @@ export default function CRM() {
                   </div>
                 </div>
 
+                {/* Tasks section */}
                 <div className="mb-6">
                   <h4 className="font-medium text-slate-900 mb-3 flex items-center gap-2">
                     <CheckCircle className="w-4 h-4 text-emerald-500" />
@@ -570,7 +315,7 @@ export default function CRM() {
                   )}
                 </div>
 
-                {/* Quick Notes Section */}
+                {/* Quick notes */}
                 <div className="mt-6 pt-6 border-t border-slate-200">
                   <h3 className="font-medium text-slate-900 mb-3">{t('crm.quickNotes')}</h3>
                   <div className="space-y-2 mb-3">
@@ -589,36 +334,32 @@ export default function CRM() {
                         </div>
                       ))}
                   </div>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      id={`quick-note-${selectedLead.id}`}
-                      placeholder={t('crm.addQuickNote')}
-                      className="flex-1 px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
-                      onKeyDown={async (e) => {
-                        if (e.key === 'Enter') {
-                          const input = e.target as HTMLInputElement;
-                          if (!input.value.trim()) return;
-                          try {
-                            await crmService.addCommunication(selectedLead.id, {
-                              type: 'note',
-                              direction: 'outbound',
-                              content: input.value.trim(),
-                            });
-                            const commsRes = await crmService.getCommunications(selectedLead.id);
-                            if (commsRes.success) setLeadCommunications(commsRes.data || []);
-                            input.value = '';
-                          } catch (error) {
-                            console.error('Failed to add note:', error);
-                          }
+                  <input
+                    type="text"
+                    placeholder={t('crm.addQuickNote')}
+                    className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+                    onKeyDown={async (e) => {
+                      if (e.key === 'Enter') {
+                        const input = e.target as HTMLInputElement;
+                        if (!input.value.trim()) return;
+                        try {
+                          await crmService.addCommunication(selectedLead.id, {
+                            type: 'note',
+                            direction: 'outbound',
+                            content: input.value.trim(),
+                          });
+                          input.value = '';
+                          loadLeadDetails(selectedLead.id);
+                        } catch (error) {
+                          console.error('Failed to add note:', error);
                         }
-                      }}
-                    />
-                  </div>
+                      }
+                    }}
+                  />
                   <p className="text-xs text-slate-400 mt-1">{t('crm.quickNoteHint')}</p>
                 </div>
 
-                {/* Email Templates Section */}
+                {/* Email templates */}
                 <div className="mt-6 pt-6 border-t border-slate-200">
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="font-medium text-slate-900">{t('crm.emailTemplates')}</h3>
@@ -650,14 +391,12 @@ export default function CRM() {
                           onClick={() => {
                             const template = EMAIL_TEMPLATES.find((t) => t.id === selectedTemplate);
                             if (template) {
-                              const content =
-                                template.content[i18n.language as 'es' | 'en'] ||
-                                template.content.es;
-                              const filledContent = content
+                              const lang = i18n.language as 'es' | 'en';
+                              const content = template.content[lang] || template.content.es;
+                              const filled = content
                                 .replace(/{{name}}/g, selectedLead.contactName)
                                 .replace(/{{myName}}/g, 'Tu Nombre');
-                              // Open email client or copy to clipboard
-                              const mailto = `mailto:${selectedLead.contactEmail}?subject=${encodeURIComponent(template.subject[i18n.language as 'es' | 'en'] || template.subject.es)}&body=${encodeURIComponent(filledContent)}`;
+                              const mailto = `mailto:${selectedLead.contactEmail}?subject=${encodeURIComponent(template.subject[lang] || template.subject.es)}&body=${encodeURIComponent(filled)}`;
                               window.open(mailto, '_blank');
                             }
                           }}
@@ -670,6 +409,7 @@ export default function CRM() {
                   )}
                 </div>
 
+                {/* Edit / Delete */}
                 <div className="flex gap-2 mt-6">
                   <button
                     onClick={() => {
@@ -705,78 +445,16 @@ export default function CRM() {
         {activeTab === 'kanban' && <KanbanBoard />}
 
         {/* Tasks Tab */}
-        {activeTab === 'tasks' && (
-          <div>
-            {tasksLoading ? (
-              <div className="flex justify-center py-12">
-                <div className="animate-spin w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full" />
-              </div>
-            ) : allTasks.length === 0 ? (
-              <div className="text-center py-12 bg-slate-50 rounded-xl">
-                <Clock className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-slate-900 mb-2">
-                  {t('crm.allTasksTitle')}
-                </h3>
-                <p className="text-slate-500">{t('crm.allTasksDescription')}</p>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {allTasks.map((task) => (
-                  <TaskCard key={task.id} task={task} onComplete={loadAllTasks} />
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+        {activeTab === 'tasks' && <TaskList />}
 
         {/* Stats Tab */}
-        {activeTab === 'stats' && stats && (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            <div className="bg-slate-50 rounded-xl p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-slate-500">{t('crm.statsTotal')}</p>
-                  <p className="text-3xl font-bold text-slate-900">{stats.totalLeads}</p>
-                </div>
-                <Users className="w-12 h-12 text-slate-200" />
-              </div>
-            </div>
-            <div className="bg-emerald-50 rounded-xl p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-emerald-600">{t('crm.statsWon')}</p>
-                  <p className="text-3xl font-bold text-emerald-600">{stats.wonLeads}</p>
-                </div>
-                <CheckCircle className="w-12 h-12 text-emerald-200" />
-              </div>
-            </div>
-            <div className="bg-amber-50 rounded-xl p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-amber-600">{t('crm.statsInProgress')}</p>
-                  <p className="text-3xl font-bold text-amber-600">{stats.inProgress}</p>
-                </div>
-                <Clock className="w-12 h-12 text-amber-200" />
-              </div>
-            </div>
-            <div className="bg-slate-900 rounded-xl p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-slate-400">{t('crm.statsConversionRate')}</p>
-                  <p className="text-3xl font-bold text-white">
-                    {stats.totalLeads > 0
-                      ? Math.round((stats.wonLeads / stats.totalLeads) * 100)
-                      : 0}
-                    %
-                  </p>
-                </div>
-                <AlertCircle className="w-12 h-12 text-slate-700" />
-              </div>
-            </div>
-          </div>
-        )}
+        {activeTab === 'stats' && <StatsOverview />}
+
+        {/* Analytics Tab */}
+        {activeTab === 'analytics' && <AnalyticsPanel />}
       </div>
 
+      {/* Lead Modal */}
       <LeadModal
         isOpen={showLeadForm}
         onClose={() => {
@@ -819,11 +497,7 @@ export default function CRM() {
                     </div>
                   )}
                   <button
-                    onClick={() => {
-                      setShowImportModal(false);
-                      setImportResult(null);
-                      loadLeads();
-                    }}
+                    onClick={closeImportModal}
                     className="w-full px-4 py-2.5 bg-emerald-500 text-white rounded-xl hover:bg-emerald-600"
                   >
                     {t('crm.close')}
@@ -836,25 +510,9 @@ export default function CRM() {
                     <input
                       type="file"
                       accept=".csv"
-                      onChange={async (e) => {
+                      onChange={(e) => {
                         const file = e.target.files?.[0];
-                        if (!file) return;
-
-                        const reader = new FileReader();
-                        reader.onload = async (event) => {
-                          const csv = event.target?.result as string;
-                          setImporting(true);
-                          try {
-                            const result = await crmService.importLeads(csv);
-                            setImportResult(result.data);
-                          } catch (error) {
-                            console.error('Import failed:', error);
-                            setImportResult({ imported: 0, errors: ['Import failed'], total: 0 });
-                          } finally {
-                            setImporting(false);
-                          }
-                        };
-                        reader.readAsText(file);
+                        if (file) handleImportFile(file);
                       }}
                       className="hidden"
                       id="csv-upload"

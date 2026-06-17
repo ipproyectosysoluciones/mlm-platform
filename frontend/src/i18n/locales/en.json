@@ -398,7 +398,8 @@
       "leads": "Leads",
       "kanban": "Kanban",
       "tasks": "Tasks",
-      "stats": "Stats"
+      "stats": "Stats",
+      "analytics": "Analytics"
     },
     "analytics": {
       "title": "CRM Analytics",

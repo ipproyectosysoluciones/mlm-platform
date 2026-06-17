@@ -107,7 +107,7 @@ export function getLocalizedValue(value: { es: string; en: string }, i18n: I18nI
 // ============================================================================
 
 /** Available CRM tabs / Tabs disponibles de CRM */
-export const CRM_TABS = ['leads', 'kanban', 'tasks', 'stats'] as const;
+export const CRM_TABS = ['leads', 'kanban', 'tasks', 'stats', 'analytics'] as const;
 export type CRMTab = (typeof CRM_TABS)[number];
 
 // ============================================================================
