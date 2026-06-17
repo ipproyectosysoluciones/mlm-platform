@@ -7,16 +7,7 @@
 import { Building, MessageSquare, Users, Filter, Edit } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { Lead } from '../../types';
-
-const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
-  new: { bg: 'bg-blue-100', text: 'text-blue-700' },
-  contacted: { bg: 'bg-yellow-100', text: 'text-yellow-700' },
-  qualified: { bg: 'bg-purple-100', text: 'text-purple-700' },
-  proposal: { bg: 'bg-indigo-100', text: 'text-indigo-700' },
-  negotiation: { bg: 'bg-orange-100', text: 'text-orange-700' },
-  won: { bg: 'bg-green-100', text: 'text-green-700' },
-  lost: { bg: 'bg-red-100', text: 'text-red-700' },
-};
+import { STATUS_COLORS } from '../../features/crm/constants';
 
 const SOURCE_ICONS: Record<string, React.ReactNode> = {
   website: <MessageSquare className="w-4 h-4" />,
