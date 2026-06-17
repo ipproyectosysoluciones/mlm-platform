@@ -181,7 +181,7 @@ export class PaymentMercadoPagoController {
     const topic = req.query.topic || req.body.topic;
     const action = req.body.action;
 
-    // ─── TODO 2.1: Signature verification ────────────────────────────────────
+    // ─── Signature verification ─────────────────────────────────────────────
     const webhookSecret = config.mercadopago.webhookSecret;
     if (webhookSecret) {
       const xSignature = req.headers['x-signature'] as string | undefined;
@@ -210,8 +210,8 @@ export class PaymentMercadoPagoController {
       );
     }
 
-    // ─── TODO 2.2: Handle payment notification ───────────────────────────────
-    // Support both IPN (topic=payment) and Webhooks API (action=payment.updated)
+    // ─── Handle payment notification ────────────────────────────────────────
+    // Supports both IPN (topic=payment) and Webhooks API (action=payment.updated)
     const isPaymentNotification =
       topic === 'payment' || (action === 'payment.updated' && req.body.data?.id);
 
