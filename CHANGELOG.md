@@ -4,6 +4,22 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
+## [3.0.1] - 2026-06-16
+
+### Fixed — Sprint 11: Quick Wins
+
+#### Push Notification Integration Tests
+
+- **Habilitados 4 tests de push previamente ignorados** — `push.test.ts`: tests de create, unsubscribe, VAPID key con datos inválidos ahora se ejecutan y pasan
+- **Registro de PushSubscription en setup.ts** — Agregado modelo `PushSubscription` al sync de Sequelize para que la tabla `push_subscriptions` se cree durante los tests de integración
+- **Mock de uuid para Jest CJS** — Creado `__mocks__/uuid.ts` con implementación CJS-compatible de uuid v4 que genera UUIDs válidos para PostgreSQL; necesario porque uuid v14 es ESM-only y Jest no puede resolverlo con `require()`
+
+#### Centralized Logger
+
+- **Reemplazado `console.warn` por Pino logger** en `backend/src/config/env.ts` — Ahora usa el logger centralizado desde `../utils/logger` para mantener consistencia en el logging de la aplicación
+
+---
+
 ## [3.0.0] - 2026-04-13
 
 ### Added — Sprint 10: Payments, Invoices, Unilevel & UX Polish
