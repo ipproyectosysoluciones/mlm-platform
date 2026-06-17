@@ -247,6 +247,17 @@ export const getProductById: RequestHandler = asyncHandler(
 
     const product = await productService.findByIdWithCategory(id);
 
+    if (!product) {
+      res.status(404).json({
+        success: false,
+        error: {
+          code: 'PRODUCT_NOT_FOUND',
+          message: 'Product not found',
+        },
+      });
+      return;
+    }
+
     const response: ApiResponse<GenericProductAttributes> = {
       success: true,
       data: {
