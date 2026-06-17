@@ -49,6 +49,7 @@ export interface UseCRMLeadsResult {
 
   // Lead detail
   selectedLead: Lead | null;
+  setSelectedLead: (lead: Lead | null) => void;
   leadTasks: Task[];
   leadCommunications: Communication[];
 
@@ -301,6 +302,7 @@ export function useCRMLeads(): UseCRMLeadsResult {
 
     // Lead detail
     selectedLead,
+    setSelectedLead,
     leadTasks,
     leadCommunications,
 

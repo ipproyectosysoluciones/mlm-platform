@@ -394,7 +394,8 @@
       "leads": "Leads",
       "kanban": "Kanban",
       "tasks": "Tareas",
-      "stats": "Estadísticas"
+      "stats": "Estadísticas",
+      "analytics": "Analítica"
     },
     "analytics": {
       "title": "Analítica de CRM",

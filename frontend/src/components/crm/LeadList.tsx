@@ -2,38 +2,71 @@
  * LeadList - Lead list with filters, search, and advanced filtering
  * Lista de leads con filtros, búsqueda y filtrado avanzado
  *
+ * Controlled component — all state is provided by the parent via props.
+ * This enables CRM.tsx to share the same useCRMLeads hook instance.
+ *
  * @module components/crm/LeadList
  */
 import { useTranslation } from 'react-i18next';
 import { Users, Search, Filter } from 'lucide-react';
 import { LeadCard } from './LeadCard';
-import { useCRMLeads } from '@/hooks/useCRMLeads';
 import { LEAD_SOURCES } from '@/features/crm/constants';
+import type { Lead } from '@/types';
 
-export function LeadList() {
+// ============================================================================
+// Props
+// ============================================================================
+
+export interface LeadListProps {
+  leads: Lead[];
+  leadsLoading: boolean;
+  searchQuery: string;
+  setSearchQuery: (value: string) => void;
+  statusFilter: string;
+  setStatusFilter: (value: string) => void;
+  sourceFilter: string;
+  setSourceFilter: (value: string) => void;
+  dateFrom: string;
+  setDateFrom: (value: string) => void;
+  dateTo: string;
+  setDateTo: (value: string) => void;
+  valueMin: string;
+  setValueMin: (value: string) => void;
+  valueMax: string;
+  setValueMax: (value: string) => void;
+  showAdvancedFilters: boolean;
+  setShowAdvancedFilters: (value: boolean) => void;
+  onNewLead: () => void;
+  onLeadClick: (leadId: string) => void;
+}
+
+// ============================================================================
+// Component
+// ============================================================================
+
+export function LeadList({
+  leads,
+  leadsLoading,
+  searchQuery,
+  setSearchQuery,
+  statusFilter,
+  setStatusFilter,
+  sourceFilter,
+  setSourceFilter,
+  dateFrom,
+  setDateFrom,
+  dateTo,
+  setDateTo,
+  valueMin,
+  setValueMin,
+  valueMax,
+  setValueMax,
+  showAdvancedFilters,
+  setShowAdvancedFilters,
+  onNewLead,
+  onLeadClick,
+}: LeadListProps) {
   const { t } = useTranslation();
-  const {
-    leads,
-    leadsLoading,
-    searchQuery,
-    setSearchQuery,
-    statusFilter,
-    setStatusFilter,
-    sourceFilter,
-    setSourceFilter,
-    dateFrom,
-    setDateFrom,
-    dateTo,
-    setDateTo,
-    valueMin,
-    setValueMin,
-    valueMax,
-    setValueMax,
-    showAdvancedFilters,
-    setShowAdvancedFilters,
-    setShowLeadForm,
-    loadLeadDetails,
-  } = useCRMLeads();
 
   const statuses = [...new Set(leads.map((l) => l.status))];
 
@@ -170,7 +203,7 @@ export function LeadList() {
             {searchQuery || statusFilter ? t('crm.noResults') : t('crm.addFirst')}
           </p>
           <button
-            onClick={() => setShowLeadForm(true)}
+            onClick={onNewLead}
             className="px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600"
           >
             {t('crm.addLead')}
@@ -179,7 +212,7 @@ export function LeadList() {
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {leads.map((lead) => (
-            <LeadCard key={lead.id} lead={lead} onClick={() => loadLeadDetails(lead.id)} />
+            <LeadCard key={lead.id} lead={lead} onClick={() => onLeadClick(lead.id)} />
           ))}
         </div>
       )}
