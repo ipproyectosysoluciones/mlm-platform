@@ -114,6 +114,7 @@ export function KanbanColumn({
                   <div
                     ref={provided.innerRef}
                     {...provided.draggableProps}
+                    style={{ ...provided.draggableProps.style } as React.CSSProperties}
                     {...provided.dragHandleProps}
                     className={snapshot.isDragging ? 'opacity-75' : ''}
                   >
