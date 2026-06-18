@@ -38,6 +38,12 @@ export default defineConfig({
         // Out-of-scope modules (Sprint 8 / Nexo Real focus)
         // Módulos fuera del scope del sprint (foco en Nexo Real)
         'src/components/crm/**',
+        'src/features/crm/**',
+        'src/hooks/useCRMAnalytics.ts',
+        'src/hooks/useCRMKanban.ts',
+        'src/hooks/useCRMLeads.ts',
+        'src/hooks/useCRMMetrics.ts',
+        'src/hooks/useCRMTasks.ts',
         'src/components/EmailCampaigns/**',
         'src/components/EmailBuilder/**',
         'src/components/GiftCards/**',
