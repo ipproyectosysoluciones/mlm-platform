@@ -90,17 +90,14 @@ function getProductImageUrl(platform: string): string {
 // Validation for product ID - accept any UUID format
 const productIdValidation = [param('id').isUUID().withMessage('Product ID must be a valid UUID')];
 
-// Validation for referral code
+// Validation for referral code — falsy values ('', null, undefined) are treated as "no ref"
 const refCodeValidation = [
   query('ref')
-    .optional()
+    .optional({ values: 'falsy' })
     .isString()
     .trim()
-    .custom((value: string) => {
-      // Allow empty string (treated as "no ref"), or valid 3-15 char code
-      if (value === '' || (value.length >= 3 && value.length <= 15)) return true;
-      throw new Error('Referral code must be 3-15 characters');
-    }),
+    .isLength({ min: 3, max: 15 })
+    .withMessage('Referral code must be 3-15 characters'),
 ];
 
 /**

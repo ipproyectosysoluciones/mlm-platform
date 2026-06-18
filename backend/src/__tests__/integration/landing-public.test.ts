@@ -114,8 +114,7 @@ describe('Public Landing Integration Tests', () => {
       expect(res.body.data).not.toHaveProperty('affiliate');
     });
 
-    // TODO: Pre-existing failure — empty ref string returns 400 instead of 200 (validation rejects empty ref)
-    it.skip('should accept optional ref query parameter', async () => {
+    it('should accept optional ref query parameter (empty ref treated as no ref)', async () => {
       const res = await testAgent
         .get(`/api/public/landing/product/${testProduct.id}`)
         .query({ ref: '' })
