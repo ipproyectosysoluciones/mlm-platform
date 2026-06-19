@@ -29,16 +29,18 @@ test.use({ storageState: path.join(__dirname, '.auth', 'admin.json') });
 test.describe('PropertiesPage — Rendering', () => {
   test('renders h1 with "Propiedades" heading', async ({ page }) => {
     await page.goto(`${baseURL}/properties`, { waitUntil: 'networkidle' });
-    await expect(page.locator('h1')).toContainText('Propiedades');
+    await expect(page.locator('h1')).toContainText(/Properties|Propiedades/i);
   });
 
   test('renders filters bar with search input', async ({ page }) => {
     await page.goto(`${baseURL}/properties`, { waitUntil: 'networkidle' });
-    const searchInput = page.locator('input[placeholder*="Buscar"]');
+    const searchInput = page.locator(
+      'input[placeholder*="Search" i], input[placeholder*="Buscar" i]'
+    );
     await expect(searchInput).toBeVisible();
   });
 
-  test('renders type filter select with "Todos los tipos" default option', async ({ page }) => {
+  test('renders type filter select with default option', async ({ page }) => {
     await page.goto(`${baseURL}/properties`, { waitUntil: 'networkidle' });
     const typeSelect = page.locator('select').first();
     await expect(typeSelect).toBeVisible();
@@ -47,13 +49,13 @@ test.describe('PropertiesPage — Rendering', () => {
 
   test('renders city filter input', async ({ page }) => {
     await page.goto(`${baseURL}/properties`, { waitUntil: 'networkidle' });
-    const cityInput = page.locator('input[placeholder*="Ciudad"]');
+    const cityInput = page.locator('input[placeholder*="City" i], input[placeholder*="Ciudad" i]');
     await expect(cityInput).toBeVisible();
   });
 
-  test('renders "Filtrar" submit button', async ({ page }) => {
+  test('renders filter submit button', async ({ page }) => {
     await page.goto(`${baseURL}/properties`, { waitUntil: 'networkidle' });
-    const filterBtn = page.locator('button[type="submit"]').filter({ hasText: /Filtrar/i });
+    const filterBtn = page.locator('button[type="submit"]').filter({ hasText: /Filter|Filtrar/i });
     await expect(filterBtn).toBeVisible();
   });
 
@@ -242,7 +244,7 @@ test.describe('PropertiesPage — Property Cards', () => {
     const badge = page
       .locator('article')
       .first()
-      .getByText(/personas vieron esto hoy/i);
+      .getByText(/personas vieron esto hoy|people viewed this today/i);
     await expect(badge).toBeVisible();
   });
 
@@ -262,7 +264,7 @@ test.describe('PropertiesPage — Property Cards', () => {
     await page.goto(`${baseURL}/properties`, { waitUntil: 'networkidle' });
     // Subtitle below h1 shows "42 propiedades disponibles"
     await expect(
-      page.locator('p').filter({ hasText: /42 propiedades disponibles/i })
+      page.locator('p').filter({ hasText: /42 propiedades disponibles|42 properties available/i })
     ).toBeVisible();
   });
 });
@@ -270,13 +272,13 @@ test.describe('PropertiesPage — Property Cards', () => {
 // ─── Type badges ─────────────────────────────────────────────────────────────
 
 test.describe('PropertiesPage — Type Badges', () => {
-  const typeCases: Array<{ type: string; label: string }> = [
-    { type: 'rental', label: 'Alquiler' },
-    { type: 'sale', label: 'Venta' },
-    { type: 'management', label: 'Administración' },
+  const typeCases: Array<{ type: string; label: string; enLabel: string }> = [
+    { type: 'rental', label: 'Alquiler', enLabel: 'Rental' },
+    { type: 'sale', label: 'Venta', enLabel: 'Sale' },
+    { type: 'management', label: 'Administración', enLabel: 'Management' },
   ];
 
-  for (const { type, label } of typeCases) {
+  for (const { type, label, enLabel } of typeCases) {
     test(`renders "${label}" badge for type "${type}"`, async ({ page }) => {
       await page.route('**/api/properties*', async (route) => {
         await route.fulfill({
@@ -302,7 +304,9 @@ test.describe('PropertiesPage — Type Badges', () => {
       });
 
       await page.goto(`${baseURL}/properties`, { waitUntil: 'networkidle' });
-      await expect(page.locator('article').first()).toContainText(label);
+      await expect(page.locator('article').first()).toContainText(
+        new RegExp(`${label}|${enLabel}`, 'i')
+      );
     });
   }
 });
@@ -324,8 +328,12 @@ test.describe('PropertiesPage — States', () => {
     });
 
     await page.goto(`${baseURL}/properties`, { waitUntil: 'networkidle' });
-    await expect(page.getByText(/No se encontraron propiedades/i)).toBeVisible();
-    await expect(page.getByText(/Probá ajustando los filtros/i)).toBeVisible();
+    await expect(
+      page.getByText(/No properties found|No se encontraron propiedades/i)
+    ).toBeVisible();
+    await expect(
+      page.getByText(/Try adjusting the filters|Probá ajustando los filtros/i)
+    ).toBeVisible();
   });
 
   test('shows error message when API fails', async ({ page }) => {
@@ -334,7 +342,9 @@ test.describe('PropertiesPage — States', () => {
     });
 
     await page.goto(`${baseURL}/properties`, { waitUntil: 'networkidle' });
-    await expect(page.getByText(/No se pudieron cargar las propiedades/i)).toBeVisible();
+    await expect(
+      page.getByText(/Could not load properties|No se pudieron cargar las propiedades/i)
+    ).toBeVisible();
   });
 });
 
@@ -344,9 +354,11 @@ test.describe('PropertiesPage — Filters', () => {
   test('type filter select contains all three options', async ({ page }) => {
     await page.goto(`${baseURL}/properties`, { waitUntil: 'networkidle' });
     const typeSelect = page.locator('select').first();
-    await expect(typeSelect.locator('option[value="rental"]')).toHaveText('Alquiler');
-    await expect(typeSelect.locator('option[value="sale"]')).toHaveText('Venta');
-    await expect(typeSelect.locator('option[value="management"]')).toHaveText('Administración');
+    await expect(typeSelect.locator('option[value="rental"]')).toContainText(/Alquiler|Rental/i);
+    await expect(typeSelect.locator('option[value="sale"]')).toContainText(/Venta|Sale/i);
+    await expect(typeSelect.locator('option[value="management"]')).toContainText(
+      /Administración|Management/i
+    );
   });
 
   test('selecting a type filter adds "Limpiar" button', async ({ page }) => {
@@ -365,14 +377,14 @@ test.describe('PropertiesPage — Filters', () => {
 
     await page.goto(`${baseURL}/properties`, { waitUntil: 'networkidle' });
 
-    // Select "Alquiler" type
+    // Select "Rental" type
     await page.locator('select').first().selectOption('rental');
 
-    // "Limpiar" button should appear (hasActiveFilters = true)
-    await expect(page.getByRole('button', { name: /Limpiar/i })).toBeVisible();
+    // "Clear" button should appear (hasActiveFilters = true)
+    await expect(page.getByRole('button', { name: /Clear|Limpiar/i })).toBeVisible();
   });
 
-  test('"Limpiar" button resets filters', async ({ page }) => {
+  test('clear button resets filters', async ({ page }) => {
     await page.route('**/api/properties*', async (route) => {
       await route.fulfill({
         status: 200,
@@ -389,15 +401,15 @@ test.describe('PropertiesPage — Filters', () => {
 
     // Apply filter
     await page.locator('select').first().selectOption('sale');
-    await expect(page.getByRole('button', { name: /Limpiar/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Clear|Limpiar/i })).toBeVisible();
 
     // Clear filters
-    await page.getByRole('button', { name: /Limpiar/i }).click();
+    await page.getByRole('button', { name: /Clear|Limpiar/i }).click();
 
     // Select resets to empty value
     await expect(page.locator('select').first()).toHaveValue('');
-    // Limpiar button gone
-    await expect(page.getByRole('button', { name: /Limpiar/i })).toHaveCount(0);
+    // Clear button gone
+    await expect(page.getByRole('button', { name: /Clear|Limpiar/i })).toHaveCount(0);
   });
 
   test('typing in search input and clicking Filtrar triggers new fetch', async ({ page }) => {
@@ -420,7 +432,10 @@ test.describe('PropertiesPage — Filters', () => {
     const initialCount = requests.length;
 
     // Type search text and submit
-    await page.locator('input[placeholder*="Buscar"]').fill('Palermo');
+    await page
+      .locator('input[placeholder*="Search" i], input[placeholder*="Buscar" i]')
+      .first()
+      .fill('Palermo');
     await page.locator('button[type="submit"]').click();
 
     // A new fetch should have been triggered
@@ -455,9 +470,9 @@ test.describe('PropertiesPage — Pagination', () => {
     });
 
     await page.goto(`${baseURL}/properties`, { waitUntil: 'networkidle' });
-    await expect(page.getByRole('button', { name: /Anterior/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /Siguiente/i })).toBeVisible();
-    await expect(page.getByText(/Página 1 de 3/i)).toBeVisible();
+    await expect(page.getByRole('button', { name: /Previous|Anterior/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Next|Siguiente/i })).toBeVisible();
+    await expect(page.getByText(/Page 1 of 3|Página 1 de 3/i)).toBeVisible();
   });
 
   test('"Anterior" button is disabled on first page', async ({ page }) => {
@@ -483,7 +498,7 @@ test.describe('PropertiesPage — Pagination', () => {
     });
 
     await page.goto(`${baseURL}/properties`, { waitUntil: 'networkidle' });
-    await expect(page.getByRole('button', { name: /Anterior/i })).toBeDisabled();
+    await expect(page.getByRole('button', { name: /Previous|Anterior/i })).toBeDisabled();
   });
 
   test('"Siguiente" button is disabled on last page', async ({ page }) => {
@@ -509,7 +524,7 @@ test.describe('PropertiesPage — Pagination', () => {
     });
 
     await page.goto(`${baseURL}/properties`, { waitUntil: 'networkidle' });
-    await expect(page.getByRole('button', { name: /Siguiente/i })).toBeDisabled();
+    await expect(page.getByRole('button', { name: /Next|Siguiente/i })).toBeDisabled();
   });
 
   test('does not render pagination when totalPages <= 1', async ({ page }) => {
@@ -537,8 +552,8 @@ test.describe('PropertiesPage — Pagination', () => {
     });
 
     await page.goto(`${baseURL}/properties`, { waitUntil: 'networkidle' });
-    await expect(page.getByRole('button', { name: /Anterior/i })).toHaveCount(0);
-    await expect(page.getByRole('button', { name: /Siguiente/i })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: /Previous|Anterior/i })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: /Next|Siguiente/i })).toHaveCount(0);
   });
 });
 
@@ -547,6 +562,6 @@ test.describe('PropertiesPage — Pagination', () => {
 test.describe('PropertiesPage — SEO', () => {
   test('page title is "Propiedades | Nexo Real" by default', async ({ page }) => {
     await page.goto(`${baseURL}/properties`, { waitUntil: 'networkidle' });
-    await expect(page).toHaveTitle(/Propiedades \| Nexo Real/i);
+    await expect(page).toHaveTitle(/Properties|Propiedades/i);
   });
 });

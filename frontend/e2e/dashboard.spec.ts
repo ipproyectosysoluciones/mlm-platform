@@ -1,6 +1,9 @@
 import { test, expect } from '@playwright/test';
 import { login } from './helpers';
 
+// Start without auth — login() handles the full login flow
+test.use({ storageState: undefined });
+
 test.describe('Dashboard', () => {
   test.beforeEach(async ({ page }) => {
     await login(page);
@@ -10,25 +13,25 @@ test.describe('Dashboard', () => {
   });
 
   test('should display dashboard with stats', async ({ page }) => {
-    await expect(page.getByText(/Total Referidos/i)).toBeVisible({ timeout: 10000 });
-    await expect(page.getByText(/Ganancias Totales/i)).toBeVisible();
-    await expect(page.getByText(/Pendiente/i)).toBeVisible();
+    await expect(page.getByText(/Total Referrals/i).first()).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText(/Total Earnings/i).first()).toBeVisible();
+    await expect(page.getByText(/Pending/i).first()).toBeVisible();
   });
 
   test('should display binary tree section', async ({ page }) => {
-    await expect(page.getByText(/Árbol Binario/i)).toBeVisible({ timeout: 15000 });
-    await expect(page.getByText(/Pierna Izquierda/i).first()).toBeVisible();
-    await expect(page.getByText(/Pierna Derecha/i).first()).toBeVisible();
-    await expect(page.getByText(/Ver Árbol Completo/i)).toBeVisible();
+    await expect(page.getByText(/Unilevel Network/i)).toBeVisible({ timeout: 15000 });
+    await expect(page.getByText(/Direct Referrals/i).first()).toBeVisible();
+    await expect(page.getByText(/Total Network/i).first()).toBeVisible();
+    await expect(page.getByText(/View Full Network/i)).toBeVisible();
   });
 
   test('should display referral link', async ({ page }) => {
-    await expect(page.getByText(/Tu Link de Referido/i)).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText(/Your Referral Link/i)).toBeVisible({ timeout: 10000 });
     await expect(page.locator('input[readonly]')).toBeVisible();
   });
 
   test('should navigate to tree view', async ({ page }) => {
-    await page.getByText(/Ver Árbol Completo/i).click();
+    await page.getByText(/View Full Network/i).click();
     await expect(page).toHaveURL(/\/tree/);
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
@@ -55,11 +58,11 @@ test.describe('Dashboard', () => {
   });
 
   test('should show QR code button', async ({ page }) => {
-    await expect(page.getByText(/Mostrar Código QR/i)).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText(/Show QR Code/i)).toBeVisible({ timeout: 10000 });
   });
 
   test('should toggle QR code visibility', async ({ page }) => {
-    await page.getByText(/Mostrar Código QR/i).click();
-    await expect(page.getByText(/Ocultar QR/i)).toBeVisible();
+    await page.getByText(/Show QR Code/i).click();
+    await expect(page.getByText(/Hide QR/i)).toBeVisible();
   });
 });

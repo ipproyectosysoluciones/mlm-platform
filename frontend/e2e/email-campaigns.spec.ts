@@ -9,7 +9,8 @@
  * @module e2e/email-campaigns.spec
  */
 import { test, expect } from '@playwright/test';
-import { baseURL, login, waitForPageReady } from './helpers';
+import { baseURL, waitForPageReady } from './helpers';
+import { setupMockApi } from './mock-api';
 
 test.describe('Email Campaigns', () => {
   // ============================================================
@@ -20,8 +21,8 @@ test.describe('Email Campaigns', () => {
     '22.1 - Admin navigates to email campaigns page',
     { tag: ['@critical', '@e2e', '@email-campaigns', '@EC-E2E-001'] },
     async ({ page }) => {
-      // Login as admin
-      await login(page);
+      // Use setupMockApi + storageState instead of login()
+      setupMockApi(page);
       await waitForPageReady(page);
 
       // Navigate to email campaigns admin page
@@ -91,10 +92,9 @@ test.describe('Email Campaigns', () => {
     '22.2 - Admin accesses email template builder area',
     { tag: ['@critical', '@e2e', '@email-campaigns', '@EC-E2E-002'] },
     async ({ page }) => {
-      await login(page);
+      setupMockApi(page);
       await waitForPageReady(page);
 
-      // Navigate to campaigns page
       await page.goto(`${baseURL}/admin/email-campaigns`);
       await page.waitForLoadState('networkidle');
       await page.waitForTimeout(2000);
@@ -148,7 +148,7 @@ test.describe('Email Campaigns', () => {
     '22.3 - Admin views campaign list and details',
     { tag: ['@critical', '@e2e', '@email-campaigns', '@EC-E2E-003'] },
     async ({ page }) => {
-      await login(page);
+      setupMockApi(page);
       await waitForPageReady(page);
 
       await page.goto(`${baseURL}/admin/email-campaigns`);
@@ -209,7 +209,7 @@ test.describe('Email Campaigns', () => {
     '22.4 - Admin uses campaign dashboard tab filters',
     { tag: ['@e2e', '@email-campaigns', '@EC-E2E-004'] },
     async ({ page }) => {
-      await login(page);
+      setupMockApi(page);
       await waitForPageReady(page);
 
       await page.goto(`${baseURL}/admin/email-campaigns`);
@@ -265,7 +265,7 @@ test.describe('Email Campaigns', () => {
     '22.5 - Page handles empty state and API gracefully',
     { tag: ['@e2e', '@email-campaigns', '@EC-E2E-005'] },
     async ({ page }) => {
-      await login(page);
+      setupMockApi(page);
       await waitForPageReady(page);
 
       await page.goto(`${baseURL}/admin/email-campaigns`);

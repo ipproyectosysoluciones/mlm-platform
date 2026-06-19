@@ -1,12 +1,14 @@
 import { test, expect } from '@playwright/test';
-import { login } from '../helpers';
+import { setupMockApi } from '../mock-api';
 import { ProductCatalogPage } from './product-catalog-page';
 
 test.describe('Product Catalog', () => {
   let productCatalogPage: ProductCatalogPage;
 
   test.beforeEach(async ({ page }) => {
-    await login(page);
+    // Use setupMockApi + storageState instead of login()
+    // login() uses addInitScript which clears the token on full page loads
+    setupMockApi(page);
     productCatalogPage = new ProductCatalogPage(page);
     await productCatalogPage.goto();
   });
