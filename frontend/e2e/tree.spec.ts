@@ -6,7 +6,8 @@
  * @module e2e/tree.spec
  */
 import { test, expect } from '@playwright/test';
-import { baseURL, login } from './helpers';
+import { baseURL } from './helpers';
+import { setupMockApi } from './mock-api';
 
 /**
  * Test suite for TreeView visual tree functionality
@@ -14,8 +15,10 @@ import { baseURL, login } from './helpers';
  */
 test.describe('TreeView', () => {
   test.beforeEach(async ({ page }) => {
-    await login(page);
-    // Navigate to tree view
+    // Use storageState token + setupMockApi directly, NOT login().
+    // login() uses addInitScript which clears the token on every full page load.
+    // StorageState + context-level routing let us navigate freely.
+    setupMockApi(page);
     await page.goto(`${baseURL}/tree`);
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
@@ -95,7 +98,7 @@ test.describe('TreeView', () => {
       await expect(canvas).toBeVisible();
     } else {
       // Or show empty state message - Spanish text
-      await expect(page.getByText(/sin miembros/i)).toBeVisible({ timeout: 5000 });
+      await expect(page.getByText(/no members|sin miembros/i)).toBeVisible({ timeout: 5000 });
     }
   });
 

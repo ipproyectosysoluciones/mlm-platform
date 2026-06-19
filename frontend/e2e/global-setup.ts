@@ -1,12 +1,11 @@
 /**
- * @fileoverview Playwright Global Setup — Authentication via direct API call
- * @description Authenticates by calling the backend API directly from Node.js
- *              (no CORS — Node doesn't enforce same-origin policy), then injects
- *              the JWT token into localStorage via a browser page visit.
+ * @fileoverview Playwright Global Setup — Offline Authentication
+ * @description Injects a mock JWT token and user data directly into localStorage
+ *              via a browser page visit. No backend server required.
  *
- *              Autentica llamando al backend API directamente desde Node.js
- *              (sin CORS — Node no aplica same-origin policy), luego inyecta
- *              el JWT en localStorage vía una visita de página del browser.
+ *              Inyecta un mock JWT token y datos de usuario directamente en
+ *              localStorage vía una visita de página del browser. No requiere
+ *              servidor backend.
  *
  * @module e2e/global-setup
  */
@@ -20,8 +19,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 /**
- * Global setup: authenticates via Node.js fetch and injects token into localStorage.
- * Setup global: autentica vía fetch de Node.js e inyecta el token en localStorage.
+ * Global setup: injects mock auth data into localStorage and saves storage state.
+ * Setup global: inyecta datos de autenticación mock en localStorage y guarda el estado.
  */
 async function globalSetup(config: FullConfig) {
   const baseURL = config.projects[0].use.baseURL ?? 'http://localhost:5173';
@@ -32,29 +31,12 @@ async function globalSetup(config: FullConfig) {
     fs.mkdirSync(authDir, { recursive: true });
   }
 
-  // ─── 1. Login via Node.js fetch — NO CORS (Node doesn't enforce same-origin)
-  //        Login vía fetch de Node.js — SIN CORS (Node no aplica same-origin)
-  const loginRes = await fetch('http://localhost:3000/api/auth/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: 'admin@mlm.com', password: 'admin123' }),
-  });
+  // ─── 1. Use hardcoded mock credentials — no backend call needed
+  //        Usar credenciales mock hardcodeadas — no requiere llamada al backend
+  const token = 'mock-jwt-token';
+  const user = { id: '1', email: 'admin@mlm.com', role: 'admin' };
 
-  if (!loginRes.ok) {
-    throw new Error(`Global setup: backend returned ${loginRes.status} for login`);
-  }
-
-  const json = (await loginRes.json()) as {
-    success: boolean;
-    data: { token: string; user: { id: string; email: string; role: string } };
-  };
-
-  if (!json.success || !json.data?.token) {
-    throw new Error(`Global setup: unexpected payload: ${JSON.stringify(json)}`);
-  }
-
-  const { token, user } = json.data;
-  console.log(`\n[global-setup] Authenticated via API as ${user.email} (${user.role})`);
+  console.log(`[global-setup] Using mock auth as ${user.email} (${user.role})`);
 
   // ─── 2. Open browser, navigate to app, inject token into localStorage
   //        Abrir browser, navegar al app, inyectar token en localStorage
@@ -66,8 +48,8 @@ async function globalSetup(config: FullConfig) {
   // Navegar a cualquier página del app para establecer el origen en el contexto del browser
   await page.goto(`${baseURL}/`, { waitUntil: 'domcontentloaded' });
 
-  // Inject the JWT token (and user data for faster hydration) into localStorage
-  // Inyectar el JWT token (y datos del user para hidratación rápida) en localStorage
+  // Inject the mock JWT token and user data into localStorage
+  // Inyectar el mock JWT token y datos del usuario en localStorage
   await page.evaluate(
     ({ token, user }) => {
       localStorage.setItem('token', token);

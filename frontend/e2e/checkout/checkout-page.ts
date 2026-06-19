@@ -7,11 +7,11 @@ export class CheckoutPage extends BasePage {
   }
 
   get orderSummarySection() {
-    return this.page.locator('text=order summary|resumen del pedido');
+    return this.page.getByText(/order summary|resumen del pedido/i);
   }
 
   get paymentMethodSection() {
-    return this.page.getByText(/payment method|método de pago/i);
+    return this.page.getByRole('heading', { name: /payment method|método de pago/i });
   }
 
   get termsCheckbox() {
@@ -36,6 +36,11 @@ export class CheckoutPage extends BasePage {
     await super.goto(`/checkout/${productId}`);
   }
 
+  async selectSimulatedPayment(): Promise<void> {
+    // The simulated radio button is `sr-only`; click the label instead
+    await this.page.getByText(/simulated|simulado/i).click();
+  }
+
   async verifyPageLoaded(): Promise<void> {
     await expect(this.heading).toBeVisible();
   }
@@ -57,8 +62,13 @@ export class CheckoutPage extends BasePage {
   }
 
   async completePurchase(): Promise<void> {
+    await this.selectSimulatedPayment();
     await this.acceptTerms();
-    await this.confirmPurchase();
+    // First click: form's "Confirm Purchase" button → opens confirmation modal
+    await this.confirmButton.click();
+    // Second click: modal's "Confirm Purchase" button (last matching button)
+    // eslint-disable-next-line playwright/no-force-option
+    await this.confirmButton.last().click();
     await this.page.waitForURL(/\/orders\/.+\/success/, { timeout: 10000 });
   }
 
