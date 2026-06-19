@@ -1,46 +1,54 @@
 import { test, expect } from '@playwright/test';
-import { baseURL, login } from './helpers';
+import { baseURL } from './helpers';
+import { setupMockApi } from './mock-api';
 
 test.describe('Admin Dashboard', () => {
   test.beforeEach(async ({ page }) => {
-    await login(page);
-    await page.goto(`${baseURL}/admin`);
-    // Wait for admin page to load
-    await page.waitForURL(/\/admin/);
-    await page.waitForLoadState('networkidle');
+    // Use storageState token + setupMockApi directly, NOT login().
+    // login() uses addInitScript which clears the token on every full page load.
+    setupMockApi(page);
+    await page.goto(`${baseURL}/admin`, { waitUntil: 'domcontentloaded' });
+    // Wait for admin page to load and React to hydrate
+    await page.waitForFunction(
+      () => {
+        const root = document.getElementById('root');
+        return root && root.innerHTML.length > 0 && root.innerHTML !== '<div></div>';
+      },
+      { timeout: 30000 }
+    );
     await page.waitForTimeout(2000);
   });
 
   test('should display admin dashboard', async ({ page }) => {
-    await expect(page.getByText(/Panel de Administración/i)).toBeVisible();
+    await expect(page.getByText(/Admin Panel/i)).toBeVisible();
   });
 
   test('should display stats cards', async ({ page }) => {
-    await expect(page.getByText(/Total Usuarios/i)).toBeVisible({ timeout: 15000 });
-    await expect(page.getByText(/Usuarios Activos/i)).toBeVisible();
-    await expect(page.getByText(/Usuarios Inactivos/i)).toBeVisible();
+    await expect(page.getByText(/Total Users/i)).toBeVisible({ timeout: 15000 });
+    await expect(page.getByText('Active Users', { exact: true })).toBeVisible();
+    await expect(page.getByText('Inactive Users', { exact: true })).toBeVisible();
   });
 
   test('should display users table', async ({ page }) => {
     await expect(page.getByText(/Email/i).first()).toBeVisible({ timeout: 15000 });
-    await expect(page.getByRole('columnheader', { name: /rol/i })).toBeVisible();
-    await expect(page.getByRole('columnheader', { name: /activo/i })).toBeVisible();
+    await expect(page.getByRole('columnheader', { name: /role/i })).toBeVisible();
+    await expect(page.getByRole('columnheader', { name: /active/i })).toBeVisible();
   });
 
   test('should have search input', async ({ page }) => {
-    await expect(page.getByText(/Total Usuarios/i)).toBeVisible({ timeout: 15000 });
-    const searchInput = page.getByPlaceholder(/buscar por email/i);
+    await expect(page.getByText(/Total Users/i).first()).toBeVisible({ timeout: 15000 });
+    const searchInput = page.getByPlaceholder(/search by email/i);
     await expect(searchInput).toBeVisible();
   });
 
   test('should have filter dropdown', async ({ page }) => {
-    await expect(page.getByText(/Total Usuarios/i)).toBeVisible({ timeout: 15000 });
+    await expect(page.getByText(/Total Users/i).first()).toBeVisible({ timeout: 15000 });
     const filter = page.locator('select').first();
     await expect(filter).toBeVisible();
   });
 
   test('should filter users by search', async ({ page }) => {
-    const searchInput = page.getByPlaceholder(/buscar por email/i);
+    const searchInput = page.getByPlaceholder(/search by email/i);
     await searchInput.fill('admin');
     await page.waitForTimeout(500);
     const rows = page.locator('tbody tr');
@@ -70,7 +78,7 @@ test.describe('Admin Dashboard', () => {
   test('should show user badge for regular users', async ({ page }) => {
     await page.waitForTimeout(2000);
     // Look for user role badges - might be "user" or role badge
-    const userBadges = page.locator('text=user, text=Usuario').first();
+    const userBadges = page.locator('text=user').first();
     await userBadges.isVisible().catch(() => false);
     // Soft check - badges might not be visible if no regular users
     expect(true).toBeTruthy();

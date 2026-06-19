@@ -33,7 +33,7 @@ test.describe('Reservation Wizard', () => {
 
     // Click the reserve / consult button
     const reserveBtn = page.locator('button').filter({
-      hasText: /Solicitar visita|Consultar/,
+      hasText: /Request visit|Solicitar visita|Consultar|Schedule tour/i,
     });
     await expect(reserveBtn).toBeVisible({ timeout: 10000 });
     await reserveBtn.click();
@@ -50,15 +50,18 @@ test.describe('Reservation Wizard', () => {
     await expect(page.locator('.rounded-2xl').first()).toBeVisible();
 
     // Step indicator shows step labels
-    await expect(page.locator('text=Fechas').or(page.locator('text=Huéspedes'))).toBeVisible();
+    await expect(page.locator('text=/Fechas|Dates|Huéspedes|Guests/i').first()).toBeVisible();
   });
 
   test('should show step 1 (Fechas) for property reservation', async ({ page }) => {
     await page.goto(`${baseURL}/properties`);
     await page.waitForSelector('article', { state: 'visible', timeout: 15000 });
 
-    // Click the first card that's a rental (has "Alquiler" badge)
-    const rentalCard = page.locator('article').filter({ hasText: 'Alquiler' }).first();
+    // Click the first card that's a rental (has "Rental" or "Alquiler" badge)
+    const rentalCard = page
+      .locator('article')
+      .filter({ hasText: /Alquiler|Rental/i })
+      .first();
     const cardCount = await rentalCard.count();
 
     if (cardCount > 0) {
@@ -71,7 +74,7 @@ test.describe('Reservation Wizard', () => {
     await page.waitForLoadState('networkidle');
 
     const reserveBtn = page.locator('button').filter({
-      hasText: /Solicitar visita|Consultar/,
+      hasText: /Request visit|Solicitar visita|Consultar|Schedule tour/i,
     });
     await reserveBtn.click();
     await page.waitForURL(/\/reservations\/new/, { timeout: 15000 });
@@ -86,9 +89,10 @@ test.describe('Reservation Wizard', () => {
     expect(visible).toBeTruthy();
 
     // Confirm wizard is rendered
-    await expect(page.locator('text=Cancelar')).toBeVisible();
+    await expect(page.locator('text=/Cancelar|Cancel/i').first()).toBeVisible();
     expect(
-      hasDateInputs || (await page.locator('text=¿Cuántas personas?').isVisible())
+      hasDateInputs ||
+        (await page.locator('text=/¿Cuántas personas?|How many people?/i').isVisible())
     ).toBeTruthy();
   });
 
@@ -103,7 +107,7 @@ test.describe('Reservation Wizard', () => {
     await startReservationFromProperty(page);
 
     // Click cancel button
-    const cancelBtn = page.locator('button', { hasText: 'Cancelar' });
+    const cancelBtn = page.locator('button', { hasText: /Cancelar|Cancel/i });
     await expect(cancelBtn).toBeVisible();
     await cancelBtn.click();
 
@@ -116,9 +120,9 @@ test.describe('Reservation Wizard', () => {
     await startReservationFromProperty(page);
 
     // Three step labels in the indicator
-    await expect(page.locator('text=Fechas')).toBeVisible();
-    await expect(page.locator('text=Huéspedes')).toBeVisible();
-    await expect(page.locator('text=Confirmación')).toBeVisible();
+    await expect(page.locator('text=/Fechas|Dates/i').first()).toBeVisible();
+    await expect(page.locator('text=/Huéspedes|Guests/i').first()).toBeVisible();
+    await expect(page.locator('text=/Confirmación|Confirmation/i').first()).toBeVisible();
   });
 
   test('should advance from dates to guests when dates are filled', async ({ page }) => {
@@ -137,7 +141,9 @@ test.describe('Reservation Wizard', () => {
     await page.waitForLoadState('networkidle');
 
     // Only proceed if it's a rental (dates step)
-    const reserveBtn = page.locator('button', { hasText: /Solicitar visita/ });
+    const reserveBtn = page.locator('button', {
+      hasText: /Request visit|Solicitar visita|Schedule tour/i,
+    });
     if ((await reserveBtn.count()) === 0) {
       test.skip();
       return;
@@ -161,13 +167,15 @@ test.describe('Reservation Wizard', () => {
       await dateInputs.nth(0).fill(fmt(tomorrow));
       await dateInputs.nth(1).fill(fmt(nextWeek));
 
-      // Continuar button should be enabled
-      const continueBtn = page.locator('button', { hasText: 'Continuar' });
+      // Continue button should be enabled
+      const continueBtn = page.locator('button', { hasText: /Continuar|Continue|Next/i });
       await expect(continueBtn).toBeEnabled({ timeout: 5000 });
       await continueBtn.click();
 
       // Should advance to guests step
-      await expect(page.locator('text=¿Cuántas personas?')).toBeVisible({ timeout: 10000 });
+      await expect(page.locator('text=/¿Cuántas personas?|How many people?/i')).toBeVisible({
+        timeout: 10000,
+      });
     }
   });
 });

@@ -60,7 +60,7 @@ test.describe('Responsive — Properties listing', () => {
     const bodyWidth = await page.evaluate(() => document.body.scrollWidth);
     expect(bodyWidth).toBeLessThanOrEqual(VIEWPORTS.mobile.width + 5);
 
-    await expect(page.locator('h1')).toContainText('Propiedades');
+    await expect(page.locator('h1')).toContainText(/Properties|Propiedades/i);
   });
 
   test('tablet: renders properties page without overflow', async ({ page }) => {
@@ -70,7 +70,7 @@ test.describe('Responsive — Properties listing', () => {
     const bodyWidth = await page.evaluate(() => document.body.scrollWidth);
     expect(bodyWidth).toBeLessThanOrEqual(VIEWPORTS.tablet.width + 5);
 
-    await expect(page.locator('h1')).toContainText('Propiedades');
+    await expect(page.locator('h1')).toContainText(/Properties|Propiedades/i);
   });
 
   test('desktop: renders properties page without overflow', async ({ page }) => {
@@ -80,7 +80,7 @@ test.describe('Responsive — Properties listing', () => {
     const bodyWidth = await page.evaluate(() => document.body.scrollWidth);
     expect(bodyWidth).toBeLessThanOrEqual(VIEWPORTS.desktop.width + 5);
 
-    await expect(page.locator('h1')).toContainText('Propiedades');
+    await expect(page.locator('h1')).toContainText(/Properties|Propiedades/i);
   });
 
   test('mobile: filter bar stacks vertically (flex-wrap)', async ({ page }) => {
@@ -88,7 +88,9 @@ test.describe('Responsive — Properties listing', () => {
     await page.waitForSelector('h1', { state: 'visible', timeout: 10000 });
 
     // Search input must be visible and accessible on mobile
-    const searchInput = page.locator('input[placeholder="Buscar por título o dirección..."]');
+    const searchInput = page
+      .locator('input[placeholder*="Search" i], input[placeholder*="Buscar" i]')
+      .first();
     await expect(searchInput).toBeVisible({ timeout: 10000 });
 
     const inputWidth = await searchInput.evaluate((el) => el.getBoundingClientRect().width);

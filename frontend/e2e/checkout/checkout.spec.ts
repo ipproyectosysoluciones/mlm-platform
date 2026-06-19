@@ -1,12 +1,12 @@
 import { test, expect } from '@playwright/test';
-import { login } from '../helpers';
+import { setupMockApi } from '../mock-api';
 import { ProductCatalogPage } from '../product-catalog/product-catalog-page';
 import { CheckoutPage } from './checkout-page';
 import { OrderSuccessPage } from '../order-success/order-success-page';
 
 test.describe('Checkout Flow', () => {
   test.beforeEach(async ({ page }) => {
-    await login(page);
+    setupMockApi(page);
   });
 
   test(
@@ -59,6 +59,8 @@ test.describe('Checkout Flow', () => {
 
       await productCatalogPage.goto();
       await productCatalogPage.clickFirstBuyNow();
+      // Select simulated payment so the confirm button is visible
+      await checkoutPage.selectSimulatedPayment();
       await checkoutPage.verifyConfirmButtonDisabled();
     }
   );
