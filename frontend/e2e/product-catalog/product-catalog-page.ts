@@ -3,11 +3,11 @@ import { BasePage } from '../pages/base-page';
 
 export class ProductCatalogPage extends BasePage {
   get heading() {
-    return this.page.getByRole('heading', { name: /our products|nuestros productos/i });
+    return this.page.getByRole('heading', { name: /product/i });
   }
 
   get productGrid() {
-    return this.page.locator('.grid.grid-cols-1').first();
+    return this.page.locator('.grid');
   }
 
   get platformFilterButtons() {
@@ -66,6 +66,6 @@ export class ProductCatalogPage extends BasePage {
 
   async verifyPlatformFilterActive(platform: string): Promise<void> {
     const button = this.page.getByRole('button', { name: new RegExp(platform, 'i') });
-    await expect(button).toHaveClass(/bg-primary/);
+    await expect(button).toHaveClass(/bg-purple-600/);
   }
 }

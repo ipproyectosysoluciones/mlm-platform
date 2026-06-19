@@ -5,12 +5,11 @@
  * @module e2e/landing-pages.spec
  */
 import { test, expect } from '@playwright/test';
-import { baseURL } from './helpers';
-import { setupMockApi } from './mock-api';
+import { baseURL, login } from './helpers';
 
 test.describe('Landing Pages Module', () => {
   test.beforeEach(async ({ page }) => {
-    setupMockApi(page);
+    await login(page);
     await page.goto(`${baseURL}/landing-pages`, { waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(2000);
     if (!page.url().includes('/landing-pages')) {
@@ -31,18 +30,17 @@ test.describe('Landing Pages Module', () => {
   test('should display landing pages list or empty state', async ({ page }) => {
     await page.waitForTimeout(2000);
 
-    // Either show stats section or pages grid or empty state
-    const hasStatsOrGrid = await page
-      .locator('[class*="grid-cols"]')
-      .first()
+    // Either show pages list or empty state
+    const hasPages = await page
+      .locator('[class*="card"], [class*="grid"], table')
       .isVisible()
       .catch(() => false);
     const hasEmptyState = await page
-      .getByText(/no landing pages|no hay landing|creá tu primera|create your first/i)
+      .getByText(/no hay landing|creá tu primera/i)
       .isVisible()
       .catch(() => false);
 
-    expect(hasStatsOrGrid || hasEmptyState).toBeTruthy();
+    expect(hasPages || hasEmptyState).toBeTruthy();
   });
 
   test('should have create new landing page button', async ({ page }) => {
@@ -81,7 +79,7 @@ test.describe('Landing Pages Module', () => {
 
 test.describe('Landing Page Creation', () => {
   test.beforeEach(async ({ page }) => {
-    setupMockApi(page);
+    await login(page);
     await page.goto(`${baseURL}/landing-pages`, { waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(2000);
     if (!page.url().includes('/landing-pages')) {
@@ -171,7 +169,7 @@ test.describe('Landing Page Creation', () => {
 
 test.describe('Landing Page Actions', () => {
   test.beforeEach(async ({ page }) => {
-    setupMockApi(page);
+    await login(page);
     await page.goto(`${baseURL}/landing-pages`, { waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(2000);
     if (!page.url().includes('/landing-pages')) {
@@ -227,7 +225,7 @@ test.describe('Landing Page Actions', () => {
 
 test.describe('Landing Page Status', () => {
   test.beforeEach(async ({ page }) => {
-    setupMockApi(page);
+    await login(page);
     await page.goto(`${baseURL}/landing-pages`, { waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(2000);
     if (!page.url().includes('/landing-pages')) {

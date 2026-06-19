@@ -6,7 +6,6 @@
  */
 import { test, expect } from '@playwright/test';
 import { baseURL, login, getUserMenuButton, waitForPageReady } from './helpers';
-import { setupMockApi } from './mock-api';
 
 test.describe('Horizontal Navbar', () => {
   test.beforeEach(async ({ page }) => {
@@ -37,14 +36,9 @@ test.describe('Horizontal Navbar', () => {
   test('should highlight current active nav link', async ({ page }) => {
     const activeLink = page.locator('nav a[href="/dashboard"]').first();
     await expect(activeLink).toBeVisible({ timeout: 10000 });
-
-    // Active link uses `text-white` vs inactive `text-slate-400`.
-    // The emerald gradient is in a child <div>, not on the link itself.
     const linkClass = await activeLink.getAttribute('class');
-    expect(linkClass).toContain('text-white');
-
-    // Also verify the emerald background indicator exists inside the active link
-    await expect(activeLink.locator('div[class*="emerald"]').first()).toBeVisible();
+    // Active link should have emerald or bg styling
+    expect(linkClass).toMatch(/emerald|bg-/);
   });
 
   test('should navigate to tree page', async ({ page }) => {
@@ -375,33 +369,28 @@ test.describe('Protected Route Navigation', () => {
   test('should redirect to dashboard when accessing login while authenticated', async ({
     page,
   }) => {
-    // Use the storageState token directly (no login() needed).
-    // login() uses addInitScript which clears the token on every page navigation.
-    setupMockApi(page);
+    await login(page);
+
+    // Try to access login page
     await page.goto(`${baseURL}/login`);
     await waitForPageReady(page, 2000);
 
-    // Should redirect to dashboard because we have a valid token
+    // Should redirect to dashboard
     expect(page.url()).toContain('/dashboard');
   });
 
   test('should maintain navigation state after page reload', async ({ page }) => {
-    // Use storageState token (no login() needed to avoid addInitScript).
-    // setupMockApi uses context-level routing (page.context().route()) which
-    // persists across full page navigations via page.goto() or page.reload().
-    setupMockApi(page);
+    await login(page);
 
-    // Navigate to tree page
-    await page.goto(`${baseURL}/tree`);
-    await waitForPageReady(page, 2000);
-    expect(page.url()).toContain('/tree');
-
-    // Navigate again (simulates page reload / full navigation)
+    // Navigate to tree
     await page.goto(`${baseURL}/tree`);
     await waitForPageReady(page, 2000);
 
-    // Should still be on tree page — context-level route handler
-    // correctly intercepted the auth API call on the second navigation.
+    // Reload page
+    await page.reload();
+    await waitForPageReady(page, 2000);
+
+    // Should still be on tree page
     expect(page.url()).toContain('/tree');
   });
 

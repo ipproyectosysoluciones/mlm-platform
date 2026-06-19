@@ -29,18 +29,16 @@ test.use({ storageState: path.join(__dirname, '.auth', 'admin.json') });
 test.describe('ToursPage — Rendering', () => {
   test('renders h1 with "Paquetes de Turismo" heading', async ({ page }) => {
     await page.goto(`${baseURL}/tours`, { waitUntil: 'networkidle' });
-    await expect(page.locator('h1')).toContainText(/Tour Packages|Paquetes de Turismo/i);
+    await expect(page.locator('h1')).toContainText('Paquetes de Turismo');
   });
 
   test('renders search input with correct placeholder', async ({ page }) => {
     await page.goto(`${baseURL}/tours`, { waitUntil: 'networkidle' });
-    const searchInput = page.locator(
-      'input[placeholder*="Search" i], input[placeholder*="Buscar" i]'
-    );
+    const searchInput = page.locator('input[placeholder*="Buscar tours"]');
     await expect(searchInput).toBeVisible();
   });
 
-  test('renders category filter select with default option', async ({ page }) => {
+  test('renders category filter select with "Todas las categorías" default', async ({ page }) => {
     await page.goto(`${baseURL}/tours`, { waitUntil: 'networkidle' });
     const categorySelect = page.locator('select').first();
     await expect(categorySelect).toBeVisible();
@@ -49,15 +47,13 @@ test.describe('ToursPage — Rendering', () => {
 
   test('renders destination filter input', async ({ page }) => {
     await page.goto(`${baseURL}/tours`, { waitUntil: 'networkidle' });
-    const destInput = page.locator(
-      'input[placeholder*="Destino" i], input[placeholder*="Destination" i]'
-    );
+    const destInput = page.locator('input[placeholder*="Destino"]');
     await expect(destInput).toBeVisible();
   });
 
-  test('renders filter submit button', async ({ page }) => {
+  test('renders "Filtrar" submit button', async ({ page }) => {
     await page.goto(`${baseURL}/tours`, { waitUntil: 'networkidle' });
-    const filterBtn = page.locator('button[type="submit"]').filter({ hasText: /Filter|Filtrar/i });
+    const filterBtn = page.locator('button[type="submit"]').filter({ hasText: /Filtrar/i });
     await expect(filterBtn).toBeVisible();
   });
 
@@ -178,7 +174,7 @@ test.describe('ToursPage — Tour Cards', () => {
     });
 
     await page.goto(`${baseURL}/tours`, { waitUntil: 'networkidle' });
-    await expect(page.locator('article').first()).toContainText(/3 días|3 days/i);
+    await expect(page.locator('article').first()).toContainText('3 días');
   });
 
   test('each card shows max guests with "Hasta" prefix', async ({ page }) => {
@@ -207,7 +203,7 @@ test.describe('ToursPage — Tour Cards', () => {
     });
 
     await page.goto(`${baseURL}/tours`, { waitUntil: 'networkidle' });
-    await expect(page.locator('article').first()).toContainText(/Hasta 6|Up to 6/i);
+    await expect(page.locator('article').first()).toContainText('Hasta 6');
   });
 
   test('clicking a card navigates to /tours/:id', async ({ page }) => {
@@ -301,7 +297,7 @@ test.describe('ToursPage — Tour Cards', () => {
     const badge = page
       .locator('article')
       .first()
-      .getByText(/personas vieron esto hoy|people viewed this today/i);
+      .getByText(/personas vieron esto hoy/i);
     await expect(badge).toBeVisible();
   });
 
@@ -320,7 +316,7 @@ test.describe('ToursPage — Tour Cards', () => {
 
     await page.goto(`${baseURL}/tours`, { waitUntil: 'networkidle' });
     await expect(
-      page.locator('p').filter({ hasText: /18 experiencias disponibles|18 experiences available/i })
+      page.locator('p').filter({ hasText: /18 experiencias disponibles/i })
     ).toBeVisible();
   });
 
@@ -350,23 +346,23 @@ test.describe('ToursPage — Tour Cards', () => {
     });
 
     await page.goto(`${baseURL}/tours`, { waitUntil: 'networkidle' });
-    await expect(page.locator('article').first()).toContainText(/\/ persona|\/ person/i);
+    await expect(page.locator('article').first()).toContainText('/ persona');
   });
 });
 
 // ─── Category badges ──────────────────────────────────────────────────────────
 
 test.describe('ToursPage — Category Badges', () => {
-  const categoryCases: Array<{ category: string; label: string; enLabel: string }> = [
-    { category: 'adventure', label: 'Aventura', enLabel: 'Adventure' },
-    { category: 'cultural', label: 'Cultural', enLabel: 'Cultural' },
-    { category: 'relaxation', label: 'Relax', enLabel: 'Relax' },
-    { category: 'gastronomic', label: 'Gastronómico', enLabel: 'Gastronomic' },
-    { category: 'ecotourism', label: 'Ecoturismo', enLabel: 'Ecotourism' },
-    { category: 'luxury', label: 'Lujo', enLabel: 'Luxury' },
+  const categoryCases: Array<{ category: string; label: string }> = [
+    { category: 'adventure', label: 'Aventura' },
+    { category: 'cultural', label: 'Cultural' },
+    { category: 'relaxation', label: 'Relax' },
+    { category: 'gastronomic', label: 'Gastronómico' },
+    { category: 'ecotourism', label: 'Ecoturismo' },
+    { category: 'luxury', label: 'Lujo' },
   ];
 
-  for (const { category, label, enLabel } of categoryCases) {
+  for (const { category, label } of categoryCases) {
     test(`renders "${label}" badge for category "${category}"`, async ({ page }) => {
       await page.route('**/api/tours*', async (route) => {
         await route.fulfill({
@@ -393,9 +389,7 @@ test.describe('ToursPage — Category Badges', () => {
       });
 
       await page.goto(`${baseURL}/tours`, { waitUntil: 'networkidle' });
-      await expect(page.locator('article').first()).toContainText(
-        new RegExp(`${label}|${enLabel}`, 'i')
-      );
+      await expect(page.locator('article').first()).toContainText(label);
     });
   }
 });
@@ -417,10 +411,8 @@ test.describe('ToursPage — States', () => {
     });
 
     await page.goto(`${baseURL}/tours`, { waitUntil: 'networkidle' });
-    await expect(page.getByText(/No tours found|No se encontraron tours/i)).toBeVisible();
-    await expect(
-      page.getByText(/Try adjusting the filters|Probá ajustando los filtros/i)
-    ).toBeVisible();
+    await expect(page.getByText(/No se encontraron tours/i)).toBeVisible();
+    await expect(page.getByText(/Probá ajustando los filtros/i)).toBeVisible();
   });
 
   test('shows error message when API fails', async ({ page }) => {
@@ -429,9 +421,7 @@ test.describe('ToursPage — States', () => {
     });
 
     await page.goto(`${baseURL}/tours`, { waitUntil: 'networkidle' });
-    await expect(
-      page.getByText(/Could not load tours|No se pudieron cargar los tours/i)
-    ).toBeVisible();
+    await expect(page.getByText(/No se pudieron cargar los tours/i)).toBeVisible();
   });
 });
 
@@ -442,21 +432,15 @@ test.describe('ToursPage — Filters', () => {
     await page.goto(`${baseURL}/tours`, { waitUntil: 'networkidle' });
     const catSelect = page.locator('select').first();
 
-    await expect(catSelect.locator('option[value="adventure"]')).toContainText(
-      /Aventura|Adventure/i
-    );
-    await expect(catSelect.locator('option[value="cultural"]')).toContainText(/Cultural/i);
-    await expect(catSelect.locator('option[value="relaxation"]')).toContainText(/Relax/i);
-    await expect(catSelect.locator('option[value="gastronomic"]')).toContainText(
-      /Gastronómico|Gastronomic/i
-    );
-    await expect(catSelect.locator('option[value="ecotourism"]')).toContainText(
-      /Ecoturismo|Ecotourism/i
-    );
-    await expect(catSelect.locator('option[value="luxury"]')).toContainText(/Lujo|Luxury/i);
+    await expect(catSelect.locator('option[value="adventure"]')).toHaveText('Aventura');
+    await expect(catSelect.locator('option[value="cultural"]')).toHaveText('Cultural');
+    await expect(catSelect.locator('option[value="relaxation"]')).toHaveText('Relax');
+    await expect(catSelect.locator('option[value="gastronomic"]')).toHaveText('Gastronómico');
+    await expect(catSelect.locator('option[value="ecotourism"]')).toHaveText('Ecoturismo');
+    await expect(catSelect.locator('option[value="luxury"]')).toHaveText('Lujo');
   });
 
-  test('selecting a category adds clear button', async ({ page }) => {
+  test('selecting a category adds "Limpiar" button', async ({ page }) => {
     await page.route('**/api/tours*', async (route) => {
       await route.fulfill({
         status: 200,
@@ -473,10 +457,10 @@ test.describe('ToursPage — Filters', () => {
 
     await page.locator('select').first().selectOption('adventure');
 
-    await expect(page.getByRole('button', { name: /Clear|Limpiar/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Limpiar/i })).toBeVisible();
   });
 
-  test('clear button resets all filters', async ({ page }) => {
+  test('"Limpiar" button resets all filters', async ({ page }) => {
     await page.route('**/api/tours*', async (route) => {
       await route.fulfill({
         status: 200,
@@ -493,13 +477,13 @@ test.describe('ToursPage — Filters', () => {
 
     // Apply a filter
     await page.locator('select').first().selectOption('luxury');
-    await expect(page.getByRole('button', { name: /Clear|Limpiar/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Limpiar/i })).toBeVisible();
 
     // Clear it
-    await page.getByRole('button', { name: /Clear|Limpiar/i }).click();
+    await page.getByRole('button', { name: /Limpiar/i }).click();
 
     await expect(page.locator('select').first()).toHaveValue('');
-    await expect(page.getByRole('button', { name: /Clear|Limpiar/i })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: /Limpiar/i })).toHaveCount(0);
   });
 
   test('typing in search and submitting triggers new fetch', async ({ page }) => {
@@ -521,10 +505,7 @@ test.describe('ToursPage — Filters', () => {
     await page.goto(`${baseURL}/tours`, { waitUntil: 'networkidle' });
     const initialCount = requests.length;
 
-    await page
-      .locator('input[placeholder*="Search" i], input[placeholder*="Buscar" i]')
-      .first()
-      .fill('Bariloche');
+    await page.locator('input[placeholder*="Buscar tours"]').fill('Bariloche');
     await page.locator('button[type="submit"]').click();
 
     await page.waitForTimeout(600);
@@ -559,9 +540,9 @@ test.describe('ToursPage — Pagination', () => {
     });
 
     await page.goto(`${baseURL}/tours`, { waitUntil: 'networkidle' });
-    await expect(page.getByRole('button', { name: /Previous|Anterior/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /Next|Siguiente/i })).toBeVisible();
-    await expect(page.getByText(/Page 1 of 3|Página 1 de 3/i)).toBeVisible();
+    await expect(page.getByRole('button', { name: /Anterior/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Siguiente/i })).toBeVisible();
+    await expect(page.getByText(/Página 1 de 3/i)).toBeVisible();
   });
 
   test('"Anterior" is disabled on first page', async ({ page }) => {
@@ -588,7 +569,7 @@ test.describe('ToursPage — Pagination', () => {
     });
 
     await page.goto(`${baseURL}/tours`, { waitUntil: 'networkidle' });
-    await expect(page.getByRole('button', { name: /Previous|Anterior/i })).toBeDisabled();
+    await expect(page.getByRole('button', { name: /Anterior/i })).toBeDisabled();
   });
 
   test('"Siguiente" is disabled on last page', async ({ page }) => {
@@ -615,7 +596,7 @@ test.describe('ToursPage — Pagination', () => {
     });
 
     await page.goto(`${baseURL}/tours`, { waitUntil: 'networkidle' });
-    await expect(page.getByRole('button', { name: /Next|Siguiente/i })).toBeDisabled();
+    await expect(page.getByRole('button', { name: /Siguiente/i })).toBeDisabled();
   });
 
   test('no pagination when totalPages <= 1', async ({ page }) => {
@@ -644,8 +625,8 @@ test.describe('ToursPage — Pagination', () => {
     });
 
     await page.goto(`${baseURL}/tours`, { waitUntil: 'networkidle' });
-    await expect(page.getByRole('button', { name: /Previous|Anterior/i })).toHaveCount(0);
-    await expect(page.getByRole('button', { name: /Next|Siguiente/i })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: /Anterior/i })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: /Siguiente/i })).toHaveCount(0);
   });
 });
 
@@ -654,6 +635,6 @@ test.describe('ToursPage — Pagination', () => {
 test.describe('ToursPage — SEO', () => {
   test('page title is "Paquetes de Turismo | Nexo Real" by default', async ({ page }) => {
     await page.goto(`${baseURL}/tours`, { waitUntil: 'networkidle' });
-    await expect(page).toHaveTitle(/Tour Packages|Paquetes de Turismo/i);
+    await expect(page).toHaveTitle(/Paquetes de Turismo \| Nexo Real/i);
   });
 });

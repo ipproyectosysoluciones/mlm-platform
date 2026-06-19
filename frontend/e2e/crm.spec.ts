@@ -55,7 +55,7 @@ test.describe('CRM Module', () => {
 
   test('should have search/filter functionality', async ({ page }) => {
     // Look for search input
-    const searchInput = page.getByPlaceholder(/buscar|search/i);
+    const searchInput = page.getByPlaceholder(/buscar/i);
     if (await searchInput.isVisible().catch(() => false)) {
       await searchInput.fill('test');
       await page.waitForTimeout(500);
@@ -66,7 +66,7 @@ test.describe('CRM Module', () => {
 
   test('should have add new lead button', async ({ page }) => {
     // Look for add/create button
-    const addButton = page.getByRole('button', { name: /create|new|agregar|crear|nuevo/i });
+    const addButton = page.getByRole('button', { name: /agregar|crear|nuevo/i });
     if (await addButton.isVisible().catch(() => false)) {
       await expect(addButton).toBeVisible();
     }
@@ -105,7 +105,7 @@ test.describe('CRM Lead Creation', () => {
   });
 
   test('should open lead creation form', async ({ page }) => {
-    const addButton = page.getByRole('button', { name: /create|new|agregar|crear|nuevo/i });
+    const addButton = page.getByRole('button', { name: /agregar|crear|nuevo/i });
 
     if (await addButton.isVisible().catch(() => false)) {
       await addButton.click();
@@ -120,7 +120,7 @@ test.describe('CRM Lead Creation', () => {
   });
 
   test('should validate required fields in lead form', async ({ page }) => {
-    const addButton = page.getByRole('button', { name: /create|new|agregar|crear|nuevo/i });
+    const addButton = page.getByRole('button', { name: /agregar|crear|nuevo/i });
 
     if (await addButton.isVisible().catch(() => false)) {
       await addButton.click();
@@ -144,13 +144,13 @@ test.describe('CRM Lead Creation', () => {
   });
 
   test('should close lead form with cancel button', async ({ page }) => {
-    const addButton = page.getByRole('button', { name: /create|new|agregar|crear|nuevo/i });
+    const addButton = page.getByRole('button', { name: /agregar|crear|nuevo/i });
 
     if (await addButton.isVisible().catch(() => false)) {
       await addButton.click();
       await page.waitForTimeout(500);
 
-      const cancelButton = page.getByRole('button', { name: /cancel|cancelar|close|cerrar/i });
+      const cancelButton = page.getByRole('button', { name: /cancelar|cerrar/i });
       if (await cancelButton.isVisible().catch(() => false)) {
         await cancelButton.click();
         await page.waitForTimeout(500);
@@ -176,9 +176,7 @@ test.describe('CRM Lead Actions', () => {
 
   test('should display lead status options', async ({ page }) => {
     // Look for status badges or labels
-    const statusOptions = page.getByText(
-      /new|nuevo|contacted|contactado|interested|interesado|closed|cerrado/i
-    );
+    const statusOptions = page.getByText(/nuevo|contactado|interesado|cerrado/i);
     if (
       await statusOptions
         .first()

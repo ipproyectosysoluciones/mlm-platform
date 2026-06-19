@@ -1,17 +1,7 @@
-/**
- * @fileoverview Debug login test for mock API verification
- * @description Tests the login flow with mock API interception.
- *              Clears any pre-existing auth (from storageState) before testing.
- *
- * @module e2e/test-login
- */
 import { test, expect } from '@playwright/test';
-import { setupMockApi } from './mock-api';
 
 test('debug login with exact credentials', async ({ page }) => {
-  // Set up mock API BEFORE navigation
-  setupMockApi(page);
-
+  // Capturar logs de consola
   page.on('console', (msg) => {
     if (msg.type() === 'error') {
       console.log('CONSOLE ERROR:', msg.text());
@@ -22,31 +12,25 @@ test('debug login with exact credentials', async ({ page }) => {
     console.log('PAGE ERROR:', err.message);
   });
 
-  // Clear pre-existing auth from storageState to start at login page
-  await page.context().clearCookies();
-  await page.goto('http://localhost:5173/login', { waitUntil: 'domcontentloaded' });
+  console.log('Navigating to login...');
+  await page.goto('http://localhost:5173/login');
+  await page.waitForLoadState('networkidle');
 
-  // Clear localStorage injected by storageState (token + mlm_user_cache)
-  await page.evaluate(() => {
-    localStorage.clear();
-    sessionStorage.clear();
-  });
-
-  // Reload so the app starts fresh without auth — lands on /login
-  await page.reload({ waitUntil: 'domcontentloaded' });
-
-  // Login form should now be visible
-  await page.waitForSelector('input[type="email"]', { state: 'visible', timeout: 15000 });
-
+  console.log('Filling form...');
   await page.fill('input[type="email"]', 'admin@mlm.com');
   await page.fill('input[type="password"]', 'admin123');
 
+  console.log('Submitting...');
   await page.click('button[type="submit"]');
 
-  // Wait for redirect to dashboard — with mock API this resolves fast
-  await page.waitForURL(/\/dashboard/, { timeout: 30000 });
+  // Esperar para ver resultado
+  await page.waitForTimeout(3000);
 
+  console.log('Current URL:', page.url());
+
+  // Tomar screenshot
   await page.screenshot({ path: '/tmp/login-debug.png', fullPage: true });
 
+  // Verificar URL
   await expect(page).toHaveURL(/\/dashboard/);
 });
