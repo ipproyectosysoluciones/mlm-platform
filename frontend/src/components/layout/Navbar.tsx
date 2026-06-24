@@ -31,6 +31,7 @@ import {
   Trophy,
   Medal,
   ChevronDown,
+  Receipt,
 } from 'lucide-react';
 import { LanguageSelector } from './LanguageSelector';
 import { UserMenu } from './UserMenu';
@@ -53,12 +54,14 @@ const NAV_ITEMS = [
   { path: '/achievements', labelKey: 'nav.achievements', icon: Medal },
   { path: '/landing-pages', labelKey: 'nav.landingPages', icon: FileText },
   { path: '/wallet', labelKey: 'nav.wallet', icon: Wallet },
+  { path: '/orders', labelKey: 'nav.orders', icon: Receipt },
   { path: '/profile', labelKey: 'nav.profile', icon: User },
 ];
 
 /** Admin dropdown items / Ítems del dropdown de administración */
 const ADMIN_DROPDOWN_ITEMS = [
   { path: '/admin', labelKey: 'nav.adminUsers', icon: Users },
+  { path: '/orders', labelKey: 'nav.orders', icon: Receipt },
   { path: '/admin/commissions', labelKey: 'nav.commissionConfig', icon: DollarSign },
   { path: '/admin/properties', labelKey: 'nav.adminProperties', icon: Building2 },
   { path: '/admin/tours', labelKey: 'nav.adminTours', icon: MapPin },

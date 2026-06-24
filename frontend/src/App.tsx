@@ -39,6 +39,8 @@ const WalletPage = lazy(() => import('./pages/WalletPage'));
 const ProductLanding = lazy(() => import('./pages/ProductLanding'));
 const RecoverCartPage = lazy(() => import('./pages/RecoverCartPage'));
 const EmailCampaignPage = lazy(() => import('./pages/EmailCampaignPage'));
+const OrdersPage = lazy(() => import('./pages/orders/OrdersPage'));
+const OrderDetailPage = lazy(() => import('./pages/orders/OrderDetailPage'));
 
 // Lazy loaded pages for Real Estate & Tourism (Sprint 5)
 const PropertiesPage = lazy(() => import('./pages/PropertiesPage'));
@@ -222,6 +224,26 @@ function App() {
                 <ProtectedRoute>
                   <Suspense fallback={<PageLoader />}>
                     <Checkout />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/orders"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<PageLoader />}>
+                    <OrdersPage />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/orders/:id"
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<PageLoader />}>
+                    <OrderDetailPage />
                   </Suspense>
                 </ProtectedRoute>
               }
