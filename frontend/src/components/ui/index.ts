@@ -86,3 +86,4 @@ export {
 export { SonnerToaster } from './sonner';
 export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './tooltip';
 export { Progress } from './progress';
+export { Pagination } from './Pagination';
