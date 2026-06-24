@@ -242,7 +242,10 @@ export interface Order {
   purchaseId?: string;
   status: OrderStatus;
   paymentMethod: PaymentMethod;
+  /** Amount from POST /orders (create) response */
   amount: number;
+  /** Total amount from GET /orders (list/single) response */
+  totalAmount?: number;
   currency: string;
   commissionTotal?: number;
   createdAt: Date;
