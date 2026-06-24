@@ -34,8 +34,8 @@ Chain strategy: pending
 
 ## Phase 3: Core Pages
 
-- [ ] 3.1 **Create `OrdersPage.tsx`** — paginated order list with status filter via `useSearchParams`. States: loading (TableSkeleton), empty (EmptyState with CTA to /products), error (card + retry), data (table with Order #, Product, Amount, Status, Date + Pagination). Uses `orderService.getOrders(params)` and `OrderStatus` badge. Frontend: `frontend/src/pages/orders/OrdersPage.tsx` (~200 lines)
-- [ ] 3.2 **Create `OrderDetailPage.tsx`** — read-only detail via `useParams` + `orderService.getOrder(id)`. States: loading (CardSkeleton), not-found (message + /orders link), data (order number copyable, OrderStatus badge, OrderSummary, payment method, CommissionBreakdownCard). No celebration animation. Frontend: `frontend/src/pages/orders/OrderDetailPage.tsx` (~140 lines)
+- [x] 3.1 **Create `OrdersPage.tsx`** — paginated order list with status filter via `useSearchParams`. States: loading (TableSkeleton), empty (EmptyState with CTA to /products), error (card + retry), data (table with Order #, Product, Amount, Status, Date + Pagination). Uses `orderService.getOrders(params)` and `OrderStatus` badge. Frontend: `frontend/src/pages/orders/OrdersPage.tsx` (~200 lines)
+- [x] 3.2 **Create `OrderDetailPage.tsx`** — read-only detail via `useParams` + `orderService.getOrder(id)`. States: loading (CardSkeleton), not-found (message + /orders link), data (order number copyable, OrderStatus badge, OrderSummary, payment method, commission info). No celebration animation. Frontend: `frontend/src/pages/orders/OrderDetailPage.tsx` (~140 lines)
 
 ## Phase 4: Wiring
 
