@@ -1,0 +1,92 @@
+change: sprint8-bot-complete
+status: archived
+created_at: "2026-04-09"
+archived_at: "2026-04-11"
+version_target: v2.4.0
+version_released: v2.4.0
+branch_base: development
+release_date: "2026-04-09T21:57:23Z"
+main_sync_date: "2026-04-10"
+
+phases_completed:
+  explore: true
+  propose: true
+  spec: true
+  design: true
+  tasks: true
+  apply: true
+  verify: true
+  archive: true
+
+batches:
+  - id: "8.1"
+    name: "Knowledge Base FAQ"
+    branch: feature/sprint8-8.1-knowledge-base
+    status: complete
+    tasks: 9
+    pr: 107
+    merged_at: "2026-04-09"
+
+  - id: "8.2"
+    name: "n8n Google Calendar (schedule-visit)"
+    branch: feature/sprint8-8.2-n8n-schedule
+    status: complete
+    tasks: 7
+    pr: 110
+    merged_at: "2026-04-09"
+
+  - id: "8.3"
+    name: "n8n Notion CRM (human-handoff)"
+    branch: feature/sprint8-8.3-n8n-handoff
+    status: complete
+    tasks: 5
+    pr: 111
+    merged_at: "2026-04-09"
+
+  - id: "8.4"
+    name: "Captación de Leads Completa"
+    branch: feature/sprint8-8.4-lead-capture
+    status: complete
+    tasks: 12
+    pr: 114
+    merged_at: "2026-04-09"
+
+  - id: "8.5"
+    name: "Onboarding de Afiliados Flow"
+    branch: feature/sprint8-8.5-onboarding
+    status: complete
+    tasks: 9
+    pr: 116
+    merged_at: "2026-04-09"
+
+additional_prs:
+  - pr: 112
+    title: "Env examples for n8n"
+    merged_at: "2026-04-09"
+  - pr: 117
+    title: "fix(n8n-brevo-http-request)"
+    merged_at: "2026-04-09"
+  - pr: 118
+    title: "dependabot npm security updates"
+    merged_at: "2026-04-10"
+  - pr: 119
+    title: "fix/codeql-missing-rate-limiting-admin-routes"
+    merged_at: "2026-04-10"
+  - pr: 120
+    title: "feature/sprint8-rbac-roles"
+    merged_at: "2026-04-10"
+  - pr: 121
+    title: "feature/sprint8-seed-docs"
+    merged_at: "2026-04-10"
+  - pr: 122
+    title: "feature/sprint8-bot-postgres-dockerhub"
+    merged_at: "2026-04-10"
+
+total_prs_merged: 16
+
+engram_artifacts:
+  explore: "sdd/sprint8-bot-complete/explore"
+  proposal: "sdd/sprint8-bot-complete/proposal"
+  spec: "sdd/sprint8-bot-complete/spec"
+  design: "sdd/sprint8-bot-complete/design"
+  tasks: "sdd/sprint8-bot-complete/tasks"

@@ -614,6 +614,96 @@ export function setupMockApi(page: Page): void {
         });
       }
 
+      // GET /api/orders — list orders (MUST come before :orderId regex)
+      if (pathname === '/api/orders' && method === 'GET') {
+        const page = parseInt(new URL(route.request().url()).searchParams.get('page') || '1');
+        const limit = parseInt(new URL(route.request().url()).searchParams.get('limit') || '20');
+        const total = 42;
+        const totalPages = Math.ceil(total / limit);
+
+        return route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            success: true,
+            data: [
+              {
+                id: 'order-001',
+                orderNumber: 'ORD-20260619-001',
+                userId: 'user-1',
+                productId: 'prod-001',
+                purchaseId: 'purchase-001',
+                totalAmount: 15.99,
+                currency: 'USD',
+                status: 'completed',
+                paymentMethod: 'simulated',
+                notes: null,
+                createdAt: '2026-06-19T10:00:00.000Z',
+                updatedAt: '2026-06-19T10:00:00.000Z',
+                product: {
+                  id: 'prod-001',
+                  name: 'Netflix Premium',
+                  platform: 'netflix',
+                  price: 15.99,
+                  durationDays: 30,
+                  description: 'Acceso a Netflix en calidad 4K',
+                },
+              },
+              {
+                id: 'order-002',
+                orderNumber: 'ORD-20260618-001',
+                userId: 'user-1',
+                productId: 'prod-002',
+                purchaseId: 'purchase-002',
+                totalAmount: 12.99,
+                currency: 'USD',
+                status: 'completed',
+                paymentMethod: 'simulated',
+                notes: null,
+                createdAt: '2026-06-18T14:30:00.000Z',
+                updatedAt: '2026-06-18T14:30:00.000Z',
+                product: {
+                  id: 'prod-002',
+                  name: 'Spotify Family',
+                  platform: 'spotify',
+                  price: 12.99,
+                  durationDays: 30,
+                  description: 'Spotify Premium para hasta 6 cuentas',
+                },
+              },
+              {
+                id: 'order-003',
+                orderNumber: 'ORD-20260617-001',
+                userId: 'user-1',
+                productId: 'prod-003',
+                purchaseId: null,
+                totalAmount: 9.99,
+                currency: 'USD',
+                status: 'pending',
+                paymentMethod: 'simulated',
+                notes: 'Awaiting payment confirmation',
+                createdAt: '2026-06-17T09:15:00.000Z',
+                updatedAt: '2026-06-17T09:15:00.000Z',
+                product: {
+                  id: 'prod-003',
+                  name: 'HBO Max',
+                  platform: 'hbo_max',
+                  price: 9.99,
+                  durationDays: 30,
+                  description: 'Todo el contenido de HBO Max',
+                },
+              },
+            ],
+            pagination: {
+              total,
+              page,
+              limit,
+              totalPages,
+            },
+          }),
+        });
+      }
+
       // GET /api/orders/:orderId — get single order (used by OrderSuccess page)
       const getOrderIdMatch = pathname.match(/^\/api\/orders\/([a-zA-Z0-9_-]+)$/);
       if (getOrderIdMatch && method === 'GET') {

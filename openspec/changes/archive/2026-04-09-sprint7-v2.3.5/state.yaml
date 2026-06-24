@@ -1,0 +1,71 @@
+change: sprint7-patch-v2.3.5
+status: archived
+archived_at: "2026-04-09"
+version: v2.3.5
+branch: development
+merged_into: main
+release_tag: v2.3.5
+type: patch
+parent_sprint: sprint7-v2.3.0
+
+summary: |
+  Patch de estabilización post-Sprint 7. Corrige unhandled promise rejection
+  en ReservationFlowPage, lint en pushService.test.ts, y actualiza toda la
+  documentación a v2.3.5. CD pipeline corregido (Docker build context).
+
+fixes:
+  - id: FIX-001
+    file: frontend/src/pages/ReservationFlowPage.tsx
+    description: "handleConfirm sin try/catch causaba unhandled promise rejection"
+    root_cause: "confirmReservation() re-lanza el error intencionalmente después de setearlo en createError"
+    fix: "Wrapped await confirmReservation() en try/catch vacío en el componente"
+
+  - id: FIX-002
+    file: frontend/src/test/pushService.test.ts
+    description: "mockPermission declarada pero nunca leída, mockOnLine let → const"
+    fix: "Eliminar mockPermission, cambiar mockOnLine a const"
+
+  - id: FIX-003
+    file: .github/workflows/cd-backend.yml
+    description: "Docker build context '.' no encontraba dist/server.mjs"
+    fix: "Cambiar context: . → context: ./backend"
+
+docs_updated:
+  - CHANGELOG.md
+  - README.md
+  - SECURITY.md
+  - backend/src/config/swagger.ts
+  - docs/ARCHITECTURE.md
+  - docs/ROADMAP.md
+  - docs/TESTING.md
+  - docs/PRD.md
+
+tests:
+  backend:
+    suites: 39
+    tests: 535
+    status: pass
+  frontend:
+    suites: 33
+    tests: 432
+    status: pass
+  total: 967
+
+known_issues:
+  - file: backend/src/tests/PayPalService.test.ts
+    tests: 2
+    description: "verifyWebhookSignature — mocks inconsistentes"
+    priority: backlog-sprint8
+
+  - file: frontend/src/test/propertiesFlow.test.tsx
+    tests: 1
+    description: "navigate mock no se resetea entre tests"
+    priority: backlog-sprint8
+
+cd_pipeline:
+  run_id: "24185646602"
+  status: success
+  duration: "1m21s"
+  image: Docker Hub actualizado
+
+github_release: "https://github.com/ipproyectosysoluciones/mlm-platform/releases/tag/v2.3.5"

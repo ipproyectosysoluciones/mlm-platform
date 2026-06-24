@@ -113,6 +113,7 @@
     "achievements": "Achievements",
     "landingPages": "Landing Pages",
     "wallet": "Wallet",
+    "orders": "Orders",
     "profile": "Profile",
     "admin": "Admin",
     "commissionConfig": "Commissions",
@@ -205,7 +206,8 @@
     "retry": "Retry",
     "actions": "Actions",
     "noData": "No data",
-    "viewAll": "View all"
+    "viewAll": "View all",
+    "all": "All"
   },
   "auth": {
     "welcome": "Welcome Back",
@@ -283,7 +285,8 @@
     "manageProperties": "Manage real estate properties",
     "manageTours": "Manage tour packages",
     "manageReservations": "Manage client reservations",
-    "manageCommissions": "Configure network commissions"
+    "manageCommissions": "Configure network commissions",
+    "manageOrders": "View and manage all orders"
   },
   "landingPages": {
     "title": "Landing Pages",
@@ -533,7 +536,10 @@
     "retry": "Retry",
     "successMessage": "Your order has been processed successfully!",
     "continueShopping": "Continue Shopping",
-    "goToDashboard": "Go to Dashboard"
+    "goToDashboard": "Go to Dashboard",
+    "backToOrders": "Back to Orders",
+    "orderNotFound": "Order not found",
+    "orderNotFoundHint": "The order you're looking for doesn't exist or you don't have access to it."
   },
   "commission": {
     "sponsor": "Your Sponsor",

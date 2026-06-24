@@ -1,0 +1,20 @@
+change: sprint7-v2.3.0
+status: archived
+archived_at: "2026-04-08"
+version: v2.3.0
+branch: feature/sprint7-bot-stability
+merged_into: development
+release_tag: v2.3.0
+prs:
+  - number: 99
+    title: "feat(frontend): Phase 1 — UI/UX Rebranding (NexoRealLanding, PropertyCard, TourCard)"
+    merged: true
+  - number: 100
+    title: "test(frontend): Phase 2 — Unit tests (307 Vitest)"
+    merged: true
+  - number: 101
+    title: "test(frontend): Phase 2 — E2E tests (51 Playwright)"
+    merged: true
+  - number: 102
+    title: "feat(bot): Phase 3 — Bot Stability (health, withRetry, disconnect handler)"
+    merged: true

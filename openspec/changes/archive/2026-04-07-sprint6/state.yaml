@@ -1,0 +1,58 @@
+change: sprint6
+status: completed
+version: 2.2.0
+created_at: "2026-04-07"
+completed_at: "2026-04-07"
+branch_base: development
+branches:
+  - feature/sprint6-deuda-tecnica
+  - feature/sprint6-admin-dashboard
+  - feature/sprint6-nexo-bot
+  - feature/sprint6-docs
+  - feature/sprint6-seo-content
+  - feature/sprint6-security
+pull_requests:
+  - id: 88
+    title: "feat(infra): Sprint 6 - build hardening, tsc strict, tsconfig fixes"
+    status: merged
+  - id: 89
+    title: "feat(backend): Admin CRUD endpoints for properties and tour packages"
+    status: merged
+  - id: 90
+    title: "feat(admin): Admin Dashboard property + tour management UI"
+    status: merged
+  - id: 91
+    title: "fix(migration): rename binary_balance to network_balance"
+    status: merged
+  - id: 92
+    title: "feat(bot): Nexo Bot WhatsApp flows for properties and tours"
+    status: merged
+  - id: 93
+    title: "feat(backend): BotController + Swagger v2.2.0 + bot endpoints"
+    status: merged
+  - id: 94
+    title: "fix(i18n): i18n cleanup - remove legacy keys, unify translations"
+    status: merged
+  - id: 95
+    title: "feat(seo): SEO content - Helmet, JSON-LD, social proof badges"
+    status: merged
+phases:
+  explore: done
+  proposal: done
+  spec: done
+  design: done
+  tasks: done
+  apply: done
+  verify: done
+  archive: done
+artifacts:
+  exploration: openspec/changes/sprint6/exploration.md
+  proposal: openspec/changes/sprint6/proposal.md
+  specs: openspec/changes/sprint6/specs/
+  design: openspec/changes/sprint6/design.md
+  tasks: openspec/changes/sprint6/tasks.md
+tasks_total: 88
+tasks_completed: 88
+notes: >
+  All 88 tasks completed across 8 PRs merged to development.
+  Awaiting final /sdd-archive to move artifacts to openspec/changes/archive/sprint6/.

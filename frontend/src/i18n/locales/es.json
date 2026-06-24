@@ -109,6 +109,7 @@
     "achievements": "Logros",
     "landingPages": "Landing Pages",
     "wallet": "Billetera",
+    "orders": "Pedidos",
     "profile": "Perfil",
     "admin": "Admin",
     "commissionConfig": "Comisiones",
@@ -201,7 +202,8 @@
     "retry": "Reintentar",
     "actions": "Acciones",
     "noData": "No hay datos",
-    "viewAll": "Ver todo"
+    "viewAll": "Ver todo",
+    "all": "Todos"
   },
   "auth": {
     "welcome": "Bienvenido",
@@ -279,7 +281,8 @@
     "manageProperties": "Gestionar propiedades inmobiliarias",
     "manageTours": "Gestionar paquetes turísticos",
     "manageReservations": "Gestionar reservas de clientes",
-    "manageCommissions": "Configurar comisiones de la red"
+    "manageCommissions": "Configurar comisiones de la red",
+    "manageOrders": "Ver y gestionar todos los pedidos"
   },
   "landingPages": {
     "title": "Landing Pages",
@@ -529,7 +532,10 @@
     "retry": "Reintentar",
     "successMessage": "Tu orden ha sido procesada exitosamente!",
     "continueShopping": "Seguir Comprando",
-    "goToDashboard": "Ir al Dashboard"
+    "goToDashboard": "Ir al Dashboard",
+    "backToOrders": "Volver a Órdenes",
+    "orderNotFound": "Orden no encontrada",
+    "orderNotFoundHint": "La orden que buscas no existe o no tienes acceso a ella."
   },
   "commission": {
     "sponsor": "Tu Patrocinador",
