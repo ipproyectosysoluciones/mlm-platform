@@ -26,11 +26,11 @@ Chain strategy: pending
 
 ## Phase 1: Backend Fix
 
-- [ ] 1.1 **Fix `OrderReadController.getOrders` response mapping** — add `product` field (id, name, platform, price, durationDays, description) inside each order's `.map()` callback, matching the existing pattern in `getOrderById`. Backend: `backend/src/controllers/orders/OrderReadController.ts` (~12 lines)
+- [x] 1.1 **Fix `OrderReadController.getOrders` response mapping** — add `product` field (id, name, platform, price, durationDays, description) inside each order's `.map()` callback, matching the existing pattern in `getOrderById`. Backend: `backend/src/controllers/orders/OrderReadController.ts` (~12 lines)
 
 ## Phase 2: Foundation UI
 
-- [ ] 2.1 **Create `Pagination.tsx`** — shadcn/ui-style component with props `{ page, totalPages, onPageChange }`. Renders page buttons (outline variant), prev/next with disabled states at boundaries; returns `null` when `totalPages <= 1`. Frontend: `frontend/src/components/ui/Pagination.tsx` (~65 lines)
+- [x] 2.1 **Create `Pagination.tsx`** — shadcn/ui-style component with props `{ page, totalPages, onPageChange }`. Renders page buttons (outline variant), prev/next with disabled states at boundaries; returns `null` when `totalPages <= 1`. Frontend: `frontend/src/components/ui/Pagination.tsx` (~65 lines)
 
 ## Phase 3: Core Pages
 
@@ -45,7 +45,7 @@ Chain strategy: pending
 
 ## Phase 5: Mock API + E2E Tests
 
-- [ ] 5.1 **Add `GET /api/orders` handler to `mock-api.ts`** — return paginated order list with 3 sample orders including product objects. Place handler **before** the `:orderId` regex to avoid false matches. Frontend: `frontend/e2e/mock-api.ts` (~55 lines)
+- [x] 5.1 **Add `GET /api/orders` handler to `mock-api.ts`** — return paginated order list with 3 sample orders including product objects. Place handler **before** the `:orderId` regex to avoid false matches. Frontend: `frontend/e2e/mock-api.ts` (~55 lines)
 - [ ] 5.2 **Create `OrdersListPage` POM** — extends `BasePage`. Selectors: table, pagination, status filter select, empty/error states, skeleton. Methods: `goto`, `filterByStatus`, `goToPage`, `clickOrderRow`. Frontend: `frontend/e2e/orders/orders-list-page.ts` (~50 lines)
 - [ ] 5.3 **Create `OrderDetailPage` POM** — extends `BasePage`. Selectors: order number, status badge, OrderSummary, commission card, back link. Methods: `goto(id)`, `verifyLoaded`. Frontend: `frontend/e2e/orders/order-detail-page.ts` (~40 lines)
 - [ ] 5.4 **Create `orders.spec.ts`** — E2E tests covering: load order list; filter by status; paginate; empty state; error state with retry; navigate to detail from list; verify detail fields; handle 404 on invalid ID. Frontend: `frontend/e2e/orders/orders.spec.ts` (~120 lines)
