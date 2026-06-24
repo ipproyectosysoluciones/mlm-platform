@@ -1,0 +1,94 @@
+change: nexo-real-rebranding
+status: completed
+created: 2026-04-05
+updated: 2026-04-05
+author: Nexo Real Team
+
+summary: |
+  Rebranding completo del proyecto de "mlm-platform" a "Nexo Real".
+  Redefinición del modelo de negocio: de plataforma MLM genérica (streaming, productos)
+  a plataforma especializada en servicios inmobiliarios + turismo/hospitalidad.
+  Documentación del Nexo Bot (AI WhatsApp), prompts y Knowledge Base.
+
+phases_completed:
+  - name: PRD rewrite
+    status: done
+    file: docs/PRD.md
+    notes: Reescritura completa v2.0.0. Eliminado streaming, delivery DiDi/Uber, productos genéricos como foco. Agregado Nexo Bot, modelo Unilevel, planes multi-tenant.
+
+  - name: ROADMAP update
+    status: done
+    file: docs/ROADMAP.md
+    notes: Actualizado branding y visión. Agregadas Fases 1/2/3 del producto. Sprint 4 incluye Nexo Bot MVP.
+
+  - name: openspec config update
+    status: done
+    file: openspec/config.yaml
+    notes: Contexto completo de Nexo Real, stack del bot, modelo de negocio, reglas del agente.
+
+  - name: prompt_kb files
+    status: done
+    path: prompt_kb/ (gitignored)
+    files:
+      - base-system-prompt.md   # Sistema prompt base, reglas duras, escalación
+      - sophia.prompt.md        # Agente femenina, atiende hombres
+      - max.prompt.md           # Agente masculino, atiende mujeres
+      - knowledge-base.md       # KB bilingüe completa, 7 secciones
+
+  - name: gitignore update
+    status: done
+    file: .gitignore
+    notes: Agregado prompt_kb/ como sección privada never-commit.
+
+decisions:
+  - id: D1
+    title: Unilevel sobre Binario
+    rationale: |
+      Los servicios inmobiliarios y turísticos tienen ticket alto, ciclos de venta
+      largos y comisiones por cierre (no recurrentes). El modelo Binario genera
+      desbalance estructural en este contexto. Unilevel es más predecible,
+      más justo y más fácil de auditar.
+
+  - id: D2
+    title: BuilderBot + Baileys sobre otras soluciones
+    rationale: |
+      Baileys es la única solución que no requiere WhatsApp Business API paga
+      para el MVP. BuilderBot provee la capa de flujos sobre Baileys.
+      Para producción multi-tenant se evaluará Meta Cloud API.
+
+  - id: D3
+    title: OpenAI GPT-4o como motor AI del bot
+    rationale: |
+      Capacidad de razonamiento suficiente para manejo de objeciones y
+      knowledge base. Costo manejable para demo. Si el volumen crece,
+      evaluar GPT-4o-mini o fine-tuning.
+
+  - id: D4
+    title: Sophia y Max como agentes diferenciados por género
+    rationale: |
+      El objetivo es generar mayor empatía y conexión con el usuario.
+      Sophia atiende hombres (cálida, carismática), Max atiende mujeres
+      (confiable, empático). Detección por nombre o declaración del usuario.
+
+  - id: D5
+    title: Bilingüe ES/EN desde el inicio
+    rationale: |
+      El target es LATAM pero con expansión a mercados anglófonos (turismo
+      internacional). La pregunta de idioma al inicio de cada conversación
+      garantiza la experiencia correcta desde el primer mensaje.
+
+  - id: D6
+    title: prompt_kb/ en .gitignore (nunca al repo)
+    rationale: |
+      Los prompts y la KB son ventaja competitiva y propiedad intelectual
+      del negocio. No deben estar en el repositorio público ni accesibles
+      a terceros. Solo el owner y el AI agent tienen acceso.
+
+next_steps:
+  - Integrar OpenAI en bot/src/services/ai.service.ts
+  - Crear flujo de detección de idioma (ES/EN) en welcome.flow.ts
+  - Crear flujo de detección de género → asignación Sophia/Max
+  - Conectar KB con el system prompt dinámicamente
+  - Configurar n8n workflows (Google Calendar + Notion + notificación humana)
+  - Primera conexión WhatsApp (pairing code en Docker)
+  - Demo funcional para primer cliente piloto

@@ -1,0 +1,51 @@
+change: sprint4-complete
+status: completed
+version: v2.0.0
+created_at: 2026-04-06
+completed_at: 2026-04-06
+registered_retroactively: true
+
+prs:
+  - "#52 — fix(backend): sprint4 backend fixes and integration tests"
+  - "#53 — test(frontend): increase test coverage from 155 to 210 tests"
+  - "#54 — docs(architecture): update ARCHITECTURE.md for v2.0.0"
+
+tag: v2.0.0
+branch_merged: development → main
+
+phases:
+  explore: complete
+  propose: complete
+  spec: complete
+  design: complete
+  tasks: complete
+  apply: complete
+  verify: skipped  # implemented directly, no prior SDD artifacts
+  archive: pending
+
+features:
+  - name: Nexo Bot (WhatsApp MVP)
+    tasks: 20
+    files: 14
+    description: BuilderBot + Baileys, 8 flujos, 3 servicios, GPT-4o agents, n8n integration
+  - name: Backend Hardening
+    tasks: 7
+    files: 6
+    description: Achievement/Leaderboard/Bot routes, BotController, bot.middleware, model associations
+  - name: Frontend Tests
+    tasks: 7
+    files: 6
+    description: 55 new tests (155 → 210), Vitest 4 fix
+  - name: Architecture Docs + Release
+    tasks: 4
+    files: 2
+    description: ARCHITECTURE.md v2.0.0, N8N-SETUP.md, tag + GitHub Release
+
+stats:
+  total_tasks: 38
+  tasks_complete: 38
+  new_files: ~26
+  modified_files: 5
+  frontend_tests_before: 155
+  frontend_tests_after: 210
+  new_tests_added: 55
