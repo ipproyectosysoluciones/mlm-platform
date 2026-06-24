@@ -16,6 +16,7 @@ import {
   MapPin,
   CalendarDays,
   DollarSign,
+  Receipt,
 } from 'lucide-react';
 import { adminService } from '../services/api';
 import { StatsOverview, UserFilters, UsersTable, CRMAutomationWidget } from '../components/admin';
@@ -64,6 +65,14 @@ const QUICK_ACCESS_CARDS = [
     icon: DollarSign,
     gradient: 'from-amber-500 to-orange-500',
     shadow: 'shadow-amber-500/25',
+  },
+  {
+    path: '/orders',
+    titleKey: 'nav.orders',
+    descriptionKey: 'admin.manageOrders',
+    icon: Receipt,
+    gradient: 'from-rose-500 to-pink-500',
+    shadow: 'shadow-rose-500/25',
   },
 ];
 

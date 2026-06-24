@@ -109,6 +109,7 @@
     "achievements": "Logros",
     "landingPages": "Landing Pages",
     "wallet": "Billetera",
+    "orders": "Pedidos",
     "profile": "Perfil",
     "admin": "Admin",
     "commissionConfig": "Comisiones",
@@ -280,7 +281,8 @@
     "manageProperties": "Gestionar propiedades inmobiliarias",
     "manageTours": "Gestionar paquetes turísticos",
     "manageReservations": "Gestionar reservas de clientes",
-    "manageCommissions": "Configurar comisiones de la red"
+    "manageCommissions": "Configurar comisiones de la red",
+    "manageOrders": "Ver y gestionar todos los pedidos"
   },
   "landingPages": {
     "title": "Landing Pages",
