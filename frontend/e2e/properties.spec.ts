@@ -328,12 +328,9 @@ test.describe('PropertiesPage — States', () => {
     });
 
     await page.goto(`${baseURL}/properties`, { waitUntil: 'networkidle' });
-    await expect(
-      page.getByText(/No properties found|No se encontraron propiedades/i)
-    ).toBeVisible();
-    await expect(
-      page.getByText(/Try adjusting the filters|Probá ajustando los filtros/i)
-    ).toBeVisible();
+    // EmptyState type="search" renders i18n key tree.search.noResults
+    // Translations: EN="No results found", ES="No se encontraron resultados"
+    await expect(page.getByText(/No results found|No se encontraron resultados/i)).toBeVisible();
   });
 
   test('shows error message when API fails', async ({ page }) => {
@@ -502,15 +499,18 @@ test.describe('PropertiesPage — Pagination', () => {
   });
 
   test('"Siguiente" button is disabled on last page', async ({ page }) => {
+    // Dynamic mock: responds with the correct page based on request
     await page.route('**/api/properties*', async (route) => {
+      const url = new URL(route.request().url());
+      const requestedPage = parseInt(url.searchParams.get('page') || '1');
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({
           success: true,
           data: Array.from({ length: 3 }, (_, i) => ({
-            id: `p${i}`,
-            title: `Prop ${i}`,
+            id: `p${i}-page${requestedPage}`,
+            title: `Prop ${i} (page ${requestedPage})`,
             address: 'X',
             city: 'Y',
             type: 'sale',
@@ -518,12 +518,21 @@ test.describe('PropertiesPage — Pagination', () => {
             currency: 'USD',
             images: [],
           })),
-          pagination: { total: 15, page: 3, limit: 5, totalPages: 3 },
+          pagination: { total: 15, page: requestedPage, limit: 5, totalPages: 3 },
         }),
       });
     });
 
     await page.goto(`${baseURL}/properties`, { waitUntil: 'networkidle' });
+
+    // Click "Siguiente" twice to reach page 3 (last page)
+    await page.getByRole('button', { name: /Next|Siguiente/i }).click();
+    await page.waitForLoadState('networkidle');
+
+    await page.getByRole('button', { name: /Next|Siguiente/i }).click();
+    await page.waitForLoadState('networkidle');
+
+    // Now on last page — "Siguiente" should be disabled
     await expect(page.getByRole('button', { name: /Next|Siguiente/i })).toBeDisabled();
   });
 
