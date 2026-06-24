@@ -108,6 +108,17 @@ export const getOrders: RequestHandler = asyncHandler(
         notes: order.notes,
         createdAt: order.createdAt,
         updatedAt: order.updatedAt,
+        // Include product details if available
+        ...(order.product && {
+          product: {
+            id: order.product.id,
+            name: order.product.name,
+            platform: order.product.platform,
+            price: Number(order.product.price),
+            durationDays: order.product.durationDays,
+            description: order.product.description,
+          },
+        }),
       })),
       pagination: {
         total: result.count,
