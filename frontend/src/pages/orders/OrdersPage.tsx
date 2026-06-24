@@ -32,7 +32,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { OrderStatus } from '@/components/OrderStatus';
 import { PriceDisplay } from '@/components/PriceDisplay';
 import { EmptyState } from '@/components/EmptyState';
-import { Pagination } from '@/components/ui/pagination';
+import { Pagination } from '@/components/ui/Pagination';
 
 /** All possible order status values for the filter */
 const ORDER_STATUSES: OrderStatusType[] = ['pending', 'completed', 'failed', 'cancelled'];
@@ -103,7 +103,7 @@ export function OrdersPage() {
 
   // State
   const [orders, setOrders] = useState<Order[]>([]);
-  const [total, setTotal] = useState(0);
+  const [, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
