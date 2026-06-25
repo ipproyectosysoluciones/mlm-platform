@@ -9,19 +9,22 @@ import { baseURL, login } from './helpers';
 
 test.describe('CRM Module', () => {
   test.beforeEach(async ({ page }) => {
-    // Login first
+    // Login first (ends on /dashboard, auth token in localStorage)
     await login(page);
 
-    // Navigate to CRM with retry
-    await page.goto(`${baseURL}/crm`, { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(2000);
-
-    // Verify we're on CRM page or handle redirect
-    if (!page.url().includes('/crm')) {
-      // Wait a bit more if redirected
-      await page.waitForTimeout(3000);
+    // Navigate to CRM via SPA link click (NOT page.goto, which triggers
+    // addInitScript and clears the auth token on full page loads).
+    // After login we're on /dashboard which has the CRM link in the navbar.
+    const crmLink = page.locator('nav a[href="/crm"]').first();
+    if (await crmLink.isVisible({ timeout: 5000 }).catch(() => false)) {
+      await crmLink.click();
+    } else {
+      // Fallback: direct navigation (may lose auth if addInitScript fires)
+      await page.goto(`${baseURL}/crm`);
     }
 
+    // Wait for React Router to process the SPA navigation
+    await page.waitForURL(/\/crm/, { timeout: 20000 });
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
   });

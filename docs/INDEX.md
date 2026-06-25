@@ -1,25 +1,27 @@
 # 📚 Documentación del Proyecto - Directorio
 
-> Índice completo de toda la documentación del proyecto Nexo Real.
+> Índice completo de toda la documentación del proyecto Nexo Real (MLM Platform).
 
 ## 📋 Documentación Principal
 
 | Documento                          | Descripción                          | Última Actualización |
 | ---------------------------------- | ------------------------------------ | -------------------- |
-| [README.md](../README.md)          | Documentación principal del proyecto | 2026-04-01           |
-| [PRD.md](PRD.md)                   | Product Requirements Document        | 2026-04-01           |
-| [ROADMAP.md](ROADMAP.md)           | Hoja de ruta completa                | 2026-04-01           |
+| [README.md](../README.md)          | Documentación principal del proyecto | 2026-06-25           |
+| [PRD.md](PRD.md)                   | Product Requirements Document        | 2026-06-25           |
+| [ROADMAP.md](ROADMAP.md)           | Hoja de ruta completa                | 2026-06-25           |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Arquitectura del sistema             | 2026-04-01           |
+| [API.md](API.md)                   | Referencia de API REST               | 2026-04-01           |
+| [DEPLOYMENT.md](DEPLOYMENT.md)     | Guía de despliegue                   | 2026-04-01           |
+| [TESTING.md](TESTING.md)           | Estrategia de testing                | 2026-04-01           |
+| [DEMO_SCRIPT.md](DEMO_SCRIPT.md)   | Script de demo para inversores       | 2026-04-01           |
 
 ## 🔧 Guías de Desarrollo
 
 | Documento                                                      | Descripción                      |
 | -------------------------------------------------------------- | -------------------------------- |
 | [guides/CONTRIBUTING.md](guides/CONTRIBUTING.md)               | Guía para contribuir al proyecto |
-| [guides/SECURITY.md](guides/SECURITY.md)                       | Políticas de seguridad           |
-| [guides/SECURITY_MONITORING.md](guides/SECURITY_MONITORING.md) | Monitoreo de seguridad           |
-| [guides/CHANGELOG.md](guides/CHANGELOG.md)                     | Historial de cambios             |
 | [guides/CODE_OF_CONDUCT.md](guides/CODE_OF_CONDUCT.md)         | Código de conducta               |
+| [guides/SECURITY_MONITORING.md](guides/SECURITY_MONITORING.md) | Monitoreo de seguridad           |
 | [guides/BRANCHING.md](guides/BRANCHING.md)                     | Estrategia de ramas              |
 | [guides/TESTING.md](guides/TESTING.md)                         | Guía de testing                  |
 | [guides/SETUP_DATABASE.md](guides/SETUP_DATABASE.md)           | Configuración de base de datos   |
@@ -47,26 +49,18 @@
 | ------------------------------ | ------------------------------- |
 | [specs/SPEC.md](specs/SPEC.md) | Especificación técnica completa |
 
-## 🤖 Nexo Bot + n8n (Sprint 4 — v2.0.0)
+## 🤖 Nexo Bot + n8n
 
 | Documento                    | Descripción                                                           |
 | ---------------------------- | --------------------------------------------------------------------- |
 | [N8N-SETUP.md](N8N-SETUP.md) | Guía completa de setup de n8n: Google Calendar, Notion CRM, workflows |
 
-## 🚀 Sprint 2 (v1.10.0)
+## 📦 Documentación Archivada
 
-| Documento                                                          | Descripción                                   |
-| ------------------------------------------------------------------ | --------------------------------------------- |
-| [TASKS-Sprint2.md](TASKS-Sprint2.md)                               | Sprint 2 task breakdown & acceptance criteria |
-| [DESIGN-GiftCards.md](DESIGN-GiftCards.md)                         | Gift Cards technical design                   |
-| [DESIGN-AbandonedCart.md](DESIGN-AbandonedCart.md)                 | Abandoned Cart Recovery technical design      |
-| [DESIGN-EmailAutomation.md](DESIGN-EmailAutomation.md)             | Email Automation technical design             |
-| [ARCHITECTURE-GiftCards.md](ARCHITECTURE-GiftCards.md)             | Gift Cards architecture decisions             |
-| [ARCHITECTURE-AbandonedCart.md](ARCHITECTURE-AbandonedCart.md)     | Abandoned Cart architecture decisions         |
-| [ARCHITECTURE-EmailAutomation.md](ARCHITECTURE-EmailAutomation.md) | Email Automation architecture decisions       |
-| [EMAIL-AUTOMATION-GUIDE.md](EMAIL-AUTOMATION-GUIDE.md)             | Admin guide for email campaigns               |
-| [BREVO-INTEGRATION.md](BREVO-INTEGRATION.md)                       | Brevo email service integration               |
-| [ABANDONED-CART-WORKFLOW.md](ABANDONED-CART-WORKFLOW.md)           | Abandoned cart recovery workflow              |
+Los siguientes documentos de sprints anteriores se movieron a [`.archive/docs/2026-06-25/`](../.archive/docs/2026-06-25/):
+
+- Sprint 2 (v1.10.0): Gift Cards, Abandoned Cart, Email Automation
+- CRM-ROADMAP, WALLET-DEPLOYMENT, STAGING_TEST_EVIDENCE
 
 ## 🗂️ SDD (Spec-Driven Development)
 
@@ -109,4 +103,4 @@
 
 ---
 
-_Última actualización: 2026-04-04_
+_Última actualización: 2026-06-25_

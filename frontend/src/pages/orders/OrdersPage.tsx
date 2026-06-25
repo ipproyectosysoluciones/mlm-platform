@@ -297,7 +297,11 @@ export function OrdersPage() {
                   </TableCell>
                   <TableCell className="text-slate-300">{order.product?.name || '-'}</TableCell>
                   <TableCell>
-                    <PriceDisplay amount={order.amount} currency={order.currency} size="sm" />
+                    <PriceDisplay
+                      amount={order.totalAmount ?? order.amount}
+                      currency={order.currency}
+                      size="sm"
+                    />
                   </TableCell>
                   <TableCell>
                     <OrderStatus status={order.status} size="sm" />

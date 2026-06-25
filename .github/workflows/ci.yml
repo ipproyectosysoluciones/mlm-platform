@@ -102,7 +102,7 @@ jobs:
           retention-days: 1
 
   # Playwright E2E tests - ONLY runs on development branch
-  # Heavy tests, not suitable for production deployments
+  # Heavy tests, not suitable for all PRs (cost optimization)
   playwright:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/development'

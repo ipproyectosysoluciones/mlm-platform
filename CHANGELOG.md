@@ -4,6 +4,95 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
+## [3.2.0] - 2026-06-25
+
+### Added — Sprint 12: Order History & Quality
+
+#### Order History Feature (multi-PR chain)
+
+- **Backend** — `GET /api/orders` corregido para incluir datos de producto/purchase en la respuesta; servicio y ruta de órdenes completos
+- **Frontend** — `OrdersPage` (listado paginado con historial de órdenes del usuario) y `OrderDetailPage` (detalle con items, total, estado)
+- **Pagination Component** — Nuevo componente `Pagination` para navegación de listas
+- **Route Wiring** — Nav links, admin card y enrutamiento lazy en App.tsx
+- **SDD Artifacts** — Documentación completa del cambio `order-history-page`
+
+#### Frontend API Modularization
+
+- **`api.ts` → 15 archivos** — `auth.ts`, `categories.ts`, `contracts.ts`, `crm.ts`, `dashboard.ts`, `giftCards.ts`, `orders.ts`, `products.ts`, `profile.ts`, `properties.ts`, `tours.ts`, `reservations.ts`, `users.ts`, `vendors.ts` y root `index.ts` con re-exports
+- **Ninguna ruta rota** — migración completa con retro-compatibilidad
+
+#### Test Coverage Expansion
+
+- **Frontend coverage: 89% statements** — Dashboard, TransactionHistory, WalletBalance y servicios testeados
+- **AuthController** — Tests unitarios para register, login, registerGuest, me (PR #189)
+- **ProductController** — 17 tests unitarios (PR #190)
+- **ReportsController + AnalyticsController** — 15 tests unitarios (PR #192)
+- **Middleware Tests** — error, validate, cache, contract middleware (23 tests, PR #192)
+- **Backend: 90+ test suites** — Jest
+- **Frontend Unit: 20+ files** — Vitest
+- **Frontend E2E: 27 specs** — Playwright
+- **Bot: 8 files / 62 tests** — Vitest
+
+#### CI/CD Improvements
+
+- **@babel/core** — Restringido a `<8.0.0` para compatibilidad
+- **Playwright** — Habilitado en PRs, luego revertido a development-only (cost optimization)
+- **coverageProvider: v8** — Resuelto conflicto babel-plugin-istanbul
+
+### Fixed
+
+#### E2E Test Fixes
+
+- **Push Notifications** — Reemplazado `permissions.set` API inválida por `grantPermissions`
+- **Properties** — Corregido empty state text y paginación en última página
+- **Property Search** — Agregado mock API para tests autónomos
+- **Reservation Wizard** — Agregado mock API + SPA navigation para tests headless
+- **Centralized Mock API** — Migración de tests E2E a mock API centralizado
+- **Orders E2E** — Corregido mock shape, campo `totalAmount` y navegación CRM
+
+#### Bug Fixes
+
+- **ProductService.delete()** — Retorna boolean en vez de `then(() => {})` para corregir bug 404
+- **Test hang frontend** — Resuelto test hang + 24 tests fallando por browser APIs no configurables
+- **Integration test isolation** — DELETE test reescrito usando creación API-based de productos
+- **Weekly digest** — Cálculo correcto de `newReferrals` count
+- **Pagination import casing** — Corregido casing inconsistente
+- **Backend TODO cleanup** — Comentarios TODO en PaymentMercadoPagoController limpiados
+
+#### Security Dependencies
+
+- **multer** 2.1.1 → 2.2.0
+- **nodemailer**, **dompurify** — bumped to latest
+- **undici** — Capado a `<8.0.0` para mantener compatibilidad con jsdom
+- **Lockfile** — Actualizado con security patches
+
+---
+
+## [3.1.0] - 2026-06-17
+
+### Added — CRM Refactoring + Security Hardening
+
+#### CRM Refactoring
+
+- **Reducción de ~894 → ~537 líneas** — CRM.tsx slimmeado a capa de orquestación pura
+- **7 sub-componentes extraídos**: KanbanBoard, LeadList, LeadModal, TaskList, CommunicationHistory, AutomationWidget, StatsPanel
+- **Foundation hooks & constants** — `useCrmState`, `useCrmActions`, `CRM_CONSTANTS` para lógica compartida
+- **TypeScript fixes** — cast `draggableProps.style` a `CSSProperties` para CI
+
+#### Security Hardening
+
+- **50 vulnerabilidades resueltas** — Dependency updates y overrides en todos los workspaces
+- **npm_and_yarn group updates** — Lodash, nodemailer, axios actualizados
+- **Security patches** — 3 rondas de dependabot merges
+
+### Fixed
+
+#### CI & Build
+
+- **nodemailer version lock** — Forzado `^9.0.0` para compatibilidad
+
+---
+
 ## [3.0.1] - 2026-06-16
 
 ### Fixed — Sprint 11: Quick Wins

@@ -7,7 +7,7 @@
 
 Conectamos tu negocio con el mundo. Plataforma de afiliaciones Unilevel con comisiones por niveles y visualización de árbol genealógico.
 
-**Versión actual: v3.0.0** — Sprint 10 completado (2026-04-13)
+**Versión actual: v3.2.0** — Sprint 12 completado (2026-06-25)
 
 ## 🚀 Características / Features
 
@@ -21,7 +21,7 @@ Conectamos tu negocio con el mundo. Plataforma de afiliaciones Unilevel con comi
 - **Landing Pages** - Creador de páginas de captura
 - **Panel de Administración** - Gestión completa de usuarios y comisiones
 - **API REST Documentada** - OpenAPI/Swagger bilingüe (ES/EN)
-- **Tests Automatizados** - ~1,236 tests (Backend 39 suites/528 + Frontend Unit 34/446 + E2E 22/262)
+- **Tests Automatizados** - ~1,600+ tests (Backend 90+ suites + Frontend Unit 20+ files + E2E 27 specs + Bot 8 files/62 tests)
 - **i18n** - Interfaz bilingüe (Español/Inglés)
 - **Wallet Digital** - Billetera digital con retiros y transacciones
 - **2FA (TOTP)** - Two-Factor Authentication con códigos de recuperación
@@ -47,35 +47,42 @@ Conectamos tu negocio con el mundo. Plataforma de afiliaciones Unilevel con comi
   - **2FA Frontend** — TwoFactorLoginPage + twoFactorService + códigos de recuperación
   - **UX Polish** — EmptyState 6 tipos + Skeleton loaders + Mobile responsive + Sonner toast
   - **Feature Guard** — Middleware con FEATURE_CRYPTO_ENABLED (deshabilitado por defecto)
+  - **Order History** — OrdersPage + OrderDetailPage + Pagination component + E2E tests
+  - **CRM Refactoring** — ~894→537 líneas, 7 sub-componentes extraídos
+  - **Frontend API Modularization** — `api.ts` dividido en 15 archivos por dominio
+  - **Test Coverage Expansion** — 89% statements frontend, +55 tests backend
 
 ## 📊 Estado de Implementación / Implementation Status
 
 ### ✅ Cambios Completados
 
-| Cambio                            | Descripción                                                                   | Estado       | Fecha      |
-| --------------------------------- | ----------------------------------------------------------------------------- | ------------ | ---------- |
-| streaming-subscriptions-ecommerce | Sistema de suscripciones y e-commerce                                         | ✅ Archivado | 2026-03-27 |
-| wallet-digital                    | Billetera digital con retiros                                                 | ✅ Archivado | 2026-03-27 |
-| sdd-i18n-bilingual                | Sistema de internacionalización ES/EN                                         | ✅ Archivado | 2026-03-27 |
-| phase-3-visual-tree               | Visual Tree UI con React Flow                                                 | ✅ Archivado | 2026-03-27 |
-| sdd-horizontal-navbar             | Layout de navbar horizontal                                                   | ✅ Archivado | 2026-03-27 |
-| es-modules-migration              | Migración a ES Modules                                                        | ✅ Completo  | 2026-03-28 |
-| postgresql-support                | Soporte para PostgreSQL + Docker                                              | ✅ Completo  | 2026-03-28 |
-| build-optimization                | Build optimizado (3.4MB → 1.2MB)                                              | ✅ Completo  | 2026-03-28 |
-| github-templates                  | CODE_OF_CONDUCT, Issues, PR templates                                         | ✅ Completo  | 2026-03-28 |
-| 2fa-totp                          | Two-Factor Authentication con TOTP                                            | ✅ Archivado | 2026-03-29 |
-| playwright-visual-testing         | Scripts E2E con modo visual                                                   | ✅ Archivado | 2026-03-29 |
-| frontend-2fa-ui                   | UI de React para 2FA con QR code                                              | ✅ Completo  | 2026-03-30 |
-| frontend-refactoring              | Modularización de componentes frontend                                        | ✅ Completo  | 2026-03-30 |
-| backend-refactoring               | Controllers modulares (auth, crm, etc)                                        | ✅ Completo  | 2026-04-01 |
-| pwa-offline-pages                 | Páginas 404 y Offline                                                         | ✅ Completo  | 2026-03-31 |
-| pwa-improvements                  | Iconos multi-size, OfflineBanner                                              | ✅ Completo  | 2026-03-31 |
-| sprint2-v1.10.0                   | Gift Cards, Abandoned Cart, Email Automation                                  | ✅ Completo  | 2026-04-04 |
-| sprint3-v1.11.0                   | Security, Products, Marketplace, Delivery, Contracts                          | ✅ Completo  | 2026-04-04 |
-| sprint5-v2.1.0                    | Real Estate & Tourism frontend + security fixes                               | ✅ Completo  | 2026-04-07 |
-| sprint6-v2.2.0                    | Admin CRUD, Nexo Bot flows, SEO, network_balance                              | ✅ Completo  | 2026-04-07 |
-| sprint7-v2.3.0                    | NexoRealLanding, PropertyCard/TourCard, 359 tests, bot health/retry/reconnect | ✅ Completo  | 2026-04-08 |
-| sprint8-v2.4.0                    | RBAC 9 roles, register/guest, updateUserRole, Seed Nexo Real colombiano       | ✅ Completo  | 2026-04-10 |
+| Cambio                            | Descripción                                                                    | Estado       | Fecha      |
+| --------------------------------- | ------------------------------------------------------------------------------ | ------------ | ---------- |
+| streaming-subscriptions-ecommerce | Sistema de suscripciones y e-commerce                                          | ✅ Archivado | 2026-03-27 |
+| wallet-digital                    | Billetera digital con retiros                                                  | ✅ Archivado | 2026-03-27 |
+| sdd-i18n-bilingual                | Sistema de internacionalización ES/EN                                          | ✅ Archivado | 2026-03-27 |
+| phase-3-visual-tree               | Visual Tree UI con React Flow                                                  | ✅ Archivado | 2026-03-27 |
+| sdd-horizontal-navbar             | Layout de navbar horizontal                                                    | ✅ Archivado | 2026-03-27 |
+| es-modules-migration              | Migración a ES Modules                                                         | ✅ Completo  | 2026-03-28 |
+| postgresql-support                | Soporte para PostgreSQL + Docker                                               | ✅ Completo  | 2026-03-28 |
+| build-optimization                | Build optimizado (3.4MB → 1.2MB)                                               | ✅ Completo  | 2026-03-28 |
+| github-templates                  | CODE_OF_CONDUCT, Issues, PR templates                                          | ✅ Completo  | 2026-03-28 |
+| 2fa-totp                          | Two-Factor Authentication con TOTP                                             | ✅ Archivado | 2026-03-29 |
+| playwright-visual-testing         | Scripts E2E con modo visual                                                    | ✅ Archivado | 2026-03-29 |
+| frontend-2fa-ui                   | UI de React para 2FA con QR code                                               | ✅ Completo  | 2026-03-30 |
+| frontend-refactoring              | Modularización de componentes frontend                                         | ✅ Completo  | 2026-03-30 |
+| backend-refactoring               | Controllers modulares (auth, crm, etc)                                         | ✅ Completo  | 2026-04-01 |
+| pwa-offline-pages                 | Páginas 404 y Offline                                                          | ✅ Completo  | 2026-03-31 |
+| pwa-improvements                  | Iconos multi-size, OfflineBanner                                               | ✅ Completo  | 2026-03-31 |
+| sprint2-v1.10.0                   | Gift Cards, Abandoned Cart, Email Automation                                   | ✅ Completo  | 2026-04-04 |
+| sprint3-v1.11.0                   | Security, Products, Marketplace, Delivery, Contracts                           | ✅ Completo  | 2026-04-04 |
+| sprint5-v2.1.0                    | Real Estate & Tourism frontend + security fixes                                | ✅ Completo  | 2026-04-07 |
+| sprint6-v2.2.0                    | Admin CRUD, Nexo Bot flows, SEO, network_balance                               | ✅ Completo  | 2026-04-07 |
+| sprint7-v2.3.0                    | NexoRealLanding, PropertyCard/TourCard, 359 tests, bot health/retry/reconnect  | ✅ Completo  | 2026-04-08 |
+| sprint8-v2.4.0                    | RBAC 9 roles, register/guest, updateUserRole, Seed Nexo Real colombiano        | ✅ Completo  | 2026-04-10 |
+| sprint11-v3.0.1                   | Push notification tests, centralized logger fix                                | ✅ Completo  | 2026-06-16 |
+| sprint12-crm-refactoring-v3.1.0   | CRM refactoring, security hardening, 50 vulns fixed                            | ✅ Completo  | 2026-06-17 |
+| sprint12-order-history-v3.2.0     | Order history, frontend API modularization, test coverage, CI fixes, E2E fixes | ✅ Completo  | 2026-06-25 |
 
 ### 🚧 Cambios en Progreso
 
@@ -258,6 +265,8 @@ Ver [docs/INDEX.md](docs/INDEX.md) para el directorio completo de documentación
 | POST   | `/api/v1/email-campaigns/{id}/pause`     | Pausar campaña                                |
 | GET    | `/api/v1/email-campaigns/{id}/logs`      | Ver logs de campaña                           |
 | GET    | `/api/v1/email-campaigns`                | Listar campañas                               |
+| GET    | `/api/orders`                            | Listar órdenes del usuario autenticado        |
+| GET    | `/api/orders/:id`                        | Detalle de orden                              |
 | GET    | `/api/products`                          | Listar productos activos (público)            |
 | GET    | `/api/products/:id`                      | Detalle de producto                           |
 | GET    | `/api/categories`                        | Listar categorías activas                     |

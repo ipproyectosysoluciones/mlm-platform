@@ -3,16 +3,16 @@
 > Hoja de ruta completa para la plataforma **Nexo Real** — Servicios Inmobiliarios, Turismo/Hospitalidad y Afiliaciones.  
 > _"Conectamos tu negocio con el mundo."_
 
-**Versión actual**: v3.0.0 — Sprint 10 Completado ✅  
-**Última actualización**: 2026-04-13  
+**Versión actual**: v3.2.0 — Sprint 10+ Completado ✅  
+**Última actualización**: 2026-06-25  
 **Estado**: Activo - Producción  
-**Meta**: v3.1.0 — expansión México + Argentina
+**Meta**: v3.3.0 — próxima expansión
 
 ---
 
 ## 📊 Estado Actual del Proyecto
 
-### ✅ Lo que YA está implementado (v3.0.0)
+### ✅ Lo que YA está implementado (v3.2.0)
 
 | Área                     | Funcionalidad                                                                        | Estado |
 | ------------------------ | ------------------------------------------------------------------------------------ | ------ |
@@ -61,7 +61,7 @@
 
 ---
 
-## 🚀 Sprint 10 — v3.0.0 (Completado 2026-04-13)
+## 🚀 Sprint 10 — v3.2.0 (Completado 2026-06-25)
 
 ### Objetivos cumplidos
 
@@ -518,22 +518,22 @@ Tests (post-Sprint 9):
   Total platform: ~729 backend+bot tests
 ```
 
-#### Sprint 10 — v3.0.0 — Stabilization & Commission Migration 📋
+#### Sprint 10 — v3.2.0 — Stabilization & Commission Migration ✅
 
 ```
 Branch:    feature/sprint10-*
-Estado:    Planned — not started
+Estado:    Completado 2026-06-25
 
-9 Issues:
-  1. Payment Webhooks Complete (PayPal + MercadoPago)         — 🔴 BLOCKER
-  2. PayPal Checkout Redirect Fix                             — 🔴 BLOCKER
-  3. Invoices → Migrate to DB                                 — 🔴 BLOCKER
-  4. Disable Crypto Wallet                                    — 🟠 HIGH
-  5. Admin CRUD Functional                                    — 🟠 HIGH
-  6. 2FA Frontend Testing + Fix                               — 🟠 HIGH
-  7. Commission Model: Binary → Unilevel (10 levels)          — 🟠 HIGH
-  8. n8n CRM Integration → Frontend                           — 🟡 MEDIUM
-  9. UX Polish — Purchase/Reservation Flow                    — 🟡 MEDIUM
+9 Issues completados:
+   1. ✅ Payment Webhooks Complete (PayPal + MercadoPago)
+   2. ✅ PayPal Checkout Redirect Fix
+   3. ✅ Invoices → Migrate to DB
+   4. ✅ Disable Crypto Wallet
+   5. ✅ Admin CRUD Functional
+   6. ✅ 2FA Frontend Testing + Fix
+   7. ✅ Commission Model: Binary → Unilevel (10 levels)
+   8. ✅ n8n CRM Integration → Frontend
+   9. ✅ UX Polish — Purchase/Reservation Flow
 ```
 
 ### Fase 2 — Multi-Tenant (1–2 meses post v2.0.0)
@@ -629,6 +629,6 @@ sprint:9             - Sprint 9 — v2.5.0 → v2.6.1
 
 ---
 
-**Última actualización**: 2026-04-12  
+**Última actualización**: 2026-06-25  
 **Proyecto**: https://github.com/users/ipproyectosysoluciones/projects/4  
 **Producto**: Nexo Real — _"Conectamos tu negocio con el mundo."_
