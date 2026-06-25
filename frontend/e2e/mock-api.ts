@@ -126,6 +126,196 @@ export function setupMockApi(page: Page): void {
         });
       }
 
+      // ── Properties (public — no auth required) ───────────────────────────
+      const MOCK_PROPERTIES = [
+        {
+          id: 'prop-001',
+          type: 'rental',
+          title: 'Casa en la playa',
+          titleEn: 'Beach House',
+          description: 'Hermosa casa frente al mar con 3 habitaciones',
+          descriptionEn: 'Beautiful beachfront house with 3 bedrooms',
+          price: 250,
+          currency: 'USD',
+          priceNegotiable: true,
+          bedrooms: 3,
+          bathrooms: 2,
+          areaM2: 120,
+          address: 'Calle del Mar 123',
+          city: 'Punta del Este',
+          country: 'Uruguay',
+          amenities: ['WiFi', 'Parking', 'Pool', 'AC'],
+          images: ['/images/prop-001.jpg'],
+          status: 'active',
+          createdAt: '2026-06-01T00:00:00Z',
+          updatedAt: '2026-06-15T00:00:00Z',
+        },
+        {
+          id: 'prop-002',
+          type: 'rental',
+          title: 'Apartamento centro',
+          titleEn: 'Downtown Apartment',
+          description: 'Moderno apartamento en el centro de la ciudad',
+          descriptionEn: 'Modern downtown apartment',
+          price: 150,
+          currency: 'USD',
+          priceNegotiable: false,
+          bedrooms: 2,
+          bathrooms: 1,
+          areaM2: 80,
+          address: 'Av. Principal 456',
+          city: 'Montevideo',
+          country: 'Uruguay',
+          amenities: ['WiFi', 'AC', 'Gym'],
+          images: ['/images/prop-002.jpg'],
+          status: 'active',
+          createdAt: '2026-06-01T00:00:00Z',
+          updatedAt: '2026-06-15T00:00:00Z',
+        },
+      ];
+
+      if (pathname === '/api/properties' && method === 'GET') {
+        return route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            success: true,
+            data: MOCK_PROPERTIES,
+            pagination: { total: MOCK_PROPERTIES.length, page: 1, limit: 20, totalPages: 1 },
+          }),
+        });
+      }
+
+      const propertyIdMatch = pathname.match(/^\/api\/properties\/([a-zA-Z0-9_-]+)$/);
+      if (propertyIdMatch && method === 'GET') {
+        const property = MOCK_PROPERTIES.find((p) => p.id === propertyIdMatch[1]);
+        if (property) {
+          return route.fulfill({
+            status: 200,
+            contentType: 'application/json',
+            body: JSON.stringify({ success: true, data: property }),
+          });
+        }
+        return route.fulfill({
+          status: 404,
+          contentType: 'application/json',
+          body: JSON.stringify({ success: false, error: 'Property not found' }),
+        });
+      }
+
+      // ── Reservations (public — no auth required) ────────────────────────
+      const MOCK_RESERVATIONS = [
+        {
+          id: 'res-001',
+          userId: '1',
+          propertyId: 'prop-001',
+          status: 'confirmed',
+          paymentStatus: 'paid',
+          checkIn: '2026-07-01',
+          checkOut: '2026-07-05',
+          guests: 2,
+          totalAmount: 1000,
+          currency: 'USD',
+          notes: null,
+          createdAt: '2026-06-20T10:00:00Z',
+          updatedAt: '2026-06-20T10:00:00Z',
+          property: {
+            id: 'prop-001',
+            title: 'Casa en la playa',
+            address: 'Calle del Mar 123',
+            city: 'Punta del Este',
+            images: ['/images/prop-001.jpg'],
+          },
+        },
+        {
+          id: 'res-002',
+          userId: '1',
+          propertyId: 'prop-002',
+          status: 'pending',
+          paymentStatus: 'pending',
+          checkIn: null,
+          checkOut: null,
+          guests: 1,
+          totalAmount: 150,
+          currency: 'USD',
+          notes: 'Pending confirmation',
+          createdAt: '2026-06-22T14:00:00Z',
+          updatedAt: '2026-06-22T14:00:00Z',
+          property: {
+            id: 'prop-002',
+            title: 'Downtown Apartment',
+            address: 'Av. Principal 456',
+            city: 'Montevideo',
+            images: ['/images/prop-002.jpg'],
+          },
+        },
+      ];
+
+      // GET /api/reservations — list
+      if (pathname === '/api/reservations' && method === 'GET') {
+        return route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            success: true,
+            data: {
+              data: MOCK_RESERVATIONS,
+              pagination: { total: MOCK_RESERVATIONS.length, page: 1, limit: 20, totalPages: 1 },
+            },
+          }),
+        });
+      }
+
+      // POST /api/reservations — create
+      if (pathname === '/api/reservations' && method === 'POST') {
+        return route.fulfill({
+          status: 201,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            success: true,
+            data: {
+              id: 'res-new-001',
+              userId: '1',
+              propertyId: 'prop-001',
+              status: 'pending',
+              paymentStatus: 'pending',
+              checkIn: '2026-07-01',
+              checkOut: '2026-07-05',
+              guests: 2,
+              totalAmount: 500,
+              currency: 'USD',
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+              property: {
+                id: 'prop-001',
+                title: 'Casa en la playa',
+                address: 'Calle del Mar 123',
+                city: 'Punta del Este',
+                images: ['/images/prop-001.jpg'],
+              },
+            },
+          }),
+        });
+      }
+
+      // GET /api/reservations/:id — single reservation
+      const getReservationIdMatch = pathname.match(/^\/api\/reservations\/([a-zA-Z0-9_-]+)$/);
+      if (getReservationIdMatch && method === 'GET') {
+        const reservation = MOCK_RESERVATIONS.find((r) => r.id === getReservationIdMatch[1]);
+        if (reservation) {
+          return route.fulfill({
+            status: 200,
+            contentType: 'application/json',
+            body: JSON.stringify({ success: true, data: reservation }),
+          });
+        }
+        return route.fulfill({
+          status: 404,
+          contentType: 'application/json',
+          body: JSON.stringify({ success: false, error: 'Reservation not found' }),
+        });
+      }
+
       // ── All remaining endpoints require a valid token ─────────────────────
 
       if (!PUBLIC_AUTH_ENDPOINTS.has(pathname)) {
