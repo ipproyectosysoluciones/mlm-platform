@@ -3,6 +3,10 @@
  * @description T2.2.3: Verifica el wizard completo: dates → guests → confirm
  * @note The wizard requires a property to be pre-selected via the store.
  *       We navigate through the UI (properties → detail → reserve button).
+ *
+ *       All navigation uses SPA link clicks instead of page.goto() to
+ *       preserve auth state (login() uses addInitScript which clears
+ *       localStorage on every full page load).
  */
 
 import { test, expect } from '@playwright/test';
@@ -14,12 +18,20 @@ test.describe('Reservation Wizard', () => {
   });
 
   /**
+   * Navigate to properties page via SPA link click (not goto) to preserve auth.
+   */
+  async function gotoProperties(page: Parameters<typeof login>[0]) {
+    await page.locator('nav a[href*="properties"]').first().click();
+    await page.waitForURL('/properties', { timeout: 15000 });
+    await page.waitForLoadState('networkidle');
+  }
+
+  /**
    * Navigate to a property detail and start the reservation flow.
    * Returns after confirming the wizard page is loaded.
    */
   async function startReservationFromProperty(page: Parameters<typeof login>[0]) {
-    await page.goto(`${baseURL}/properties`);
-    await page.waitForLoadState('networkidle');
+    await gotoProperties(page);
 
     // Wait for at least one property card
     await page.waitForSelector('article', { state: 'visible', timeout: 15000 });
@@ -54,7 +66,7 @@ test.describe('Reservation Wizard', () => {
   });
 
   test('should show step 1 (Fechas) for property reservation', async ({ page }) => {
-    await page.goto(`${baseURL}/properties`);
+    await gotoProperties(page);
     await page.waitForSelector('article', { state: 'visible', timeout: 15000 });
 
     // Click the first card that's a rental (has "Rental" or "Alquiler" badge)
@@ -97,7 +109,8 @@ test.describe('Reservation Wizard', () => {
   });
 
   test('should redirect home if wizard accessed without data', async ({ page }) => {
-    // Navigate directly to /reservations/new without starting wizard
+    // Navigate directly to /reservations/new via goto (this doesn't need auth state
+    // preservation since the auth guard will redirect)
     await page.goto(`${baseURL}/reservations/new`);
     // Should be redirected to home
     await expect(page).toHaveURL(/^\/?$|\/$/m, { timeout: 10000 });
@@ -126,7 +139,7 @@ test.describe('Reservation Wizard', () => {
   });
 
   test('should advance from dates to guests when dates are filled', async ({ page }) => {
-    await page.goto(`${baseURL}/properties`);
+    await gotoProperties(page);
     await page.waitForSelector('article', { state: 'visible', timeout: 15000 });
 
     // Specifically try to get a rental property for the dates step
