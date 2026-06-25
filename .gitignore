@@ -61,6 +61,8 @@ test-results/
 playwright-report/
 playwright/.cache/
 frontend/test-screenshots/
+frontend/e2e/screenshots/
+frontend/e2e/debug-*.spec.ts
 
 # ===========================================
 # Temporary files
@@ -97,6 +99,11 @@ openspec/
 # API Testing files (Postman collections - use docs/API.md instead)
 # ===========================================
 postman/
+
+# ===========================================
+# Vercel
+# ===========================================
+.vercel/
 
 # ===========================================
 # Deploy scripts (configure on server, not in repo)
