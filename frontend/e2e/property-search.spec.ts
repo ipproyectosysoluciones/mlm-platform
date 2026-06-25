@@ -6,8 +6,67 @@
 import { test, expect } from '@playwright/test';
 import { baseURL, login } from './helpers';
 
+const MOCK_PROPERTIES = [
+  {
+    id: 'prop-001',
+    title: 'Departamento en Palermo',
+    address: 'Av. Santa Fe 3200',
+    city: 'Buenos Aires',
+    type: 'rental',
+    price: 180000,
+    currency: 'ARS',
+    bedrooms: 2,
+    bathrooms: 1,
+    area: 65,
+    images: [],
+  },
+  {
+    id: 'prop-002',
+    title: 'Casa en Nordelta',
+    address: 'Calle Los Cipreses 45',
+    city: 'Tigre',
+    type: 'sale',
+    price: 95000,
+    currency: 'USD',
+    bedrooms: 4,
+    bathrooms: 3,
+    area: 280,
+    images: [],
+  },
+];
+
 test.describe('Property Search & Detail', () => {
   test.beforeEach(async ({ page }) => {
+    // Mock API for property listing and detail
+    await page.route('**/api/properties**', async (route) => {
+      const url = new URL(route.request().url());
+      const pathname = url.pathname;
+
+      // Detail endpoint: /api/properties/:id
+      if (pathname !== '/api/properties') {
+        const propId = pathname.split('/').pop() || '';
+        const property = MOCK_PROPERTIES.find((p) => p.id === propId) || MOCK_PROPERTIES[0];
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({ success: true, data: property }),
+        });
+        return;
+      }
+
+      // List endpoint: /api/properties?page=...
+      const requestedPage = parseInt(url.searchParams.get('page') || '1');
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          success: true,
+          data: MOCK_PROPERTIES,
+          pagination: { total: 2, page: requestedPage, limit: 12, totalPages: 1 },
+        }),
+      });
+    });
+
     await login(page);
     await page.goto(`${baseURL}/properties`);
     await page.waitForLoadState('networkidle');
@@ -48,7 +107,7 @@ test.describe('Property Search & Detail', () => {
     // Either results or empty state
     const hasCards = (await page.locator('article').count()) > 0;
     const hasEmpty = await page
-      .locator('text=/No properties found|No se encontraron propiedades/i')
+      .locator('text=/No results found|No se encontraron resultados/i')
       .isVisible();
     expect(hasCards || hasEmpty).toBeTruthy();
   });
