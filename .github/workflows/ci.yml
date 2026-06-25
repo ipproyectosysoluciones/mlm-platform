@@ -101,10 +101,11 @@ jobs:
           path: frontend/dist
           retention-days: 1
 
-  # Playwright E2E tests - runs on development branch and all PRs
+  # Playwright E2E tests - ONLY runs on development branch
+  # Heavy tests, not suitable for all PRs (cost optimization)
   playwright:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/development' || github.event_name == 'pull_request'
+    if: github.ref == 'refs/heads/development'
     needs: [frontend]
     steps:
       - uses: actions/checkout@v4
