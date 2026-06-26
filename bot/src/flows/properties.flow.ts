@@ -1,6 +1,7 @@
 import { addKeyword } from '@builderbot/bot';
 import { mlmApi, type BotProperty } from '../services/mlm-api.service.js';
 import { PROPERTIES_KEYWORDS } from '../config/keywords.js';
+import { platformUrl } from '../config/platform.js';
 
 /**
  * Formats a list of properties into a human-readable WhatsApp message.
@@ -15,8 +16,8 @@ function formatPropertiesMessage(lang: string, properties: BotProperty[]): strin
 
   if (properties.length === 0) {
     return isEs
-      ? '🏠 No hay propiedades disponibles en este momento.\n\nVisitá la plataforma para más información:\n🌐 https://nexoreal.xyz/properties'
-      : '🏠 No properties available at the moment.\n\nVisit the platform for more info:\n🌐 https://nexoreal.xyz/properties';
+      ? `🏠 No hay propiedades disponibles en este momento.\n\nVisitá la plataforma para más información:\n🌐 ${platformUrl('/properties')}`
+      : `🏠 No properties available at the moment.\n\nVisit the platform for more info:\n🌐 ${platformUrl('/properties')}`;
   }
 
   const header = isEs
@@ -56,8 +57,8 @@ function formatPropertiesMessage(lang: string, properties: BotProperty[]): strin
   });
 
   const footer = isEs
-    ? `\n\n🔍 Ver todas las propiedades:\n🌐 https://nexoreal.xyz/properties`
-    : `\n\n🔍 View all properties:\n🌐 https://nexoreal.xyz/properties`;
+    ? `\n\n🔍 Ver todas las propiedades:\n🌐 ${platformUrl('/properties')}`
+    : `\n\n🔍 View all properties:\n🌐 ${platformUrl('/properties')}`;
 
   return header + lines.join('\n\n') + footer;
 }
