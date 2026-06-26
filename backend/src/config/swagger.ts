@@ -25,7 +25,7 @@ const options: swaggerJsdoc.Options = {
     openapi: '3.0.0',
     info: {
       title: 'Nexo Real API',
-      version: '2.4.0',
+      version: '3.2.0',
       description: `
 ## API REST para plataforma Nexo Real — Servicios Inmobiliarios, Turismo y Afiliaciones Unilevel
 
