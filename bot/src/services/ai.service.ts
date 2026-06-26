@@ -19,6 +19,7 @@ import {
   ChatMessage,
   MAX_HISTORY_MESSAGES,
 } from './conversation-store.js';
+import { platformUrl, EMAIL, CALENDLY_LINK, OFFICE_ADDRESS } from '../config/platform.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -104,6 +105,43 @@ async function fetchLiveContext(): Promise<string> {
 }
 
 /**
+ * Substitute environment-backed placeholders in a knowledge-base string.
+ * Reemplaza los placeholders de entorno en un string de knowledge base.
+ *
+ * Replaces the following placeholders with their env-var values:
+ *   [EMAIL]          → EMAIL env var (fallback: 'Ask the agent for more information')
+ *   [PLATFORM_URL]   → platformUrl() result (default: 'https://nexoreal.xyz')
+ *   [CALENDLY_LINK]  → CALENDLY_LINK env var (fallback: 'Ask the agent for more information')
+ *   [OFFICE_ADDRESS] → OFFICE_ADDRESS env var (fallback from platform.ts)
+ *
+ * Legacy aliases (backward-compatible):
+ *   [EMAIL_NEXO_REAL]    → same as [EMAIL]
+ *   [WEB_NEXO_REAL]      → same as [PLATFORM_URL]
+ *   [DIRECCION_NEXO_REAL] → same as [OFFICE_ADDRESS]
+ *   [ADDRESS_NEXO_REAL]   → same as [OFFICE_ADDRESS]
+ *
+ * @param kb - Knowledge-base string containing placeholders
+ * @returns KB string with all placeholders replaced by env-var values
+ */
+function substituteEnvVars(kb: string): string {
+  const email = EMAIL || 'Ask the agent for more information';
+  const platform = platformUrl();
+  const calendly = CALENDLY_LINK || 'Ask the agent for more information';
+  const office = OFFICE_ADDRESS;
+
+  let result = kb;
+  result = result.replaceAll('[EMAIL]', email);
+  result = result.replaceAll('[PLATFORM_URL]', platform);
+  result = result.replaceAll('[CALENDLY_LINK]', calendly);
+  result = result.replaceAll('[OFFICE_ADDRESS]', office);
+  result = result.replaceAll('[EMAIL_NEXO_REAL]', email);
+  result = result.replaceAll('[WEB_NEXO_REAL]', platform);
+  result = result.replaceAll('[DIRECCION_NEXO_REAL]', office);
+  result = result.replaceAll('[ADDRESS_NEXO_REAL]', office);
+  return result;
+}
+
+/**
  * Build the system prompt by combining static KB files with optional live context.
  * Construye el prompt del sistema combinando archivos KB estáticos con contexto en vivo opcional.
  *
@@ -117,8 +155,11 @@ function buildSystemPrompt(agent: AgentName, language: Language, liveContext = '
   const knowledgeBase = loadFile('knowledge-base.md');
   const agentPrompt = loadFile(`${agent}.prompt.md`);
 
+  // Substitute env vars in KB before injection
+  const substitutedKB = substituteEnvVars(knowledgeBase);
+
   // Inject KB into base prompt
-  const promptWithKB = basePrompt.replace('{KNOWLEDGE_BASE}', knowledgeBase);
+  const promptWithKB = basePrompt.replace('{KNOWLEDGE_BASE}', substitutedKB);
 
   // Add language instruction
   const langInstruction =
