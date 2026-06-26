@@ -2,6 +2,7 @@ import { addKeyword } from '@builderbot/bot';
 import { mlmApi } from '../services/mlm-api.service.js';
 import { logger } from '../services/logger.js';
 import { BALANCE_KEYWORDS } from '../config/keywords.js';
+import { platformUrl } from '../config/platform.js';
 
 /**
  * Balance flow — responds with wallet balance + pending withdrawals.
@@ -21,7 +22,7 @@ export const balanceFlow = addKeyword(BALANCE_KEYWORDS).addAction(
       logger.warn('balance.user.not-found', { phone: ctx.from });
       await flowDynamic([
         {
-          body: '❌ No encontré una cuenta asociada a tu número.\n\n🌐 Registrate en:\nhttps://nexoreal.xyz/register', // TODO: domain pending
+          body: `❌ No encontré una cuenta asociada a tu número.\n\n🌐 Registrate en:\n${platformUrl('/register')}`,
         },
       ]);
       return;
@@ -49,7 +50,7 @@ export const balanceFlow = addKeyword(BALANCE_KEYWORDS).addAction(
           `⏳ Retiros pendientes: ${currency} ${fmt(wallet.pendingWithdrawals)}\n` +
           `📈 Total ganado: ${currency} ${fmt(wallet.totalEarned)}\n\n` +
           `Para retirar fondos, ingresá a la plataforma web.\n` +
-          `🌐 https://nexoreal.xyz`, // TODO: domain pending
+          `🌐 ${platformUrl()}`,
       },
     ]);
   }

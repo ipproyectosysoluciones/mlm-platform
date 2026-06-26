@@ -1,5 +1,6 @@
 import { addKeyword } from '@builderbot/bot';
 import { SUPPORT_KEYWORDS } from '../config/keywords.js';
+import { platformUrl } from '../config/platform.js';
 
 /**
  * Support / FAQ flow — shows all available commands and a link to the platform.
@@ -13,6 +14,6 @@ export const supportFlow = addKeyword(SUPPORT_KEYWORDS).addAnswer(
     `👤 *hablar con un asesor* — Conectarte con una persona real\n` +
     `❓ *ayuda* — Ver este menú\n\n` +
     `━━━━━━━━━━━━━━━━━━━━\n\n` +
-    `🌐 *Plataforma web:*\nhttps://nexoreal.xyz\n\n` + // TODO: domain pending
+    `🌐 *Plataforma web:*\n${platformUrl()}\n\n` +
     `Si tenés algún problema, podés escribirme en cualquier momento. 😊`
 );
