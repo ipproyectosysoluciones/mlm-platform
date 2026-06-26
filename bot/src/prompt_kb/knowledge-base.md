@@ -476,11 +476,12 @@ Siempre intentar obtener antes de cerrar la conversación o escalar:
 ### Canales de contacto
 
 > **NOTA PARA EL BOT**: Reemplazar los placeholders con los datos reales del cliente cuando estén disponibles.
+> **NOTA**: Los placeholders `[EMAIL]`, `[PLATFORM_URL]`, `[CALENDLY_LINK]` y `[OFFICE_ADDRESS]` son reemplazados automáticamente por el sistema con los datos del cliente.
 
-- 📧 Email: `[EMAIL_NEXO_REAL]`
-- 🌐 Web: `[WEB_NEXO_REAL]`
+- 📧 Email: `[EMAIL]`
+- 🌐 Web: `[PLATFORM_URL]`
 - 📅 Agendar llamada: `[CALENDLY_LINK]`
-- 📍 Oficina: `[DIRECCION_NEXO_REAL]`
+- 📍 Oficina: `[OFFICE_ADDRESS]`
 
 ---
 
@@ -510,11 +511,12 @@ Always try to collect before closing the conversation or escalating:
 ### Contact channels
 
 > **NOTE FOR BOT**: Replace placeholders with actual client data when available.
+> **NOTE**: The placeholders `[EMAIL]`, `[PLATFORM_URL]`, `[CALENDLY_LINK]` and `[OFFICE_ADDRESS]` are automatically replaced by the system with actual client data.
 
-- 📧 Email: `[EMAIL_NEXO_REAL]`
-- 🌐 Web: `[WEB_NEXO_REAL]`
+- 📧 Email: `[EMAIL]`
+- 🌐 Web: `[PLATFORM_URL]`
 - 📅 Schedule a call: `[CALENDLY_LINK]`
-- 📍 Office: `[ADDRESS_NEXO_REAL]`
+- 📍 Office: `[OFFICE_ADDRESS]`
 
 ---
 
