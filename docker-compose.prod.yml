@@ -151,6 +151,12 @@ services:
       DB_USER: ${DB_USER:-mlm}
       DB_PASSWORD: ${DB_PASSWORD}
 
+      # Platform configuration — bot contact info & URLs
+      PLATFORM_URL: ${PLATFORM_URL:-https://nexoreal.xyz}
+      EMAIL: ${EMAIL:-}
+      CALENDLY_LINK: ${CALENDLY_LINK:-}
+      OFFICE_ADDRESS: ${OFFICE_ADDRESS:-Ask the agent for more information}
+
       # n8n — internal webhook base URL
       N8N_WEBHOOK_URL: http://n8n:5678/webhook
     volumes:
