@@ -14,6 +14,11 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 import { mlmApi, BotProperty, BotTour } from './mlm-api.service.js';
+import {
+  createConversationStore,
+  ChatMessage,
+  MAX_HISTORY_MESSAGES,
+} from './conversation-store.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -23,10 +28,7 @@ const __dirname = path.dirname(__filename);
 export type AgentName = 'sophia' | 'max';
 export type Language = 'es' | 'en';
 
-export interface ChatMessage {
-  role: 'user' | 'assistant' | 'system';
-  content: string;
-}
+export type { ChatMessage } from './conversation-store.js';
 
 export interface AIResponse {
   text: string;
@@ -40,9 +42,8 @@ const MODEL = process.env.OPENAI_MODEL || 'gpt-4o';
 const MAX_TOKENS = 512;
 const TEMPERATURE = 0.7;
 
-// In-memory conversation history keyed by WhatsApp phone number
-const conversationHistory = new Map<string, ChatMessage[]>();
-const MAX_HISTORY_MESSAGES = 20; // keep last 20 turns to avoid token bloat
+// Conversation history store — Redis if REDIS_URL is set, in-memory Map otherwise
+const conversationHistory = createConversationStore();
 
 // ─── Prompt Loader ────────────────────────────────────────────────────────────
 
@@ -297,22 +298,17 @@ function getClient(): OpenAI {
 
 // ─── Conversation History ─────────────────────────────────────────────────────
 
-export function getHistory(phone: string): ChatMessage[] {
-  return conversationHistory.get(phone) || [];
+export async function getHistory(phone: string): Promise<ChatMessage[]> {
+  const result = await conversationHistory.get(phone);
+  return result || [];
 }
 
-export function appendToHistory(phone: string, message: ChatMessage): void {
-  const history = conversationHistory.get(phone) || [];
-  history.push(message);
-  // Trim to last N messages to avoid excessive token usage
-  if (history.length > MAX_HISTORY_MESSAGES) {
-    history.splice(0, history.length - MAX_HISTORY_MESSAGES);
-  }
-  conversationHistory.set(phone, history);
+export async function appendToHistory(phone: string, message: ChatMessage): Promise<void> {
+  await conversationHistory.append(phone, message);
 }
 
-export function clearHistory(phone: string): void {
-  conversationHistory.delete(phone);
+export async function clearHistory(phone: string): Promise<void> {
+  await conversationHistory.clear(phone);
 }
 
 // ─── Main AI Chat Function ────────────────────────────────────────────────────
@@ -342,12 +338,13 @@ export async function chat(
   const systemPrompt = buildSystemPrompt(agent, language, liveContext);
 
   // Append user message to history
-  appendToHistory(phone, { role: 'user', content: userMsg });
+  await appendToHistory(phone, { role: 'user', content: userMsg });
 
   // Build messages array: system + history
+  const history = await getHistory(phone);
   const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
     { role: 'system', content: systemPrompt },
-    ...getHistory(phone).map((m) => ({
+    ...history.map((m) => ({
       role: m.role as 'user' | 'assistant',
       content: m.content,
     })),
@@ -370,7 +367,7 @@ export async function chat(
         : 'Lo siento, no pude procesar eso. Te conecto con un asesor humano.');
 
     // Append assistant response to history
-    appendToHistory(phone, { role: 'assistant', content: responseText });
+    await appendToHistory(phone, { role: 'assistant', content: responseText });
 
     return { text: responseText, agent };
   } catch (error) {

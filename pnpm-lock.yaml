@@ -266,6 +266,9 @@ importers:
       dotenv:
         specifier: ^16.6.1
         version: 16.6.1
+      ioredis:
+        specifier: ^5.10.1
+        version: 5.10.1
       openai:
         specifier: ^4.91.1
         version: 4.104.0(ws@8.21.0)(zod@3.25.76)
