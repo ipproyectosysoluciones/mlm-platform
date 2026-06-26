@@ -81,8 +81,8 @@ export const handoffFlow = addKeyword(HANDOFF_KEYWORDS).addAction(
       .triggerHumanHandoff({
         phone,
         name,
-        reason: (ctx.body || '').trim() || 'User requested human agent',
-        agent: aiAgent,
+        summary: (ctx.body || '').trim() || 'User requested human agent',
+        agentName: aiAgent,
         language: lang,
         escalatedAt: new Date().toISOString(),
       })
