@@ -30,6 +30,7 @@
   "devDependencies": {
     "@types/node": "^20.19.37",
     "@vitest/coverage-v8": "^4.1.9",
+    "nock": "^14.0.16",
     "prettier": "^3.8.1",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
