@@ -65,6 +65,7 @@ describe('welcomeFlow (E2E)', () => {
 
   vi.mocked(aiService.chat).mockResolvedValue({
     text: '¡Claro! Soy Sophia, tu asesora virtual. ¿En qué te puedo ayudar hoy?',
+    agent: 'sophia',
   });
 
   beforeEach(async () => {

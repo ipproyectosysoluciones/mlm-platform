@@ -18,6 +18,7 @@ import { toursFlow } from './flows/tours.flow.js';
 import { onboardingFlow } from './flows/onboarding.flow.js';
 import { reservationsFlow } from './flows/reservations.flow.js';
 import { COMMISSIONS_KEYWORDS } from './config/keywords.js';
+import { BOT_PHONE_NUMBER } from './config/platform.js';
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
@@ -120,6 +121,9 @@ const main = async () => {
   httpServer(PORT);
 
   console.log(`[bot] ✅ WhatsApp bot running on port ${PORT}`);
+  if (BOT_PHONE_NUMBER) {
+    console.log(`[bot] 📱 Phone: ${BOT_PHONE_NUMBER}`);
+  }
   console.log(`[bot] 📱 Scan the QR code above with WhatsApp > Linked Devices > Link a Device`);
 
   // ── WhatsApp Disconnect Handler ──────────────────────────────────────────────

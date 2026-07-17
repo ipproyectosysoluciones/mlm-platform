@@ -52,3 +52,14 @@ export const CALENDLY_LINK: string = process.env.CALENDLY_LINK || '';
  */
 export const OFFICE_ADDRESS: string =
   process.env.OFFICE_ADDRESS || 'Ask the agent for more information';
+
+/**
+ * WhatsApp phone number for this bot instance (international format, no + or spaces).
+ * Set via PHONE_NUMBER env var. Used for logging, self-identification, and display.
+ *
+ * Número de teléfono WhatsApp de esta instancia del bot (formato internacional, sin + ni espacios).
+ * Se configura via variable de entorno PHONE_NUMBER. Se usa para logging, auto-identificación y display.
+ *
+ * @example '573004019604'
+ */
+export const BOT_PHONE_NUMBER: string = process.env.PHONE_NUMBER || '';
