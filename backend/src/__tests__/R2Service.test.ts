@@ -70,8 +70,19 @@ jest.mock('crypto', () => ({
   randomUUID: jest.fn().mockReturnValue('test-uuid-1234'),
 }));
 
+// ============================================
+// Mock logger to verify error logging
+// ============================================
+
+jest.mock('../utils/logger', () => ({
+  logger: {
+    error: jest.fn(),
+  },
+}));
+
 import { R2Service } from '../services/R2Service';
 import { PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
+import { logger } from '../utils/logger';
 
 describe('R2Service', () => {
   let r2Service: R2Service;
@@ -271,6 +282,89 @@ describe('R2Service', () => {
 
       expect(result).toEqual(expectedUrls);
       expect(result).toHaveLength(2);
+    });
+  });
+
+  // ============================================================
+  // Error handling — verify try/catch logging
+  // ============================================================
+  describe('error handling', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('uploadImage — logs error and rethrows when sharp fails', async () => {
+      const error = new Error('sharp processing failed');
+      mockSharp.mockImplementationOnce(() => {
+        throw error;
+      });
+
+      await expect(
+        r2Service.uploadImage({
+          buffer: Buffer.from('data'),
+          mimetype: 'image/jpeg',
+          entityType: 'properties',
+          entityId: 'prop-uuid',
+          filename: 'photo.jpg',
+        })
+      ).rejects.toThrow('sharp processing failed');
+
+      expect(logger.error).toHaveBeenCalledWith(
+        { service: 'R2Service', method: 'uploadImage', error },
+        'Operation failed'
+      );
+    });
+
+    it('uploadImage — logs error and rethrows when S3 upload fails', async () => {
+      const error = new Error('S3 upload failed');
+      mockSend.mockRejectedValueOnce(error);
+
+      await expect(
+        r2Service.uploadImage({
+          buffer: Buffer.from('data'),
+          mimetype: 'image/jpeg',
+          entityType: 'properties',
+          entityId: 'prop-uuid',
+          filename: 'photo.jpg',
+        })
+      ).rejects.toThrow('S3 upload failed');
+
+      expect(logger.error).toHaveBeenCalledWith(
+        { service: 'R2Service', method: 'uploadImage', error },
+        'Operation failed'
+      );
+    });
+
+    it('deleteImage — logs error and rethrows when S3 delete fails', async () => {
+      const error = new Error('S3 delete failed');
+      mockSend.mockRejectedValueOnce(error);
+
+      await expect(
+        r2Service.deleteImage('https://media.nexoreal.xyz/properties/uuid/img.webp')
+      ).rejects.toThrow('S3 delete failed');
+
+      expect(logger.error).toHaveBeenCalledWith(
+        { service: 'R2Service', method: 'deleteImage', error },
+        'Operation failed'
+      );
+    });
+
+    it('uploadImages — logs error and rethrows when uploadImage fails', async () => {
+      const error = new Error('upload failed');
+      jest.spyOn(r2Service, 'uploadImage').mockRejectedValueOnce(error);
+
+      await expect(
+        r2Service.uploadImages({
+          files: [{ buffer: Buffer.from('f1'), mimetype: 'image/jpeg', originalname: 'a.jpg' }],
+          entityType: 'properties',
+          entityId: 'prop-uuid',
+        })
+      ).rejects.toThrow('upload failed');
+
+      expect(logger.error).toHaveBeenCalledWith(
+        { service: 'R2Service', method: 'uploadImages', error },
+        'Operation failed'
+      );
     });
   });
 });
