@@ -488,34 +488,52 @@ Batch 8.8 — Documentación:
 
 ```
 Branch:    feature/sprint9-* (multiple feature branches)
-Estado:    Completado 2026-04-12 (6 issues closed, all PRs merged)
+Estado:    Completado 2026-04-12 (7 issues closed, all PRs merged)
 
-Issue #150 — Pino Logger Migration:
+Issue #126 [S9/9.1] — Mount 6 orphaned routes + relocate commission-config:
+  ✅ 6 dormant route files mounted in routes/index.ts
+  ✅ commissionConfigRoutes relocated from app.ts to routes/index.ts
+  PR #133 merged
+
+Issue #127 [S9/9.2] — Remove JWT/2FA default secrets, fail-fast on missing:
+  ✅ Removed default-secret-change-in-production fallback
+  ✅ Server throws FATAL error if JWT_SECRET or TWO_FACTOR_SECRET_KEY missing
+  PR #134 merged
+
+Issue #128 [S9/9.3] — Pino Logger Migration:
   ✅ Winston → Pino structured JSON logging across entire backend
-  ✅ All console.log and Winston calls replaced with Pino logger
+  ✅ All production console.log/error/warn calls replaced with Pino logger
+  PR #145 merged
 
-Issue #151 — Eliminate all explicit `any` types:
-  ✅ 39 backend production files audited and fixed
-  ✅ Zero explicit `any` remaining in production code
-
-Issue #152 — Bot Vitest Test Infrastructure:
-  ✅ 8 test files, 62 tests covering all bot flows and services
-
-Issue #148 — PLATFORM_DOMAIN Environment Variable:
+Issue #129 [S9/9.4] — PLATFORM_DOMAIN Environment Variable:
   ✅ Removed all hardcoded nexoreal.xyz references
   ✅ Domain now fully configurable via PLATFORM_DOMAIN env var
+  PR #148 merged
 
-Issue #149 — Controller Test Coverage Expansion:
+Issue #130 [S9/9.5] — Eliminate all explicit `any` types:
+  ✅ 39 backend production files audited and fixed
+  ✅ Zero unjustified explicit `any` remaining in production code
+  PR #146 merged
+
+Issue #131 [S9/9.6] — Bot Vitest Test Infrastructure:
+  ✅ 18 test files, 115 tests covering all bot flows and services
+  PRs #227-229 merged
+
+Issue #132 [S9/9.7] — Controller Test Coverage Expansion:
   ✅ 9 new controller test files added
-  ✅ Backend tests expanded from 540 → 667 tests (49 suites)
+  ✅ Backend tests expanded from 528 → 667 tests (49 suites)
+  PR #149 merged
 
-Issue #153 — Investor Pitch Deck:
-  ✅ 12-slide HTML presentation for investor demos
+Issue #150 — Documentation Update:
+  ✅ All project documentation updated to reflect Sprint 9 completion
+
+⚠️ Known gap: R2Service, QRService, MercadoPagoService lack try/catch error handling
+   → Tracked in separate change: fix-service-error-handling
 
 Tests (post-Sprint 9):
   Backend: 49 suites / 667 tests (Jest) ✅
-  Bot: 8 files / 62 tests (Vitest) ✅
-  Total platform: ~729 backend+bot tests
+  Bot: 18 files / 115 tests (Vitest) ✅
+  Total platform: ~782 backend+bot tests
 ```
 
 #### Sprint 10 — v3.2.0 — Stabilization & Commission Migration ✅
