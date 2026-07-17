@@ -5,11 +5,8 @@
  * @module services/lead-persistence.service
  */
 
-'use strict';
-
-const axios = require('axios');
-
-/** @typedef {import('../types/lead.types').BotLeadData} BotLeadData */
+import axios from 'axios';
+import type { BotLeadData } from '../types/lead.types.js';
 
 /**
  * Backend URL for the bot leads endpoint.
@@ -27,7 +24,7 @@ const BOT_SECRET = process.env.BOT_SECRET || '';
  * Service responsible for persisting leads captured by the WhatsApp bot.
  * Servicio responsable de persistir leads capturados por el bot de WhatsApp.
  */
-const leadPersistenceService = {
+export const leadPersistenceService = {
   /**
    * Saves a bot-captured lead to the Nexo Real backend database.
    * Guarda un lead capturado por el bot en la base de datos del backend de Nexo Real.
@@ -35,10 +32,9 @@ const leadPersistenceService = {
    * Errors are caught and logged — a failed save must never crash the bot conversation.
    * Los errores se capturan y loggean — un fallo al guardar jamás debe romper la conversación.
    *
-   * @param {BotLeadData} data - Lead data captured during the bot conversation / Datos del lead capturados
-   * @returns {Promise<void>}
+   * @param data - Lead data captured during the bot conversation / Datos del lead capturados
    */
-  async saveLead(data) {
+  async saveLead(data: BotLeadData): Promise<void> {
     try {
       await axios.post(BOT_LEADS_URL, data, {
         headers: {
@@ -49,9 +45,8 @@ const leadPersistenceService = {
       });
 
       console.info(`[LeadPersistence] Lead saved — phone: ${data.phone}, agent: ${data.agentName}`);
-    } catch (error) {
+    } catch (error: any) {
       // Non-fatal: log and continue — the bot conversation must not be interrupted
-      // No fatal: loggear y continuar — la conversación del bot no debe interrumpirse
       const status = error?.response?.status;
       const message = error?.response?.data?.message || error?.message || 'unknown error';
       console.error(
@@ -60,5 +55,3 @@ const leadPersistenceService = {
     }
   },
 };
-
-module.exports = { leadPersistenceService };

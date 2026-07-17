@@ -11,8 +11,8 @@ const mockLeadData = {
   phone: '5491122334455',
   name: 'Juan Test',
   agentName: 'sophia',
-  language: 'es',
-  source: 'whatsapp',
+  language: 'es' as const,
+  source: 'whatsapp_bot' as const,
 };
 
 const BACKEND_URL = 'http://localhost:3000';
