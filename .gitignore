@@ -128,3 +128,5 @@ deploy.prod.sh
 # No longer gitignored — must be tracked to be included in the Docker build context.
 # ===========================================
 # /prompt_kb/  ← removed: prompt_kb is now baked into the bot Docker image
+
+/.vscode
