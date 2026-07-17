@@ -1,20 +1,20 @@
 # Nexo Real — Estado del Proyecto
 
-> **Archivo de referencia rápida para nuevas sesiones.** Refleja el estado real al 2026-04-11.
+> **Archivo de referencia rápida para nuevas sesiones.** Refleja el estado real al 2026-07-17.
 
 ---
 
-## Versión actual: v2.4.0
+## Versión actual: v3.2.0
 
 | Campo | Valor |
 |-------|-------|
-| Versión | **v2.4.0** (Sprint 8 — Bot production-ready) |
-| Branch main | `main` — producción (synced 2026-04-10) |
+| Versión | **v3.2.0** (Sprint 13 — Order History + Frontend API Modularization + Test Coverage) |
+| Branch main | `main` — producción (synced 2026-06-25) |
 | Branch activo | `development` |
-| Sprint completado | Sprint 8 — Bot Completo + n8n Workflows |
-| Próximo sprint | **Sprint 9** — Planeado |
+| Sprint completado | Sprint 13 — Order History, CRM Refactoring, Test Coverage Expansion |
+| Próximo sprint | **Sprint 14** — Planeado |
 | Repositorio | `ipproyectosysoluciones/mlm-platform` |
-| Root local | `/media/bladimir/Datos1/Datos/MLM` |
+| Root local | `/media/bladimir/Datos2/Datos/MLM` |
 
 ---
 
@@ -25,20 +25,21 @@
 | Backend | ✅ Activo | `api.nexoreal.xyz` (Cloudflare Tunnel) |
 | Frontend | ✅ Activo | `nexoreal.xyz` + `www.nexoreal.xyz` (Vercel) |
 | Bot WhatsApp | ✅ Activo | Puerto 3002 (local) |
+| Bot CI/CD | ✅ GitHub Actions | `ci-bot.yml` — Vitest en PRs |
 | n8n | 🔧 Docker local | Pendiente migrar a cloud |
 | DB | ✅ PostgreSQL | `DB_NAME=mlm_platform` (nombre legacy, **NO cambiar**) |
 
 ---
 
-## Tests al cierre v2.4.0
+## Tests al cierre v3.2.0
 
 | Suite | Tests | Estado |
 |-------|-------|--------|
-| Backend (Jest) | 528 (39 suites) | ✅ 527 passed, 1 skipped |
+| Backend (Jest) | 887 (66 suites) | ✅ 886 passed, 1 skipped |
 | Frontend Unit (Vitest) | ~446 (34 files) | ✅ Pasan |
 | E2E (Playwright) | ~262 (22 specs) | ✅ Pasan |
-| Bot | 0 | ⚠️ Sin tests |
-| **Total** | **~1,236** | ✅ |
+| Bot (Vitest) | 115 (18 files) | ✅ Pasan |
+| **Total** | **~1,298** | ✅ |
 
 **Histórico v2.3.5**: Backend 535 / Frontend 432 / Total 967
 
@@ -50,7 +51,8 @@
 
 | PR | Branch | Target | Estado |
 |----|--------|--------|--------|
-| #105 | `feature/sprint7-testing` | `development` | ⚠️ **OPEN — pendiente merge manual** |
+
+*(Ninguno pendiente)*
 
 ---
 
@@ -69,6 +71,40 @@
 
 **Additional PRs (scope expansion)**: #112, #117–#125 (env examples, bug fixes, RBAC, seed, docs, Docker)
 **Total PRs merged**: 19 (#107–#125)
+
+---
+
+## Sprint 9 — Estado COMPLETADO ✅
+
+**Change**: `sprint9-tech-debt` | **Status**: ARCHIVED
+**Completed**: 2026-04-12
+
+| # | Issue | Descripción | PR |
+|---|-------|-------------|-----|
+| 1 | #126 | Mount 6 orphaned routes + relocate commission-config | #133 |
+| 2 | #127 | JWT/2FA fail-fast on missing secrets | #134 |
+| 3 | #128 | Pino Logger Migration (Winston → Pino) | #145 |
+| 4 | #129 | PLATFORM_DOMAIN env var (remove hardcoded) | #148 |
+| 5 | #130 | Eliminate all explicit `any` types (39 files) | #146 |
+| 6 | #131 | Bot Vitest Test Infrastructure (18 files, 115 tests) | #227–#229 |
+| 7 | #132 | Controller Test Coverage Expansion (9 new test files) | #149 |
+| 8 | #218 | Bot CI/CD GitHub Actions (`ci-bot.yml`) | #234 |
+| 9 | — | fix-service-error-handling: R2Service, QRService, MercadoPagoService try/catch | #232 |
+| 10 | — | docs: Sprint 9 roadmap corrections | #231 |
+| 11 | — | MercadoPagoService test coverage | #233 |
+
+**Total PRs merged**: 12 (#133, #134, #145, #146, #148, #149, #227–#229, #231–#234)
+
+---
+
+## Sprints 10–13 — Estado COMPLETADO ✅
+
+| Sprint | Versión | Foco principal | Fecha |
+|--------|---------|---------------|-------|
+| Sprint 10 | v3.0.0 | Payment webhooks, Invoices DB, Commission Unilevel, 2FA frontend, Admin CRUD, UX Polish, n8n CRM | 2026-04-13 |
+| Sprint 11 | v3.0.1 | Push notification tests habilitados, centralized logger fix | 2026-06-16 |
+| Sprint 12 | v3.1.0 | CRM Refactoring (7 sub-componentes), Security Hardening (50 vulns resueltas) | 2026-06-17 |
+| Sprint 13 | v3.2.0 | Order History, Frontend API Modularization, Test Coverage Expansion, CI/CD Fixes, E2E Fixes | 2026-06-25 |
 
 ---
 
@@ -118,20 +154,19 @@ Login:  admin@mlm.com / admin123
 |-------|-------|
 | Artifact store | `engram` (proyecto: `bladimir`) |
 | Sprint 8 change | `sprint8-bot-complete` — ✅ ARCHIVED (archive report: obs #711) |
+| Sprint 9 change | `sprint9-tech-debt` — ✅ ARCHIVED |
+| Sprint 9 fix | `fix-service-error-handling` — ✅ ARCHIVED |
+| Sprint 10 change | `sprint10-stabilization` — ✅ ARCHIVED |
 | Archived to | `openspec/changes/archive/2026-04-11-sprint8-bot-complete/` |
-| Next sprint | Sprint 9 — planeado (SDD contexto a actualizar) |
-| sdd-init | Reejecutar si se inicia Sprint 9 |
+| Next sprint | Sprint 14 — planeado (SDD contexto a actualizar) |
+| sdd-init | Reejecutar si se inicia Sprint 14 |
 
 ---
 
 ## Deuda técnica conocida
 
-1. PR #105 pendiente merge (`feature/sprint7-testing` → `development`)
-2. Coverage real no medida — puede no llegar al 90% gate
-3. `api/services/api.ts` — 7.56% coverage (difícil de cubrir, bajo en prioritario)
-4. `components/tree/*` — 0.92% (legacy MLM, excluir de coverage)
-5. `pages/Profile.tsx` — 21.66% coverage
+*(Sin items críticos pendientes)*
 
 ---
 
-*Actualizado: 2026-04-11 | Post-auditoría v2.4.0*
+*Actualizado: 2026-07-17 | Post-auditoría v3.2.0*
