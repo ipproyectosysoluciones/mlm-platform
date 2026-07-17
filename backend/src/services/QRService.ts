@@ -9,6 +9,7 @@
 import QRCode from 'qrcode';
 import { config } from '../config/env';
 import { QrMapping } from '../models';
+import { logger } from '../utils/logger';
 
 /**
  * QR Code Service - Generates QR codes for referral links and gift cards
@@ -52,18 +53,26 @@ export class QRService {
    * const dataUrl = await qrService.generateQRDataUrl('MLM-ABCD-1234');
    */
   async generateQRDataUrl(referralCode: string): Promise<string> {
-    const link = this.getReferralLink(referralCode);
+    try {
+      const link = this.getReferralLink(referralCode);
 
-    return QRCode.toDataURL(link, {
-      errorCorrectionLevel: 'H',
-      type: 'image/png',
-      margin: 2,
-      width: 300,
-      color: {
-        dark: '#000000',
-        light: '#ffffff',
-      },
-    });
+      return await QRCode.toDataURL(link, {
+        errorCorrectionLevel: 'H',
+        type: 'image/png',
+        margin: 2,
+        width: 300,
+        color: {
+          dark: '#000000',
+          light: '#ffffff',
+        },
+      });
+    } catch (error) {
+      logger.error(
+        { service: 'QRService', method: 'generateQRDataUrl', error },
+        'Operation failed'
+      );
+      throw error;
+    }
   }
 
   /**
@@ -81,18 +90,23 @@ export class QRService {
    * const buffer = await qrService.generateQRBuffer('MLM-ABCD-1234');
    */
   async generateQRBuffer(referralCode: string): Promise<Buffer> {
-    const link = this.getReferralLink(referralCode);
+    try {
+      const link = this.getReferralLink(referralCode);
 
-    return QRCode.toBuffer(link, {
-      errorCorrectionLevel: 'H',
-      type: 'png',
-      margin: 2,
-      width: 300,
-      color: {
-        dark: '#000000',
-        light: '#ffffff',
-      },
-    });
+      return await QRCode.toBuffer(link, {
+        errorCorrectionLevel: 'H',
+        type: 'png',
+        margin: 2,
+        width: 300,
+        color: {
+          dark: '#000000',
+          light: '#ffffff',
+        },
+      });
+    } catch (error) {
+      logger.error({ service: 'QRService', method: 'generateQRBuffer', error }, 'Operation failed');
+      throw error;
+    }
   }
 
   /**
@@ -109,14 +123,19 @@ export class QRService {
    * await qrService.generateQRFile('MLM-ABCD-1234', './qrcodes/qr-usuario.png');
    */
   async generateQRFile(referralCode: string, filePath: string): Promise<void> {
-    const link = this.getReferralLink(referralCode);
+    try {
+      const link = this.getReferralLink(referralCode);
 
-    await QRCode.toFile(filePath, link, {
-      errorCorrectionLevel: 'H',
-      type: 'png',
-      margin: 2,
-      width: 300,
-    });
+      await QRCode.toFile(filePath, link, {
+        errorCorrectionLevel: 'H',
+        type: 'png',
+        margin: 2,
+        width: 300,
+      });
+    } catch (error) {
+      logger.error({ service: 'QRService', method: 'generateQRFile', error }, 'Operation failed');
+      throw error;
+    }
   }
 
   // ============================================
@@ -138,18 +157,26 @@ export class QRService {
    * const dataUrl = await qrService.generateGiftCardQR('abc123xyz');
    */
   async generateGiftCardQR(shortCode: string): Promise<string> {
-    const qrUrl = `${this.baseUrl}/q/${shortCode}`;
+    try {
+      const qrUrl = `${this.baseUrl}/q/${shortCode}`;
 
-    return QRCode.toDataURL(qrUrl, {
-      errorCorrectionLevel: 'H',
-      type: 'image/png',
-      margin: 2,
-      width: 300,
-      color: {
-        dark: '#000000',
-        light: '#ffffff',
-      },
-    });
+      return await QRCode.toDataURL(qrUrl, {
+        errorCorrectionLevel: 'H',
+        type: 'image/png',
+        margin: 2,
+        width: 300,
+        color: {
+          dark: '#000000',
+          light: '#ffffff',
+        },
+      });
+    } catch (error) {
+      logger.error(
+        { service: 'QRService', method: 'generateGiftCardQR', error },
+        'Operation failed'
+      );
+      throw error;
+    }
   }
 
   /**
@@ -167,19 +194,24 @@ export class QRService {
    * const giftCardId = await qrService.resolveShortCode('abc123xyz');
    */
   async resolveShortCode(shortCode: string): Promise<string | null> {
-    const mapping = await QrMapping.findOne({ where: { shortCode } });
+    try {
+      const mapping = await QrMapping.findOne({ where: { shortCode } });
 
-    if (!mapping) {
-      return null;
+      if (!mapping) {
+        return null;
+      }
+
+      // Increment scan count and update last scanned timestamp
+      await mapping.update({
+        scanCount: mapping.scanCount + 1,
+        lastScannedAt: new Date(),
+      });
+
+      return mapping.giftCardId;
+    } catch (error) {
+      logger.error({ service: 'QRService', method: 'resolveShortCode', error }, 'Operation failed');
+      throw error;
     }
-
-    // Increment scan count and update last scanned timestamp
-    await mapping.update({
-      scanCount: mapping.scanCount + 1,
-      lastScannedAt: new Date(),
-    });
-
-    return mapping.giftCardId;
   }
 }
 

@@ -29,9 +29,17 @@ jest.mock('../../config/env', () => ({
   },
 }));
 
+// Mock logger to verify error logging
+jest.mock('../../utils/logger', () => ({
+  logger: {
+    error: jest.fn(),
+  },
+}));
+
 import QRCode from 'qrcode';
 import { QRService, qrService } from '../../services/QRService';
 import { QrMapping } from '../../models';
+import { logger } from '../../utils/logger';
 
 describe('QRService — Gift Card Methods', () => {
   beforeEach(() => {
@@ -103,6 +111,84 @@ describe('QRService — Gift Card Methods', () => {
   describe('singleton export', () => {
     it('should export a singleton instance of QRService', () => {
       expect(qrService).toBeInstanceOf(QRService);
+    });
+  });
+
+  // ============================================
+  // Error handling — verify try/catch logging
+  // ============================================
+
+  describe('error handling', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('generateQRDataUrl — logs error and rethrows when QRCode.toDataURL fails', async () => {
+      const error = new Error('QR generation failed');
+      (QRCode.toDataURL as jest.Mock).mockRejectedValueOnce(error);
+
+      await expect(qrService.generateQRDataUrl('MLM-ABCD-1234')).rejects.toThrow(
+        'QR generation failed'
+      );
+
+      expect(logger.error).toHaveBeenCalledWith(
+        { service: 'QRService', method: 'generateQRDataUrl', error },
+        'Operation failed'
+      );
+    });
+
+    it('generateQRBuffer — logs error and rethrows when QRCode.toBuffer fails', async () => {
+      const error = new Error('QR buffer failed');
+      (QRCode.toBuffer as jest.Mock).mockRejectedValueOnce(error);
+
+      await expect(qrService.generateQRBuffer('MLM-ABCD-1234')).rejects.toThrow('QR buffer failed');
+
+      expect(logger.error).toHaveBeenCalledWith(
+        { service: 'QRService', method: 'generateQRBuffer', error },
+        'Operation failed'
+      );
+    });
+
+    it('generateQRFile — logs error and rethrows when QRCode.toFile fails', async () => {
+      const error = new Error('QR file write failed');
+      (QRCode.toFile as jest.Mock).mockRejectedValueOnce(error);
+
+      await expect(qrService.generateQRFile('MLM-ABCD-1234', '/tmp/qr.png')).rejects.toThrow(
+        'QR file write failed'
+      );
+
+      expect(logger.error).toHaveBeenCalledWith(
+        { service: 'QRService', method: 'generateQRFile', error },
+        'Operation failed'
+      );
+    });
+
+    it('generateGiftCardQR — logs error and rethrows when QRCode.toDataURL fails', async () => {
+      const error = new Error('Gift card QR failed');
+      (QRCode.toDataURL as jest.Mock).mockRejectedValueOnce(error);
+
+      await expect(qrService.generateGiftCardQR('abc123xyz')).rejects.toThrow(
+        'Gift card QR failed'
+      );
+
+      expect(logger.error).toHaveBeenCalledWith(
+        { service: 'QRService', method: 'generateGiftCardQR', error },
+        'Operation failed'
+      );
+    });
+
+    it('resolveShortCode — logs error and rethrows when QrMapping.findOne fails', async () => {
+      const error = new Error('Database query failed');
+      (QrMapping.findOne as jest.Mock).mockRejectedValueOnce(error);
+
+      await expect(qrService.resolveShortCode('abc123xyz')).rejects.toThrow(
+        'Database query failed'
+      );
+
+      expect(logger.error).toHaveBeenCalledWith(
+        { service: 'QRService', method: 'resolveShortCode', error },
+        'Operation failed'
+      );
     });
   });
 });

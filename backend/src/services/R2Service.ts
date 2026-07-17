@@ -20,6 +20,7 @@ import { PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { randomUUID } from 'crypto';
 import sharp from 'sharp';
 import { r2Client, R2_BUCKET, R2_PUBLIC_URL } from '../config/r2';
+import { logger } from '../utils/logger';
 
 // ============================================
 // TYPES
@@ -87,29 +88,34 @@ export class R2Service {
    * // returns 'https://media.<PLATFORM_DOMAIN>/properties/prop-uuid/550e8400.webp'
    */
   async uploadImage(params: UploadImageParams): Promise<string> {
-    const { buffer, entityType, entityId } = params;
+    try {
+      const { buffer, entityType, entityId } = params;
 
-    // Resize to max 1920px, convert to webp quality 85
-    // Redimensionar a máx 1920px, convertir a webp calidad 85
-    const processedBuffer = await sharp(buffer)
-      .resize({ width: 1920, withoutEnlargement: true })
-      .webp({ quality: 85 })
-      .toBuffer();
+      // Resize to max 1920px, convert to webp quality 85
+      // Redimensionar a máx 1920px, convertir a webp calidad 85
+      const processedBuffer = await sharp(buffer)
+        .resize({ width: 1920, withoutEnlargement: true })
+        .webp({ quality: 85 })
+        .toBuffer();
 
-    // Generate unique storage key: {entityType}/{entityId}/{uuid}.webp
-    // Generar clave única de almacenamiento: {entityType}/{entityId}/{uuid}.webp
-    const key = `${entityType}/${entityId}/${randomUUID()}.webp`;
+      // Generate unique storage key: {entityType}/{entityId}/{uuid}.webp
+      // Generar clave única de almacenamiento: {entityType}/{entityId}/{uuid}.webp
+      const key = `${entityType}/${entityId}/${randomUUID()}.webp`;
 
-    await r2Client.send(
-      new PutObjectCommand({
-        Bucket: R2_BUCKET,
-        Key: key,
-        Body: processedBuffer,
-        ContentType: 'image/webp',
-      })
-    );
+      await r2Client.send(
+        new PutObjectCommand({
+          Bucket: R2_BUCKET,
+          Key: key,
+          Body: processedBuffer,
+          ContentType: 'image/webp',
+        })
+      );
 
-    return `${R2_PUBLIC_URL}/${key}`;
+      return `${R2_PUBLIC_URL}/${key}`;
+    } catch (error) {
+      logger.error({ service: 'R2Service', method: 'uploadImage', error }, 'Operation failed');
+      throw error;
+    }
   }
 
   /**
@@ -126,16 +132,21 @@ export class R2Service {
    * await r2Service.deleteImage('https://media.<PLATFORM_DOMAIN>/properties/uuid/550e8400.webp');
    */
   async deleteImage(imageUrl: string): Promise<void> {
-    // Extract key by removing the base URL prefix
-    // Extraer la clave eliminando el prefijo de la URL base
-    const key = imageUrl.replace(`${R2_PUBLIC_URL}/`, '');
+    try {
+      // Extract key by removing the base URL prefix
+      // Extraer la clave eliminando el prefijo de la URL base
+      const key = imageUrl.replace(`${R2_PUBLIC_URL}/`, '');
 
-    await r2Client.send(
-      new DeleteObjectCommand({
-        Bucket: R2_BUCKET,
-        Key: key,
-      })
-    );
+      await r2Client.send(
+        new DeleteObjectCommand({
+          Bucket: R2_BUCKET,
+          Key: key,
+        })
+      );
+    } catch (error) {
+      logger.error({ service: 'R2Service', method: 'deleteImage', error }, 'Operation failed');
+      throw error;
+    }
   }
 
   /**
@@ -157,20 +168,25 @@ export class R2Service {
    * // returns ['https://media.<PLATFORM_DOMAIN>/properties/uuid/a.webp', ...]
    */
   async uploadImages(params: UploadImagesParams): Promise<string[]> {
-    const { files, entityType, entityId } = params;
-    const urls: string[] = [];
+    try {
+      const { files, entityType, entityId } = params;
+      const urls: string[] = [];
 
-    for (const file of files) {
-      const url = await this.uploadImage({
-        buffer: file.buffer,
-        mimetype: file.mimetype as 'image/jpeg' | 'image/png' | 'image/webp',
-        entityType,
-        entityId,
-        filename: file.originalname,
-      });
-      urls.push(url);
+      for (const file of files) {
+        const url = await this.uploadImage({
+          buffer: file.buffer,
+          mimetype: file.mimetype as 'image/jpeg' | 'image/png' | 'image/webp',
+          entityType,
+          entityId,
+          filename: file.originalname,
+        });
+        urls.push(url);
+      }
+
+      return urls;
+    } catch (error) {
+      logger.error({ service: 'R2Service', method: 'uploadImages', error }, 'Operation failed');
+      throw error;
     }
-
-    return urls;
   }
 }

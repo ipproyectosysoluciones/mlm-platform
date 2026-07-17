@@ -7,6 +7,7 @@
 import { createHmac } from 'crypto';
 import { MercadoPagoConfig, Preference, Payment, PaymentRefund } from 'mercadopago';
 import { config } from '../config/env.js';
+import { logger } from '../utils/logger';
 
 // Configure MercadoPago SDK v2
 const client = new MercadoPagoConfig({
@@ -66,13 +67,21 @@ class MercadoPagoService {
    * @see https://www.mercadopago.com/developers/en/docs/checkout-api/integration-configuration
    */
   async createPreference(preference: MercadoPagoPreference): Promise<CreatePreferenceResult> {
-    const result = await this.preference.create({ body: preference });
+    try {
+      const result = await this.preference.create({ body: preference });
 
-    return {
-      id: result.id!,
-      init_point: result.init_point!,
-      sandbox_init_point: result.sandbox_init_point!,
-    };
+      return {
+        id: result.id!,
+        init_point: result.init_point!,
+        sandbox_init_point: result.sandbox_init_point!,
+      };
+    } catch (error) {
+      logger.error(
+        { service: 'MercadoPagoService', method: 'createPreference', error },
+        'Operation failed'
+      );
+      throw error;
+    }
   }
 
   /**
@@ -102,18 +111,26 @@ class MercadoPagoService {
    * Get payment status by ID
    */
   async getPayment(paymentId: string): Promise<PaymentResult> {
-    const result = await this.payment.get({ id: paymentId });
+    try {
+      const result = await this.payment.get({ id: paymentId });
 
-    return {
-      id: result.id!.toString(),
-      status: result.status as PaymentResult['status'],
-      status_detail: result.status_detail ?? undefined,
-      payment_type_id: result.payment_type_id ?? undefined,
-      transaction_amount: result.transaction_amount ?? undefined,
-      currency_id: result.currency_id ?? undefined,
-      external_reference: result.external_reference ?? undefined,
-      additional_info: result.additional_info as PaymentResult['additional_info'],
-    };
+      return {
+        id: result.id!.toString(),
+        status: result.status as PaymentResult['status'],
+        status_detail: result.status_detail ?? undefined,
+        payment_type_id: result.payment_type_id ?? undefined,
+        transaction_amount: result.transaction_amount ?? undefined,
+        currency_id: result.currency_id ?? undefined,
+        external_reference: result.external_reference ?? undefined,
+        additional_info: result.additional_info as PaymentResult['additional_info'],
+      };
+    } catch (error) {
+      logger.error(
+        { service: 'MercadoPagoService', method: 'getPayment', error },
+        'Operation failed'
+      );
+      throw error;
+    }
   }
 
   /**
@@ -135,39 +152,55 @@ class MercadoPagoService {
       };
     };
   }): Promise<PaymentResult> {
-    const result = await this.payment.create({
-      body: {
-        token: paymentData.token,
-        issuer_id: paymentData.issuerId ? parseInt(paymentData.issuerId) : undefined,
-        payment_method_id: paymentData.paymentMethodId,
-        transaction_amount: paymentData.transactionAmount,
-        installments: paymentData.installments,
-        description: paymentData.description,
-        external_reference: paymentData.externalReference,
-        payer: paymentData.payer,
-      },
-    });
+    try {
+      const result = await this.payment.create({
+        body: {
+          token: paymentData.token,
+          issuer_id: paymentData.issuerId ? parseInt(paymentData.issuerId) : undefined,
+          payment_method_id: paymentData.paymentMethodId,
+          transaction_amount: paymentData.transactionAmount,
+          installments: paymentData.installments,
+          description: paymentData.description,
+          external_reference: paymentData.externalReference,
+          payer: paymentData.payer,
+        },
+      });
 
-    return {
-      id: result.id!.toString(),
-      status: result.status as PaymentResult['status'],
-      status_detail: result.status_detail ?? undefined,
-      payment_type_id: result.payment_type_id ?? undefined,
-      transaction_amount: result.transaction_amount ?? undefined,
-      currency_id: result.currency_id ?? undefined,
-      external_reference: result.external_reference ?? undefined,
-    };
+      return {
+        id: result.id!.toString(),
+        status: result.status as PaymentResult['status'],
+        status_detail: result.status_detail ?? undefined,
+        payment_type_id: result.payment_type_id ?? undefined,
+        transaction_amount: result.transaction_amount ?? undefined,
+        currency_id: result.currency_id ?? undefined,
+        external_reference: result.external_reference ?? undefined,
+      };
+    } catch (error) {
+      logger.error(
+        { service: 'MercadoPagoService', method: 'processPayment', error },
+        'Operation failed'
+      );
+      throw error;
+    }
   }
 
   /**
    * Refund a payment
    */
   async refundPayment(paymentId: string): Promise<{ status: string }> {
-    const result = await this.paymentRefund.create({ payment_id: parseInt(paymentId) });
+    try {
+      const result = await this.paymentRefund.create({ payment_id: parseInt(paymentId) });
 
-    return {
-      status: result.status ?? 'approved',
-    };
+      return {
+        status: result.status ?? 'approved',
+      };
+    } catch (error) {
+      logger.error(
+        { service: 'MercadoPagoService', method: 'refundPayment', error },
+        'Operation failed'
+      );
+      throw error;
+    }
   }
 
   /**
@@ -176,15 +209,23 @@ class MercadoPagoService {
    * Use the REST API directly or return a static list of common methods.
    */
   async getPaymentMethods(): Promise<Array<{ id: string; name: string; payment_type_id: string }>> {
-    // SDK v2 PaymentMethod only supports get(id), not list().
-    // Return common payment methods — extend as needed.
-    return [
-      { id: 'visa', name: 'Visa', payment_type_id: 'credit_card' },
-      { id: 'master', name: 'Mastercard', payment_type_id: 'credit_card' },
-      { id: 'amex', name: 'American Express', payment_type_id: 'credit_card' },
-      { id: 'pse', name: 'PSE', payment_type_id: 'bank_transfer' },
-      { id: 'efecty', name: 'Efecty', payment_type_id: 'ticket' },
-    ];
+    try {
+      // SDK v2 PaymentMethod only supports get(id), not list().
+      // Return common payment methods — extend as needed.
+      return [
+        { id: 'visa', name: 'Visa', payment_type_id: 'credit_card' },
+        { id: 'master', name: 'Mastercard', payment_type_id: 'credit_card' },
+        { id: 'amex', name: 'American Express', payment_type_id: 'credit_card' },
+        { id: 'pse', name: 'PSE', payment_type_id: 'bank_transfer' },
+        { id: 'efecty', name: 'Efecty', payment_type_id: 'ticket' },
+      ];
+    } catch (error) {
+      logger.error(
+        { service: 'MercadoPagoService', method: 'getPaymentMethods', error },
+        'Operation failed'
+      );
+      throw error;
+    }
   }
 }
 
