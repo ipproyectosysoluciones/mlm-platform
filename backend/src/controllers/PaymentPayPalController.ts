@@ -26,7 +26,13 @@ export class PaymentPayPalController {
    */
   static createOrder = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
     const { amount, currency = 'USD', description, orderId } = req.body;
-    const userId = req.user?.id;
+
+    if (!req.user) {
+      return res
+        .status(401)
+        .json(ResponseUtil.error('UNAUTHORIZED', 'Authentication required', 401));
+    }
+    const userId = req.user.id;
 
     if (!amount || amount <= 0) {
       return res
@@ -109,7 +115,12 @@ export class PaymentPayPalController {
    * @see https://developer.paypal.com/docs/api-basics/notifications/webhooks/
    */
   static webhook = asyncHandler(async (req: Request, res: Response) => {
-    const body = JSON.stringify(req.body);
+    const event = req.body;
+    if (!event) {
+      return res.status(400).json(ResponseUtil.error('EMPTY_BODY', 'Empty request body', 400));
+    }
+
+    const body = JSON.stringify(event);
     const headers = {
       'paypal-transmission-id': req.headers['paypal-transmission-id'] as string,
       'paypal-transmission-time': req.headers['paypal-transmission-time'] as string,
@@ -129,7 +140,6 @@ export class PaymentPayPalController {
         );
     }
 
-    const event = req.body;
     const eventId: string | undefined = event.id;
 
     // ── Global idempotency check (persistent via WebhookEvent table) ──

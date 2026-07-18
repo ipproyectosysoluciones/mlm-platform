@@ -55,12 +55,12 @@ export class PaymentMercadoPagoController {
 
     const preference = await mercadoPagoService.createPreference({
       items: items.map((item: PreferenceItemInput) => ({
-        id: item.id || item.productId,
-        title: item.title || item.name,
+        id: item.id ?? item.productId ?? '',
+        title: item.title ?? item.name ?? '',
         description: item.description || description || 'Nexo Real - Compra',
         quantity: item.quantity || 1,
         currency_id: item.currency_id || 'COP',
-        unit_price: parseFloat(item.unit_price || item.price),
+        unit_price: parseFloat(String(item.unit_price ?? item.price ?? '0')),
       })),
       payer: {
         email: userEmail,

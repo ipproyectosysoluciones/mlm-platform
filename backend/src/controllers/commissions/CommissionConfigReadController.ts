@@ -118,7 +118,7 @@ export async function getActiveRates(req: AuthenticatedRequest, res: Response): 
     const { COMMISSION_RATES } = await import('../../types');
     for (const [key, value] of Object.entries(COMMISSION_RATES)) {
       if (rates[key] === undefined) {
-        rates[key] = value;
+        rates[key] = value as number;
       }
     }
 
