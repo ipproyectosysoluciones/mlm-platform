@@ -3,8 +3,8 @@
 > Hoja de ruta completa para la plataforma **Nexo Real** — Servicios Inmobiliarios, Turismo/Hospitalidad y Afiliaciones.  
 > _"Conectamos tu negocio con el mundo."_
 
-**Versión actual**: v3.2.0 — Sprint 10+ Completado ✅  
-**Última actualización**: 2026-07-17  
+**Versión actual**: v3.2.0 — Sprint 14 Completado ✅  
+**Última actualización**: 2026-07-18  
 **Estado**: Activo - Producción  
 **Meta**: v3.3.0 — próxima expansión
 
@@ -560,6 +560,37 @@ Estado:    Completado 2026-06-25
    9. ✅ UX Polish — Purchase/Reservation Flow
 ```
 
+#### Sprint 14 — CI Pipeline Optimization + Security Hardening ✅
+
+```
+Branch:    ci/*, infra/*
+Estado:    Completado 2026-07-18
+PRs:       #238, #240, #242
+
+PR #238 — Bot TypeScript Migration + Deploy Cleanup:
+  ✅ lead-persistence.service.js (CJS) → .ts (ESM native)
+  ✅ BOT_PHONE_NUMBER config from env var
+  ✅ deploy.sh cleaned: removed dead frontend Docker refs
+  ✅ Archived sprint9-tech-debt artifacts
+
+PR #240 — CI Performance Optimization:
+  ✅ pnpm cache via actions/setup-node cache option
+  ✅ dorny/paths-filter@v3 — backend/frontend skip on irrelevant PRs
+  ✅ Fixed: corepack enable MUST precede setup-node for cache to work
+
+PR #242 — Integration Test Sharding + Security:
+  ✅ Jest sharding: 3 parallel shards (--shard=1/3, 2/3, 3/3)
+  ✅ Fixed pnpm `--` arg parsing bug (call jest directly)
+  ✅ 7 hardcoded secrets → GitHub Actions secrets (CI_*)
+  ✅ .env.production.example: complete 30+ variable template
+  ✅ .env.production removed from git tracking
+
+Impact:
+  CI total: ~9min → ~6min (33% reduction)
+  Integration tests: ~6-7min → ~4min (3 shards parallel)
+  Security: 7 secrets extracted from YAML to GitHub Actions secrets
+```
+
 ### Fase 2 — Multi-Tenant (1–2 meses post v2.0.0)
 
 ```
@@ -653,6 +684,6 @@ sprint:9             - Sprint 9 — v2.5.0 → v2.6.1
 
 ---
 
-**Última actualización**: 2026-07-17  
+**Última actualización**: 2026-07-18  
 **Proyecto**: https://github.com/users/ipproyectosysoluciones/projects/4  
 **Producto**: Nexo Real — _"Conectamos tu negocio con el mundo."_

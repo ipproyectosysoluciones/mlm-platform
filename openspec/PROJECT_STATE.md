@@ -1,6 +1,6 @@
 # Nexo Real — Estado del Proyecto
 
-> **Archivo de referencia rápida para nuevas sesiones.** Refleja el estado real al 2026-07-17.
+> **Archivo de referencia rápida para nuevas sesiones.** Refleja el estado real al 2026-07-18.
 
 ---
 
@@ -8,11 +8,11 @@
 
 | Campo | Valor |
 |-------|-------|
-| Versión | **v3.2.0** (Sprint 13 — Order History + Frontend API Modularization + Test Coverage) |
+| Versión | **v3.2.0** (Sprint 14 — CI Pipeline Optimization + Security Hardening) |
 | Branch main | `main` — producción (synced 2026-06-25) |
 | Branch activo | `development` |
-| Sprint completado | Sprint 13 — Order History, CRM Refactoring, Test Coverage Expansion |
-| Próximo sprint | **Sprint 14** — Planeado |
+| Sprint completado | Sprint 14 — CI optimization, Jest sharding, secrets extraction |
+| Próximo sprint | **Sprint 15** — Pendiente |
 | Repositorio | `ipproyectosysoluciones/mlm-platform` |
 | Root local | `/media/bladimir/Datos2/Datos/MLM` |
 
@@ -28,6 +28,8 @@
 | Bot CI/CD | ✅ GitHub Actions | `ci-bot.yml` — Vitest en PRs |
 | n8n | 🔧 Docker local | Pendiente migrar a cloud |
 | DB | ✅ PostgreSQL | `DB_NAME=mlm_platform` (nombre legacy, **NO cambiar**) |
+| CI Pipeline | ✅ GitHub Actions | Jest 3 shards + pnpm cache + path filters |
+| CD Pipeline | ✅ GitHub Actions | `cd-backend.yml` + `cd-bot.yml` → Docker Hub |
 
 ---
 
@@ -53,6 +55,33 @@
 |----|--------|--------|--------|
 
 *(Ninguno pendiente)*
+
+---
+
+## Sprint 14 — Estado COMPLETADO ✅
+
+**Fecha**: 2026-07-17–18 | **Foco**: CI Pipeline Optimization + Security Hardening
+
+| PR | Título | Cambio | Estado |
+|----|--------|--------|--------|
+| #238 | infra/bot-typescript-migration-deploy-cleanup | Bot CJS→TS, deploy.sh cleanup, BOT_PHONE_NUMBER | ✅ Merged |
+| #240 | ci/backend-perf-optimization | pnpm cache + path filters + corepack fix | ✅ Merged |
+| #242 | ci/integration-test-sharding | Jest 3 shards + secrets extraction + .env.example | ✅ Merged |
+
+**Issues cerrados**: #236, #239, #241
+
+**GitHub Actions Secrets creados**:
+- `CI_JWT_SECRET`, `CI_TWO_FACTOR_SECRET_KEY`
+- `CI_VAPID_PUBLIC_KEY`, `CI_VAPID_PRIVATE_KEY`, `CI_VAPID_SUBJECT`
+
+**Impacto CI**:
+| Métrica | Antes | Después |
+|---------|-------|---------|
+| Integration tests | ~6-7min (secuencial) | ~4min (3 shards paralelos) |
+| Total backend CI | ~9min | ~6min |
+| Secrets en YAML | 7 valores hardcodeados | Todos en GitHub Actions secrets |
+
+**Bug encontrado y corregido**: pnpm agrega `--` antes de args de usuario → Jest trataba `--shard` como patrón de archivos. Fix: `npx jest` directo en CI.
 
 ---
 
@@ -111,13 +140,15 @@
 ## Convenciones críticas
 
 ```
-GPG signing:    EXPIRADO → SIEMPRE usar git -c commit.gpgsign=false
+GPG signing:    EXPIRADO → SIEMPRE usar --no-gpg-sign
 Commits:        Conventional Commits (feat:, fix:, test:, etc.)
 JSDoc:          ES+EN en todos los archivos nuevos/modificados
 i18n:           todos los strings visibles via t() del sistema i18n
 DB:             DB_NAME=mlm_platform (nombre legacy, no cambiar)
 Branding:       SIEMPRE "Nexo Real" — NUNCA "mlm-platform" ni "IP Proyectos"
-Bot code:       SIEMPRE CommonJS (sin "type": "module") — BuilderBot + Baileys requieren CJS
+Bot code:       ESM TypeScript (lead-persistence.service.ts converted from CJS)
+CI secrets:     Usar ${{ secrets.CI_* }} — NUNCA hardcodear en YAML
+Jest sharding:  Llamar jest directo (npx jest --shard=X/Y), NO via pnpm test:integration --
 ```
 
 ---
@@ -152,14 +183,14 @@ Login:  admin@mlm.com / admin123
 
 | Campo | Valor |
 |-------|-------|
-| Artifact store | `engram` (proyecto: `bladimir`) |
-| Sprint 8 change | `sprint8-bot-complete` — ✅ ARCHIVED (archive report: obs #711) |
+| Artifact store | `engram` (proyecto: `mlm-platform`) |
+| Sprint 8 change | `sprint8-bot-complete` — ✅ ARCHIVED |
 | Sprint 9 change | `sprint9-tech-debt` — ✅ ARCHIVED |
 | Sprint 9 fix | `fix-service-error-handling` — ✅ ARCHIVED |
 | Sprint 10 change | `sprint10-stabilization` — ✅ ARCHIVED |
 | Archived to | `openspec/changes/archive/2026-04-11-sprint8-bot-complete/` |
-| Next sprint | Sprint 14 — planeado (SDD contexto a actualizar) |
-| sdd-init | Reejecutar si se inicia Sprint 14 |
+| Next sprint | Sprint 15 — pendiente |
+| sdd-init | Reejecutar si se inicia Sprint 15 |
 
 ---
 
@@ -169,4 +200,4 @@ Login:  admin@mlm.com / admin123
 
 ---
 
-*Actualizado: 2026-07-17 | Post-auditoría v3.2.0*
+*Actualizado: 2026-07-18 | Post-Sprint 14 CI optimization*
