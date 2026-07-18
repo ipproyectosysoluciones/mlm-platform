@@ -14,7 +14,7 @@
  * const clavePublica = getVapidPublicKey();
  */
 import webpush from 'web-push';
-import { vapidConfig, validateVapidConfig } from '../config/vapid';
+import { vapidConfig, validateVapidConfig } from '../config/vapid.js';
 
 /**
  * Get the VAPID public key in base64 format for client-side subscription
@@ -81,5 +81,5 @@ export function validateVapid(): void {
 }
 
 // Re-export types and config for convenience
-export { vapidConfig } from '../config/vapid';
-export type { VapidKeys } from '../config/vapid';
+export { vapidConfig } from '../config/vapid.js';
+export type { VapidKeys } from '../config/vapid.js';

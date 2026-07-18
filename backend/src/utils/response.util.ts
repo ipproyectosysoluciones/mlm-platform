@@ -39,7 +39,11 @@ export class ResponseUtil {
   static error(code: string, message: string, status = 400, details?: unknown) {
     return {
       success: false,
-      error: { code, message, ...(details && { details }) },
+      error: {
+        code,
+        message,
+        ...(details != null && typeof details === 'object' ? { details } : {}),
+      },
       status,
     };
   }

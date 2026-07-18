@@ -7,7 +7,7 @@ import dashboardRoutes from './dashboard.routes';
 import productRoutes from './product.routes';
 import orderRoutes from './order.routes';
 import walletRoutes from './wallet.routes';
-import { featureGuard } from '../middleware/featureGuard';
+import { featureGuard } from '../middleware/featureGuard.js';
 import twoFactorRoutes from './twoFactor.routes';
 import pushRoutes from './push.routes';
 import publicRoutes from './public.routes';
