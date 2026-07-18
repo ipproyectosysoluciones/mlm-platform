@@ -5,7 +5,7 @@
  * @module database/migrations/twoFactorAuth
  */
 
-import { sequelize } from '../../config/database';
+import { sequelize } from '../../config/database.js';
 
 /**
  * Migration: Add 2FA columns to users table

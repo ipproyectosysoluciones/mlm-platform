@@ -14,12 +14,12 @@
  * Body: { businessName, contactEmail, contactPhone }
  */
 import { Request, Response } from 'express';
-import { vendorService } from '../services/VendorService';
-import { authenticate, requireVendor } from '../middleware/auth.middleware';
-import type { AuthenticatedRequest } from '../middleware/auth.middleware';
+import { vendorService } from '../services/VendorService.js';
+import { authenticate, requireVendor } from '../middleware/auth.middleware.js';
+import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
 import { body, validationResult } from 'express-validator';
-import { Product } from '../models';
-import { logger } from '../utils/logger';
+import { Product } from '../models/index.js';
+import { logger } from '../utils/logger.js';
 import { hasStatusCode, getErrorMessage } from '../utils/HttpError.js';
 
 // Validation rules

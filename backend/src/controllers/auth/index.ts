@@ -12,4 +12,4 @@
  */
 
 // Profile controller
-export { me } from './ProfileController';
+export { me } from './ProfileController.js';

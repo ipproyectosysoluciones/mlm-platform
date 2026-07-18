@@ -4,11 +4,11 @@
  * @module controllers/dashboard/DashboardUserController
  */
 import { Response } from 'express';
-import { userService } from '../../services/UserService';
-import { LEVEL_NAMES } from '../../types';
-import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
-import type { ApiResponse } from '../../types';
-import { ResponseUtil } from '../../utils/response.util';
+import { userService } from '../../services/UserService.js';
+import { LEVEL_NAMES } from '../../types/index.js';
+import type { AuthenticatedRequest } from '../../middleware/auth.middleware.js';
+import type { ApiResponse } from '../../types/index.js';
+import { ResponseUtil } from '../../utils/response.util.js';
 
 /**
  * Get user info for dashboard

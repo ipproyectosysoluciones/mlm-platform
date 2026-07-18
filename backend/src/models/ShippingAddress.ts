@@ -13,8 +13,8 @@
  * const address = await ShippingAddress.findOne({ where: { userId, isDefault: true } });
  */
 import { DataTypes, Model, Optional, ForeignKey } from 'sequelize';
-import { sequelize } from '../config/database';
-import type { ShippingAddressAttributes } from '../types';
+import { sequelize } from '../config/database.js';
+import type { ShippingAddressAttributes } from '../types/index.js';
 
 type ShippingAddressCreation = Optional<
   ShippingAddressAttributes,

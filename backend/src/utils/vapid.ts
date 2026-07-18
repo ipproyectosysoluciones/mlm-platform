@@ -6,15 +6,15 @@
  *
  * @example
  * // English: Get VAPID public key for client
- * import { getVapidPublicKey } from '../utils/vapid';
+ * import { getVapidPublicKey } from '../utils/vapid.js';
  * const publicKey = getVapidPublicKey();
  *
  * // Español: Obtener clave pública VAPID para el cliente
- * import { getVapidPublicKey } from '../utils/vapid';
+ * import { getVapidPublicKey } from '../utils/vapid.js';
  * const clavePublica = getVapidPublicKey();
  */
 import webpush from 'web-push';
-import { vapidConfig, validateVapidConfig } from '../config/vapid';
+import { vapidConfig, validateVapidConfig } from '../config/vapid.js';
 
 /**
  * Get the VAPID public key in base64 format for client-side subscription
@@ -43,12 +43,12 @@ export function getVapidPublicKey(): string {
  *
  * @example
  * // English: Send push notification
- * import { getWebPush } from '../utils/vapid';
+ * import { getWebPush } from '../utils/vapid.js';
  * const webPush = getWebPush();
  * await webPush.sendNotification(subscription, payload);
  *
  * // Español: Enviar notificación push
- * import { getWebPush } from '../utils/vapid';
+ * import { getWebPush } from '../utils/vapid.js';
  * const webPush = getWebPush();
  * await webPush.sendNotification(subscription, payload);
  */
@@ -69,11 +69,11 @@ export function getWebPush(): typeof webpush {
  *
  * @example
  * // English: Validate config before starting push service
- * import { validateVapid } from '../utils/vapid';
+ * import { validateVapid } from '../utils/vapid.js';
  * validateVapid();
  *
  * // Español: Validar config antes de iniciar servicio push
- * import { validateVapid } from '../utils/vapid';
+ * import { validateVapid } from '../utils/vapid.js';
  * validateVapid();
  */
 export function validateVapid(): void {
@@ -81,5 +81,5 @@ export function validateVapid(): void {
 }
 
 // Re-export types and config for convenience
-export { vapidConfig } from '../config/vapid';
-export type { VapidKeys } from '../config/vapid';
+export { vapidConfig } from '../config/vapid.js';
+export type { VapidKeys } from '../config/vapid.js';

@@ -5,7 +5,7 @@
  * @module middleware/featureGuard
  */
 import { Request, Response, NextFunction } from 'express';
-import { config } from '../config/env';
+import { config } from '../config/env.js';
 
 /**
  * Creates a middleware that returns 503 if a feature is disabled.

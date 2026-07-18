@@ -13,8 +13,8 @@
  * const tracking = await ShipmentTracking.findOne({ where: { orderId } });
  */
 import { DataTypes, Model, Optional, ForeignKey } from 'sequelize';
-import { sequelize } from '../config/database';
-import type { ShipmentTrackingAttributes, ShipmentStatusHistoryEntry } from '../types';
+import { sequelize } from '../config/database.js';
+import type { ShipmentTrackingAttributes, ShipmentStatusHistoryEntry } from '../types/index.js';
 
 type ShipmentTrackingCreation = Optional<
   ShipmentTrackingAttributes,

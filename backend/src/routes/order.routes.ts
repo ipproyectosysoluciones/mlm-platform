@@ -13,10 +13,10 @@
  * router.post('/', authenticateToken, createOrder);
  */
 import { Router, Router as ExpressRouter } from 'express';
-import { createOrder, getOrders, getOrderById } from '../controllers/OrderController';
-import { authenticateToken } from '../middleware/auth.middleware';
-import { validate } from '../middleware/validate.middleware';
-import { asyncHandler } from '../middleware/asyncHandler';
+import { createOrder, getOrders, getOrderById } from '../controllers/OrderController.js';
+import { authenticateToken } from '../middleware/auth.middleware.js';
+import { validate } from '../middleware/validate.middleware.js';
+import { asyncHandler } from '../middleware/asyncHandler.js';
 import { body, param, query } from 'express-validator';
 
 const router: ExpressRouter = Router();

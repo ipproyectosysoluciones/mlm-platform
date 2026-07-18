@@ -6,16 +6,16 @@
  * @author MLM Development Team
  */
 
-import { ContractTemplate, AffiliateContract } from '../models';
-import { AppError } from '../middleware/error.middleware';
-import { generateUUID } from '../utils/codeGenerator';
+import { ContractTemplate, AffiliateContract } from '../models/index.js';
+import { AppError } from '../middleware/error.middleware.js';
+import { generateUUID } from '../utils/codeGenerator.js';
 import type {
   ContractTemplateAttributes,
   AffiliateContractAttributes,
   ContractType,
   ContractStatus,
-} from '../types';
-import { sequelize } from '../config/database';
+} from '../types/index.js';
+import { sequelize } from '../config/database.js';
 import type { Request } from 'express';
 
 export interface CreateTemplateData {

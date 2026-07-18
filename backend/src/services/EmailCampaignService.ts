@@ -23,7 +23,7 @@
  * await emailCampaignService.sendCampaign('campaign-uuid');
  */
 
-import { sequelize } from '../config/database';
+import { sequelize } from '../config/database.js';
 import {
   EmailTemplate,
   EmailCampaign,
@@ -31,9 +31,17 @@ import {
   EmailQueue,
   EmailCampaignLog,
   User,
-} from '../models';
-import { ALLOWED_TEMPLATE_VARIABLES, EMAIL_CAMPAIGN_STATUS, EMAIL_QUEUE_STATUS } from '../types';
-import type { TemplateValidationResult, CreateCampaignDto, EmailCampaignStatus } from '../types';
+} from '../models/index.js';
+import {
+  ALLOWED_TEMPLATE_VARIABLES,
+  EMAIL_CAMPAIGN_STATUS,
+  EMAIL_QUEUE_STATUS,
+} from '../types/index.js';
+import type {
+  TemplateValidationResult,
+  CreateCampaignDto,
+  EmailCampaignStatus,
+} from '../types/index.js';
 
 // ============================================
 // HTML Escape Utility — Utilidad de escape HTML

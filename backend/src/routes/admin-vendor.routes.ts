@@ -12,7 +12,7 @@ import {
   rejectVendor,
   suspendVendor,
   updateCommissionRate,
-} from '../controllers/AdminVendorController';
+} from '../controllers/AdminVendorController.js';
 
 const router = Router();
 

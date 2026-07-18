@@ -9,7 +9,7 @@ import { asyncHandler } from '../middleware/asyncHandler.js';
 import { mercadoPagoService } from '../services/MercadoPagoService.js';
 import { ResponseUtil } from '../utils/response.util.js';
 import { config } from '../config/env.js';
-import { logger } from '../utils/logger';
+import { logger } from '../utils/logger.js';
 import { Purchase, Order, Product } from '../models/index.js';
 import { WebhookEvent } from '../models/WebhookEvent.js';
 import { CommissionService } from '../services/CommissionService.js';

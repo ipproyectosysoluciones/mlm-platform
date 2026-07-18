@@ -14,8 +14,8 @@
  * await emailService.sendWelcome({ email: 'usuario@ejemplo.com', firstName: 'Juan', referralCode: 'REF123', referralLink: 'https://...' });
  */
 import nodemailer from 'nodemailer';
-import { config } from '../config/env';
-import { logger } from '../utils/logger';
+import { config } from '../config/env.js';
+import { logger } from '../utils/logger.js';
 
 /**
  * EmailService - Brevo SMTP email delivery

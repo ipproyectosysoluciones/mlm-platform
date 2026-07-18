@@ -19,12 +19,12 @@
  * const stats = await crmService.getCRMStats(userId);
  */
 import { Op, WhereOptions } from 'sequelize';
-import { Lead, LeadStatus, LeadSource } from '../models/Lead';
-import Task from '../models/Task';
+import { Lead, LeadStatus, LeadSource } from '../models/Lead.js';
+import Task from '../models/Task.js';
 import type { TaskType } from '../models/Task.js';
-import Communication from '../models/Communication';
+import Communication from '../models/Communication.js';
 import type { CommunicationType, CommunicationDirection } from '../models/Communication.js';
-import { User } from '../models';
+import { User } from '../models/index.js';
 
 /**
  * Lead filter options for queries

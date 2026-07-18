@@ -15,9 +15,9 @@
  */
 
 import { DataTypes, Model, Optional, ForeignKey } from 'sequelize';
-import { sequelize } from '../config/database';
-import { User } from './User';
-import type { WalletAttributes } from '../types';
+import { sequelize } from '../config/database.js';
+import { User } from './User.js';
+import type { WalletAttributes } from '../types/index.js';
 
 type WalletCreation = Optional<WalletAttributes, 'id' | 'createdAt' | 'updatedAt'>;
 

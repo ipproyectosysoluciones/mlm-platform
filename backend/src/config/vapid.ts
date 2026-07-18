@@ -19,15 +19,15 @@
  *
  * @example
  * // English: Import from config (in production)
- * import { vapidConfig } from '../config/vapid';
+ * import { vapidConfig } from '../config/vapid.js';
  * const publicKey = vapidConfig.publicKey;
  *
  * // Español: Importar desde config (en producción)
- * import { vapidConfig } from '../config/vapid';
+ * import { vapidConfig } from '../config/vapid.js';
  * const publicKey = vapidConfig.publicKey;
  */
 import webpush from 'web-push';
-import { config } from './env';
+import { config } from './env.js';
 
 /**
  * VAPID keys structure

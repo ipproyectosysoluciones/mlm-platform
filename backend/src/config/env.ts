@@ -8,10 +8,10 @@
  *
  * @example
  * // English: Import config in your modules
- * import { config } from '../config/env';
+ * import { config } from '../config/env.js';
  *
  * // Español: Importar config en tus módulos
- * import { config } from '../config/env';
+ * import { config } from '../config/env.js';
  *
  * @example
  * // English: Environment variables required
@@ -27,7 +27,7 @@
  * // Vars requeridas: BREVO_SMTP_*, BREVO_API_KEY
  */
 import dotenv from 'dotenv';
-import { logger } from '../utils/logger';
+import { logger } from '../utils/logger.js';
 
 dotenv.config();
 

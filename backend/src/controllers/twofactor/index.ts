@@ -12,10 +12,10 @@
  */
 
 // Status controller
-export { get2FAStatus } from './TwoFactorStatusController';
+export { get2FAStatus } from './TwoFactorStatusController.js';
 
 // Setup controller
-export { setup2FA, getPendingSetups } from './TwoFactorSetupController';
+export { setup2FA, getPendingSetups } from './TwoFactorSetupController.js';
 
 // Verification controller
 export {
@@ -23,7 +23,7 @@ export {
   verify2FA,
   verifySetupValidation,
   verify2FAValidation,
-} from './TwoFactorVerificationController';
+} from './TwoFactorVerificationController.js';
 
 // Disable controller
-export { disable2FA, disable2FAValidation } from './TwoFactorDisableController';
+export { disable2FA, disable2FAValidation } from './TwoFactorDisableController.js';

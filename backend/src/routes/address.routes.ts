@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { body } from 'express-validator';
-import * as ShippingAddressController from '../controllers/ShippingAddressController';
-import { authenticate, requireUser } from '../middleware/auth.middleware';
+import * as ShippingAddressController from '../controllers/ShippingAddressController.js';
+import { authenticate, requireUser } from '../middleware/auth.middleware.js';
 
 const router = Router();
 

@@ -1,5 +1,5 @@
 import { Router, Router as ExpressRouter } from 'express';
-import { authenticate, requireRole } from '../middleware/auth.middleware';
+import { authenticate, requireRole } from '../middleware/auth.middleware.js';
 import {
   getGlobalStats,
   getAllUsers,
@@ -8,16 +8,16 @@ import {
   getCommissionsReport,
   promoteToAdmin,
   updateUserRole,
-} from '../controllers/AdminController';
-import { asyncHandler } from '../middleware/asyncHandler';
+} from '../controllers/AdminController.js';
+import { asyncHandler } from '../middleware/asyncHandler.js';
 import { body } from 'express-validator';
-import { validate } from '../middleware/validate.middleware';
-import { USER_ROLES, ADMIN_ROLES } from '../types';
+import { validate } from '../middleware/validate.middleware.js';
+import { USER_ROLES, ADMIN_ROLES } from '../types/index.js';
 
 const router: ExpressRouter = Router();
 
 router.use(authenticate);
-router.use(requireRole(...(ADMIN_ROLES as import('../types').UserRole[])));
+router.use(requireRole(...(ADMIN_ROLES as import('../types/index.js').UserRole[])));
 
 /**
  * @swagger

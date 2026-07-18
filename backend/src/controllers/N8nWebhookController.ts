@@ -14,8 +14,8 @@
  */
 
 import { Request, Response, NextFunction } from 'express';
-import { WorkflowService, LeadNotFoundError } from '../services/WorkflowService';
-import { logger } from '../utils/logger';
+import { WorkflowService, LeadNotFoundError } from '../services/WorkflowService.js';
+import { logger } from '../utils/logger.js';
 
 /** Required body fields for the n8n-action endpoint / Campos requeridos del body */
 const REQUIRED_FIELDS = [

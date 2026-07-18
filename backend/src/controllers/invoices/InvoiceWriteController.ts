@@ -13,10 +13,10 @@
  * import { createInvoice, updateInvoiceStatus, cancelInvoice } from '../controllers/invoices';
  */
 import { Response } from 'express';
-import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
-import { asyncHandler } from '../../middleware/asyncHandler';
-import { invoiceService } from '../../services/InvoiceService';
-import type { InvoiceStatus, InvoiceType } from '../../types';
+import type { AuthenticatedRequest } from '../../middleware/auth.middleware.js';
+import { asyncHandler } from '../../middleware/asyncHandler.js';
+import { invoiceService } from '../../services/InvoiceService.js';
+import type { InvoiceStatus, InvoiceType } from '../../types/index.js';
 
 /**
  * UUID validation regex

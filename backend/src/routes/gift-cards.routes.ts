@@ -13,10 +13,10 @@ import {
   redeemGiftCard,
   listGiftCards,
   getGiftCardDetails,
-} from '../controllers/GiftCardController';
-import { authenticateToken, requireAdmin } from '../middleware/auth.middleware';
-import { validate } from '../middleware/validate.middleware';
-import { asyncHandler } from '../middleware/asyncHandler';
+} from '../controllers/GiftCardController.js';
+import { authenticateToken, requireAdmin } from '../middleware/auth.middleware.js';
+import { validate } from '../middleware/validate.middleware.js';
+import { asyncHandler } from '../middleware/asyncHandler.js';
 
 const router: ExpressRouter = Router();
 

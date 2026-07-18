@@ -5,15 +5,15 @@
  * @author MLM Development Team
  */
 import { Router, Router as ExpressRouter } from 'express';
-import { authenticate, requireAdmin } from '../middleware/auth.middleware';
+import { authenticate, requireAdmin } from '../middleware/auth.middleware.js';
 import {
   createCategory,
   updateCategory,
   deleteCategory,
   getCategoryAdmin,
   listCategoriesAdmin,
-} from '../controllers/CategoryController';
-import { asyncHandler } from '../middleware/asyncHandler';
+} from '../controllers/CategoryController.js';
+import { asyncHandler } from '../middleware/asyncHandler.js';
 
 const router: ExpressRouter = Router();
 

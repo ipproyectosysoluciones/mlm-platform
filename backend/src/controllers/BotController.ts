@@ -11,12 +11,12 @@
 
 import { Request, Response, NextFunction } from 'express';
 import { Op } from 'sequelize';
-import { User, Wallet, Commission, WithdrawalRequest } from '../models';
-import { Reservation } from '../models/Reservation';
-import { propertyService } from '../services/PropertyService';
-import { tourPackageService } from '../services/TourPackageService';
-import { Property } from '../models/Property';
-import { TourPackage } from '../models/TourPackage';
+import { User, Wallet, Commission, WithdrawalRequest } from '../models/index.js';
+import { Reservation } from '../models/Reservation.js';
+import { propertyService } from '../services/PropertyService.js';
+import { tourPackageService } from '../services/TourPackageService.js';
+import { Property } from '../models/Property.js';
+import { TourPackage } from '../models/TourPackage.js';
 
 // ── GET /api/bot/user-by-phone/:phone ─────────────────────────────────────────
 

@@ -29,14 +29,14 @@ import {
   createLeadValidation,
   updateLeadValidation,
   createTaskValidation,
-} from '../controllers/CRMController';
+} from '../controllers/CRMController.js';
 import {
   getAutomationStatus,
   getAutomationExecutions,
-} from '../controllers/crm/AutomationController';
-import { authenticateToken } from '../middleware/auth.middleware';
-import { validate } from '../middleware/validate.middleware';
-import { asyncHandler } from '../middleware/asyncHandler';
+} from '../controllers/crm/AutomationController.js';
+import { authenticateToken } from '../middleware/auth.middleware.js';
+import { validate } from '../middleware/validate.middleware.js';
+import { asyncHandler } from '../middleware/asyncHandler.js';
 
 const router = Router();
 

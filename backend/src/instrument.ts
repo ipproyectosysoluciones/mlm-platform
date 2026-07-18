@@ -7,7 +7,7 @@
  * @see https://docs.sentry.io/platforms/node/install/esm/
  */
 import * as Sentry from '@sentry/node';
-import { config } from './config/env';
+import { config } from './config/env.js';
 
 // Initialize Sentry if DSN is provided
 if (process.env.SENTRY_DSN) {

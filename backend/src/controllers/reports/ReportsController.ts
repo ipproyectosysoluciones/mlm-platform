@@ -6,4 +6,4 @@
  */
 
 // Re-export all from reports barrel
-export * from './index';
+export * from './index.js';

@@ -9,10 +9,10 @@
  *
  * @example
  * // English: Import auth controller functions
- * import { register, login, me } from '../controllers/AuthController';
+ * import { register, login, me } from '../controllers/AuthController.js';
  *
  * // Español: Importar funciones del controlador de auth
- * import { register, login, me } from '../controllers/AuthController';
+ * import { register, login, me } from '../controllers/AuthController.js';
  *
  * @example
  * // English: Add auth routes
@@ -28,20 +28,20 @@
 import { randomBytes } from 'crypto';
 import { Response, RequestHandler } from 'express';
 import { body } from 'express-validator';
-import { userService } from '../services/UserService';
-import { hashPassword, verifyPassword, generateToken } from '../services/AuthService';
-import { emailService } from '../services/EmailService';
-import { achievementService } from '../services/AchievementService';
-import { config } from '../config/env';
-import type { ApiResponse, UserAttributes } from '../types';
-import { AppError } from '../middleware/error.middleware';
-import { logger } from '../utils/logger';
-import type { AuthenticatedRequest } from '../middleware/auth.middleware';
-import { asyncHandler } from '../middleware/asyncHandler';
-import { Lead } from '../models/Lead';
+import { userService } from '../services/UserService.js';
+import { hashPassword, verifyPassword, generateToken } from '../services/AuthService.js';
+import { emailService } from '../services/EmailService.js';
+import { achievementService } from '../services/AchievementService.js';
+import { config } from '../config/env.js';
+import type { ApiResponse, UserAttributes } from '../types/index.js';
+import { AppError } from '../middleware/error.middleware.js';
+import { logger } from '../utils/logger.js';
+import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
+import { asyncHandler } from '../middleware/asyncHandler.js';
+import { Lead } from '../models/Lead.js';
 
 // Re-export profile controller (maintains backward compatibility)
-export { me } from './auth/ProfileController';
+export { me } from './auth/ProfileController.js';
 
 /**
  * Validation rules for user registration

@@ -8,10 +8,10 @@
  */
 
 // Re-export from sub-controllers
-export { getDashboardUser } from './dashboard/DashboardUserController';
-export { getDashboardStats } from './dashboard/DashboardStatsController';
-export { getDashboardCommissions } from './dashboard/DashboardCommissionsController';
-export { getDashboardReferrals } from './dashboard/DashboardReferralsController';
+export { getDashboardUser } from './dashboard/DashboardUserController.js';
+export { getDashboardStats } from './dashboard/DashboardStatsController.js';
+export { getDashboardCommissions } from './dashboard/DashboardCommissionsController.js';
+export { getDashboardReferrals } from './dashboard/DashboardReferralsController.js';
 
 // Main dashboard aggregator - combines all sub-controller data
-export { getDashboard } from './dashboard/DashboardController';
+export { getDashboard } from './dashboard/DashboardController.js';

@@ -15,9 +15,9 @@
  */
 
 import { DataTypes, Model, ForeignKey } from 'sequelize';
-import { sequelize } from '../config/database';
-import { User } from './User';
-import type { CartAttributes, CartCreationAttributes, CartStatus } from '../types';
+import { sequelize } from '../config/database.js';
+import { User } from './User.js';
+import type { CartAttributes, CartCreationAttributes, CartStatus } from '../types/index.js';
 
 type CartCreation = CartCreationAttributes & { id?: string };
 
@@ -38,7 +38,7 @@ export class Cart extends Model<CartAttributes, CartCreation> {
 
   // Associations
   declare user?: User | null;
-  declare items?: import('./CartItem').CartItem[];
+  declare items?: import('./CartItem.js').CartItem[];
 }
 
 Cart.init(

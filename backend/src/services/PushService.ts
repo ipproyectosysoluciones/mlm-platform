@@ -6,23 +6,23 @@
  *
  * @example
  * // English: Send notification to a user
- * import { pushService } from './PushService';
+ * import { pushService } from './PushService.js';
  * await pushService.sendToUser(userId, {
  *   title: 'New Commission Earned!',
  *   body: 'You earned $50 from your referral',
  * });
  *
  * // Español: Enviar notificación a un usuario
- * import { pushService } from './PushService';
+ * import { pushService } from './PushService.js';
  * await pushService.sendToUser(usuarioId, {
  *   title: '¡Nueva comisión ganada!',
  *   body: 'Ganaste $50 de tu referido',
  * });
  */
 import webpush from 'web-push';
-import { PushSubscription } from '../models';
-import { getWebPush, validateVapid } from '../utils/vapid';
-import { logger } from '../utils/logger';
+import { PushSubscription } from '../models/index.js';
+import { getWebPush, validateVapid } from '../utils/vapid.js';
+import { logger } from '../utils/logger.js';
 
 export interface PushNotificationPayload {
   title: string;
