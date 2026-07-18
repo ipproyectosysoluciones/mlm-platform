@@ -4,15 +4,15 @@
 
 ---
 
-## Versión actual: v3.2.0
+## Versión actual: v3.3.0
 
 | Campo | Valor |
 |-------|-------|
-| Versión | **v3.2.0** (Sprint 14 — CI Pipeline Optimization + Security Hardening) |
+| Versión | **v3.3.0** (Sprint 15 — TypeScript Strict Error Elimination) |
 | Branch main | `main` — producción (synced 2026-06-25) |
 | Branch activo | `development` |
-| Sprint completado | Sprint 14 — CI optimization, Jest sharding, secrets extraction |
-| Próximo sprint | **Sprint 15** — Pendiente |
+| Sprint completado | Sprint 15 — TypeScript strict errors eliminated, CI gate added |
+| Próximo sprint | **Sprint 16** — Pendiente |
 | Repositorio | `ipproyectosysoluciones/mlm-platform` |
 | Root local | `/media/bladimir/Datos2/Datos/MLM` |
 
@@ -55,6 +55,27 @@
 |----|--------|--------|--------|
 
 *(Ninguno pendiente)*
+
+---
+
+## Sprint 15 — Estado COMPLETADO ✅
+
+**Fecha**: 2026-07-18 | **Foco**: TypeScript Strict Error Elimination
+
+| PR | Título | Cambio | Estado |
+|----|--------|--------|--------|
+| #248 | fix/backend-ts-errors-batch1 | Strict TS errors: auth, config, middleware | ✅ Merged |
+| #249 | fix/backend-ts-errors-batch2 | Strict TS errors: services, controllers | ✅ Merged |
+| #250 | fix/backend-ts-errors-batch3 | Strict TS errors: routes, utils | ✅ Merged |
+| #251 | fix/backend-ts-errors-batch4 | Strict TS errors: remaining modules | ✅ Merged |
+| #252 | ci/backend-ts-check-gate | tsc --noEmit blocking CI gate | ✅ Merged |
+
+**Impacto**:
+- 979+ TypeScript strict errors eliminated across backend
+- `tsc --noEmit` blocking CI gate prevents regressions
+- Zero compilation errors — clean type checking pass
+
+**GitHub Actions**: `tsc --noEmit` step runs after "Build backend" in CI pipeline
 
 ---
 
@@ -188,9 +209,9 @@ Login:  admin@mlm.com / admin123
 | Sprint 9 change | `sprint9-tech-debt` — ✅ ARCHIVED |
 | Sprint 9 fix | `fix-service-error-handling` — ✅ ARCHIVED |
 | Sprint 10 change | `sprint10-stabilization` — ✅ ARCHIVED |
+| Sprint 15 change | `sprint15-typescript-strict-errors` — ✅ ARCHIVED |
 | Archived to | `openspec/changes/archive/2026-04-11-sprint8-bot-complete/` |
-| Next sprint | Sprint 15 — pendiente |
-| sdd-init | Reejecutar si se inicia Sprint 15 |
+| Next sprint | Sprint 16 — pendiente |
 
 ---
 
@@ -200,4 +221,4 @@ Login:  admin@mlm.com / admin123
 
 ---
 
-*Actualizado: 2026-07-18 | Post-Sprint 14 CI optimization*
+*Actualizado: 2026-07-18 | Post-Sprint 15 TypeScript strict error elimination*
