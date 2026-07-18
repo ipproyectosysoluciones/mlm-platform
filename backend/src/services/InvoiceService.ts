@@ -13,10 +13,10 @@
  * const invoice = await invoiceService.create({ userId, type: 'purchase', items, amount, tax, currency });
  */
 import { QueryTypes } from 'sequelize';
-import { sequelize } from '../config/database';
-import { Invoice } from '../models';
-import { AppError } from '../middleware/error.middleware';
-import type { InvoiceCreationAttributes, InvoiceStatus, UserRole } from '../types';
+import { sequelize } from '../config/database.js';
+import { Invoice } from '../models/index.js';
+import { AppError } from '../middleware/error.middleware.js';
+import type { InvoiceCreationAttributes, InvoiceStatus, UserRole } from '../types/index.js';
 
 /**
  * Valid status transitions for invoices

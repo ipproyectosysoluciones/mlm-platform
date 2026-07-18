@@ -15,14 +15,14 @@
  */
 
 import { DataTypes, Model, Optional, ForeignKey } from 'sequelize';
-import { sequelize } from '../config/database';
-import { GiftCard } from './GiftCard';
-import { User } from './User';
+import { sequelize } from '../config/database.js';
+import { GiftCard } from './GiftCard.js';
+import { User } from './User.js';
 import type {
   GiftCardTransactionAttributes,
   GiftCardTransactionType,
   GiftCardTransactionStatus,
-} from '../types';
+} from '../types/index.js';
 
 type GiftCardTransactionCreation = Optional<
   GiftCardTransactionAttributes,

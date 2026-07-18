@@ -6,10 +6,10 @@
  * @author MLM Development Team
  */
 import { Response } from 'express';
-import { CommissionConfig } from '../../models';
-import { BUSINESS_TYPES } from '../../types';
-import type { ApiResponse } from '../../types';
-import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
+import { CommissionConfig } from '../../models/index.js';
+import { BUSINESS_TYPES } from '../../types/index.js';
+import type { ApiResponse } from '../../types/index.js';
+import type { AuthenticatedRequest } from '../../middleware/auth.middleware.js';
 
 /**
  * Get all commission configurations
@@ -115,7 +115,7 @@ export async function getActiveRates(req: AuthenticatedRequest, res: Response): 
     }
 
     // Fill missing levels with defaults from COMMISSION_RATES
-    const { COMMISSION_RATES } = await import('../../types');
+    const { COMMISSION_RATES } = await import('../../types/index.js');
     for (const [key, value] of Object.entries(COMMISSION_RATES)) {
       if (rates[key] === undefined) {
         rates[key] = value as number;

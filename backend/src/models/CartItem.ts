@@ -15,8 +15,8 @@
  */
 
 import { DataTypes, Model, Optional, ForeignKey } from 'sequelize';
-import { sequelize } from '../config/database';
-import type { CartItemAttributes } from '../types';
+import { sequelize } from '../config/database.js';
+import type { CartItemAttributes } from '../types/index.js';
 
 type CartItemCreation = Optional<CartItemAttributes, 'id' | 'createdAt' | 'updatedAt'>;
 
@@ -33,7 +33,7 @@ export class CartItem extends Model<CartItemAttributes, CartItemCreation> {
   declare readonly updatedAt: Date;
 
   // Associations
-  declare product?: import('./Product').Product;
+  declare product?: import('./Product.js').Product;
 }
 
 CartItem.init(

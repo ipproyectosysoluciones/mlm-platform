@@ -8,11 +8,11 @@
 
 import { Response } from 'express';
 import { body } from 'express-validator';
-import { crmService } from '../../services/CRMService';
-import { AppError } from '../../middleware/error.middleware';
-import { WorkflowService } from '../../services/WorkflowService';
-import { logger } from '../../utils/logger';
-import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
+import { crmService } from '../../services/CRMService.js';
+import { AppError } from '../../middleware/error.middleware.js';
+import { WorkflowService } from '../../services/WorkflowService.js';
+import { logger } from '../../utils/logger.js';
+import type { AuthenticatedRequest } from '../../middleware/auth.middleware.js';
 import type { LeadStatus, LeadSource } from '../../models/Lead.js';
 
 /**

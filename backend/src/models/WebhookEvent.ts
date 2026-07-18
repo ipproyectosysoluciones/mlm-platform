@@ -25,7 +25,7 @@
  */
 
 import { DataTypes, Model, Optional } from 'sequelize';
-import { sequelize } from '../config/database';
+import { sequelize } from '../config/database.js';
 
 /** Supported payment providers */
 export type WebhookProvider = 'paypal' | 'mercadopago' | 'stripe';

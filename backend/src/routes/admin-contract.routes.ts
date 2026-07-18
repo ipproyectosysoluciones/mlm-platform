@@ -12,8 +12,8 @@ import {
   updateTemplate,
   getUserContracts,
   revokeUserContract,
-} from '../controllers/AdminContractController';
-import { requireAdmin, authenticate } from '../middleware/auth.middleware';
+} from '../controllers/AdminContractController.js';
+import { requireAdmin, authenticate } from '../middleware/auth.middleware.js';
 
 const router = Router();
 

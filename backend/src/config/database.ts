@@ -1,6 +1,6 @@
 import { Sequelize } from 'sequelize';
-import { config } from './env';
-import { logger } from '../utils/logger';
+import { config } from './env.js';
+import { logger } from '../utils/logger.js';
 
 // Allow test override
 let _sequelize: Sequelize | null = null;

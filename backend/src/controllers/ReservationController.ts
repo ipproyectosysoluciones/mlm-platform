@@ -16,8 +16,8 @@
  * POST /api/reservations
  */
 import { Request, Response } from 'express';
-import { reservationService } from '../services/ReservationService';
-import { logger } from '../utils/logger';
+import { reservationService } from '../services/ReservationService.js';
+import { logger } from '../utils/logger.js';
 import { hasStatusCode, getErrorMessage } from '../utils/HttpError.js';
 
 // ============================================

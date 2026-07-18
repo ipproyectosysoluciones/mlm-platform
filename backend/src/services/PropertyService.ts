@@ -13,8 +13,8 @@
  * const result = await propertyService.findAll({ city: 'Bogotá', status: 'available' });
  */
 import { Op, WhereOptions } from 'sequelize';
-import { Property } from '../models';
-import type { PropertyAttributes, PropertyCreationAttributes } from '../models/Property';
+import { Property } from '../models/index.js';
+import type { PropertyAttributes, PropertyCreationAttributes } from '../models/Property.js';
 
 // ============================================
 // TYPES

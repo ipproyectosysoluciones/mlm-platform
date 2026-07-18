@@ -14,8 +14,8 @@
  * const categories = await Category.findAll({ where: { parentId: null } });
  */
 import { DataTypes, Model, Optional } from 'sequelize';
-import { sequelize } from '../config/database';
-import type { CategoryAttributes } from '../types';
+import { sequelize } from '../config/database.js';
+import type { CategoryAttributes } from '../types/index.js';
 
 type CategoryCreation = Optional<CategoryAttributes, 'id' | 'createdAt' | 'updatedAt'>;
 

@@ -5,13 +5,13 @@
  * @module controllers/CommissionConfigController
  * @author MLM Development Team
  *
- * @deprecated Use imports from '../controllers/commissions' instead
+ * @deprecated Use imports from '../controllers/commissions/index.js' instead
  * @example
  * // English: New import pattern
- * import { getAllConfigs, createConfig, updateConfig, deleteConfig } from '../controllers/commissions';
+ * import { getAllConfigs, createConfig, updateConfig, deleteConfig } from '../controllers/commissions/index.js';
  *
  * // Español: Nuevo patrón de importación
- * import { getAllConfigs, createConfig, updateConfig, deleteConfig } from '../controllers/commissions';
+ * import { getAllConfigs, createConfig, updateConfig, deleteConfig } from '../controllers/commissions/index.js';
  */
 
 // Re-export from sub-controllers for backward compatibility
@@ -22,4 +22,4 @@ export {
   createConfig,
   updateConfig,
   deleteConfig,
-} from './commissions';
+} from './commissions/index.js';

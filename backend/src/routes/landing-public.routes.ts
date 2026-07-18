@@ -13,10 +13,10 @@
  */
 import { Router, Request, Response } from 'express';
 import { param, query } from 'express-validator';
-import { Product, User } from '../models';
-import { asyncHandler } from '../middleware/asyncHandler';
-import { validate } from '../middleware/validate.middleware';
-import type { ApiResponse } from '../types';
+import { Product, User } from '../models/index.js';
+import { asyncHandler } from '../middleware/asyncHandler.js';
+import { validate } from '../middleware/validate.middleware.js';
+import type { ApiResponse } from '../types/index.js';
 
 const router = Router();
 

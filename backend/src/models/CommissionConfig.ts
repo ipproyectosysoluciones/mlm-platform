@@ -7,7 +7,7 @@
  */
 
 import { DataTypes, Model, Optional } from 'sequelize';
-import { sequelize } from '../config/database';
+import { sequelize } from '../config/database.js';
 
 // Business types for commission configuration
 export const BUSINESS_TYPES = {

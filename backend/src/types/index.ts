@@ -875,6 +875,28 @@ export interface InventoryMovementCreationAttributes {
  * Product list options for filtering
  * Opciones de listado de productos para filtrado
  */
+export interface ProductListOptions {
+  page?: number;
+  limit?: number;
+  platform?:
+    | 'netflix'
+    | 'disney_plus'
+    | 'spotify'
+    | 'hbo_max'
+    | 'amazon_prime'
+    | 'youtube_premium'
+    | 'apple_tv'
+    | 'other';
+  isActive?: boolean;
+  minPrice?: number;
+  maxPrice?: number;
+  type?: ProductType;
+  categoryId?: string;
+  minStock?: number;
+  maxStock?: number;
+  search?: string;
+}
+
 export interface GenericProductListOptions extends ProductListOptions {
   type?: ProductType;
   categoryId?: string;

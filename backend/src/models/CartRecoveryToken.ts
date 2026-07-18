@@ -15,13 +15,13 @@
  */
 
 import { DataTypes, Model, ForeignKey } from 'sequelize';
-import { sequelize } from '../config/database';
-import { User } from './User';
+import { sequelize } from '../config/database.js';
+import { User } from './User.js';
 import type {
   CartRecoveryTokenAttributes,
   CartRecoveryTokenCreationAttributes,
   CartRecoveryTokenStatus,
-} from '../types';
+} from '../types/index.js';
 
 type CartRecoveryTokenCreation = CartRecoveryTokenCreationAttributes & { id?: string };
 
@@ -45,7 +45,7 @@ export class CartRecoveryToken extends Model<
 
   // Associations
   declare user?: User | null;
-  declare cart?: import('./Cart').Cart;
+  declare cart?: import('./Cart.js').Cart;
 }
 
 CartRecoveryToken.init(

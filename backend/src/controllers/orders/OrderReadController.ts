@@ -13,10 +13,10 @@
  * import { getOrders, getOrderById } from '../controllers/orders';
  */
 import { Response, RequestHandler } from 'express';
-import { orderService } from '../../services/OrderService';
-import type { ApiResponse, OrderAttributes } from '../../types';
-import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
-import { asyncHandler } from '../../middleware/asyncHandler';
+import { orderService } from '../../services/OrderService.js';
+import type { ApiResponse, OrderAttributes } from '../../types/index.js';
+import type { AuthenticatedRequest } from '../../middleware/auth.middleware.js';
+import { asyncHandler } from '../../middleware/asyncHandler.js';
 
 /**
  * UUID validation regex

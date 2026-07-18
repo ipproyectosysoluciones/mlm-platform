@@ -25,10 +25,10 @@
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcryptjs';
 import { Op } from 'sequelize';
-import { sequelize } from '../config/database';
-import { Cart, CartItem, CartRecoveryToken, Product, User } from '../models';
-import { CART_STATUS, CART_RECOVERY_TOKEN_STATUS } from '../types';
-import type { CartStatus } from '../types';
+import { sequelize } from '../config/database.js';
+import { Cart, CartItem, CartRecoveryToken, Product, User } from '../models/index.js';
+import { CART_STATUS, CART_RECOVERY_TOKEN_STATUS } from '../types/index.js';
+import type { CartStatus } from '../types/index.js';
 import { HttpError } from '../utils/HttpError.js';
 
 /**

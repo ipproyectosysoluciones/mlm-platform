@@ -6,7 +6,7 @@
  */
 
 import { Router } from 'express';
-import { authenticateBot } from '../middleware/bot.middleware';
+import { authenticateBot } from '../middleware/bot.middleware.js';
 import {
   getUserByPhone,
   getWalletInfo,
@@ -16,9 +16,9 @@ import {
   getBotTours,
   getBotReservations,
   getBotHealth,
-} from '../controllers/BotController';
-import { asyncHandler } from '../middleware/asyncHandler';
-import botLeadsRouter from './bot-leads.routes';
+} from '../controllers/BotController.js';
+import { asyncHandler } from '../middleware/asyncHandler.js';
+import botLeadsRouter from './bot-leads.routes.js';
 
 const router = Router();
 

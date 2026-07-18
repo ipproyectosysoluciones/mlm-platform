@@ -1,5 +1,5 @@
 import swaggerJsdoc from 'swagger-jsdoc';
-import { config } from './env';
+import { config } from './env.js';
 
 /**
  * Swagger/OpenAPI Configuration for Nexo Real API

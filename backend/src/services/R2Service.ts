@@ -19,8 +19,8 @@
 import { PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { randomUUID } from 'crypto';
 import sharp from 'sharp';
-import { r2Client, R2_BUCKET, R2_PUBLIC_URL } from '../config/r2';
-import { logger } from '../utils/logger';
+import { r2Client, R2_BUCKET, R2_PUBLIC_URL } from '../config/r2.js';
+import { logger } from '../utils/logger.js';
 
 // ============================================
 // TYPES

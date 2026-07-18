@@ -12,13 +12,13 @@
  * const response = await fetch('/api/categories/tree');
  */
 import { Response } from 'express';
-import { categoryService } from '../services/CategoryService';
-import { asyncHandler } from '../middleware/asyncHandler';
-import { AppError } from '../middleware/error.middleware';
-import type { AuthenticatedRequest } from '../middleware/auth.middleware';
-import type { ApiResponse } from '../types';
-import type { Category } from '../models/Category';
-import type { CategoryTreeNode, CategoryBreadcrumbItem } from '../services/CategoryService';
+import { categoryService } from '../services/CategoryService.js';
+import { asyncHandler } from '../middleware/asyncHandler.js';
+import { AppError } from '../middleware/error.middleware.js';
+import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
+import type { ApiResponse } from '../types/index.js';
+import type { Category } from '../models/Category.js';
+import type { CategoryTreeNode, CategoryBreadcrumbItem } from '../services/CategoryService.js';
 
 /**
  * Get category tree (public)

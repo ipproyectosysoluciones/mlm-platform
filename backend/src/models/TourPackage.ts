@@ -13,7 +13,7 @@
  * const tours = await TourPackage.findAll({ where: { type: 'adventure', status: 'active', country: 'Colombia' } });
  */
 import { DataTypes, Model, Optional } from 'sequelize';
-import { sequelize } from '../config/database';
+import { sequelize } from '../config/database.js';
 
 // ============================================
 // INTERFACES — TourPackage Attributes

@@ -28,8 +28,8 @@
  */
 
 import { DataTypes, Model, Optional } from 'sequelize';
-import { sequelize } from '../config/database';
-import type { AffiliateContractAttributes, ContractStatus } from '../types';
+import { sequelize } from '../config/database.js';
+import type { AffiliateContractAttributes, ContractStatus } from '../types/index.js';
 
 type AffiliateContractCreation = Optional<
   AffiliateContractAttributes,

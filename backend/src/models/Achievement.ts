@@ -14,7 +14,7 @@
  * const achievements = await Achievement.findAll({ where: { status: 'active' } });
  */
 import { DataTypes, Model, Optional } from 'sequelize';
-import { sequelize } from '../config/database';
+import { sequelize } from '../config/database.js';
 
 export type AchievementConditionType =
   | 'count_referrals'
@@ -66,8 +66,8 @@ export class Achievement extends Model<AchievementAttributes, AchievementCreatio
   declare readonly updatedAt: Date;
 
   // Associations / Asociaciones
-  declare userAchievements?: import('./UserAchievement').UserAchievement[];
-  declare badge?: import('./Badge').Badge | null;
+  declare userAchievements?: import('./UserAchievement.js').UserAchievement[];
+  declare badge?: import('./Badge.js').Badge | null;
 }
 
 Achievement.init(

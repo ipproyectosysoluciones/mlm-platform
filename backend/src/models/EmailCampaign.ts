@@ -15,9 +15,9 @@
  */
 
 import { DataTypes, Model, ForeignKey } from 'sequelize';
-import { sequelize } from '../config/database';
-import { User } from './User';
-import type { EmailCampaignAttributes, EmailCampaignStatus } from '../types';
+import { sequelize } from '../config/database.js';
+import { User } from './User.js';
+import type { EmailCampaignAttributes, EmailCampaignStatus } from '../types/index.js';
 
 type EmailCampaignCreation = Omit<
   EmailCampaignAttributes,
@@ -76,7 +76,7 @@ export class EmailCampaign extends Model<EmailCampaignAttributes, EmailCampaignC
 
   // Associations
   declare createdByUser?: User | null;
-  declare emailTemplate?: import('./EmailTemplate').EmailTemplate | null;
+  declare emailTemplate?: import('./EmailTemplate.js').EmailTemplate | null;
 }
 
 EmailCampaign.init(

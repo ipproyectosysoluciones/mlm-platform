@@ -7,7 +7,7 @@
  * @author MLM Development Team
  */
 import { QueryTypes } from 'sequelize';
-import { sequelize } from '../config/database';
+import { sequelize } from '../config/database.js';
 
 // ============================================
 // TYPES

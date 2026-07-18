@@ -8,7 +8,7 @@
  * @author MLM Development Team
  */
 import { Router } from 'express';
-import { createReservation, getReservation } from '../controllers/ReservationController';
+import { createReservation, getReservation } from '../controllers/ReservationController.js';
 
 const router = Router();
 

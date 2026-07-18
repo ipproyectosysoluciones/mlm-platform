@@ -19,10 +19,10 @@
  */
 
 import { Op } from 'sequelize';
-import { EmailQueue, EmailCampaign, EmailCampaignLog } from '../models';
-import { brevoEmailService } from './BrevoEmailService';
-import { EMAIL_QUEUE_STATUS, EMAIL_CAMPAIGN_STATUS } from '../types';
-import { logger } from '../utils/logger';
+import { EmailQueue, EmailCampaign, EmailCampaignLog } from '../models/index.js';
+import { brevoEmailService } from './BrevoEmailService.js';
+import { EMAIL_QUEUE_STATUS, EMAIL_CAMPAIGN_STATUS } from '../types/index.js';
+import { logger } from '../utils/logger.js';
 
 // ============================================
 // CONSTANTS — Constantes

@@ -7,13 +7,13 @@
 
 import { Response } from 'express';
 import { body } from 'express-validator';
-import { User } from '../../models';
-import { TwoFactorService } from '../../services/TwoFactorService';
-import type { ApiResponse } from '../../types';
-import { AppError } from '../../middleware/error.middleware';
-import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
-import { asyncHandler } from '../../middleware/asyncHandler';
-import { getPendingSetups } from './TwoFactorSetupController';
+import { User } from '../../models/index.js';
+import { TwoFactorService } from '../../services/TwoFactorService.js';
+import type { ApiResponse } from '../../types/index.js';
+import { AppError } from '../../middleware/error.middleware.js';
+import type { AuthenticatedRequest } from '../../middleware/auth.middleware.js';
+import { asyncHandler } from '../../middleware/asyncHandler.js';
+import { getPendingSetups } from './TwoFactorSetupController.js';
 
 // ============================================
 // CONSTANTS

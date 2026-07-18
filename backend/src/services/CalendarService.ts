@@ -17,7 +17,7 @@
  * await calendarService.notifyReservationConfirmed({ reservationId: '123', ... });
  */
 
-import { logger } from '../utils/logger';
+import { logger } from '../utils/logger.js';
 
 // ============================================
 // TYPES / TIPOS

@@ -12,7 +12,7 @@
  */
 
 // Order write controller (creation operations)
-export { createOrder } from './OrderWriteController';
+export { createOrder } from './OrderWriteController.js';
 
 // Order read controller (retrieval operations)
-export { getOrders, getOrderById } from './OrderReadController';
+export { getOrders, getOrderById } from './OrderReadController.js';
