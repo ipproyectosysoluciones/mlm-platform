@@ -78,8 +78,8 @@ jobs:
           DB_NAME: mlm_test
           DB_USER: test
           DB_PASSWORD: test
-          JWT_SECRET: ci-test-secret
-          TWO_FACTOR_SECRET_KEY: ci-test-2fa-key
+          JWT_SECRET: ${{ secrets.CI_JWT_SECRET }}
+          TWO_FACTOR_SECRET_KEY: ${{ secrets.CI_TWO_FACTOR_SECRET_KEY }}
 
       - name: Integration tests (shard ${{ matrix.shard }}/3)
         run: cd backend && SKIP_COMMISSION_CALCULATION=true npx jest --config=jest.integration.config.cjs --runInBand --shard=${{ matrix.shard }}/3
@@ -90,12 +90,12 @@ jobs:
           TEST_DB_NAME: mlm_test
           TEST_DB_USER: test
           TEST_DB_PASSWORD: test
-          JWT_SECRET: ci-test-secret
-          TWO_FACTOR_SECRET_KEY: ci-test-2fa-key
+          JWT_SECRET: ${{ secrets.CI_JWT_SECRET }}
+          TWO_FACTOR_SECRET_KEY: ${{ secrets.CI_TWO_FACTOR_SECRET_KEY }}
           NODE_ENV: test
-          VAPID_PUBLIC_KEY: BEueSTlTOD2y1tdK7YoKXPdgNqOaVeTYxW0XRSRp6zj0RCJfAAmTUWT4y-7Nlam3FhJdXXFtJSPfQSFi1Y_-O-Y
-          VAPID_PRIVATE_KEY: yTkAndYTiEvEvZ4brY98pn1741cHKtdnBIELcRSlr3Y
-          VAPID_SUBJECT: mailto:test@mlm-platform.local
+          VAPID_PUBLIC_KEY: ${{ secrets.CI_VAPID_PUBLIC_KEY }}
+          VAPID_PRIVATE_KEY: ${{ secrets.CI_VAPID_PRIVATE_KEY }}
+          VAPID_SUBJECT: ${{ secrets.CI_VAPID_SUBJECT }}
 
       - name: Upload backend artifact
         uses: actions/upload-artifact@v4
