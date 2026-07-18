@@ -4,7 +4,7 @@
  * @module controllers/PaymentPayPalController
  */
 
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { asyncHandler } from '../middleware/asyncHandler.js';
 import { paypalService } from '../services/PayPalService.js';
 import { ResponseUtil } from '../utils/response.util.js';
@@ -39,7 +39,7 @@ export class PaymentPayPalController {
       currency,
       description: description || 'Nexo Real - Compra',
       orderId,
-      userId,
+      userId: userId ?? '',
     });
 
     // Find approval URL
@@ -242,7 +242,7 @@ export class PaymentPayPalController {
             orderNumber,
             userId,
             productId,
-            purchaseId: purchase.id,
+            purchaseId: purchase.id ?? null,
             totalAmount: amount,
             currency,
             status: 'completed',
