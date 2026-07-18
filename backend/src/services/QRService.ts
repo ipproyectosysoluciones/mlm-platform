@@ -7,9 +7,9 @@
  */
 
 import QRCode from 'qrcode';
-import { config } from '../config/env';
-import { QrMapping } from '../models';
-import { logger } from '../utils/logger';
+import { config } from '../config/env.js';
+import { QrMapping } from '../models/index.js';
+import { logger } from '../utils/logger.js';
 
 /**
  * QR Code Service - Generates QR codes for referral links and gift cards

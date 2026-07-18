@@ -19,10 +19,10 @@
  * // Español: Obtener migas de pan para una categoría
  * const breadcrumb = await categoryService.getBreadcrumb('category-id');
  */
-import { Category, MAX_CATEGORY_DEPTH, Product } from '../models';
-import { AppError } from '../middleware/error.middleware';
-import type { CategoryAttributes } from '../types';
-import type { CategoryCreation } from '../models/Category';
+import { Category, MAX_CATEGORY_DEPTH, Product } from '../models/index.js';
+import { AppError } from '../middleware/error.middleware.js';
+import type { CategoryAttributes } from '../types/index.js';
+import type { CategoryCreation } from '../models/Category.js';
 
 export interface CategoryTreeNode extends CategoryAttributes {
   children: CategoryTreeNode[];

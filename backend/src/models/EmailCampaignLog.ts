@@ -15,8 +15,8 @@
  */
 
 import { DataTypes, Model } from 'sequelize';
-import { sequelize } from '../config/database';
-import type { EmailCampaignLogAttributes } from '../types';
+import { sequelize } from '../config/database.js';
+import type { EmailCampaignLogAttributes } from '../types/index.js';
 
 type EmailCampaignLogCreation = Omit<EmailCampaignLogAttributes, 'id' | 'createdAt'> & {
   id?: string;
@@ -33,8 +33,8 @@ export class EmailCampaignLog extends Model<EmailCampaignLogAttributes, EmailCam
   declare readonly createdAt: Date;
 
   // Associations
-  declare campaign?: import('./EmailCampaign').EmailCampaign | null;
-  declare campaignRecipient?: import('./CampaignRecipient').CampaignRecipient | null;
+  declare campaign?: import('./EmailCampaign.js').EmailCampaign | null;
+  declare campaignRecipient?: import('./CampaignRecipient.js').CampaignRecipient | null;
 }
 
 EmailCampaignLog.init(

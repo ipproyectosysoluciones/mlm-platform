@@ -13,7 +13,7 @@
  * const availability = await TourAvailability.findOne({ where: { tourPackageId: 'uuid', date: '2026-07-15' } });
  */
 import { DataTypes, Model, Optional } from 'sequelize';
-import { sequelize } from '../config/database';
+import { sequelize } from '../config/database.js';
 
 // ============================================
 // INTERFACES — TourAvailability Attributes

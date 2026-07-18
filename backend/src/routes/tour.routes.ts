@@ -6,7 +6,7 @@
  * @author MLM Development Team
  */
 import { Router } from 'express';
-import { getTourPackages, getTourPackage } from '../controllers/TourPackageController';
+import { getTourPackages, getTourPackage } from '../controllers/TourPackageController.js';
 
 const router = Router();
 

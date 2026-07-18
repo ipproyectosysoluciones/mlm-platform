@@ -13,7 +13,7 @@
  * import { r2Client, R2_BUCKET } from './config/r2';
  */
 import { S3Client } from '@aws-sdk/client-s3';
-import { config } from './env';
+import { config } from './env.js';
 
 /**
  * S3-compatible client configured to use Cloudflare R2

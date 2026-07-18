@@ -12,7 +12,7 @@
  * const properties = await Property.findAll({ where: { city: 'Bogotá', status: 'available' } });
  */
 import { DataTypes, Model, Optional } from 'sequelize';
-import { sequelize } from '../config/database';
+import { sequelize } from '../config/database.js';
 
 // ============================================
 // INTERFACES — Property Attributes

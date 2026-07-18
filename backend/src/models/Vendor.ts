@@ -12,8 +12,8 @@
  * const vendor = await Vendor.findOne({ where: { userId: idUsuario } });
  */
 import { DataTypes, Model, Optional } from 'sequelize';
-import { sequelize } from '../config/database';
-import type { VendorAttributes } from '../types';
+import { sequelize } from '../config/database.js';
+import type { VendorAttributes } from '../types/index.js';
 
 type VendorCreation = Optional<VendorAttributes, 'id' | 'createdAt' | 'updatedAt'>;
 

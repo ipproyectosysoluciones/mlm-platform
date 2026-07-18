@@ -15,7 +15,7 @@
  * const reservations = await Reservation.findAll({ where: { userId: 'uuid', type: 'property', status: 'pending' } });
  */
 import { DataTypes, Model, Optional } from 'sequelize';
-import { sequelize } from '../config/database';
+import { sequelize } from '../config/database.js';
 
 // ============================================
 // INTERFACES — Reservation Attributes
@@ -177,10 +177,10 @@ export class Reservation
   declare readonly updatedAt: Date;
 
   // Associations / Asociaciones
-  declare user?: import('./User').User | null;
-  declare property?: import('./Property').Property | null;
-  declare tourPackage?: import('./TourPackage').TourPackage | null;
-  declare vendor?: import('./Vendor').Vendor | null;
+  declare user?: import('./User.js').User | null;
+  declare property?: import('./Property.js').Property | null;
+  declare tourPackage?: import('./TourPackage.js').TourPackage | null;
+  declare vendor?: import('./Vendor.js').Vendor | null;
 }
 
 Reservation.init(

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction, RequestHandler } from 'express';
-import { logger } from '../utils/logger';
+import { logger } from '../utils/logger.js';
 
 type AsyncRequestHandler = (req: Request, res: Response, next: NextFunction) => Promise<void>;
 

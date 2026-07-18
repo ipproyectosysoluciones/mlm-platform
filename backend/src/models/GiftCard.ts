@@ -15,9 +15,9 @@
  */
 
 import { DataTypes, Model, Optional, ForeignKey } from 'sequelize';
-import { sequelize } from '../config/database';
-import { User } from './User';
-import type { GiftCardAttributes, GiftCardStatus } from '../types';
+import { sequelize } from '../config/database.js';
+import { User } from './User.js';
+import type { GiftCardAttributes, GiftCardStatus } from '../types/index.js';
 
 type GiftCardCreation = Optional<GiftCardAttributes, 'id' | 'createdAt' | 'updatedAt'>;
 

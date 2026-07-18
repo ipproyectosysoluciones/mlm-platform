@@ -6,8 +6,8 @@
  * @author MLM Development Team
  */
 import { Response } from 'express';
-import type { AuthenticatedRequest } from '../middleware/auth.middleware';
-import { leaderboardService, Period } from '../services/LeaderboardService';
+import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
+import { leaderboardService, Period } from '../services/LeaderboardService.js';
 
 const VALID_PERIODS: Period[] = ['weekly', 'monthly', 'all-time'];
 

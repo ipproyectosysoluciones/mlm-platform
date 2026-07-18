@@ -14,7 +14,7 @@
  */
 
 // Admin - StatsController (commissions report)
-export { getCommissionsReport } from '../admin/StatsController';
+export { getCommissionsReport } from '../admin/StatsController.js';
 
 // CRM - AnalyticsController (analytics reports)
-export { getAnalyticsReport, exportAnalyticsReport } from '../crm/AnalyticsController';
+export { getAnalyticsReport, exportAnalyticsReport } from '../crm/AnalyticsController.js';

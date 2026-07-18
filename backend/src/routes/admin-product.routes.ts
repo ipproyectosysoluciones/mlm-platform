@@ -12,14 +12,14 @@
  * router.post('/', requireAdmin, createProduct);
  */
 import { Router, Router as ExpressRouter } from 'express';
-import { authenticate, requireAdmin } from '../middleware/auth.middleware';
+import { authenticate, requireAdmin } from '../middleware/auth.middleware.js';
 import {
   createProduct,
   updateProduct,
   deleteProduct,
   getProductAdmin,
   listProductsAdmin,
-} from '../controllers/products/ProductWriteController';
+} from '../controllers/products/ProductWriteController.js';
 import {
   reserveStock,
   releaseStock,
@@ -27,8 +27,8 @@ import {
   setInitialStock,
   recordReturn,
   getInventoryMovements,
-} from '../controllers/products/ProductInventoryController';
-import { asyncHandler } from '../middleware/asyncHandler';
+} from '../controllers/products/ProductInventoryController.js';
+import { asyncHandler } from '../middleware/asyncHandler.js';
 
 const router: ExpressRouter = Router();
 

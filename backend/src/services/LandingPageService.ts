@@ -20,8 +20,8 @@
  * // Español: Obtener estadísticas de página
  * const stats = await landingPageService.getStats(userId);
  */
-import { LandingPage, User } from '../models';
-import type { LandingPageContent, LandingPageTemplate } from '../models/LandingPage';
+import { LandingPage, User } from '../models/index.js';
+import type { LandingPageContent, LandingPageTemplate } from '../models/LandingPage.js';
 
 /**
  * Input for creating a new landing page

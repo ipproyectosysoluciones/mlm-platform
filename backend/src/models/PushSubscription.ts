@@ -13,7 +13,7 @@
  * const subscriptions = await PushSubscription.findAll({ where: { userId: userId } });
  */
 import { DataTypes, Model, Optional } from 'sequelize';
-import { sequelize } from '../config/database';
+import { sequelize } from '../config/database.js';
 
 export interface PushSubscriptionAttributes {
   id: string;

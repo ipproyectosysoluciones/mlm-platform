@@ -14,10 +14,10 @@ import {
   getWithdrawalStatus,
   cancelWithdrawal,
   getCryptoPrices,
-} from '../controllers/WalletController';
-import { authenticateToken } from '../middleware/auth.middleware';
-import { validate } from '../middleware/validate.middleware';
-import { asyncHandler } from '../middleware/asyncHandler';
+} from '../controllers/WalletController.js';
+import { authenticateToken } from '../middleware/auth.middleware.js';
+import { validate } from '../middleware/validate.middleware.js';
+import { asyncHandler } from '../middleware/asyncHandler.js';
 
 const router: ExpressRouter = Router();
 

@@ -8,8 +8,8 @@ import {
   deleteLandingPage,
   getPublicLandingPage,
   trackConversion,
-} from '../controllers/LandingPageController';
-import { authenticate } from '../middleware/auth.middleware';
+} from '../controllers/LandingPageController.js';
+import { authenticate } from '../middleware/auth.middleware.js';
 
 const router = Router();
 

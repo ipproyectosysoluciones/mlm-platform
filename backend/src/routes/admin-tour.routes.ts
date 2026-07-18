@@ -10,7 +10,7 @@
  */
 import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
-import { authenticate, requireAdmin } from '../middleware/auth.middleware';
+import { authenticate, requireAdmin } from '../middleware/auth.middleware.js';
 import {
   getTourPackages,
   getTourPackage,
@@ -19,8 +19,8 @@ import {
   deleteTourPackage,
   uploadTourImages,
   deleteTourImage,
-} from '../controllers/TourPackageController';
-import { uploadImages } from '../middleware/upload';
+} from '../controllers/TourPackageController.js';
+import { uploadImages } from '../middleware/upload.js';
 
 const router = Router();
 

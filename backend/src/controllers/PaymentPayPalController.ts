@@ -8,7 +8,7 @@ import { Response } from 'express';
 import { asyncHandler } from '../middleware/asyncHandler.js';
 import { paypalService } from '../services/PayPalService.js';
 import { ResponseUtil } from '../utils/response.util.js';
-import { logger } from '../utils/logger';
+import { logger } from '../utils/logger.js';
 import { Purchase, Order, Product } from '../models/index.js';
 import { CommissionService } from '../services/CommissionService.js';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';

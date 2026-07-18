@@ -22,9 +22,9 @@
  * });
  */
 import { DataTypes, Model, Optional } from 'sequelize';
-import { sequelize } from '../config/database';
-import type { Achievement } from './Achievement';
-import type { User } from './User';
+import { sequelize } from '../config/database.js';
+import type { Achievement } from './Achievement.js';
+import type { User } from './User.js';
 
 export interface UserAchievementAttributes {
   id: string;

@@ -13,7 +13,7 @@ const isTest = process.env.NODE_ENV === 'test';
  *
  * @example
  * ```ts
- * import { logger } from '../utils/logger';
+ * import { logger } from '../utils/logger.js';
  *
  * logger.info({ userId: 123 }, 'User logged in');
  * logger.error({ err }, 'Payment failed');

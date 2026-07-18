@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getPublicProfile, getSitemapUsers } from '../controllers/PublicController';
+import { getPublicProfile, getSitemapUsers } from '../controllers/PublicController.js';
 
 const router = Router();
 

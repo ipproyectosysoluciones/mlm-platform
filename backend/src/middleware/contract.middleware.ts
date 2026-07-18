@@ -6,10 +6,10 @@
  */
 
 import { Response, NextFunction } from 'express';
-import { ContractService } from '../services/ContractService';
-import { logger } from '../utils/logger';
-import type { AuthenticatedRequest } from './auth.middleware';
-import type { ContractType } from '../types';
+import { ContractService } from '../services/ContractService.js';
+import { logger } from '../utils/logger.js';
+import type { AuthenticatedRequest } from './auth.middleware.js';
+import type { ContractType } from '../types/index.js';
 
 const contractService = new ContractService();
 

@@ -14,10 +14,10 @@ import {
   updateConfig,
   deleteConfig,
   getActiveRates,
-} from '../controllers/CommissionConfigController';
-import { authenticateToken, requireAdmin } from '../middleware/auth.middleware';
-import { validate } from '../middleware/validate.middleware';
-import { asyncHandler } from '../middleware/asyncHandler';
+} from '../controllers/CommissionConfigController.js';
+import { authenticateToken, requireAdmin } from '../middleware/auth.middleware.js';
+import { validate } from '../middleware/validate.middleware.js';
+import { asyncHandler } from '../middleware/asyncHandler.js';
 
 const router: ExpressRouter = Router();
 

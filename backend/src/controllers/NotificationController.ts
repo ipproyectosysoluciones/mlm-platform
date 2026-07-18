@@ -19,10 +19,10 @@
  * POST   /api/users/me/2fa/disable   - Disable 2FA
  */
 import { Response } from 'express';
-import { User } from '../models/User';
-import { smsService } from '../services/SMSService';
-import { ResponseUtil } from '../utils/response.util';
-import { logger } from '../utils/logger';
+import { User } from '../models/User.js';
+import { smsService } from '../services/SMSService.js';
+import { ResponseUtil } from '../utils/response.util.js';
+import { logger } from '../utils/logger.js';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
 
 // In-memory store for 2FA codes (use Redis in production)

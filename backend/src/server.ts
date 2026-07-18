@@ -1,12 +1,12 @@
 // Instrument Sentry BEFORE any other imports (Sentry ESM pattern)
 import './instrument';
 
-import app from './app';
-import { connectDatabase, syncDatabase } from './config/database';
-import { config, platformDomain } from './config/env';
-import { logger } from './utils/logger';
-import { initModels, User, Product, CommissionConfig, UserClosure } from './models';
-import { achievementService } from './services/AchievementService';
+import app from './app.js';
+import { connectDatabase, syncDatabase } from './config/database.js';
+import { config, platformDomain } from './config/env.js';
+import { logger } from './utils/logger.js';
+import { initModels, User, Product, CommissionConfig, UserClosure } from './models/index.js';
+import { achievementService } from './services/AchievementService.js';
 import bcrypt from 'bcryptjs';
 
 /**

@@ -6,12 +6,12 @@
  * @author MLM Development Team
  */
 import { Response } from 'express';
-import { CommissionService } from '../services/CommissionService';
-import { Purchase } from '../models';
-import type { Commission } from '../models/Commission';
-import type { ApiResponse } from '../types';
-import type { AuthenticatedRequest } from '../middleware/auth.middleware';
-import { logger } from '../utils/logger';
+import { CommissionService } from '../services/CommissionService.js';
+import { Purchase } from '../models/index.js';
+import type { Commission } from '../models/Commission.js';
+import type { ApiResponse } from '../types/index.js';
+import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
+import { logger } from '../utils/logger.js';
 
 const commissionService = new CommissionService();
 

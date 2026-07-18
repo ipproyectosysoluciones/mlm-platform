@@ -18,10 +18,10 @@
  */
 import { Request, Response, NextFunction } from 'express';
 import { body, param, query, validationResult } from 'express-validator';
-import { authenticate, requireAdmin } from '../middleware/auth.middleware';
-import { tourPackageService } from '../services/TourPackageService';
-import { R2Service } from '../services/R2Service';
-import { logger } from '../utils/logger';
+import { authenticate, requireAdmin } from '../middleware/auth.middleware.js';
+import { tourPackageService } from '../services/TourPackageService.js';
+import { R2Service } from '../services/R2Service.js';
+import { logger } from '../utils/logger.js';
 import { hasStatusCode, getErrorMessage } from '../utils/HttpError.js';
 
 // ============================================

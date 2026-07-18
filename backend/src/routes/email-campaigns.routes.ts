@@ -21,10 +21,10 @@ import {
   pauseCampaign,
   retryFailedEmails,
   getCampaignLogs,
-} from '../controllers/EmailCampaignController';
-import { authenticateToken, requireAdmin } from '../middleware/auth.middleware';
-import { validate } from '../middleware/validate.middleware';
-import { asyncHandler } from '../middleware/asyncHandler';
+} from '../controllers/EmailCampaignController.js';
+import { authenticateToken, requireAdmin } from '../middleware/auth.middleware.js';
+import { validate } from '../middleware/validate.middleware.js';
+import { asyncHandler } from '../middleware/asyncHandler.js';
 
 // ============================================
 // TEMPLATE ROUTES — Rutas de Templates

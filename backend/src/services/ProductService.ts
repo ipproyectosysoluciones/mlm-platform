@@ -13,10 +13,10 @@
  * const { rows, count } = await productService.getProductList({ page: 1, limit: 20 });
  */
 import { Op, Transaction } from 'sequelize';
-import { sequelize, Product, Category, InventoryMovement, User } from '../models';
-import { AppError } from '../middleware/error.middleware';
-import type { ProductAttributes, ProductType, GenericProductAttributes } from '../types';
-import type { InventoryMovementCreation } from '../models/InventoryMovement';
+import { sequelize, Product, Category, InventoryMovement, User } from '../models/index.js';
+import { AppError } from '../middleware/error.middleware.js';
+import type { ProductAttributes, ProductType, GenericProductAttributes } from '../types/index.js';
+import type { InventoryMovementCreation } from '../models/InventoryMovement.js';
 
 export interface ProductListOptions {
   page?: number;

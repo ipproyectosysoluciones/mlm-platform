@@ -14,22 +14,22 @@
  *
  * @example
  * // ES: Importar y ejecutar desde seed.ts
- * import { seedDemoProperties, seedDemoTours, seedDemoTourAvailabilities } from './seed-demo';
+ * import { seedDemoProperties, seedDemoTours, seedDemoTourAvailabilities } from './seed-demo.js';
  * await seedDemoProperties();
  * await seedDemoTours();
  * await seedDemoTourAvailabilities();
  *
  * // EN: Import and execute from seed.ts
- * import { seedDemoProperties, seedDemoTours, seedDemoTourAvailabilities } from './seed-demo';
+ * import { seedDemoProperties, seedDemoTours, seedDemoTourAvailabilities } from './seed-demo.js';
  * await seedDemoProperties();
  * await seedDemoTours();
  * await seedDemoTourAvailabilities();
  */
 
-import { Property, TourPackage, TourAvailability } from './models';
-import type { PropertyCreationAttributes } from './models/Property';
-import type { TourPackageCreationAttributes } from './models/TourPackage';
-import type { TourAvailabilityCreationAttributes } from './models/TourAvailability';
+import { Property, TourPackage, TourAvailability } from './models/index.js';
+import type { PropertyCreationAttributes } from './models/Property.js';
+import type { TourPackageCreationAttributes } from './models/TourPackage.js';
+import type { TourAvailabilityCreationAttributes } from './models/TourAvailability.js';
 
 // ─── IDs fijos para reproducibilidad ──────────────────────────────────────────
 // Fixed IDs for seed reproducibility

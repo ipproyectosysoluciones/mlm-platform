@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { validationResult, ValidationChain } from 'express-validator';
-import type { ApiResponse } from '../types';
+import type { ApiResponse } from '../types/index.js';
 
 export function validate(validations: ValidationChain[]) {
   return async (req: Request, res: Response, next: NextFunction): Promise<void> => {

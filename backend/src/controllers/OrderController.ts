@@ -9,13 +9,13 @@
  *
  * @example
  * // English: Import from sub-controllers (recommended)
- * import { createOrder, getOrders, getOrderById } from '../controllers/orders';
+ * import { createOrder, getOrders, getOrderById } from '../controllers/orders/index.js';
  *
  * // Español: Importar desde sub-controladores (recomendado)
- * import { createOrder, getOrders, getOrderById } from '../controllers/orders';
+ * import { createOrder, getOrders, getOrderById } from '../controllers/orders/index.js';
  */
 
 // Re-export from sub-controllers for backward compatibility
 // These are the primary exports now
-export { createOrder } from './orders/OrderWriteController';
-export { getOrders, getOrderById } from './orders/OrderReadController';
+export { createOrder } from './orders/OrderWriteController.js';
+export { getOrders, getOrderById } from './orders/OrderReadController.js';

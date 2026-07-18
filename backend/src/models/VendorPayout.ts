@@ -16,9 +16,9 @@
  * });
  */
 import { DataTypes, Model, Optional, ForeignKey } from 'sequelize';
-import { sequelize } from '../config/database';
-import type { VendorPayoutAttributes } from '../types';
-import type { Vendor } from './Vendor';
+import { sequelize } from '../config/database.js';
+import type { VendorPayoutAttributes } from '../types/index.js';
+import type { Vendor } from './Vendor.js';
 
 type VendorPayoutCreation = Optional<VendorPayoutAttributes, 'id' | 'createdAt' | 'updatedAt'>;
 
