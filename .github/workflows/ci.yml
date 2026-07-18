@@ -82,7 +82,7 @@ jobs:
           TWO_FACTOR_SECRET_KEY: ci-test-2fa-key
 
       - name: Integration tests (shard ${{ matrix.shard }}/3)
-        run: cd backend && pnpm test:integration -- --shard=${{ matrix.shard }}/3
+        run: cd backend && SKIP_COMMISSION_CALCULATION=true npx jest --config=jest.integration.config.cjs --runInBand --shard=${{ matrix.shard }}/3
         env:
           DB_DIALECT: postgres
           TEST_DB_HOST: localhost
