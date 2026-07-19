@@ -133,7 +133,7 @@ router.get(
       .isIn([...VALID_TYPES])
       .withMessage(`Type must be one of: ${VALID_TYPES.join(', ')}`),
   ]),
-  asyncHandler(getInvoices)
+  getInvoices
 );
 
 /**
@@ -174,7 +174,7 @@ router.get(
     // Validate UUID format for invoice ID / Validar formato UUID para ID de factura
     param('id').matches(UUID_REGEX).withMessage('Invoice ID must be a valid UUID'),
   ]),
-  asyncHandler(getInvoiceById)
+  getInvoiceById
 );
 
 // ============================================
@@ -263,7 +263,7 @@ router.post(
     // Validate items is a non-empty array / Validar que items sea un array no vacío
     body('items').isArray({ min: 1 }).withMessage('At least one item is required'),
   ]),
-  asyncHandler(createInvoice)
+  createInvoice
 );
 
 /**
@@ -322,7 +322,7 @@ router.patch(
       .isIn([...VALID_STATUSES])
       .withMessage(`Status must be one of: ${VALID_STATUSES.join(', ')}`),
   ]),
-  asyncHandler(updateInvoiceStatus)
+  updateInvoiceStatus
 );
 
 /**
@@ -363,7 +363,7 @@ router.delete(
     // Validate UUID format for invoice ID / Validar formato UUID para ID de factura
     param('id').matches(UUID_REGEX).withMessage('Invoice ID must be a valid UUID'),
   ]),
-  asyncHandler(cancelInvoice)
+  cancelInvoice
 );
 
 // ============================================
@@ -412,7 +412,7 @@ router.get(
     // Validate UUID format for invoice ID / Validar formato UUID para ID de factura
     param('id').matches(UUID_REGEX).withMessage('Invoice ID must be a valid UUID'),
   ]),
-  asyncHandler(generateInvoicePdf)
+  generateInvoicePdf
 );
 
 /**
@@ -458,7 +458,7 @@ router.get(
     // Validate UUID format for invoice ID / Validar formato UUID para ID de factura
     param('id').matches(UUID_REGEX).withMessage('Invoice ID must be a valid UUID'),
   ]),
-  asyncHandler(downloadInvoicePdf)
+  downloadInvoicePdf
 );
 
 export default router;

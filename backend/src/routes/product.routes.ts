@@ -81,7 +81,7 @@ router.get(
       .isIn(['subscription', 'streaming', 'one-time'])
       .withMessage('Platform must be one of: subscription, streaming, one-time'),
   ],
-  asyncHandler(getProducts)
+  getProducts
 );
 
 /**
@@ -124,7 +124,7 @@ router.get(
       .matches(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)
       .withMessage('Product ID must be a valid UUID'),
   ],
-  asyncHandler(getProductById)
+  getProductById
 );
 
 export default router;

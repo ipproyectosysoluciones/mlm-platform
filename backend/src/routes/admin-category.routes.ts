@@ -59,7 +59,7 @@ router.use(requireAdmin);
  *       403:
  *         description: Forbidden - Admin role required / Prohibido - Rol admin requerido
  */
-router.get('/', asyncHandler(listCategoriesAdmin));
+router.get('/', listCategoriesAdmin);
 
 /**
  * @swagger
@@ -94,7 +94,7 @@ router.get('/', asyncHandler(listCategoriesAdmin));
  *       404:
  *         description: Category not found / Categoría no encontrada
  */
-router.get('/:id', asyncHandler(getCategoryAdmin));
+router.get('/:id', getCategoryAdmin);
 
 /**
  * @swagger
@@ -156,7 +156,7 @@ router.get('/:id', asyncHandler(getCategoryAdmin));
  *       409:
  *         description: Category slug already exists / El slug de categoría ya existe
  */
-router.post('/', asyncHandler(createCategory));
+router.post('/', createCategory);
 
 /**
  * @swagger
@@ -221,7 +221,7 @@ router.post('/', asyncHandler(createCategory));
  *       404:
  *         description: Category not found / Categoría no encontrada
  */
-router.put('/:id', asyncHandler(updateCategory));
+router.put('/:id', updateCategory);
 
 /**
  * @swagger
@@ -260,6 +260,6 @@ router.put('/:id', asyncHandler(updateCategory));
  *       404:
  *         description: Category not found / Categoría no encontrada
  */
-router.delete('/:id', asyncHandler(deleteCategory));
+router.delete('/:id', deleteCategory);
 
 export default router;
