@@ -114,8 +114,14 @@ export async function getCommissionsReport(
     const where: CommissionWhereClause = {};
     if (startDate || endDate) {
       where.createdAt = {};
-      if (startDate) where.createdAt[Op.gte] = new Date(startDate as string);
-      if (endDate) where.createdAt[Op.lte] = new Date(endDate as string);
+      if (startDate)
+        (where.createdAt as Record<string, unknown>)[Op.gte as unknown as string] = new Date(
+          startDate as string
+        );
+      if (endDate)
+        (where.createdAt as Record<string, unknown>)[Op.lte as unknown as string] = new Date(
+          endDate as string
+        );
     }
     if (type && ['direct', 'level_1', 'level_2', 'level_3', 'level_4'].includes(type as string)) {
       where.type = type as CommissionAttributes['type'];
@@ -150,7 +156,7 @@ export async function getCommissionsReport(
           fromUserEmail: c.fromUser?.email,
           createdAt: c.createdAt,
         })),
-        byType: byType.map((b: { type: string; total: string | number }) => ({
+        byType: (byType as unknown as { type: string; total: string | number }[]).map((b) => ({
           type: b.type,
           total: Number(b.total),
         })),

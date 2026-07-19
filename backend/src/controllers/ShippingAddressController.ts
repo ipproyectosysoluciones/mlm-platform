@@ -25,7 +25,7 @@ export async function createAddress(
   next: NextFunction
 ): Promise<void> {
   try {
-    const userId = req.user!.id;
+    const userId = (req as any).user.id;
     const data: CreateAddressData = {
       label: req.body.label,
       recipientName: req.body.recipientName,
@@ -58,7 +58,7 @@ export async function createAddress(
  */
 export async function getAddresses(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const userId = req.user!.id;
+    const userId = (req as any).user.id;
     const addresses = await shippingAddressService.findAllByUser(userId);
 
     const response: ApiResponse<typeof addresses> = {
@@ -78,7 +78,7 @@ export async function getAddresses(req: Request, res: Response, next: NextFuncti
  */
 export async function getAddress(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const userId = req.user!.id;
+    const userId = (req as any).user.id;
     const { id } = req.params;
 
     const address = await shippingAddressService.findById(id, userId);
@@ -104,7 +104,7 @@ export async function updateAddress(
   next: NextFunction
 ): Promise<void> {
   try {
-    const userId = req.user!.id;
+    const userId = (req as any).user.id;
     const { id } = req.params;
     const data: UpdateAddressData = {
       label: req.body.label,
@@ -142,7 +142,7 @@ export async function deleteAddress(
   next: NextFunction
 ): Promise<void> {
   try {
-    const userId = req.user!.id;
+    const userId = (req as any).user.id;
     const { id } = req.params;
 
     await shippingAddressService.delete(id, userId);
@@ -168,7 +168,7 @@ export async function setDefaultAddress(
   next: NextFunction
 ): Promise<void> {
   try {
-    const userId = req.user!.id;
+    const userId = (req as any).user.id;
     const { id } = req.params;
 
     const address = await shippingAddressService.setDefault(id, userId);

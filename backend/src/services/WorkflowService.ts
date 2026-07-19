@@ -115,8 +115,10 @@ export class WorkflowService {
     const [execution, created] = await WorkflowExecution.findOrCreate({
       where: { leadId, n8nExecutionId },
       defaults: {
+        leadId,
         workflowName,
         actionType,
+        n8nExecutionId,
         status: status as 'pending' | 'success' | 'failed',
         payload: payload ?? {},
         errorMessage: errorMessage ?? null,
@@ -139,7 +141,7 @@ export class WorkflowService {
         const msSinceUpdate = Date.now() - new Date(lead.updatedAt).getTime();
         if (msSinceUpdate >= HUMAN_GUARD_MS) {
           lead.status = newStatus as typeof lead.status;
-          lead.automationStatus = 'n8n';
+          lead.automationStatus = 'automated';
           lead.lastWorkflowActionId = execution.id;
           await lead.save();
           logger.info(`Lead ${leadId} status updated to ${newStatus} by n8n`);

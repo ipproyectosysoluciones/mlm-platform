@@ -301,6 +301,9 @@ export class PaymentMercadoPagoController {
                   status: 'completed',
                   paymentMethod: 'mercadopago',
                   notes: `mercadopago:${payment.id}`,
+                  shippingAddressId: null,
+                  shippingCost: null,
+                  shippingStatus: 'not_required',
                 });
 
                 logger.info(

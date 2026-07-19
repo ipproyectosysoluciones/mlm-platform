@@ -291,10 +291,12 @@ export class WalletService {
     if (options?.startDate || options?.endDate) {
       where.created_at = {};
       if (options?.startDate) {
-        (where.created_at as Record<string, unknown>)[Op.gte as string] = options.startDate;
+        (where.created_at as Record<string, unknown>)[Op.gte as unknown as string] =
+          options.startDate;
       }
       if (options?.endDate) {
-        (where.created_at as Record<string, unknown>)[Op.lte as string] = options.endDate;
+        (where.created_at as Record<string, unknown>)[Op.lte as unknown as string] =
+          options.endDate;
       }
     }
 

@@ -111,6 +111,7 @@ export class GiftCardService {
         {
           shortCode,
           giftCardId: giftCard.id,
+          scanCount: 0,
         },
         { transaction: t }
       );

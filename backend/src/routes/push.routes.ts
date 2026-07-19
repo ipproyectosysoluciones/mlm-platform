@@ -132,9 +132,9 @@ router.post(
     const { endpoint, keys, userAgent } = req.body;
 
     const subscription = await pushService.handleSubscription(
-      userId,
+      userId ?? '',
       { endpoint, keys },
-      userAgent
+      userAgent || ''
     );
 
     const response: ApiResponse<{

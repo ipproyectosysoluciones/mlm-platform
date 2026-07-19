@@ -23,7 +23,7 @@ import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../config/database.js';
 import type { InventoryMovementAttributes, InventoryMovementType } from '../types/index.js';
 
-type InventoryMovementCreation = Optional<
+export type InventoryMovementCreation = Optional<
   InventoryMovementAttributes,
   'id' | 'createdAt' | 'updatedAt'
 >;

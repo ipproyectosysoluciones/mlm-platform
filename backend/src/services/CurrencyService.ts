@@ -47,7 +47,7 @@ async function fetchExchangeRates(): Promise<Record<string, number>> {
       throw new Error(`API returned status ${response.status}`);
     }
 
-    const data = await response.json();
+    const data = (await response.json()) as { rates?: Record<string, number> };
 
     if (!data.rates) {
       throw new Error('Invalid API response - missing rates');

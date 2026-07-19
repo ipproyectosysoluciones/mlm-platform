@@ -13,6 +13,7 @@ import { AppError } from '../middleware/error.middleware.js';
 import { leaderboardService } from './LeaderboardService.js';
 import { achievementService } from './AchievementService.js';
 import { logger } from '../utils/logger.js';
+import type { UserRole } from '../types/index.js';
 
 const treeService = new TreeService();
 
@@ -57,6 +58,7 @@ export class UserService {
     passwordHash: string;
     sponsorCode?: string;
     currency?: 'USD' | 'COP' | 'MXN';
+    role?: UserRole;
   }): Promise<User> {
     const referralCode = await generateUniqueReferralCode();
 
@@ -87,13 +89,19 @@ export class UserService {
       position,
       level: 1,
       status: 'active',
-      role: 'user',
+      role: data.role || 'user',
       currency: data.currency || 'USD',
       // Notification preferences - defaults
       emailNotifications: true,
       smsNotifications: false,
       twoFactorEnabled: false,
+      twoFactorPhone: null,
       weeklyDigest: true,
+      twoFactorSecretEncrypted: null,
+      twoFactorRecoveryCodesHash: null,
+      twoFactorEnabledAt: null,
+      twoFactorFailedAttempts: 0,
+      twoFactorLockedUntil: null,
     });
 
     await treeService.insertWithClosure(userId, sponsorId);
