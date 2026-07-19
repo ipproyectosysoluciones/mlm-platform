@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { getCache, setCache, deleteCache, CACHE_KEYS, CACHE_TTL } from '../config/redis';
+import { getCache, setCache, deleteCache, CACHE_KEYS, CACHE_TTL } from '../config/redis.js';
 
 export { CACHE_KEYS, CACHE_TTL };
 

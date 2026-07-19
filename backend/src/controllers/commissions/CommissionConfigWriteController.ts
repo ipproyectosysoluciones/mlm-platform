@@ -6,10 +6,10 @@
  * @author MLM Development Team
  */
 import { Response } from 'express';
-import { CommissionConfig } from '../../models';
-import { BUSINESS_TYPES } from '../../types';
-import type { ApiResponse } from '../../types';
-import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
+import { CommissionConfig } from '../../models/index.js';
+import { BUSINESS_TYPES } from '../../types/index.js';
+import type { ApiResponse } from '../../types/index.js';
+import type { AuthenticatedRequest } from '../../middleware/auth.middleware.js';
 
 /**
  * Create new commission configuration

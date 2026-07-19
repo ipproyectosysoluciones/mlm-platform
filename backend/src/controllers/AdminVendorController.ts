@@ -12,11 +12,11 @@
  * POST /api/admin/vendors/:id/approve
  */
 import { Request, Response } from 'express';
-import { vendorService } from '../services/VendorService';
-import { authenticate, requireAdmin } from '../middleware/auth.middleware';
-import type { AuthenticatedRequest } from '../middleware/auth.middleware';
+import { vendorService } from '../services/VendorService.js';
+import { authenticate, requireAdmin } from '../middleware/auth.middleware.js';
+import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
 import { body, validationResult } from 'express-validator';
-import { logger } from '../utils/logger';
+import { logger } from '../utils/logger.js';
 import { hasStatusCode, getErrorMessage } from '../utils/HttpError.js';
 
 /**

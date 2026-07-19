@@ -16,14 +16,14 @@
 
 // Re-export from sub-controllers
 // Read operations
-export { getInvoices, getInvoiceById } from './invoices/InvoiceReadController';
+export { getInvoices, getInvoiceById } from './invoices/InvoiceReadController.js';
 
 // Write operations (create, status update, cancellation)
 export {
   createInvoice,
   updateInvoiceStatus,
   cancelInvoice,
-} from './invoices/InvoiceWriteController';
+} from './invoices/InvoiceWriteController.js';
 
 // PDF operations
-export { generateInvoicePdf, downloadInvoicePdf } from './invoices/InvoicePdfController';
+export { generateInvoicePdf, downloadInvoicePdf } from './invoices/InvoicePdfController.js';

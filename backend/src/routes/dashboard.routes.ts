@@ -1,9 +1,9 @@
 import { Router, Router as ExpressRouter } from 'express';
-import { getDashboard } from '../controllers/DashboardController';
-import { authenticateToken } from '../middleware/auth.middleware';
-import type { AuthenticatedRequest } from '../middleware/auth.middleware';
-import { asyncHandler } from '../middleware/asyncHandler';
-import { cacheMiddleware, CACHE_KEYS, CACHE_TTL } from '../middleware/cache.middleware';
+import { getDashboard } from '../controllers/DashboardController.js';
+import { authenticateToken } from '../middleware/auth.middleware.js';
+import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
+import { asyncHandler } from '../middleware/asyncHandler.js';
+import { cacheMiddleware, CACHE_KEYS, CACHE_TTL } from '../middleware/cache.middleware.js';
 
 const router: ExpressRouter = Router();
 

@@ -4,16 +4,22 @@
  */
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { config } from '../config/env';
-import { UserRole, ADMIN_ROLES, FINANCE_ROLES, CRM_ROLES, PROPERTY_MGMT_ROLES } from '../types';
-import { logger } from '../utils/logger';
+import { config } from '../config/env.js';
+import {
+  UserRole,
+  ADMIN_ROLES,
+  FINANCE_ROLES,
+  CRM_ROLES,
+  PROPERTY_MGMT_ROLES,
+} from '../types/index.js';
+import { logger } from '../utils/logger.js';
 
 // ============================================
 // TYPES
 // ============================================
 
 // Re-export for backward compatibility with consumers that import UserRole from here
-export type { UserRole } from '../types';
+export type { UserRole } from '../types/index.js';
 
 interface TokenPayload {
   userId: string;

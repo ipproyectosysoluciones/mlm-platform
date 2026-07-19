@@ -21,10 +21,10 @@ import {
   cancelInvoice,
   generateInvoicePdf,
   downloadInvoicePdf,
-} from '../controllers/invoices';
-import { authenticateToken, requireAdmin } from '../middleware/auth.middleware';
-import { validate } from '../middleware/validate.middleware';
-import { asyncHandler } from '../middleware/asyncHandler';
+} from '../controllers/invoices/index.js';
+import { authenticateToken, requireAdmin } from '../middleware/auth.middleware.js';
+import { validate } from '../middleware/validate.middleware.js';
+import { asyncHandler } from '../middleware/asyncHandler.js';
 import { body, param, query } from 'express-validator';
 
 const router: ExpressRouter = Router();

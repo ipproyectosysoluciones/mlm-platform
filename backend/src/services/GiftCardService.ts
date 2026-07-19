@@ -20,16 +20,16 @@
  * const result = await giftCardService.redeemGiftCard('card-uuid', 'user-uuid');
  */
 import crypto from 'crypto';
-import { sequelize } from '../config/database';
-import { GiftCard, QrMapping, GiftCardTransaction, User } from '../models';
-import { qrService } from './QRService';
-import { logger } from '../utils/logger';
+import { sequelize } from '../config/database.js';
+import { GiftCard, QrMapping, GiftCardTransaction, User } from '../models/index.js';
+import { qrService } from './QRService.js';
+import { logger } from '../utils/logger.js';
 import {
   GIFT_CARD_STATUS,
   GIFT_CARD_TRANSACTION_TYPE,
   GIFT_CARD_TRANSACTION_STATUS,
-} from '../types';
-import type { GiftCardValidationResult } from '../types';
+} from '../types/index.js';
+import type { GiftCardValidationResult } from '../types/index.js';
 
 /**
  * Default expiration in days

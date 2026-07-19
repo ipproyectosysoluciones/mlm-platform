@@ -7,9 +7,9 @@ import {
   loginValidation,
   registerGuest,
   registerGuestValidation,
-} from '../controllers/AuthController';
-import { authenticateToken } from '../middleware/auth.middleware';
-import { validate } from '../middleware/validate.middleware';
+} from '../controllers/AuthController.js';
+import { authenticateToken } from '../middleware/auth.middleware.js';
+import { validate } from '../middleware/validate.middleware.js';
 
 const router: ExpressRouter = Router();
 

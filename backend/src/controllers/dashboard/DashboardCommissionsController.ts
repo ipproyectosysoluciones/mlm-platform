@@ -5,10 +5,10 @@
  */
 import { Response } from 'express';
 import { Op } from 'sequelize';
-import { Commission } from '../../models';
-import { CommissionService } from '../../services/CommissionService';
-import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
-import type { ApiResponse } from '../../types';
+import { Commission } from '../../models/index.js';
+import { CommissionService } from '../../services/CommissionService.js';
+import type { AuthenticatedRequest } from '../../middleware/auth.middleware.js';
+import type { ApiResponse } from '../../types/index.js';
 
 /**
  * Get recent commissions for dashboard

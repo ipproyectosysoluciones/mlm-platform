@@ -19,11 +19,11 @@
  * });
  */
 import { DataTypes, Model, Optional, ForeignKey } from 'sequelize';
-import { sequelize } from '../config/database';
-import { User } from './User';
-import { Product } from './Product';
-import { Purchase } from './Purchase';
-import type { OrderAttributes, ShippingStatus } from '../types';
+import { sequelize } from '../config/database.js';
+import { User } from './User.js';
+import { Product } from './Product.js';
+import { Purchase } from './Purchase.js';
+import type { OrderAttributes, ShippingStatus } from '../types/index.js';
 
 type OrderCreation = Optional<OrderAttributes, 'id' | 'createdAt' | 'updatedAt'>;
 

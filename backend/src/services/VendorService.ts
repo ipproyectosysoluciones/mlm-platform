@@ -11,8 +11,8 @@
  * // Español: Registrarse como vendedor
  * const vendor = await vendorService.register(idUsuario, { businessName, contactEmail });
  */
-import { Vendor, VendorPayout, Product, VendorOrder } from '../models';
-import { AppError } from '../middleware/error.middleware';
+import { Vendor, VendorPayout, Product, VendorOrder } from '../models/index.js';
+import { AppError } from '../middleware/error.middleware.js';
 import { Op } from 'sequelize';
 
 export class VendorService {

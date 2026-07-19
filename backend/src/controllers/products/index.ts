@@ -12,7 +12,7 @@
  */
 
 // Product read controller (retrieval operations)
-export { getProducts, getProductById } from './ProductReadController';
+export { getProducts, getProductById } from './ProductReadController.js';
 
 // Product write controller (admin CRUD)
 export {
@@ -21,7 +21,7 @@ export {
   deleteProduct,
   getProductAdmin,
   listProductsAdmin,
-} from './ProductWriteController';
+} from './ProductWriteController.js';
 
 // Product inventory controller (stock management)
 export {
@@ -31,4 +31,4 @@ export {
   setInitialStock,
   recordReturn,
   getInventoryMovements,
-} from './ProductInventoryController';
+} from './ProductInventoryController.js';

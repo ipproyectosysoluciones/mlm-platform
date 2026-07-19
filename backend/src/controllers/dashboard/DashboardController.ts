@@ -5,14 +5,14 @@
  */
 import { Response } from 'express';
 import { Op } from 'sequelize';
-import { userService, treeServiceInstance } from '../../services/UserService';
-import { CommissionService } from '../../services/CommissionService';
-import { QRService } from '../../services/QRService';
-import { User, Commission } from '../../models';
-import type { ApiResponse } from '../../types';
-import { LEVEL_NAMES } from '../../types';
-import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
-import { ResponseUtil } from '../../utils/response.util';
+import { userService, treeServiceInstance } from '../../services/UserService.js';
+import { CommissionService } from '../../services/CommissionService.js';
+import { QRService } from '../../services/QRService.js';
+import { User, Commission } from '../../models/index.js';
+import type { ApiResponse } from '../../types/index.js';
+import { LEVEL_NAMES } from '../../types/index.js';
+import type { AuthenticatedRequest } from '../../middleware/auth.middleware.js';
+import { ResponseUtil } from '../../utils/response.util.js';
 
 /**
  * Get user dashboard with stats, referrals, and commissions

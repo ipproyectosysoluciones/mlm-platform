@@ -19,11 +19,11 @@
  * // Español: Crear solicitud de retiro
  * const withdrawal = await walletService.createWithdrawal(userId, 100);
  */
-import { Wallet, WalletTransaction, WithdrawalRequest } from '../models';
-import { config } from '../config/env';
-import { WALLET_TRANSACTION_TYPE, WITHDRAWAL_STATUS } from '../types';
+import { Wallet, WalletTransaction, WithdrawalRequest } from '../models/index.js';
+import { config } from '../config/env.js';
+import { WALLET_TRANSACTION_TYPE, WITHDRAWAL_STATUS } from '../types/index.js';
 import { Op } from 'sequelize';
-import { logger } from '../utils/logger';
+import { logger } from '../utils/logger.js';
 
 // Simple exchange rates to USD (in production, use an external API)
 const EXCHANGE_RATES: Record<string, number> = {

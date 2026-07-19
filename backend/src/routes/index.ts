@@ -1,48 +1,48 @@
 import { Router, Router as ExpressRouter } from 'express';
-import authRoutes from './auth.routes';
-import botRoutes from './bot.routes';
-import userRoutes from './user.routes';
-import commissionRoutes from './commission.routes';
-import dashboardRoutes from './dashboard.routes';
-import productRoutes from './product.routes';
-import orderRoutes from './order.routes';
-import walletRoutes from './wallet.routes';
+import authRoutes from './auth.routes.js';
+import botRoutes from './bot.routes.js';
+import userRoutes from './user.routes.js';
+import commissionRoutes from './commission.routes.js';
+import dashboardRoutes from './dashboard.routes.js';
+import productRoutes from './product.routes.js';
+import orderRoutes from './order.routes.js';
+import walletRoutes from './wallet.routes.js';
 import { featureGuard } from '../middleware/featureGuard.js';
-import twoFactorRoutes from './twoFactor.routes';
-import pushRoutes from './push.routes';
-import publicRoutes from './public.routes';
-import landingPublicRoutes from './landing-public.routes';
-import giftCardRoutes from './gift-cards.routes';
+import twoFactorRoutes from './twoFactor.routes.js';
+import pushRoutes from './push.routes.js';
+import publicRoutes from './public.routes.js';
+import landingPublicRoutes from './landing-public.routes.js';
+import giftCardRoutes from './gift-cards.routes.js';
 import {
   templateRouter as emailTemplateRoutes,
   campaignRouter as emailCampaignRoutes,
-} from './email-campaigns.routes';
-import cartRoutes from './carts.routes';
-import adminProductRoutes from './admin-product.routes';
-import adminCategoryRoutes from './admin-category.routes';
-import categoryRoutes from './category.routes';
-import vendorRoutes from './vendor.routes';
-import adminVendorRoutes from './admin-vendor.routes';
-import contractRoutes from './contract.routes';
-import adminContractRoutes from './admin-contract.routes';
-import addressRoutes from './address.routes';
-import shippingRoutes from './shipping.routes';
-import achievementRoutes from './achievement.routes';
-import leaderboardRoutes from './leaderboard.routes';
-import invoiceRoutes from './invoices.routes';
+} from './email-campaigns.routes.js';
+import cartRoutes from './carts.routes.js';
+import adminProductRoutes from './admin-product.routes.js';
+import adminCategoryRoutes from './admin-category.routes.js';
+import categoryRoutes from './category.routes.js';
+import vendorRoutes from './vendor.routes.js';
+import adminVendorRoutes from './admin-vendor.routes.js';
+import contractRoutes from './contract.routes.js';
+import adminContractRoutes from './admin-contract.routes.js';
+import addressRoutes from './address.routes.js';
+import shippingRoutes from './shipping.routes.js';
+import achievementRoutes from './achievement.routes.js';
+import leaderboardRoutes from './leaderboard.routes.js';
+import invoiceRoutes from './invoices.routes.js';
 
 // Sprint 9 — previously orphaned routes (fix #126)
 // Sprint 9 — rutas previamente huérfanas (fix #126)
-import adminReservationRoutes from './admin-reservation.routes';
-import adminTourRoutes from './admin-tour.routes';
-import adminPropertyRoutes from './admin-property.routes';
-import propertyRoutes from './property.routes';
-import tourRoutes from './tour.routes';
-import botLeadsRoutes from './bot-leads.routes';
+import adminReservationRoutes from './admin-reservation.routes.js';
+import adminTourRoutes from './admin-tour.routes.js';
+import adminPropertyRoutes from './admin-property.routes.js';
+import propertyRoutes from './property.routes.js';
+import tourRoutes from './tour.routes.js';
+import botLeadsRoutes from './bot-leads.routes.js';
 
 // Relocated from app.ts → centralised in router index (fix #126)
 // Reubicado de app.ts → centralizado en índice de rutas (fix #126)
-import commissionConfigRoutes from './commission-config.routes';
+import commissionConfigRoutes from './commission-config.routes.js';
 
 const router: ExpressRouter = Router();
 
@@ -128,7 +128,7 @@ router.use('/bot/leads', botLeadsRoutes);
 router.use('/admin/commissions', commissionConfigRoutes);
 
 // Profile public routes (MUST be before publicRoutes to avoid /profile/:code conflict)
-import profilePublicRoutes from './profile-public.routes';
+import profilePublicRoutes from './profile-public.routes.js';
 router.use('/public/profile', profilePublicRoutes);
 
 router.use('/public/landing', landingPublicRoutes);

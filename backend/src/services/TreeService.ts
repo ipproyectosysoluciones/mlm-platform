@@ -21,9 +21,9 @@
  * const upline = await treeService.getUpline(userId);
  */
 import { Op } from 'sequelize';
-import { sequelize } from '../config/database';
-import { User, UserClosure } from '../models';
-import type { TreeNode } from '../types';
+import { sequelize } from '../config/database.js';
+import { User, UserClosure } from '../models/index.js';
+import type { TreeNode } from '../types/index.js';
 
 // Types for Phase 3
 interface UserSearchResult {

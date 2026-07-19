@@ -12,10 +12,10 @@
  * // Español: Crear nueva dirección de envío
  * const address = await shippingAddressService.create(uuid-usuario, datosDireccion);
  */
-import { sequelize } from '../config/database';
-import { ShippingAddress } from '../models/ShippingAddress';
-import { AppError } from '../middleware/error.middleware';
-import type { ShippingAddressCreationAttributes } from '../types';
+import { sequelize } from '../config/database.js';
+import { ShippingAddress } from '../models/ShippingAddress.js';
+import { AppError } from '../middleware/error.middleware.js';
+import type { ShippingAddressCreationAttributes } from '../types/index.js';
 
 const MAX_ADDRESSES_PER_USER = 10;
 

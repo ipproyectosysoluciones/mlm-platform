@@ -6,12 +6,12 @@
  * @module __tests__/fixtures
  */
 
-import { User, UserClosure } from '../models';
-import { sequelize } from '../config/database';
+import { User, UserClosure } from '../models/index.js';
+import { sequelize } from '../config/database.js';
 import { QueryTypes, type CreationAttributes } from 'sequelize';
 import bcrypt from 'bcryptjs';
-import { generateToken } from '../services/AuthService';
-import type { UserRole } from '../types';
+import { generateToken } from '../services/AuthService.js';
+import type { UserRole } from '../types/index.js';
 
 /**
  * Create a test user with valid credentials.

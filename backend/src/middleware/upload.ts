@@ -13,7 +13,7 @@
  * router.post('/:id/images', uploadImages, uploadPropertyImages);
  */
 import multer from 'multer';
-import { AppError } from './error.middleware';
+import { AppError } from './error.middleware.js';
 
 /**
  * Allowed MIME types for image uploads

@@ -6,7 +6,7 @@
  * @author MLM Development Team
  */
 
-import { logger } from '../utils/logger';
+import { logger } from '../utils/logger.js';
 
 const FRANKFURTER_API = 'https://api.frankfurter.dev';
 

@@ -6,13 +6,13 @@
  * @author MLM Development Team
  */
 
-import { User } from '../models';
-import { generateUniqueReferralCode, generateUUID } from '../utils/codeGenerator';
-import { TreeService } from './TreeService';
-import { AppError } from '../middleware/error.middleware';
-import { leaderboardService } from './LeaderboardService';
-import { achievementService } from './AchievementService';
-import { logger } from '../utils/logger';
+import { User } from '../models/index.js';
+import { generateUniqueReferralCode, generateUUID } from '../utils/codeGenerator.js';
+import { TreeService } from './TreeService.js';
+import { AppError } from '../middleware/error.middleware.js';
+import { leaderboardService } from './LeaderboardService.js';
+import { achievementService } from './AchievementService.js';
+import { logger } from '../utils/logger.js';
 
 const treeService = new TreeService();
 

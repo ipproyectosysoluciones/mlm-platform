@@ -10,7 +10,7 @@
  */
 import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
-import { authenticate, requireAdmin } from '../middleware/auth.middleware';
+import { authenticate, requireAdmin } from '../middleware/auth.middleware.js';
 import {
   getProperties,
   createProperty,
@@ -18,8 +18,8 @@ import {
   deleteProperty,
   uploadPropertyImages,
   deletePropertyImage,
-} from '../controllers/PropertyController';
-import { uploadImages } from '../middleware/upload';
+} from '../controllers/PropertyController.js';
+import { uploadImages } from '../middleware/upload.js';
 
 const router = Router();
 

@@ -1,8 +1,8 @@
 import { DataTypes, Model, Optional, ForeignKey } from 'sequelize';
-import { sequelize } from '../config/database';
-import { User } from './User';
-import { Product } from './Product';
-import type { PurchaseAttributes } from '../types';
+import { sequelize } from '../config/database.js';
+import { User } from './User.js';
+import { Product } from './Product.js';
+import type { PurchaseAttributes } from '../types/index.js';
 
 type PurchaseCreation = Optional<PurchaseAttributes, 'id' | 'createdAt' | 'updatedAt'>;
 

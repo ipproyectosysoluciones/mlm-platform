@@ -4,8 +4,8 @@
  * @module services/SMSService
  */
 import axios from 'axios';
-import { config } from '../config/env';
-import { logger } from '../utils/logger';
+import { config } from '../config/env.js';
+import { logger } from '../utils/logger.js';
 import { getErrorMessage } from '../utils/HttpError.js';
 
 /**

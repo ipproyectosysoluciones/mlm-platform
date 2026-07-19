@@ -15,10 +15,13 @@
  * const result = await reservationService.findAll({ type: 'property', status: 'pending' });
  */
 import { Includeable, WhereOptions } from 'sequelize';
-import { Reservation, Property, TourPackage, TourAvailability, User } from '../models';
-import type { ReservationAttributes, ReservationCreationAttributes } from '../models/Reservation';
-import { CalendarService } from './CalendarService';
-import { logger } from '../utils/logger';
+import { Reservation, Property, TourPackage, TourAvailability, User } from '../models/index.js';
+import type {
+  ReservationAttributes,
+  ReservationCreationAttributes,
+} from '../models/Reservation.js';
+import { CalendarService } from './CalendarService.js';
+import { logger } from '../utils/logger.js';
 
 // ============================================
 // TYPES

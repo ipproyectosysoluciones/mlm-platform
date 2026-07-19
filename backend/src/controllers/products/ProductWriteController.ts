@@ -5,11 +5,11 @@
  * @author MLM Development Team
  */
 import { Response } from 'express';
-import { productService } from '../../services/ProductService';
-import { asyncHandler } from '../../middleware/asyncHandler';
-import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
-import type { ApiResponse, ProductType } from '../../types';
-import type { Product } from '../../models/Product';
+import { productService } from '../../services/ProductService.js';
+import { asyncHandler } from '../../middleware/asyncHandler.js';
+import type { AuthenticatedRequest } from '../../middleware/auth.middleware.js';
+import type { ApiResponse, ProductType } from '../../types/index.js';
+import type { Product } from '../../models/Product.js';
 
 /**
  * Create a new product

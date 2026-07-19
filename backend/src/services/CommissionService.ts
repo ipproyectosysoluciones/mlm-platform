@@ -20,14 +20,14 @@
  * // Español: Obtener historial de comisiones del usuario
  * const { rows, count } = await commissionService.getUserCommissions(userId, { page: 1, limit: 20 });
  */
-import { sequelize } from '../config/database';
-import { User, Commission, Purchase, CommissionConfig } from '../models';
-import { COMMISSION_RATES, generateLevelKey } from '../types';
+import { sequelize } from '../config/database.js';
+import { User, Commission, Purchase, CommissionConfig } from '../models/index.js';
+import { COMMISSION_RATES, generateLevelKey } from '../types/index.js';
 import type { BusinessType } from '../types/index.js';
-import { walletService } from './WalletService';
-import { emailService } from './EmailService';
-import { logger } from '../utils/logger';
-import { config } from '../config/env';
+import { walletService } from './WalletService.js';
+import { emailService } from './EmailService.js';
+import { logger } from '../utils/logger.js';
+import { config } from '../config/env.js';
 
 export class CommissionService {
   /**
@@ -369,7 +369,7 @@ export class CommissionService {
     }
 
     // Vendor product - calculate 3-way split
-    const { Vendor } = await import('../models');
+    const { Vendor } = await import('../models/index.js');
     const vendor = await Vendor.findByPk(vendorId);
 
     if (!vendor) {

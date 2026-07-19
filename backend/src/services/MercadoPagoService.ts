@@ -7,7 +7,7 @@
 import { createHmac } from 'crypto';
 import { MercadoPagoConfig, Preference, Payment, PaymentRefund } from 'mercadopago';
 import { config } from '../config/env.js';
-import { logger } from '../utils/logger';
+import { logger } from '../utils/logger.js';
 
 // Configure MercadoPago SDK v2
 const client = new MercadoPagoConfig({

@@ -19,16 +19,16 @@
  * });
  */
 import { DataTypes, Model, ForeignKey } from 'sequelize';
-import { sequelize } from '../config/database';
-import { User } from './User';
-import { Order } from './Order';
+import { sequelize } from '../config/database.js';
+import { User } from './User.js';
+import { Order } from './Order.js';
 import type {
   InvoiceAttributes,
   InvoiceCreationAttributes,
   InvoiceType,
   InvoiceStatus,
   InvoiceItem,
-} from '../types';
+} from '../types/index.js';
 
 /**
  * Invoice Model - Represents invoices for billing and accounting

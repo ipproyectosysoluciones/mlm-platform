@@ -7,4 +7,4 @@
  */
 
 // Re-export everything from the crm barrel
-export * from './crm';
+export * from './crm/index.js';

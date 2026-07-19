@@ -7,12 +7,12 @@
  */
 import { Request, Response, NextFunction } from 'express';
 import crypto from 'crypto';
-import { ShipmentTrackingService } from '../services/ShipmentTrackingService';
-import { DeliveryProvider } from '../models/DeliveryProvider';
-import { Order, Product } from '../models';
-import { AppError } from '../middleware/error.middleware';
-import type { ApiResponse } from '../types';
-import { ShipmentTrackingStatus } from '../types';
+import { ShipmentTrackingService } from '../services/ShipmentTrackingService.js';
+import { DeliveryProvider } from '../models/DeliveryProvider.js';
+import { Order, Product } from '../models/index.js';
+import { AppError } from '../middleware/error.middleware.js';
+import type { ApiResponse } from '../types/index.js';
+import { ShipmentTrackingStatus } from '../types/index.js';
 
 const shipmentTrackingService = new ShipmentTrackingService();
 

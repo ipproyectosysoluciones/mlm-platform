@@ -15,9 +15,9 @@
  */
 
 import { DataTypes, Model, ForeignKey } from 'sequelize';
-import { sequelize } from '../config/database';
-import { User } from './User';
-import type { EmailTemplateAttributes } from '../types';
+import { sequelize } from '../config/database.js';
+import { User } from './User.js';
+import type { EmailTemplateAttributes } from '../types/index.js';
 
 type EmailTemplateCreation = Omit<EmailTemplateAttributes, 'id' | 'createdAt' | 'updatedAt'> & {
   id?: string;

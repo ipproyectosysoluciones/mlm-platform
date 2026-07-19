@@ -13,7 +13,7 @@
  * const response = await fetch('/api/categories/tree');
  */
 import { Router, Router as ExpressRouter } from 'express';
-import { authenticate, requireAdmin } from '../middleware/auth.middleware';
+import { authenticate, requireAdmin } from '../middleware/auth.middleware.js';
 import {
   getCategoryTree,
   getCategoryBreadcrumb,
@@ -24,8 +24,8 @@ import {
   deleteCategory,
   getCategoryAdmin,
   listCategoriesAdmin,
-} from '../controllers/CategoryController';
-import { asyncHandler } from '../middleware/asyncHandler';
+} from '../controllers/CategoryController.js';
+import { asyncHandler } from '../middleware/asyncHandler.js';
 
 const router: ExpressRouter = Router();
 

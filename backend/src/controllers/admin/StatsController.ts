@@ -6,11 +6,11 @@
  */
 import { Response } from 'express';
 import { Op, WhereOptions } from 'sequelize';
-import { User, Commission, Purchase } from '../../models';
-import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
-import type { ApiResponse } from '../../types';
-import { ResponseUtil } from '../../utils/response.util';
-import type { CommissionAttributes } from '../../types';
+import { User, Commission, Purchase } from '../../models/index.js';
+import type { AuthenticatedRequest } from '../../middleware/auth.middleware.js';
+import type { ApiResponse } from '../../types/index.js';
+import { ResponseUtil } from '../../utils/response.util.js';
+import type { CommissionAttributes } from '../../types/index.js';
 
 // Type for Commission where clauses
 type CommissionWhereClause = WhereOptions<CommissionAttributes>;

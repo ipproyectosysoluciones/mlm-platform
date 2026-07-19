@@ -5,12 +5,12 @@
  */
 import { Response } from 'express';
 import { Op } from 'sequelize';
-import { User } from '../../models';
-import { userService } from '../../services/UserService';
-import { QRService } from '../../services/QRService';
-import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
-import type { ApiResponse } from '../../types';
-import { ResponseUtil } from '../../utils/response.util';
+import { User } from '../../models/index.js';
+import { userService } from '../../services/UserService.js';
+import { QRService } from '../../services/QRService.js';
+import type { AuthenticatedRequest } from '../../middleware/auth.middleware.js';
+import type { ApiResponse } from '../../types/index.js';
+import { ResponseUtil } from '../../utils/response.util.js';
 
 /**
  * Get recent referrals and referral link for dashboard

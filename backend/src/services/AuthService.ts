@@ -7,8 +7,8 @@
 
 import bcrypt from 'bcryptjs';
 import jwt, { SignOptions } from 'jsonwebtoken';
-import { config } from '../config/env';
-import type { JwtPayload, UserAttributes } from '../types';
+import { config } from '../config/env.js';
+import type { JwtPayload, UserAttributes } from '../types/index.js';
 
 /**
  * @constant {number} SALT_ROUNDS

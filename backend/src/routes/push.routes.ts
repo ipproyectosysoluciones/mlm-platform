@@ -15,13 +15,13 @@
  */
 import { Router, Request, Response } from 'express';
 import { body } from 'express-validator';
-import { pushService } from '../services/PushService';
-import { getVapidPublicKey } from '../utils/vapid';
-import { authenticateToken } from '../middleware/auth.middleware';
-import type { AuthenticatedRequest } from '../middleware/auth.middleware';
-import { validate } from '../middleware/validate.middleware';
-import { asyncHandler } from '../middleware/asyncHandler';
-import type { ApiResponse } from '../types';
+import { pushService } from '../services/PushService.js';
+import { getVapidPublicKey } from '../utils/vapid.js';
+import { authenticateToken } from '../middleware/auth.middleware.js';
+import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
+import { validate } from '../middleware/validate.middleware.js';
+import { asyncHandler } from '../middleware/asyncHandler.js';
+import type { ApiResponse } from '../types/index.js';
 
 const router = Router();
 

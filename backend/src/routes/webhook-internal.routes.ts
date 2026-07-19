@@ -20,7 +20,7 @@
  */
 
 import { Router, Request, Response, NextFunction } from 'express';
-import { ReservationService } from '../services/ReservationService';
+import { ReservationService } from '../services/ReservationService.js';
 import { handleN8nAction } from '../controllers/N8nWebhookController.js';
 
 const router = Router();

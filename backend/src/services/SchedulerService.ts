@@ -22,17 +22,17 @@
  * await schedulerService.triggerAbandonedCartJob();
  */
 import cron from 'node-cron';
-import { walletService } from './WalletService';
-import { notificationService } from './NotificationService';
-import { cartRecoveryEmailService } from './CartRecoveryEmailService';
-import { cartService } from './CartService';
-import { emailQueueService } from './EmailQueueService';
-import { emailCampaignService } from './EmailCampaignService';
-import { EmailCampaign } from '../models';
+import { walletService } from './WalletService.js';
+import { notificationService } from './NotificationService.js';
+import { cartRecoveryEmailService } from './CartRecoveryEmailService.js';
+import { cartService } from './CartService.js';
+import { emailQueueService } from './EmailQueueService.js';
+import { emailCampaignService } from './EmailCampaignService.js';
+import { EmailCampaign } from '../models/index.js';
 import { Op } from 'sequelize';
-import { EMAIL_CAMPAIGN_STATUS } from '../types';
-import { config } from '../config/env';
-import { logger } from '../utils/logger';
+import { EMAIL_CAMPAIGN_STATUS } from '../types/index.js';
+import { config } from '../config/env.js';
+import { logger } from '../utils/logger.js';
 
 /**
  * Abandoned cart detection cron: every 15 minutes

@@ -10,9 +10,9 @@ import {
   ContractService,
   CreateTemplateData,
   UpdateTemplateData,
-} from '../services/ContractService';
-import { requireAdmin, type AuthenticatedRequest } from '../middleware/auth.middleware';
-import { logger } from '../utils/logger';
+} from '../services/ContractService.js';
+import { requireAdmin, type AuthenticatedRequest } from '../middleware/auth.middleware.js';
+import { logger } from '../utils/logger.js';
 import { hasStatusCode, getErrorMessage } from '../utils/HttpError.js';
 
 const contractService = new ContractService();

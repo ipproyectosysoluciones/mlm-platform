@@ -11,7 +11,7 @@ import {
   getVendorProducts,
   getVendorDashboard,
   requestPayout,
-} from '../controllers/VendorController';
+} from '../controllers/VendorController.js';
 
 const router = Router();
 

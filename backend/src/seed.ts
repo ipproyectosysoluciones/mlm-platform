@@ -23,11 +23,11 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { connectDatabase, syncDatabase } from './config/database';
-import { initModels, User, UserClosure, CommissionConfig, Product } from './models';
-import { hashPassword } from './services/AuthService';
-import { seedDemoProperties, seedDemoTours, seedDemoTourAvailabilities } from './seed-demo';
-import { platformDomain } from './config/env';
+import { connectDatabase, syncDatabase } from './config/database.js';
+import { initModels, User, UserClosure, CommissionConfig, Product } from './models/index.js';
+import { hashPassword } from './services/AuthService.js';
+import { seedDemoProperties, seedDemoTours, seedDemoTourAvailabilities } from './seed-demo.js';
+import { platformDomain } from './config/env.js';
 
 // ─── Tipos auxiliares ─────────────────────────────────────────────────────────
 

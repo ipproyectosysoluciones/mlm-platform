@@ -10,8 +10,8 @@ import {
   ShippingAddressService,
   CreateAddressData,
   UpdateAddressData,
-} from '../services/ShippingAddressService';
-import { ApiResponse } from '../types';
+} from '../services/ShippingAddressService.js';
+import { ApiResponse } from '../types/index.js';
 
 const shippingAddressService = new ShippingAddressService();
 

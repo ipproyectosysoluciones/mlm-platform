@@ -13,8 +13,8 @@
  * const providers = await DeliveryProvider.findAll({ where: { isActive: true } });
  */
 import { DataTypes, Model, Optional } from 'sequelize';
-import { sequelize } from '../config/database';
-import type { DeliveryProviderAttributes } from '../types';
+import { sequelize } from '../config/database.js';
+import type { DeliveryProviderAttributes } from '../types/index.js';
 
 type DeliveryProviderCreation = Optional<
   DeliveryProviderAttributes,

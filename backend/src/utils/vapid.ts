@@ -6,11 +6,11 @@
  *
  * @example
  * // English: Get VAPID public key for client
- * import { getVapidPublicKey } from '../utils/vapid';
+ * import { getVapidPublicKey } from '../utils/vapid.js';
  * const publicKey = getVapidPublicKey();
  *
  * // Español: Obtener clave pública VAPID para el cliente
- * import { getVapidPublicKey } from '../utils/vapid';
+ * import { getVapidPublicKey } from '../utils/vapid.js';
  * const clavePublica = getVapidPublicKey();
  */
 import webpush from 'web-push';
@@ -43,12 +43,12 @@ export function getVapidPublicKey(): string {
  *
  * @example
  * // English: Send push notification
- * import { getWebPush } from '../utils/vapid';
+ * import { getWebPush } from '../utils/vapid.js';
  * const webPush = getWebPush();
  * await webPush.sendNotification(subscription, payload);
  *
  * // Español: Enviar notificación push
- * import { getWebPush } from '../utils/vapid';
+ * import { getWebPush } from '../utils/vapid.js';
  * const webPush = getWebPush();
  * await webPush.sendNotification(subscription, payload);
  */
@@ -69,11 +69,11 @@ export function getWebPush(): typeof webpush {
  *
  * @example
  * // English: Validate config before starting push service
- * import { validateVapid } from '../utils/vapid';
+ * import { validateVapid } from '../utils/vapid.js';
  * validateVapid();
  *
  * // Español: Validar config antes de iniciar servicio push
- * import { validateVapid } from '../utils/vapid';
+ * import { validateVapid } from '../utils/vapid.js';
  * validateVapid();
  */
 export function validateVapid(): void {

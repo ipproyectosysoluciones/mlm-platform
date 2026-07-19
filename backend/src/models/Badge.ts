@@ -14,8 +14,8 @@
  * const badge = await Badge.findOne({ where: { achievementId: 'uuid' } });
  */
 import { DataTypes, Model, Optional } from 'sequelize';
-import { sequelize } from '../config/database';
-import type { Achievement } from './Achievement';
+import { sequelize } from '../config/database.js';
+import type { Achievement } from './Achievement.js';
 
 export interface BadgeAttributes {
   id: string;

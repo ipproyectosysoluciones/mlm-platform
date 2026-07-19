@@ -16,8 +16,8 @@
  * @author MLM Development Team
  */
 
-import { WorkflowExecution, Lead } from '../models';
-import { logger } from '../utils/logger';
+import { WorkflowExecution, Lead } from '../models/index.js';
+import { logger } from '../utils/logger.js';
 
 /**
  * Human-guard window in milliseconds (5 minutes).

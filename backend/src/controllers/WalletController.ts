@@ -6,10 +6,10 @@
  * @author MLM Development Team
  */
 import { Response } from 'express';
-import { walletService } from '../services/WalletService';
-import { getCryptoPrices as fetchCryptoPrices } from '../services/CryptoPriceService';
-import type { ApiResponse } from '../types';
-import type { AuthenticatedRequest } from '../middleware/auth.middleware';
+import { walletService } from '../services/WalletService.js';
+import { getCryptoPrices as fetchCryptoPrices } from '../services/CryptoPriceService.js';
+import type { ApiResponse } from '../types/index.js';
+import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
 
 /**
  * Get wallet balance for authenticated user

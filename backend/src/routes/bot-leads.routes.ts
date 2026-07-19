@@ -8,10 +8,10 @@
  */
 
 import { Router, Request, Response } from 'express';
-import { asyncHandler } from '../middleware/asyncHandler';
-import { sequelize } from '../config/database';
+import { asyncHandler } from '../middleware/asyncHandler.js';
+import { sequelize } from '../config/database.js';
 import { v4 as uuidv4 } from 'uuid';
-import { logger } from '../utils/logger';
+import { logger } from '../utils/logger.js';
 
 const router = Router();
 

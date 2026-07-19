@@ -5,7 +5,7 @@
  * @author MLM Development Team
  */
 import { Router } from 'express';
-import { getProperties, getProperty } from '../controllers/PropertyController';
+import { getProperties, getProperty } from '../controllers/PropertyController.js';
 
 const router = Router();
 
