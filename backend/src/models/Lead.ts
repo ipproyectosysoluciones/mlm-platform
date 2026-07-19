@@ -20,7 +20,7 @@ export type LeadSource =
   | 'whatsapp_bot';
 
 /** Automation tracking status: manual | automated | mixed */
-export type AutomationStatus = 'manual' | 'automated' | 'mixed';
+export type AutomationStatus = 'manual' | 'automated' | 'mixed' | 'n8n';
 
 interface LeadAttributes {
   id: string;

@@ -141,7 +141,7 @@ export class WorkflowService {
         const msSinceUpdate = Date.now() - new Date(lead.updatedAt).getTime();
         if (msSinceUpdate >= HUMAN_GUARD_MS) {
           lead.status = newStatus as typeof lead.status;
-          lead.automationStatus = 'automated';
+          lead.automationStatus = 'n8n';
           lead.lastWorkflowActionId = execution.id;
           await lead.save();
           logger.info(`Lead ${leadId} status updated to ${newStatus} by n8n`);
