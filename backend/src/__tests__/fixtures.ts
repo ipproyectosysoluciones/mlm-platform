@@ -212,6 +212,7 @@ export async function createSponsorWithReferrals(): Promise<{
  * Get auth token for a user
  */
 export function getAuthToken(user: User): string {
+  // @ts-expect-error — generateToken accepts partial UserAttributes in tests
   return generateToken({
     id: user.id,
     email: user.email,

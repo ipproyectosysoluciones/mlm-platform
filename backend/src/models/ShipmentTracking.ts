@@ -14,7 +14,11 @@
  */
 import { DataTypes, Model, Optional, ForeignKey } from 'sequelize';
 import { sequelize } from '../config/database.js';
-import type { ShipmentTrackingAttributes, ShipmentStatusHistoryEntry } from '../types/index.js';
+import type {
+  ShipmentTrackingAttributes,
+  ShipmentStatusHistoryEntry,
+  ShipmentTrackingStatus,
+} from '../types/index.js';
 
 type ShipmentTrackingCreation = Optional<
   ShipmentTrackingAttributes,
@@ -34,7 +38,7 @@ export class ShipmentTracking
   declare vendorOrderId: ForeignKey<string> | null;
   declare providerId: ForeignKey<string> | null;
   declare trackingNumber: string;
-  declare status: string;
+  declare status: ShipmentTrackingStatus;
   declare statusHistory: ShipmentStatusHistoryEntry[];
   declare estimatedDelivery: Date | null;
   declare actualDelivery: Date | null;

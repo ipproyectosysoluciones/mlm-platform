@@ -48,7 +48,7 @@ export async function getDashboardReferrals(
   const referralsByMonth = await User.findAll({
     where: {
       sponsorId: fullUser.id,
-      created_at: { [Op.gte]: sixMonthsAgo },
+      createdAt: { [Op.gte]: sixMonthsAgo },
     },
     attributes: [['created_at', 'createdAt']],
   });

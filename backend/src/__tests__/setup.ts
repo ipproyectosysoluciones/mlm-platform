@@ -146,6 +146,7 @@ beforeAll(async () => {
     const appModule = await import('../app.js');
     const app = appModule.default;
     console.log('App loaded, creating test agent...');
+    // @ts-expect-error — supertest() type mismatch with exported variable type
     testAgent = supertest(app);
     console.log('Test agent created successfully');
   } catch (error) {

@@ -93,33 +93,37 @@ export const getOrders: RequestHandler = asyncHandler(
       status,
     });
 
-    const response: ApiResponse<OrderAttributes[]> = {
+    const orderData = result.rows.map((order) => ({
+      id: order.id,
+      orderNumber: order.orderNumber,
+      userId: order.userId,
+      productId: order.productId,
+      purchaseId: order.purchaseId,
+      totalAmount: Number(order.totalAmount),
+      currency: order.currency,
+      status: order.status,
+      paymentMethod: order.paymentMethod,
+      notes: order.notes,
+      createdAt: order.createdAt,
+      updatedAt: order.updatedAt,
+      shippingAddressId: order.shippingAddressId,
+      shippingCost: order.shippingCost,
+      shippingStatus: order.shippingStatus,
+      // Include product details if available
+      ...(order.product && {
+        product: {
+          id: order.product.id,
+          name: order.product.name,
+          platform: order.product.platform,
+          price: Number(order.product.price),
+          durationDays: order.product.durationDays,
+          description: order.product.description,
+        } as Record<string, unknown>,
+      }),
+    }));
+    const response: ApiResponse<(OrderAttributes & { product?: Record<string, unknown> })[]> = {
       success: true,
-      data: result.rows.map((order) => ({
-        id: order.id,
-        orderNumber: order.orderNumber,
-        userId: order.userId,
-        productId: order.productId,
-        purchaseId: order.purchaseId,
-        totalAmount: Number(order.totalAmount),
-        currency: order.currency,
-        status: order.status,
-        paymentMethod: order.paymentMethod,
-        notes: order.notes,
-        createdAt: order.createdAt,
-        updatedAt: order.updatedAt,
-        // Include product details if available
-        ...(order.product && {
-          product: {
-            id: order.product.id,
-            name: order.product.name,
-            platform: order.product.platform,
-            price: Number(order.product.price),
-            durationDays: order.product.durationDays,
-            description: order.product.description,
-          },
-        }),
-      })),
+      data: orderData as (OrderAttributes & { product?: Record<string, unknown> })[],
       pagination: {
         total: result.count,
         page,
@@ -203,33 +207,37 @@ export const getOrderById: RequestHandler = asyncHandler(
     // Get order (authorization check is inside the service)
     const order = await orderService.findByIdForUser(id, userId);
 
+    const orderData = {
+      id: order.id,
+      orderNumber: order.orderNumber,
+      userId: order.userId,
+      productId: order.productId,
+      purchaseId: order.purchaseId,
+      totalAmount: Number(order.totalAmount),
+      currency: order.currency,
+      status: order.status,
+      paymentMethod: order.paymentMethod,
+      notes: order.notes,
+      createdAt: order.createdAt,
+      updatedAt: order.updatedAt,
+      shippingAddressId: order.shippingAddressId,
+      shippingCost: order.shippingCost,
+      shippingStatus: order.shippingStatus,
+      // Include product details if available
+      ...(order.product && {
+        product: {
+          id: order.product.id,
+          name: order.product.name,
+          platform: order.product.platform,
+          price: Number(order.product.price),
+          durationDays: order.product.durationDays,
+          description: order.product.description,
+        } as Record<string, unknown>,
+      }),
+    };
     const response: ApiResponse<OrderAttributes & { product?: Record<string, unknown> }> = {
       success: true,
-      data: {
-        id: order.id,
-        orderNumber: order.orderNumber,
-        userId: order.userId,
-        productId: order.productId,
-        purchaseId: order.purchaseId,
-        totalAmount: Number(order.totalAmount),
-        currency: order.currency,
-        status: order.status,
-        paymentMethod: order.paymentMethod,
-        notes: order.notes,
-        createdAt: order.createdAt,
-        updatedAt: order.updatedAt,
-        // Include product details if available
-        ...(order.product && {
-          product: {
-            id: order.product.id,
-            name: order.product.name,
-            platform: order.product.platform,
-            price: Number(order.product.price),
-            durationDays: order.product.durationDays,
-            description: order.product.description,
-          },
-        }),
-      },
+      data: orderData as OrderAttributes & { product?: Record<string, unknown> },
     };
 
     res.json(response);

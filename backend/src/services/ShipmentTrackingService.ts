@@ -260,6 +260,6 @@ export class ShipmentTrackingService {
       }
     }
 
-    return { tracking: tracking.reload(), isNew: true };
+    return { tracking: await tracking.reload(), isNew: true };
   }
 }

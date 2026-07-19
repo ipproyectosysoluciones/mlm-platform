@@ -98,7 +98,7 @@ export class InvoiceService {
       ...data,
       invoiceNumber,
       status: data.status ?? 'draft',
-    } as Record<string, unknown>);
+    } as unknown as InvoiceCreationAttributes);
   }
 
   /**

@@ -112,7 +112,7 @@ async function migrateHistoricalCommissions(): Promise<MigrationResult> {
           walletId: wallet.id,
           type: WALLET_TRANSACTION_TYPE.COMMISSION_EARNED,
           amount: amountInUSD,
-          balanceAfter: newBalance,
+          currency: 'USD',
           referenceId: commission.id.toString(),
           description:
             `Historical commission migration: ${commission.description || 'Commission'}`.substring(

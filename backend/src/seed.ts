@@ -93,6 +93,18 @@ async function createUser(
     status: 'active',
     role,
     currency,
+    // Notification preferences
+    emailNotifications: true,
+    smsNotifications: false,
+    twoFactorEnabled: false,
+    twoFactorPhone: null,
+    weeklyDigest: true,
+    // 2FA fields
+    twoFactorSecretEncrypted: null,
+    twoFactorRecoveryCodesHash: null,
+    twoFactorEnabledAt: null,
+    twoFactorFailedAttempts: 0,
+    twoFactorLockedUntil: null,
   });
 
   // Auto-referencia (depth 0) / Self-reference (depth 0)

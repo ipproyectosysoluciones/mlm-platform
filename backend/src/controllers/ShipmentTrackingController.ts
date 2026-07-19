@@ -54,8 +54,8 @@ export async function addTracking(req: Request, res: Response, next: NextFunctio
     }
 
     // Check if user owns the order or is admin
-    const userId = req.user!.id;
-    const isAdmin = req.user!.role === 'admin';
+    const userId = (req as any).user.id;
+    const isAdmin = (req as any).user.role === 'admin';
 
     if (!isAdmin && order.userId !== userId) {
       throw new AppError(403, 'FORBIDDEN', 'Not authorized to add tracking to this order');
@@ -94,8 +94,8 @@ export async function getTracking(req: Request, res: Response, next: NextFunctio
     }
 
     // Check if user owns the order or is admin
-    const userId = req.user!.id;
-    const isAdmin = req.user!.role === 'admin';
+    const userId = (req as any).user.id;
+    const isAdmin = (req as any).user.role === 'admin';
 
     if (!isAdmin && order.userId !== userId) {
       throw new AppError(403, 'FORBIDDEN', 'Not authorized to view tracking for this order');

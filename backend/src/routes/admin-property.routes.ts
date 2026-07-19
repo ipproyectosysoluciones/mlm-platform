@@ -123,7 +123,7 @@ router.use(requireAdmin);
  *       403:
  *         description: Forbidden - not an admin / Prohibido - no es admin
  */
-router.get('/', getProperties);
+router.get('/', ...getProperties);
 
 /**
  * @swagger
@@ -211,7 +211,7 @@ router.get('/', getProperties);
  *       403:
  *         description: Forbidden / Prohibido
  */
-router.post('/', createProperty);
+router.post('/', ...createProperty);
 
 /**
  * @swagger
@@ -250,7 +250,7 @@ router.post('/', createProperty);
  *       404:
  *         description: Property not found / Propiedad no encontrada
  */
-router.put('/:id', updateProperty);
+router.put('/:id', ...updateProperty);
 
 /**
  * @swagger

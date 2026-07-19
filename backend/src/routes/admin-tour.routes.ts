@@ -129,7 +129,7 @@ router.use(requireAdmin);
  *       403:
  *         description: Forbidden - not an admin / Prohibido - no es admin
  */
-router.get('/', getTourPackages);
+router.get('/', ...getTourPackages);
 
 /**
  * @swagger
@@ -234,7 +234,7 @@ router.get('/:id', getTourPackage);
  *       403:
  *         description: Forbidden / Prohibido
  */
-router.post('/', createTourPackage);
+router.post('/', ...createTourPackage);
 
 /**
  * @swagger
@@ -273,7 +273,7 @@ router.post('/', createTourPackage);
  *       404:
  *         description: Tour package not found / Paquete turístico no encontrado
  */
-router.put('/:id', updateTourPackage);
+router.put('/:id', ...updateTourPackage);
 
 /**
  * @swagger

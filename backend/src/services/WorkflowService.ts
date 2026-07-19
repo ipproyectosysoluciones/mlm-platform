@@ -115,8 +115,10 @@ export class WorkflowService {
     const [execution, created] = await WorkflowExecution.findOrCreate({
       where: { leadId, n8nExecutionId },
       defaults: {
+        leadId,
         workflowName,
         actionType,
+        n8nExecutionId,
         status: status as 'pending' | 'success' | 'failed',
         payload: payload ?? {},
         errorMessage: errorMessage ?? null,

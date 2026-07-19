@@ -1,4 +1,4 @@
-import { Router, Router as ExpressRouter } from 'express';
+import { Router, Router as ExpressRouter, Response } from 'express';
 import {
   getMe,
   getTree,
@@ -206,7 +206,7 @@ router.post(
 router.get(
   '/me/tree',
   authenticateToken,
-  asyncHandler(async (req: AuthenticatedRequest, res) => {
+  asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
     req.params.id = req.user!.id;
     return getTree(req, res);
   })
@@ -232,7 +232,7 @@ router.get(
 router.get(
   '/me/qr',
   authenticateToken,
-  asyncHandler(async (req: AuthenticatedRequest, res) => {
+  asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
     req.params.id = req.user!.id;
     return getQR(req, res);
   })
@@ -266,7 +266,7 @@ router.get(
 router.get(
   '/me/qr-url',
   authenticateToken,
-  asyncHandler(async (req: AuthenticatedRequest, res) => {
+  asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
     req.params.id = req.user!.id;
     return getQRUrl(req, res);
   })

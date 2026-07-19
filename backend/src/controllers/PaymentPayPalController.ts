@@ -258,6 +258,9 @@ export class PaymentPayPalController {
             status: 'completed',
             paymentMethod: 'paypal',
             notes: `paypal:${captureId}`,
+            shippingAddressId: null,
+            shippingCost: null,
+            shippingStatus: 'not_required',
           });
 
           logger.info(

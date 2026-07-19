@@ -64,7 +64,7 @@ const router: ExpressRouter = Router();
  *                   items:
  *                     $ref: '#/components/schemas/CategoryTree'
  */
-router.get('/tree', asyncHandler(getCategoryTree));
+router.get('/tree', getCategoryTree);
 
 /**
  * @swagger
@@ -93,7 +93,7 @@ router.get('/tree', asyncHandler(getCategoryTree));
  *       404:
  *         description: Category not found / Categoría no encontrada
  */
-router.get('/:id/breadcrumb', asyncHandler(getCategoryBreadcrumb));
+router.get('/:id/breadcrumb', getCategoryBreadcrumb);
 
 /**
  * @swagger
@@ -122,7 +122,7 @@ router.get('/:id/breadcrumb', asyncHandler(getCategoryBreadcrumb));
  *       404:
  *         description: Category not found / Categoría no encontrada
  */
-router.get('/:id', asyncHandler(getCategoryById));
+router.get('/:id', getCategoryById);
 
 /**
  * @swagger
@@ -159,7 +159,7 @@ router.get('/:id', asyncHandler(getCategoryById));
  *             schema:
  *               $ref: '#/components/schemas/ApiResponse'
  */
-router.get('/', asyncHandler(listCategories));
+router.get('/', listCategories);
 
 // ============================================
 // ADMIN ROUTES
@@ -207,7 +207,7 @@ router.use(requireAdmin);
  *       403:
  *         description: Forbidden - Admin role required / Prohibido - Rol admin requerido
  */
-router.get('/', asyncHandler(listCategoriesAdmin));
+router.get('/', listCategoriesAdmin);
 
 /**
  * @swagger
@@ -242,7 +242,7 @@ router.get('/', asyncHandler(listCategoriesAdmin));
  *       404:
  *         description: Category not found / Categoría no encontrada
  */
-router.get('/:id', asyncHandler(getCategoryAdmin));
+router.get('/:id', getCategoryAdmin);
 
 /**
  * @swagger
@@ -304,7 +304,7 @@ router.get('/:id', asyncHandler(getCategoryAdmin));
  *       409:
  *         description: Category slug already exists / El slug de categoría ya existe
  */
-router.post('/', asyncHandler(createCategory));
+router.post('/', createCategory);
 
 /**
  * @swagger
@@ -369,7 +369,7 @@ router.post('/', asyncHandler(createCategory));
  *       404:
  *         description: Category not found / Categoría no encontrada
  */
-router.put('/:id', asyncHandler(updateCategory));
+router.put('/:id', updateCategory);
 
 /**
  * @swagger
@@ -408,6 +408,6 @@ router.put('/:id', asyncHandler(updateCategory));
  *       404:
  *         description: Category not found / Categoría no encontrada
  */
-router.delete('/:id', asyncHandler(deleteCategory));
+router.delete('/:id', deleteCategory);
 
 export default router;

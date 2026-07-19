@@ -91,7 +91,7 @@ const router = Router();
  *       400:
  *         description: Validation error / Error de validación
  */
-router.get('/', getTourPackages);
+router.get('/', ...getTourPackages);
 
 /**
  * @swagger

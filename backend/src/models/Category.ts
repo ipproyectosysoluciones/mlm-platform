@@ -17,7 +17,7 @@ import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../config/database.js';
 import type { CategoryAttributes } from '../types/index.js';
 
-type CategoryCreation = Optional<CategoryAttributes, 'id' | 'createdAt' | 'updatedAt'>;
+export type CategoryCreation = Optional<CategoryAttributes, 'id' | 'createdAt' | 'updatedAt'>;
 
 /**
  * Category Model - Represents hierarchical product categories

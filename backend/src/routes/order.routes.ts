@@ -87,7 +87,7 @@ router.post(
     // Validate payment method
     body('paymentMethod').isString().notEmpty().withMessage('Payment method is required'),
   ]),
-  asyncHandler(createOrder)
+  createOrder
 );
 
 /**
@@ -157,7 +157,7 @@ router.get(
       .isIn(['pending', 'completed', 'cancelled', 'refunded'])
       .withMessage('Status must be one of: pending, completed, cancelled, refunded'),
   ]),
-  asyncHandler(getOrders)
+  getOrders
 );
 
 /**
@@ -198,7 +198,7 @@ router.get(
       .matches(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)
       .withMessage('Order ID must be a valid UUID'),
   ]),
-  asyncHandler(getOrderById)
+  getOrderById
 );
 
 export default router;

@@ -80,6 +80,12 @@ export interface UserAttributes {
   twoFactorEnabled: boolean;
   twoFactorPhone: string | null;
   weeklyDigest: boolean;
+  // 2FA fields (declared on model but missing from this interface)
+  twoFactorSecretEncrypted: string | null;
+  twoFactorRecoveryCodesHash: string | null;
+  twoFactorEnabledAt: Date | null;
+  twoFactorFailedAttempts: number;
+  twoFactorLockedUntil: Date | null;
   createdAt?: Date;
   updatedAt?: Date;
 }

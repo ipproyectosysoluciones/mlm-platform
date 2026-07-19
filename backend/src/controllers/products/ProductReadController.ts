@@ -73,6 +73,7 @@ function transformProductResponse(product: Product): GenericProductAttributes {
     maxQuantityPerUser: product.maxQuantityPerUser || null,
     metadata: product.metadata || null,
     images: product.images || [],
+    vendorId: product.vendorId || null,
     createdAt: product.createdAt,
     updatedAt: product.updatedAt,
   };
@@ -258,7 +259,9 @@ export const getProductById: RequestHandler = asyncHandler(
       return;
     }
 
-    const response: ApiResponse<GenericProductAttributes> = {
+    const response: ApiResponse<
+      GenericProductAttributes & { category?: Record<string, unknown> | null }
+    > = {
       success: true,
       data: {
         ...transformProductResponse(product),
