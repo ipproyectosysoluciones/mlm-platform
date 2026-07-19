@@ -114,7 +114,7 @@ export async function handleN8nAction(
       });
       return;
     }
-    logger.error('Unexpected error in n8n-action handler', error);
+    logger.error({ err: error }, 'Unexpected error in n8n-action handler');
     res.status(500).json({
       success: false,
       error: 'Internal server error',

@@ -124,7 +124,7 @@ export class ProductService {
 
     // Search filter (name or description)
     if (options.search) {
-      where[Op.or] = [
+      where[Op.or as string] = [
         { name: { [Op.iLike]: `%${options.search}%` } },
         { description: { [Op.iLike]: `%${options.search}%` } },
       ];
