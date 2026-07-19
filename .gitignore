@@ -129,4 +129,4 @@ deploy.prod.sh
 # ===========================================
 # /prompt_kb/  ← removed: prompt_kb is now baked into the bot Docker image
 
-/.vscode
+/.vscodeioredis
