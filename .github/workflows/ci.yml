@@ -70,7 +70,7 @@ jobs:
         run: cd backend && pnpm build
 
       - name: Type check backend
-        run: cd backend && pnpm tsc --noEmit
+        run: cd backend && pnpm tsc --noEmit -p tsconfig.check.json
 
       - name: Unit tests
         run: cd backend && pnpm test
