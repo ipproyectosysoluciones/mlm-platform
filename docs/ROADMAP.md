@@ -3,7 +3,7 @@
 > Hoja de ruta completa para la plataforma **Nexo Real** — Servicios Inmobiliarios, Turismo/Hospitalidad y Afiliaciones.  
 > _"Conectamos tu negocio con el mundo."_
 
-**Versión actual**: v3.2.0 — Sprint 14 Completado ✅  
+**Versión actual**: v3.3.0 — Sprint 15 Completado ✅  
 **Última actualización**: 2026-07-18  
 **Estado**: Activo - Producción  
 **Meta**: v3.3.0 — próxima expansión
@@ -589,6 +589,39 @@ Impact:
   CI total: ~9min → ~6min (33% reduction)
   Integration tests: ~6-7min → ~4min (3 shards parallel)
   Security: 7 secrets extracted from YAML to GitHub Actions secrets
+```
+
+#### Sprint 15 — TypeScript Strict Error Elimination ✅
+
+```
+Branch:    fix/sprint15-*
+Estado:    Completado 2026-07-18
+PRs:       #248–#252
+
+PR #248 — Backend TS Errors Batch 1:
+  ✅ Strict TS errors eliminated: auth, config, middleware modules
+  ✅ Proper type annotations for all route handlers
+
+PR #249 — Backend TS Errors Batch 2:
+  ✅ Strict TS errors eliminated: services, controllers
+  ✅ Removed all unjustified `any` casts in business logic
+
+PR #250 — Backend TS Errors Batch 3:
+  ✅ Strict TS errors eliminated: routes, utils
+  ✅ Type-safe route parameter handling
+
+PR #251 — Backend TS Errors Batch 4:
+  ✅ Remaining modules: models, validators, types
+  ✅ Zero compilation errors across entire backend
+
+PR #252 — CI Type Check Gate:
+  ✅ tsc --noEmit blocking step in CI pipeline
+  ✅ Runs after build — catches type regressions before merge
+
+Impact:
+  979+ TypeScript strict errors eliminated
+  CI gate prevents type error regressions
+  Zero compilation errors — clean type checking pass
 ```
 
 ### Fase 2 — Multi-Tenant (1–2 meses post v2.0.0)
