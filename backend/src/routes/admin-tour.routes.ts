@@ -279,7 +279,91 @@ router.put('/:id', ...updateTourPackage);
 router.delete('/:id', deleteTourPackage);
 
 // Image upload routes / Rutas de subida de imágenes
+
+/**
+ * @swagger
+ * /admin/tours/{id}/images:
+ *   post:
+ *     summary: Upload tour package images / Subir imágenes del paquete turístico
+ *     description: Upload one or more images for a tour package. Requires admin role.
+ *     tags: [admin-tours]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Tour package ID / ID del paquete turístico
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - images
+ *             properties:
+ *               images:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
+ *     responses:
+ *       200:
+ *         description: Images uploaded / Imágenes subidas
+ *       400:
+ *         description: Invalid files or limit exceeded / Archivos inválidos o límite excedido
+ *       401:
+ *         description: Unauthorized / No autorizado
+ *       403:
+ *         description: Forbidden — admin required / Prohibido — se requiere admin
+ *       404:
+ *         description: Tour package not found / Paquete turístico no encontrado
+ *       500:
+ *         description: Internal error / Error interno
+ */
 router.post('/:id/images', uploadImages, uploadTourImages);
+
+/**
+ * @swagger
+ * /admin/tours/{id}/images/{imageIndex}:
+ *   delete:
+ *     summary: Delete tour package image / Eliminar imagen del paquete turístico
+ *     description: Delete a specific image from a tour package by index. Requires admin role.
+ *     tags: [admin-tours]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Tour package ID / ID del paquete turístico
+ *       - in: path
+ *         name: imageIndex
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Image index / Índice de la imagen
+ *     responses:
+ *       200:
+ *         description: Image deleted / Imagen eliminada
+ *       400:
+ *         description: Invalid index / Índice inválido
+ *       401:
+ *         description: Unauthorized / No autorizado
+ *       403:
+ *         description: Forbidden — admin required / Prohibido — se requiere admin
+ *       404:
+ *         description: Tour package or image not found / Paquete turístico o imagen no encontrado
+ *       500:
+ *         description: Internal error / Error interno
+ */
 router.delete('/:id/images/:imageIndex', deleteTourImage);
 
 export default router;

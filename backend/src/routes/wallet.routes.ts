@@ -61,7 +61,52 @@ router.use(authenticateToken);
  */
 router.get('/', asyncHandler(getBalance));
 
-// Also support /:userId path for test compatibility
+/**
+ * @swagger
+ * /wallet/{userId}:
+ *   get:
+ *     summary: Get wallet balance by user ID / Obtener balance del wallet por ID de usuario
+ *     description: Returns the wallet balance for a specific user. Supports test compatibility path.
+ *     tags: [wallet]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID / ID del usuario
+ *     responses:
+ *       200:
+ *         description: Wallet balance retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                     userId:
+ *                       type: string
+ *                     balance:
+ *                       type: number
+ *                     currency:
+ *                       type: string
+ *                     lastUpdated:
+ *                       type: string
+ *       401:
+ *         description: Not authenticated / No autenticado
+ *       404:
+ *         description: User not found / Usuario no encontrado
+ *       500:
+ *         description: Internal error / Error interno
+ */
 router.get('/:userId', asyncHandler(getBalance));
 
 /**
@@ -121,6 +166,55 @@ router.get(
   asyncHandler(getTransactions)
 );
 
+/**
+ * @swagger
+ * /wallet/{userId}/transactions:
+ *   get:
+ *     summary: Get wallet transactions by user ID / Obtener transacciones del wallet por ID de usuario
+ *     description: Returns paginated wallet transactions for a specific user with optional filters. Supports test compatibility path.
+ *     tags: [wallet]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID / ID del usuario
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 20
+ *       - in: query
+ *         name: type
+ *         schema:
+ *           type: string
+ *           enum: [commission, withdrawal, refund]
+ *       - in: query
+ *         name: startDate
+ *         schema:
+ *           type: string
+ *           format: date
+ *       - in: query
+ *         name: endDate
+ *         schema:
+ *           type: string
+ *           format: date
+ *     responses:
+ *       200:
+ *         description: Transactions retrieved successfully
+ *       401:
+ *         description: Not authenticated / No autenticado
+ *       500:
+ *         description: Internal error / Error interno
+ */
 // Also support /:userId/transactions path for test compatibility
 router.get(
   '/:userId/transactions',

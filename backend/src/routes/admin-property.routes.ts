@@ -256,7 +256,91 @@ router.put('/:id', ...updateProperty);
 router.delete('/:id', deleteProperty);
 
 // Image upload routes / Rutas de subida de imágenes
+
+/**
+ * @swagger
+ * /admin/properties/{id}/images:
+ *   post:
+ *     summary: Upload property images / Subir imágenes de propiedad
+ *     description: Upload one or more images for a property. Requires admin role.
+ *     tags: [admin-properties]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Property ID / ID de la propiedad
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - images
+ *             properties:
+ *               images:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
+ *     responses:
+ *       200:
+ *         description: Images uploaded / Imágenes subidas
+ *       400:
+ *         description: Invalid files or limit exceeded / Archivos inválidos o límite excedido
+ *       401:
+ *         description: Unauthorized / No autorizado
+ *       403:
+ *         description: Forbidden — admin required / Prohibido — se requiere admin
+ *       404:
+ *         description: Property not found / Propiedad no encontrada
+ *       500:
+ *         description: Internal error / Error interno
+ */
 router.post('/:id/images', uploadImages, uploadPropertyImages);
+
+/**
+ * @swagger
+ * /admin/properties/{id}/images/{imageIndex}:
+ *   delete:
+ *     summary: Delete property image / Eliminar imagen de propiedad
+ *     description: Delete a specific image from a property by index. Requires admin role.
+ *     tags: [admin-properties]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Property ID / ID de la propiedad
+ *       - in: path
+ *         name: imageIndex
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Image index / Índice de la imagen
+ *     responses:
+ *       200:
+ *         description: Image deleted / Imagen eliminada
+ *       400:
+ *         description: Invalid index / Índice inválido
+ *       401:
+ *         description: Unauthorized / No autorizado
+ *       403:
+ *         description: Forbidden — admin required / Prohibido — se requiere admin
+ *       404:
+ *         description: Property or image not found / Propiedad o imagen no encontrada
+ *       500:
+ *         description: Internal error / Error interno
+ */
 router.delete('/:id/images/:imageIndex', deletePropertyImage);
 
 export default router;
