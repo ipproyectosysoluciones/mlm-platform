@@ -5,6 +5,7 @@
  * @author MLM Development Team
  */
 import { Router, Router as ExpressRouter } from 'express';
+import { adminLimiter } from '../middleware/rateLimit.js';
 import { authenticate, requireAdmin } from '../middleware/auth.middleware.js';
 import {
   createCategory,
@@ -18,6 +19,7 @@ import { asyncHandler } from '../middleware/asyncHandler.js';
 const router: ExpressRouter = Router();
 
 // All routes require authentication and admin role
+router.use(adminLimiter);
 router.use(authenticate);
 router.use(requireAdmin);
 

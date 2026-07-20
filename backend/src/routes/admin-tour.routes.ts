@@ -9,7 +9,7 @@
  * @author MLM Development Team
  */
 import { Router } from 'express';
-import rateLimit from 'express-rate-limit';
+import { adminLimiter } from '../middleware/rateLimit.js';
 import { authenticate, requireAdmin } from '../middleware/auth.middleware.js';
 import {
   getTourPackages,
@@ -24,27 +24,7 @@ import { uploadImages } from '../middleware/upload.js';
 
 const router = Router();
 
-/**
- * Rate limiter for admin tour package endpoints.
- * Stricter than the global limiter (200 req/min) since these routes perform
- * authorization checks and write operations.
- *
- * Rate limit para endpoints admin de paquetes turísticos.
- * Más estricto que el global (200 req/min) ya que estas rutas realizan
- * verificación de autorización y operaciones de escritura.
- */
-const adminTourLimiter = rateLimit({
-  windowMs: 60 * 1000, // 1 minute / 1 minuto
-  max: process.env.NODE_ENV === 'test' ? 1000 : 60,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: {
-    success: false,
-    error: { code: 'RATE_LIMIT', message: 'Too many requests. Please try again later.' },
-  },
-});
-
-router.use(adminTourLimiter);
+router.use(adminLimiter);
 
 /**
  * Enforce JWT authentication and admin role for all routes in this router.
@@ -299,7 +279,91 @@ router.put('/:id', ...updateTourPackage);
 router.delete('/:id', deleteTourPackage);
 
 // Image upload routes / Rutas de subida de imágenes
+
+/**
+ * @swagger
+ * /admin/tours/{id}/images:
+ *   post:
+ *     summary: Upload tour package images / Subir imágenes del paquete turístico
+ *     description: Upload one or more images for a tour package. Requires admin role.
+ *     tags: [admin-tours]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Tour package ID / ID del paquete turístico
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - images
+ *             properties:
+ *               images:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
+ *     responses:
+ *       200:
+ *         description: Images uploaded / Imágenes subidas
+ *       400:
+ *         description: Invalid files or limit exceeded / Archivos inválidos o límite excedido
+ *       401:
+ *         description: Unauthorized / No autorizado
+ *       403:
+ *         description: Forbidden — admin required / Prohibido — se requiere admin
+ *       404:
+ *         description: Tour package not found / Paquete turístico no encontrado
+ *       500:
+ *         description: Internal error / Error interno
+ */
 router.post('/:id/images', uploadImages, uploadTourImages);
+
+/**
+ * @swagger
+ * /admin/tours/{id}/images/{imageIndex}:
+ *   delete:
+ *     summary: Delete tour package image / Eliminar imagen del paquete turístico
+ *     description: Delete a specific image from a tour package by index. Requires admin role.
+ *     tags: [admin-tours]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Tour package ID / ID del paquete turístico
+ *       - in: path
+ *         name: imageIndex
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Image index / Índice de la imagen
+ *     responses:
+ *       200:
+ *         description: Image deleted / Imagen eliminada
+ *       400:
+ *         description: Invalid index / Índice inválido
+ *       401:
+ *         description: Unauthorized / No autorizado
+ *       403:
+ *         description: Forbidden — admin required / Prohibido — se requiere admin
+ *       404:
+ *         description: Tour package or image not found / Paquete turístico o imagen no encontrado
+ *       500:
+ *         description: Internal error / Error interno
+ */
 router.delete('/:id/images/:imageIndex', deleteTourImage);
 
 export default router;

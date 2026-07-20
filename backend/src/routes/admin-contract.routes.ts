@@ -6,6 +6,7 @@
  */
 
 import { Router } from 'express';
+import { adminLimiter } from '../middleware/rateLimit.js';
 import {
   getTemplates,
   createTemplate,
@@ -16,6 +17,8 @@ import {
 import { requireAdmin, authenticate } from '../middleware/auth.middleware.js';
 
 const router = Router();
+
+router.use(adminLimiter);
 
 /**
  * @swagger
@@ -92,7 +95,71 @@ router.post('/', authenticate, requireAdmin, createTemplate);
  *         description: New version created
  */
 router.put('/:id', authenticate, requireAdmin, updateTemplate);
+
+/**
+ * @swagger
+ * /admin/contracts/users/{userId}:
+ *   get:
+ *     summary: Get user contracts
+ *     description: Get all contracts signed by a specific user (admin)
+ *     tags: [admin/contracts]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *     responses:
+ *       200:
+ *         description: List of user contracts
+ *       401:
+ *         description: Not authenticated / No autenticado
+ *       403:
+ *         description: Forbidden — admin required / Prohibido — se requiere admin
+ *       404:
+ *         description: User not found / Usuario no encontrado
+ *       500:
+ *         description: Internal error / Error interno
+ */
 router.get('/users/:userId', authenticate, requireAdmin, getUserContracts);
+
+/**
+ * @swagger
+ * /admin/contracts/{id}/revoke/{userId}:
+ *   post:
+ *     summary: Revoke user contract
+ *     description: Revoke a specific contract for a user (admin)
+ *     tags: [admin/contracts]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Contract template ID
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *     responses:
+ *       200:
+ *         description: Contract revoked
+ *       401:
+ *         description: Not authenticated / No autenticado
+ *       403:
+ *         description: Forbidden — admin required / Prohibido — se requiere admin
+ *       404:
+ *         description: Contract or user not found / Contrato o usuario no encontrado
+ *       500:
+ *         description: Internal error / Error interno
+ */
 router.post('/:id/revoke/:userId', authenticate, requireAdmin, revokeUserContract);
 
 export default router;

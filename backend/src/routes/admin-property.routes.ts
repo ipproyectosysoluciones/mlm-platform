@@ -9,7 +9,7 @@
  * @author MLM Development Team
  */
 import { Router } from 'express';
-import rateLimit from 'express-rate-limit';
+import { adminLimiter } from '../middleware/rateLimit.js';
 import { authenticate, requireAdmin } from '../middleware/auth.middleware.js';
 import {
   getProperties,
@@ -23,27 +23,7 @@ import { uploadImages } from '../middleware/upload.js';
 
 const router = Router();
 
-/**
- * Rate limiter for admin property endpoints.
- * Stricter than the global limiter (200 req/min) since these routes perform
- * authorization checks and write operations.
- *
- * Rate limit para endpoints admin de propiedades.
- * Más estricto que el global (200 req/min) ya que estas rutas realizan
- * verificación de autorización y operaciones de escritura.
- */
-const adminPropertyLimiter = rateLimit({
-  windowMs: 60 * 1000, // 1 minute / 1 minuto
-  max: process.env.NODE_ENV === 'test' ? 1000 : 60,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: {
-    success: false,
-    error: { code: 'RATE_LIMIT', message: 'Too many requests. Please try again later.' },
-  },
-});
-
-router.use(adminPropertyLimiter);
+router.use(adminLimiter);
 
 /**
  * Enforce JWT authentication and admin role for all routes in this router.
@@ -276,7 +256,91 @@ router.put('/:id', ...updateProperty);
 router.delete('/:id', deleteProperty);
 
 // Image upload routes / Rutas de subida de imágenes
+
+/**
+ * @swagger
+ * /admin/properties/{id}/images:
+ *   post:
+ *     summary: Upload property images / Subir imágenes de propiedad
+ *     description: Upload one or more images for a property. Requires admin role.
+ *     tags: [admin-properties]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Property ID / ID de la propiedad
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - images
+ *             properties:
+ *               images:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
+ *     responses:
+ *       200:
+ *         description: Images uploaded / Imágenes subidas
+ *       400:
+ *         description: Invalid files or limit exceeded / Archivos inválidos o límite excedido
+ *       401:
+ *         description: Unauthorized / No autorizado
+ *       403:
+ *         description: Forbidden — admin required / Prohibido — se requiere admin
+ *       404:
+ *         description: Property not found / Propiedad no encontrada
+ *       500:
+ *         description: Internal error / Error interno
+ */
 router.post('/:id/images', uploadImages, uploadPropertyImages);
+
+/**
+ * @swagger
+ * /admin/properties/{id}/images/{imageIndex}:
+ *   delete:
+ *     summary: Delete property image / Eliminar imagen de propiedad
+ *     description: Delete a specific image from a property by index. Requires admin role.
+ *     tags: [admin-properties]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Property ID / ID de la propiedad
+ *       - in: path
+ *         name: imageIndex
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Image index / Índice de la imagen
+ *     responses:
+ *       200:
+ *         description: Image deleted / Imagen eliminada
+ *       400:
+ *         description: Invalid index / Índice inválido
+ *       401:
+ *         description: Unauthorized / No autorizado
+ *       403:
+ *         description: Forbidden — admin required / Prohibido — se requiere admin
+ *       404:
+ *         description: Property or image not found / Propiedad o imagen no encontrada
+ *       500:
+ *         description: Internal error / Error interno
+ */
 router.delete('/:id/images/:imageIndex', deletePropertyImage);
 
 export default router;
