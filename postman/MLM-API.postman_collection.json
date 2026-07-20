@@ -1,8 +1,14 @@
 {
   "info": {
     "name": "Nexo Real API",
-    "description": "Complete API collection for Nexo Real Platform - v2.4.0 (Sprint 8: RBAC 9 roles, register/guest, updateUserRole, Seed Nexo Real colombiano)",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    "description": "Sprint 18 — Full sync with backend routes. All endpoints documented. Generated 2026-07-20.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": {
+      "major": 2,
+      "minor": 0,
+      "patch": 0,
+      "identifier": "sprint-18"
+    }
   },
   "variable": [
     {
@@ -719,6 +725,413 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "DELETE /users/me — Delete my account",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /users/me/qr — My QR image",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/me/qr",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "me",
+                "qr"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /users/me/notifications — Get notification preferences",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/me/notifications",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "me",
+                "notifications"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /users/me/notifications — Update notification prefs",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/me/notifications",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "me",
+                "notifications"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"emailNotifications\": true,\n  \"smsNotifications\": false,\n  \"weeklyDigest\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /users/me/2fa/enable — Enable 2FA (SMS)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/me/2fa/enable",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "me",
+                "2fa",
+                "enable"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"+541112345678\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /users/me/2fa/verify — Verify 2FA code",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/me/2fa/verify",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "me",
+                "2fa",
+                "verify"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"123456\",\n  \"phone\": \"+541112345678\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /users/me/2fa/disable — Disable 2FA",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/me/2fa/disable",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "me",
+                "2fa",
+                "disable"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /users/search — Search users in my network",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/search",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "",
+                  "description": "min 2 chars"
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /users/:id/tree — Other user tree",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/:id/tree",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                ":id",
+                "tree"
+              ],
+              "query": [
+                {
+                  "key": "depth",
+                  "value": "3",
+                  "description": "1-10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /users/:id/qr — Other user QR",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/:id/qr",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                ":id",
+                "qr"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /users/:id/qr-url — Other user QR URL",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/:id/qr-url",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                ":id",
+                "qr-url"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /users/:id/details — User details + tree stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/:id/details",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                ":id",
+                "details"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -803,7 +1216,7 @@
       ]
     },
     {
-      "name": "Admin",
+      "name": "Admin — Dashboard & Users",
       "item": [
         {
           "name": "Get Stats",
@@ -1046,6 +1459,73 @@
               "path": [
                 "push",
                 "unsubscribe"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /push/unsubscribe — Unsubscribe",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/push/unsubscribe",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "push",
+                "unsubscribe"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"endpoint\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /push/send-test — Send test notification",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/push/send-test",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "push",
+                "send-test"
               ]
             }
           },
@@ -1456,6 +1936,198 @@
                   "key": "days",
                   "value": "30"
                 }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /carts/items — Add item",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/carts/items",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "carts",
+                "items"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"\",\n  \"quantity\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /carts/items/:itemId — Update quantity",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/carts/items/:itemId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "carts",
+                "items",
+                ":itemId"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /carts/items/:itemId — Remove item",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/carts/items/:itemId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "carts",
+                "items",
+                ":itemId"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /carts/recover/:token — Preview recovery (public)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/carts/recover/:token",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "carts",
+                "recover",
+                ":token"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /carts/recover/:token — Complete recovery (auth)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/carts/recover/:token",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "carts",
+                "recover",
+                ":token"
+              ]
+            },
+            "description": "Completes cart recovery with token"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /carts/abandoned — Abandoned carts (admin only)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/carts/abandoned",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "carts",
+                "abandoned"
               ]
             }
           },
@@ -1884,128 +2556,6 @@
             }
           },
           "response": []
-        },
-        {
-          "name": "Admin: List All Categories",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/admin/categories",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "admin",
-                "categories"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Admin: Create Category",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Electronics\",\n  \"description\": \"Electronic products\",\n  \"slug\": \"electronics\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/admin/categories",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "admin",
-                "categories"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Admin: Update Category",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Updated Name\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/admin/categories/:id",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "admin",
-                "categories",
-                ":id"
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": ""
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Admin: Delete Category",
-          "request": {
-            "method": "DELETE",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/admin/categories/:id",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "admin",
-                "categories",
-                ":id"
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": ""
-                }
-              ]
-            }
-          },
-          "response": []
         }
       ]
     },
@@ -2062,165 +2612,12 @@
             }
           },
           "response": []
-        },
-        {
-          "name": "Admin: List All Products",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/admin/products",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "admin",
-                "products"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Admin: Create Product",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Sample Product\",\n  \"sku\": \"PROD-001\",\n  \"price\": 29.99,\n  \"categoryId\": \"{{categoryId}}\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/admin/products",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "admin",
-                "products"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Admin: Update Product",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Updated Product\",\n  \"price\": 24.99\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/admin/products/:id",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "admin",
-                "products",
-                ":id"
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": ""
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Admin: Delete Product",
-          "request": {
-            "method": "DELETE",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/admin/products/:id",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "admin",
-                "products",
-                ":id"
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": ""
-                }
-              ]
-            }
-          },
-          "response": []
         }
       ]
     },
     {
       "name": "Inventory",
       "item": [
-        {
-          "name": "Get Product Inventory",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/admin/products/:id/inventory",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "admin",
-                "products",
-                ":id",
-                "inventory"
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": ""
-                }
-              ]
-            }
-          },
-          "response": []
-        },
         {
           "name": "Update Inventory Stock",
           "request": {
@@ -2249,38 +2646,6 @@
                 "products",
                 ":id",
                 "inventory"
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": ""
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Inventory Movements",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/admin/products/:id/inventory/movements",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "admin",
-                "products",
-                ":id",
-                "inventory",
-                "movements"
               ],
               "variable": [
                 {
@@ -2331,151 +2696,155 @@
             }
           },
           "response": []
-        }
-      ]
-    },
-    {
-      "name": "Vendors",
-      "item": [
-        {
-          "name": "Vendor Dashboard",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{vendorToken}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/vendor/dashboard",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "vendor",
-                "dashboard"
-              ]
-            }
-          },
-          "response": []
         },
         {
-          "name": "Vendor Products",
+          "name": "GET /products/:id/inventory — Stock level",
           "request": {
             "method": "GET",
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/vendor/products",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "vendor",
-                "products"
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Admin Vendors",
-      "item": [
-        {
-          "name": "List All Vendors",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/admin/vendors",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "admin",
-                "vendors"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Vendor Detail",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/admin/vendors/:id",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "admin",
-                "vendors",
-                ":id"
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": ""
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Update Vendor Commission Rate",
-          "request": {
-            "method": "PATCH",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
+                "value": "Bearer {{token}}",
+                "type": "text"
               },
               {
                 "key": "Content-Type",
-                "value": "application/json"
+                "value": "application/json",
+                "type": "text"
               }
             ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"commissionRate\": 15.5\n}"
-            },
             "url": {
-              "raw": "{{baseUrl}}/admin/vendors/:id/commission-rate",
+              "raw": "{{baseUrl}}/products/:id/inventory",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
-                "admin",
-                "vendors",
+                "products",
                 ":id",
-                "commission-rate"
+                "inventory"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /products/:id/inventory — Update stock",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/products/:id/inventory",
+              "host": [
+                "{{baseUrl}}"
               ],
-              "variable": [
+              "path": [
+                "products",
+                ":id",
+                "inventory"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"stock\": 100,\n  \"reason\": \"restock\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /products/:id/inventory/movements — Movements",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/products/:id/inventory/movements",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products",
+                ":id",
+                "inventory",
+                "movements"
+              ],
+              "query": [
                 {
-                  "key": "id",
-                  "value": ""
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": ""
                 }
               ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /products/:id/inventory/movements — Record movement",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/products/:id/inventory/movements",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products",
+                ":id",
+                "inventory",
+                "movements"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"in\",\n  \"quantity\": 10,\n  \"reason\": \"restock\",\n  \"notes\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             }
           },
           "response": []
@@ -2483,7 +2852,7 @@
       ]
     },
     {
-      "name": "Contracts",
+      "name": "Contracts — My Agreements",
       "item": [
         {
           "name": "List My Contracts",
@@ -2595,416 +2964,31 @@
             }
           },
           "response": []
-        }
-      ]
-    },
-    {
-      "name": "Admin Contracts",
-      "item": [
+        },
         {
-          "name": "List All Contract Templates",
+          "name": "GET /contracts/template — Get template",
           "request": {
             "method": "GET",
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/admin/contracts",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "admin",
-                "contracts"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Create Contract Template",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
+                "value": "Bearer {{token}}",
+                "type": "text"
               },
               {
                 "key": "Content-Type",
-                "value": "application/json"
+                "value": "application/json",
+                "type": "text"
               }
             ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"type\": \"AFFILIATE_AGREEMENT\",\n  \"version\": \"1.0.0\",\n  \"title\": \"Affiliate Agreement\",\n  \"content\": \"Contract terms...\",\n  \"effectiveFrom\": \"2026-04-04\"\n}"
-            },
             "url": {
-              "raw": "{{baseUrl}}/admin/contracts",
+              "raw": "{{baseUrl}}/contracts/template",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
-                "admin",
-                "contracts"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Update Contract Template",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"title\": \"Updated Title\",\n  \"content\": \"New terms...\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/admin/contracts/:id",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "admin",
                 "contracts",
-                ":id"
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": ""
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get User Contract Acceptances",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/admin/contracts/users/:userId",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "admin",
-                "contracts",
-                "users",
-                ":userId"
-              ],
-              "variable": [
-                {
-                  "key": "userId",
-                  "value": ""
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Revoke User Contract",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/admin/contracts/:id/revoke/:userId",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "admin",
-                "contracts",
-                ":id",
-                "revoke",
-                ":userId"
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": ""
-                },
-                {
-                  "key": "userId",
-                  "value": ""
-                }
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Shipping & Addresses",
-      "item": [
-        {
-          "name": "List My Addresses",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/addresses",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "addresses"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Create Shipping Address",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Home\",\n  \"street\": \"123 Main St\",\n  \"city\": \"Buenos Aires\",\n  \"state\": \"BA\",\n  \"postalCode\": \"1001\",\n  \"country\": \"AR\",\n  \"phone\": \"+54911234567\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/addresses",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "addresses"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Address",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/addresses/:id",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "addresses",
-                ":id"
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": ""
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Update Address",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"street\": \"456 New St\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/addresses/:id",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "addresses",
-                ":id"
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": ""
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Address",
-          "request": {
-            "method": "DELETE",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/addresses/:id",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "addresses",
-                ":id"
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": ""
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Set Default Address",
-          "request": {
-            "method": "PATCH",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/addresses/:id/default",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "addresses",
-                ":id",
-                "default"
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": ""
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Assign Shipping to Order",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"providerId\": \"{{providerId}}\",\n  \"addressId\": \"{{addressId}}\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/orders/:id/shipping",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "orders",
-                ":id",
-                "shipping"
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": ""
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Order Tracking",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/orders/:id/tracking",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "orders",
-                ":id",
-                "tracking"
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": ""
-                }
+                "template"
               ]
             }
           },
@@ -3195,6 +3179,117 @@
               ]
             }
           }
+        },
+        {
+          "name": "GET /properties — List",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/properties",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "properties"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": ""
+                },
+                {
+                  "key": "type",
+                  "value": "",
+                  "description": "apartment|house|condo"
+                },
+                {
+                  "key": "minPrice",
+                  "value": "",
+                  "description": ""
+                },
+                {
+                  "key": "maxPrice",
+                  "value": "",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /properties/:id — Detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/properties/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "properties",
+                ":id"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /properties/:id/availability — Availability",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/properties/:id/availability",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "properties",
+                ":id",
+                "availability"
+              ],
+              "query": [
+                {
+                  "key": "checkIn",
+                  "value": "",
+                  "description": "YYYY-MM-DD"
+                },
+                {
+                  "key": "checkOut",
+                  "value": "",
+                  "description": "YYYY-MM-DD"
+                }
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -3381,6 +3476,107 @@
               ]
             }
           }
+        },
+        {
+          "name": "GET /tours — List",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/tours",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "tours"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": ""
+                },
+                {
+                  "key": "destination",
+                  "value": "",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /tours/:id — Detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/tours/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "tours",
+                ":id"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /tours/:id/availability — Availability",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/tours/:id/availability",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "tours",
+                ":id",
+                "availability"
+              ],
+              "query": [
+                {
+                  "key": "date",
+                  "value": "",
+                  "description": "YYYY-MM-DD"
+                },
+                {
+                  "key": "guests",
+                  "value": "1",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -3561,6 +3757,156 @@
               ]
             }
           }
+        },
+        {
+          "name": "POST /reservations — Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reservations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reservations"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"propertyId\": \"\",\n  \"checkIn\": \"\",\n  \"checkOut\": \"\",\n  \"guests\": 1,\n  \"type\": \"property\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /reservations — List my reservations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reservations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reservations"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": ""
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "description": "pending|confirmed|cancelled"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /reservations/:id — Detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reservations/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reservations",
+                ":id"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /reservations/:id/cancel — Cancel",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reservations/:id/cancel",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reservations",
+                ":id",
+                "cancel"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -3658,6 +4004,229 @@
             "description": "Get simplified tour package listings for Nexo Bot WhatsApp responses. Requires X-Bot-Secret header.\n\nObtiene paquetes turísticos simplificados para respuestas del Nexo Bot de WhatsApp. Requiere cabecera X-Bot-Secret."
           },
           "response": []
+        },
+        {
+          "name": "GET /bot/properties — Bot properties",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/bot/properties",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "bot",
+                "properties"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /bot/properties/:id — Bot property detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/bot/properties/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "bot",
+                "properties",
+                ":id"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /bot/tours — Bot tours",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/bot/tours",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "bot",
+                "tours"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /bot/tours/:id — Bot tour detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/bot/tours/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "bot",
+                "tours",
+                ":id"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /bot/leads — Create lead",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/bot/leads",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "bot",
+                "leads"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"\",\n  \"email\": \"\",\n  \"phone\": \"\",\n  \"propertyId\": \"\",\n  \"message\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /bot/leads — List leads",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/bot/leads",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "bot",
+                "leads"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /bot/conversations — Start conversation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/bot/conversations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "bot",
+                "conversations"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"leadId\": \"\",\n  \"channel\": \"whatsapp\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /bot/conversations/:id — Get conversation",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/bot/conversations/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "bot",
+                "conversations",
+                ":id"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -3681,8 +4250,14 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/register/guest",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "register", "guest"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register",
+                "guest"
+              ]
             },
             "description": "Registra un usuario con role 'guest' sin necesitar un sponsor. No requiere autenticación.\n\nRegisters a user with 'guest' role without requiring a sponsor. No auth needed."
           },
@@ -3708,10 +4283,4120 @@
             },
             "url": {
               "raw": "{{baseUrl}}/admin/users/{{userId}}/role",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "users", "{{userId}}", "role"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "users",
+                "{{userId}}",
+                "role"
+              ]
             },
             "description": "Actualiza el rol de un usuario. Solo accesible por super_admin y admin.\nRoles válidos: super_admin | admin | finance | sales | advisor | vendor | user | guest | bot\n\nUpdates a user's role. Accessible only by super_admin and admin.\nValid roles: super_admin | admin | finance | sales | advisor | vendor | user | guest | bot"
+          },
+          "response": []
+        },
+        {
+          "name": "POST /rbac/register-guest — Register guest",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/rbac/register-guest",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rbac",
+                "register-guest"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"\",\n  \"name\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /rbac/users/:id/role — Update user role",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/rbac/users/:id/role",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rbac",
+                "users",
+                ":id",
+                "role"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"role\": \"buyer\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Auth — 2FA",
+      "item": [
+        {
+          "name": "GET /auth/2fa/status — Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/2fa/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "2fa",
+                "status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /auth/2fa/setup — Setup",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/2fa/setup",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "2fa",
+                "setup"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"+541112345678\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /auth/2fa/verify-setup — Verify during setup",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/2fa/verify-setup",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "2fa",
+                "verify-setup"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"123456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /auth/2fa/verify — Verify at login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/2fa/verify",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "2fa",
+                "verify"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tempToken\": \"\",\n  \"code\": \"123456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /auth/2fa/disable — Disable",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/2fa/disable",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "2fa",
+                "disable"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"password\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Wallet",
+      "item": [
+        {
+          "name": "GET /wallet — Balance",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/wallet",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "wallet"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /wallet/transactions — History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/wallet/transactions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "wallet",
+                "transactions"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": ""
+                },
+                {
+                  "key": "type",
+                  "value": "",
+                  "description": "commission|withdrawal|purchase|refund"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /wallet/withdrawals — Request withdrawal",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/wallet/withdrawals",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "wallet",
+                "withdrawals"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 100,\n  \"paymentMethod\": \"bank_transfer\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /wallet/withdrawals/:id — Withdrawal detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/wallet/withdrawals/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "wallet",
+                "withdrawals",
+                ":id"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /wallet/withdrawals/:id — Cancel withdrawal",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/wallet/withdrawals/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "wallet",
+                "withdrawals",
+                ":id"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /wallet/crypto-prices — Crypto prices",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/wallet/crypto-prices",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "wallet",
+                "crypto-prices"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "POST /orders — Create order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orders",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"productId\": \"\",\n      \"quantity\": 1\n    }\n  ],\n  \"shippingAddressId\": \"\",\n  \"paymentMethod\": \"balance\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /orders — List my orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orders",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": ""
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "description": "pending|paid|shipped|delivered|cancelled"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /orders/:id — Order detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orders/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders",
+                ":id"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Invoices",
+      "item": [
+        {
+          "name": "GET /invoices — List my invoices",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/invoices",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "invoices"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /invoices/:id — Invoice detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/invoices/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "invoices",
+                ":id"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /invoices — Create invoice",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/invoices",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "invoices"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderId\": \"\",\n  \"items\": [],\n  \"tax\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /invoices/:id/status — Update status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/invoices/:id/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "invoices",
+                ":id",
+                "status"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"paid\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /invoices/:id/cancel — Cancel invoice",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/invoices/:id/cancel",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "invoices",
+                ":id",
+                "cancel"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /invoices/:id/pdf — View PDF",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/invoices/:id/pdf",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "invoices",
+                ":id",
+                "pdf"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /invoices/:id/download-pdf — Download PDF",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/invoices/:id/download-pdf",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "invoices",
+                ":id",
+                "download-pdf"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Leaderboard",
+      "item": [
+        {
+          "name": "GET /leaderboard/sellers — Top sellers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/leaderboard/sellers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "leaderboard",
+                "sellers"
+              ],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "monthly",
+                  "description": "weekly|monthly|quarterly|yearly"
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /leaderboard/referrers — Top referrers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/leaderboard/referrers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "leaderboard",
+                "referrers"
+              ],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "monthly",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /leaderboard/me — My position",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/leaderboard/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "leaderboard",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Achievements",
+      "item": [
+        {
+          "name": "GET /achievements — All achievements",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/achievements",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "achievements"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /achievements/me — My achievements",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/achievements/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "achievements",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /achievements/me/summary — Summary",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/achievements/me/summary",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "achievements",
+                "me",
+                "summary"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Payments",
+      "item": [
+        {
+          "name": "POST /payment/paypal/create — Create PayPal order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/payment/paypal/create",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payment",
+                "paypal",
+                "create"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 100,\n  \"currency\": \"USD\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /payment/paypal/capture — Capture PayPal order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/payment/paypal/capture",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payment",
+                "paypal",
+                "capture"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderId\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /payment/mercadopago/create — Create MercadoPago payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/payment/mercadopago/create",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payment",
+                "mercadopago",
+                "create"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 100\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /payment/mercadopago/webhook — Webhook (public)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/payment/mercadopago/webhook",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payment",
+                "mercadopago",
+                "webhook"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"payment\",\n  \"data\": {\n    \"id\": \"\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Commission Config",
+      "item": [
+        {
+          "name": "GET /commission-config — Get config",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/commission-config",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "commission-config"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /commission-config — Update config",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/commission-config",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "commission-config"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"levels\": [\n    {\n      \"level\": 1,\n      \"percentage\": 10\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /commission-config/levels — Get levels",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/commission-config/levels",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "commission-config",
+                "levels"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /commission-config/levels — Update levels",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/commission-config/levels",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "commission-config",
+                "levels"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"levels\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /commission-config/history — Change history",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/commission-config/history",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "commission-config",
+                "history"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /commission-config/reset — Reset to defaults",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/commission-config/reset",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "commission-config",
+                "reset"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Vendors — My Profile",
+      "item": [
+        {
+          "name": "POST /vendors/register — Register as vendor",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/vendors/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "vendors",
+                "register"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"businessName\": \"\",\n  \"contactEmail\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /vendors/me — My vendor profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/vendors/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "vendors",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /vendors/me/products — My products",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/vendors/me/products",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "vendors",
+                "me",
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /vendors/me/dashboard — My dashboard",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/vendors/me/dashboard",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "vendors",
+                "me",
+                "dashboard"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /vendors/me/payouts — Request payout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/vendors/me/payouts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "vendors",
+                "me",
+                "payouts"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 100,\n  \"paymentMethod\": \"bank_transfer\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin — Vendors",
+      "item": [
+        {
+          "name": "GET /admin/vendors — List all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/vendors",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "vendors"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": ""
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "description": "pending|approved|rejected|suspended"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/vendors/:id — Vendor detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/vendors/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "vendors",
+                ":id"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /admin/vendors/:id/approve — Approve",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/vendors/:id/approve",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "vendors",
+                ":id",
+                "approve"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /admin/vendors/:id/reject — Reject",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/vendors/:id/reject",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "vendors",
+                ":id",
+                "reject"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /admin/vendors/:id/suspend — Suspend",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/vendors/:id/suspend",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "vendors",
+                ":id",
+                "suspend"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /admin/vendors/:id/commission-rate — Set rate",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/vendors/:id/commission-rate",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "vendors",
+                ":id",
+                "commission-rate"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rate\": 0.1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin — Contracts",
+      "item": [
+        {
+          "name": "GET /admin/contracts — List all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/contracts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "contracts"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /admin/contracts — Create contract",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/contracts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "contracts"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"\",\n  \"content\": \"\",\n  \"type\": \"vendor_agreement\",\n  \"version\": \"1.0\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/contracts/:id — Contract detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/contracts/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "contracts",
+                ":id"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /admin/contracts/:id — Update contract",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/contracts/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "contracts",
+                ":id"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"\",\n  \"content\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/contracts/users/:userId — User acceptances",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/contracts/users/:userId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "contracts",
+                "users",
+                ":userId"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /admin/contracts/users/:userId/:contractId — Revoke acceptance",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/contracts/users/:userId/:contractId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "contracts",
+                "users",
+                ":userId",
+                ":contractId"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin — Properties",
+      "item": [
+        {
+          "name": "GET /admin/properties — List all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/properties",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "properties"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": ""
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "description": "available|booked|maintenance"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /admin/properties — Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/properties",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "properties"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"\",\n  \"description\": \"\",\n  \"type\": \"apartment\",\n  \"price\": 0,\n  \"location\": {},\n  \"capacity\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/properties/:id — Detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/properties/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "properties",
+                ":id"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /admin/properties/:id — Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/properties/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "properties",
+                ":id"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /admin/properties/:id — Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/properties/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "properties",
+                ":id"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /admin/properties/:id/images — Add images",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/properties/:id/images",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "properties",
+                ":id",
+                "images"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"images\": [\n    \"url1\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /admin/properties/:id/images/:imageId — Remove image",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/properties/:id/images/:imageId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "properties",
+                ":id",
+                "images",
+                ":imageId"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin — Tour Packages",
+      "item": [
+        {
+          "name": "GET /admin/tours — List all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/tours",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "tours"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": ""
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "description": "active|inactive|draft"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /admin/tours — Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/tours",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "tours"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"\",\n  \"description\": \"\",\n  \"destination\": \"\",\n  \"price\": 0,\n  \"duration\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/tours/:id — Detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/tours/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "tours",
+                ":id"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /admin/tours/:id — Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/tours/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "tours",
+                ":id"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /admin/tours/:id — Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/tours/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "tours",
+                ":id"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /admin/tours/:id/images — Add images",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/tours/:id/images",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "tours",
+                ":id",
+                "images"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"images\": [\n    \"url1\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /admin/tours/:id/images/:imageId — Remove image",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/tours/:id/images/:imageId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "tours",
+                ":id",
+                "images",
+                ":imageId"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/tours/:id/availability — Availability",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/tours/:id/availability",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "tours",
+                ":id",
+                "availability"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin — Reservations",
+      "item": [
+        {
+          "name": "GET /admin/reservations — List all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/reservations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "reservations"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": ""
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "description": "pending|confirmed|cancelled"
+                },
+                {
+                  "key": "type",
+                  "value": "",
+                  "description": "property|tour"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/reservations/:id — Detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/reservations/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "reservations",
+                ":id"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /admin/reservations/:id — Update",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/reservations/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "reservations",
+                ":id"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"confirmed\",\n  \"notes\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /admin/reservations/:id/confirm — Confirm",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/reservations/:id/confirm",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "reservations",
+                ":id",
+                "confirm"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /admin/reservations/:id/cancel — Cancel",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/reservations/:id/cancel",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "reservations",
+                ":id",
+                "cancel"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/reservations/stats — Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/reservations/stats",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "reservations",
+                "stats"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin — Roles & RBAC",
+      "item": [
+        {
+          "name": "POST /admin/users/:id/role — Assign role",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/users/:id/role",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "users",
+                ":id",
+                "role"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"role\": \"admin\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /admin/users/:id/role/:roleId — Revoke role",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/users/:id/role/:roleId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "users",
+                ":id",
+                "role",
+                ":roleId"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/roles — List roles",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/roles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "roles"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /admin/roles — Create role",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/roles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "roles"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"\",\n  \"permissions\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /admin/roles/:id — Update role",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/roles/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "roles",
+                ":id"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /admin/roles/:id — Delete role",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/roles/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "roles",
+                ":id"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin — Products",
+      "item": [
+        {
+          "name": "GET /admin/products — List all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/products",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": ""
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Search by name"
+                },
+                {
+                  "key": "category",
+                  "value": "",
+                  "description": "Filter by category"
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "description": "active|inactive"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /admin/products — Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/products",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "products"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"\",\n  \"description\": \"\",\n  \"price\": 0,\n  \"categoryId\": \"\",\n  \"stock\": 0,\n  \"images\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/products/:id — Detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/products/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "products",
+                ":id"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /admin/products/:id — Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/products/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "products",
+                ":id"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"\",\n  \"price\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /admin/products/:id — Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/products/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "products",
+                ":id"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /admin/products/:id/status — Toggle status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/products/:id/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "products",
+                ":id",
+                "status"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"active\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /admin/products/:id/images — Add images",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/products/:id/images",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "products",
+                ":id",
+                "images"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"images\": [\n    \"url1\",\n    \"url2\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /admin/products/:id/images/:imageId — Remove image",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/products/:id/images/:imageId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "products",
+                ":id",
+                "images",
+                ":imageId"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/products/:id/inventory — Inventory",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/products/:id/inventory",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "products",
+                ":id",
+                "inventory"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /admin/products/:id/inventory — Update inventory",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/products/:id/inventory",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "products",
+                ":id",
+                "inventory"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"stock\": 100\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/products/:id/inventory/movements — Movements",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/products/:id/inventory/movements",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "products",
+                ":id",
+                "inventory",
+                "movements"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin — Categories",
+      "item": [
+        {
+          "name": "GET /admin/categories — List all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/categories",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "categories"
+              ],
+              "query": [
+                {
+                  "key": "includeInactive",
+                  "value": "false",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /admin/categories — Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/categories",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "categories"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"\",\n  \"slug\": \"\",\n  \"description\": \"\",\n  \"icon\": \"\",\n  \"order\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/categories/:id — Detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/categories/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "categories",
+                ":id"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /admin/categories/:id — Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/categories/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "categories",
+                ":id"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /admin/categories/:id — Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/categories/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "categories",
+                ":id"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin — Stats & Users",
+      "item": [
+        {
+          "name": "GET /admin/users — List users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "users"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": ""
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Email or name"
+                },
+                {
+                  "key": "role",
+                  "value": "",
+                  "description": "Filter by role"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/users/:id — User detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/users/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "users",
+                ":id"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /admin/users/:id/status — Toggle status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/users/:id/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "users",
+                ":id",
+                "status"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"active\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /admin/users/:id/promote — Promote to admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/users/:id/promote",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "users",
+                ":id",
+                "promote"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/commissions/report — Commission report",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/commissions/report",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "commissions",
+                "report"
+              ],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "",
+                  "description": "ISO date"
+                },
+                {
+                  "key": "endDate",
+                  "value": "",
+                  "description": "ISO date"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Shipping & Tracking",
+      "item": [
+        {
+          "name": "PUT /orders/:id/shipping — Add tracking",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orders/:id/shipping",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders",
+                ":id",
+                "shipping"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"carrier\": \"fedex\",\n  \"trackingNumber\": \"1234567890\",\n  \"estimatedDelivery\": \"2026-08-01\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /orders/:id/tracking — Get tracking",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orders/:id/tracking",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders",
+                ":id",
+                "tracking"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /webhooks/shipping/:providerId — Shipping webhook (public)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/webhooks/shipping/:providerId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "webhooks",
+                "shipping",
+                ":providerId"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tracking_number\": \"\",\n  \"status\": \"in_transit\",\n  \"details\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Public — Landing",
+      "item": [
+        {
+          "name": "GET /public/products/:slug/landing — Product landing",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/public/products/:slug/landing",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "public",
+                "products",
+                ":slug",
+                "landing"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /public/products/:slug/landing/:referralCode — With referral",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/public/products/:slug/landing/:referralCode",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "public",
+                "products",
+                ":slug",
+                "landing",
+                ":referralCode"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /public/affiliates/products — Affiliate products",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/public/affiliates/products",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "public",
+                "affiliates",
+                "products"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Landing — Public",
+      "item": [
+        {
+          "name": "GET /landing-public — List landing pages",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/landing-public",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "landing-public"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /landing-public/:slug — Landing by slug",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/landing-public/:slug",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "landing-public",
+                ":slug"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /landing-public/:slug/ref/:referralCode — With referral",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/landing-public/:slug/ref/:referralCode",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "landing-public",
+                ":slug",
+                "ref",
+                ":referralCode"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Profile — Public",
+      "item": [
+        {
+          "name": "GET /profile-public/:userId — Public profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/profile-public/:userId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "profile-public",
+                ":userId"
+              ]
+            }
           },
           "response": []
         }
