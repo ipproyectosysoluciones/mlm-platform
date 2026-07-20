@@ -2,8 +2,17 @@ name: CD Backend
 
 on:
   push:
-    branches: [release]
+    branches: [release, development]
     tags: ['v*']
+
+# ── Required Secrets ─────────────────────────────────────────────────
+# DOCKERHUB_USERNAME  — Docker Hub username (used as image namespace)
+# DOCKERHUB_TOKEN     — Docker Hub access token (not password)
+# SSH_PRIVATE_KEY     — Private key for SSH deploy to production server
+# PROD_HOST           — Production server IP or hostname
+# PROD_USER           — SSH user on production server
+# PROD_PATH           — Absolute path to project on production server
+# ─────────────────────────────────────────────────────────────────────
 
 env:
   REGISTRY: docker.io
@@ -69,3 +78,66 @@ jobs:
           echo "docker pull ${{ env.BACKEND_IMAGE }}:${{ github.ref_name }}"
           echo "docker compose -f docker-compose.prod.yml up -d backend"
           echo "\`\`\`"
+
+  # ── Development Auto-Deploy ──────────────────────────────────────────
+  # Runs ONLY on push to development branch
+  # Deploys backend to dev server via SSH with health check verification
+  deploy-development:
+    runs-on: ubuntu-latest
+    needs: build-and-push-backend
+    if: github.ref == 'refs/heads/development'
+    environment: development
+    steps:
+      - name: Deploy to dev server via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.PROD_HOST }}
+          username: ${{ secrets.PROD_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            set -e
+
+            echo "🚀 Auto-deploying development build..."
+            echo "Image: ${{ env.BACKEND_IMAGE }}:development"
+
+            cd ${{ secrets.PROD_PATH }}
+
+            echo "📥 Pulling latest backend image..."
+            docker pull ${{ env.BACKEND_IMAGE }}:development
+
+            echo "🔄 Restarting backend container..."
+            VERSION=development docker compose -f docker-compose.prod.yml up -d --no-deps backend
+
+            echo "⏳ Waiting for backend to initialize..."
+            sleep 10
+
+      - name: Health check with retry
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.PROD_HOST }}
+          username: ${{ secrets.PROD_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            set -e
+
+            echo "🏥 Running health check..."
+
+            MAX_RETRIES=3
+            RETRY_DELAY=10
+            HEALTH_URL="http://localhost:3000/api/health"
+
+            for i in $(seq 1 $MAX_RETRIES); do
+              echo "  Attempt $i/$MAX_RETRIES..."
+              HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" $HEALTH_URL 2>/dev/null || echo "000")
+
+              if [ "$HTTP_CODE" = "200" ]; then
+                echo "✅ Backend is healthy (HTTP $HTTP_CODE)"
+                exit 0
+              fi
+
+              echo "  ⚠️  Got HTTP $HTTP_CODE, retrying in ${RETRY_DELAY}s..."
+              sleep $RETRY_DELAY
+            done
+
+            echo "❌ Health check failed after $MAX_RETRIES attempts"
+            exit 1
