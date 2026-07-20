@@ -437,74 +437,7 @@ router.get('/reservations/:userId', asyncHandler(getBotReservations));
  */
 router.get('/health', asyncHandler(getBotHealth));
 
-/**
- * @swagger
- * /bot/leads:
- *   post:
- *     summary: Persist a bot lead / Persistir un lead del bot
- *     description: |
- *       Persists a lead captured by the WhatsApp AI bot (Sophia / Max).
- *       Deduplicates by phone number (ON CONFLICT DO NOTHING).
- *     tags: [Bot]
- *     security:
- *       - botSecret: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - name
- *               - phone
- *               - agentName
- *               - language
- *               - source
- *             properties:
- *               name:
- *                 type: string
- *                 description: Lead name / Nombre del lead
- *               phone:
- *                 type: string
- *                 description: WhatsApp phone number / Número de WhatsApp
- *               email:
- *                 type: string
- *                 format: email
- *                 description: Lead email (optional) / Email del lead (opcional)
- *               areaOfInterest:
- *                 type: string
- *                 description: Area of interest / Área de interés
- *               agentName:
- *                 type: string
- *                 description: Bot agent name (Sophia or Max) / Nombre del agente bot
- *               language:
- *                 type: string
- *                 description: User language / Idioma del usuario
- *               source:
- *                 type: string
- *                 enum: [whatsapp_bot]
- *                 description: Lead source (must be whatsapp_bot) / Fuente del lead
- *     responses:
- *       201:
- *         description: Lead created / Lead creado
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                 leadId:
- *                   type: string
- *                 created:
- *                   type: boolean
- *       200:
- *         description: Lead already exists (duplicate phone) / Lead ya existe (teléfono duplicado)
- *       400:
- *         description: Missing or invalid required fields / Campos requeridos faltantes o inválidos
- *       401:
- *         description: Missing or invalid bot secret / Bot secret ausente o inválido
- */
+// Bot leads sub-router — @swagger annotation defined in bot-leads.routes.ts
 router.use('/leads', botLeadsRouter);
 
 export default router;

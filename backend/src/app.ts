@@ -11,7 +11,6 @@ import { swaggerSpec } from './config/swagger.js';
 import routes from './routes/index.js';
 import adminRoutes from './routes/admin.routes.js';
 import crmRoutes from './routes/crm.routes.js';
-import publicRoutes from './routes/public.routes.js';
 import landingRoutes from './routes/landing.routes.js';
 import paymentRoutes from './routes/payment.routes.js';
 import { resolveShortCode } from './controllers/GiftCardController.js';
