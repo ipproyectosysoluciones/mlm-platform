@@ -66,6 +66,14 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
     },
     servers: [
       {
+        url: 'https://api.nexoreal.com.co/api',
+        description: 'Servidor de Producción / Production Server',
+      },
+      {
+        url: 'https://staging-api.nexoreal.com.co/api',
+        description: 'Servidor de Staging / Staging Server',
+      },
+      {
         url: 'http://localhost:3000/api',
         description: 'Servidor de Desarrollo / Development Server',
       },
@@ -2498,7 +2506,7 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
       },
     ],
   },
-  apis: ['./src/routes/*.ts', './src/controllers/*.ts'],
+  apis: ['./src/routes/*.ts', './src/controllers/**/*.ts'],
 };
 
 export const swaggerSpec = swaggerJsdoc(options);

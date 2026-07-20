@@ -123,6 +123,11 @@ deploy.prod.sh
 *.tar.gz
 
 # ===========================================
+# Generated (swagger export)
+# ===========================================
+backend/swagger.json
+
+# ===========================================
 # AI Prompts & Knowledge Base
 # Files live at bot/src/prompt_kb/ and are baked into the Docker image.
 # No longer gitignored — must be tracked to be included in the Docker build context.
