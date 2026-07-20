@@ -11,13 +11,16 @@ import { swaggerSpec } from './config/swagger.js';
 import routes from './routes/index.js';
 import adminRoutes from './routes/admin.routes.js';
 import crmRoutes from './routes/crm.routes.js';
-import publicRoutes from './routes/public.routes.js';
 import landingRoutes from './routes/landing.routes.js';
 import paymentRoutes from './routes/payment.routes.js';
 import { resolveShortCode } from './controllers/GiftCardController.js';
 import { asyncHandler } from './middleware/asyncHandler.js';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware.js';
-import type { AuthenticatedRequest } from './middleware/auth.middleware.js';
+import {
+  authenticate,
+  requireAdmin,
+  type AuthenticatedRequest,
+} from './middleware/auth.middleware.js';
 
 const app: Application = express();
 const isTest = process.env.NODE_ENV === 'test';
@@ -211,7 +214,6 @@ app.use(
 app.use('/api', routes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/crm', crmRoutes);
-app.use('/api/public', publicRoutes);
 app.use('/api', landingRoutes);
 app.use('/api/payment', paymentRoutes);
 
@@ -245,30 +247,33 @@ if (process.env.SENTRY_DSN && process.env.NODE_ENV !== 'test') {
   Sentry.setupExpressErrorHandler(app);
 }
 
-// Debug: Show all routes
-app.get('/debug/routes', (req, res) => {
-  const routes: string[] = [];
-  // Express internal router stack has no public type definitions
-  // Los tipos internos del router de Express no tienen definiciones públicas
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  app._router?.stack?.forEach((middleware: any) => {
-    if (middleware.route) {
-      routes.push(
-        `${Object.keys(middleware.route.methods).join(', ').toUpperCase()} ${middleware.route.path}`
-      );
-    } else if (middleware.name === 'router') {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      middleware.handle?.stack?.forEach((handler: any) => {
-        if (handler.route) {
-          routes.push(
-            `${Object.keys(handler.route.methods).join(', ').toUpperCase()} ${handler.route.path}`
-          );
-        }
-      });
-    }
+// Debug: Show all routes (protected: admin only, non-production only)
+// Ruta de debug: muestra todas las rutas (protegida: solo admin, solo en no-producción)
+if (config.nodeEnv !== 'production') {
+  app.get('/debug/routes', authenticate, requireAdmin, (req, res) => {
+    const routes: string[] = [];
+    // Express internal router stack has no public type definitions
+    // Los tipos internos del router de Express no tienen definiciones públicas
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    app._router?.stack?.forEach((middleware: any) => {
+      if (middleware.route) {
+        routes.push(
+          `${Object.keys(middleware.route.methods).join(', ').toUpperCase()} ${middleware.route.path}`
+        );
+      } else if (middleware.name === 'router') {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        middleware.handle?.stack?.forEach((handler: any) => {
+          if (handler.route) {
+            routes.push(
+              `${Object.keys(handler.route.methods).join(', ').toUpperCase()} ${handler.route.path}`
+            );
+          }
+        });
+      }
+    });
+    res.json({ routes });
   });
-  res.json({ routes });
-});
+}
 
 // Error handlers
 app.use(notFoundHandler);

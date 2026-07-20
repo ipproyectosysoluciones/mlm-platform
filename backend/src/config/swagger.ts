@@ -66,6 +66,14 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
     },
     servers: [
       {
+        url: 'https://api.nexoreal.com.co/api',
+        description: 'Servidor de Producción / Production Server',
+      },
+      {
+        url: 'https://staging-api.nexoreal.com.co/api',
+        description: 'Servidor de Staging / Staging Server',
+      },
+      {
         url: 'http://localhost:3000/api',
         description: 'Servidor de Desarrollo / Development Server',
       },
@@ -84,6 +92,13 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
           name: 'X-Bot-Secret',
           description:
             'Bot secret key from BOT_SECRET env variable — used by Nexo Bot to authenticate / Clave secreta del bot desde la variable BOT_SECRET — usada por el Nexo Bot para autenticarse',
+        },
+        headerSecret: {
+          type: 'apiKey',
+          in: 'header',
+          name: 'X-Internal-Secret',
+          description:
+            'Internal webhook secret for service-to-service communication / Secreto interno para comunicación entre servicios',
         },
       },
       schemas: {
@@ -2496,9 +2511,34 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
         description:
           'Nexo Bot API / API del Nexo Bot - Endpoints para el bot de WhatsApp: propiedades y tours (Sprint 6)',
       },
+      {
+        name: 'Payment',
+        description:
+          'Payment Gateways / Pasarelas de Pago - PayPal & MercadoPago integration (Sprint 16)',
+      },
+      {
+        name: 'Address',
+        description:
+          'Shipping Addresses / Direcciones de Envío - CRUD de direcciones del usuario (Sprint 16)',
+      },
+      {
+        name: 'Shipping',
+        description:
+          'Shipment Tracking / Seguimiento de Envíos - Tracking & carrier webhooks (Sprint 16)',
+      },
+      {
+        name: 'Webhook Internal',
+        description:
+          'Internal Webhooks / Webhooks Internos - n8n & reservation confirm (Sprint 16)',
+      },
+      {
+        name: 'Bot Leads',
+        description:
+          'Bot Lead Capture / Captura de Leads del Bot - WhatsApp lead persistence (Sprint 16)',
+      },
     ],
   },
-  apis: ['./src/routes/*.ts', './src/controllers/*.ts'],
+  apis: ['./src/routes/*.ts', './src/controllers/**/*.ts'],
 };
 
 export const swaggerSpec = swaggerJsdoc(options);

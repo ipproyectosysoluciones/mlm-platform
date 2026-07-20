@@ -16,11 +16,85 @@ import { logger } from '../utils/logger.js';
 const router = Router();
 
 /**
- * @route   POST /api/bot/leads
- * @desc    Persist a lead captured by the WhatsApp AI bot (Sophia / Max)
- *          Persistir un lead capturado por el bot de WhatsApp con IA (Sophia / Max)
- * @access  Bot-only (x-bot-secret) — already enforced by parent router
- * @body    { name, phone, email?, areaOfInterest?, agentName, language, source }
+ * @swagger
+ * /bot/leads:
+ *   post:
+ *     summary: Create bot lead / Crear lead del bot
+ *     description: Persists a lead captured by the WhatsApp AI bot (Sophia / Max). Deduplicates by phone.
+ *     tags: [Bot Leads]
+ *     security:
+ *       - botSecret: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - phone
+ *               - agentName
+ *               - language
+ *               - source
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: Lead name / Nombre del lead
+ *               phone:
+ *                 type: string
+ *                 description: Phone number / Número de teléfono
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: Email address (optional, auto-generated if missing) / Correo electrónico (opcional)
+ *               areaOfInterest:
+ *                 type: string
+ *                 description: Area of interest / Área de interés
+ *               agentName:
+ *                 type: string
+ *                 description: Bot agent name (Sophia or Max) / Nombre del agente bot
+ *               language:
+ *                 type: string
+ *                 description: Conversation language / Idioma de la conversación
+ *               source:
+ *                 type: string
+ *                 enum:
+ *                   - whatsapp_bot
+ *                 description: Lead source / Fuente del lead
+ *     responses:
+ *       201:
+ *         description: Lead created / Lead creado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 leadId:
+ *                   type: string
+ *                   format: uuid
+ *                 created:
+ *                   type: boolean
+ *                   description: true if newly created / true si fue creado
+ *       200:
+ *         description: Lead already exists (duplicate phone) / Lead ya existe (teléfono duplicado)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                 created:
+ *                   type: boolean
+ *                   description: false — duplicate / false — duplicado
+ *       400:
+ *         description: Missing or invalid required fields / Campos requeridos faltantes o inválidos
+ *       500:
+ *         description: Server misconfiguration or internal error / Error de configuración o interno
  */
 router.post(
   '/',
