@@ -6,6 +6,7 @@
  */
 
 import { Router } from 'express';
+import { adminLimiter } from '../middleware/rateLimit.js';
 import {
   getTemplates,
   createTemplate,
@@ -16,6 +17,8 @@ import {
 import { requireAdmin, authenticate } from '../middleware/auth.middleware.js';
 
 const router = Router();
+
+router.use(adminLimiter);
 
 /**
  * @swagger

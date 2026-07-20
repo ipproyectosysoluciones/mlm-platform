@@ -1,4 +1,5 @@
 import { Router, Router as ExpressRouter } from 'express';
+import { adminLimiter } from '../middleware/rateLimit.js';
 import { authenticate, requireRole } from '../middleware/auth.middleware.js';
 import {
   getGlobalStats,
@@ -16,6 +17,7 @@ import { USER_ROLES, ADMIN_ROLES } from '../types/index.js';
 
 const router: ExpressRouter = Router();
 
+router.use(adminLimiter);
 router.use(authenticate);
 router.use(requireRole(...(ADMIN_ROLES as import('../types/index.js').UserRole[])));
 

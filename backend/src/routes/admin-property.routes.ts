@@ -9,7 +9,7 @@
  * @author MLM Development Team
  */
 import { Router } from 'express';
-import rateLimit from 'express-rate-limit';
+import { adminLimiter } from '../middleware/rateLimit.js';
 import { authenticate, requireAdmin } from '../middleware/auth.middleware.js';
 import {
   getProperties,
@@ -23,27 +23,7 @@ import { uploadImages } from '../middleware/upload.js';
 
 const router = Router();
 
-/**
- * Rate limiter for admin property endpoints.
- * Stricter than the global limiter (200 req/min) since these routes perform
- * authorization checks and write operations.
- *
- * Rate limit para endpoints admin de propiedades.
- * Más estricto que el global (200 req/min) ya que estas rutas realizan
- * verificación de autorización y operaciones de escritura.
- */
-const adminPropertyLimiter = rateLimit({
-  windowMs: 60 * 1000, // 1 minute / 1 minuto
-  max: process.env.NODE_ENV === 'test' ? 1000 : 60,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: {
-    success: false,
-    error: { code: 'RATE_LIMIT', message: 'Too many requests. Please try again later.' },
-  },
-});
-
-router.use(adminPropertyLimiter);
+router.use(adminLimiter);
 
 /**
  * Enforce JWT authentication and admin role for all routes in this router.
