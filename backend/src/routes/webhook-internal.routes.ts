@@ -51,12 +51,47 @@ const verifyInternalSecret = (req: Request, res: Response, next: NextFunction): 
 // ============================================
 
 /**
- * POST /webhooks/internal/reservation-confirm
- * @description Confirm a reservation (called by n8n after payment verification)
- *              Confirmar una reserva (llamado por n8n después de verificar el pago)
- * @security X-Internal-Secret header required / Requiere encabezado X-Internal-Secret
- * @body {{ reservationId: string }} Reservation UUID / UUID de la reserva
- * @returns {{ success: boolean, reservationId: string, status: string }}
+ * @swagger
+ * /webhooks/internal/reservation-confirm:
+ *   post:
+ *     summary: Confirm reservation / Confirmar reserva
+ *     description: Confirms a reservation after payment verification (called by n8n)
+ *     tags: [Webhook Internal]
+ *     security:
+ *       - headerSecret: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - reservationId
+ *             properties:
+ *               reservationId:
+ *                 type: string
+ *                 format: uuid
+ *                 description: Reservation UUID / UUID de la reserva
+ *     responses:
+ *       200:
+ *         description: Reservation confirmed / Reserva confirmada
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 reservationId:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ *       400:
+ *         description: Missing reservationId / reservationId requerido
+ *       401:
+ *         description: Missing or invalid X-Internal-Secret / Secreto interno faltante o inválido
+ *       500:
+ *         description: Internal error / Error interno
  */
 router.post(
   '/reservation-confirm',
@@ -85,16 +120,74 @@ router.post(
 );
 
 /**
- * POST /webhooks/internal/n8n-action
- * @description Process inbound n8n workflow action — idempotent execution persistence
- *              Procesar acción de workflow n8n entrante — persistencia idempotente de ejecución
- * @security X-Internal-Secret header required / Requiere encabezado X-Internal-Secret
- * @body {{ leadId: string, workflowName: string, actionType: string, n8nExecutionId: string,
- *          status: string, payload?: object, errorMessage?: string }}
- * @returns 201 {{ success: true, executionId: string, leadId: string, idempotent: false }}
- * @returns 200 {{ success: true, executionId: string, leadId: string, idempotent: true }}
- * @returns 400 {{ success: false, error: string }} — missing required fields
- * @returns 422 {{ success: false, error: string }} — unknown lead
+ * @swagger
+ * /webhooks/internal/n8n-action:
+ *   post:
+ *     summary: Process n8n workflow action / Procesar acción de workflow n8n
+ *     description: Receives and persists an n8n workflow execution action (idempotent)
+ *     tags: [Webhook Internal]
+ *     security:
+ *       - headerSecret: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - leadId
+ *               - workflowName
+ *               - actionType
+ *               - n8nExecutionId
+ *               - status
+ *             properties:
+ *               leadId:
+ *                 type: string
+ *                 format: uuid
+ *                 description: Lead UUID / UUID del lead
+ *               workflowName:
+ *                 type: string
+ *                 description: n8n workflow name / Nombre del workflow n8n
+ *               actionType:
+ *                 type: string
+ *                 description: Action type / Tipo de acción
+ *               n8nExecutionId:
+ *                 type: string
+ *                 description: n8n execution ID / ID de ejecución de n8n
+ *               status:
+ *                 type: string
+ *                 description: Execution status / Estado de la ejecución
+ *               payload:
+ *                 type: object
+ *                 description: Optional additional data / Datos adicionales opcionales
+ *               errorMessage:
+ *                 type: string
+ *                 description: Error message if failed / Mensaje de error si falló
+ *     responses:
+ *       201:
+ *         description: Execution recorded / Ejecución registrada
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 executionId:
+ *                   type: string
+ *                 leadId:
+ *                   type: string
+ *                 idempotent:
+ *                   type: boolean
+ *                   description: true if execution was already recorded / true si ya estaba registrada
+ *       200:
+ *         description: Idempotent — execution already recorded / Idempotente — ejecución ya registrada
+ *       400:
+ *         description: Missing required fields / Campos requeridos faltantes
+ *       401:
+ *         description: Missing or invalid X-Internal-Secret / Secreto interno faltante o inválido
+ *       422:
+ *         description: Unknown lead / Lead desconocido
  */
 router.post('/n8n-action', verifyInternalSecret, handleN8nAction);
 
