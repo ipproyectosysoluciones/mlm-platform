@@ -135,6 +135,10 @@ app.use('/api', (req, res, next) => {
   if (req.path.startsWith('/v1')) {
     return next();
   }
+  // Skip Swagger docs — /api-docs has its own redirect route below
+  if (req.originalUrl === '/api-docs' || req.originalUrl.startsWith('/api-docs?')) {
+    return next();
+  }
   // Redirect webhook POST/PUT from /api/payment/* to /api/v1/payment/*
   if ((req.method === 'POST' || req.method === 'PUT') && req.path.startsWith('/payment/')) {
     const target = `/api/v1${req.originalUrl.replace(/^\/api/, '')}`;
