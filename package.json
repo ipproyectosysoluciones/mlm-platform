@@ -58,7 +58,9 @@
       "@babel/core": ">=7.29.6 <8.0.0",
       "esbuild": ">=0.28.1",
       "baileys": ">=7.0.0-rc12",
-      "@opentelemetry/core": ">=2.8.0"
+      "@opentelemetry/core": ">=2.8.0",
+      "fast-uri": ">=0.2.3",
+      "fast-uri": ">=0.2.3"
     },
     "ignoredBuiltDependencies": [
       "@scarf/scarf",
