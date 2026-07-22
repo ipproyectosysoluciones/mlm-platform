@@ -8,10 +8,10 @@
  *
  * @example
  * // EN: Create a template
- * POST /api/v1/email-templates { name, subjectLine, htmlContent }
+ * POST /api/email-templates { name, subjectLine, htmlContent }
  *
  * // ES: Crear un template
- * POST /api/v1/email-templates { name, subjectLine, htmlContent }
+ * POST /api/email-templates { name, subjectLine, htmlContent }
  */
 import { Response } from 'express';
 import { emailCampaignService } from '../services/EmailCampaignService.js';

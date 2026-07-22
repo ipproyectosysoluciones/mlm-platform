@@ -4,6 +4,19 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
+## [3.3.0] - 2026-07-21
+
+### Added — Sprint 18: Quick Wins
+
+- **Postman Collection Sync** — Collection actualizada de 126 → 255 endpoints para cubrir toda la API
+- **CI/CD Auto-deploy** — Deploy automático habilitado en branch `development`
+
+### Fixed
+
+- **JSDoc `/v1/` misleading paths** — Corregidos comentarios `@route` en `CartController.ts` y `EmailCampaignController.ts` que referenciaban paths `/api/v1/` inexistentes; rutas reales usan prefijo `/api`
+
+---
+
 ## [3.2.0] - 2026-06-25
 
 ### Added — Sprint 12: Order History & Quality
