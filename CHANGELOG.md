@@ -4,6 +4,27 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
+## [3.4.0] - 2026-07-22
+
+### Added — Sprint 19: API Versioning
+
+- **API version prefix `/api/v1/`** — All 255 endpoints canonical under `/api/v1/`; legacy `/api/*` paths remain active with 307 redirects during deprecation window
+- **Dual-mount Express Router** — `/api/v1` primary mount + `/api` legacy mount sharing identical route handlers
+- **307 redirect middleware** — GET `/api/*` → `/api/v1/*` and POST/PUT `/api/payment/*` → `/api/v1/payment/*` (skipped in test env)
+- **Swagger UI relocated** — `/api/v1/docs` (canonical), `/api-docs` legacy with 307 redirect
+- **Frontend baseURL migrated** — `client.ts` now targets `/api/v1`
+- **Bot baseURL migrated** — `mlm-api.service.ts` now targets `/api/v1`
+- **Rate limiters dual-mounted** — Global, auth, 2FA, and order limiters on both `/api/v1/*` and `/api/*`
+- **Postman collection synced** — `baseUrl` updated to `/api/v1`; 255 endpoints now target versioned paths
+- **22 integration test URLs migrated** — All test files updated from `/api/*` to `/api/v1/*`
+
+### Fixed
+
+- **Swagger redirect** — `/api-docs` now correctly redirects to `/api/v1/docs` (skip added in redirect middleware)
+- **Integration test CI failures** — Redirect middleware skipped in `NODE_ENV=test` to prevent 307 responses in supertest; api-versioning redirect tests use standalone Express app
+
+---
+
 ## [3.3.0] - 2026-07-21
 
 ### Added — Sprint 18: Quick Wins
