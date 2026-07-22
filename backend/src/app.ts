@@ -7,7 +7,7 @@ import rateLimit from 'express-rate-limit';
 import swaggerUi from 'swagger-ui-express';
 import * as Sentry from '@sentry/node';
 import { config } from './config/env.js';
-import { swaggerSpec } from './config/swagger.js';
+import { getSwaggerSpec } from './config/swagger.js';
 import routes from './routes/index.js';
 import adminRoutes from './routes/admin.routes.js';
 import crmRoutes from './routes/crm.routes.js';
@@ -200,15 +200,22 @@ if (!isTest) {
   app.use('/api/auth/2fa/verify-setup', twoFALimiter);
 }
 
-// Swagger UI
-app.use(
-  '/api-docs',
-  swaggerUi.serve,
-  swaggerUi.setup(swaggerSpec, {
-    customCss: '.swagger-ui .topbar { display: none }',
-    customSiteTitle: 'MLM API Documentation',
-  })
-);
+// Swagger UI — lazy spec generation avoids glob Symbol error in Jest/CI
+let _swaggerSetup: ReturnType<typeof swaggerUi.setup> | null = null;
+app.use('/api-docs', swaggerUi.serve, (req: Request, res: Response, next: NextFunction) => {
+  if (!_swaggerSetup) {
+    try {
+      _swaggerSetup = swaggerUi.setup(getSwaggerSpec(), {
+        customCss: '.swagger-ui .topbar { display: none }',
+        customSiteTitle: 'MLM API Documentation',
+      });
+    } catch (err) {
+      logger.error({ err }, 'Failed to initialize Swagger UI');
+      return res.status(503).json({ error: 'Swagger UI unavailable' });
+    }
+  }
+  _swaggerSetup(req, res, next);
+});
 
 // API Routes
 app.use('/api', routes);

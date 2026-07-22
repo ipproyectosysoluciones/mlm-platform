@@ -13,7 +13,8 @@ const root = resolve(__dirname, '..');
 
 try {
   // Import the full swagger spec (includes all components, security schemes, tags)
-  const { swaggerSpec } = await import(resolve(root, 'src/config/swagger.ts'));
+  const { getSwaggerSpec } = await import(resolve(root, 'src/config/swagger.ts'));
+  const swaggerSpec = getSwaggerSpec();
   const outPath = resolve(root, 'swagger.json');
   writeFileSync(outPath, JSON.stringify(swaggerSpec, null, 2) + '\n');
   console.log(`✓ swagger.json exported → ${outPath}`);
