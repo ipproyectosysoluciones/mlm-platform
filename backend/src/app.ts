@@ -130,32 +130,36 @@ const globalLimiter = rateLimit({
 
 // --- 307 Legacy Redirect Middleware (runs before route mounts) ---
 // Redirects GET requests from /api/* to /api/v1/* and webhook POST/PUT
-app.use('/api', (req, res, next) => {
-  // Skip if already on /api/v1 (canonical path)
-  if (req.path.startsWith('/v1')) {
-    return next();
-  }
-  // Skip Swagger docs — /api-docs has its own redirect route below
-  if (req.originalUrl === '/api-docs' || req.originalUrl.startsWith('/api-docs?')) {
-    return next();
-  }
-  // Redirect webhook POST/PUT from /api/payment/* to /api/v1/payment/*
-  if ((req.method === 'POST' || req.method === 'PUT') && req.path.startsWith('/payment/')) {
-    const target = `/api/v1${req.originalUrl.replace(/^\/api/, '')}`;
-    res.redirect(307, target);
-    return;
-  }
-  // Redirect GET requests from /api/* to /api/v1/*
-  if (req.method === 'GET') {
-    const queryIndex = req.originalUrl.indexOf('?');
-    const query = queryIndex !== -1 ? req.originalUrl.substring(queryIndex) : '';
-    const target = `/api/v1${req.path}${query}`;
-    res.redirect(307, target);
-    return;
-  }
-  // Non-GET, non-webhook: pass through to legacy mount
-  next();
-});
+// Skipped in test environment — integration tests use supertest which
+// doesn't follow redirects, so the middleware would break /api/* test URLs.
+if (!isTest) {
+  app.use('/api', (req, res, next) => {
+    // Skip if already on /api/v1 (canonical path)
+    if (req.path.startsWith('/v1')) {
+      return next();
+    }
+    // Skip Swagger docs — /api-docs has its own redirect route below
+    if (req.originalUrl === '/api-docs' || req.originalUrl.startsWith('/api-docs?')) {
+      return next();
+    }
+    // Redirect webhook POST/PUT from /api/payment/* to /api/v1/payment/*
+    if ((req.method === 'POST' || req.method === 'PUT') && req.path.startsWith('/payment/')) {
+      const target = `/api/v1${req.originalUrl.replace(/^\/api/, '')}`;
+      res.redirect(307, target);
+      return;
+    }
+    // Redirect GET requests from /api/* to /api/v1/*
+    if (req.method === 'GET') {
+      const queryIndex = req.originalUrl.indexOf('?');
+      const query = queryIndex !== -1 ? req.originalUrl.substring(queryIndex) : '';
+      const target = `/api/v1${req.path}${query}`;
+      res.redirect(307, target);
+      return;
+    }
+    // Non-GET, non-webhook: pass through to legacy mount
+    next();
+  });
+}
 
 // Apply global rate limiter to both prefixes
 app.use('/api/v1', globalLimiter);
