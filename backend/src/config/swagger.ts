@@ -66,15 +66,15 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
     },
     servers: [
       {
-        url: 'https://api.nexoreal.com.co/api',
+        url: 'https://api.nexoreal.com.co/api/v1',
         description: 'Servidor de Producción / Production Server',
       },
       {
-        url: 'https://staging-api.nexoreal.com.co/api',
+        url: 'https://staging-api.nexoreal.com.co/api/v1',
         description: 'Servidor de Staging / Staging Server',
       },
       {
-        url: 'http://localhost:3000/api',
+        url: 'http://localhost:3000/api/v1',
         description: 'Servidor de Desarrollo / Development Server',
       },
     ],
