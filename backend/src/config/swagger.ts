@@ -2541,4 +2541,16 @@ Esta API usa JWT Bearer tokens. Incluye el token en el header:
   apis: ['./src/routes/*.ts', './src/controllers/**/*.ts'],
 };
 
-export const swaggerSpec = swaggerJsdoc(options);
+/**
+ * Lazy-loaded Swagger spec — avoids Symbol-to-string error in Jest/CI
+ * when glob@7.x encounters the apis patterns during module import.
+ * The spec is generated once on first access, then cached.
+ */
+let _swaggerSpec: ReturnType<typeof swaggerJsdoc> | null = null;
+
+export function getSwaggerSpec() {
+  if (!_swaggerSpec) {
+    _swaggerSpec = swaggerJsdoc(options);
+  }
+  return _swaggerSpec;
+}
