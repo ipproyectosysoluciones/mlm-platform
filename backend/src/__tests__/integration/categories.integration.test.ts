@@ -27,7 +27,7 @@ describe('Category Integration Tests', () => {
   // ============================================================
   describe('GET /api/categories (Public)', () => {
     it('should return empty array when no categories exist', async () => {
-      const res = await testAgent.get('/api/categories').expect(200);
+      const res = await testAgent.get('/api/v1/categories').expect(200);
       expect(res.body.success).toBe(true);
       expect(Array.isArray(res.body.data)).toBe(true);
     });
@@ -42,13 +42,13 @@ describe('Category Integration Tests', () => {
         sortOrder: 0,
       });
 
-      const res = await testAgent.get('/api/categories').expect(200);
+      const res = await testAgent.get('/api/v1/categories').expect(200);
       expect(res.body.success).toBe(true);
       expect(Array.isArray(res.body.data)).toBe(true);
     });
 
     it('should allow unauthenticated access', async () => {
-      const res = await testAgent.get('/api/categories').expect(200);
+      const res = await testAgent.get('/api/v1/categories').expect(200);
       expect(res.body.success).toBe(true);
     });
   });
@@ -75,7 +75,7 @@ describe('Category Integration Tests', () => {
         sortOrder: 0,
       });
 
-      const res = await testAgent.get('/api/categories/tree').expect(200);
+      const res = await testAgent.get('/api/v1/categories/tree').expect(200);
       expect(res.body.success).toBe(true);
       expect(res.body.data).toHaveLength(1);
       expect(res.body.data[0].children).toHaveLength(1);
@@ -161,7 +161,7 @@ describe('Category Integration Tests', () => {
   describe('POST /api/admin/categories (Admin)', () => {
     it('should create root category (201)', async () => {
       const res = await testAgent
-        .post('/api/admin/categories')
+        .post('/api/v1/admin/categories')
         .set(adminHeaders)
         .send({
           name: 'New Category',
@@ -182,7 +182,7 @@ describe('Category Integration Tests', () => {
       });
 
       const res = await testAgent
-        .post('/api/admin/categories')
+        .post('/api/v1/admin/categories')
         .set(adminHeaders)
         .send({
           name: 'Child Category',
@@ -198,7 +198,7 @@ describe('Category Integration Tests', () => {
     it('should reject if parent not found (400)', async () => {
       const fakeId = '00000000-0000-0000-0000-000000000000';
       const res = await testAgent
-        .post('/api/admin/categories')
+        .post('/api/v1/admin/categories')
         .set(adminHeaders)
         .send({
           name: 'Bad Child',
@@ -212,7 +212,7 @@ describe('Category Integration Tests', () => {
 
     it('should reject non-admin user (403)', async () => {
       const res = await testAgent
-        .post('/api/admin/categories')
+        .post('/api/v1/admin/categories')
         .set(regularHeaders)
         .send({
           name: 'Test',
@@ -225,7 +225,7 @@ describe('Category Integration Tests', () => {
 
     it('should reject unauthenticated request (401)', async () => {
       const res = await testAgent
-        .post('/api/admin/categories')
+        .post('/api/v1/admin/categories')
         .send({
           name: 'Test',
           slug: 'test-cat',

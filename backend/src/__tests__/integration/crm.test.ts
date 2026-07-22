@@ -14,14 +14,14 @@ describe('CRM Integration Tests', () => {
       const user = await createTestUser();
       const headers = await getAuthHeaders(user);
 
-      const res = await testAgent.get('/api/crm/stats').set(headers).expect(200);
+      const res = await testAgent.get('/api/v1/crm/stats').set(headers).expect(200);
 
       expect(res.body.success).toBe(true);
       expect(res.body.data).toHaveProperty('total');
     });
 
     it('should reject unauthenticated request', async () => {
-      const res = await testAgent.get('/api/crm/stats').expect(401);
+      const res = await testAgent.get('/api/v1/crm/stats').expect(401);
 
       expect(res.body.success).toBe(false);
     });
@@ -33,7 +33,7 @@ describe('CRM Integration Tests', () => {
       const headers = await getAuthHeaders(user);
 
       const res = await testAgent
-        .post('/api/crm')
+        .post('/api/v1/crm')
         .set(headers)
         .send({
           contactName: 'Test User',
@@ -48,7 +48,7 @@ describe('CRM Integration Tests', () => {
       const headers = await getAuthHeaders(user);
 
       const res = await testAgent
-        .post('/api/crm')
+        .post('/api/v1/crm')
         .set(headers)
         .send({
           contactName: 'Test User',
@@ -64,7 +64,7 @@ describe('CRM Integration Tests', () => {
       const headers = await getAuthHeaders(user);
 
       const res = await testAgent
-        .post('/api/crm')
+        .post('/api/v1/crm')
         .set(headers)
         .send({
           contactEmail: 'test@example.com',
@@ -79,7 +79,7 @@ describe('CRM Integration Tests', () => {
       const headers = await getAuthHeaders(user);
 
       const res = await testAgent
-        .post('/api/crm')
+        .post('/api/v1/crm')
         .set(headers)
         .send({
           contactName: 'Test User',
@@ -91,7 +91,7 @@ describe('CRM Integration Tests', () => {
 
     it('should reject unauthenticated request', async () => {
       const res = await testAgent
-        .post('/api/crm')
+        .post('/api/v1/crm')
         .send({
           contactName: 'Test User',
           contactEmail: 'test@example.com',
@@ -107,7 +107,7 @@ describe('CRM Integration Tests', () => {
       const user = await createTestUser();
       const headers = await getAuthHeaders(user);
 
-      const res = await testAgent.get('/api/crm').set(headers).expect(200);
+      const res = await testAgent.get('/api/v1/crm').set(headers).expect(200);
 
       expect(res.body.success).toBe(true);
     });
@@ -116,7 +116,7 @@ describe('CRM Integration Tests', () => {
       const user = await createTestUser();
       const headers = await getAuthHeaders(user);
 
-      const res = await testAgent.get('/api/crm').set(headers).expect(200);
+      const res = await testAgent.get('/api/v1/crm').set(headers).expect(200);
 
       expect(res.body.success).toBe(true);
     });
@@ -127,7 +127,7 @@ describe('CRM Integration Tests', () => {
       const user = await createTestUser();
       const headers = await getAuthHeaders(user);
 
-      const res = await testAgent.get('/api/crm/non-existent-id').set(headers).expect(404);
+      const res = await testAgent.get('/api/v1/crm/non-existent-id').set(headers).expect(404);
 
       expect(res.body.success).toBe(false);
     });
@@ -139,7 +139,7 @@ describe('CRM Integration Tests', () => {
       const headers = await getAuthHeaders(user);
 
       const res = await testAgent
-        .put('/api/crm/non-existent-id')
+        .put('/api/v1/crm/non-existent-id')
         .set(headers)
         .send({ contactName: 'Updated Name' })
         .expect(404);
@@ -153,13 +153,13 @@ describe('CRM Integration Tests', () => {
       const user = await createTestUser();
       const headers = await getAuthHeaders(user);
 
-      const res = await testAgent.get('/api/crm/tasks').set(headers).expect(200);
+      const res = await testAgent.get('/api/v1/crm/tasks').set(headers).expect(200);
 
       expect(res.body.success).toBe(true);
     });
 
     it('should reject unauthenticated request', async () => {
-      const res = await testAgent.get('/api/crm/tasks').expect(401);
+      const res = await testAgent.get('/api/v1/crm/tasks').expect(401);
 
       expect(res.body.success).toBe(false);
     });
@@ -171,7 +171,7 @@ describe('CRM Integration Tests', () => {
       const headers = await getAuthHeaders(user);
 
       const res = await testAgent
-        .post('/api/crm/non-existent-lead/tasks')
+        .post('/api/v1/crm/non-existent-lead/tasks')
         .set(headers)
         .send({})
         .expect(400);
@@ -183,7 +183,7 @@ describe('CRM Integration Tests', () => {
   describe('POST /api/crm/:leadId/communications (Add Communication)', () => {
     it('should reject unauthenticated request', async () => {
       const res = await testAgent
-        .post('/api/crm/some-lead/communications')
+        .post('/api/v1/crm/some-lead/communications')
         .send({
           type: 'call',
           subject: 'Test',

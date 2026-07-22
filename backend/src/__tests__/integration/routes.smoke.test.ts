@@ -25,38 +25,38 @@ describe('Route Mounting Smoke Tests / Pruebas de Montaje de Rutas', () => {
    * Una respuesta 401 confirma que la ruta ESTÁ montada pero requiere autenticación.
    */
 
-  it('GET /api/admin/reservations should be mounted (not 404)', async () => {
-    const res = await testAgent.get('/api/admin/reservations');
+  it('GET /api/v1/admin/reservations should be mounted (not 404)', async () => {
+    const res = await testAgent.get('/api/v1/admin/reservations');
     expect(res.status).not.toBe(404);
   });
 
-  it('GET /api/admin/tours should be mounted (not 404)', async () => {
-    const res = await testAgent.get('/api/admin/tours');
+  it('GET /api/v1/admin/tours should be mounted (not 404)', async () => {
+    const res = await testAgent.get('/api/v1/admin/tours');
     expect(res.status).not.toBe(404);
   });
 
-  it('GET /api/admin/properties should be mounted (not 404)', async () => {
-    const res = await testAgent.get('/api/admin/properties');
+  it('GET /api/v1/admin/properties should be mounted (not 404)', async () => {
+    const res = await testAgent.get('/api/v1/admin/properties');
     expect(res.status).not.toBe(404);
   });
 
-  it('GET /api/properties should be mounted (not 404)', async () => {
-    const res = await testAgent.get('/api/properties');
+  it('GET /api/v1/properties should be mounted (not 404)', async () => {
+    const res = await testAgent.get('/api/v1/properties');
     expect(res.status).not.toBe(404);
   });
 
-  it('GET /api/tours should be mounted (not 404)', async () => {
-    const res = await testAgent.get('/api/tours');
+  it('GET /api/v1/tours should be mounted (not 404)', async () => {
+    const res = await testAgent.get('/api/v1/tours');
     expect(res.status).not.toBe(404);
   });
 
-  it('GET /api/bot/leads should be mounted (not 404)', async () => {
-    const res = await testAgent.get('/api/bot/leads');
+  it('GET /api/v1/bot/leads should be mounted (not 404)', async () => {
+    const res = await testAgent.get('/api/v1/bot/leads');
     expect(res.status).not.toBe(404);
   });
 
-  it('GET /api/admin/commissions should be mounted after relocation (not 404)', async () => {
-    const res = await testAgent.get('/api/admin/commissions');
+  it('GET /api/v1/admin/commissions should be mounted after relocation (not 404)', async () => {
+    const res = await testAgent.get('/api/v1/admin/commissions');
     expect(res.status).not.toBe(404);
   });
 });

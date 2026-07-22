@@ -17,7 +17,7 @@ describe('Binary Tree Integration Tests', () => {
       });
 
       const res = await testAgent
-        .post('/api/auth/register')
+        .post('/api/v1/auth/register')
         .send({
           email: 'newmember@test.mlm',
           password: 'ValidPass123!',
@@ -31,7 +31,7 @@ describe('Binary Tree Integration Tests', () => {
 
     it('should reject registration with invalid sponsor code', async () => {
       const res = await testAgent
-        .post('/api/auth/register')
+        .post('/api/v1/auth/register')
         .send({
           email: 'orphan@test.mlm',
           password: 'ValidPass123!',
@@ -44,7 +44,7 @@ describe('Binary Tree Integration Tests', () => {
 
     it('should generate unique referral code for new user', async () => {
       const res = await testAgent
-        .post('/api/auth/register')
+        .post('/api/v1/auth/register')
         .send({
           email: 'codecreator@test.mlm',
           password: 'ValidPass123!',
@@ -79,7 +79,7 @@ describe('Binary Tree Integration Tests', () => {
 
       const headers = await getAuthHeaders(sponsor);
 
-      const res = await testAgent.get('/api/users/me/tree').set(headers).expect(200);
+      const res = await testAgent.get('/api/v1/users/me/tree').set(headers).expect(200);
 
       expect(res.body.success).toBe(true);
       expect(res.body.data).toHaveProperty('tree');
@@ -92,7 +92,7 @@ describe('Binary Tree Integration Tests', () => {
       const user = await createTestUser();
       const headers = await getAuthHeaders(user);
 
-      const res = await testAgent.get('/api/users/me/tree').set(headers).expect(200);
+      const res = await testAgent.get('/api/v1/users/me/tree').set(headers).expect(200);
 
       expect(res.body.success).toBe(true);
       expect(res.body.data).toHaveProperty('tree');
@@ -101,7 +101,7 @@ describe('Binary Tree Integration Tests', () => {
     });
 
     it('should return 401 without authentication', async () => {
-      const res = await testAgent.get('/api/users/me/tree').expect(401);
+      const res = await testAgent.get('/api/v1/users/me/tree').expect(401);
 
       expect(res.body.success).toBe(false);
     });
@@ -138,7 +138,7 @@ describe('Binary Tree Integration Tests', () => {
 
       // Register first referred user
       await testAgent
-        .post('/api/auth/register')
+        .post('/api/v1/auth/register')
         .send({
           email: 'first_referral@test.mlm',
           password: 'ValidPass123!',
@@ -148,7 +148,7 @@ describe('Binary Tree Integration Tests', () => {
 
       // Check sponsor's tree
       const headers = await getAuthHeaders(sponsor);
-      const res = await testAgent.get('/api/users/me/tree').set(headers).expect(200);
+      const res = await testAgent.get('/api/v1/users/me/tree').set(headers).expect(200);
 
       expect(res.body.success).toBe(true);
     });
@@ -162,7 +162,7 @@ describe('Binary Tree Integration Tests', () => {
 
       // Register with level 1
       const res = await testAgent
-        .post('/api/auth/register')
+        .post('/api/v1/auth/register')
         .send({
           email: 'l2@test.mlm',
           password: 'ValidPass123!',

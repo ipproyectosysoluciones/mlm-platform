@@ -19,7 +19,7 @@ describe('Commission Integration Tests', () => {
       const headers = await getAuthHeaders(user);
 
       const res = await testAgent
-        .post('/api/commissions')
+        .post('/api/v1/commissions')
         .set(headers)
         .send({
           amount: 100,
@@ -37,7 +37,7 @@ describe('Commission Integration Tests', () => {
       const headers = await getAuthHeaders(user);
 
       const res = await testAgent
-        .post('/api/commissions')
+        .post('/api/v1/commissions')
         .set(headers)
         .send({
           amount: -50,
@@ -53,7 +53,7 @@ describe('Commission Integration Tests', () => {
       const headers = await getAuthHeaders(user);
 
       const res = await testAgent
-        .post('/api/commissions')
+        .post('/api/v1/commissions')
         .set(headers)
         .send({
           amount: 0,
@@ -69,7 +69,7 @@ describe('Commission Integration Tests', () => {
       const headers = await getAuthHeaders(user);
 
       const res = await testAgent
-        .post('/api/commissions')
+        .post('/api/v1/commissions')
         .set(headers)
         .send({
           amount: 100,
@@ -82,7 +82,7 @@ describe('Commission Integration Tests', () => {
 
     it('should reject purchase without authentication', async () => {
       const res = await testAgent
-        .post('/api/commissions')
+        .post('/api/v1/commissions')
         .send({
           amount: 100,
           currency: 'USD',
@@ -98,7 +98,7 @@ describe('Commission Integration Tests', () => {
 
       // COP
       const resCop = await testAgent
-        .post('/api/commissions')
+        .post('/api/v1/commissions')
         .set(headers)
         .send({
           amount: 500000,
@@ -110,7 +110,7 @@ describe('Commission Integration Tests', () => {
 
       // MXN
       const resMxn = await testAgent
-        .post('/api/commissions')
+        .post('/api/v1/commissions')
         .set(headers)
         .send({
           amount: 200,
@@ -127,7 +127,7 @@ describe('Commission Integration Tests', () => {
       const user = await createTestUser();
       const headers = await getAuthHeaders(user);
 
-      const res = await testAgent.get('/api/commissions').set(headers).expect(200);
+      const res = await testAgent.get('/api/v1/commissions').set(headers).expect(200);
 
       expect(res.body.success).toBe(true);
       expect(Array.isArray(res.body.data)).toBe(true);
@@ -139,7 +139,7 @@ describe('Commission Integration Tests', () => {
 
       // Create a purchase first
       await testAgent
-        .post('/api/commissions')
+        .post('/api/v1/commissions')
         .set(headers)
         .send({
           amount: 100,
@@ -148,7 +148,7 @@ describe('Commission Integration Tests', () => {
         .expect(201);
 
       // Get commissions
-      const res = await testAgent.get('/api/commissions').set(headers).expect(200);
+      const res = await testAgent.get('/api/v1/commissions').set(headers).expect(200);
 
       expect(res.body.success).toBe(true);
       expect(Array.isArray(res.body.data)).toBe(true);
@@ -159,7 +159,7 @@ describe('Commission Integration Tests', () => {
       const headers = await getAuthHeaders(user);
 
       const res = await testAgent
-        .get('/api/commissions')
+        .get('/api/v1/commissions')
         .query({ limit: 5, offset: 0 })
         .set(headers)
         .expect(200);
@@ -169,7 +169,7 @@ describe('Commission Integration Tests', () => {
     });
 
     it('should reject request without authentication', async () => {
-      const res = await testAgent.get('/api/commissions').expect(401);
+      const res = await testAgent.get('/api/v1/commissions').expect(401);
 
       expect(res.body.success).toBe(false);
     });
@@ -180,7 +180,7 @@ describe('Commission Integration Tests', () => {
       const user = await createTestUser();
       const headers = await getAuthHeaders(user);
 
-      const res = await testAgent.get('/api/commissions/stats').set(headers).expect(200);
+      const res = await testAgent.get('/api/v1/commissions/stats').set(headers).expect(200);
 
       expect(res.body.success).toBe(true);
       expect(res.body.data).toHaveProperty('pending');
@@ -192,14 +192,14 @@ describe('Commission Integration Tests', () => {
       const user = await createTestUser();
       const headers = await getAuthHeaders(user);
 
-      const res = await testAgent.get('/api/commissions/stats').set(headers).expect(200);
+      const res = await testAgent.get('/api/v1/commissions/stats').set(headers).expect(200);
 
       expect(res.body.data.pending).toBe(0);
       expect(res.body.data.totalEarned).toBe(0);
     });
 
     it('should reject request without authentication', async () => {
-      const res = await testAgent.get('/api/commissions/stats').expect(401);
+      const res = await testAgent.get('/api/v1/commissions/stats').expect(401);
 
       expect(res.body.success).toBe(false);
     });
@@ -211,7 +211,7 @@ describe('Commission Integration Tests', () => {
       const headers = await getAuthHeaders(user);
 
       const res = await testAgent
-        .post('/api/commissions')
+        .post('/api/v1/commissions')
         .set(headers)
         .send({
           amount: 100,
@@ -228,7 +228,7 @@ describe('Commission Integration Tests', () => {
       const headers = await getAuthHeaders(user);
 
       const res = await testAgent
-        .post('/api/commissions')
+        .post('/api/v1/commissions')
         .set(headers)
         .send({
           amount: 250,

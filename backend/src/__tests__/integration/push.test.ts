@@ -46,7 +46,7 @@ describe('Push Integration Tests', () => {
       };
 
       const res = await testAgent
-        .post('/api/push/subscribe')
+        .post('/api/v1/push/subscribe')
         .set(authHeaders)
         .send(subscriptionData)
         .expect(201);
@@ -65,7 +65,7 @@ describe('Push Integration Tests', () => {
         },
       };
 
-      const res = await testAgent.post('/api/push/subscribe').send(subscriptionData).expect(401);
+      const res = await testAgent.post('/api/v1/push/subscribe').send(subscriptionData).expect(401);
 
       expect(res.body.success).toBe(false);
     });
@@ -80,7 +80,7 @@ describe('Push Integration Tests', () => {
       };
 
       const res = await testAgent
-        .post('/api/push/subscribe')
+        .post('/api/v1/push/subscribe')
         .set(authHeaders)
         .send(subscriptionData)
         .expect(400);
@@ -94,7 +94,7 @@ describe('Push Integration Tests', () => {
       };
 
       const res = await testAgent
-        .post('/api/push/subscribe')
+        .post('/api/v1/push/subscribe')
         .set(authHeaders)
         .send(subscriptionData)
         .expect(400);
@@ -111,7 +111,7 @@ describe('Push Integration Tests', () => {
       };
 
       const res = await testAgent
-        .post('/api/push/subscribe')
+        .post('/api/v1/push/subscribe')
         .set(authHeaders)
         .send(subscriptionData)
         .expect(400);
@@ -128,7 +128,7 @@ describe('Push Integration Tests', () => {
       };
 
       const res = await testAgent
-        .post('/api/push/subscribe')
+        .post('/api/v1/push/subscribe')
         .set(authHeaders)
         .send(subscriptionData)
         .expect(400);
@@ -147,7 +147,7 @@ describe('Push Integration Tests', () => {
       };
 
       const res = await testAgent
-        .post('/api/push/subscribe')
+        .post('/api/v1/push/subscribe')
         .set(authHeaders)
         .send(subscriptionData)
         .expect(201);
@@ -166,7 +166,7 @@ describe('Push Integration Tests', () => {
 
       // First subscription
       await testAgent
-        .post('/api/push/subscribe')
+        .post('/api/v1/push/subscribe')
         .set(authHeaders)
         .send(subscriptionData)
         .expect(201);
@@ -181,7 +181,7 @@ describe('Push Integration Tests', () => {
 
       // Second subscription with same endpoint should update ownership
       const res = await testAgent
-        .post('/api/push/subscribe')
+        .post('/api/v1/push/subscribe')
         .set(headers2)
         .send(subscriptionData)
         .expect(201);
@@ -202,14 +202,14 @@ describe('Push Integration Tests', () => {
       };
 
       await testAgent
-        .post('/api/push/subscribe')
+        .post('/api/v1/push/subscribe')
         .set(authHeaders)
         .send(subscriptionData)
         .expect(201);
 
       // Then unsubscribe
       const res = await testAgent
-        .delete('/api/push/unsubscribe')
+        .delete('/api/v1/push/unsubscribe')
         .set(authHeaders)
         .send({ endpoint: 'https://fcm.googleapis.com/fcm/send/unsubscribe-test' })
         .expect(200);
@@ -219,7 +219,7 @@ describe('Push Integration Tests', () => {
 
     it('should reject unsubscribe without auth token', async () => {
       const res = await testAgent
-        .delete('/api/push/unsubscribe')
+        .delete('/api/v1/push/unsubscribe')
         .send({ endpoint: 'https://fcm.googleapis.com/fcm/send/test' })
         .expect(401);
 
@@ -228,7 +228,7 @@ describe('Push Integration Tests', () => {
 
     it('should reject unsubscribe with missing endpoint', async () => {
       const res = await testAgent
-        .delete('/api/push/unsubscribe')
+        .delete('/api/v1/push/unsubscribe')
         .set(authHeaders)
         .send({})
         .expect(400);
@@ -238,7 +238,7 @@ describe('Push Integration Tests', () => {
 
     it('should return success even if subscription does not exist', async () => {
       const res = await testAgent
-        .delete('/api/push/unsubscribe')
+        .delete('/api/v1/push/unsubscribe')
         .set(authHeaders)
         .send({ endpoint: 'https://fcm.googleapis.com/fcm/send/nonexistent' })
         .expect(200);
@@ -249,7 +249,7 @@ describe('Push Integration Tests', () => {
 
   describe('GET /api/push/vapid-public-key', () => {
     it('should return VAPID public key without auth', async () => {
-      const res = await testAgent.get('/api/push/vapid-public-key').expect(200);
+      const res = await testAgent.get('/api/v1/push/vapid-public-key').expect(200);
 
       expect(res.body.success).toBe(true);
       expect(res.body.data).toHaveProperty('publicKey');
@@ -259,15 +259,15 @@ describe('Push Integration Tests', () => {
     });
 
     it('should return the same key on multiple calls', async () => {
-      const res1 = await testAgent.get('/api/push/vapid-public-key').expect(200);
-      const res2 = await testAgent.get('/api/push/vapid-public-key').expect(200);
+      const res1 = await testAgent.get('/api/v1/push/vapid-public-key').expect(200);
+      const res2 = await testAgent.get('/api/v1/push/vapid-public-key').expect(200);
 
       expect(res1.body.data.publicKey).toBe(res2.body.data.publicKey);
     });
 
     it('should work without any auth headers', async () => {
       const res = await testAgent
-        .get('/api/push/vapid-public-key')
+        .get('/api/v1/push/vapid-public-key')
         .set('Accept', 'application/json')
         .expect(200);
 

@@ -12,7 +12,7 @@ describe('Validation Integration Tests', () => {
   describe('Auth Registration Validation', () => {
     it('should accept valid email format', async () => {
       const res = await testAgent
-        .post('/api/auth/register')
+        .post('/api/v1/auth/register')
         .send({
           email: `valid${Date.now()}@example.com`,
           password: 'ValidPass123!',
@@ -24,7 +24,7 @@ describe('Validation Integration Tests', () => {
 
     it('should reject email without @', async () => {
       const res = await testAgent
-        .post('/api/auth/register')
+        .post('/api/v1/auth/register')
         .send({
           email: 'invalid-email.com',
           password: 'ValidPass123!',
@@ -36,7 +36,7 @@ describe('Validation Integration Tests', () => {
 
     it('should reject password shorter than 8 characters', async () => {
       const res = await testAgent
-        .post('/api/auth/register')
+        .post('/api/v1/auth/register')
         .send({
           email: `short${Date.now()}@test.com`,
           password: 'Short1!',
@@ -48,7 +48,7 @@ describe('Validation Integration Tests', () => {
 
     it('should accept password without uppercase letter if other requirements met', async () => {
       const res = await testAgent
-        .post('/api/auth/register')
+        .post('/api/v1/auth/register')
         .send({
           email: `noupper${Date.now()}@test.com`,
           password: 'lowercase123!',
@@ -60,7 +60,7 @@ describe('Validation Integration Tests', () => {
 
     it('should accept password with only letters if it meets basic requirements', async () => {
       const res = await testAgent
-        .post('/api/auth/register')
+        .post('/api/v1/auth/register')
         .send({
           email: `letters${Date.now()}@test.com`,
           password: 'Password123',
@@ -72,7 +72,7 @@ describe('Validation Integration Tests', () => {
 
     it('should accept password with common special characters', async () => {
       const res = await testAgent
-        .post('/api/auth/register')
+        .post('/api/v1/auth/register')
         .send({
           email: `special${Date.now()}@test.com`,
           password: 'Password123!',
@@ -84,7 +84,7 @@ describe('Validation Integration Tests', () => {
 
     it('should reject missing email', async () => {
       const res = await testAgent
-        .post('/api/auth/register')
+        .post('/api/v1/auth/register')
         .send({
           password: 'ValidPass123!',
         })
@@ -95,7 +95,7 @@ describe('Validation Integration Tests', () => {
 
     it('should reject missing password', async () => {
       const res = await testAgent
-        .post('/api/auth/register')
+        .post('/api/v1/auth/register')
         .send({
           email: `missing${Date.now()}@test.com`,
         })
@@ -105,7 +105,7 @@ describe('Validation Integration Tests', () => {
     });
 
     it('should reject empty body', async () => {
-      const res = await testAgent.post('/api/auth/register').send({}).expect(400);
+      const res = await testAgent.post('/api/v1/auth/register').send({}).expect(400);
 
       expect(res.body.success).toBe(false);
     });
@@ -114,7 +114,7 @@ describe('Validation Integration Tests', () => {
   describe('Auth Login Validation', () => {
     it('should reject empty email', async () => {
       const res = await testAgent
-        .post('/api/auth/login')
+        .post('/api/v1/auth/login')
         .send({
           email: '',
           password: 'ValidPass123!',
@@ -126,7 +126,7 @@ describe('Validation Integration Tests', () => {
 
     it('should reject invalid email format', async () => {
       const res = await testAgent
-        .post('/api/auth/login')
+        .post('/api/v1/auth/login')
         .send({
           email: 'notanemail',
           password: 'ValidPass123!',
@@ -138,7 +138,7 @@ describe('Validation Integration Tests', () => {
 
     it('should reject missing password', async () => {
       const res = await testAgent
-        .post('/api/auth/login')
+        .post('/api/v1/auth/login')
         .send({
           email: 'test@test.com',
         })
@@ -148,7 +148,7 @@ describe('Validation Integration Tests', () => {
     });
 
     it('should reject empty body', async () => {
-      const res = await testAgent.post('/api/auth/login').send({}).expect(400);
+      const res = await testAgent.post('/api/v1/auth/login').send({}).expect(400);
 
       expect(res.body.success).toBe(false);
     });
@@ -160,7 +160,7 @@ describe('Validation Integration Tests', () => {
       const headers = await getAuthHeaders(user);
 
       const res = await testAgent
-        .post('/api/commissions')
+        .post('/api/v1/commissions')
         .set(headers)
         .send({
           amount: -100,
@@ -176,7 +176,7 @@ describe('Validation Integration Tests', () => {
       const headers = await getAuthHeaders(user);
 
       const res = await testAgent
-        .post('/api/commissions')
+        .post('/api/v1/commissions')
         .set(headers)
         .send({
           amount: 0,
@@ -192,7 +192,7 @@ describe('Validation Integration Tests', () => {
       const headers = await getAuthHeaders(user);
 
       const res = await testAgent
-        .post('/api/commissions')
+        .post('/api/v1/commissions')
         .set(headers)
         .send({
           amount: 100.5,
@@ -208,7 +208,7 @@ describe('Validation Integration Tests', () => {
       const headers = await getAuthHeaders(user);
 
       const res = await testAgent
-        .post('/api/commissions')
+        .post('/api/v1/commissions')
         .set(headers)
         .send({
           currency: 'USD',
@@ -283,7 +283,7 @@ describe('Validation Integration Tests', () => {
       const headers = await getAuthHeaders(user);
 
       const res = await testAgent
-        .post('/api/crm')
+        .post('/api/v1/crm')
         .set(headers)
         .send({
           contactName: 'Test Lead',
@@ -299,7 +299,7 @@ describe('Validation Integration Tests', () => {
       const headers = await getAuthHeaders(user);
 
       const res = await testAgent
-        .post('/api/crm')
+        .post('/api/v1/crm')
         .set(headers)
         .send({
           contactName: 'Valid Lead',
@@ -314,7 +314,7 @@ describe('Validation Integration Tests', () => {
   describe('Authorization Header Validation', () => {
     it('should reject malformed Authorization header', async () => {
       const res = await testAgent
-        .get('/api/auth/me')
+        .get('/api/v1/auth/me')
         .set('Authorization', 'NotBearer token')
         .expect(401);
 
@@ -323,7 +323,7 @@ describe('Validation Integration Tests', () => {
 
     it('should reject Basic Auth instead of Bearer', async () => {
       const res = await testAgent
-        .get('/api/auth/me')
+        .get('/api/v1/auth/me')
         .set('Authorization', 'Basic dXNlcjpwYXNz')
         .expect(401);
 
@@ -332,7 +332,7 @@ describe('Validation Integration Tests', () => {
 
     it('should reject invalid JWT', async () => {
       const res = await testAgent
-        .get('/api/auth/me')
+        .get('/api/v1/auth/me')
         .set('Authorization', 'Bearer invalid.token.here')
         .expect(401);
 

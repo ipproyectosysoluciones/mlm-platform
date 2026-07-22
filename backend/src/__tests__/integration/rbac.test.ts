@@ -23,7 +23,7 @@ describe('RBAC Integration Tests', () => {
         const admin = await createAdminUser();
         const headers = await getAuthHeaders(admin);
 
-        const res = await testAgent.get('/api/admin/stats').set(headers).expect(200);
+        const res = await testAgent.get('/api/v1/admin/stats').set(headers).expect(200);
 
         expect(res.body.success).toBe(true);
         expect(res.body.data).toHaveProperty('totalUsers');
@@ -33,14 +33,14 @@ describe('RBAC Integration Tests', () => {
         const user = await createRegularUser();
         const headers = await getAuthHeaders(user);
 
-        const res = await testAgent.get('/api/admin/stats').set(headers);
+        const res = await testAgent.get('/api/v1/admin/stats').set(headers);
         // Expect either 403 (forbidden) or other error status
         expect([401, 403]).toContain(res.status);
         expect(res.body.success).toBe(false);
       });
 
       it('should deny unauthenticated request to stats', async () => {
-        const res = await testAgent.get('/api/admin/stats');
+        const res = await testAgent.get('/api/v1/admin/stats');
         expect([401, 403]).toContain(res.status);
       });
     });
@@ -50,7 +50,7 @@ describe('RBAC Integration Tests', () => {
         const admin = await createAdminUser();
         const headers = await getAuthHeaders(admin);
 
-        const res = await testAgent.get('/api/admin/users').set(headers).expect(200);
+        const res = await testAgent.get('/api/v1/admin/users').set(headers).expect(200);
 
         expect(res.body.success).toBe(true);
         expect(Array.isArray(res.body.data.users)).toBe(true);
@@ -60,7 +60,7 @@ describe('RBAC Integration Tests', () => {
         const user = await createRegularUser();
         const headers = await getAuthHeaders(user);
 
-        const res = await testAgent.get('/api/admin/users').set(headers).expect(403);
+        const res = await testAgent.get('/api/v1/admin/users').set(headers).expect(403);
 
         expect(res.body.success).toBe(false);
       });
@@ -70,7 +70,7 @@ describe('RBAC Integration Tests', () => {
         const headers = await getAuthHeaders(admin);
 
         const res = await testAgent
-          .get('/api/admin/users')
+          .get('/api/v1/admin/users')
           .query({ limit: 10, offset: 0 })
           .set(headers)
           .expect(200);
@@ -114,7 +114,7 @@ describe('RBAC Integration Tests', () => {
         const headers = await getAuthHeaders(admin);
 
         const res = await testAgent
-          .get('/api/admin/users/non-existent-id')
+          .get('/api/v1/admin/users/non-existent-id')
           .set(headers)
           .expect(404);
 
@@ -203,7 +203,10 @@ describe('RBAC Integration Tests', () => {
         const admin = await createAdminUser();
         const headers = await getAuthHeaders(admin);
 
-        const res = await testAgent.get('/api/admin/reports/commissions').set(headers).expect(200);
+        const res = await testAgent
+          .get('/api/v1/admin/reports/commissions')
+          .set(headers)
+          .expect(200);
 
         expect(res.body.success).toBe(true);
         expect(res.body.data).toHaveProperty('commissions');
@@ -214,7 +217,10 @@ describe('RBAC Integration Tests', () => {
         const user = await createRegularUser();
         const headers = await getAuthHeaders(user);
 
-        const res = await testAgent.get('/api/admin/reports/commissions').set(headers).expect(403);
+        const res = await testAgent
+          .get('/api/v1/admin/reports/commissions')
+          .set(headers)
+          .expect(403);
 
         expect(res.body.success).toBe(false);
       });
@@ -321,7 +327,7 @@ describe('RBAC Integration Tests', () => {
         const headers = getAuthHeaders(admin);
 
         const res = await testAgent
-          .patch('/api/admin/users/00000000-0000-0000-0000-000000000000/role')
+          .patch('/api/v1/admin/users/00000000-0000-0000-0000-000000000000/role')
           .set(headers)
           .send({ role: 'user' })
           .expect(404);
@@ -379,7 +385,7 @@ describe('RBAC Integration Tests', () => {
       const user = await createRegularUser();
       const headers = await getAuthHeaders(user);
 
-      const res = await testAgent.get('/api/users/me').set(headers).expect(200);
+      const res = await testAgent.get('/api/v1/users/me').set(headers).expect(200);
 
       expect(res.body.success).toBe(true);
     });
@@ -389,7 +395,7 @@ describe('RBAC Integration Tests', () => {
       const headers = await getAuthHeaders(user);
 
       const res = await testAgent
-        .patch('/api/users/me')
+        .patch('/api/v1/users/me')
         .set(headers)
         .send({ firstName: 'John', lastName: 'Doe' })
         .expect(200);
@@ -401,7 +407,7 @@ describe('RBAC Integration Tests', () => {
       const user = await createRegularUser();
       const headers = await getAuthHeaders(user);
 
-      const res = await testAgent.get('/api/users/me/tree').set(headers).expect(200);
+      const res = await testAgent.get('/api/v1/users/me/tree').set(headers).expect(200);
 
       expect(res.body.success).toBe(true);
     });

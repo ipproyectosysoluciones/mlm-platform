@@ -14,7 +14,7 @@ describe('Pagination Integration Tests', () => {
       const user = await createTestUser();
       const headers = await getAuthHeaders(user);
 
-      const res = await testAgent.get('/api/commissions').set(headers).expect(200);
+      const res = await testAgent.get('/api/v1/commissions').set(headers).expect(200);
 
       expect(res.body.success).toBe(true);
       expect(res.body).toHaveProperty('pagination');
@@ -25,7 +25,7 @@ describe('Pagination Integration Tests', () => {
       const headers = await getAuthHeaders(user);
 
       const res = await testAgent
-        .get('/api/commissions')
+        .get('/api/v1/commissions')
         .query({ page: 2, limit: 5 })
         .set(headers)
         .expect(200);
@@ -40,7 +40,7 @@ describe('Pagination Integration Tests', () => {
       const headers = await getAuthHeaders(user);
 
       const res = await testAgent
-        .get('/api/commissions')
+        .get('/api/v1/commissions')
         .query({ page: 999, limit: 10 })
         .set(headers)
         .expect(200);
@@ -55,7 +55,7 @@ describe('Pagination Integration Tests', () => {
       const admin = await createAdminUser();
       const headers = await getAuthHeaders(admin);
 
-      const res = await testAgent.get('/api/admin/users').set(headers).expect(200);
+      const res = await testAgent.get('/api/v1/admin/users').set(headers).expect(200);
 
       expect(res.body.success).toBe(true);
       expect(res.body.data).toHaveProperty('pagination');
@@ -66,7 +66,7 @@ describe('Pagination Integration Tests', () => {
       const headers = await getAuthHeaders(admin);
 
       const res = await testAgent
-        .get('/api/admin/users')
+        .get('/api/v1/admin/users')
         .query({ page: 3, limit: 50 })
         .set(headers)
         .expect(200);
@@ -82,7 +82,7 @@ describe('Pagination Integration Tests', () => {
       const admin = await createAdminUser();
       const headers = await getAuthHeaders(admin);
 
-      const res = await testAgent.get('/api/admin/users').set(headers).expect(200);
+      const res = await testAgent.get('/api/v1/admin/users').set(headers).expect(200);
 
       expect(res.body.data.pagination).toHaveProperty('page');
       expect(res.body.data.pagination).toHaveProperty('limit');

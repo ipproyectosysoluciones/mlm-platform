@@ -50,7 +50,7 @@ describe('Gift Cards Integration Tests', () => {
   describe('POST /api/gift-cards (Create Gift Card)', () => {
     it('should create a gift card with QR code and return expected fields', async () => {
       const res = await testAgent
-        .post('/api/gift-cards')
+        .post('/api/v1/gift-cards')
         .set(adminHeaders)
         .send({ amount: 50, expiresInDays: 60 })
         .expect(201);
@@ -72,7 +72,7 @@ describe('Gift Cards Integration Tests', () => {
 
     it('should reject creation by non-admin user', async () => {
       const res = await testAgent
-        .post('/api/gift-cards')
+        .post('/api/v1/gift-cards')
         .set(regularHeaders)
         .send({ amount: 50 })
         .expect(403);
@@ -82,7 +82,7 @@ describe('Gift Cards Integration Tests', () => {
 
     it('should reject creation with invalid amount', async () => {
       const res = await testAgent
-        .post('/api/gift-cards')
+        .post('/api/v1/gift-cards')
         .set(adminHeaders)
         .send({ amount: -10 })
         .expect(400);
@@ -98,7 +98,7 @@ describe('Gift Cards Integration Tests', () => {
     it('should redeem an active gift card and mark as redeemed', async () => {
       // Step 1: Create a gift card via API
       const createRes = await testAgent
-        .post('/api/gift-cards')
+        .post('/api/v1/gift-cards')
         .set(adminHeaders)
         .send({ amount: 100, expiresInDays: 30 })
         .expect(201);
@@ -167,7 +167,7 @@ describe('Gift Cards Integration Tests', () => {
     it('should reject double redemption of a gift card', async () => {
       // Create a gift card
       const createRes = await testAgent
-        .post('/api/gift-cards')
+        .post('/api/v1/gift-cards')
         .set(adminHeaders)
         .send({ amount: 75 })
         .expect(201);
@@ -202,7 +202,7 @@ describe('Gift Cards Integration Tests', () => {
     it('should allow only one redemption when two are fired simultaneously', async () => {
       // Create a gift card
       const createRes = await testAgent
-        .post('/api/gift-cards')
+        .post('/api/v1/gift-cards')
         .set(adminHeaders)
         .send({ amount: 200 })
         .expect(201);
@@ -246,7 +246,7 @@ describe('Gift Cards Integration Tests', () => {
       // Create 4 gift cards — 3 active, 1 manually set to redeemed
       for (let i = 0; i < 3; i++) {
         await testAgent
-          .post('/api/gift-cards')
+          .post('/api/v1/gift-cards')
           .set(adminHeaders)
           .send({ amount: 25 * (i + 1) })
           .expect(201);
@@ -267,7 +267,7 @@ describe('Gift Cards Integration Tests', () => {
 
       // List page 1, limit 2, only active
       const res = await testAgent
-        .get('/api/gift-cards')
+        .get('/api/v1/gift-cards')
         .set(adminHeaders)
         .query({ page: 1, limit: 2, status: 'active' })
         .expect(200);
@@ -286,7 +286,10 @@ describe('Gift Cards Integration Tests', () => {
       }
 
       // Verify non-admin can't list
-      const forbiddenRes = await testAgent.get('/api/gift-cards').set(regularHeaders).expect(403);
+      const forbiddenRes = await testAgent
+        .get('/api/v1/gift-cards')
+        .set(regularHeaders)
+        .expect(403);
 
       expect(forbiddenRes.body.success).toBe(false);
     });
@@ -299,7 +302,7 @@ describe('Gift Cards Integration Tests', () => {
     it('should return gift card details with transaction history after redemption', async () => {
       // Create a gift card
       const createRes = await testAgent
-        .post('/api/gift-cards')
+        .post('/api/v1/gift-cards')
         .set(adminHeaders)
         .send({ amount: 150 })
         .expect(201);
@@ -355,7 +358,7 @@ describe('Gift Cards Integration Tests', () => {
     it('should validate an active gift card and return card details', async () => {
       // Create a gift card
       const createRes = await testAgent
-        .post('/api/gift-cards')
+        .post('/api/v1/gift-cards')
         .set(adminHeaders)
         .send({ amount: 80, expiresInDays: 90 })
         .expect(201);
@@ -401,7 +404,7 @@ describe('Gift Cards Integration Tests', () => {
     it('should return isValid=false for already redeemed card', async () => {
       // Create and redeem a card
       const createRes = await testAgent
-        .post('/api/gift-cards')
+        .post('/api/v1/gift-cards')
         .set(adminHeaders)
         .send({ amount: 40 })
         .expect(201);

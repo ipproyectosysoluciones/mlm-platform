@@ -11,10 +11,10 @@ import { testAgent } from '../setup';
 import { createTestUser, getAuthHeaders } from '../fixtures';
 
 describe('Auth Integration Tests', () => {
-  describe('POST /api/auth/register', () => {
+  describe('POST /api/v1/auth/register', () => {
     it('should register new user with valid credentials', async () => {
       const res = await testAgent
-        .post('/api/auth/register')
+        .post('/api/v1/auth/register')
         .send({
           email: 'newuser@test.mlm',
           password: 'ValidPass123!',
@@ -35,7 +35,7 @@ describe('Auth Integration Tests', () => {
       });
 
       const res = await testAgent
-        .post('/api/auth/register')
+        .post('/api/v1/auth/register')
         .send({
           email: 'referred@test.mlm',
           password: 'ValidPass123!',
@@ -51,7 +51,7 @@ describe('Auth Integration Tests', () => {
       await createTestUser({ email: 'duplicate@test.mlm' });
 
       const res = await testAgent
-        .post('/api/auth/register')
+        .post('/api/v1/auth/register')
         .send({
           email: 'duplicate@test.mlm',
           password: 'ValidPass123!',
@@ -64,7 +64,7 @@ describe('Auth Integration Tests', () => {
 
     it('should reject registration with invalid email', async () => {
       const res = await testAgent
-        .post('/api/auth/register')
+        .post('/api/v1/auth/register')
         .send({
           email: 'invalid-email',
           password: 'ValidPass123!',
@@ -76,7 +76,7 @@ describe('Auth Integration Tests', () => {
 
     it('should reject registration with weak password (too short)', async () => {
       const res = await testAgent
-        .post('/api/auth/register')
+        .post('/api/v1/auth/register')
         .send({
           email: 'user@test.mlm',
           password: 'short',
@@ -88,7 +88,7 @@ describe('Auth Integration Tests', () => {
 
     it('should reject registration with weak password (no number)', async () => {
       const res = await testAgent
-        .post('/api/auth/register')
+        .post('/api/v1/auth/register')
         .send({
           email: 'user@test.mlm',
           password: 'NoNumbersHere!',
@@ -100,7 +100,7 @@ describe('Auth Integration Tests', () => {
 
     it('should reject registration with missing email', async () => {
       const res = await testAgent
-        .post('/api/auth/register')
+        .post('/api/v1/auth/register')
         .send({
           password: 'ValidPass123!',
         })
@@ -110,7 +110,7 @@ describe('Auth Integration Tests', () => {
     });
   });
 
-  describe('POST /api/auth/login', () => {
+  describe('POST /api/v1/auth/login', () => {
     it('should login with valid credentials', async () => {
       await createTestUser({
         email: 'loginuser@test.mlm',
@@ -118,7 +118,7 @@ describe('Auth Integration Tests', () => {
       });
 
       const res = await testAgent
-        .post('/api/auth/login')
+        .post('/api/v1/auth/login')
         .send({
           email: 'loginuser@test.mlm',
           password: 'TestPass123!',
@@ -137,7 +137,7 @@ describe('Auth Integration Tests', () => {
       });
 
       const res = await testAgent
-        .post('/api/auth/login')
+        .post('/api/v1/auth/login')
         .send({
           email: 'wrongpass@test.mlm',
           password: 'WrongPassword!',
@@ -151,7 +151,7 @@ describe('Auth Integration Tests', () => {
 
     it('should reject login with non-existent user', async () => {
       const res = await testAgent
-        .post('/api/auth/login')
+        .post('/api/v1/auth/login')
         .send({
           email: 'nobody@test.mlm',
           password: 'AnyPassword123!',
@@ -162,32 +162,32 @@ describe('Auth Integration Tests', () => {
     });
 
     it('should reject login with missing credentials', async () => {
-      const res = await testAgent.post('/api/auth/login').send({}).expect(400);
+      const res = await testAgent.post('/api/v1/auth/login').send({}).expect(400);
 
       expect(res.body.success).toBe(false);
     });
   });
 
-  describe('GET /api/auth/me', () => {
+  describe('GET /api/v1/auth/me', () => {
     it('should return user data with valid token', async () => {
       const user = await createTestUser();
       const headers = await getAuthHeaders(user);
 
-      const res = await testAgent.get('/api/auth/me').set(headers).expect(200);
+      const res = await testAgent.get('/api/v1/auth/me').set(headers).expect(200);
 
       expect(res.body.success).toBe(true);
       expect(res.body.data.email).toBe(user.email);
     });
 
     it('should reject request without token', async () => {
-      const res = await testAgent.get('/api/auth/me').expect(401);
+      const res = await testAgent.get('/api/v1/auth/me').expect(401);
 
       expect(res.body.success).toBe(false);
     });
 
     it('should reject request with invalid token', async () => {
       const res = await testAgent
-        .get('/api/auth/me')
+        .get('/api/v1/auth/me')
         .set('Authorization', 'Bearer invalid-token-here')
         .expect(401);
 
@@ -196,7 +196,7 @@ describe('Auth Integration Tests', () => {
 
     it('should reject request with malformed Authorization header', async () => {
       const res = await testAgent
-        .get('/api/auth/me')
+        .get('/api/v1/auth/me')
         .set('Authorization', 'NotBearer sometoken')
         .expect(401);
 

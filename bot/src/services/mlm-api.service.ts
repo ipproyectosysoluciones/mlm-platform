@@ -1,8 +1,8 @@
 /**
  * @fileoverview MLM API Service — HTTP client for backend bot endpoints
- * @description Thin HTTP wrapper around the backend /api/bot/* routes.
+ * @description Thin HTTP wrapper around the backend /api/v1/bot/* routes.
  *              All requests include the x-bot-secret header automatically.
- *              Cliente HTTP delgado para las rutas /api/bot/* del backend.
+ *              Cliente HTTP delgado para las rutas /api/v1/bot/* del backend.
  *              Todas las peticiones incluyen el header x-bot-secret automáticamente.
  * @module services/mlm-api.service
  */
@@ -10,7 +10,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: process.env.MLM_BACKEND_URL ?? 'http://backend:3000/api',
+  baseURL: process.env.MLM_BACKEND_URL ?? 'http://backend:3000/api/v1',
   headers: {
     'Content-Type': 'application/json',
     'x-bot-secret': process.env.BOT_SECRET ?? '',

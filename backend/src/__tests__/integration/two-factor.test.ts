@@ -15,7 +15,7 @@ import { TwoFactorService } from '../../services/TwoFactorService';
 describe('Two-Factor Authentication Integration Tests', () => {
   describe('GET /api/auth/2fa/status', () => {
     it('should return 401 without token', async () => {
-      const res = await testAgent.get('/api/auth/2fa/status').expect(401);
+      const res = await testAgent.get('/api/v1/auth/2fa/status').expect(401);
 
       expect(res.body.success).toBe(false);
     });
@@ -24,7 +24,7 @@ describe('Two-Factor Authentication Integration Tests', () => {
       const user = await createTestUser();
       const headers = await getAuthHeaders(user);
 
-      const res = await testAgent.get('/api/auth/2fa/status').set(headers).expect(200);
+      const res = await testAgent.get('/api/v1/auth/2fa/status').set(headers).expect(200);
 
       expect(res.body.success).toBe(true);
       expect(res.body.data).toHaveProperty('enabled');
@@ -51,7 +51,7 @@ describe('Two-Factor Authentication Integration Tests', () => {
         twoFactorEnabledAt: new Date(),
       });
 
-      const res = await testAgent.get('/api/auth/2fa/status').set(headers).expect(200);
+      const res = await testAgent.get('/api/v1/auth/2fa/status').set(headers).expect(200);
 
       expect(res.body.success).toBe(true);
       expect(res.body.data.enabled).toBe(true);
@@ -61,7 +61,7 @@ describe('Two-Factor Authentication Integration Tests', () => {
 
   describe('POST /api/auth/2fa/setup', () => {
     it('should return 401 without token', async () => {
-      const res = await testAgent.post('/api/auth/2fa/setup').expect(401);
+      const res = await testAgent.post('/api/v1/auth/2fa/setup').expect(401);
 
       expect(res.body.success).toBe(false);
     });
@@ -70,7 +70,7 @@ describe('Two-Factor Authentication Integration Tests', () => {
       const user = await createTestUser();
       const headers = await getAuthHeaders(user);
 
-      const res = await testAgent.post('/api/auth/2fa/setup').set(headers).expect(200);
+      const res = await testAgent.post('/api/v1/auth/2fa/setup').set(headers).expect(200);
 
       expect(res.body.success).toBe(true);
       expect(res.body.data).toHaveProperty('qrCodeUrl');
@@ -96,7 +96,7 @@ describe('Two-Factor Authentication Integration Tests', () => {
         twoFactorEnabledAt: new Date(),
       });
 
-      const res = await testAgent.post('/api/auth/2fa/setup').set(headers).expect(400);
+      const res = await testAgent.post('/api/v1/auth/2fa/setup').set(headers).expect(400);
 
       expect(res.body.success).toBe(false);
       expect(res.body.error.code).toBe('TWO_FA_ALREADY_ENABLED');
@@ -106,7 +106,7 @@ describe('Two-Factor Authentication Integration Tests', () => {
   describe('POST /api/auth/2fa/verify-setup', () => {
     it('should return 401 without token', async () => {
       const res = await testAgent
-        .post('/api/auth/2fa/verify-setup')
+        .post('/api/v1/auth/2fa/verify-setup')
         .send({ code: '123456' })
         .expect(401);
 
@@ -118,7 +118,7 @@ describe('Two-Factor Authentication Integration Tests', () => {
       const headers = await getAuthHeaders(user);
 
       const res = await testAgent
-        .post('/api/auth/2fa/verify-setup')
+        .post('/api/v1/auth/2fa/verify-setup')
         .set(headers)
         .send({ code: '123456' })
         .expect(400);
@@ -132,7 +132,7 @@ describe('Two-Factor Authentication Integration Tests', () => {
       const headers = await getAuthHeaders(user);
 
       // First, initiate setup and capture the returned secret
-      const setupRes = await testAgent.post('/api/auth/2fa/setup').set(headers).expect(200);
+      const setupRes = await testAgent.post('/api/v1/auth/2fa/setup').set(headers).expect(200);
 
       const { secret } = setupRes.body.data;
 
@@ -143,7 +143,7 @@ describe('Two-Factor Authentication Integration Tests', () => {
       });
 
       const res = await testAgent
-        .post('/api/auth/2fa/verify-setup')
+        .post('/api/v1/auth/2fa/verify-setup')
         .set(headers)
         .send({ code: validCode })
         .expect(200);
@@ -164,11 +164,11 @@ describe('Two-Factor Authentication Integration Tests', () => {
       const headers = await getAuthHeaders(user);
 
       // Initiate setup
-      await testAgent.post('/api/auth/2fa/setup').set(headers);
+      await testAgent.post('/api/v1/auth/2fa/setup').set(headers);
 
       // Try with invalid code
       const res = await testAgent
-        .post('/api/auth/2fa/verify-setup')
+        .post('/api/v1/auth/2fa/verify-setup')
         .set(headers)
         .send({ code: '000000' })
         .expect(400);
@@ -185,7 +185,7 @@ describe('Two-Factor Authentication Integration Tests', () => {
   describe('POST /api/auth/2fa/disable', () => {
     it('should return 401 without token', async () => {
       const res = await testAgent
-        .post('/api/auth/2fa/disable')
+        .post('/api/v1/auth/2fa/disable')
         .send({ code: '123456' })
         .expect(401);
 
@@ -197,7 +197,7 @@ describe('Two-Factor Authentication Integration Tests', () => {
       const headers = await getAuthHeaders(user);
 
       const res = await testAgent
-        .post('/api/auth/2fa/disable')
+        .post('/api/v1/auth/2fa/disable')
         .set(headers)
         .send({ code: '123456' })
         .expect(400);
@@ -230,7 +230,7 @@ describe('Two-Factor Authentication Integration Tests', () => {
       });
 
       const res = await testAgent
-        .post('/api/auth/2fa/disable')
+        .post('/api/v1/auth/2fa/disable')
         .set(headers)
         .send({ code: validCode })
         .expect(200);
@@ -265,7 +265,7 @@ describe('Two-Factor Authentication Integration Tests', () => {
       const recoveryCode = recoveryCodes[0];
 
       const res = await testAgent
-        .post('/api/auth/2fa/disable')
+        .post('/api/v1/auth/2fa/disable')
         .set(headers)
         .send({ code: recoveryCode })
         .expect(200);
@@ -296,7 +296,7 @@ describe('Two-Factor Authentication Integration Tests', () => {
       });
 
       const res = await testAgent
-        .post('/api/auth/2fa/disable')
+        .post('/api/v1/auth/2fa/disable')
         .set(headers)
         .send({ code: '000000' })
         .expect(400);
@@ -312,7 +312,10 @@ describe('Two-Factor Authentication Integration Tests', () => {
 
   describe('POST /api/auth/2fa/verify', () => {
     it('should return 401 without token', async () => {
-      const res = await testAgent.post('/api/auth/2fa/verify').send({ code: '123456' }).expect(401);
+      const res = await testAgent
+        .post('/api/v1/auth/2fa/verify')
+        .send({ code: '123456' })
+        .expect(401);
 
       expect(res.body.success).toBe(false);
     });
@@ -322,7 +325,7 @@ describe('Two-Factor Authentication Integration Tests', () => {
       const headers = await getAuthHeaders(user);
 
       const res = await testAgent
-        .post('/api/auth/2fa/verify')
+        .post('/api/v1/auth/2fa/verify')
         .set(headers)
         .send({ code: '123456' })
         .expect(400);
@@ -355,7 +358,7 @@ describe('Two-Factor Authentication Integration Tests', () => {
       });
 
       const res = await testAgent
-        .post('/api/auth/2fa/verify')
+        .post('/api/v1/auth/2fa/verify')
         .set(headers)
         .send({ code: validCode })
         .expect(200);
@@ -382,7 +385,7 @@ describe('Two-Factor Authentication Integration Tests', () => {
       });
 
       const res = await testAgent
-        .post('/api/auth/2fa/verify')
+        .post('/api/v1/auth/2fa/verify')
         .set(headers)
         .send({ code: '000000' })
         .expect(400);
@@ -415,7 +418,7 @@ describe('Two-Factor Authentication Integration Tests', () => {
 
       // Recovery codes fail the isNumeric() validation
       const res = await testAgent
-        .post('/api/auth/2fa/verify')
+        .post('/api/v1/auth/2fa/verify')
         .set(headers)
         .send({ code: recoveryCode })
         .expect(400);
