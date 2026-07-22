@@ -155,7 +155,7 @@ describe('Wallet Integration Tests', () => {
       });
 
       const res = await testAgent
-        .post('/api/wallets/withdraw')
+        .post('/api/v1/wallets/withdraw')
         .set(authHeaders)
         .send({
           amount: 30,
@@ -178,7 +178,7 @@ describe('Wallet Integration Tests', () => {
       });
 
       const res = await testAgent
-        .post('/api/wallets/withdraw')
+        .post('/api/v1/wallets/withdraw')
         .set(authHeaders)
         .send({
           amount: 10,
@@ -198,7 +198,7 @@ describe('Wallet Integration Tests', () => {
         currency: 'USD',
       });
 
-      const res = await testAgent.post('/api/wallets/withdraw').set(authHeaders).send({
+      const res = await testAgent.post('/api/v1/wallets/withdraw').set(authHeaders).send({
         amount: 20,
       });
 

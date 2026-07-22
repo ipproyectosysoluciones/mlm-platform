@@ -65,7 +65,7 @@ describe('Email Campaigns Integration Tests', () => {
     overrides?: { name?: string; subjectLine?: string; htmlContent?: string }
   ) {
     return testAgent
-      .post('/api/email-templates')
+      .post('/api/v1/email-templates')
       .set(headers)
       .send({
         name: overrides?.name || 'Welcome Email',
@@ -86,7 +86,7 @@ describe('Email Campaigns Integration Tests', () => {
     overrides?: { name?: string }
   ) {
     return testAgent
-      .post('/api/email-campaigns')
+      .post('/api/v1/email-campaigns')
       .set(headers)
       .send({
         name: overrides?.name || 'Test Campaign',
@@ -127,7 +127,7 @@ describe('Email Campaigns Integration Tests', () => {
     });
 
     it('should reject template with unknown variable {{badVar}}', async () => {
-      const res = await testAgent.post('/api/email-templates').set(adminHeaders).send({
+      const res = await testAgent.post('/api/v1/email-templates').set(adminHeaders).send({
         name: 'Bad Template',
         subjectLine: 'Hi {{firstName}}',
         htmlContent: '<p>{{badVar}} is not allowed</p>',
@@ -181,7 +181,7 @@ describe('Email Campaigns Integration Tests', () => {
     });
 
     it('should reject campaign creation with non-existent template', async () => {
-      const res = await testAgent.post('/api/email-campaigns').set(adminHeaders).send({
+      const res = await testAgent.post('/api/v1/email-campaigns').set(adminHeaders).send({
         name: 'Ghost Campaign',
         emailTemplateId: 'a0000000-b000-4000-8000-c00000000099',
       });
@@ -521,7 +521,7 @@ describe('Email Campaigns Integration Tests', () => {
         .expect(200);
 
       // List all campaigns / Listar todas las campañas
-      const listRes = await testAgent.get('/api/email-campaigns').set(adminHeaders).expect(200);
+      const listRes = await testAgent.get('/api/v1/email-campaigns').set(adminHeaders).expect(200);
 
       expect(listRes.body.success).toBe(true);
       // Response shape: { data: [...], pagination: { total, page, limit, totalPages } }
@@ -532,7 +532,7 @@ describe('Email Campaigns Integration Tests', () => {
       // Filter by status=draft (should be 2: Beta and Gamma)
       // Filtrar por status=draft (deben ser 2: Beta y Gamma)
       const draftRes = await testAgent
-        .get('/api/email-campaigns?status=draft')
+        .get('/api/v1/email-campaigns?status=draft')
         .set(adminHeaders)
         .expect(200);
 
@@ -542,7 +542,7 @@ describe('Email Campaigns Integration Tests', () => {
       // Filter by status=sending (should be 1: Alpha)
       // Filtrar por status=sending (debe ser 1: Alpha)
       const sendingRes = await testAgent
-        .get('/api/email-campaigns?status=sending')
+        .get('/api/v1/email-campaigns?status=sending')
         .set(adminHeaders)
         .expect(200);
 

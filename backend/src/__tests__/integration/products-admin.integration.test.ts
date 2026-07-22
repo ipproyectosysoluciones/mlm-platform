@@ -75,7 +75,7 @@ describe('Products Admin Integration Tests', () => {
   describe('POST /api/admin/products (Create Product)', () => {
     it('should create a new product successfully', async () => {
       const res = await testAgent
-        .post('/api/admin/products')
+        .post('/api/v1/admin/products')
         .set(adminHeaders)
         .send({
           name: 'New Test Product',
@@ -95,7 +95,7 @@ describe('Products Admin Integration Tests', () => {
 
     it('should reject missing required fields with 400', async () => {
       const res = await testAgent
-        .post('/api/admin/products')
+        .post('/api/v1/admin/products')
         .set(adminHeaders)
         .send({
           name: 'Incomplete Product',
@@ -108,7 +108,7 @@ describe('Products Admin Integration Tests', () => {
 
     it('should reject non-admin user with 403', async () => {
       const res = await testAgent
-        .post('/api/admin/products')
+        .post('/api/v1/admin/products')
         .set(regularHeaders)
         .send({
           name: 'Test Product',
@@ -133,7 +133,7 @@ describe('Products Admin Integration Tests', () => {
       await createTestProduct({ name: 'Product B', price: 20.0 });
       await createTestProduct({ name: 'Product C', price: 30.0 });
 
-      const res = await testAgent.get('/api/admin/products').set(adminHeaders).expect(200);
+      const res = await testAgent.get('/api/v1/admin/products').set(adminHeaders).expect(200);
 
       expect(res.body.success).toBe(true);
       expect(res.body.data).toBeInstanceOf(Array);
@@ -166,7 +166,7 @@ describe('Products Admin Integration Tests', () => {
       } as any);
 
       const res = await testAgent
-        .get('/api/admin/products?type=physical')
+        .get('/api/v1/admin/products?type=physical')
         .set(adminHeaders)
         .expect(200);
 
@@ -245,7 +245,7 @@ describe('Products Admin Integration Tests', () => {
     // transaction isolation issues where the API call doesn't see the product
     async function createProductViaApi(): Promise<{ id: string }> {
       const res = await testAgent
-        .post('/api/admin/products')
+        .post('/api/v1/admin/products')
         .set(adminHeaders)
         .send({
           name: 'Deletable Product',

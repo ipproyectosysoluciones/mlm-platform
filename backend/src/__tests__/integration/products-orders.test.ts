@@ -36,7 +36,7 @@ describe('Products and Orders Integration Tests', () => {
     it('should return 200 with active products list', async () => {
       let res: any;
       try {
-        res = await testAgent.get('/api/products');
+        res = await testAgent.get('/api/v1/products');
       } catch (e: any) {
         console.error('Request error:', e.message);
         throw e;
@@ -69,7 +69,7 @@ describe('Products and Orders Integration Tests', () => {
         isActive: false,
       });
 
-      const res = await testAgent.get('/api/products');
+      const res = await testAgent.get('/api/v1/products');
 
       console.log('GET /api/products (active only) response:', res.status, res.body);
 
@@ -95,7 +95,7 @@ describe('Products and Orders Integration Tests', () => {
         });
       }
 
-      const res = await testAgent.get('/api/products?page=1&limit=3');
+      const res = await testAgent.get('/api/v1/products?page=1&limit=3');
 
       console.log('GET /api/products (pagination) response:', res.status, res.body);
 
@@ -133,7 +133,7 @@ describe('Products and Orders Integration Tests', () => {
     });
 
     it('should return 400 for invalid UUID format', async () => {
-      const res = await testAgent.get('/api/products/invalid-id');
+      const res = await testAgent.get('/api/v1/products/invalid-id');
 
       console.log('GET /api/products/:id (invalid UUID) response:', res.status, res.body);
 
@@ -148,7 +148,7 @@ describe('Products and Orders Integration Tests', () => {
       const headers = getAuthHeaders(testUser);
 
       const res = await testAgent
-        .post('/api/orders')
+        .post('/api/v1/orders')
         .set(headers)
         .send({
           items: [
@@ -171,7 +171,7 @@ describe('Products and Orders Integration Tests', () => {
     });
 
     it('should return 401 without JWT', async () => {
-      const res = await testAgent.post('/api/orders').send({
+      const res = await testAgent.post('/api/v1/orders').send({
         items: [
           {
             productId: testProduct.id,
@@ -194,7 +194,7 @@ describe('Products and Orders Integration Tests', () => {
       const invalidProductId = '00000000-0000-0000-0000-000000000000';
 
       const res = await testAgent
-        .post('/api/orders')
+        .post('/api/v1/orders')
         .set(headers)
         .send({
           items: [
@@ -216,7 +216,7 @@ describe('Products and Orders Integration Tests', () => {
     it('should return 400 with missing required fields', async () => {
       const headers = getAuthHeaders(testUser);
 
-      const res = await testAgent.post('/api/orders').set(headers).send({
+      const res = await testAgent.post('/api/v1/orders').set(headers).send({
         items: [],
       });
 
@@ -254,7 +254,7 @@ describe('Products and Orders Integration Tests', () => {
         orderNumber: `ORD-TEST-${Date.now()}`,
       });
 
-      const res = await testAgent.get('/api/orders').set(headers);
+      const res = await testAgent.get('/api/v1/orders').set(headers);
 
       console.log('GET /api/orders response:', res.status, res.body);
 
@@ -270,7 +270,7 @@ describe('Products and Orders Integration Tests', () => {
     });
 
     it('should return 401 without JWT', async () => {
-      const res = await testAgent.get('/api/orders');
+      const res = await testAgent.get('/api/v1/orders');
 
       console.log('GET /api/orders (no auth) response:', res.status, res.body);
 

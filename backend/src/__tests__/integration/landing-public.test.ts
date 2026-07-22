@@ -68,7 +68,7 @@ describe('Public Landing Integration Tests', () => {
 
     it('should return 404 for invalid product ID', async () => {
       const res = await testAgent
-        .get('/api/public/landing/product/00000000-0000-0000-0000-000000000000')
+        .get('/api/v1/public/landing/product/00000000-0000-0000-0000-000000000000')
         .expect(404);
 
       expect(res.body.success).toBe(false);
@@ -76,7 +76,7 @@ describe('Public Landing Integration Tests', () => {
     });
 
     it('should return 404 for non-UUID product ID', async () => {
-      const res = await testAgent.get('/api/public/landing/product/not-a-uuid').expect(400);
+      const res = await testAgent.get('/api/v1/public/landing/product/not-a-uuid').expect(400);
 
       expect(res.body.success).toBe(false);
     });
@@ -129,7 +129,7 @@ describe('Public Landing Integration Tests', () => {
     // No inner beforeEach needed — avoids unique constraint violation on referralCode.
 
     it('should return products for valid referral code', async () => {
-      const res = await testAgent.get('/api/public/profile/PUSHTEST/products').expect(200);
+      const res = await testAgent.get('/api/v1/public/profile/PUSHTEST/products').expect(200);
 
       expect(res.body.success).toBe(true);
       expect(res.body.data).toBeDefined();
@@ -137,14 +137,14 @@ describe('Public Landing Integration Tests', () => {
     });
 
     it('should return 404 for invalid referral code', async () => {
-      const res = await testAgent.get('/api/public/profile/NONEXISTENT/products').expect(404);
+      const res = await testAgent.get('/api/v1/public/profile/NONEXISTENT/products').expect(404);
 
       expect(res.body.success).toBe(false);
       expect(res.body.error).toHaveProperty('code', 'NOT_FOUND');
     });
 
     it('should return products with required fields', async () => {
-      const res = await testAgent.get('/api/public/profile/PUSHTEST/products').expect(200);
+      const res = await testAgent.get('/api/v1/public/profile/PUSHTEST/products').expect(200);
 
       if (res.body.data.length > 0) {
         const product = res.body.data[0];
@@ -158,15 +158,15 @@ describe('Public Landing Integration Tests', () => {
     });
 
     it('should return at most 6 products', async () => {
-      const res = await testAgent.get('/api/public/profile/PUSHTEST/products').expect(200);
+      const res = await testAgent.get('/api/v1/public/profile/PUSHTEST/products').expect(200);
 
       expect(res.body.data.length).toBeLessThanOrEqual(6);
     });
 
     it('should be case insensitive for referral code', async () => {
-      const res1 = await testAgent.get('/api/public/profile/pushtest/products').expect(200);
+      const res1 = await testAgent.get('/api/v1/public/profile/pushtest/products').expect(200);
 
-      const res2 = await testAgent.get('/api/public/profile/PUSHTEST/products').expect(200);
+      const res2 = await testAgent.get('/api/v1/public/profile/PUSHTEST/products').expect(200);
 
       // Both should return 200, though results might differ based on what exists
       expect(res1.body.success).toBe(true);
@@ -174,7 +174,7 @@ describe('Public Landing Integration Tests', () => {
     });
 
     it('should handle special characters in referral code', async () => {
-      const res = await testAgent.get('/api/public/profile/USER%40123/products').expect(404); // Special chars not valid in referral codes
+      const res = await testAgent.get('/api/v1/public/profile/USER%40123/products').expect(404); // Special chars not valid in referral codes
 
       expect(res.body.success).toBe(false);
     });

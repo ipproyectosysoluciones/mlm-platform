@@ -202,7 +202,7 @@ describe('errorHandler', () => {
 
 describe('notFoundHandler', () => {
   it('returns 404 with method and path', () => {
-    const req = makeReq({ method: 'POST', path: '/api/unknown' });
+    const req = makeReq({ method: 'POST', path: '/api/v1/unknown' });
     const res = makeRes();
 
     notFoundHandler(req, res);
@@ -210,7 +210,7 @@ describe('notFoundHandler', () => {
     expect(res._status).toBe(404);
     expect(res._json).toMatchObject({
       success: false,
-      error: { code: 'NOT_FOUND', message: 'Route POST /api/unknown not found' },
+      error: { code: 'NOT_FOUND', message: 'Route POST /api/v1/unknown not found' },
     });
   });
 });
