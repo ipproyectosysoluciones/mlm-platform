@@ -1,0 +1,40 @@
+# =============================================================================
+# Nexo Real — Cloudflare Tunnel Configuration
+# =============================================================================
+# Installed on the VPS by provision.sh, placed at /etc/cloudflared/config.yml
+#
+# cloudflared runs as a systemd service:
+#   sudo systemctl status cloudflared
+#   sudo journalctl -u cloudflared -f
+#
+# The tunnel token is provided via systemd unit or environment variable,
+# NOT in this config file.
+#
+# Prerequisites:
+#   1. Create tunnel in Cloudflare dashboard or via CLI:
+#      cloudflared tunnel create nexoreal
+#   2. Route DNS:
+#      cloudflared tunnel route dns nexoreal nexoreal.xyz
+#   3. Set token in systemd unit or /etc/default/cloudflared
+
+# --- Tunnel Ingress Rules ---------------------------------------------------
+# Traffic flow: Internet → Cloudflare → cloudflared → localhost:80 (Nginx)
+# Nginx then proxies to backend (3000) or bot (3002)
+
+ingress:
+  # nexoreal.xyz → Nginx on port 80
+  - hostname: nexoreal.xyz
+    service: http://localhost:80
+    originRequest:
+      # NoTLS since Nginx runs HTTP (Cloudflare handles TLS)
+      noTLSVerify: false
+      # Keep connections alive for WebSocket
+      keepAliveConnections: 10
+      keepAliveTimeout: 90s
+
+  # www.nexoreal.xyz → same as above (redirect handled by Cloudflare)
+  - hostname: www.nexoreal.xyz
+    service: http://localhost:80
+
+  # Catch-all — return 404 for unmatched routes
+  - service: http_status:404
