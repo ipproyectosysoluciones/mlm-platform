@@ -131,7 +131,7 @@ jobs:
             docker pull ipproyectos/mlm-bot:development
 
             echo "🔄 Restarting services..."
-            VERSION=development docker compose -f docker-compose.azure.yml up -d --remove-orphans
+            VERSION=development docker compose -f docker-compose.azure.yml --env-file .env.azure up -d --remove-orphans
 
             echo "⏳ Waiting for services to initialize..."
             sleep 20
