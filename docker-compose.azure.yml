@@ -4,7 +4,16 @@
 # Usage: docker compose -f docker-compose.azure.yml --env-file .env.azure up -d
 #
 # This compose file is for VPS deployments (Azure, Hostinger, DonWeb, etc.)
-# where PostgreSQL is external (managed service). No local postgres/redis/n8n.
+# where PostgreSQL is external (managed service). Includes Redis + n8n.
+#
+# Memory budget (4GB VM):
+#   OS + Docker:   ~700MB
+#   PostgreSQL:    ~200MB (Azure managed, not local)
+#   Redis:         ~100MB (mem_limit)
+#   Backend:       ~500MB (mem_limit)
+#   Bot:           ~800MB (mem_limit, Baileys + Chromium)
+#   n8n:           ~512MB (mem_limit)
+#   Swap:          2GB buffer
 #
 # Prerequisites:
 #   1. provision.sh has been run on the VPS
@@ -12,6 +21,76 @@
 #   3. Docker images are pushed to Docker Hub
 
 services:
+  # ── Redis ────────────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --maxmemory 64mb --maxmemory-policy allkeys-lru
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    mem_limit: 100m
+    networks:
+      - mlm-network
+
+  # ── n8n — Workflow Automation ────────────────────────────────────────────
+  # Handles: Google Calendar (schedule visits), Notion CRM (leads), human handoff
+  n8n:
+    image: n8nio/n8n:latest
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5678:5678"
+    environment:
+      # ── Core ──────────────────────────────────────────────────────────
+      N8N_HOST: ${N8N_HOST:-localhost}
+      N8N_PORT: 5678
+      N8N_PROTOCOL: ${N8N_PROTOCOL:-http}
+      WEBHOOK_URL: ${N8N_WEBHOOK_URL:-http://n8n:5678/}
+
+      # ── Auth — owner account ──────────────────────────────────────────
+      N8N_USER_MANAGEMENT_DISABLED: "false"
+      N8N_USER_EMAIL: ${N8N_USER_EMAIL}
+      N8N_USER_PASSWORD: ${N8N_USER_PASSWORD}
+      N8N_USER_FIRST_NAME: ${N8N_USER_FIRST_NAME:-Nexo}
+      N8N_USER_LAST_NAME: ${N8N_USER_LAST_NAME:-Admin}
+
+      # ── Timezone ──────────────────────────────────────────────────────
+      GENERIC_TIMEZONE: ${TZ:-America/Bogota}
+      TZ: ${TZ:-America/Bogota}
+
+      # ── Persistence (SQLite by default) ───────────────────────────────
+      DB_TYPE: sqlite
+      DB_SQLITE_DATABASE: /home/node/.n8n/database.sqlite
+
+      # ── Google Calendar integration ────────────────────────────────────
+      GOOGLE_CALENDAR_ID: ${GOOGLE_CALENDAR_ID:-}
+
+      # ── Notion integration ─────────────────────────────────────────────
+      NOTION_LEADS_DB_ID: ${NOTION_DATABASE_ID_LEADS:-}
+      NOTION_DATABASE_ID_VISITS: ${NOTION_DATABASE_ID_VISITS:-}
+
+      # ── Brevo — Human Handoff email ───────────────────────────────────
+      BREVO_API_KEY: ${BREVO_API_KEY:-}
+      BREVO_HANDOFF_TEMPLATE_ID: ${BREVO_HANDOFF_TEMPLATE_ID:-1}
+      SALES_TEAM_EMAIL: ${SALES_TEAM_EMAIL:-}
+    volumes:
+      - n8n_data:/home/node/.n8n
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:5678/healthz || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    mem_limit: 512m
+    networks:
+      - mlm-network
+
   # ── Backend API ─────────────────────────────────────────────────────────
   backend:
     image: ipproyectos/mlm-backend:${VERSION:-latest}
@@ -44,8 +123,10 @@ services:
       FRONTEND_URL: ${FRONTEND_URL:-https://nexoreal.xyz}
       ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-https://nexoreal.xyz}
 
-      # ── Redis (disabled on Azure — deferred) ──────────────────────────
-      REDIS_ENABLED: ${REDIS_ENABLED:-false}
+      # ── Redis ─────────────────────────────────────────────────────────
+      REDIS_ENABLED: ${REDIS_ENABLED:-true}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
 
       # ── Email / Brevo ─────────────────────────────────────────────────
       BREVO_SMTP_HOST: ${BREVO_SMTP_HOST:-smtp-relay.brevo.com}
@@ -85,18 +166,20 @@ services:
 
       # ── Feature flags ─────────────────────────────────────────────────
       SKIP_COMMISSION_CALCULATION: ${SKIP_COMMISSION_CALCULATION:-false}
+    depends_on:
+      redis:
+        condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:3000/api/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 30s
+    mem_limit: 500m
     networks:
       - mlm-network
 
   # ── WhatsApp Bot ────────────────────────────────────────────────────────
-  # NOTE: No n8n dependency — n8n is deferred for Azure deployment.
-  # The N8N_WEBHOOK_URL env var is empty or points to an external n8n instance.
   bot:
     image: ipproyectos/mlm-bot:${VERSION:-latest}
     restart: unless-stopped
@@ -129,12 +212,14 @@ services:
       CALENDLY_LINK: ${CALENDLY_LINK:-}
       OFFICE_ADDRESS: ${OFFICE_ADDRESS:-Ask the agent for more information}
 
-      # n8n — deferred for Azure (no local n8n container)
-      N8N_WEBHOOK_URL: ${N8N_WEBHOOK_URL:-}
+      # n8n — internal webhook base URL
+      N8N_WEBHOOK_URL: http://n8n:5678/webhook
     volumes:
       - bot_sessions:/app/bot_sessions
     depends_on:
       backend:
+        condition: service_healthy
+      n8n:
         condition: service_healthy
     healthcheck:
       # Bot doesn't expose a /health endpoint — verify HTTP server is listening
@@ -143,12 +228,14 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s
+    mem_limit: 800m
     networks:
       - mlm-network
 
 # --- Volumes ----------------------------------------------------------------
-# Persist WhatsApp session across container restarts
 volumes:
+  redis_data:
+  n8n_data:
   bot_sessions:
 
 # --- Networks ---------------------------------------------------------------
