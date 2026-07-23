@@ -101,12 +101,18 @@ terraform output
 
 ### 3.4 Cost Estimate
 
-| Resource           | SKU                     | Monthly Cost (approx) |
-| ------------------ | ----------------------- | --------------------- |
-| VM (B2ats v2)      | 2 vCPU, 4 GB RAM        | ~$30 USD              |
-| PostgreSQL (B1MS)  | 1 vCPU, 2 GB RAM, 32 GB | ~$15 USD              |
-| Public IP (static) | Standard                | ~$4 USD               |
-| **Total**          |                         | **~$49 USD/month**    |
+> **Azure Free Account**: New accounts get **12 months FREE** of B2ats v2 VM + PostgreSQL B1MS + 64GB SSD. See [azure.microsoft.com/pricing/free-services](https://azure.microsoft.com/en-us/pricing/free-services).
+
+| Resource           | SKU                     | Free (12 months) | After 12 months  |
+| ------------------ | ----------------------- | ---------------- | ---------------- |
+| VM (B2ats v2)      | 2 vCPU, 4 GB RAM        | **$0** (750 hrs) | ~$15 USD/mes     |
+| PostgreSQL (B1MS)  | 1 vCPU, 2 GB RAM, 32 GB | **$0** (750 hrs) | ~$12 USD/mes     |
+| Managed Disk (P6)  | 64 GB SSD               | **$0**           | ~$3 USD/mes      |
+| Public IP (static) | Standard                | **$0**           | ~$4 USD/mes      |
+| Bandwidth          | 15 GB outbound          | **$0**           | Pay-as-you-go    |
+| **Total**          |                         | **$0 USD/mes**   | **~$34 USD/mes** |
+
+> **Note**: After 12 months, costs are ~$34 USD/month (~135K COP). The free tier is sufficient for testing and early production.
 
 ---
 
