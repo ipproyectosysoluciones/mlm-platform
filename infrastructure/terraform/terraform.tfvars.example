@@ -1,0 +1,23 @@
+# =============================================================================
+# Nexo Real — Terraform Variables (copy to terraform.tfvars and fill in)
+# NEVER commit the real terraform.tfvars — it contains secrets
+# =============================================================================
+
+# VM Configuration
+project_name   = "nexoreal"
+location       = "brazilsouth"
+vm_size        = "Standard_B2ats_v2"
+admin_username = "azureuser"
+
+# SSH — paste your public key (cat ~/.ssh/azure_vm_key.pub)
+ssh_public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAA... your-email@domain.com"
+
+# PostgreSQL — set a strong password (min 8 chars)
+postgres_password = "CHANGE_ME_strong_password_2024"
+
+# Team IPs — your team's public IPs for SSH access
+# Find yours: https://whatismyipaddress.com
+allowed_ssh_ips = [
+  "203.0.113.10",   # Replace with your IP
+  "198.51.100.20",  # Replace with teammate IP
+]
