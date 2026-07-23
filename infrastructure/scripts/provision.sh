@@ -235,7 +235,7 @@ if [ ! -f "$ENV_FILE" ]; then
 # NEVER commit the real .env.production
 # =============================================================================
 
-# Database — Azure Managed PostgreSQL
+# ── Database (Azure Managed PostgreSQL) ──────────────────────────────────────
 DB_DIALECT=postgres
 DB_HOST=REPLACE_WITH_POSTGRES_FQDN
 DB_PORT=5432
@@ -244,12 +244,80 @@ DB_USER=mlm_admin
 DB_PASSWORD=REPLACE_WITH_DB_PASSWORD
 DATABASE_URL=postgresql://mlm_admin:REPLACE_WITH_DB_PASSWORD@REPLACE_WITH_POSTGRES_FQDN:5432/mlm_db?sslmode=require
 
-# Bot — no n8n in Azure (deferred)
+# ── JWT Authentication ───────────────────────────────────────────────────────
+# Generate: openssl rand -hex 64
+JWT_SECRET=REPLACE_WITH_JWT_SECRET
+JWT_EXPIRES_IN=7d
+
+# ── 2FA ──────────────────────────────────────────────────────────────────────
+# Generate: openssl rand -hex 32
+TWO_FACTOR_SECRET_KEY=REPLACE_WITH_2FA_SECRET
+
+# ── Application URLs ────────────────────────────────────────────────────────
+APP_URL=https://nexoreal.xyz
+FRONTEND_URL=https://nexoreal.xyz
+ALLOWED_ORIGINS=https://nexoreal.xyz,https://www.nexoreal.xyz
+
+# ── Redis (disabled on Azure — deferred) ─────────────────────────────────────
+REDIS_ENABLED=false
+
+# ── Email / Brevo ───────────────────────────────────────────────────────────
+BREVO_SMTP_HOST=smtp-relay.brevo.com
+BREVO_SMTP_PORT=587
+BREVO_SMTP_USER=REPLACE_WITH_BREVO_LOGIN_EMAIL
+BREVO_SMTP_PASS=REPLACE_WITH_BREVO_SMTP_PASSWORD
+BREVO_SENDER_EMAIL=noreply@nexoreal.xyz
+BREVO_SENDER_NAME=Nexo Real
+BREVO_API_KEY=REPLACE_WITH_BREVO_API_KEY
+BREVO_SMS_SENDER=NexoReal
+
+# ── Wallet ──────────────────────────────────────────────────────────────────
+WALLET_MIN_WITHDRAWAL=20
+WALLET_FEE_PERCENTAGE=5
+WALLET_CRON_TIME=0 0 * * *
+
+# ── Push Notifications (VAPID) ──────────────────────────────────────────────
+# Generate: npx web-push generate-vapid-keys
+VAPID_PUBLIC_KEY=REPLACE_WITH_VAPID_PUBLIC_KEY
+VAPID_PRIVATE_KEY=REPLACE_WITH_VAPID_PRIVATE_KEY
+VAPID_SUBJECT=mailto:admin@nexoreal.xyz
+
+# ── PayPal ──────────────────────────────────────────────────────────────────
+PAYPAL_MODE=sandbox
+PAYPAL_CLIENT_ID=REPLACE_WITH_PAYPAL_CLIENT_ID
+PAYPAL_CLIENT_SECRET=REPLACE_WITH_PAYPAL_CLIENT_SECRET
+PAYPAL_WEBHOOK_ID=REPLACE_WITH_PAYPAL_WEBHOOK_ID
+
+# ── MercadoPago ─────────────────────────────────────────────────────────────
+MERCADOPAGO_ACCESS_TOKEN=REPLACE_WITH_MP_ACCESS_TOKEN
+MERCADOPAGO_PUBLIC_KEY=REPLACE_WITH_MP_PUBLIC_KEY
+MERCADOPAGO_WEBHOOK_ID=REPLACE_WITH_MP_WEBHOOK_ID
+MERCADOPAGO_INTEGRATION_TYPE=checkout
+MERCADOPAGO_WEBHOOK_SECRET=REPLACE_WITH_MP_WEBHOOK_SECRET
+
+# ── Monitoring ──────────────────────────────────────────────────────────────
+SENTRY_DSN=
+
+# ── Feature Flags ───────────────────────────────────────────────────────────
+SKIP_COMMISSION_CALCULATION=false
+
+# ── WhatsApp Bot ────────────────────────────────────────────────────────────
+BOT_SECRET=REPLACE_WITH_BOT_SECRET
+PHONE_NUMBER=REPLACE_WITH_PHONE_NUMBER
+OPENAI_API_KEY=REPLACE_WITH_OPENAI_API_KEY
+OPENAI_MODEL=gpt-4o-mini
+
+# ── Bot Platform Config ─────────────────────────────────────────────────────
+PLATFORM_URL=https://nexoreal.xyz
+EMAIL=
+CALENDLY_LINK=
+OFFICE_ADDRESS=Ask the agent for more information
+
+# ── n8n (deferred — no local n8n on Azure) ──────────────────────────────────
 N8N_WEBHOOK_URL=
 
-# Bot secrets
-BOT_SECRET=REPLACE_WITH_BOT_SECRET
-OPENAI_API_KEY=REPLACE_WITH_OPENAI_KEY
+# ── Timezone ────────────────────────────────────────────────────────────────
+TZ=America/Bogota
 ENVEOF
   chown "$DEPLOY_USER":"$DEPLOY_USER" "$ENV_FILE"
   chmod 600 "$ENV_FILE"
