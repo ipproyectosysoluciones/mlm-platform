@@ -110,6 +110,8 @@ postman/
 # ===========================================
 deploy.sh
 deploy.prod.sh
+# Allow infrastructure deploy script (infrastructure-as-code, versioned)
+!infrastructure/scripts/deploy.sh
 
 # ===========================================
 # Sentry
