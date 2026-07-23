@@ -8,9 +8,3 @@ pnpm:
     - esbuild
     - sharp
     - sqlite3
-  overrides:
-    'brace-expansion': '>=5.0.5'
-    'picomatch': '>=4.0.4'
-    'handlebars': '>=4.7.9'
-    'nodemailer': '>=8.0.6'
-    'minimatch': '>=9.0.0'
