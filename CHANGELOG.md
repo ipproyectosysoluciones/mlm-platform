@@ -4,7 +4,23 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
-## [3.4.0] - 2026-07-22
+## [3.4.0] - 2026-07-24
+
+### Removed — Azure Infrastructure Cleanup
+
+- **Azure CI/CD removed** — Deleted `cd-azure.yml` workflow, `docker-compose.azure.yml`, `.env.azure.example`, and all Azure-specific secrets references
+- **Terraform IaC removed** — Deleted `infrastructure/terraform/` (main.tf, variables.tf, outputs.tf, terraform.tfvars.example)
+- **Azure deployment scripts removed** — Deleted `infrastructure/scripts/` (provision.sh, deploy.sh, rollback.sh, backup-db.sh)
+- **Nginx config removed** — Deleted `infrastructure/nginx/nexoreal.conf`
+- **Azure documentation removed** — Deleted `docs/AZURE-ARCHITECTURE.md`, `docs/AZURE-SETUP.md`, `docs/TROUBLESHOOTING.md`
+- **`.gitignore` cleaned** — Removed Azure env and Terraform state entries
+
+### Changed — Docker Deployment (Local)
+
+- **Docker Engine native** — All services run locally via `docker-compose.prod.yml` with Cloudflare Tunnel for external access
+- **Cloudflare Tunnel** — Persistent `nexo-real-backend` tunnel with HTTP/2 protocol (Vivaldi VPN compatible)
+- **Tunnel routes** — `api.nexoreal.xyz` → backend:3000, `n8n.nexoreal.xyz` → n8n:5678, `bot.nexoreal.xyz` → bot:3002
+- **Docker Hub images** — `ipproyectos/mlm-backend:release` and `ipproyectos/mlm-bot:release` rebuilt and published
 
 ### Added — Sprint 19: API Versioning
 
