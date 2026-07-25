@@ -7,7 +7,7 @@ on:
       - 'bot/**'
       - 'pnpm-lock.yaml'
   pull_request:
-    branches: [development]
+    branches: [main, release]
     paths:
       - 'bot/**'
       - 'pnpm-lock.yaml'
