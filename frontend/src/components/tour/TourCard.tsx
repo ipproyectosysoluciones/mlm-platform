@@ -10,7 +10,7 @@
  *       Los badges de categoría están hardcodeados en español y deben migrarse a claves i18n.
  */
 
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { MapPin, Clock, Users, Compass } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import type { TourPackage, TourCategory } from '../../services/tourService';

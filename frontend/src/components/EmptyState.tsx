@@ -11,7 +11,7 @@
  */
 
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { CalendarDays, Package, Receipt, RefreshCw, Search, ShoppingCart } from 'lucide-react';
 import { cn } from '../utils/cn';
 import { Button } from '@/components/ui/button';

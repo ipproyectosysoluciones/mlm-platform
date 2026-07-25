@@ -8,7 +8,7 @@
 
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { EmptyState } from '../../components/EmptyState';
 
 /* ─────────────────── Phase 1 Tests (T1.2 — existing) ─────────────────── */

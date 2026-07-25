@@ -8,7 +8,7 @@
  * @module pages/Register
  */
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { Loader2, Eye, EyeOff, Building2, Check } from 'lucide-react';
 import { useAuth } from '../context/useAuth';

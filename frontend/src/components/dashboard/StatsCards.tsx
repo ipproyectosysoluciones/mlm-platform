@@ -3,7 +3,7 @@
  *
  * @module components/dashboard/StatsCards
  */
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { Users, DollarSign, TrendingUp, Wallet } from 'lucide-react';
 import type { DashboardData } from '../../types';

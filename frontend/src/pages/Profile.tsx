@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { ArrowLeft, User, Mail, Gift, Calendar, LogOut, FileText } from 'lucide-react';
 import { useAuth } from '../context/useAuth';
