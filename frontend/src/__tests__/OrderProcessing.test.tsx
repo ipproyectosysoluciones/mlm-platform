@@ -11,15 +11,15 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
-// ─── Mock react-router-dom's useSearchParams and useNavigate ─────────────────
+// ─── Mock react-router's useSearchParams and useNavigate ─────────────────
 // We keep MemoryRouter for <Link> rendering but control useSearchParams manually.
 const mockNavigate = vi.fn();
 let mockSearchParams: URLSearchParams = new URLSearchParams();
 
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual<typeof import('react-router-dom')>('react-router-dom');
+vi.mock('react-router', async () => {
+  const actual = await vi.importActual<typeof import('react-router')>('react-router');
   return {
     ...actual,
     useNavigate: () => mockNavigate,

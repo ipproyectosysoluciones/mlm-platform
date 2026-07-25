@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 import { APP_URL, APP_SITE_NAME } from '../config/app.config';
 
 interface SEOProps {

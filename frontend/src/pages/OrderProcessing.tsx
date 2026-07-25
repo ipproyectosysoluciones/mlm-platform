@@ -7,7 +7,7 @@
  */
 
 import { useEffect } from 'react';
-import { useNavigate, useSearchParams, Link } from 'react-router-dom';
+import { useNavigate, useSearchParams, Link } from 'react-router';
 import { Check, Clock, XCircle, AlertCircle, Loader2, Home, ShoppingBag } from 'lucide-react';
 import { cn } from '../utils/cn';
 import { browserAPI } from '../lib/browser';

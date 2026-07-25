@@ -8,7 +8,7 @@
  * Tab state, active section rendering, and top-level layout only.
  */
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import i18n from 'i18next';
 import {

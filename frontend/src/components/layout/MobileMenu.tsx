@@ -7,7 +7,7 @@
  *
  * @module components/layout/MobileMenu
  */
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { changeLanguage, getCurrentLanguage, supportedLanguages } from '../../i18n';
 import { useAuth } from '../../context/useAuth';

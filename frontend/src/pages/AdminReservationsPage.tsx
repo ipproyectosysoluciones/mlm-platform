@@ -16,7 +16,7 @@
  * // Español: Acceder vía /admin/reservations (requiere AdminRoute)
  */
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import {
   ArrowLeft,
   RefreshCw,

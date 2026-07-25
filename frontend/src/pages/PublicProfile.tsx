@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router';
 import { useProfileSEO } from '../hooks/useSEO';
 import api from '../services/api';
 import type { Product } from '../types';
