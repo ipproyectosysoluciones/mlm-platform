@@ -4,6 +4,26 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
+## [3.4.1] - 2026-07-25
+
+### Fixed — Security Patches
+
+- **react-router CSRF bypass** — Upgraded `react-router-dom` v7.18.0 → `react-router` v8.3.0 (Dependabot #181). v8 merges packages — import path changed from `react-router-dom` to `react-router` across 78 frontend files. No behavioral changes (legacy BrowserRouter pattern maintained).
+- **Rate limiting gaps** — Added rate limiters to 4 unprotected mutation endpoints (CodeQL #48):
+  - `POST /auth/register/guest` — 10 req/15min (IP-keyed)
+  - `POST /vendors/register` — 5 req/15min (IP-keyed)
+  - `POST/PUT/DELETE /carts` — 30 req/min (user-ID-keyed, GET excluded)
+  - `POST /crm/*` — 20 req/min (user-ID-keyed, GET excluded)
+- **Dependency bumps** — `brace-expansion` 5.0.7→5.0.8, `js-yaml` 5.2.1→5.2.2, `postcss` 8.5.15→8.5.23
+
+### Tests
+
+- **Backend**: 878 tests passing (1 skipped)
+- **Frontend**: 654 tests passing (1 skipped)
+- **CI gate**: `tsc --noEmit -p tsconfig.check.json` — 0 errors
+
+---
+
 ## [3.4.0] - 2026-07-24
 
 ### Removed — Azure Infrastructure Cleanup

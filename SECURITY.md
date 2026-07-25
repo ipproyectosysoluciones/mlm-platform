@@ -6,14 +6,12 @@ We currently support the following versions with security updates:
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 2.6.x   | :white_check_mark: |
-| 2.5.x   | :white_check_mark: |
-| 2.4.x   | :white_check_mark: |
-| 2.3.x   | :white_check_mark: |
-| 2.2.x   | :x:                |
-| 2.1.x   | :x:                |
-| 2.0.x   | :x:                |
-| < 2.0   | :x:                |
+| 3.4.x   | :white_check_mark: |
+| 3.3.x   | :white_check_mark: |
+| 3.2.x   | :white_check_mark: |
+| 2.6.x   | :x:                |
+| 2.5.x   | :x:                |
+| < 2.5   | :x:                |
 
 ## Reporting a Vulnerability
 
@@ -226,5 +224,40 @@ This prevents type confusion attacks where an attacker could manipulate the `fil
 
 ---
 
-_Last updated: 2026-04-12_
-_Version: 2.6.1_
+### Security Patches (v3.4.1)
+
+#### Dependabot High — react-router CSRF Bypass (Dependabot #181)
+
+| Alert           | Package      | Severity | Vulnerable Range   | Fix                             |
+| --------------- | ------------ | -------- | ------------------ | ------------------------------- |
+| Dependabot #181 | react-router | High     | >= 7.12.0, < 8.3.0 | Upgraded to react-router v8.3.0 |
+
+**What changed**: `react-router-dom` v7.18.0 replaced with `react-router` v8.3.0. v8 merges packages — import path changed from `react-router-dom` to `react-router` across 78 frontend files. Legacy BrowserRouter pattern maintained (no behavioral changes).
+
+#### CodeQL High — Missing Rate Limiting (CodeQL #48)
+
+| Alert      | Issue                 | Fix                                               |
+| ---------- | --------------------- | ------------------------------------------------- |
+| CodeQL #48 | Missing rate limiting | Added 4 new rate limiters in `backend/src/app.ts` |
+
+**Endpoints protected**:
+
+| Endpoint                  | Limiter               | Window | Max Requests | Key Source |
+| ------------------------- | --------------------- | ------ | ------------ | ---------- |
+| POST /auth/register/guest | guestAuthLimiter      | 15 min | 10           | IP         |
+| POST /vendors/register    | vendorRegisterLimiter | 15 min | 5            | IP         |
+| POST/PUT/DELETE /carts    | cartLimiter           | 1 min  | 30           | User ID    |
+| POST /crm/\*              | crmWriteLimiter       | 1 min  | 20           | User ID    |
+
+#### Dependency Bumps (Dependabot)
+
+| Package         | Before | After  | Fix                                        |
+| --------------- | ------ | ------ | ------------------------------------------ |
+| brace-expansion | 5.0.7  | 5.0.8  | DoS via unbounded expansion (#183)         |
+| js-yaml         | 5.2.1  | 5.2.2  | Exponential parsing time DoS (#182)        |
+| postcss         | 8.5.15 | 8.5.23 | Path traversal via sourceMappingURL (#180) |
+
+---
+
+_Last updated: 2026-07-25_
+_Version: 3.4.1_
