@@ -23,10 +23,10 @@ pnpm install
 docker compose up -d postgres
 
 # Run migrations
-cd backend && pnpm prisma migrate dev
+cd backend && pnpm sequelize db:migrate
 
 # Seed database
-pnpm prisma db seed
+pnpm seed
 
 # Start development
 pnpm dev
