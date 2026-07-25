@@ -2,8 +2,11 @@ name: CD Backend
 
 on:
   push:
-    branches: [release, development]
+    branches: [release]
     tags: ['v*']
+    paths:
+      - 'backend/**'
+      - 'pnpm-lock.yaml'
 
 # ── Required Secrets ─────────────────────────────────────────────────
 # DOCKERHUB_USERNAME  — Docker Hub username (used as image namespace)

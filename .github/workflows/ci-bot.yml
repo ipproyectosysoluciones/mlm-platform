@@ -2,12 +2,12 @@ name: CI Bot
 
 on:
   push:
-    branches: [main, development]
+    branches: [development]
     paths:
       - 'bot/**'
       - 'pnpm-lock.yaml'
   pull_request:
-    branches: [main, development]
+    branches: [development]
     paths:
       - 'bot/**'
       - 'pnpm-lock.yaml'

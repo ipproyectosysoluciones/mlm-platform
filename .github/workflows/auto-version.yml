@@ -1,0 +1,98 @@
+name: Auto Version
+
+on:
+  push:
+    branches: [release]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  version-bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history needed for conventional-changelog
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'pnpm'
+
+      - run: corepack enable && corepack prepare pnpm@latest --activate
+
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Install conventional-changelog tools
+        run: pnpm add -Dw conventional-changelog-cli conventional-recommended-bump
+
+      - name: Detect version bump
+        id: bump
+        run: |
+          BUMP=$(npx conventional-recommended-bump --preset angular 2>/dev/null || echo "")
+          echo "type=${BUMP}" >> "$GITHUB_OUTPUT"
+          echo "Bump type: ${BUMP:-none}"
+
+      - name: Calculate new version
+        id: version
+        if: steps.bump.outputs.type != ''
+        run: |
+          CURRENT=$(node -p "require('./package.json').version")
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT"
+
+          case "${{ steps.bump.outputs.type }}" in
+            major)   NEW="$((MAJOR + 1)).0.0" ;;
+            minor)   NEW="$MAJOR.$((MINOR + 1)).0" ;;
+            patch)   NEW="$MAJOR.$MINOR.$((PATCH + 1))" ;;
+            *)       echo "Unknown bump type"; exit 1 ;;
+          esac
+
+          echo "current=${CURRENT}" >> "$GITHUB_OUTPUT"
+          echo "new=${NEW}" >> "$GITHUB_OUTPUT"
+          echo "New version: ${NEW}"
+
+      - name: Check tag does not exist
+        if: steps.version.outputs.new != ''
+        run: |
+          TAG="v${{ steps.version.outputs.new }}"
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Tag $TAG already exists — skipping"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+        id: tag-check
+
+      - name: Bump version in package.json
+        if: steps.version.outputs.new != '' && steps.tag-check.outputs.skip != 'true'
+        run: |
+          npm version "${{ steps.version.outputs.new }}" --no-git-tag-version
+
+      - name: Generate CHANGELOG
+        if: steps.version.outputs.new != '' && steps.tag-check.outputs.skip != 'true'
+        run: |
+          npx conventional-changelog -p angular -i CHANGELOG.md -s --pkg package.json
+          # Prepend date to the new section if not present
+          TODAY=$(date +%Y-%m-%d)
+          sed -i "s/## \[${{ steps.version.outputs.new }}\]/## [${{ steps.version.outputs.new }}] - ${TODAY}/" CHANGELOG.md
+
+      - name: Commit and tag
+        if: steps.version.outputs.new != '' && steps.tag-check.outputs.skip != 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add package.json pnpm-lock.yaml CHANGELOG.md
+          git commit -m "chore(release): v${{ steps.version.outputs.new }} [skip ci]"
+          git tag "v${{ steps.version.outputs.new }}"
+          git push origin HEAD "v${{ steps.version.outputs.new }}"
+
+      - name: Summary
+        if: steps.version.outputs.new != '' && steps.tag-check.outputs.skip != 'true'
+        run: |
+          echo "## 🏷️ Version Bumped" >> "$GITHUB_STEP_SUMMARY"
+          echo "**${{ steps.version.outputs.current }}** → **${{ steps.version.outputs.new }}**" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Tag:** \`v${{ steps.version.outputs.new }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Bump type:** ${{ steps.bump.outputs.type }}" >> "$GITHUB_STEP_SUMMARY"
