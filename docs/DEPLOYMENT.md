@@ -21,11 +21,13 @@ The platform uses a **hybrid deployment model**:
 
 ## 🔗 Production URLs / URLs de Producción
 
-| Service  | URL                                              | Purpose                |
-| -------- | ------------------------------------------------ | ---------------------- |
-| Frontend | https://nexoreal.xyz                             | Production (principal) |
-| Backend  | https://api.nexoreal.xyz                         | API Backend            |
-| Docker   | https://hub.docker.com/r/ipproyectos/mlm-backend | Container Registry     |
+| Service    | URL                                              | Purpose                           |
+| ---------- | ------------------------------------------------ | --------------------------------- |
+| Frontend   | https://nexoreal.xyz                             | Production (principal)            |
+| Backend    | https://api.nexoreal.xyz                         | API Backend                       |
+| n8n        | https://n8n.nexoreal.xyz                         | n8n (Cloudflare Access protected) |
+| Bot        | https://bot.nexoreal.xyz                         | Nexo Bot                          |
+| Docker Hub | https://hub.docker.com/r/ipproyectos/mlm-backend | Container Registry                |
 
 > **Note**: Backup/internal URL: `https://frontend-beta-rosy-89.vercel.app`
 
@@ -37,30 +39,15 @@ The platform uses a **hybrid deployment model**:
 
 ```bash
 # Pull latest
-docker pull ipproyectos/mlm-backend:latest
+docker pull ipproyectos/mlm-backend:release
 
-# Run with Docker Compose
-docker compose -f docker-compose.prod.yml up -d backend
+# Run with Docker Compose (env file is REQUIRED — not auto-loaded)
+docker compose -f docker-compose.prod.yml --env-file .env.production up -d
 ```
 
 ### Frontend (Vercel)
 
-Automatic deployment via GitHub Actions when pushing to `release` branch.
-
----
-
-### Using Deploy Script / Usando Script de Deploy
-
-```bash
-# Make executable
-chmod +x deploy-backend.sh
-
-# Deploy backend only
-./deploy-backend.sh latest
-
-# Deploy specific version
-./deploy-backend.sh v1.7.2
-```
+Automatic deployment via Vercel on push to `release` branch.
 
 ---
 
@@ -75,50 +62,37 @@ cd nexo-real
 cp .env.example .env.production
 # Edit .env.production with your values
 
-# Start all services
+# Start all services (env file is REQUIRED)
 docker compose -f docker-compose.prod.yml --env-file .env.production up -d
 
 # Check status
 docker compose -f docker-compose.prod.yml ps
 ```
 
-### Using Deploy Script
-
-```bash
-# Make executable
-chmod +x deploy.sh
-
-# Deploy latest version
-./deploy.sh latest
-
-# Deploy specific version
-./deploy.sh v1.3.0
-```
-
 ---
 
-## 🐳 Docker Images (Backend Only)
+## 🐳 Docker Images
 
 ### Pre-built Images (Docker Hub)
 
 ```bash
 # Pull backend image
-docker pull ipproyectos/mlm-backend:latest
+docker pull ipproyectos/mlm-backend:release
 
-# Run backend
-docker run -d \
-  --name mlm-backend \
-  -p 3000:3000 \
-  -e NODE_ENV=production \
-  -e DB_HOST=postgres \
-  -e DB_NAME=mlm_db \
-  -e DB_USER=mlm \
-  -e DB_PASSWORD=secret \
-  -e JWT_SECRET=your-secret \
-  ipproyectos/mlm-backend:latest
+# Pull bot image
+docker pull ipproyectos/mlm-bot:release
 ```
 
-> **Note**: Frontend is deployed via Vercel, not Docker. / El frontend se despliega vía Vercel, no Docker.
+### Production Containers
+
+| Container        | Port      | Purpose                                      |
+| ---------------- | --------- | -------------------------------------------- |
+| `mlm-backend-1`  | 3000      | API Backend (healthcheck: `/api/v1/health`)  |
+| `mlm-bot-1`      | 3002      | Nexo Bot (WhatsApp)                          |
+| `mlm-postgres-1` | 5432/5434 | PostgreSQL 16 (DB: `mlm_db`, user: `mlm`)    |
+| `mlm-redis-1`    | 6379      | Redis 7                                      |
+| `mlm-n8n-1`      | 5678      | n8n Automation (Cloudflare Access protected) |
+| `dozzle`         | 8080      | Real-time Docker log viewer                  |
 
 ---
 
@@ -212,89 +186,34 @@ docker exec mlm-backend-1 node dist/server.cjs --force-sync
 - [ ] Change all default passwords
 - [ ] Use strong JWT_SECRET (32+ random characters)
 - [ ] Configure ALLOWED_ORIGINS with your domain
-- [ ] Enable HTTPS (SSL/TLS)
-- [ ] Set up rate limiting
-- [ ] Configure firewall rules
+- [ ] Verify Cloudflare Tunnel is running and routes are correct
+- [ ] Set up Cloudflare Access on n8n.nexoreal.xyz
 - [ ] Enable database backups
-- [ ] Set up monitoring (Sentry)
+- [ ] Verify monitoring (Dozzle, healthcheck, Telegram alerts)
 - [ ] Review CORS settings
 - [ ] Update email credentials
+- [ ] Ensure .env.production is NOT committed to git
 
 ### Recommended Security Headers
 
-Add to your reverse proxy (nginx):
+Cloudflare handles most security headers automatically. For additional hardening:
 
-```nginx
-# Security headers
-add_header X-Frame-Options "SAMEORIGIN" always;
-add_header X-Content-Type-Options "nosniff" always;
-add_header X-XSS-Protection "1; mode=block" always;
-add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
-
-# Remove server header
-server_tokens off;
-```
+- X-Frame-Options and X-Content-Type-Options are set by Cloudflare
+- HSTS is managed at the Cloudflare zone level
+- DDoS protection is automatic with Cloudflare
 
 ---
 
-## 🌐 Nginx Configuration
+## 🌐 Reverse Proxy — Cloudflare Tunnel
 
-### Production Config
+The platform uses **Cloudflare Tunnel** instead of a traditional reverse proxy. No nginx or open firewall ports needed.
 
-```nginx
-server {
-    listen 80;
-    server_name yourdomain.com;
-    return 301 https://$server_name$request_uri;
-}
+- Tunnel name: `nexo-real-backend`
+- Protocol: `http2` (required for Vivaldi VPN compatibility)
+- Host: Astaroth (190.9.193.112)
+- Docker Engine storage: `/mnt/docker-data` on `/dev/sda4` (30GB)
 
-server {
-    listen 443 ssl http2;
-    server_name yourdomain.com;
-
-    # SSL Configuration
-    ssl_certificate /etc/nginx/ssl/fullchain.pem;
-    ssl_certificate_key /etc/nginx/ssl/privkey.pem;
-    ssl_protocols TLSv1.2 TLSv1.3;
-    ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256;
-    ssl_prefer_server_ciphers off;
-
-    # Security headers
-    add_header X-Frame-Options "SAMEORIGIN" always;
-    add_header X-Content-Type-Options "nosniff" always;
-    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
-
-    # Gzip compression
-    gzip on;
-    gzip_types text/plain text/css application/json application/javascript;
-
-    # Frontend static files
-    location / {
-        root /usr/share/nginx/html;
-        try_files $uri $uri/ /index.html;
-        expires 1y;
-        add_header Cache-Control "public, immutable";
-    }
-
-    # API proxy
-    location /api/ {
-        proxy_pass http://backend:3000/api/;
-        proxy_http_version 1.1;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-
-    # WebSocket support (if needed)
-    location /ws {
-        proxy_pass http://backend:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
-    }
-}
-```
+Cloudflare handles SSL termination, DDoS protection, and global routing.
 
 ---
 
@@ -302,36 +221,38 @@ server {
 
 ### GitHub Actions Pipeline
 
-The project includes automatic deployment via GitHub Actions:
+The project uses **Docker Hub CI/CD** (not Azure):
 
-1. **Push to `development`**: Runs CI tests
-2. **Push to `main`**: Runs CI tests
-3. **Push to `release`**: Builds and deploys to Docker Hub
+1. **Push to `development`**: Runs CI tests + type check gate
+2. **Push to `release`**: Builds and pushes Docker images to Docker Hub
+3. **Tag pushed**: Creates GitHub Release
+
+### CD Workflows
+
+| Workflow         | Image                     | Docker Hub                         |
+| ---------------- | ------------------------- | ---------------------------------- |
+| `cd-backend.yml` | `ipproyectos/mlm-backend` | Pushes `latest` and `release` tags |
+| `cd-bot.yml`     | `ipproyectos/mlm-bot`     | Pushes `latest` and `release` tags |
 
 ### Manual Deployment Steps
 
 ```bash
-# 1. Update version
-git tag v1.3.0
-git push origin v1.3.0
+# 1. On server, pull new images
+docker pull ipproyectos/mlm-backend:release
+docker pull ipproyectos/mlm-bot:release
 
-# 2. CI/CD automatically:
-#    - Runs tests
-#    - Builds Docker images
-#    - Pushes to Docker Hub
-
-# 3. On server, pull new images
-docker pull ipproyectos/mlm-backend:v1.3.0
-docker pull ipproyectos/mlm-frontend:v1.3.0
-
-# 4. Restart services
-docker compose -f docker-compose.prod.yml pull
-docker compose -f docker-compose.prod.yml up -d
+# 2. Restart services (env file REQUIRED)
+docker compose -f docker-compose.prod.yml --env-file .env.production pull
+docker compose -f docker-compose.prod.yml --env-file .env.production up -d
 ```
 
 ---
 
 ## 📊 Monitoring
+
+### Dozzle (Real-time Logs)
+
+Dozzle runs on port 8080 for live Docker log streaming across all containers.
 
 ### Health Checks
 
@@ -340,13 +261,31 @@ docker compose -f docker-compose.prod.yml up -d
 docker ps --format "table {{.Names}}\t{{.Status}}"
 
 # Check API health
-curl http://localhost:3001/api/health
+curl http://localhost:3000/api/v1/health
 
-# Check logs
-docker logs mlm-backend-1 --tail 100
+# Run healthcheck manually
+bash infrastructure/monitoring/healthcheck.sh
+
+# Cron: runs every 5 minutes for continuous monitoring
 ```
 
-### Sentry Integration
+### Cloudflare Tunnel
+
+The platform is exposed via Cloudflare Tunnel (no open ports needed):
+
+| Route              | Internal Service                       |
+| ------------------ | -------------------------------------- |
+| `api.nexoreal.xyz` | backend:3000                           |
+| `n8n.nexoreal.xyz` | n8n:5678 (Cloudflare Access protected) |
+| `bot.nexoreal.xyz` | bot:3002                               |
+
+**Tunnel name**: `nexo-real-backend` (ID: `5daa75c9-45f5-4648-a34a-bb334a299693`)
+
+### Telegram Alerts
+
+Monitoring alerts are sent via the `@IP_Proyectos_y_Soluciones_bot` Telegram bot.
+
+### Sentry Integration (Optional)
 
 1. Create project at [sentry.io](https://sentry.io)
 2. Get DSN URL
@@ -386,30 +325,33 @@ docker logs mlm-backend-1
 ```bash
 # Check port conflicts
 lsof -i :3000
-lsof -i :80
+lsof -i :8080
 
-# Restart services
-docker compose -f docker-compose.prod.yml down
-docker compose -f docker-compose.prod.yml up -d
+# Restart services (env file REQUIRED)
+docker compose -f docker-compose.prod.yml --env-file .env.production down
+docker compose -f docker-compose.prod.yml --env-file .env.production up -d
 ```
 
 ### Useful Commands
 
 ```bash
-# View all logs
-docker compose -f docker-compose.prod.yml logs -f
+# View all logs (with env file)
+docker compose -f docker-compose.prod.yml --env-file .env.production logs -f
+
+# View logs in Dozzle
+# Open http://localhost:8080 in browser
 
 # Restart specific service
-docker compose -f docker-compose.prod.yml restart backend
-
-# Rebuild without cache
-docker build --no-cache -t image:tag .
+docker compose -f docker-compose.prod.yml --env-file .env.production restart backend
 
 # Clean up unused images
 docker image prune -f
 
 # Shell into container
 docker exec -it mlm-backend-1 sh
+
+# Run healthcheck manually
+bash infrastructure/monitoring/healthcheck.sh
 ```
 
 ---
@@ -417,7 +359,7 @@ docker exec -it mlm-backend-1 sh
 ## 📋 Docker Compose Production Template
 
 ```yaml
-version: '3.8'
+# Requires: --env-file .env.production
 
 services:
   postgres:
@@ -428,6 +370,8 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U ${DB_USER:-mlm}']
       interval: 10s
@@ -438,9 +382,11 @@ services:
     image: redis:7-alpine
     volumes:
       - redis_data:/data
+    ports:
+      - '6379:6379'
 
   backend:
-    image: ipproyectos/mlm-backend:latest
+    image: ipproyectos/mlm-backend:release
     environment:
       NODE_ENV: production
       DB_HOST: postgres
@@ -451,22 +397,39 @@ services:
       REDIS_HOST: redis
       JWT_SECRET: ${JWT_SECRET}
       ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
-      SENTRY_DSN: ${SENTRY_DSN}
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
+    healthcheck:
+      test: ['CMD-SHELL', 'curl -f http://localhost:3000/api/v1/health || exit 1']
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    ports:
+      - '3000:3000'
 
-  frontend:
-    image: ipproyectos/mlm-frontend:latest
+  bot:
+    image: ipproyectos/mlm-bot:release
     depends_on:
       - backend
+    ports:
+      - '3002:3002'
+
+  n8n:
+    image: n8nio/n8n
+    depends_on:
+      - backend
+    ports:
+      - '5678:5678'
 
 volumes:
   postgres_data:
   redis_data:
 ```
+
+> **Important**: Always run with `--env-file .env.production`. Docker Compose does NOT auto-load environment files.
 
 ---
 

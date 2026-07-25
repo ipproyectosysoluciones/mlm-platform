@@ -3,16 +3,16 @@
 > Hoja de ruta completa para la plataforma **Nexo Real** — Servicios Inmobiliarios, Turismo/Hospitalidad y Afiliaciones.  
 > _"Conectamos tu negocio con el mundo."_
 
-**Versión actual**: v3.3.0 — Sprint 15 Completado ✅  
-**Última actualización**: 2026-07-18  
+**Versión actual**: v3.4.0 — Sprint 19 Completado ✅  
+**Última actualización**: 2026-07-24  
 **Estado**: Activo - Producción  
-**Meta**: v3.3.0 — próxima expansión
+**Meta**: v3.4.0 — próxima expansión
 
 ---
 
 ## 📊 Estado Actual del Proyecto
 
-### ✅ Lo que YA está implementado (v3.2.0)
+### ✅ Lo que YA está implementado (v3.4.0)
 
 | Área                     | Funcionalidad                                                                                            | Estado |
 | ------------------------ | -------------------------------------------------------------------------------------------------------- | ------ |
@@ -58,6 +58,13 @@
 | **UX Polish**            | EmptyState 6 tipos + Skeleton loaders + Mobile responsive + Sonner toast                                 | ✅     |
 | **Feature Guard**        | Middleware para feature flags (FEATURE_CRYPTO_ENABLED=false por defecto)                                 | ✅     |
 | **Tests**                | Backend: 66 suites, 887 tests · Frontend: 34 files, 446 tests · Bot: 18 files, 115 tests · Total: ~1,448 | ✅     |
+| **API Versioning**       | `/api/v1/` prefix, 307 redirects, dual-mount Express Router                                              | ✅     |
+| **Azure Cleanup**        | Removed Azure CI/CD, Terraform, nginx, Azure docs                                                        | ✅     |
+| **Docker Hub CI/CD**     | `cd-backend.yml` and `cd-bot.yml` pushing to Docker Hub                                                  | ✅     |
+| **Cloudflare Tunnel**    | Persistent tunnel with HTTP/2, routes for api/n8n/bot                                                    | ✅     |
+| **Cloudflare Access**    | Email OTP on n8n.nexoreal.xyz                                                                            | ✅     |
+| **Monitoring**           | Dozzle (8080), healthcheck cron, Telegram alerts                                                         | ✅     |
+| **Tests (v3.4.0)**       | 878 backend tests passing (1 skipped), ~1,701 total                                                      | ✅     |
 
 ---
 
@@ -624,6 +631,47 @@ Impact:
   Zero compilation errors — clean type checking pass
 ```
 
+#### Sprint 19 — v3.4.0 — API Versioning + Infrastructure Overhaul ✅
+
+```
+Branch:    feature/sprint19-*
+Estado:    Completado 2026-07-24
+Release:   v3.4.0
+
+Added — API Versioning:
+  ✅ API version prefix /api/v1/ — all 255 endpoints canonical
+  ✅ Dual-mount Express Router — /api/v1 primary + /api legacy with 307 redirects
+  ✅ Swagger UI relocated — /api/v1/docs (canonical), /api-docs legacy
+  ✅ Frontend baseURL migrated to /api/v1
+  ✅ Bot baseURL migrated to /api/v1
+  ✅ 22 integration test URLs migrated
+
+Removed — Azure Cleanup:
+  ✅ Deleted cd-azure.yml, docker-compose.azure.yml, .env.azure.example
+  ✅ Deleted infrastructure/terraform/ (main.tf, variables.tf, outputs.tf)
+  ✅ Deleted infrastructure/scripts/ (provision.sh, deploy.sh, rollback.sh, backup-db.sh)
+  ✅ Deleted infrastructure/nginx/nexoreal.conf
+  ✅ Deleted Azure documentation (AZURE-ARCHITECTURE.md, AZURE-SETUP.md, TROUBLESHOOTING.md)
+  ✅ .gitignore cleaned of Azure env and Terraform state entries
+
+Changed — Infrastructure:
+  ✅ Docker Engine native on /mnt/docker-data (/dev/sda4), expanded to 30GB
+  ✅ docker-compose.prod.yml requires --env-file .env.production (does NOT auto-load)
+  ✅ Cloudflare Tunnel: nexo-real-backend, HTTP/2 protocol, connector host Astaroth
+  ✅ Routes: api.nexoreal.xyz → backend:3000, n8n.nexoreal.xyz → n8n:5678, bot.nexoreal.xyz → bot:3002
+  ✅ Cloudflare Access on n8n.nexoreal.xyz with Email OTP
+
+Added — Monitoring:
+  ✅ Dozzle on port 8080 for real-time Docker logs
+  ✅ Healthcheck script: infrastructure/monitoring/healthcheck.sh (cron every 5 min)
+  ✅ Telegram alerts via @IP_Proyectos_y_Soluciones_bot
+
+Tests:
+  ✅ 878 backend tests passing (1 skipped)
+  ✅ ~1,701 total automated tests
+  ✅ CI gate: tsc --noEmit -p tsconfig.check.json — 0 errors
+```
+
 ### Fase 2 — Multi-Tenant (1–2 meses post v2.0.0)
 
 ```
@@ -659,7 +707,7 @@ Email: Brevo (SMTP + API)
 SMS: Brevo SMS
 Pagos: PayPal + MercadoPago
 Delivery: Providers via webhooks
-Testing: Jest (66 suites / 887 tests) + Bot Vitest (18 files / 115 tests)
+Testing: Jest (878 tests) + Bot Vitest + Frontend Vitest (~1,701 total)
 ```
 
 ### Frontend Stack
@@ -678,10 +726,10 @@ Testing: Vitest (34 files / 446 tests) + Playwright (22 specs / 262 E2E)
 
 ## 📈 Métricas Objetivo
 
-| Métrica       | Actual (v2.4.0)                                                  | Objetivo                 |
+| Métrica       | Actual (v3.4.0)                                                  | Objetivo                 |
 | ------------- | ---------------------------------------------------------------- | ------------------------ |
 | Test Coverage | ~70%                                                             | **90%+**                 |
-| Tests Totales | ~1,375 (Backend 667 + Bot 62 + Frontend Unit 446 + E2E 262)      | **~550** ✅ superado     |
+| Tests Totales | ~1,701 (878 backend + Frontend Unit + E2E + Bot)                 | **~550** ✅ superado     |
 | Features      | Pagos + Gamif + E-commerce + Multi-vendor + Delivery + Contracts | **Release v2.0.0**       |
 | Delivery      | Shipping addresses + tracking                                    | **+ DiDi/Uber/InDriver** |
 | Pagos         | PayPal + MP                                                      | **+ Gift Cards** ✅      |
@@ -717,6 +765,6 @@ sprint:9             - Sprint 9 — v2.5.0 → v2.6.1
 
 ---
 
-**Última actualización**: 2026-07-18  
+**Última actualización**: 2026-07-24  
 **Proyecto**: https://github.com/users/ipproyectosysoluciones/projects/4  
 **Producto**: Nexo Real — _"Conectamos tu negocio con el mundo."_
