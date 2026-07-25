@@ -1,11 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: 📖 Documentación
-    url: https://github.com/tu-usuario/mlm-platform/wiki
-    about: Consulta la wiki para documentación detallada
-  - name: 💬 Discord
-    url: https://discord.gg/tu-link
-    about: Únete a nuestra comunidad en Discord
+    url: https://github.com/ipproyectosysoluciones/mlm-platform/blob/main/docs/README.md
+    about: Consulta la documentación del proyecto
   - name: 📧 Contacto
-    url: mailto:tu-email@ejemplo.com
+    url: mailto:info@nexoreal.xyz
     about: Para consultas directas

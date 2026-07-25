@@ -52,6 +52,6 @@ assignees: ''
 
 <!-- Agrega cualquier otro contexto sobre el problema aquí -->
 
-## ¿Cómo人可以 corregir este bug?
+## ¿Cómo se puede corregir este bug?
 
 <!-- Opcional: Si tienes una idea de cómo solucionarlo -->

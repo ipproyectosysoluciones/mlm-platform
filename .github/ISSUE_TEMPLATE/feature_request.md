@@ -52,6 +52,6 @@ assignees: ''
 - [ ] **Media**: Mejora importante
 - [ ] **Baja**: Nice to have
 
-##¿Cómo человек puede implementar esta feature?
+## ¿Cómo se puede implementar esta feature?
 
 <!-- Opcional: Si tienes ideas de implementación -->

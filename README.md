@@ -7,7 +7,7 @@
 
 Conectamos tu negocio con el mundo. Plataforma de afiliaciones Unilevel con comisiones por niveles y visualización de árbol genealógico.
 
-**Versión actual: v3.4.0** — Sprint 19 completado (2026-07-24)
+**Versión actual: v3.4.1** — Security patches (2026-07-25)
 
 ## 🚀 Características / Features
 
