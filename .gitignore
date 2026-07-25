@@ -136,3 +136,6 @@ backend/swagger.json
 # /prompt_kb/  ← removed: prompt_kb is now baked into the bot Docker image
 
 /.vscodeioredis
+
+# Environment files with secrets
+.env.monitoring
