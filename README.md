@@ -7,7 +7,7 @@
 
 Conectamos tu negocio con el mundo. Plataforma de afiliaciones Unilevel con comisiones por niveles y visualización de árbol genealógico.
 
-**Versión actual: v3.2.0** — Sprint 12 completado (2026-06-25)
+**Versión actual: v3.4.0** — Sprint 19 completado (2026-07-24)
 
 ## 🚀 Características / Features
 
@@ -21,7 +21,7 @@ Conectamos tu negocio con el mundo. Plataforma de afiliaciones Unilevel con comi
 - **Landing Pages** - Creador de páginas de captura
 - **Panel de Administración** - Gestión completa de usuarios y comisiones
 - **API REST Documentada** - OpenAPI/Swagger bilingüe (ES/EN)
-- **Tests Automatizados** - ~1,600+ tests (Backend 90+ suites + Frontend Unit 20+ files + E2E 27 specs + Bot 8 files/62 tests)
+- **Tests Automatizados** - ~1,701 tests (878 backend, 1 skipped; CI gate: tsc --noEmit 0 errors)
 - **i18n** - Interfaz bilingüe (Español/Inglés)
 - **Wallet Digital** - Billetera digital con retiros y transacciones
 - **2FA (TOTP)** - Two-Factor Authentication con códigos de recuperación
@@ -51,6 +51,15 @@ Conectamos tu negocio con el mundo. Plataforma de afiliaciones Unilevel con comi
   - **CRM Refactoring** — ~894→537 líneas, 7 sub-componentes extraídos
   - **Frontend API Modularization** — `api.ts` dividido en 15 archivos por dominio
   - **Test Coverage Expansion** — 89% statements frontend, +55 tests backend
+
+## 🏗️ Infrastructure
+
+- **Docker Hub CI/CD** - Backend and Bot images published to `ipproyectos/mlm-backend` and `ipproyectos/mlm-bot`
+- **Cloudflare Tunnel** - Persistent tunnel (`nexo-real-backend`) with HTTP/2 protocol exposing `api.nexoreal.xyz`, `n8n.nexoreal.xyz`, `bot.nexoreal.xyz`
+- **Cloudflare Access** - Email OTP protection on `n8n.nexoreal.xyz`
+- **Monitoring** - Dozzle (port 8080) for real-time logs, healthcheck script via cron, Telegram alerts
+- **Docker containers** - 5 services: backend, bot, postgres, redis, n8n (plus Dozzle)
+- **CI gate** - `tsc --noEmit -p tsconfig.check.json` enforces zero type errors before merge
 
 ## 📊 Estado de Implementación / Implementation Status
 
@@ -83,6 +92,7 @@ Conectamos tu negocio con el mundo. Plataforma de afiliaciones Unilevel con comi
 | sprint11-v3.0.1                   | Push notification tests, centralized logger fix                                | ✅ Completo  | 2026-06-16 |
 | sprint12-crm-refactoring-v3.1.0   | CRM refactoring, security hardening, 50 vulns fixed                            | ✅ Completo  | 2026-06-17 |
 | sprint12-order-history-v3.2.0     | Order history, frontend API modularization, test coverage, CI fixes, E2E fixes | ✅ Completo  | 2026-06-25 |
+| sprint19-api-versioning-v3.4.0    | API versioning /api/v1/, Azure cleanup, Docker Hub CI/CD, Cloudflare Tunnel    | ✅ Completo  | 2026-07-24 |
 
 ### 🚧 Cambios en Progreso
 
@@ -340,7 +350,11 @@ MLM/
 │   │   └── stores/
 │   │       └── cartStore.ts   # Zustand cart state
 │   └── ...
-├── docker-compose.prod.yml  # Producción
+├── infrastructure/
+│   └── monitoring/
+│       ├── healthcheck.sh     # Health check script (cron every 5 min)
+│       └── MONITORING.md      # Monitoring documentation
+├── docker-compose.prod.yml  # Producción (requires --env-file .env.production)
 └── deploy.sh               # Script de deployment
 ```
 
@@ -359,7 +373,7 @@ Si este proyecto te resulta útil, podés apoyarlo con una donación:
 
 - **Proyecto**: Nexo Real - Plataforma de Afiliaciones
 - **GitHub**: https://github.com/ipproyectosysoluciones/mlm-platform _(será renombrado próximamente)_
-- **Docker Hub**: https://hub.docker.com/u/ipproyectos
+- **Docker Hub**: https://hub.docker.com/r/ipproyectos/mlm-backend
 
 ## 📄 Licencia
 

@@ -2,9 +2,9 @@
 
 ## Nexo Real — Plataforma SaaS de Servicios Inmobiliarios, Turismo y Afiliaciones
 
-**Version**: 3.2.0  
-**Status**: ✅ v3.2.0 Released  
-**Last Updated**: 2026-07-17  
+**Version**: 3.4.0  
+**Status**: ✅ v3.4.0 Released  
+**Last Updated**: 2026-07-24  
 **Document Owner**: Nexo Real Development Team  
 **Tagline**: _"Conectamos tu negocio con el mundo."_
 
@@ -33,7 +33,7 @@ Las agencias inmobiliarias, hoteles, hosterías y operadores turísticos en LATA
 3. **CRM integrado** — Gestión de leads, tareas, comunicaciones, y agendamiento
 4. **Integraciones n8n** — Google Calendar, Notion, notificación a agente humano
 
-> **Status**: v3.2.0 RELEASED ✅
+> **Status**: v3.4.0 RELEASED ✅
 
 ---
 
@@ -330,18 +330,19 @@ Session:     experimentalStore: true, timeRelease: 10800000
 ```
 Runtime:    Node 24+ (ESM)
 Framework:  Express 5
-Database:   PostgreSQL + Redis
+Database:   PostgreSQL 15 + Redis 7
 ORM:        Sequelize 6
 Email:      Brevo (SMTP + API)
 SMS:        Brevo SMS
 Payments:   PayPal SDK + MercadoPago SDK
-Testing:    Jest (66 suites / 887 tests) + Bot Vitest (18 files / 115 tests)
+Testing:    Jest (878 backend / ~1,701 total) + Bot Vitest (18 files / 115 tests)
+CI Gate:    tsc --noEmit zero errors
 ```
 
 ## Frontend
 
 ```
-Framework:  React 19 + Vite
+Framework:  React 19 + Vite 8
 Styling:    Tailwind CSS 4 + shadcn/ui
 State:      Zustand 5
 Routing:    React Router 7
@@ -358,6 +359,59 @@ Bot:        BuilderBot + Baileys
 AI:         OpenAI GPT-4o
 Automation: n8n (Docker)
 Port:       3002
+```
+
+## Infrastructure & Deployment (Sprint 19 — v3.4.0)
+
+### Docker Containers
+
+```
+5 containers on Docker Engine (native, /mnt/docker-data, /dev/sda4 30GB):
+├── backend    → ipproyectos/mlm-backend   (port 3000)
+├── bot        → ipproyectos/mlm-bot       (port 3002)
+├── postgres   → PostgreSQL 15             (port 5432)
+├── redis      → Redis 7                  (port 6379)
+└── n8n        → Workflow automation       (port 5678)
++ Dozzle       → Log viewer               (port 8080)
+```
+
+### CI/CD — Docker Hub
+
+```
+GitHub Actions:
+├── cd-backend.yml → builds & pushes ipproyectos/mlm-backend
+├── cd-bot.yml     → builds & pushes ipproyectos/mlm-bot
+└── Trigger: push to main
+```
+
+Azure CI/CD has been fully removed.
+
+### Cloudflare Tunnel
+
+```
+Tunnel: nexo-real-backend (protocol http2)
+Host:   Astaroth (190.9.193.112)
+
+Routes:
+├── api.nexoreal.xyz   → backend:3000
+├── n8n.nexoreal.xyz   → n8n:5678     (Cloudflare Access + Email OTP)
+├── bot.nexoreal.xyz   → bot:3002
+└── nexoreal.xyz       → Vercel (frontend, Cloudflare DNS)
+```
+
+### docker-compose.prod.yml
+
+```
+Requires: --env-file .env.production
+Services: backend, bot, postgres, redis, n8n, dozzle
+```
+
+### Monitoring
+
+```
+├── Dozzle           → real-time container logs (port 8080)
+├── Healthcheck      → cron script every 5 minutes
+└── Telegram alerts  → on container failure
 ```
 
 ---
@@ -501,7 +555,7 @@ PATCH  /api/admin/vendors/:id/commission-rate
 | KPI                       | Target        | Actual |
 | ------------------------- | ------------- | ------ |
 | Test Coverage             | >= 90%        | ~89%   |
-| Tests Totales             | ~1,500        | ~1,600 |
+| Tests Totales             | ~1,700        | ~1,701 |
 | API Response Time         | < 200ms (p95) | TBD    |
 | System Uptime             | >= 99.5%      | TBD    |
 | Payment Success Rate      | >= 95%        | N/A    |
@@ -527,6 +581,7 @@ PATCH  /api/admin/vendors/:id/commission-rate
 
 | Version | Date       | Author         | Changes                                                                                                                                                                                                                                                                          |
 | ------- | ---------- | -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 3.4.0   | 2026-07-24 | Nexo Real Team | Sprint 14-19: Docker Hub CI/CD (cd-backend.yml, cd-bot.yml), Cloudflare Tunnel (nexo-real-backend), Cloudflare Access (n8n Email OTP), Dozzle monitoring, healthcheck cron + Telegram alerts, 5-container Docker stack, Azure CI/CD removed. 1,701 total tests.                  |
 | 3.3.0   | 2026-07-17 | Nexo Real Team | Sprint 9 completion: error handling fix (R2Service, QRService, MercadoPagoService try/catch), bot CI/CD (GitHub Actions ci-bot.yml), MercadoPagoService test coverage, ROADMAP corrections. 887+115 tests, PRs #231-234.                                                         |
 | 3.2.0   | 2026-06-25 | Nexo Real Team | Sprint 12-13: Order History, Frontend API modularization, CRM refactoring (7 sub-componentes), Test Coverage 89%, CI/CD fixes, E2E fixes, security deps. Total ~1,600 tests.                                                                                                     |
 | 3.0.0   | 2026-04-13 | Nexo Real Team | Sprint 10: Payment webhooks, Invoices, Commission model migration, 2FA frontend, admin CRUD, UX Polish, Feature Guard. 154 files changed, ~12,110 insertions. v3.0.0 released.                                                                                                   |
@@ -554,16 +609,17 @@ _Nexo Real — "Conectamos tu negocio con el mundo."_
 
 ## Sprint Status
 
-| Sprint     | Versión | Descripción                                                                                                                                                         | Estado        | Fecha      |
-| ---------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ---------- |
-| Sprint 1-3 | v1.11.0 | Auth, MLM, CRM, E-commerce, Security, Marketplace                                                                                                                   | ✅ Completado | 2026-04-04 |
-| Sprint 4   | v2.0.0  | Nexo Bot WhatsApp, n8n Automation, Gamificación                                                                                                                     | ✅ Completado | 2026-04-06 |
-| Sprint 5   | v2.1.0  | Real Estate Frontend, Tourism Frontend, Reservation Wizard                                                                                                          | ✅ Completado | 2026-04-07 |
-| Sprint 6   | v2.2.0  | Admin Dashboard CRUD, Nexo Bot Flows (properties+tours), SEO Frontend, Build Hardening, i18n cleanup, CodeQL fixes                                                  | ✅ Completado | 2026-04-07 |
-| Sprint 7   | v2.3.5  | UI/UX Rebranding completo (landing Nexo Real, auth skin, AppLayout), Vitest 90%+ coverage, E2E Playwright, PWA                                                      | ✅ Completado | 2026-04-09 |
-| Sprint 8   | v2.4.0  | Bot Production-Ready, RBAC 9 roles, PostgreSQL adapter, Docker Hub, n8n workflows, seed Nexo Real                                                                   | ✅ Completado | 2026-04-10 |
-| Sprint 9   | v2.6.1  | Technical Debt — Pino logger, eliminate `any` types, bot Vitest (115 tests), PLATFORM_DOMAIN, controller tests (887), error handling (R2/QR/MercadoPago), bot CI/CD | ✅ Completado | 2026-04-12 |
-| Sprint 10  | v3.0.0  | Stabilization — Payment webhooks, invoices DB migration, disable crypto wallet, admin CRUD, 2FA testing, commission model migration                                 | ✅ Completado | 2026-04-13 |
-| Sprint 11  | v3.0.1  | Quick Wins — Push notification tests habilitados, centralized logger fix                                                                                            | ✅ Completado | 2026-06-16 |
-| Sprint 12  | v3.1.0  | CRM Refactoring + Security Hardening — 7 sub-componentes, 50 vulns resueltas                                                                                        | ✅ Completado | 2026-06-17 |
-| Sprint 13  | v3.2.0  | Order History, Frontend API Modularization, Test Coverage Expansion, CI/CD Fixes, E2E Fixes                                                                         | ✅ Completado | 2026-06-25 |
+| Sprint       | Versión | Descripción                                                                                                                                                         | Estado        | Fecha      |
+| ------------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ---------- |
+| Sprint 1-3   | v1.11.0 | Auth, MLM, CRM, E-commerce, Security, Marketplace                                                                                                                   | ✅ Completado | 2026-04-04 |
+| Sprint 4     | v2.0.0  | Nexo Bot WhatsApp, n8n Automation, Gamificación                                                                                                                     | ✅ Completado | 2026-04-06 |
+| Sprint 5     | v2.1.0  | Real Estate Frontend, Tourism Frontend, Reservation Wizard                                                                                                          | ✅ Completado | 2026-04-07 |
+| Sprint 6     | v2.2.0  | Admin Dashboard CRUD, Nexo Bot Flows (properties+tours), SEO Frontend, Build Hardening, i18n cleanup, CodeQL fixes                                                  | ✅ Completado | 2026-04-07 |
+| Sprint 7     | v2.3.5  | UI/UX Rebranding completo (landing Nexo Real, auth skin, AppLayout), Vitest 90%+ coverage, E2E Playwright, PWA                                                      | ✅ Completado | 2026-04-09 |
+| Sprint 8     | v2.4.0  | Bot Production-Ready, RBAC 9 roles, PostgreSQL adapter, Docker Hub, n8n workflows, seed Nexo Real                                                                   | ✅ Completado | 2026-04-10 |
+| Sprint 9     | v2.6.1  | Technical Debt — Pino logger, eliminate `any` types, bot Vitest (115 tests), PLATFORM_DOMAIN, controller tests (887), error handling (R2/QR/MercadoPago), bot CI/CD | ✅ Completado | 2026-04-12 |
+| Sprint 10    | v3.0.0  | Stabilization — Payment webhooks, invoices DB migration, disable crypto wallet, admin CRUD, 2FA testing, commission model migration                                 | ✅ Completado | 2026-04-13 |
+| Sprint 11    | v3.0.1  | Quick Wins — Push notification tests habilitados, centralized logger fix                                                                                            | ✅ Completado | 2026-06-16 |
+| Sprint 12    | v3.1.0  | CRM Refactoring + Security Hardening — 7 sub-componentes, 50 vulns resueltas                                                                                        | ✅ Completado | 2026-06-17 |
+| Sprint 13    | v3.2.0  | Order History, Frontend API Modularization, Test Coverage Expansion, CI/CD Fixes, E2E Fixes                                                                         | ✅ Completado | 2026-06-25 |
+| Sprint 14-19 | v3.4.0  | Docker Hub CI/CD, Cloudflare Tunnel, Cloudflare Access, Dozzle Monitoring, Healthcheck + Telegram Alerts, Azure CI/CD Removed                                       | ✅ Completado | 2026-07-24 |

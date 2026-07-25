@@ -18,9 +18,12 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 ### Changed — Docker Deployment (Local)
 
 - **Docker Engine native** — All services run locally via `docker-compose.prod.yml` with Cloudflare Tunnel for external access
-- **Cloudflare Tunnel** — Persistent `nexo-real-backend` tunnel with HTTP/2 protocol (Vivaldi VPN compatible)
+- **Docker data on /mnt/docker-data** — Engine storage expanded from 20GB to 30GB (`/dev/sda4`)
+- **Cloudflare Tunnel** — Persistent `nexo-real-backend` tunnel with HTTP/2 protocol (Vivaldi VPN compatible), connector host Astaroth (190.9.193.112)
 - **Tunnel routes** — `api.nexoreal.xyz` → backend:3000, `n8n.nexoreal.xyz` → n8n:5678, `bot.nexoreal.xyz` → bot:3002
+- **Cloudflare Access** — Email OTP (one-time PIN) protection on `n8n.nexoreal.xyz`
 - **Docker Hub images** — `ipproyectos/mlm-backend:release` and `ipproyectos/mlm-bot:release` rebuilt and published
+- **Env file requirement** — `docker-compose.prod.yml` requires `--env-file .env.production` (does NOT auto-load)
 
 ### Added — Sprint 19: API Versioning
 
@@ -38,6 +41,19 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 
 - **Swagger redirect** — `/api-docs` now correctly redirects to `/api/v1/docs` (skip added in redirect middleware)
 - **Integration test CI failures** — Redirect middleware skipped in `NODE_ENV=test` to prevent 307 responses in supertest; api-versioning redirect tests use standalone Express app
+
+### Added — Monitoring & Observability
+
+- **Dozzle** — Real-time Docker log viewer on port 8080
+- **Healthcheck script** — `infrastructure/monitoring/healthcheck.sh` runs every 5 min via cron
+- **Telegram alerts** — Alerts via bot @IP_Proyectos_y_Soluciones_bot
+- **Monitoring docs** — `infrastructure/monitoring/MONITORING.md`
+
+### Tests
+
+- **Backend**: 878 tests passing (1 skipped)
+- **Total platform**: ~1,701 automated tests
+- **CI gate**: `tsc --noEmit -p tsconfig.check.json` — 0 errors
 
 ---
 
