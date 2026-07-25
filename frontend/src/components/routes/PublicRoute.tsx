@@ -5,7 +5,7 @@
  *
  * @module components/routes/PublicRoute
  */
-import { Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router';
 import { useAuth } from '../../context/useAuth';
 
 interface PublicRouteProps {

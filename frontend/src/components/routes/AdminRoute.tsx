@@ -6,7 +6,7 @@
  *
  * @module components/routes/AdminRoute
  */
-import { Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router';
 import { useAuth } from '../../context/useAuth';
 import AppLayout from '../layout/AppLayout';
 

@@ -10,7 +10,7 @@
  *       Los badges de estado están hardcodeados en español y deben migrarse a claves i18n.
  */
 
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { MapPin, Bed, Bath, Maximize, Tag } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import type { Property, PropertyType } from '../../services/propertyService';

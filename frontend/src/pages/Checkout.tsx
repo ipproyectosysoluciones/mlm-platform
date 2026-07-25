@@ -5,7 +5,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { Loader2, AlertCircle, ArrowLeft, Check, Lock, X } from 'lucide-react';
 import { OrderSummary } from '../components/OrderSummary';

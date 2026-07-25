@@ -10,7 +10,7 @@
  * @module pages/TwoFactorLoginPage
  */
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { Loader2, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../context/useAuth';

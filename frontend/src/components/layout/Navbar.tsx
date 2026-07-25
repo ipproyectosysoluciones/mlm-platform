@@ -9,7 +9,7 @@
  *
  * @module components/layout/Navbar
  */
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/useAuth';
 import {

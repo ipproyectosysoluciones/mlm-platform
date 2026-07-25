@@ -9,7 +9,7 @@
  */
 
 import { useEffect } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router';
 import { ShoppingCart, AlertTriangle, Loader2, ArrowRight, RefreshCw } from 'lucide-react';
 import { CartPreview } from '../components/Cart/CartPreview';
 import { useCartRecovery } from '../stores/cartStore';

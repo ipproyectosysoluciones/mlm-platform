@@ -9,7 +9,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import NexoRealLanding from '../pages/landing/NexoRealLanding';
 import type { Property } from '../services/propertyService';
 import type { TourPackage } from '../services/tourService';

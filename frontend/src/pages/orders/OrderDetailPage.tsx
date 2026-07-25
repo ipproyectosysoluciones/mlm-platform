@@ -12,7 +12,7 @@
  */
 
 import { useCallback, useEffect, useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { ArrowLeft, Copy, Check, ShoppingBag, CreditCard } from 'lucide-react';
 import { orderService } from '@/services/api';

@@ -202,6 +202,70 @@ const orderLimiter = rateLimit({
   },
 });
 
+// Guest registration limiter — 10 req/15min, IP-keyed (public, no auth)
+const guestAuthLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: isTest ? 1000 : 10,
+  message: {
+    success: false,
+    error: {
+      code: 'RATE_LIMIT',
+      message: 'Too many guest registration attempts. Please try again later.',
+    },
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Vendor registration limiter — 5 req/15min, IP-keyed (public)
+const vendorRegisterLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: isTest ? 1000 : 5,
+  message: {
+    success: false,
+    error: {
+      code: 'RATE_LIMIT',
+      message: 'Too many vendor registration attempts. Please try again later.',
+    },
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Cart mutation limiter — 30 req/min, user-ID-keyed (auth), IP fallback
+const cartLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: isTest ? 1000 : 30,
+  message: {
+    success: false,
+    error: { code: 'RATE_LIMIT', message: 'Too many cart operations. Please try again later.' },
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: (req) => {
+    const user = (req as AuthenticatedRequest).user;
+    return user?.id?.toString() || req.ip || 'anonymous';
+  },
+  skip: (req) => req.method === 'GET',
+});
+
+// CRM write limiter — 20 req/min, user-ID-keyed (auth + role-gated)
+const crmWriteLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: isTest ? 1000 : 20,
+  message: {
+    success: false,
+    error: { code: 'RATE_LIMIT', message: 'Too many CRM operations. Please try again later.' },
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: (req) => {
+    const user = (req as AuthenticatedRequest).user;
+    return user?.id?.toString() || req.ip || 'anonymous';
+  },
+  skip: (req) => req.method === 'GET',
+});
+
 if (!isTest) {
   app.use('/api/v1/auth/login', authLimiter);
   app.use('/api/auth/login', authLimiter);
@@ -209,6 +273,18 @@ if (!isTest) {
   app.use('/api/auth/register', authLimiter);
   app.use('/api/v1/orders', orderLimiter);
   app.use('/api/orders', orderLimiter);
+
+  // Public mutation endpoints (IP-keyed)
+  app.use('/api/v1/auth/register/guest', guestAuthLimiter);
+  app.use('/api/auth/register/guest', guestAuthLimiter);
+  app.use('/api/v1/vendors/register', vendorRegisterLimiter);
+  app.use('/api/vendors/register', vendorRegisterLimiter);
+
+  // Authenticated mutation endpoints (user-ID-keyed)
+  app.use('/api/v1/carts', cartLimiter);
+  app.use('/api/carts', cartLimiter);
+  app.use('/api/v1/crm', crmWriteLimiter);
+  app.use('/api/crm', crmWriteLimiter);
 }
 
 // Rate limiting for 2FA verification (strict: 10 attempts per minute)

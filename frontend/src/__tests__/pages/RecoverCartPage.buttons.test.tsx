@@ -7,7 +7,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 // ── Mocks ───────────────────────────────────────────────────────────────────
 
@@ -36,8 +36,8 @@ vi.mock('../../components/Cart/CartPreview', () => ({
 }));
 
 // Must mock useSearchParams to provide the token
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom');
+vi.mock('react-router', async () => {
+  const actual = await vi.importActual('react-router');
   return {
     ...actual,
     useSearchParams: () => [new URLSearchParams('token=test-token-123'), vi.fn()],
