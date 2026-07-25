@@ -15,9 +15,9 @@
  */
 
 import { DataTypes, Model, ForeignKey } from 'sequelize';
-import { sequelize } from '../config/database';
-import { User } from './User';
-import type { CampaignRecipientAttributes, CampaignRecipientStatus } from '../types';
+import { sequelize } from '../config/database.js';
+import { User } from './User.js';
+import type { CampaignRecipientAttributes, CampaignRecipientStatus } from '../types/index.js';
 
 type CampaignRecipientCreation = Omit<
   CampaignRecipientAttributes,
@@ -58,7 +58,7 @@ export class CampaignRecipient extends Model<
 
   // Associations
   declare user?: User | null;
-  declare campaign?: import('./EmailCampaign').EmailCampaign | null;
+  declare campaign?: import('./EmailCampaign.js').EmailCampaign | null;
 }
 
 CampaignRecipient.init(

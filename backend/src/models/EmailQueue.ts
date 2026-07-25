@@ -15,9 +15,9 @@
  */
 
 import { DataTypes, Model, ForeignKey } from 'sequelize';
-import { sequelize } from '../config/database';
-import { User } from './User';
-import type { EmailQueueAttributes, EmailQueueStatus } from '../types';
+import { sequelize } from '../config/database.js';
+import { User } from './User.js';
+import type { EmailQueueAttributes, EmailQueueStatus } from '../types/index.js';
 
 type EmailQueueCreation = Omit<
   EmailQueueAttributes,
@@ -61,8 +61,8 @@ export class EmailQueue extends Model<EmailQueueAttributes, EmailQueueCreation> 
 
   // Associations
   declare user?: User | null;
-  declare campaign?: import('./EmailCampaign').EmailCampaign | null;
-  declare campaignRecipient?: import('./CampaignRecipient').CampaignRecipient | null;
+  declare campaign?: import('./EmailCampaign.js').EmailCampaign | null;
+  declare campaignRecipient?: import('./CampaignRecipient.js').CampaignRecipient | null;
 }
 
 EmailQueue.init(

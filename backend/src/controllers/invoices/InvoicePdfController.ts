@@ -13,10 +13,10 @@
  * import { generateInvoicePdf, downloadInvoicePdf } from '../controllers/invoices';
  */
 import { Response } from 'express';
-import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
-import { asyncHandler } from '../../middleware/asyncHandler';
-import { invoiceService } from '../../services/InvoiceService';
-import { config } from '../../config/env';
+import type { AuthenticatedRequest } from '../../middleware/auth.middleware.js';
+import { asyncHandler } from '../../middleware/asyncHandler.js';
+import { invoiceService } from '../../services/InvoiceService.js';
+import { config } from '../../config/env.js';
 
 /**
  * UUID validation regex

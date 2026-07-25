@@ -15,4 +15,4 @@
  */
 
 // Re-export from sub-controllers
-export { getProducts, getProductById } from './products/ProductReadController';
+export { getProducts, getProductById } from './products/ProductReadController.js';

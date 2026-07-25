@@ -5,12 +5,12 @@
  * @author MLM Development Team
  */
 import { Response } from 'express';
-import { productService } from '../../services/ProductService';
-import { asyncHandler } from '../../middleware/asyncHandler';
-import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
-import type { ApiResponse } from '../../types';
-import type { Product } from '../../models/Product';
-import type { InventoryMovement } from '../../models/InventoryMovement';
+import { productService } from '../../services/ProductService.js';
+import { asyncHandler } from '../../middleware/asyncHandler.js';
+import type { AuthenticatedRequest } from '../../middleware/auth.middleware.js';
+import type { ApiResponse } from '../../types/index.js';
+import type { Product } from '../../models/Product.js';
+import type { InventoryMovement } from '../../models/InventoryMovement.js';
 
 /**
  * Reserve stock for an order
@@ -197,4 +197,4 @@ export const getInventoryMovements = asyncHandler(
 );
 
 // Import AppError at the end to avoid circular dependency issues
-import { AppError } from '../../middleware/error.middleware';
+import { AppError } from '../../middleware/error.middleware.js';

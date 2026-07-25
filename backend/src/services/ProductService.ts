@@ -13,33 +13,18 @@
  * const { rows, count } = await productService.getProductList({ page: 1, limit: 20 });
  */
 import { Op, Transaction } from 'sequelize';
-import { sequelize, Product, Category, InventoryMovement, User } from '../models';
-import { AppError } from '../middleware/error.middleware';
-import type { ProductAttributes, ProductType, GenericProductAttributes } from '../types';
-import type { InventoryMovementCreation } from '../models/InventoryMovement';
+import { sequelize, Product, Category, InventoryMovement, User } from '../models/index.js';
+import { AppError } from '../middleware/error.middleware.js';
+import type {
+  ProductAttributes,
+  ProductType,
+  GenericProductAttributes,
+  ProductListOptions,
+} from '../types/index.js';
+import type { InventoryMovementCreation } from '../models/InventoryMovement.js';
 
-export interface ProductListOptions {
-  page?: number;
-  limit?: number;
-  platform?:
-    | 'netflix'
-    | 'disney_plus'
-    | 'spotify'
-    | 'hbo_max'
-    | 'amazon_prime'
-    | 'youtube_premium'
-    | 'apple_tv'
-    | 'other';
-  isActive?: boolean; // true for active, false for inactive, undefined for both
-  minPrice?: number;
-  maxPrice?: number;
-  // Extended filters for generic products
-  type?: ProductType;
-  categoryId?: string;
-  minStock?: number;
-  maxStock?: number;
-  search?: string;
-}
+/** Sequelize Product model instance type */
+type ProductModel = Product;
 
 export interface PaginatedProducts {
   rows: ProductModel[];
@@ -139,7 +124,7 @@ export class ProductService {
 
     // Search filter (name or description)
     if (options.search) {
-      where[Op.or] = [
+      where[Op.or as unknown as string] = [
         { name: { [Op.iLike]: `%${options.search}%` } },
         { description: { [Op.iLike]: `%${options.search}%` } },
       ];

@@ -12,14 +12,15 @@
  * router.post('/', requireAdmin, createProduct);
  */
 import { Router, Router as ExpressRouter } from 'express';
-import { authenticate, requireAdmin } from '../middleware/auth.middleware';
+import { adminLimiter } from '../middleware/rateLimit.js';
+import { authenticate, requireAdmin } from '../middleware/auth.middleware.js';
 import {
   createProduct,
   updateProduct,
   deleteProduct,
   getProductAdmin,
   listProductsAdmin,
-} from '../controllers/products/ProductWriteController';
+} from '../controllers/products/ProductWriteController.js';
 import {
   reserveStock,
   releaseStock,
@@ -27,12 +28,13 @@ import {
   setInitialStock,
   recordReturn,
   getInventoryMovements,
-} from '../controllers/products/ProductInventoryController';
-import { asyncHandler } from '../middleware/asyncHandler';
+} from '../controllers/products/ProductInventoryController.js';
+import { asyncHandler } from '../middleware/asyncHandler.js';
 
 const router: ExpressRouter = Router();
 
 // All routes require authentication and admin role
+router.use(adminLimiter);
 router.use(authenticate);
 router.use(requireAdmin);
 
@@ -86,7 +88,7 @@ router.use(requireAdmin);
  *       200:
  *         description: Product list
  */
-router.get('/', asyncHandler(listProductsAdmin));
+router.get('/', listProductsAdmin);
 
 /**
  * @swagger
@@ -110,7 +112,7 @@ router.get('/', asyncHandler(listProductsAdmin));
  *       404:
  *         description: Product not found
  */
-router.get('/:id', asyncHandler(getProductAdmin));
+router.get('/:id', getProductAdmin);
 
 /**
  * @swagger
@@ -133,7 +135,7 @@ router.get('/:id', asyncHandler(getProductAdmin));
  *       400:
  *         description: Validation error
  */
-router.post('/', asyncHandler(createProduct));
+router.post('/', createProduct);
 
 /**
  * @swagger
@@ -163,7 +165,7 @@ router.post('/', asyncHandler(createProduct));
  *       404:
  *         description: Product not found
  */
-router.put('/:id', asyncHandler(updateProduct));
+router.put('/:id', updateProduct);
 
 /**
  * @swagger
@@ -187,7 +189,7 @@ router.put('/:id', asyncHandler(updateProduct));
  *       404:
  *         description: Product not found
  */
-router.delete('/:id', asyncHandler(deleteProduct));
+router.delete('/:id', deleteProduct);
 
 // ============================================
 // INVENTORY MANAGEMENT ROUTES
@@ -231,7 +233,7 @@ router.delete('/:id', asyncHandler(deleteProduct));
  *       400:
  *         description: Insufficient stock
  */
-router.post('/:id/inventory/reserve', asyncHandler(reserveStock));
+router.post('/:id/inventory/reserve', reserveStock);
 
 /**
  * @swagger
@@ -269,7 +271,7 @@ router.post('/:id/inventory/reserve', asyncHandler(reserveStock));
  *       200:
  *         description: Stock released
  */
-router.post('/:id/inventory/release', asyncHandler(releaseStock));
+router.post('/:id/inventory/release', releaseStock);
 
 /**
  * @swagger
@@ -307,7 +309,7 @@ router.post('/:id/inventory/release', asyncHandler(releaseStock));
  *       400:
  *         description: Invalid adjustment
  */
-router.post('/:id/inventory/adjust', asyncHandler(adjustStock));
+router.post('/:id/inventory/adjust', adjustStock);
 
 /**
  * @swagger
@@ -341,7 +343,7 @@ router.post('/:id/inventory/adjust', asyncHandler(adjustStock));
  *       200:
  *         description: Initial stock set
  */
-router.post('/:id/inventory/initial', asyncHandler(setInitialStock));
+router.post('/:id/inventory/initial', setInitialStock);
 
 /**
  * @swagger
@@ -381,7 +383,7 @@ router.post('/:id/inventory/initial', asyncHandler(setInitialStock));
  *       200:
  *         description: Return recorded
  */
-router.post('/:id/inventory/return', asyncHandler(recordReturn));
+router.post('/:id/inventory/return', recordReturn);
 
 /**
  * @swagger
@@ -408,6 +410,6 @@ router.post('/:id/inventory/return', asyncHandler(recordReturn));
  *       200:
  *         description: List of inventory movements
  */
-router.get('/:id/inventory/movements', asyncHandler(getInventoryMovements));
+router.get('/:id/inventory/movements', getInventoryMovements);
 
 export default router;

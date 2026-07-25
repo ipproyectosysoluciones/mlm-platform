@@ -14,7 +14,7 @@
  */
 
 // CommissionConfig Read Controller exports
-export { getAllConfigs, getConfigById, getActiveRates } from './CommissionConfigReadController';
+export { getAllConfigs, getConfigById, getActiveRates } from './CommissionConfigReadController.js';
 
 // CommissionConfig Write Controller exports
-export { createConfig, updateConfig, deleteConfig } from './CommissionConfigWriteController';
+export { createConfig, updateConfig, deleteConfig } from './CommissionConfigWriteController.js';

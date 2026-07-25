@@ -18,14 +18,14 @@ describe('Achievements API', () => {
       const user = await createTestUser();
       const headers = getAuthHeaders(user);
 
-      const res = await testAgent.get('/api/achievements').set(headers).expect(200);
+      const res = await testAgent.get('/api/v1/achievements').set(headers).expect(200);
 
       expect(res.body.success).toBe(true);
       expect(Array.isArray(res.body.data)).toBe(true);
     });
 
     it('should return 401 when no auth token is provided', async () => {
-      const res = await testAgent.get('/api/achievements').expect(401);
+      const res = await testAgent.get('/api/v1/achievements').expect(401);
 
       expect(res.body.success).toBe(false);
     });
@@ -35,7 +35,7 @@ describe('Achievements API', () => {
 
   describe('GET /api/achievements/me', () => {
     it('should return 401 without auth token', async () => {
-      const res = await testAgent.get('/api/achievements/me').expect(401);
+      const res = await testAgent.get('/api/v1/achievements/me').expect(401);
 
       expect(res.body.success).toBe(false);
     });
@@ -44,7 +44,7 @@ describe('Achievements API', () => {
       const user = await createTestUser();
       const headers = getAuthHeaders(user);
 
-      const res = await testAgent.get('/api/achievements/me').set(headers).expect(200);
+      const res = await testAgent.get('/api/v1/achievements/me').set(headers).expect(200);
 
       expect(res.body.success).toBe(true);
       // A new user has no unlocked achievements yet

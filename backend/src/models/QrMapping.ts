@@ -15,9 +15,9 @@
  */
 
 import { DataTypes, Model, Optional, ForeignKey } from 'sequelize';
-import { sequelize } from '../config/database';
-import { GiftCard } from './GiftCard';
-import type { QrMappingAttributes } from '../types';
+import { sequelize } from '../config/database.js';
+import { GiftCard } from './GiftCard.js';
+import type { QrMappingAttributes } from '../types/index.js';
 
 type QrMappingCreation = Optional<QrMappingAttributes, 'id' | 'createdAt' | 'updatedAt'>;
 

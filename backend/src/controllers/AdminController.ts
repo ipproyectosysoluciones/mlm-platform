@@ -12,11 +12,11 @@
  */
 
 // Re-export from sub-controllers
-export { getGlobalStats, getCommissionsReport } from './admin/StatsController';
+export { getGlobalStats, getCommissionsReport } from './admin/StatsController.js';
 export {
   getAllUsers,
   getUserById,
   updateUserStatus,
   promoteToAdmin,
   updateUserRole,
-} from './admin/UsersAdminController';
+} from './admin/UsersAdminController.js';

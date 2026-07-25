@@ -14,6 +14,12 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 import { mlmApi, BotProperty, BotTour } from './mlm-api.service.js';
+import {
+  createConversationStore,
+  ChatMessage,
+  MAX_HISTORY_MESSAGES,
+} from './conversation-store.js';
+import { platformUrl, EMAIL, CALENDLY_LINK, OFFICE_ADDRESS } from '../config/platform.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -23,10 +29,7 @@ const __dirname = path.dirname(__filename);
 export type AgentName = 'sophia' | 'max';
 export type Language = 'es' | 'en';
 
-export interface ChatMessage {
-  role: 'user' | 'assistant' | 'system';
-  content: string;
-}
+export type { ChatMessage } from './conversation-store.js';
 
 export interface AIResponse {
   text: string;
@@ -40,9 +43,8 @@ const MODEL = process.env.OPENAI_MODEL || 'gpt-4o';
 const MAX_TOKENS = 512;
 const TEMPERATURE = 0.7;
 
-// In-memory conversation history keyed by WhatsApp phone number
-const conversationHistory = new Map<string, ChatMessage[]>();
-const MAX_HISTORY_MESSAGES = 20; // keep last 20 turns to avoid token bloat
+// Conversation history store — Redis if REDIS_URL is set, in-memory Map otherwise
+const conversationHistory = createConversationStore();
 
 // ─── Prompt Loader ────────────────────────────────────────────────────────────
 
@@ -103,6 +105,43 @@ async function fetchLiveContext(): Promise<string> {
 }
 
 /**
+ * Substitute environment-backed placeholders in a knowledge-base string.
+ * Reemplaza los placeholders de entorno en un string de knowledge base.
+ *
+ * Replaces the following placeholders with their env-var values:
+ *   [EMAIL]          → EMAIL env var (fallback: 'Ask the agent for more information')
+ *   [PLATFORM_URL]   → platformUrl() result (default: 'https://nexoreal.xyz')
+ *   [CALENDLY_LINK]  → CALENDLY_LINK env var (fallback: 'Ask the agent for more information')
+ *   [OFFICE_ADDRESS] → OFFICE_ADDRESS env var (fallback from platform.ts)
+ *
+ * Legacy aliases (backward-compatible):
+ *   [EMAIL_NEXO_REAL]    → same as [EMAIL]
+ *   [WEB_NEXO_REAL]      → same as [PLATFORM_URL]
+ *   [DIRECCION_NEXO_REAL] → same as [OFFICE_ADDRESS]
+ *   [ADDRESS_NEXO_REAL]   → same as [OFFICE_ADDRESS]
+ *
+ * @param kb - Knowledge-base string containing placeholders
+ * @returns KB string with all placeholders replaced by env-var values
+ */
+function substituteEnvVars(kb: string): string {
+  const email = EMAIL || 'Ask the agent for more information';
+  const platform = platformUrl();
+  const calendly = CALENDLY_LINK || 'Ask the agent for more information';
+  const office = OFFICE_ADDRESS;
+
+  let result = kb;
+  result = result.replaceAll('[EMAIL]', email);
+  result = result.replaceAll('[PLATFORM_URL]', platform);
+  result = result.replaceAll('[CALENDLY_LINK]', calendly);
+  result = result.replaceAll('[OFFICE_ADDRESS]', office);
+  result = result.replaceAll('[EMAIL_NEXO_REAL]', email);
+  result = result.replaceAll('[WEB_NEXO_REAL]', platform);
+  result = result.replaceAll('[DIRECCION_NEXO_REAL]', office);
+  result = result.replaceAll('[ADDRESS_NEXO_REAL]', office);
+  return result;
+}
+
+/**
  * Build the system prompt by combining static KB files with optional live context.
  * Construye el prompt del sistema combinando archivos KB estáticos con contexto en vivo opcional.
  *
@@ -116,8 +155,11 @@ function buildSystemPrompt(agent: AgentName, language: Language, liveContext = '
   const knowledgeBase = loadFile('knowledge-base.md');
   const agentPrompt = loadFile(`${agent}.prompt.md`);
 
+  // Substitute env vars in KB before injection
+  const substitutedKB = substituteEnvVars(knowledgeBase);
+
   // Inject KB into base prompt
-  const promptWithKB = basePrompt.replace('{KNOWLEDGE_BASE}', knowledgeBase);
+  const promptWithKB = basePrompt.replace('{KNOWLEDGE_BASE}', substitutedKB);
 
   // Add language instruction
   const langInstruction =
@@ -297,22 +339,17 @@ function getClient(): OpenAI {
 
 // ─── Conversation History ─────────────────────────────────────────────────────
 
-export function getHistory(phone: string): ChatMessage[] {
-  return conversationHistory.get(phone) || [];
+export async function getHistory(phone: string): Promise<ChatMessage[]> {
+  const result = await conversationHistory.get(phone);
+  return result || [];
 }
 
-export function appendToHistory(phone: string, message: ChatMessage): void {
-  const history = conversationHistory.get(phone) || [];
-  history.push(message);
-  // Trim to last N messages to avoid excessive token usage
-  if (history.length > MAX_HISTORY_MESSAGES) {
-    history.splice(0, history.length - MAX_HISTORY_MESSAGES);
-  }
-  conversationHistory.set(phone, history);
+export async function appendToHistory(phone: string, message: ChatMessage): Promise<void> {
+  await conversationHistory.append(phone, message);
 }
 
-export function clearHistory(phone: string): void {
-  conversationHistory.delete(phone);
+export async function clearHistory(phone: string): Promise<void> {
+  await conversationHistory.clear(phone);
 }
 
 // ─── Main AI Chat Function ────────────────────────────────────────────────────
@@ -342,12 +379,13 @@ export async function chat(
   const systemPrompt = buildSystemPrompt(agent, language, liveContext);
 
   // Append user message to history
-  appendToHistory(phone, { role: 'user', content: userMsg });
+  await appendToHistory(phone, { role: 'user', content: userMsg });
 
   // Build messages array: system + history
+  const history = await getHistory(phone);
   const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
     { role: 'system', content: systemPrompt },
-    ...getHistory(phone).map((m) => ({
+    ...history.map((m) => ({
       role: m.role as 'user' | 'assistant',
       content: m.content,
     })),
@@ -370,7 +408,7 @@ export async function chat(
         : 'Lo siento, no pude procesar eso. Te conecto con un asesor humano.');
 
     // Append assistant response to history
-    appendToHistory(phone, { role: 'assistant', content: responseText });
+    await appendToHistory(phone, { role: 'assistant', content: responseText });
 
     return { text: responseText, agent };
   } catch (error) {

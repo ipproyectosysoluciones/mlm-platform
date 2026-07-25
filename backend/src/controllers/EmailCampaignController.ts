@@ -8,17 +8,17 @@
  *
  * @example
  * // EN: Create a template
- * POST /api/v1/email-templates { name, subjectLine, htmlContent }
+ * POST /api/email-templates { name, subjectLine, htmlContent }
  *
  * // ES: Crear un template
- * POST /api/v1/email-templates { name, subjectLine, htmlContent }
+ * POST /api/email-templates { name, subjectLine, htmlContent }
  */
 import { Response } from 'express';
-import { emailCampaignService } from '../services/EmailCampaignService';
-import { EmailCampaignLog } from '../models';
-import type { EmailTemplate } from '../models/EmailTemplate';
-import type { ApiResponse } from '../types';
-import type { AuthenticatedRequest } from '../middleware/auth.middleware';
+import { emailCampaignService } from '../services/EmailCampaignService.js';
+import { EmailCampaignLog } from '../models/index.js';
+import type { EmailTemplate } from '../models/EmailTemplate.js';
+import type { ApiResponse } from '../types/index.js';
+import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
 
 // ============================================
 // TEMPLATE ENDPOINTS — Endpoints de Templates
@@ -267,7 +267,7 @@ export async function listCampaigns(req: AuthenticatedRequest, res: Response): P
       limit,
     };
     if (status) {
-      filters.status = status as import('../types').EmailCampaignStatus;
+      filters.status = status as import('../types/index.js').EmailCampaignStatus;
     }
 
     const { rows, count } = await emailCampaignService.listCampaigns(filters);

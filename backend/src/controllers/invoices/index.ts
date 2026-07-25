@@ -17,10 +17,10 @@
  */
 
 // Invoice read controller (retrieval operations)
-export { getInvoices, getInvoiceById } from './InvoiceReadController';
+export { getInvoices, getInvoiceById } from './InvoiceReadController.js';
 
 // Invoice write controller (create, status update, cancellation)
-export { createInvoice, updateInvoiceStatus, cancelInvoice } from './InvoiceWriteController';
+export { createInvoice, updateInvoiceStatus, cancelInvoice } from './InvoiceWriteController.js';
 
 // Invoice PDF controller (PDF generation)
-export { generateInvoicePdf, downloadInvoicePdf } from './InvoicePdfController';
+export { generateInvoicePdf, downloadInvoicePdf } from './InvoicePdfController.js';

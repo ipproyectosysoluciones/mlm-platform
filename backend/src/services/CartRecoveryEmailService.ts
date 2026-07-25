@@ -15,10 +15,10 @@
  * // ES: Enviar email de recuperación para un carrito abandonado
  * await cartRecoveryEmailService.sendRecoveryEmail(cartId, tokenPlain);
  */
-import { Cart, CartItem, CartRecoveryToken, Product, User } from '../models';
-import { emailService } from './EmailService';
-import { config } from '../config/env';
-import { logger } from '../utils/logger';
+import { Cart, CartItem, CartRecoveryToken, Product, User } from '../models/index.js';
+import { emailService } from './EmailService.js';
+import { config } from '../config/env.js';
+import { logger } from '../utils/logger.js';
 
 /**
  * CartRecoveryEmailService - Composes and sends abandoned cart recovery emails

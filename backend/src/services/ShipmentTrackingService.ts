@@ -12,9 +12,13 @@
  * // Español: Agregar seguimiento a un pedido
  * const tracking = await shipmentTrackingService.addTracking(uuid-pedido, datosSeguimiento);
  */
-import { ShipmentTracking, Order } from '../models';
-import { AppError } from '../middleware/error.middleware';
-import type { ShipmentStatusHistoryEntry, ShipmentTrackingStatus, AddTrackingDto } from '../types';
+import { ShipmentTracking, Order } from '../models/index.js';
+import { AppError } from '../middleware/error.middleware.js';
+import type {
+  ShipmentStatusHistoryEntry,
+  ShipmentTrackingStatus,
+  AddTrackingDto,
+} from '../types/index.js';
 
 /**
  * ShipmentTrackingService - Handles shipment tracking operations
@@ -256,6 +260,6 @@ export class ShipmentTrackingService {
       }
     }
 
-    return { tracking: tracking.reload(), isNew: true };
+    return { tracking: await tracking.reload(), isNew: true };
   }
 }

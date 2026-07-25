@@ -17,9 +17,9 @@
  */
 
 import { DataTypes, Model, Optional, ForeignKey } from 'sequelize';
-import { sequelize } from '../config/database';
-import { User } from './User';
-import type { CommissionAttributes } from '../types';
+import { sequelize } from '../config/database.js';
+import { User } from './User.js';
+import type { CommissionAttributes } from '../types/index.js';
 
 type CommissionCreation = Optional<CommissionAttributes, 'id' | 'createdAt' | 'updatedAt'>;
 

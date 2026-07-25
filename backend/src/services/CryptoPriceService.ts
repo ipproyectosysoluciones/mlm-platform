@@ -7,7 +7,7 @@
  */
 
 import axios from 'axios';
-import { logger } from '../utils/logger';
+import { logger } from '../utils/logger.js';
 
 // CoinGecko API URL
 const COINGECKO_API = 'https://api.coingecko.com/api/v3';

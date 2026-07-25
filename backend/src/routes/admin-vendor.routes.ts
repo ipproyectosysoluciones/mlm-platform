@@ -5,6 +5,7 @@
  * @author MLM Development Team
  */
 import { Router } from 'express';
+import { adminLimiter } from '../middleware/rateLimit.js';
 import {
   listVendors,
   getVendor,
@@ -12,9 +13,11 @@ import {
   rejectVendor,
   suspendVendor,
   updateCommissionRate,
-} from '../controllers/AdminVendorController';
+} from '../controllers/AdminVendorController.js';
 
 const router = Router();
+
+router.use(adminLimiter);
 
 /**
  * @swagger

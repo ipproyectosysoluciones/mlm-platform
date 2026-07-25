@@ -64,7 +64,7 @@ describe('Cart Integration Tests', () => {
   // ============================================================
   describe('GET /api/carts/me (Get My Cart)', () => {
     it('should create and return a new empty cart for user with no cart', async () => {
-      const res = await testAgent.get('/api/carts/me').set(regularHeaders).expect(200);
+      const res = await testAgent.get('/api/v1/carts/me').set(regularHeaders).expect(200);
 
       expect(res.body.success).toBe(true);
       expect(res.body.data).toBeTruthy();
@@ -76,13 +76,13 @@ describe('Cart Integration Tests', () => {
     it('should return existing active cart with items', async () => {
       // Add item first
       await testAgent
-        .post('/api/carts/me/items')
+        .post('/api/v1/carts/me/items')
         .set(regularHeaders)
         .send({ productId: testProduct.id, quantity: 2 })
         .expect(201);
 
       // Now fetch cart
-      const res = await testAgent.get('/api/carts/me').set(regularHeaders).expect(200);
+      const res = await testAgent.get('/api/v1/carts/me').set(regularHeaders).expect(200);
 
       expect(res.body.success).toBe(true);
       expect(res.body.data.itemCount).toBe(1);
@@ -90,7 +90,7 @@ describe('Cart Integration Tests', () => {
     });
 
     it('should reject unauthenticated request', async () => {
-      await testAgent.get('/api/carts/me').expect(401);
+      await testAgent.get('/api/v1/carts/me').expect(401);
     });
   });
 
@@ -100,7 +100,7 @@ describe('Cart Integration Tests', () => {
   describe('POST /api/carts/me/items (Add Item)', () => {
     it('should add a product to cart and return updated cart', async () => {
       const res = await testAgent
-        .post('/api/carts/me/items')
+        .post('/api/v1/carts/me/items')
         .set(regularHeaders)
         .send({ productId: testProduct.id, quantity: 1 })
         .expect(201);
@@ -115,14 +115,14 @@ describe('Cart Integration Tests', () => {
     it('should increment quantity when adding same product again', async () => {
       // Add 1
       await testAgent
-        .post('/api/carts/me/items')
+        .post('/api/v1/carts/me/items')
         .set(regularHeaders)
         .send({ productId: testProduct.id, quantity: 1 })
         .expect(201);
 
       // Add 2 more of same product
       const res = await testAgent
-        .post('/api/carts/me/items')
+        .post('/api/v1/carts/me/items')
         .set(regularHeaders)
         .send({ productId: testProduct.id, quantity: 2 })
         .expect(201);
@@ -135,7 +135,7 @@ describe('Cart Integration Tests', () => {
     it('should reject adding non-existent product', async () => {
       const fakeId = uuidv4();
       const res = await testAgent
-        .post('/api/carts/me/items')
+        .post('/api/v1/carts/me/items')
         .set(regularHeaders)
         .send({ productId: fakeId, quantity: 1 })
         .expect(404);
@@ -146,7 +146,7 @@ describe('Cart Integration Tests', () => {
 
     it('should reject invalid quantity (0)', async () => {
       const res = await testAgent
-        .post('/api/carts/me/items')
+        .post('/api/v1/carts/me/items')
         .set(regularHeaders)
         .send({ productId: testProduct.id, quantity: 0 })
         .expect(400);
@@ -156,7 +156,7 @@ describe('Cart Integration Tests', () => {
 
     it('should reject missing productId', async () => {
       const res = await testAgent
-        .post('/api/carts/me/items')
+        .post('/api/v1/carts/me/items')
         .set(regularHeaders)
         .send({ quantity: 1 })
         .expect(400);
@@ -172,7 +172,7 @@ describe('Cart Integration Tests', () => {
     it('should remove an item from cart', async () => {
       // Add item first
       const addRes = await testAgent
-        .post('/api/carts/me/items')
+        .post('/api/v1/carts/me/items')
         .set(regularHeaders)
         .send({ productId: testProduct.id, quantity: 2 })
         .expect(201);
@@ -192,7 +192,7 @@ describe('Cart Integration Tests', () => {
 
     it('should return 404 for non-existent cart item', async () => {
       // Create a cart first
-      await testAgent.get('/api/carts/me').set(regularHeaders).expect(200);
+      await testAgent.get('/api/v1/carts/me').set(regularHeaders).expect(200);
 
       const fakeId = uuidv4();
       const res = await testAgent
@@ -211,7 +211,7 @@ describe('Cart Integration Tests', () => {
     it('should update item quantity and recalculate totals', async () => {
       // Add item
       const addRes = await testAgent
-        .post('/api/carts/me/items')
+        .post('/api/v1/carts/me/items')
         .set(regularHeaders)
         .send({ productId: testProduct.id, quantity: 1 })
         .expect(201);
@@ -232,7 +232,7 @@ describe('Cart Integration Tests', () => {
 
     it('should reject quantity of 0', async () => {
       const addRes = await testAgent
-        .post('/api/carts/me/items')
+        .post('/api/v1/carts/me/items')
         .set(regularHeaders)
         .send({ productId: testProduct.id, quantity: 1 })
         .expect(201);
@@ -254,13 +254,13 @@ describe('Cart Integration Tests', () => {
     it('should return cart data for valid recovery token', async () => {
       // Create cart with items
       await testAgent
-        .post('/api/carts/me/items')
+        .post('/api/v1/carts/me/items')
         .set(regularHeaders)
         .send({ productId: testProduct.id, quantity: 2 })
         .expect(201);
 
       // Get the cart ID
-      const cartRes = await testAgent.get('/api/carts/me').set(regularHeaders).expect(200);
+      const cartRes = await testAgent.get('/api/v1/carts/me').set(regularHeaders).expect(200);
       const cartId = cartRes.body.data.id;
 
       // Manually mark as abandoned and create recovery token via DB
@@ -308,12 +308,12 @@ describe('Cart Integration Tests', () => {
     it('should recover cart and mark token as used', async () => {
       // Create cart with items
       await testAgent
-        .post('/api/carts/me/items')
+        .post('/api/v1/carts/me/items')
         .set(regularHeaders)
         .send({ productId: testProduct.id, quantity: 3 })
         .expect(201);
 
-      const cartRes = await testAgent.get('/api/carts/me').set(regularHeaders).expect(200);
+      const cartRes = await testAgent.get('/api/v1/carts/me').set(regularHeaders).expect(200);
       const cartId = cartRes.body.data.id;
 
       // Abandon + create token
@@ -355,12 +355,12 @@ describe('Cart Integration Tests', () => {
     it('should return 410 when token already used (replay prevention)', async () => {
       // Setup cart + abandon + token
       await testAgent
-        .post('/api/carts/me/items')
+        .post('/api/v1/carts/me/items')
         .set(regularHeaders)
         .send({ productId: testProduct.id, quantity: 1 })
         .expect(201);
 
-      const cartRes = await testAgent.get('/api/carts/me').set(regularHeaders).expect(200);
+      const cartRes = await testAgent.get('/api/v1/carts/me').set(regularHeaders).expect(200);
       const cartId = cartRes.body.data.id;
 
       await Cart.update(
@@ -408,12 +408,12 @@ describe('Cart Integration Tests', () => {
     it('should return abandoned carts with stats for admin', async () => {
       // Create a cart, add items, mark as abandoned
       await testAgent
-        .post('/api/carts/me/items')
+        .post('/api/v1/carts/me/items')
         .set(regularHeaders)
         .send({ productId: testProduct.id, quantity: 2 })
         .expect(201);
 
-      const cartRes = await testAgent.get('/api/carts/me').set(regularHeaders).expect(200);
+      const cartRes = await testAgent.get('/api/v1/carts/me').set(regularHeaders).expect(200);
       const cartId = cartRes.body.data.id;
 
       await Cart.update(
@@ -422,7 +422,7 @@ describe('Cart Integration Tests', () => {
       );
 
       // Admin request
-      const res = await testAgent.get('/api/carts/abandoned').set(adminHeaders).expect(200);
+      const res = await testAgent.get('/api/v1/carts/abandoned').set(adminHeaders).expect(200);
 
       expect(res.body.success).toBe(true);
       expect(res.body.data.data).toHaveLength(1);
@@ -432,11 +432,11 @@ describe('Cart Integration Tests', () => {
     });
 
     it('should reject non-admin user', async () => {
-      await testAgent.get('/api/carts/abandoned').set(regularHeaders).expect(403);
+      await testAgent.get('/api/v1/carts/abandoned').set(regularHeaders).expect(403);
     });
 
     it('should reject unauthenticated request', async () => {
-      await testAgent.get('/api/carts/abandoned').expect(401);
+      await testAgent.get('/api/v1/carts/abandoned').expect(401);
     });
   });
 
@@ -449,19 +449,19 @@ describe('Cart Integration Tests', () => {
 
       // 1. Add items to cart
       await testAgent
-        .post('/api/carts/me/items')
+        .post('/api/v1/carts/me/items')
         .set(regularHeaders)
         .send({ productId: testProduct.id, quantity: 2 })
         .expect(201);
 
       await testAgent
-        .post('/api/carts/me/items')
+        .post('/api/v1/carts/me/items')
         .set(regularHeaders)
         .send({ productId: product2.id, quantity: 1 })
         .expect(201);
 
       // 2. Verify cart state
-      const cartRes = await testAgent.get('/api/carts/me').set(regularHeaders).expect(200);
+      const cartRes = await testAgent.get('/api/v1/carts/me').set(regularHeaders).expect(200);
       const cartId = cartRes.body.data.id;
       expect(cartRes.body.data.itemCount).toBe(2);
       expect(Number(cartRes.body.data.totalAmount)).toBeCloseTo(41.97, 2);

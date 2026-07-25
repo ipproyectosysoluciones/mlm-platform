@@ -24,8 +24,8 @@ const SCHEDULE_PAYLOAD: ScheduleVisitPayload = {
 const HANDOFF_PAYLOAD: HumanHandoffPayload = {
   phone: '5491122334455',
   name: 'Juan Test',
-  reason: 'quiere hablar con un asesor',
-  agent: 'sophia',
+  summary: 'quiere hablar con un asesor',
+  agentName: 'sophia',
   language: 'es',
   escalatedAt: new Date().toISOString(),
 };

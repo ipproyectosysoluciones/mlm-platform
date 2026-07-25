@@ -12,15 +12,15 @@
  * // Español: Crear nuevo pedido con cálculo de comisiones
  * const order = await orderService.createOrder(userId, { productId, paymentMethod });
  */
-import { sequelize } from '../config/database';
-import { Order, Product, Purchase, User, VendorOrder, ShippingAddress } from '../models';
-import { AppError } from '../middleware/error.middleware';
-import { CommissionService } from './CommissionService';
-import { AchievementService } from './AchievementService';
-import { LeaderboardService } from './LeaderboardService';
+import { sequelize } from '../config/database.js';
+import { Order, Product, Purchase, User, VendorOrder, ShippingAddress } from '../models/index.js';
+import { AppError } from '../middleware/error.middleware.js';
+import { CommissionService } from './CommissionService.js';
+import { AchievementService } from './AchievementService.js';
+import { LeaderboardService } from './LeaderboardService.js';
 import { body } from 'express-validator';
-import type { ShippingStatus } from '../types';
-import { logger } from '../utils/logger';
+import type { ShippingStatus } from '../types/index.js';
+import { logger } from '../utils/logger.js';
 
 const achievementService = new AchievementService();
 const leaderboardService = new LeaderboardService();

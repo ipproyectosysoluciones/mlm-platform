@@ -25,7 +25,7 @@ USER nodejs
 EXPOSE 3000
 
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1
+    CMD wget --no-verbose --tries=1 --spider http://localhost:3000/api/v1/health || exit 1
 
 # --alter: applies schema changes without dropping tables (safe for production data)
 # Use --force-sync ONLY in dev/test environments — it DROPS ALL TABLES on every start

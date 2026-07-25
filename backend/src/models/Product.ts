@@ -21,8 +21,8 @@
  * const digitalProducts = await Product.findAll({ where: { type: 'digital' } });
  */
 import { DataTypes, Model, Optional } from 'sequelize';
-import { sequelize } from '../config/database';
-import type { ProductAttributes, ProductType, GenericProductAttributes } from '../types';
+import { sequelize } from '../config/database.js';
+import type { ProductAttributes, ProductType, GenericProductAttributes } from '../types/index.js';
 
 // Extended optional attributes
 type GenericProductCreation = Optional<
@@ -81,8 +81,8 @@ export class Product
 }
 
 // Placeholder imports for associations - will be set up in index.ts
-import type { Category } from './Category';
-import type { InventoryMovement } from './InventoryMovement';
+import type { Category } from './Category.js';
+import type { InventoryMovement } from './InventoryMovement.js';
 
 Product.init(
   {

@@ -15,8 +15,11 @@
  * const result = await tourPackageService.findAll({ type: 'adventure', country: 'Colombia', status: 'active' });
  */
 import { Op, WhereOptions } from 'sequelize';
-import { TourPackage, TourAvailability } from '../models';
-import type { TourPackageAttributes, TourPackageCreationAttributes } from '../models/TourPackage';
+import { TourPackage, TourAvailability } from '../models/index.js';
+import type {
+  TourPackageAttributes,
+  TourPackageCreationAttributes,
+} from '../models/TourPackage.js';
 
 // ============================================
 // TYPES

@@ -22,7 +22,6 @@ build/
 .env.*.local
 .env.production
 .env.production.local
-
 # ===========================================
 # Logs
 # ===========================================
@@ -61,6 +60,8 @@ test-results/
 playwright-report/
 playwright/.cache/
 frontend/test-screenshots/
+frontend/e2e/screenshots/
+frontend/e2e/debug-*.spec.ts
 
 # ===========================================
 # Temporary files
@@ -99,10 +100,17 @@ openspec/
 postman/
 
 # ===========================================
+# Vercel
+# ===========================================
+.vercel/
+
+# ===========================================
 # Deploy scripts (configure on server, not in repo)
 # ===========================================
 deploy.sh
 deploy.prod.sh
+# Allow infrastructure deploy script (infrastructure-as-code, versioned)
+!infrastructure/scripts/deploy.sh
 
 # ===========================================
 # Sentry
@@ -116,8 +124,15 @@ deploy.prod.sh
 *.tar.gz
 
 # ===========================================
+# Generated (swagger export)
+# ===========================================
+backend/swagger.json
+
+# ===========================================
 # AI Prompts & Knowledge Base
 # Files live at bot/src/prompt_kb/ and are baked into the Docker image.
 # No longer gitignored — must be tracked to be included in the Docker build context.
 # ===========================================
 # /prompt_kb/  ← removed: prompt_kb is now baked into the bot Docker image
+
+/.vscodeioredis

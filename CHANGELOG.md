@@ -4,6 +4,56 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
+## [3.4.0] - 2026-07-24
+
+### Removed — Azure Infrastructure Cleanup
+
+- **Azure CI/CD removed** — Deleted `cd-azure.yml` workflow, `docker-compose.azure.yml`, `.env.azure.example`, and all Azure-specific secrets references
+- **Terraform IaC removed** — Deleted `infrastructure/terraform/` (main.tf, variables.tf, outputs.tf, terraform.tfvars.example)
+- **Azure deployment scripts removed** — Deleted `infrastructure/scripts/` (provision.sh, deploy.sh, rollback.sh, backup-db.sh)
+- **Nginx config removed** — Deleted `infrastructure/nginx/nexoreal.conf`
+- **Azure documentation removed** — Deleted `docs/AZURE-ARCHITECTURE.md`, `docs/AZURE-SETUP.md`, `docs/TROUBLESHOOTING.md`
+- **`.gitignore` cleaned** — Removed Azure env and Terraform state entries
+
+### Changed — Docker Deployment (Local)
+
+- **Docker Engine native** — All services run locally via `docker-compose.prod.yml` with Cloudflare Tunnel for external access
+- **Cloudflare Tunnel** — Persistent `nexo-real-backend` tunnel with HTTP/2 protocol (Vivaldi VPN compatible)
+- **Tunnel routes** — `api.nexoreal.xyz` → backend:3000, `n8n.nexoreal.xyz` → n8n:5678, `bot.nexoreal.xyz` → bot:3002
+- **Docker Hub images** — `ipproyectos/mlm-backend:release` and `ipproyectos/mlm-bot:release` rebuilt and published
+
+### Added — Sprint 19: API Versioning
+
+- **API version prefix `/api/v1/`** — All 255 endpoints canonical under `/api/v1/`; legacy `/api/*` paths remain active with 307 redirects during deprecation window
+- **Dual-mount Express Router** — `/api/v1` primary mount + `/api` legacy mount sharing identical route handlers
+- **307 redirect middleware** — GET `/api/*` → `/api/v1/*` and POST/PUT `/api/payment/*` → `/api/v1/payment/*` (skipped in test env)
+- **Swagger UI relocated** — `/api/v1/docs` (canonical), `/api-docs` legacy with 307 redirect
+- **Frontend baseURL migrated** — `client.ts` now targets `/api/v1`
+- **Bot baseURL migrated** — `mlm-api.service.ts` now targets `/api/v1`
+- **Rate limiters dual-mounted** — Global, auth, 2FA, and order limiters on both `/api/v1/*` and `/api/*`
+- **Postman collection synced** — `baseUrl` updated to `/api/v1`; 255 endpoints now target versioned paths
+- **22 integration test URLs migrated** — All test files updated from `/api/*` to `/api/v1/*`
+
+### Fixed
+
+- **Swagger redirect** — `/api-docs` now correctly redirects to `/api/v1/docs` (skip added in redirect middleware)
+- **Integration test CI failures** — Redirect middleware skipped in `NODE_ENV=test` to prevent 307 responses in supertest; api-versioning redirect tests use standalone Express app
+
+---
+
+## [3.3.0] - 2026-07-21
+
+### Added — Sprint 18: Quick Wins
+
+- **Postman Collection Sync** — Collection actualizada de 126 → 255 endpoints para cubrir toda la API
+- **CI/CD Auto-deploy** — Deploy automático habilitado en branch `development`
+
+### Fixed
+
+- **JSDoc `/v1/` misleading paths** — Corregidos comentarios `@route` en `CartController.ts` y `EmailCampaignController.ts` que referenciaban paths `/api/v1/` inexistentes; rutas reales usan prefijo `/api`
+
+---
+
 ## [3.2.0] - 2026-06-25
 
 ### Added — Sprint 12: Order History & Quality

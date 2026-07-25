@@ -8,6 +8,7 @@
  * @author MLM Development Team
  */
 import { Router } from 'express';
+import { adminLimiter } from '../middleware/rateLimit.js';
 import {
   getReservations,
   getReservation,
@@ -15,9 +16,11 @@ import {
   updateReservation,
   cancelReservation,
   confirmReservation,
-} from '../controllers/ReservationController';
+} from '../controllers/ReservationController.js';
 
 const router = Router();
+
+router.use(adminLimiter);
 
 /**
  * @swagger

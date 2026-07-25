@@ -13,16 +13,16 @@
  * import { getProducts, getProductById } from '../controllers/products';
  */
 import { Response, RequestHandler } from 'express';
-import { productService } from '../../services/ProductService';
+import { productService } from '../../services/ProductService.js';
 import type {
   ApiResponse,
   ProductAttributes,
   ProductType,
   GenericProductAttributes,
-} from '../../types';
-import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
-import { asyncHandler } from '../../middleware/asyncHandler';
-import type { Product } from '../../models/Product';
+} from '../../types/index.js';
+import type { AuthenticatedRequest } from '../../middleware/auth.middleware.js';
+import { asyncHandler } from '../../middleware/asyncHandler.js';
+import type { Product } from '../../models/Product.js';
 
 /**
  * UUID validation regex
@@ -73,6 +73,7 @@ function transformProductResponse(product: Product): GenericProductAttributes {
     maxQuantityPerUser: product.maxQuantityPerUser || null,
     metadata: product.metadata || null,
     images: product.images || [],
+    vendorId: product.vendorId || null,
     createdAt: product.createdAt,
     updatedAt: product.updatedAt,
   };
@@ -258,7 +259,9 @@ export const getProductById: RequestHandler = asyncHandler(
       return;
     }
 
-    const response: ApiResponse<GenericProductAttributes> = {
+    const response: ApiResponse<
+      GenericProductAttributes & { category?: Record<string, unknown> | null }
+    > = {
       success: true,
       data: {
         ...transformProductResponse(product),

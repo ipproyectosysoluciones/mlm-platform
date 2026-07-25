@@ -37,7 +37,7 @@ describe('Phase 3: Visual Tree UI API Tests', () => {
       const headers = await getAuthHeaders(sponsor);
 
       // Search by email partial - should find at least one child
-      const res = await testAgent.get('/api/users/search?q=child').set(headers).expect(200);
+      const res = await testAgent.get('/api/v1/users/search?q=child').set(headers).expect(200);
 
       expect(res.body.success).toBe(true);
       expect(Array.isArray(res.body.data)).toBe(true);
@@ -62,7 +62,7 @@ describe('Phase 3: Visual Tree UI API Tests', () => {
       const headers = await getAuthHeaders(sponsor);
 
       // Search by referral code
-      const res = await testAgent.get('/api/users/search?q=CODETEST').set(headers).expect(200);
+      const res = await testAgent.get('/api/v1/users/search?q=CODETEST').set(headers).expect(200);
 
       expect(res.body.success).toBe(true);
       expect(Array.isArray(res.body.data)).toBe(true);
@@ -87,7 +87,7 @@ describe('Phase 3: Visual Tree UI API Tests', () => {
 
       // Test limit
       const res = await testAgent
-        .get('/api/users/search?q=limit_child&limit=3')
+        .get('/api/v1/users/search?q=limit_child&limit=3')
         .set(headers)
         .expect(200);
 
@@ -99,14 +99,14 @@ describe('Phase 3: Visual Tree UI API Tests', () => {
       const user = await createTestUser();
       const headers = await getAuthHeaders(user);
 
-      const res = await testAgent.get('/api/users/search?q=a').set(headers).expect(400);
+      const res = await testAgent.get('/api/v1/users/search?q=a').set(headers).expect(400);
 
       expect(res.body.success).toBe(false);
       expect(res.body.error).toBeDefined();
     });
 
     it('should return 401 without authentication', async () => {
-      const res = await testAgent.get('/api/users/search?q=test').expect(401);
+      const res = await testAgent.get('/api/v1/users/search?q=test').expect(401);
 
       expect(res.body.success).toBe(false);
     });
@@ -116,7 +116,7 @@ describe('Phase 3: Visual Tree UI API Tests', () => {
       const headers = await getAuthHeaders(user);
 
       const res = await testAgent
-        .get('/api/users/search?q=nonexistentuser123456')
+        .get('/api/v1/users/search?q=nonexistentuser123456')
         .set(headers)
         .expect(200);
 
@@ -178,7 +178,7 @@ describe('Phase 3: Visual Tree UI API Tests', () => {
       const headers = await getAuthHeaders(user);
 
       const res = await testAgent
-        .get('/api/users/00000000-0000-0000-0000-000000000000/details')
+        .get('/api/v1/users/00000000-0000-0000-0000-000000000000/details')
         .set(headers)
         .expect(404);
 
@@ -230,7 +230,7 @@ describe('Phase 3: Visual Tree UI API Tests', () => {
       const headers = await getAuthHeaders(sponsor);
 
       const res = await testAgent
-        .get('/api/users/me/tree?depth=2&page=1&limit=10')
+        .get('/api/v1/users/me/tree?depth=2&page=1&limit=10')
         .set(headers)
         .expect(200);
 
@@ -252,7 +252,7 @@ describe('Phase 3: Visual Tree UI API Tests', () => {
 
       const headers = await getAuthHeaders(sponsor);
 
-      const res = await testAgent.get('/api/users/me/tree?depth=2').set(headers).expect(200);
+      const res = await testAgent.get('/api/v1/users/me/tree?depth=2').set(headers).expect(200);
 
       expect(res.body.success).toBe(true);
       expect(res.body.data).toHaveProperty('tree');
@@ -291,7 +291,7 @@ describe('Phase 3: Visual Tree UI API Tests', () => {
 
       const headers = await getAuthHeaders(sponsor);
 
-      const res = await testAgent.get('/api/users/me/tree?depth=3').set(headers).expect(200);
+      const res = await testAgent.get('/api/v1/users/me/tree?depth=3').set(headers).expect(200);
 
       expect(res.body.success).toBe(true);
       expect(res.body.data.tree).toHaveProperty('stats');
@@ -337,7 +337,7 @@ describe('Phase 3: Visual Tree UI API Tests', () => {
         position: 'left',
       });
 
-      const res = await testAgent.get('/api/users/me/tree?depth=3').set(headers).expect(200);
+      const res = await testAgent.get('/api/v1/users/me/tree?depth=3').set(headers).expect(200);
 
       // Relaxed assertions - closure table may have race conditions in test environment
       // The important thing is that the endpoint works and returns stats
@@ -377,7 +377,7 @@ describe('Phase 3: Visual Tree UI API Tests', () => {
       const headers = await getAuthHeaders(root);
 
       // Request only depth 1
-      const res = await testAgent.get('/api/users/me/tree?depth=1').set(headers).expect(200);
+      const res = await testAgent.get('/api/v1/users/me/tree?depth=1').set(headers).expect(200);
 
       expect(res.body.success).toBe(true);
       // Relaxed assertion - at least verify the endpoint returns a valid tree structure
@@ -396,7 +396,7 @@ describe('Phase 3: Visual Tree UI API Tests', () => {
       const user = await createTestUser();
       const headers = await getAuthHeaders(user);
 
-      const res = await testAgent.get('/api/users/me/tree?depth=1').set(headers).expect(200);
+      const res = await testAgent.get('/api/v1/users/me/tree?depth=1').set(headers).expect(200);
 
       expect(res.body.success).toBe(true);
       expect(res.body.data.tree.id).toBe(user.id);

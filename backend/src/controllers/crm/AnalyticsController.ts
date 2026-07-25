@@ -7,8 +7,8 @@
  */
 
 import { Response } from 'express';
-import { crmService } from '../../services/CRMService';
-import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
+import { crmService } from '../../services/CRMService.js';
+import type { AuthenticatedRequest } from '../../middleware/auth.middleware.js';
 
 /**
  * Get CRM statistics

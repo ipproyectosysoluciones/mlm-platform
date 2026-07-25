@@ -12,9 +12,9 @@
  */
 import { Router, Router as ExpressRouter } from 'express';
 import rateLimit from 'express-rate-limit';
-import { authenticateToken } from '../middleware/auth.middleware';
-import { achievementController } from '../controllers/AchievementController';
-import { asyncHandler } from '../middleware/asyncHandler';
+import { authenticateToken } from '../middleware/auth.middleware.js';
+import { achievementController } from '../controllers/AchievementController.js';
+import { asyncHandler } from '../middleware/asyncHandler.js';
 
 const router: ExpressRouter = Router();
 

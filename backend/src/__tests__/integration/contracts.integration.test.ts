@@ -37,13 +37,13 @@ describe('Contracts Integration', () => {
     });
 
     // Get auth tokens
-    const userAuth = await testAgent.post('/api/auth/login').send({
+    const userAuth = await testAgent.post('/api/v1/auth/login').send({
       email: 'user@test.com',
       password: 'password123',
     });
     userToken = userAuth.body.data.token;
 
-    const adminAuth = await testAgent.post('/api/auth/login').send({
+    const adminAuth = await testAgent.post('/api/v1/auth/login').send({
       email: 'admin@test.com',
       password: 'password123',
     });
@@ -53,7 +53,7 @@ describe('Contracts Integration', () => {
   describe('Admin Contract Management', () => {
     it('should create a contract template', async () => {
       const response = await testAgent
-        .post('/api/admin/contracts')
+        .post('/api/v1/admin/contracts')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
           type: 'AFFILIATE_AGREEMENT',
@@ -72,7 +72,7 @@ describe('Contracts Integration', () => {
     it('should get all contract templates', async () => {
       // Create a template first
       await testAgent
-        .post('/api/admin/contracts')
+        .post('/api/v1/admin/contracts')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
           type: 'COMPENSATION_PLAN',
@@ -83,7 +83,7 @@ describe('Contracts Integration', () => {
         });
 
       const response = await testAgent
-        .get('/api/admin/contracts')
+        .get('/api/v1/admin/contracts')
         .set('Authorization', `Bearer ${adminToken}`);
 
       expect(response.status).toBe(200);
@@ -94,7 +94,7 @@ describe('Contracts Integration', () => {
     it('should update template by creating new version', async () => {
       // Create initial template
       const createResponse = await testAgent
-        .post('/api/admin/contracts')
+        .post('/api/v1/admin/contracts')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
           type: 'PRIVACY_POLICY',
@@ -127,7 +127,7 @@ describe('Contracts Integration', () => {
     beforeEach(async () => {
       // Create a template for user tests
       const response = await testAgent
-        .post('/api/admin/contracts')
+        .post('/api/v1/admin/contracts')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
           type: 'AFFILIATE_AGREEMENT',
@@ -141,7 +141,7 @@ describe('Contracts Integration', () => {
 
     it('should get contracts with user status', async () => {
       const response = await testAgent
-        .get('/api/contracts')
+        .get('/api/v1/contracts')
         .set('Authorization', `Bearer ${userToken}`);
 
       expect(response.status).toBe(200);
@@ -202,7 +202,7 @@ describe('Contracts Integration', () => {
     beforeEach(async () => {
       // Create template and have user accept it
       const createResponse = await testAgent
-        .post('/api/admin/contracts')
+        .post('/api/v1/admin/contracts')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
           type: 'COMPENSATION_PLAN',
@@ -244,7 +244,7 @@ describe('Contracts Integration', () => {
     it('should mark old version as inactive when creating new', async () => {
       // Create first version
       const v1 = await testAgent
-        .post('/api/admin/contracts')
+        .post('/api/v1/admin/contracts')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
           type: 'TERMS_OF_SERVICE',
@@ -256,7 +256,7 @@ describe('Contracts Integration', () => {
 
       // Create second version
       const v2 = await testAgent
-        .post('/api/admin/contracts')
+        .post('/api/v1/admin/contracts')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
           type: 'TERMS_OF_SERVICE',
@@ -275,7 +275,7 @@ describe('Contracts Integration', () => {
     it('should store content hash at acceptance time', async () => {
       // Create template
       const createResponse = await testAgent
-        .post('/api/admin/contracts')
+        .post('/api/v1/admin/contracts')
         .set('Authorization', `Bearer ${adminToken}`)
         .send({
           type: 'PRIVACY_POLICY',

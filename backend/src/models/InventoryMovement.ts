@@ -20,10 +20,10 @@
  * });
  */
 import { DataTypes, Model, Optional } from 'sequelize';
-import { sequelize } from '../config/database';
-import type { InventoryMovementAttributes, InventoryMovementType } from '../types';
+import { sequelize } from '../config/database.js';
+import type { InventoryMovementAttributes, InventoryMovementType } from '../types/index.js';
 
-type InventoryMovementCreation = Optional<
+export type InventoryMovementCreation = Optional<
   InventoryMovementAttributes,
   'id' | 'createdAt' | 'updatedAt'
 >;
@@ -52,8 +52,8 @@ export class InventoryMovement
 }
 
 // Placeholder imports for associations - will be set up in index.ts
-import type { Product } from './Product';
-import type { User } from './User';
+import type { Product } from './Product.js';
+import type { User } from './User.js';
 
 InventoryMovement.init(
   {

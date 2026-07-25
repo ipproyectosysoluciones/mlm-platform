@@ -1,4 +1,4 @@
-import { Router, Router as ExpressRouter } from 'express';
+import { Router, Router as ExpressRouter, Response } from 'express';
 import {
   getMe,
   getTree,
@@ -12,18 +12,18 @@ import {
   updateProfileValidation,
   changePasswordValidation,
   deleteAccountValidation,
-} from '../controllers/UserController';
+} from '../controllers/UserController.js';
 import {
   getNotificationPreferences,
   updateNotificationPreferences,
   enable2FA,
   verify2FA,
   disable2FA,
-} from '../controllers/NotificationController';
-import { authenticateToken } from '../middleware/auth.middleware';
-import { validate } from '../middleware/validate.middleware';
-import type { AuthenticatedRequest } from '../middleware/auth.middleware';
-import { asyncHandler } from '../middleware/asyncHandler';
+} from '../controllers/NotificationController.js';
+import { authenticateToken } from '../middleware/auth.middleware.js';
+import { validate } from '../middleware/validate.middleware.js';
+import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
+import { asyncHandler } from '../middleware/asyncHandler.js';
 
 const router: ExpressRouter = Router();
 
@@ -206,7 +206,7 @@ router.post(
 router.get(
   '/me/tree',
   authenticateToken,
-  asyncHandler(async (req: AuthenticatedRequest, res) => {
+  asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
     req.params.id = req.user!.id;
     return getTree(req, res);
   })
@@ -232,7 +232,7 @@ router.get(
 router.get(
   '/me/qr',
   authenticateToken,
-  asyncHandler(async (req: AuthenticatedRequest, res) => {
+  asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
     req.params.id = req.user!.id;
     return getQR(req, res);
   })
@@ -266,7 +266,7 @@ router.get(
 router.get(
   '/me/qr-url',
   authenticateToken,
-  asyncHandler(async (req: AuthenticatedRequest, res) => {
+  asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
     req.params.id = req.user!.id;
     return getQRUrl(req, res);
   })

@@ -7,12 +7,12 @@
  */
 import { Request, Response, NextFunction } from 'express';
 import crypto from 'crypto';
-import { ShipmentTrackingService } from '../services/ShipmentTrackingService';
-import { DeliveryProvider } from '../models/DeliveryProvider';
-import { Order, Product } from '../models';
-import { AppError } from '../middleware/error.middleware';
-import type { ApiResponse } from '../types';
-import { ShipmentTrackingStatus } from '../types';
+import { ShipmentTrackingService } from '../services/ShipmentTrackingService.js';
+import { DeliveryProvider } from '../models/DeliveryProvider.js';
+import { Order, Product } from '../models/index.js';
+import { AppError } from '../middleware/error.middleware.js';
+import type { ApiResponse } from '../types/index.js';
+import { ShipmentTrackingStatus } from '../types/index.js';
 
 const shipmentTrackingService = new ShipmentTrackingService();
 
@@ -54,8 +54,8 @@ export async function addTracking(req: Request, res: Response, next: NextFunctio
     }
 
     // Check if user owns the order or is admin
-    const userId = req.user!.id;
-    const isAdmin = req.user!.role === 'admin';
+    const userId = (req as any).user.id;
+    const isAdmin = (req as any).user.role === 'admin';
 
     if (!isAdmin && order.userId !== userId) {
       throw new AppError(403, 'FORBIDDEN', 'Not authorized to add tracking to this order');
@@ -94,8 +94,8 @@ export async function getTracking(req: Request, res: Response, next: NextFunctio
     }
 
     // Check if user owns the order or is admin
-    const userId = req.user!.id;
-    const isAdmin = req.user!.role === 'admin';
+    const userId = (req as any).user.id;
+    const isAdmin = (req as any).user.role === 'admin';
 
     if (!isAdmin && order.userId !== userId) {
       throw new AppError(403, 'FORBIDDEN', 'Not authorized to view tracking for this order');

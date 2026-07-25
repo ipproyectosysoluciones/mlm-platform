@@ -12,16 +12,16 @@
  */
 
 // User controller
-export { getDashboardUser } from './DashboardUserController';
+export { getDashboardUser } from './DashboardUserController.js';
 
 // Stats controller
-export { getDashboardStats } from './DashboardStatsController';
+export { getDashboardStats } from './DashboardStatsController.js';
 
 // Commissions controller
-export { getDashboardCommissions } from './DashboardCommissionsController';
+export { getDashboardCommissions } from './DashboardCommissionsController.js';
 
 // Referrals controller
-export { getDashboardReferrals } from './DashboardReferralsController';
+export { getDashboardReferrals } from './DashboardReferralsController.js';
 
 // Main dashboard aggregator
-export { getDashboard } from './DashboardController';
+export { getDashboard } from './DashboardController.js';

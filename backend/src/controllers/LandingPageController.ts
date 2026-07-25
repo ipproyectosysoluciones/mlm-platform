@@ -8,10 +8,10 @@
  * @author MLM Development Team
  */
 import { Response } from 'express';
-import { landingPageService } from '../services/LandingPageService';
-import type { ApiResponse } from '../types';
-import type { AuthenticatedRequest } from '../middleware/auth.middleware';
-import { ResponseUtil } from '../utils/response.util';
+import { landingPageService } from '../services/LandingPageService.js';
+import type { ApiResponse } from '../types/index.js';
+import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
+import { ResponseUtil } from '../utils/response.util.js';
 import type { Request } from 'express';
 
 /**

@@ -1,12 +1,13 @@
 // Instrument Sentry BEFORE any other imports (Sentry ESM pattern)
 import './instrument';
 
-import app from './app';
-import { connectDatabase, syncDatabase } from './config/database';
-import { config, platformDomain } from './config/env';
-import { logger } from './utils/logger';
-import { initModels, User, Product, CommissionConfig, UserClosure } from './models';
-import { achievementService } from './services/AchievementService';
+import app from './app.js';
+import { connectDatabase, syncDatabase } from './config/database.js';
+import { config, platformDomain } from './config/env.js';
+import { logger } from './utils/logger.js';
+import { initModels, User, Product, CommissionConfig, UserClosure } from './models/index.js';
+import type { UserRole } from './types/index.js';
+import { achievementService } from './services/AchievementService.js';
 import bcrypt from 'bcryptjs';
 
 /**
@@ -217,7 +218,7 @@ async function autoSeed(): Promise<void> {
       id: string,
       email: string,
       referralCode: string,
-      role: string,
+      role: UserRole,
       sponsorId: string | null,
       level: number
     ): Promise<User> {
@@ -232,6 +233,16 @@ async function autoSeed(): Promise<void> {
         status: 'active',
         role,
         currency: 'COP',
+        emailNotifications: true,
+        smsNotifications: false,
+        twoFactorEnabled: false,
+        twoFactorPhone: null,
+        weeklyDigest: true,
+        twoFactorSecretEncrypted: null,
+        twoFactorRecoveryCodesHash: null,
+        twoFactorEnabledAt: null,
+        twoFactorFailedAttempts: 0,
+        twoFactorLockedUntil: null,
       });
       await UserClosure.create({ ancestorId: user.id, descendantId: user.id, depth: 0 });
       if (sponsorId) {

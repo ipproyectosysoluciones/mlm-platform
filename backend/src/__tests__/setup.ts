@@ -9,7 +9,7 @@ import supertest from 'supertest';
 import { QueryTypes, type Sequelize } from 'sequelize';
 
 // Import the singleton sequelize - it already reads TEST_DB_* env vars
-import { sequelize } from '../config/database';
+import { sequelize } from '../config/database.js';
 
 // Global test agent - used by all integration tests
 // Agente de test global — usado por todos los tests de integración
@@ -61,7 +61,7 @@ beforeAll(async () => {
     AffiliateContract,
     WorkflowExecution,
     PushSubscription,
-  } = await import('../models');
+  } = await import('../models/index.js');
 
   // Models imported for side-effect: registering with sequelize instance
   void User;
@@ -143,9 +143,10 @@ beforeAll(async () => {
   try {
     console.log('Loading app...');
     // Mock the database module to return our test sequelize
-    const appModule = await import('../app');
+    const appModule = await import('../app.js');
     const app = appModule.default;
     console.log('App loaded, creating test agent...');
+    // @ts-expect-error — supertest() type mismatch with exported variable type
     testAgent = supertest(app);
     console.log('Test agent created successfully');
   } catch (error) {

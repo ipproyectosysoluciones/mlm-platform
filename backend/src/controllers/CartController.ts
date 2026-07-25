@@ -19,7 +19,7 @@ import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
  * Get the current user's active cart (creates one if none exists)
  * Obtener el carrito activo del usuario (crea uno si no existe)
  *
- * @route GET /api/v1/carts/me
+ * @route GET /api/carts/me
  * @param req - Authenticated request / Request autenticada
  * @param res - Response with cart data / Respuesta con datos del carrito
  */
@@ -52,7 +52,7 @@ export async function getMyCart(req: AuthenticatedRequest, res: Response): Promi
  * Add an item to the user's cart
  * Agregar un item al carrito del usuario
  *
- * @route POST /api/v1/carts/me/items
+ * @route POST /api/carts/me/items
  * @param req - Body: productId, quantity / Body: productId, quantity
  * @param res - Response with updated cart / Respuesta con carrito actualizado
  */
@@ -95,7 +95,7 @@ export async function addItemToCart(req: AuthenticatedRequest, res: Response): P
  * Remove an item from the user's cart
  * Eliminar un item del carrito del usuario
  *
- * @route DELETE /api/v1/carts/me/items/:cartItemId
+ * @route DELETE /api/carts/me/items/:cartItemId
  * @param req - Params: cartItemId / Params: cartItemId
  * @param res - Response with updated cart / Respuesta con carrito actualizado
  */
@@ -138,7 +138,7 @@ export async function removeItemFromCart(req: AuthenticatedRequest, res: Respons
  * Update quantity of a cart item
  * Actualizar cantidad de un item del carrito
  *
- * @route PATCH /api/v1/carts/me/items/:cartItemId
+ * @route PATCH /api/carts/me/items/:cartItemId
  * @param req - Params: cartItemId, Body: quantity / Params: cartItemId, Body: quantity
  * @param res - Response with updated cart / Respuesta con carrito actualizado
  */
@@ -190,7 +190,7 @@ export async function updateCartItemQuantity(
  * Get cart data by recovery token (preview before recovery)
  * Obtener datos del carrito por token de recuperación (preview antes de recuperar)
  *
- * @route GET /api/v1/carts/recover/:token
+ * @route GET /api/carts/recover/:token
  * @param req - Params: token (plaintext UUID)
  * @param res - Response with cart data or error
  */
@@ -238,7 +238,7 @@ export async function getCartByRecoveryToken(
  * Complete cart recovery (mark token as used, restore cart)
  * Completar recuperación del carrito (marcar token como usado, restaurar carrito)
  *
- * @route POST /api/v1/carts/recover/:token
+ * @route POST /api/carts/recover/:token
  * @param req - Params: token (plaintext UUID)
  * @param res - Response with recovered cart
  */
@@ -294,7 +294,7 @@ export async function recoverCartByToken(req: AuthenticatedRequest, res: Respons
  * List abandoned carts with stats (admin only)
  * Listar carritos abandonados con estadísticas (solo admin)
  *
- * @route GET /api/v1/carts/abandoned
+ * @route GET /api/carts/abandoned
  * @param req - Query: limit, offset, days / Query: limit, offset, days
  * @param res - Response with abandoned carts, pagination, and stats
  */

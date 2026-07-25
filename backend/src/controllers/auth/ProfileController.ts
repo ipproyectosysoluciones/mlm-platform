@@ -14,12 +14,12 @@
  * import { me } from '../controllers/auth/ProfileController';
  */
 import { Response, RequestHandler } from 'express';
-import { userService } from '../../services/UserService';
-import type { ApiResponse } from '../../types';
-import { AppError } from '../../middleware/error.middleware';
-import { LEVEL_NAMES } from '../../types';
-import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
-import { asyncHandler } from '../../middleware/asyncHandler';
+import { userService } from '../../services/UserService.js';
+import type { ApiResponse } from '../../types/index.js';
+import { AppError } from '../../middleware/error.middleware.js';
+import { LEVEL_NAMES } from '../../types/index.js';
+import type { AuthenticatedRequest } from '../../middleware/auth.middleware.js';
+import { asyncHandler } from '../../middleware/asyncHandler.js';
 
 /**
  * Get current authenticated user profile

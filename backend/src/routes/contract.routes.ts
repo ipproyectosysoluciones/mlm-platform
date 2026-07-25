@@ -11,8 +11,8 @@ import {
   getContract,
   acceptContract,
   declineContract,
-} from '../controllers/ContractController';
-import { authenticate } from '../middleware/auth.middleware';
+} from '../controllers/ContractController.js';
+import { authenticate } from '../middleware/auth.middleware.js';
 
 const router = Router();
 

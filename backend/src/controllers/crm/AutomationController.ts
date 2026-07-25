@@ -10,8 +10,8 @@
  */
 
 import { Response, NextFunction } from 'express';
-import { WorkflowExecution } from '../../models';
-import type { AuthenticatedRequest } from '../../middleware/auth.middleware';
+import { WorkflowExecution } from '../../models/index.js';
+import type { AuthenticatedRequest } from '../../middleware/auth.middleware.js';
 
 /**
  * Get automation status summary: total executions, pending follow-ups, last action timestamp.

@@ -17,7 +17,7 @@ export {
   exportLeads,
   updateLead,
   deleteLead,
-} from './LeadController';
+} from './LeadController.js';
 
 // Task Controller exports
 export {
@@ -26,10 +26,10 @@ export {
   completeTask,
   getLeadTasks,
   getUpcomingTasks,
-} from './TaskController';
+} from './TaskController.js';
 
 // Communication Controller exports
-export { addCommunication, getLeadCommunications } from './CommunicationController';
+export { addCommunication, getLeadCommunications } from './CommunicationController.js';
 
 // Analytics Controller exports
 export {
@@ -37,7 +37,7 @@ export {
   getAnalyticsReport,
   getCRMAlerts,
   exportAnalyticsReport,
-} from './AnalyticsController';
+} from './AnalyticsController.js';
 
 // Automation Controller exports
-export { getAutomationStatus, getAutomationExecutions } from './AutomationController';
+export { getAutomationStatus, getAutomationExecutions } from './AutomationController.js';

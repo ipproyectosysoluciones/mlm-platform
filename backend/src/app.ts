@@ -2,22 +2,25 @@ import express, { Application, type Request, type Response, type NextFunction } 
 import cors from 'cors';
 import helmet from 'helmet';
 import { pinoHttp } from 'pino-http';
-import { logger } from './utils/logger';
+import { logger } from './utils/logger.js';
 import rateLimit from 'express-rate-limit';
 import swaggerUi from 'swagger-ui-express';
 import * as Sentry from '@sentry/node';
-import { config } from './config/env';
-import { swaggerSpec } from './config/swagger';
-import routes from './routes';
-import adminRoutes from './routes/admin.routes';
-import crmRoutes from './routes/crm.routes';
-import publicRoutes from './routes/public.routes';
-import landingRoutes from './routes/landing.routes';
-import paymentRoutes from './routes/payment.routes';
-import { resolveShortCode } from './controllers/GiftCardController';
-import { asyncHandler } from './middleware/asyncHandler';
-import { errorHandler, notFoundHandler } from './middleware/error.middleware';
-import type { AuthenticatedRequest } from './middleware/auth.middleware.js';
+import { config } from './config/env.js';
+import { getSwaggerSpec } from './config/swagger.js';
+import routes from './routes/index.js';
+import adminRoutes from './routes/admin.routes.js';
+import crmRoutes from './routes/crm.routes.js';
+import landingRoutes from './routes/landing.routes.js';
+import paymentRoutes from './routes/payment.routes.js';
+import { resolveShortCode } from './controllers/GiftCardController.js';
+import { asyncHandler } from './middleware/asyncHandler.js';
+import { errorHandler, notFoundHandler } from './middleware/error.middleware.js';
+import {
+  authenticate,
+  requireAdmin,
+  type AuthenticatedRequest,
+} from './middleware/auth.middleware.js';
 
 const app: Application = express();
 const isTest = process.env.NODE_ENV === 'test';
@@ -120,12 +123,46 @@ const globalLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   skip: (req) => {
-    // Skip rate limiting for health checks
-    return req.path === '/health' || req.path === '/api/health';
+    // Skip rate limiting for health checks (v1 and legacy)
+    return req.path === '/health' || req.path === '/api/health' || req.path === '/api/v1/health';
   },
 });
 
-// Apply global rate limiter to all API routes
+// --- 307 Legacy Redirect Middleware (runs before route mounts) ---
+// Redirects GET requests from /api/* to /api/v1/* and webhook POST/PUT
+// Skipped in test environment — integration tests use supertest which
+// doesn't follow redirects, so the middleware would break /api/* test URLs.
+if (!isTest) {
+  app.use('/api', (req, res, next) => {
+    // Skip if already on /api/v1 (canonical path)
+    if (req.path.startsWith('/v1')) {
+      return next();
+    }
+    // Skip Swagger docs — /api-docs has its own redirect route below
+    if (req.originalUrl === '/api-docs' || req.originalUrl.startsWith('/api-docs?')) {
+      return next();
+    }
+    // Redirect webhook POST/PUT from /api/payment/* to /api/v1/payment/*
+    if ((req.method === 'POST' || req.method === 'PUT') && req.path.startsWith('/payment/')) {
+      const target = `/api/v1${req.originalUrl.replace(/^\/api/, '')}`;
+      res.redirect(307, target);
+      return;
+    }
+    // Redirect GET requests from /api/* to /api/v1/*
+    if (req.method === 'GET') {
+      const queryIndex = req.originalUrl.indexOf('?');
+      const query = queryIndex !== -1 ? req.originalUrl.substring(queryIndex) : '';
+      const target = `/api/v1${req.path}${query}`;
+      res.redirect(307, target);
+      return;
+    }
+    // Non-GET, non-webhook: pass through to legacy mount
+    next();
+  });
+}
+
+// Apply global rate limiter to both prefixes
+app.use('/api/v1', globalLimiter);
 app.use('/api', globalLimiter);
 
 // Rate limiting for auth endpoints
@@ -166,8 +203,11 @@ const orderLimiter = rateLimit({
 });
 
 if (!isTest) {
+  app.use('/api/v1/auth/login', authLimiter);
   app.use('/api/auth/login', authLimiter);
+  app.use('/api/v1/auth/register', authLimiter);
   app.use('/api/auth/register', authLimiter);
+  app.use('/api/v1/orders', orderLimiter);
   app.use('/api/orders', orderLimiter);
 }
 
@@ -193,25 +233,45 @@ const twoFALimiter = rateLimit({
 });
 
 if (!isTest) {
+  app.use('/api/v1/auth/2fa/verify', twoFALimiter);
   app.use('/api/auth/2fa/verify', twoFALimiter);
+  app.use('/api/v1/auth/2fa/verify-setup', twoFALimiter);
   app.use('/api/auth/2fa/verify-setup', twoFALimiter);
 }
 
-// Swagger UI
-app.use(
-  '/api-docs',
-  swaggerUi.serve,
-  swaggerUi.setup(swaggerSpec, {
-    customCss: '.swagger-ui .topbar { display: none }',
-    customSiteTitle: 'MLM API Documentation',
-  })
-);
+// Swagger UI — lazy spec generation avoids glob Symbol error in Jest/CI
+let _swaggerSetup: ReturnType<typeof swaggerUi.setup> | null = null;
+app.use('/api/v1/docs', swaggerUi.serve, (req: Request, res: Response, next: NextFunction) => {
+  if (!_swaggerSetup) {
+    try {
+      _swaggerSetup = swaggerUi.setup(getSwaggerSpec(), {
+        customCss: '.swagger-ui .topbar { display: none }',
+        customSiteTitle: 'MLM API Documentation',
+      });
+    } catch (err) {
+      logger.error({ err }, 'Failed to initialize Swagger UI');
+      return res.status(503).json({ error: 'Swagger UI unavailable' });
+    }
+  }
+  _swaggerSetup(req, res, next);
+});
 
-// API Routes
+// Legacy Swagger docs path → 307 redirect to versioned path
+app.get('/api-docs', (_req, res) => {
+  res.redirect(307, '/api/v1/docs');
+});
+
+// API Routes — Canonical v1 routes (primary mount)
+app.use('/api/v1', routes);
+app.use('/api/v1/admin', adminRoutes);
+app.use('/api/v1/crm', crmRoutes);
+app.use('/api/v1', landingRoutes);
+app.use('/api/v1/payment', paymentRoutes);
+
+// Legacy dual-mount (serves existing /api/* paths during deprecation window)
 app.use('/api', routes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/crm', crmRoutes);
-app.use('/api/public', publicRoutes);
 app.use('/api', landingRoutes);
 app.use('/api/payment', paymentRoutes);
 
@@ -245,30 +305,33 @@ if (process.env.SENTRY_DSN && process.env.NODE_ENV !== 'test') {
   Sentry.setupExpressErrorHandler(app);
 }
 
-// Debug: Show all routes
-app.get('/debug/routes', (req, res) => {
-  const routes: string[] = [];
-  // Express internal router stack has no public type definitions
-  // Los tipos internos del router de Express no tienen definiciones públicas
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  app._router?.stack?.forEach((middleware: any) => {
-    if (middleware.route) {
-      routes.push(
-        `${Object.keys(middleware.route.methods).join(', ').toUpperCase()} ${middleware.route.path}`
-      );
-    } else if (middleware.name === 'router') {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      middleware.handle?.stack?.forEach((handler: any) => {
-        if (handler.route) {
-          routes.push(
-            `${Object.keys(handler.route.methods).join(', ').toUpperCase()} ${handler.route.path}`
-          );
-        }
-      });
-    }
+// Debug: Show all routes (protected: admin only, non-production only)
+// Ruta de debug: muestra todas las rutas (protegida: solo admin, solo en no-producción)
+if (config.nodeEnv !== 'production') {
+  app.get('/debug/routes', authenticate, requireAdmin, (req, res) => {
+    const routes: string[] = [];
+    // Express internal router stack has no public type definitions
+    // Los tipos internos del router de Express no tienen definiciones públicas
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    app._router?.stack?.forEach((middleware: any) => {
+      if (middleware.route) {
+        routes.push(
+          `${Object.keys(middleware.route.methods).join(', ').toUpperCase()} ${middleware.route.path}`
+        );
+      } else if (middleware.name === 'router') {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        middleware.handle?.stack?.forEach((handler: any) => {
+          if (handler.route) {
+            routes.push(
+              `${Object.keys(handler.route.methods).join(', ').toUpperCase()} ${handler.route.path}`
+            );
+          }
+        });
+      }
+    });
+    res.json({ routes });
   });
-  res.json({ routes });
-});
+}
 
 // Error handlers
 app.use(notFoundHandler);

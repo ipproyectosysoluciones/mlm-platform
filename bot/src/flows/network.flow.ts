@@ -1,6 +1,7 @@
 import { addKeyword } from '@builderbot/bot';
 import { mlmApi } from '../services/mlm-api.service.js';
 import { NETWORK_KEYWORDS } from '../config/keywords.js';
+import { platformUrl } from '../config/platform.js';
 
 /**
  * Network flow — shows the user's downline summary: total referrals,
@@ -19,7 +20,7 @@ export const networkFlow = addKeyword(NETWORK_KEYWORDS).addAction(
     if (!user) {
       await flowDynamic([
         {
-          body: '❌ No encontré una cuenta asociada a tu número.\n\n🌐 Registrate en:\nhttps://nexoreal.xyz/register', // TODO: domain pending
+          body: `❌ No encontré una cuenta asociada a tu número.\n\n🌐 Registrate en:\n${platformUrl('/register')}`,
         },
       ]);
       return;
@@ -59,7 +60,7 @@ export const networkFlow = addKeyword(NETWORK_KEYWORDS).addAction(
           `➡️ Pierna derecha: ${network.rightLeg}\n` +
           `🏆 Nivel actual: *${network.level}*` +
           commissionsText +
-          `\n\n🌐 Ver árbol completo:\nhttps://nexoreal.xyz/tree`, // TODO: domain pending
+          `\n\n🌐 Ver árbol completo:\n${platformUrl('/tree')}`,
       },
     ]);
   }

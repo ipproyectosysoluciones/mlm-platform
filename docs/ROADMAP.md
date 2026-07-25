@@ -3,8 +3,8 @@
 > Hoja de ruta completa para la plataforma **Nexo Real** — Servicios Inmobiliarios, Turismo/Hospitalidad y Afiliaciones.  
 > _"Conectamos tu negocio con el mundo."_
 
-**Versión actual**: v3.2.0 — Sprint 10+ Completado ✅  
-**Última actualización**: 2026-06-25  
+**Versión actual**: v3.3.0 — Sprint 15 Completado ✅  
+**Última actualización**: 2026-07-18  
 **Estado**: Activo - Producción  
 **Meta**: v3.3.0 — próxima expansión
 
@@ -14,50 +14,50 @@
 
 ### ✅ Lo que YA está implementado (v3.2.0)
 
-| Área                     | Funcionalidad                                                                        | Estado |
-| ------------------------ | ------------------------------------------------------------------------------------ | ------ |
-| **Auth**                 | JWT, 2FA, Roles                                                                      | ✅     |
-| **MLM**                  | Unilevel con Closure Table                                                           | ✅     |
-| **Comisiones**           | 5 niveles configurables                                                              | ✅     |
-| **E-commerce**           | Productos streaming (MVP ejemplo)                                                    | ✅     |
-| **Wallet**               | Balance, transacciones, retiros                                                      | ✅     |
-| **CRM**                  | Leads, Tasks, Communications                                                         | ✅     |
-| **Notificaciones**       | Email (Brevo), Push (Web)                                                            | ✅     |
-| **PWA**                  | Offline, instalable, shortcuts                                                       | ✅     |
-| **Landing Pages**        | Productos con SEO                                                                    | ✅     |
-| **Dashboard**            | Stats, tree view, perfil                                                             | ✅     |
-| **i18n**                 | Español + Inglés (sin claves huérfanas)                                              | ✅     |
-| **Pagos**                | PayPal + MercadoPago                                                                 | ✅     |
-| **Gamificación**         | Leaderboards + Achievements                                                          | ✅     |
-| **Gift Cards**           | CRUD, redeem, balance, admin                                                         | ✅     |
-| **Cart Recovery**        | Persistence, tokens, emails                                                          | ✅     |
-| **Email Auto**           | Templates, campaigns, scheduling                                                     | ✅     |
-| **Security**             | SSRF, XSS, pino-http, Docker hardening, CodeQL fixes                                 | ✅     |
-| **Products**             | Generic products + inventory + categories                                            | ✅     |
-| **Marketplace**          | Multi-vendor, commission split 3-way                                                 | ✅     |
-| **Delivery**             | Shipping addresses, providers, tracking                                              | ✅     |
-| **Contracts**            | Affiliate contracts MVP con hash/IP                                                  | ✅     |
-| **Real Estate Frontend** | PropertiesPage, PropertyDetailPage, filtros, galería                                 | ✅     |
-| **Tourism Frontend**     | ToursPage, TourDetailPage, itinerario, disponibilidad                                | ✅     |
-| **Reservation Wizard**   | Wizard 3 pasos + MisReservasPage + reservationStore                                  | ✅     |
-| **Admin Dashboard CRUD** | AdminPropertiesPage + AdminToursPage + AdminReservationsPage                         | ✅     |
-| **Nexo Bot Flows**       | propertiesFlow + toursFlow (ES/EN, limit 5)                                          | ✅     |
-| **network_balance**      | Migración `binary_balance` → `network_balance`                                       | ✅     |
-| **Build Hardening**      | Sin `.map` en producción, logs de tamaño                                             | ✅     |
-| **SEO Frontend**         | Helmet dinámico + OG tags + JSON-LD (Property + Tour) + social proof badges          | ✅     |
-| **Tests**                | Backend: 49 suites, 667 tests (Jest) · Bot: 8 files, 62 tests (Vitest) · Total: ~729 | ✅     |
-| **RBAC 9 Roles**         | super_admin, admin, finance, sales, advisor, vendor, user, guest, bot                | ✅     |
-| **Register Guest**       | `POST /api/auth/register/guest` — registro público sin sponsor                       | ✅     |
-| **Update User Role**     | `PATCH /api/admin/users/:id/role` — solo super_admin/admin                           | ✅     |
-| **Seed Nexo Real**       | Datos colombianos (Medellín, Bogotá, Cartagena), árbol Unilevel completo             | ✅     |
-| **Payment Webhooks**     | WebhookEvent model + MercadoPago + PayPal webhook handlers                           | ✅     |
-| **Invoice System**       | Invoice model + InvoiceService + PDF generation + CRUD routes                        | ✅     |
-| **Commission Unilevel**  | Migración Binary→Unilevel, 10 niveles configurables, Closure Table                   | ✅     |
-| **n8n CRM Integration**  | WorkflowService + WorkflowExecution + N8nWebhookController + Automation routes       | ✅     |
-| **2FA Frontend**         | TwoFactorLoginPage + twoFactorService + códigos de recuperación                      | ✅     |
-| **UX Polish**            | EmptyState 6 tipos + Skeleton loaders + Mobile responsive + Sonner toast             | ✅     |
-| **Feature Guard**        | Middleware para feature flags (FEATURE_CRYPTO_ENABLED=false por defecto)             | ✅     |
-| **Tests**                | Backend: 65+ suites, 600+ tests · Frontend: 35+ suites, 600+ tests · Total: 1,200+   | ✅     |
+| Área                     | Funcionalidad                                                                                            | Estado |
+| ------------------------ | -------------------------------------------------------------------------------------------------------- | ------ |
+| **Auth**                 | JWT, 2FA, Roles                                                                                          | ✅     |
+| **MLM**                  | Unilevel con Closure Table                                                                               | ✅     |
+| **Comisiones**           | 5 niveles configurables                                                                                  | ✅     |
+| **E-commerce**           | Productos streaming (MVP ejemplo)                                                                        | ✅     |
+| **Wallet**               | Balance, transacciones, retiros                                                                          | ✅     |
+| **CRM**                  | Leads, Tasks, Communications                                                                             | ✅     |
+| **Notificaciones**       | Email (Brevo), Push (Web)                                                                                | ✅     |
+| **PWA**                  | Offline, instalable, shortcuts                                                                           | ✅     |
+| **Landing Pages**        | Productos con SEO                                                                                        | ✅     |
+| **Dashboard**            | Stats, tree view, perfil                                                                                 | ✅     |
+| **i18n**                 | Español + Inglés (sin claves huérfanas)                                                                  | ✅     |
+| **Pagos**                | PayPal + MercadoPago                                                                                     | ✅     |
+| **Gamificación**         | Leaderboards + Achievements                                                                              | ✅     |
+| **Gift Cards**           | CRUD, redeem, balance, admin                                                                             | ✅     |
+| **Cart Recovery**        | Persistence, tokens, emails                                                                              | ✅     |
+| **Email Auto**           | Templates, campaigns, scheduling                                                                         | ✅     |
+| **Security**             | SSRF, XSS, pino-http, Docker hardening, CodeQL fixes                                                     | ✅     |
+| **Products**             | Generic products + inventory + categories                                                                | ✅     |
+| **Marketplace**          | Multi-vendor, commission split 3-way                                                                     | ✅     |
+| **Delivery**             | Shipping addresses, providers, tracking                                                                  | ✅     |
+| **Contracts**            | Affiliate contracts MVP con hash/IP                                                                      | ✅     |
+| **Real Estate Frontend** | PropertiesPage, PropertyDetailPage, filtros, galería                                                     | ✅     |
+| **Tourism Frontend**     | ToursPage, TourDetailPage, itinerario, disponibilidad                                                    | ✅     |
+| **Reservation Wizard**   | Wizard 3 pasos + MisReservasPage + reservationStore                                                      | ✅     |
+| **Admin Dashboard CRUD** | AdminPropertiesPage + AdminToursPage + AdminReservationsPage                                             | ✅     |
+| **Nexo Bot Flows**       | propertiesFlow + toursFlow (ES/EN, limit 5)                                                              | ✅     |
+| **network_balance**      | Migración `binary_balance` → `network_balance`                                                           | ✅     |
+| **Build Hardening**      | Sin `.map` en producción, logs de tamaño                                                                 | ✅     |
+| **SEO Frontend**         | Helmet dinámico + OG tags + JSON-LD (Property + Tour) + social proof badges                              | ✅     |
+| **Tests**                | Backend: 66 suites, 887 tests (Jest) · Bot: 18 files, 115 tests (Vitest) · Total: ~1,002                 | ✅     |
+| **RBAC 9 Roles**         | super_admin, admin, finance, sales, advisor, vendor, user, guest, bot                                    | ✅     |
+| **Register Guest**       | `POST /api/auth/register/guest` — registro público sin sponsor                                           | ✅     |
+| **Update User Role**     | `PATCH /api/admin/users/:id/role` — solo super_admin/admin                                               | ✅     |
+| **Seed Nexo Real**       | Datos colombianos (Medellín, Bogotá, Cartagena), árbol Unilevel completo                                 | ✅     |
+| **Payment Webhooks**     | WebhookEvent model + MercadoPago + PayPal webhook handlers                                               | ✅     |
+| **Invoice System**       | Invoice model + InvoiceService + PDF generation + CRUD routes                                            | ✅     |
+| **Commission Unilevel**  | Migración Binary→Unilevel, 10 niveles configurables, Closure Table                                       | ✅     |
+| **n8n CRM Integration**  | WorkflowService + WorkflowExecution + N8nWebhookController + Automation routes                           | ✅     |
+| **2FA Frontend**         | TwoFactorLoginPage + twoFactorService + códigos de recuperación                                          | ✅     |
+| **UX Polish**            | EmptyState 6 tipos + Skeleton loaders + Mobile responsive + Sonner toast                                 | ✅     |
+| **Feature Guard**        | Middleware para feature flags (FEATURE_CRYPTO_ENABLED=false por defecto)                                 | ✅     |
+| **Tests**                | Backend: 66 suites, 887 tests · Frontend: 34 files, 446 tests · Bot: 18 files, 115 tests · Total: ~1,448 | ✅     |
 
 ---
 
@@ -488,34 +488,58 @@ Batch 8.8 — Documentación:
 
 ```
 Branch:    feature/sprint9-* (multiple feature branches)
-Estado:    Completado 2026-04-12 (6 issues closed, all PRs merged)
+Estado:    Completado 2026-04-12 (7 issues closed, all PRs merged)
 
-Issue #150 — Pino Logger Migration:
+Issue #126 [S9/9.1] — Mount 6 orphaned routes + relocate commission-config:
+  ✅ 6 dormant route files mounted in routes/index.ts
+  ✅ commissionConfigRoutes relocated from app.ts to routes/index.ts
+  PR #133 merged
+
+Issue #127 [S9/9.2] — Remove JWT/2FA default secrets, fail-fast on missing:
+  ✅ Removed default-secret-change-in-production fallback
+  ✅ Server throws FATAL error if JWT_SECRET or TWO_FACTOR_SECRET_KEY missing
+  PR #134 merged
+
+Issue #128 [S9/9.3] — Pino Logger Migration:
   ✅ Winston → Pino structured JSON logging across entire backend
-  ✅ All console.log and Winston calls replaced with Pino logger
+  ✅ All production console.log/error/warn calls replaced with Pino logger
+  PR #145 merged
 
-Issue #151 — Eliminate all explicit `any` types:
-  ✅ 39 backend production files audited and fixed
-  ✅ Zero explicit `any` remaining in production code
-
-Issue #152 — Bot Vitest Test Infrastructure:
-  ✅ 8 test files, 62 tests covering all bot flows and services
-
-Issue #148 — PLATFORM_DOMAIN Environment Variable:
+Issue #129 [S9/9.4] — PLATFORM_DOMAIN Environment Variable:
   ✅ Removed all hardcoded nexoreal.xyz references
   ✅ Domain now fully configurable via PLATFORM_DOMAIN env var
+  PR #148 merged
 
-Issue #149 — Controller Test Coverage Expansion:
+Issue #130 [S9/9.5] — Eliminate all explicit `any` types:
+  ✅ 39 backend production files audited and fixed
+  ✅ Zero unjustified explicit `any` remaining in production code
+  PR #146 merged
+
+Issue #131 [S9/9.6] — Bot Vitest Test Infrastructure:
+  ✅ 18 test files, 115 tests covering all bot flows and services
+  PRs #227-229 merged
+
+Issue #132 [S9/9.7] — Controller Test Coverage Expansion:
   ✅ 9 new controller test files added
-  ✅ Backend tests expanded from 540 → 667 tests (49 suites)
+  ✅ Backend tests expanded from 528 → 667 tests (49 suites)
+  PR #149 merged
 
-Issue #153 — Investor Pitch Deck:
-  ✅ 12-slide HTML presentation for investor demos
+Issue #150 — Documentation Update:
+  ✅ All project documentation updated to reflect Sprint 9 completion
+
+✅ Error handling resolved: R2Service, QRService, MercadoPagoService — PR #232
+
+PRs additions (Sprint 9 late cycle):
+  PR #231: docs/update-sprint9-roadmap
+  PR #232: fix/service-error-handling (R2Service, QRService, MercadoPagoService)
+  PR #233: test/mercadopago-service-coverage
+  PR #234: ci/bot-github-actions (GitHub Actions workflow for bot tests)
+  Issue #218: Bot CI/CD — CLOSED
 
 Tests (post-Sprint 9):
-  Backend: 49 suites / 667 tests (Jest) ✅
-  Bot: 8 files / 62 tests (Vitest) ✅
-  Total platform: ~729 backend+bot tests
+  Backend: 66 suites / 887 tests (Jest) ✅
+  Bot: 18 files / 115 tests (Vitest) ✅
+  Total platform: ~1,002 backend+bot tests
 ```
 
 #### Sprint 10 — v3.2.0 — Stabilization & Commission Migration ✅
@@ -534,6 +558,70 @@ Estado:    Completado 2026-06-25
    7. ✅ Commission Model: Binary → Unilevel (10 levels)
    8. ✅ n8n CRM Integration → Frontend
    9. ✅ UX Polish — Purchase/Reservation Flow
+```
+
+#### Sprint 14 — CI Pipeline Optimization + Security Hardening ✅
+
+```
+Branch:    ci/*, infra/*
+Estado:    Completado 2026-07-18
+PRs:       #238, #240, #242
+
+PR #238 — Bot TypeScript Migration + Deploy Cleanup:
+  ✅ lead-persistence.service.js (CJS) → .ts (ESM native)
+  ✅ BOT_PHONE_NUMBER config from env var
+  ✅ deploy.sh cleaned: removed dead frontend Docker refs
+  ✅ Archived sprint9-tech-debt artifacts
+
+PR #240 — CI Performance Optimization:
+  ✅ pnpm cache via actions/setup-node cache option
+  ✅ dorny/paths-filter@v3 — backend/frontend skip on irrelevant PRs
+  ✅ Fixed: corepack enable MUST precede setup-node for cache to work
+
+PR #242 — Integration Test Sharding + Security:
+  ✅ Jest sharding: 3 parallel shards (--shard=1/3, 2/3, 3/3)
+  ✅ Fixed pnpm `--` arg parsing bug (call jest directly)
+  ✅ 7 hardcoded secrets → GitHub Actions secrets (CI_*)
+  ✅ .env.production.example: complete 30+ variable template
+  ✅ .env.production removed from git tracking
+
+Impact:
+  CI total: ~9min → ~6min (33% reduction)
+  Integration tests: ~6-7min → ~4min (3 shards parallel)
+  Security: 7 secrets extracted from YAML to GitHub Actions secrets
+```
+
+#### Sprint 15 — TypeScript Strict Error Elimination ✅
+
+```
+Branch:    fix/sprint15-*
+Estado:    Completado 2026-07-18
+PRs:       #248–#252
+
+PR #248 — Backend TS Errors Batch 1:
+  ✅ Strict TS errors eliminated: auth, config, middleware modules
+  ✅ Proper type annotations for all route handlers
+
+PR #249 — Backend TS Errors Batch 2:
+  ✅ Strict TS errors eliminated: services, controllers
+  ✅ Removed all unjustified `any` casts in business logic
+
+PR #250 — Backend TS Errors Batch 3:
+  ✅ Strict TS errors eliminated: routes, utils
+  ✅ Type-safe route parameter handling
+
+PR #251 — Backend TS Errors Batch 4:
+  ✅ Remaining modules: models, validators, types
+  ✅ Zero compilation errors across entire backend
+
+PR #252 — CI Type Check Gate:
+  ✅ tsc --noEmit blocking step in CI pipeline
+  ✅ Runs after build — catches type regressions before merge
+
+Impact:
+  979+ TypeScript strict errors eliminated
+  CI gate prevents type error regressions
+  Zero compilation errors — clean type checking pass
 ```
 
 ### Fase 2 — Multi-Tenant (1–2 meses post v2.0.0)
@@ -571,7 +659,7 @@ Email: Brevo (SMTP + API)
 SMS: Brevo SMS
 Pagos: PayPal + MercadoPago
 Delivery: Providers via webhooks
-Testing: Jest (49 suites / 667 tests) + Bot Vitest (8 files / 62 tests)
+Testing: Jest (66 suites / 887 tests) + Bot Vitest (18 files / 115 tests)
 ```
 
 ### Frontend Stack
@@ -629,6 +717,6 @@ sprint:9             - Sprint 9 — v2.5.0 → v2.6.1
 
 ---
 
-**Última actualización**: 2026-06-25  
+**Última actualización**: 2026-07-18  
 **Proyecto**: https://github.com/users/ipproyectosysoluciones/projects/4  
 **Producto**: Nexo Real — _"Conectamos tu negocio con el mundo."_

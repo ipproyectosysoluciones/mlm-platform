@@ -1,20 +1,20 @@
 # Nexo Real — Estado del Proyecto
 
-> **Archivo de referencia rápida para nuevas sesiones.** Refleja el estado real al 2026-04-11.
+> **Archivo de referencia rápida para nuevas sesiones.** Refleja el estado real al 2026-07-18.
 
 ---
 
-## Versión actual: v2.4.0
+## Versión actual: v3.3.0
 
 | Campo | Valor |
 |-------|-------|
-| Versión | **v2.4.0** (Sprint 8 — Bot production-ready) |
-| Branch main | `main` — producción (synced 2026-04-10) |
+| Versión | **v3.3.0** (Sprint 15 — TypeScript Strict Error Elimination) |
+| Branch main | `main` — producción (synced 2026-06-25) |
 | Branch activo | `development` |
-| Sprint completado | Sprint 8 — Bot Completo + n8n Workflows |
-| Próximo sprint | **Sprint 9** — Planeado |
+| Sprint completado | Sprint 15 — TypeScript strict errors eliminated, CI gate added |
+| Próximo sprint | **Sprint 16** — Pendiente |
 | Repositorio | `ipproyectosysoluciones/mlm-platform` |
-| Root local | `/media/bladimir/Datos1/Datos/MLM` |
+| Root local | `/media/bladimir/Datos2/Datos/MLM` |
 
 ---
 
@@ -25,20 +25,23 @@
 | Backend | ✅ Activo | `api.nexoreal.xyz` (Cloudflare Tunnel) |
 | Frontend | ✅ Activo | `nexoreal.xyz` + `www.nexoreal.xyz` (Vercel) |
 | Bot WhatsApp | ✅ Activo | Puerto 3002 (local) |
+| Bot CI/CD | ✅ GitHub Actions | `ci-bot.yml` — Vitest en PRs |
 | n8n | 🔧 Docker local | Pendiente migrar a cloud |
 | DB | ✅ PostgreSQL | `DB_NAME=mlm_platform` (nombre legacy, **NO cambiar**) |
+| CI Pipeline | ✅ GitHub Actions | Jest 3 shards + pnpm cache + path filters |
+| CD Pipeline | ✅ GitHub Actions | `cd-backend.yml` + `cd-bot.yml` → Docker Hub |
 
 ---
 
-## Tests al cierre v2.4.0
+## Tests al cierre v3.2.0
 
 | Suite | Tests | Estado |
 |-------|-------|--------|
-| Backend (Jest) | 528 (39 suites) | ✅ 527 passed, 1 skipped |
+| Backend (Jest) | 887 (66 suites) | ✅ 886 passed, 1 skipped |
 | Frontend Unit (Vitest) | ~446 (34 files) | ✅ Pasan |
 | E2E (Playwright) | ~262 (22 specs) | ✅ Pasan |
-| Bot | 0 | ⚠️ Sin tests |
-| **Total** | **~1,236** | ✅ |
+| Bot (Vitest) | 115 (18 files) | ✅ Pasan |
+| **Total** | **~1,298** | ✅ |
 
 **Histórico v2.3.5**: Backend 535 / Frontend 432 / Total 967
 
@@ -50,7 +53,56 @@
 
 | PR | Branch | Target | Estado |
 |----|--------|--------|--------|
-| #105 | `feature/sprint7-testing` | `development` | ⚠️ **OPEN — pendiente merge manual** |
+
+*(Ninguno pendiente)*
+
+---
+
+## Sprint 15 — Estado COMPLETADO ✅
+
+**Fecha**: 2026-07-18 | **Foco**: TypeScript Strict Error Elimination
+
+| PR | Título | Cambio | Estado |
+|----|--------|--------|--------|
+| #248 | fix/backend-ts-errors-batch1 | Strict TS errors: auth, config, middleware | ✅ Merged |
+| #249 | fix/backend-ts-errors-batch2 | Strict TS errors: services, controllers | ✅ Merged |
+| #250 | fix/backend-ts-errors-batch3 | Strict TS errors: routes, utils | ✅ Merged |
+| #251 | fix/backend-ts-errors-batch4 | Strict TS errors: remaining modules | ✅ Merged |
+| #252 | ci/backend-ts-check-gate | tsc --noEmit blocking CI gate | ✅ Merged |
+
+**Impacto**:
+- 979+ TypeScript strict errors eliminated across backend
+- `tsc --noEmit` blocking CI gate prevents regressions
+- Zero compilation errors — clean type checking pass
+
+**GitHub Actions**: `tsc --noEmit` step runs after "Build backend" in CI pipeline
+
+---
+
+## Sprint 14 — Estado COMPLETADO ✅
+
+**Fecha**: 2026-07-17–18 | **Foco**: CI Pipeline Optimization + Security Hardening
+
+| PR | Título | Cambio | Estado |
+|----|--------|--------|--------|
+| #238 | infra/bot-typescript-migration-deploy-cleanup | Bot CJS→TS, deploy.sh cleanup, BOT_PHONE_NUMBER | ✅ Merged |
+| #240 | ci/backend-perf-optimization | pnpm cache + path filters + corepack fix | ✅ Merged |
+| #242 | ci/integration-test-sharding | Jest 3 shards + secrets extraction + .env.example | ✅ Merged |
+
+**Issues cerrados**: #236, #239, #241
+
+**GitHub Actions Secrets creados**:
+- `CI_JWT_SECRET`, `CI_TWO_FACTOR_SECRET_KEY`
+- `CI_VAPID_PUBLIC_KEY`, `CI_VAPID_PRIVATE_KEY`, `CI_VAPID_SUBJECT`
+
+**Impacto CI**:
+| Métrica | Antes | Después |
+|---------|-------|---------|
+| Integration tests | ~6-7min (secuencial) | ~4min (3 shards paralelos) |
+| Total backend CI | ~9min | ~6min |
+| Secrets en YAML | 7 valores hardcodeados | Todos en GitHub Actions secrets |
+
+**Bug encontrado y corregido**: pnpm agrega `--` antes de args de usuario → Jest trataba `--shard` como patrón de archivos. Fix: `npx jest` directo en CI.
 
 ---
 
@@ -72,16 +124,52 @@
 
 ---
 
+## Sprint 9 — Estado COMPLETADO ✅
+
+**Change**: `sprint9-tech-debt` | **Status**: ARCHIVED
+**Completed**: 2026-04-12
+
+| # | Issue | Descripción | PR |
+|---|-------|-------------|-----|
+| 1 | #126 | Mount 6 orphaned routes + relocate commission-config | #133 |
+| 2 | #127 | JWT/2FA fail-fast on missing secrets | #134 |
+| 3 | #128 | Pino Logger Migration (Winston → Pino) | #145 |
+| 4 | #129 | PLATFORM_DOMAIN env var (remove hardcoded) | #148 |
+| 5 | #130 | Eliminate all explicit `any` types (39 files) | #146 |
+| 6 | #131 | Bot Vitest Test Infrastructure (18 files, 115 tests) | #227–#229 |
+| 7 | #132 | Controller Test Coverage Expansion (9 new test files) | #149 |
+| 8 | #218 | Bot CI/CD GitHub Actions (`ci-bot.yml`) | #234 |
+| 9 | — | fix-service-error-handling: R2Service, QRService, MercadoPagoService try/catch | #232 |
+| 10 | — | docs: Sprint 9 roadmap corrections | #231 |
+| 11 | — | MercadoPagoService test coverage | #233 |
+
+**Total PRs merged**: 12 (#133, #134, #145, #146, #148, #149, #227–#229, #231–#234)
+
+---
+
+## Sprints 10–13 — Estado COMPLETADO ✅
+
+| Sprint | Versión | Foco principal | Fecha |
+|--------|---------|---------------|-------|
+| Sprint 10 | v3.0.0 | Payment webhooks, Invoices DB, Commission Unilevel, 2FA frontend, Admin CRUD, UX Polish, n8n CRM | 2026-04-13 |
+| Sprint 11 | v3.0.1 | Push notification tests habilitados, centralized logger fix | 2026-06-16 |
+| Sprint 12 | v3.1.0 | CRM Refactoring (7 sub-componentes), Security Hardening (50 vulns resueltas) | 2026-06-17 |
+| Sprint 13 | v3.2.0 | Order History, Frontend API Modularization, Test Coverage Expansion, CI/CD Fixes, E2E Fixes | 2026-06-25 |
+
+---
+
 ## Convenciones críticas
 
 ```
-GPG signing:    EXPIRADO → SIEMPRE usar git -c commit.gpgsign=false
+GPG signing:    EXPIRADO → SIEMPRE usar --no-gpg-sign
 Commits:        Conventional Commits (feat:, fix:, test:, etc.)
 JSDoc:          ES+EN en todos los archivos nuevos/modificados
 i18n:           todos los strings visibles via t() del sistema i18n
 DB:             DB_NAME=mlm_platform (nombre legacy, no cambiar)
 Branding:       SIEMPRE "Nexo Real" — NUNCA "mlm-platform" ni "IP Proyectos"
-Bot code:       SIEMPRE CommonJS (sin "type": "module") — BuilderBot + Baileys requieren CJS
+Bot code:       ESM TypeScript (lead-persistence.service.ts converted from CJS)
+CI secrets:     Usar ${{ secrets.CI_* }} — NUNCA hardcodear en YAML
+Jest sharding:  Llamar jest directo (npx jest --shard=X/Y), NO via pnpm test:integration --
 ```
 
 ---
@@ -116,22 +204,21 @@ Login:  admin@mlm.com / admin123
 
 | Campo | Valor |
 |-------|-------|
-| Artifact store | `engram` (proyecto: `bladimir`) |
-| Sprint 8 change | `sprint8-bot-complete` — ✅ ARCHIVED (archive report: obs #711) |
+| Artifact store | `engram` (proyecto: `mlm-platform`) |
+| Sprint 8 change | `sprint8-bot-complete` — ✅ ARCHIVED |
+| Sprint 9 change | `sprint9-tech-debt` — ✅ ARCHIVED |
+| Sprint 9 fix | `fix-service-error-handling` — ✅ ARCHIVED |
+| Sprint 10 change | `sprint10-stabilization` — ✅ ARCHIVED |
+| Sprint 15 change | `sprint15-typescript-strict-errors` — ✅ ARCHIVED |
 | Archived to | `openspec/changes/archive/2026-04-11-sprint8-bot-complete/` |
-| Next sprint | Sprint 9 — planeado (SDD contexto a actualizar) |
-| sdd-init | Reejecutar si se inicia Sprint 9 |
+| Next sprint | Sprint 16 — pendiente |
 
 ---
 
 ## Deuda técnica conocida
 
-1. PR #105 pendiente merge (`feature/sprint7-testing` → `development`)
-2. Coverage real no medida — puede no llegar al 90% gate
-3. `api/services/api.ts` — 7.56% coverage (difícil de cubrir, bajo en prioritario)
-4. `components/tree/*` — 0.92% (legacy MLM, excluir de coverage)
-5. `pages/Profile.tsx` — 21.66% coverage
+*(Sin items críticos pendientes)*
 
 ---
 
-*Actualizado: 2026-04-11 | Post-auditoría v2.4.0*
+*Actualizado: 2026-07-18 | Post-Sprint 15 TypeScript strict error elimination*

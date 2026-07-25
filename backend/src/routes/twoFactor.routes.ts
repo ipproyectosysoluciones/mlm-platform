@@ -21,8 +21,8 @@ import {
   verifySetup,
   verify2FA,
   disable2FA,
-} from '../controllers/TwoFactorController';
-import { authenticateToken } from '../middleware/auth.middleware';
+} from '../controllers/TwoFactorController.js';
+import { authenticateToken } from '../middleware/auth.middleware.js';
 
 const router: ExpressRouter = Router();
 

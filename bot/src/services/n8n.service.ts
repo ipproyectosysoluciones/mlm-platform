@@ -40,9 +40,9 @@ export interface HumanHandoffPayload {
   /** User's name */
   name: string;
   /** Brief summary of why they need human attention */
-  reason: string;
+  summary: string;
   /** Last AI agent assigned (sophia | max) */
-  agent: string;
+  agentName: string;
   /** Conversation language */
   language: 'es' | 'en';
   /** Timestamp of escalation */

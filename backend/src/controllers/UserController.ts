@@ -7,14 +7,14 @@
  */
 import { Response } from 'express';
 import { body } from 'express-validator';
-import { userService, treeServiceInstance } from '../services/UserService';
-import { QRService } from '../services/QRService';
-import { hashPassword, verifyPassword } from '../services/AuthService';
-import type { ApiResponse } from '../types';
-import { LEVEL_NAMES } from '../types';
-import type { AuthenticatedRequest } from '../middleware/auth.middleware';
-import { AppError } from '../middleware/error.middleware';
-import { ResponseUtil } from '../utils/response.util';
+import { userService, treeServiceInstance } from '../services/UserService.js';
+import { QRService } from '../services/QRService.js';
+import { hashPassword, verifyPassword } from '../services/AuthService.js';
+import type { ApiResponse } from '../types/index.js';
+import { LEVEL_NAMES } from '../types/index.js';
+import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
+import { AppError } from '../middleware/error.middleware.js';
+import { ResponseUtil } from '../utils/response.util.js';
 
 const qrService = new QRService();
 

@@ -12,10 +12,10 @@
  * const vendorOrders = await VendorOrder.findAll({ where: { orderId: idPedido } });
  */
 import { DataTypes, Model, Optional, ForeignKey } from 'sequelize';
-import { sequelize } from '../config/database';
-import type { VendorOrderAttributes } from '../types';
-import type { Vendor } from './Vendor';
-import type { Order } from './Order';
+import { sequelize } from '../config/database.js';
+import type { VendorOrderAttributes } from '../types/index.js';
+import type { Vendor } from './Vendor.js';
+import type { Order } from './Order.js';
 
 type VendorOrderCreation = Optional<VendorOrderAttributes, 'id' | 'createdAt' | 'updatedAt'>;
 

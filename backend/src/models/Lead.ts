@@ -1,5 +1,5 @@
 import { DataTypes, Model, Optional } from 'sequelize';
-import { sequelize } from '../config/database';
+import { sequelize } from '../config/database.js';
 import { v4 as uuidv4 } from 'uuid';
 
 export type LeadStatus =
@@ -20,7 +20,7 @@ export type LeadSource =
   | 'whatsapp_bot';
 
 /** Automation tracking status: manual | automated | mixed */
-export type AutomationStatus = 'manual' | 'automated' | 'mixed';
+export type AutomationStatus = 'manual' | 'automated' | 'mixed' | 'n8n';
 
 interface LeadAttributes {
   id: string;

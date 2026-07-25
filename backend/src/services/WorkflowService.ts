@@ -16,8 +16,8 @@
  * @author MLM Development Team
  */
 
-import { WorkflowExecution, Lead } from '../models';
-import { logger } from '../utils/logger';
+import { WorkflowExecution, Lead } from '../models/index.js';
+import { logger } from '../utils/logger.js';
 
 /**
  * Human-guard window in milliseconds (5 minutes).
@@ -115,8 +115,10 @@ export class WorkflowService {
     const [execution, created] = await WorkflowExecution.findOrCreate({
       where: { leadId, n8nExecutionId },
       defaults: {
+        leadId,
         workflowName,
         actionType,
+        n8nExecutionId,
         status: status as 'pending' | 'success' | 'failed',
         payload: payload ?? {},
         errorMessage: errorMessage ?? null,

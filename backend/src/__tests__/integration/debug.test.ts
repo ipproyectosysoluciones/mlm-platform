@@ -2,7 +2,7 @@ import { testAgent } from '../setup';
 
 describe('Debug Test', () => {
   it('should show actual response from /api/products', async () => {
-    const res = await testAgent.get('/api/products');
+    const res = await testAgent.get('/api/v1/products');
 
     // Try to expose the result
     expect(res.status).toBe(200);

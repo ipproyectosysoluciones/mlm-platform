@@ -4,10 +4,10 @@ import {
   getCommissions,
   getCommissionStats,
   createPurchase,
-} from '../controllers/CommissionController';
-import { authenticateToken } from '../middleware/auth.middleware';
-import { validate } from '../middleware/validate.middleware';
-import { asyncHandler } from '../middleware/asyncHandler';
+} from '../controllers/CommissionController.js';
+import { authenticateToken } from '../middleware/auth.middleware.js';
+import { validate } from '../middleware/validate.middleware.js';
+import { asyncHandler } from '../middleware/asyncHandler.js';
 
 const router: ExpressRouter = Router();
 

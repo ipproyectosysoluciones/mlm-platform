@@ -15,10 +15,10 @@
  *   .catch(err => console.error('[Achievements]', err));
  */
 import { QueryTypes } from 'sequelize';
-import { sequelize } from '../config/database';
-import { Achievement, Badge, UserAchievement } from '../models';
-import type { AchievementConditionType } from '../models/Achievement';
-import { logger } from '../utils/logger';
+import { sequelize } from '../config/database.js';
+import { Achievement, Badge, UserAchievement } from '../models/index.js';
+import type { AchievementConditionType } from '../models/Achievement.js';
+import { logger } from '../utils/logger.js';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 

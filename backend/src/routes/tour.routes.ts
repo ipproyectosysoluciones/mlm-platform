@@ -6,7 +6,7 @@
  * @author MLM Development Team
  */
 import { Router } from 'express';
-import { getTourPackages, getTourPackage } from '../controllers/TourPackageController';
+import { getTourPackages, getTourPackage } from '../controllers/TourPackageController.js';
 
 const router = Router();
 
@@ -91,7 +91,7 @@ const router = Router();
  *       400:
  *         description: Validation error / Error de validación
  */
-router.get('/', getTourPackages);
+router.get('/', ...getTourPackages);
 
 /**
  * @swagger

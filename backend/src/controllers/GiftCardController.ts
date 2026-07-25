@@ -6,10 +6,10 @@
  * @author MLM Development Team
  */
 import { Response } from 'express';
-import { giftCardService } from '../services/GiftCardService';
-import { qrService } from '../services/QRService';
-import type { ApiResponse } from '../types';
-import type { AuthenticatedRequest } from '../middleware/auth.middleware';
+import { giftCardService } from '../services/GiftCardService.js';
+import { qrService } from '../services/QRService.js';
+import type { ApiResponse } from '../types/index.js';
+import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
 
 /**
  * Create a new gift card (admin only)

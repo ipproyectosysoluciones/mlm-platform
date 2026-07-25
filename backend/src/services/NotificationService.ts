@@ -11,9 +11,9 @@
  * notificationService.stopWeeklyDigest();
  */
 import cron from 'node-cron';
-import { User, Commission } from '../models';
-import { emailService } from './EmailService';
-import { logger } from '../utils/logger';
+import { User, Commission } from '../models/index.js';
+import { emailService } from './EmailService.js';
+import { logger } from '../utils/logger.js';
 
 /**
  * Weekly digest cron schedule - Every Sunday at 9:00 AM UTC

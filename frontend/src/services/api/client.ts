@@ -8,7 +8,7 @@
 import axios from 'axios';
 
 /** @constant {string} API_URL - Backend base URL / URL base del backend */
-const API_URL = import.meta.env.VITE_API_URL || '/api';
+const API_URL = import.meta.env.VITE_API_URL || '/api/v1';
 
 /** @constant {string} CF_ACCESS_CLIENT_ID - Cloudflare Access Client ID */
 const CF_ACCESS_CLIENT_ID = import.meta.env.VITE_CF_ACCESS_CLIENT_ID;

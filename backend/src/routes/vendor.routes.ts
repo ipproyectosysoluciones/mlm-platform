@@ -11,7 +11,7 @@ import {
   getVendorProducts,
   getVendorDashboard,
   requestPayout,
-} from '../controllers/VendorController';
+} from '../controllers/VendorController.js';
 
 const router = Router();
 
@@ -59,7 +59,7 @@ const router = Router();
  *       400:
  *         description: Validation error or vendor exists / Error de validación o vendedor existe
  */
-router.post('/register', registerVendor);
+router.post('/register', ...registerVendor);
 
 /**
  * @swagger
@@ -146,6 +146,6 @@ router.get('/me/dashboard', getVendorDashboard);
  *       400:
  *         description: Invalid amount or insufficient balance / Monto inválido o saldo insuficiente
  */
-router.post('/me/payouts', requestPayout);
+router.post('/me/payouts', ...requestPayout);
 
 export default router;

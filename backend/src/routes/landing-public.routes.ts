@@ -13,14 +13,35 @@
  */
 import { Router, Request, Response } from 'express';
 import { param, query } from 'express-validator';
-import { Product, User } from '../models';
-import { asyncHandler } from '../middleware/asyncHandler';
-import { validate } from '../middleware/validate.middleware';
-import type { ApiResponse } from '../types';
+import { Product, User } from '../models/index.js';
+import { asyncHandler } from '../middleware/asyncHandler.js';
+import { validate } from '../middleware/validate.middleware.js';
+import type { ApiResponse } from '../types/index.js';
 
 const router = Router();
 
 // DEBUG endpoint - test without validation
+
+/**
+ * @swagger
+ * /public/landing/product/debug/{id}:
+ *   get:
+ *     summary: Debug product landing endpoint
+ *     description: Debug endpoint to test product landing route without validation (development only)
+ *     tags: [public]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Product ID (any format)
+ *     responses:
+ *       200:
+ *         description: Debug response with product ID
+ *       500:
+ *         description: Internal error / Error interno
+ */
 router.get(
   '/product/debug/:id',
   asyncHandler(async (req: Request, res: Response) => {

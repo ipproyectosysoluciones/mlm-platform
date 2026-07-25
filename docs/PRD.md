@@ -4,7 +4,7 @@
 
 **Version**: 3.2.0  
 **Status**: ✅ v3.2.0 Released  
-**Last Updated**: 2026-06-25  
+**Last Updated**: 2026-07-17  
 **Document Owner**: Nexo Real Development Team  
 **Tagline**: _"Conectamos tu negocio con el mundo."_
 
@@ -335,7 +335,7 @@ ORM:        Sequelize 6
 Email:      Brevo (SMTP + API)
 SMS:        Brevo SMS
 Payments:   PayPal SDK + MercadoPago SDK
-Testing:    Jest (90+ suites) + Bot Vitest (62 tests)
+Testing:    Jest (66 suites / 887 tests) + Bot Vitest (18 files / 115 tests)
 ```
 
 ## Frontend
@@ -527,6 +527,7 @@ PATCH  /api/admin/vendors/:id/commission-rate
 
 | Version | Date       | Author         | Changes                                                                                                                                                                                                                                                                          |
 | ------- | ---------- | -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 3.3.0   | 2026-07-17 | Nexo Real Team | Sprint 9 completion: error handling fix (R2Service, QRService, MercadoPagoService try/catch), bot CI/CD (GitHub Actions ci-bot.yml), MercadoPagoService test coverage, ROADMAP corrections. 887+115 tests, PRs #231-234.                                                         |
 | 3.2.0   | 2026-06-25 | Nexo Real Team | Sprint 12-13: Order History, Frontend API modularization, CRM refactoring (7 sub-componentes), Test Coverage 89%, CI/CD fixes, E2E fixes, security deps. Total ~1,600 tests.                                                                                                     |
 | 3.0.0   | 2026-04-13 | Nexo Real Team | Sprint 10: Payment webhooks, Invoices, Commission model migration, 2FA frontend, admin CRUD, UX Polish, Feature Guard. 154 files changed, ~12,110 insertions. v3.0.0 released.                                                                                                   |
 | 2.4.0   | 2026-04-10 | Nexo Real Team | Sprint 8 RBAC completo: 9 roles (super_admin, admin, finance, sales, advisor, vendor, user, guest, bot), endpoints register/guest y updateUserRole. Seed Nexo Real colombiano (Unilevel). Tests ~1,236.                                                                          |
@@ -553,16 +554,16 @@ _Nexo Real — "Conectamos tu negocio con el mundo."_
 
 ## Sprint Status
 
-| Sprint     | Versión | Descripción                                                                                                                         | Estado        | Fecha      |
-| ---------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------- | ------------- | ---------- |
-| Sprint 1-3 | v1.11.0 | Auth, MLM, CRM, E-commerce, Security, Marketplace                                                                                   | ✅ Completado | 2026-04-04 |
-| Sprint 4   | v2.0.0  | Nexo Bot WhatsApp, n8n Automation, Gamificación                                                                                     | ✅ Completado | 2026-04-06 |
-| Sprint 5   | v2.1.0  | Real Estate Frontend, Tourism Frontend, Reservation Wizard                                                                          | ✅ Completado | 2026-04-07 |
-| Sprint 6   | v2.2.0  | Admin Dashboard CRUD, Nexo Bot Flows (properties+tours), SEO Frontend, Build Hardening, i18n cleanup, CodeQL fixes                  | ✅ Completado | 2026-04-07 |
-| Sprint 7   | v2.3.5  | UI/UX Rebranding completo (landing Nexo Real, auth skin, AppLayout), Vitest 90%+ coverage, E2E Playwright, PWA                      | ✅ Completado | 2026-04-09 |
-| Sprint 8   | v2.4.0  | Bot Production-Ready, RBAC 9 roles, PostgreSQL adapter, Docker Hub, n8n workflows, seed Nexo Real                                   | ✅ Completado | 2026-04-10 |
-| Sprint 9   | v2.6.1  | Technical Debt — Pino logger, eliminate `any` types, bot Vitest (62 tests), PLATFORM_DOMAIN, controller tests (667), pitch deck     | ✅ Completado | 2026-04-12 |
-| Sprint 10  | v3.0.0  | Stabilization — Payment webhooks, invoices DB migration, disable crypto wallet, admin CRUD, 2FA testing, commission model migration | ✅ Completado | 2026-04-13 |
-| Sprint 11  | v3.0.1  | Quick Wins — Push notification tests habilitados, centralized logger fix                                                            | ✅ Completado | 2026-06-16 |
-| Sprint 12  | v3.1.0  | CRM Refactoring + Security Hardening — 7 sub-componentes, 50 vulns resueltas                                                        | ✅ Completado | 2026-06-17 |
-| Sprint 13  | v3.2.0  | Order History, Frontend API Modularization, Test Coverage Expansion, CI/CD Fixes, E2E Fixes                                         | ✅ Completado | 2026-06-25 |
+| Sprint     | Versión | Descripción                                                                                                                                                         | Estado        | Fecha      |
+| ---------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ---------- |
+| Sprint 1-3 | v1.11.0 | Auth, MLM, CRM, E-commerce, Security, Marketplace                                                                                                                   | ✅ Completado | 2026-04-04 |
+| Sprint 4   | v2.0.0  | Nexo Bot WhatsApp, n8n Automation, Gamificación                                                                                                                     | ✅ Completado | 2026-04-06 |
+| Sprint 5   | v2.1.0  | Real Estate Frontend, Tourism Frontend, Reservation Wizard                                                                                                          | ✅ Completado | 2026-04-07 |
+| Sprint 6   | v2.2.0  | Admin Dashboard CRUD, Nexo Bot Flows (properties+tours), SEO Frontend, Build Hardening, i18n cleanup, CodeQL fixes                                                  | ✅ Completado | 2026-04-07 |
+| Sprint 7   | v2.3.5  | UI/UX Rebranding completo (landing Nexo Real, auth skin, AppLayout), Vitest 90%+ coverage, E2E Playwright, PWA                                                      | ✅ Completado | 2026-04-09 |
+| Sprint 8   | v2.4.0  | Bot Production-Ready, RBAC 9 roles, PostgreSQL adapter, Docker Hub, n8n workflows, seed Nexo Real                                                                   | ✅ Completado | 2026-04-10 |
+| Sprint 9   | v2.6.1  | Technical Debt — Pino logger, eliminate `any` types, bot Vitest (115 tests), PLATFORM_DOMAIN, controller tests (887), error handling (R2/QR/MercadoPago), bot CI/CD | ✅ Completado | 2026-04-12 |
+| Sprint 10  | v3.0.0  | Stabilization — Payment webhooks, invoices DB migration, disable crypto wallet, admin CRUD, 2FA testing, commission model migration                                 | ✅ Completado | 2026-04-13 |
+| Sprint 11  | v3.0.1  | Quick Wins — Push notification tests habilitados, centralized logger fix                                                                                            | ✅ Completado | 2026-06-16 |
+| Sprint 12  | v3.1.0  | CRM Refactoring + Security Hardening — 7 sub-componentes, 50 vulns resueltas                                                                                        | ✅ Completado | 2026-06-17 |
+| Sprint 13  | v3.2.0  | Order History, Frontend API Modularization, Test Coverage Expansion, CI/CD Fixes, E2E Fixes                                                                         | ✅ Completado | 2026-06-25 |

@@ -8,12 +8,12 @@
  * @author MLM Development Team
  */
 import { Response } from 'express';
-import { User } from '../models';
-import { userService, treeServiceInstance } from '../services/UserService';
-import type { ApiResponse } from '../types';
-import { LEVEL_NAMES } from '../types';
+import { User } from '../models/index.js';
+import { userService, treeServiceInstance } from '../services/UserService.js';
+import type { ApiResponse } from '../types/index.js';
+import { LEVEL_NAMES } from '../types/index.js';
 import type { Request } from 'express';
-import { ResponseUtil } from '../utils/response.util';
+import { ResponseUtil } from '../utils/response.util.js';
 
 /**
  * Get public user profile by referral code

@@ -19,11 +19,11 @@
  * // Español: Crear solicitud de retiro
  * const withdrawal = await walletService.createWithdrawal(userId, 100);
  */
-import { Wallet, WalletTransaction, WithdrawalRequest } from '../models';
-import { config } from '../config/env';
-import { WALLET_TRANSACTION_TYPE, WITHDRAWAL_STATUS } from '../types';
+import { Wallet, WalletTransaction, WithdrawalRequest } from '../models/index.js';
+import { config } from '../config/env.js';
+import { WALLET_TRANSACTION_TYPE, WITHDRAWAL_STATUS } from '../types/index.js';
 import { Op } from 'sequelize';
-import { logger } from '../utils/logger';
+import { logger } from '../utils/logger.js';
 
 // Simple exchange rates to USD (in production, use an external API)
 const EXCHANGE_RATES: Record<string, number> = {
@@ -291,10 +291,12 @@ export class WalletService {
     if (options?.startDate || options?.endDate) {
       where.created_at = {};
       if (options?.startDate) {
-        (where.created_at as Record<string, Date>)[Op.gte] = options.startDate;
+        (where.created_at as Record<string, unknown>)[Op.gte as unknown as string] =
+          options.startDate;
       }
       if (options?.endDate) {
-        (where.created_at as Record<string, Date>)[Op.lte] = options.endDate;
+        (where.created_at as Record<string, unknown>)[Op.lte as unknown as string] =
+          options.endDate;
       }
     }
 

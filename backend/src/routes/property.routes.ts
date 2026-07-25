@@ -5,7 +5,7 @@
  * @author MLM Development Team
  */
 import { Router } from 'express';
-import { getProperties, getProperty } from '../controllers/PropertyController';
+import { getProperties, getProperty } from '../controllers/PropertyController.js';
 
 const router = Router();
 
@@ -84,7 +84,7 @@ const router = Router();
  *       400:
  *         description: Validation error / Error de validación
  */
-router.get('/', getProperties);
+router.get('/', ...getProperties);
 
 /**
  * @swagger

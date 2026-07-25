@@ -6,8 +6,8 @@
  * @author MLM Development Team
  */
 
-import Redis from 'ioredis';
-import { logger } from '../utils/logger';
+import { Redis } from 'ioredis';
+import { logger } from '../utils/logger.js';
 
 let redis: Redis | null = null;
 

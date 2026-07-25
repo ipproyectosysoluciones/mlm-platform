@@ -13,8 +13,8 @@
  * GET /api/achievements
  */
 import { Response } from 'express';
-import type { AuthenticatedRequest } from '../middleware/auth.middleware';
-import { achievementService, AchievementWithProgress } from '../services/AchievementService';
+import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
+import { achievementService, AchievementWithProgress } from '../services/AchievementService.js';
 
 export class AchievementController {
   /**

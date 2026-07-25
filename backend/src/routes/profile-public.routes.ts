@@ -12,9 +12,9 @@
  * GET /api/public/profile/AFFILIATE123/products
  */
 import { Router, Request, Response } from 'express';
-import { Product, User } from '../models';
-import { asyncHandler } from '../middleware/asyncHandler';
-import type { ApiResponse } from '../types';
+import { Product, User } from '../models/index.js';
+import { asyncHandler } from '../middleware/asyncHandler.js';
+import type { ApiResponse } from '../types/index.js';
 
 const router = Router();
 
