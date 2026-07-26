@@ -165,6 +165,9 @@ importers:
       '@types/express':
         specifier: ^4.17.25
         version: 4.17.25
+      '@types/express-serve-static-core':
+        specifier: ^4.19.8
+        version: 4.19.8
       '@types/jest':
         specifier: ^30.0.0
         version: 30.0.0
@@ -186,6 +189,9 @@ importers:
       '@types/qrcode':
         specifier: ^1.5.6
         version: 1.5.6
+      '@types/qs':
+        specifier: ^6.15.0
+        version: 6.15.0
       '@types/speakeasy':
         specifier: ^2.0.10
         version: 2.0.10
