@@ -26,7 +26,10 @@ const mockUser = {
 
 const mockToken = 'mock-jwt-token';
 
-/** Public auth endpoints that don't require a valid token. */
+/**
+ * Public auth endpoints that don't require a valid token.
+ * Normalized paths (without /v1/) — path normalization is applied before matching.
+ */
 const PUBLIC_AUTH_ENDPOINTS = new Set(['/api/auth/login', '/api/auth/register']);
 
 // ─── Auth helpers ─────────────────────────────────────────────────────────────
@@ -73,9 +76,13 @@ export function setupMockApi(page: Page): void {
       const method = route.request().method();
       const pathname = url.pathname;
 
+      // Normalize /api/v1/* → /api/* so mock checks match frontend's baseURL prefix.
+      // e.g. /api/v1/auth/login → /api/auth/login
+      const normalizedPath = pathname.replace(/^\/api\/v1/, '/api');
+
       // ── Auth endpoints (no token required) ────────────────────────────────
 
-      if (pathname === '/api/auth/login' && method === 'POST') {
+      if (normalizedPath === '/api/auth/login' && method === 'POST') {
         let body: Record<string, unknown> = {};
         try {
           body = JSON.parse(route.request().postData() ?? '{}');
@@ -107,7 +114,7 @@ export function setupMockApi(page: Page): void {
         });
       }
 
-      if (pathname === '/api/auth/register' && method === 'POST') {
+      if (normalizedPath === '/api/auth/register' && method === 'POST') {
         return route.fulfill({
           status: 200,
           contentType: 'application/json',
@@ -174,7 +181,7 @@ export function setupMockApi(page: Page): void {
         },
       ];
 
-      if (pathname === '/api/properties' && method === 'GET') {
+      if (normalizedPath === '/api/properties' && method === 'GET') {
         return route.fulfill({
           status: 200,
           contentType: 'application/json',
@@ -186,7 +193,7 @@ export function setupMockApi(page: Page): void {
         });
       }
 
-      const propertyIdMatch = pathname.match(/^\/api\/properties\/([a-zA-Z0-9_-]+)$/);
+      const propertyIdMatch = normalizedPath.match(/^\/api\/properties\/([a-zA-Z0-9_-]+)$/);
       if (propertyIdMatch && method === 'GET') {
         const property = MOCK_PROPERTIES.find((p) => p.id === propertyIdMatch[1]);
         if (property) {
@@ -252,7 +259,7 @@ export function setupMockApi(page: Page): void {
       ];
 
       // GET /api/reservations — list
-      if (pathname === '/api/reservations' && method === 'GET') {
+      if (normalizedPath === '/api/reservations' && method === 'GET') {
         return route.fulfill({
           status: 200,
           contentType: 'application/json',
@@ -267,7 +274,7 @@ export function setupMockApi(page: Page): void {
       }
 
       // POST /api/reservations — create
-      if (pathname === '/api/reservations' && method === 'POST') {
+      if (normalizedPath === '/api/reservations' && method === 'POST') {
         return route.fulfill({
           status: 201,
           contentType: 'application/json',
@@ -299,7 +306,7 @@ export function setupMockApi(page: Page): void {
       }
 
       // GET /api/reservations/:id — single reservation
-      const getReservationIdMatch = pathname.match(/^\/api\/reservations\/([a-zA-Z0-9_-]+)$/);
+      const getReservationIdMatch = normalizedPath.match(/^\/api\/reservations\/([a-zA-Z0-9_-]+)$/);
       if (getReservationIdMatch && method === 'GET') {
         const reservation = MOCK_RESERVATIONS.find((r) => r.id === getReservationIdMatch[1]);
         if (reservation) {
@@ -318,7 +325,7 @@ export function setupMockApi(page: Page): void {
 
       // ── All remaining endpoints require a valid token ─────────────────────
 
-      if (!PUBLIC_AUTH_ENDPOINTS.has(pathname)) {
+      if (!PUBLIC_AUTH_ENDPOINTS.has(normalizedPath)) {
         const token = getAuthToken(route);
         if (token !== mockToken) {
           return unauthorized(route);
@@ -327,7 +334,7 @@ export function setupMockApi(page: Page): void {
 
       // ── Auth /me endpoint ─────────────────────────────────────────────────
 
-      if (pathname === '/api/auth/me' && method === 'GET') {
+      if (normalizedPath === '/api/auth/me' && method === 'GET') {
         return route.fulfill({
           status: 200,
           contentType: 'application/json',
@@ -340,7 +347,7 @@ export function setupMockApi(page: Page): void {
 
       // ── Dashboard endpoint ────────────────────────────────────────────────
 
-      if (pathname === '/api/dashboard' && method === 'GET') {
+      if (normalizedPath === '/api/dashboard' && method === 'GET') {
         return route.fulfill({
           status: 200,
           contentType: 'application/json',
@@ -395,7 +402,7 @@ export function setupMockApi(page: Page): void {
 
       // ── Wallet endpoints ──────────────────────────────────────────────────
 
-      if (pathname === '/api/wallet' && method === 'GET') {
+      if (normalizedPath === '/api/wallet' && method === 'GET') {
         return route.fulfill({
           status: 200,
           contentType: 'application/json',
@@ -412,7 +419,7 @@ export function setupMockApi(page: Page): void {
         });
       }
 
-      if (pathname === '/api/wallet/transactions' && method === 'GET') {
+      if (normalizedPath === '/api/wallet/transactions' && method === 'GET') {
         return route.fulfill({
           status: 200,
           contentType: 'application/json',
@@ -423,7 +430,7 @@ export function setupMockApi(page: Page): void {
         });
       }
 
-      if (pathname === '/api/wallet/prices' && method === 'GET') {
+      if (normalizedPath === '/api/wallet/prices' && method === 'GET') {
         return route.fulfill({
           status: 200,
           contentType: 'application/json',
@@ -434,9 +441,46 @@ export function setupMockApi(page: Page): void {
         });
       }
 
+      // POST /api/wallet/withdraw — create withdrawal request
+      if (normalizedPath === '/api/wallet/withdraw' && method === 'POST') {
+        let body: Record<string, unknown> = {};
+        try {
+          body = JSON.parse(route.request().postData() ?? '{}');
+        } catch {
+          /* ignore */
+        }
+        return route.fulfill({
+          status: 201,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            success: true,
+            data: {
+              id: 'wd-001',
+              userId: '1',
+              amount: Number(body.amount ?? 0),
+              currency: 'USD',
+              status: 'pending',
+              createdAt: new Date().toISOString(),
+            },
+          }),
+        });
+      }
+
+      // GET /api/wallet/withdrawals — list withdrawal requests
+      if (normalizedPath === '/api/wallet/withdrawals' && method === 'GET') {
+        return route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            success: true,
+            data: { withdrawals: [], total: 0, page: 1, limit: 20, totalPages: 0 },
+          }),
+        });
+      }
+
       // ── Tree endpoint ─────────────────────────────────────────────────────
 
-      if (pathname === '/api/users/me/tree' && method === 'GET') {
+      if (normalizedPath === '/api/users/me/tree' && method === 'GET') {
         return route.fulfill({
           status: 200,
           contentType: 'application/json',
@@ -458,9 +502,80 @@ export function setupMockApi(page: Page): void {
         });
       }
 
+      // GET /api/users/:userId/tree — specific user's tree
+      const userTreeMatch = normalizedPath.match(/^\/api\/users\/([^/]+)\/tree$/);
+      if (userTreeMatch && method === 'GET') {
+        const uid = userTreeMatch[1];
+        return route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            success: true,
+            data: {
+              tree: {
+                id: uid,
+                email: 'user@mlm.com',
+                referralCode: 'USER',
+                position: 'left',
+                level: 0,
+                stats: { leftCount: 5, rightCount: 3 },
+                children: [],
+              },
+              stats: { totalLeft: 5, totalRight: 3, totalDepth: 2 },
+            },
+          }),
+        });
+      }
+
+      // PATCH /api/users/me — update profile
+      if (normalizedPath === '/api/users/me' && method === 'PATCH') {
+        return route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({ success: true, data: mockUser }),
+        });
+      }
+
+      // POST /api/users/me/change-password
+      if (normalizedPath === '/api/users/me/change-password' && method === 'POST') {
+        return route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({ success: true, data: { message: 'Password changed' } }),
+        });
+      }
+
+      // GET /api/users/search
+      if (normalizedPath === '/api/users/search' && method === 'GET') {
+        return route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({ success: true, data: [] }),
+        });
+      }
+
+      // GET /api/users/:userId/details
+      const userDetailsMatch = normalizedPath.match(/^\/api\/users\/([^/]+)\/details$/);
+      if (userDetailsMatch && method === 'GET') {
+        return route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            success: true,
+            data: {
+              ...mockUser,
+              id: userDetailsMatch[1],
+              binaryBalance: 2500,
+              networkBalance: 3500,
+              totalCommissions: 12500,
+            },
+          }),
+        });
+      }
+
       // ── Admin endpoints ───────────────────────────────────────────────────
 
-      if (pathname === '/api/admin/stats' && method === 'GET') {
+      if (normalizedPath === '/api/admin/stats' && method === 'GET') {
         return route.fulfill({
           status: 200,
           contentType: 'application/json',
@@ -477,7 +592,7 @@ export function setupMockApi(page: Page): void {
         });
       }
 
-      if (pathname === '/api/admin/users' && method === 'GET') {
+      if (normalizedPath === '/api/admin/users' && method === 'GET') {
         return route.fulfill({
           status: 200,
           contentType: 'application/json',
@@ -503,9 +618,195 @@ export function setupMockApi(page: Page): void {
         });
       }
 
+      // ── Admin properties ────────────────────────────────────────────────
+
+      if (normalizedPath === '/api/admin/properties' && method === 'GET') {
+        return route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            success: true,
+            data: {
+              properties: [
+                {
+                  id: 'prop-001',
+                  type: 'rental',
+                  title: 'Casa en la playa',
+                  titleEn: 'Beach House',
+                  description: 'Hermosa casa frente al mar',
+                  descriptionEn: 'Beautiful beachfront house',
+                  price: 250,
+                  currency: 'USD',
+                  priceNegotiable: true,
+                  bedrooms: 3,
+                  bathrooms: 2,
+                  areaM2: 120,
+                  address: 'Calle del Mar 123',
+                  city: 'Punta del Este',
+                  country: 'Uruguay',
+                  amenities: ['WiFi', 'Parking', 'Pool'],
+                  images: ['/images/prop-001.jpg'],
+                  status: 'active',
+                  createdAt: '2026-06-01T00:00:00Z',
+                  updatedAt: '2026-06-15T00:00:00Z',
+                },
+                {
+                  id: 'prop-002',
+                  type: 'sale',
+                  title: 'Apartamento centro',
+                  titleEn: 'Downtown Apartment',
+                  description: 'Moderno apartamento en el centro',
+                  descriptionEn: 'Modern downtown apartment',
+                  price: 95000,
+                  currency: 'USD',
+                  priceNegotiable: false,
+                  bedrooms: 2,
+                  bathrooms: 1,
+                  areaM2: 80,
+                  address: 'Av. Principal 456',
+                  city: 'Montevideo',
+                  country: 'Uruguay',
+                  amenities: ['WiFi', 'AC'],
+                  images: ['/images/prop-002.jpg'],
+                  status: 'active',
+                  createdAt: '2026-06-01T00:00:00Z',
+                  updatedAt: '2026-06-15T00:00:00Z',
+                },
+              ],
+              total: 2,
+              page: 1,
+              limit: 20,
+              totalPages: 1,
+            },
+          }),
+        });
+      }
+
+      // ── Admin tours ─────────────────────────────────────────────────────
+
+      if (normalizedPath === '/api/admin/tours' && method === 'GET') {
+        return route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            success: true,
+            data: {
+              tours: [
+                {
+                  id: 'tour-001',
+                  type: 'adventure',
+                  title: 'Trekking en Patagonia',
+                  titleEn: 'Patagonia Trekking',
+                  description: 'Aventura por la Patagonia argentina',
+                  descriptionEn: 'Adventure through Argentine Patagonia',
+                  destination: 'El Chaltén',
+                  country: 'Argentina',
+                  durationDays: 7,
+                  price: 85000,
+                  currency: 'ARS',
+                  priceIncludes: ['Alojamiento', 'Comidas', 'Guía'],
+                  priceExcludes: ['Vuelos', 'Seguro'],
+                  maxCapacity: 12,
+                  minGroupSize: 4,
+                  status: 'active',
+                  images: [],
+                  createdAt: '2026-06-01T00:00:00Z',
+                  updatedAt: '2026-06-15T00:00:00Z',
+                },
+                {
+                  id: 'tour-002',
+                  type: 'gastronomic',
+                  title: 'Bodega & Vino en Mendoza',
+                  titleEn: 'Mendoza Winery Tour',
+                  description: 'Recorrido por bodegas de Mendoza',
+                  descriptionEn: 'Mendoza winery tour',
+                  destination: 'Luján de Cuyo',
+                  country: 'Argentina',
+                  durationDays: 3,
+                  price: 45000,
+                  currency: 'ARS',
+                  priceIncludes: ['Degustación', 'Transporte'],
+                  priceExcludes: ['Alojamiento'],
+                  maxCapacity: 8,
+                  minGroupSize: 2,
+                  status: 'active',
+                  images: [],
+                  createdAt: '2026-06-01T00:00:00Z',
+                  updatedAt: '2026-06-15T00:00:00Z',
+                },
+              ],
+              total: 2,
+              page: 1,
+              limit: 20,
+              totalPages: 1,
+            },
+          }),
+        });
+      }
+
+      // ── Admin reservations ──────────────────────────────────────────────
+
+      if (normalizedPath === '/api/admin/reservations' && method === 'GET') {
+        return route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            success: true,
+            data: {
+              reservations: [
+                {
+                  id: 'res-001',
+                  userId: '1',
+                  type: 'property',
+                  propertyId: 'prop-001',
+                  status: 'confirmed',
+                  paymentStatus: 'paid',
+                  checkIn: '2026-07-01',
+                  checkOut: '2026-07-05',
+                  guests: 2,
+                  totalAmount: 1000,
+                  currency: 'USD',
+                  adminNotes: null,
+                  createdAt: '2026-06-20T10:00:00Z',
+                  updatedAt: '2026-06-20T10:00:00Z',
+                  user: { id: '1', email: 'admin@mlm.com' },
+                  property: { id: 'prop-001', title: 'Casa en la playa', city: 'Punta del Este' },
+                },
+                {
+                  id: 'res-002',
+                  userId: '2',
+                  type: 'tour',
+                  tourId: 'tour-001',
+                  status: 'pending',
+                  paymentStatus: 'pending',
+                  checkIn: '2026-08-01',
+                  checkOut: '2026-08-08',
+                  guests: 4,
+                  totalAmount: 340000,
+                  currency: 'ARS',
+                  adminNotes: null,
+                  createdAt: '2026-06-22T14:00:00Z',
+                  updatedAt: '2026-06-22T14:00:00Z',
+                  user: { id: '2', email: 'user1@mlm.com' },
+                  tour: {
+                    id: 'tour-001',
+                    title: 'Trekking en Patagonia',
+                    destination: 'El Chaltén',
+                  },
+                },
+              ],
+              total: 2,
+              page: 1,
+              limit: 20,
+              totalPages: 1,
+            },
+          }),
+        });
+      }
+
       // ── CRM automation endpoints ─────────────────────────────────────────
 
-      if (pathname === '/api/crm/automation/status' && method === 'GET') {
+      if (normalizedPath === '/api/crm/automation/status' && method === 'GET') {
         return route.fulfill({
           status: 200,
           contentType: 'application/json',
@@ -520,7 +821,7 @@ export function setupMockApi(page: Page): void {
         });
       }
 
-      if (pathname === '/api/crm/automation/executions' && method === 'GET') {
+      if (normalizedPath === '/api/crm/automation/executions' && method === 'GET') {
         return route.fulfill({
           status: 200,
           contentType: 'application/json',
@@ -559,7 +860,7 @@ export function setupMockApi(page: Page): void {
 
       // ── Categories ──────────────────────────────────────────────────────
 
-      if (pathname === '/api/categories/tree' && method === 'GET') {
+      if (normalizedPath === '/api/categories/tree' && method === 'GET') {
         return route.fulfill({
           status: 200,
           contentType: 'application/json',
@@ -596,7 +897,7 @@ export function setupMockApi(page: Page): void {
         });
       }
 
-      if (pathname === '/api/categories' && method === 'GET') {
+      if (normalizedPath === '/api/categories' && method === 'GET') {
         return route.fulfill({
           status: 200,
           contentType: 'application/json',
@@ -614,7 +915,7 @@ export function setupMockApi(page: Page): void {
 
       // ── Product Catalog ──────────────────────────────────────────────────
 
-      if (pathname === '/api/products' && method === 'GET') {
+      if (normalizedPath === '/api/products' && method === 'GET') {
         const products = [
           {
             id: 'prod-001',
@@ -691,7 +992,7 @@ export function setupMockApi(page: Page): void {
 
       // ── Single Product (by ID) ──────────────────────────────────────────
 
-      const productIdMatch = pathname.match(/^\/api\/products\/([a-zA-Z0-9_-]+)$/);
+      const productIdMatch = normalizedPath.match(/^\/api\/products\/([a-zA-Z0-9_-]+)$/);
       if (productIdMatch && method === 'GET') {
         const productId = productIdMatch[1];
         const products = [
@@ -771,7 +1072,7 @@ export function setupMockApi(page: Page): void {
       // ── Orders ──────────────────────────────────────────────────────────
 
       // POST /api/orders — create order
-      if (pathname === '/api/orders' && method === 'POST') {
+      if (normalizedPath === '/api/orders' && method === 'POST') {
         return route.fulfill({
           status: 201,
           contentType: 'application/json',
@@ -805,7 +1106,7 @@ export function setupMockApi(page: Page): void {
       }
 
       // GET /api/orders — list orders (MUST come before :orderId regex)
-      if (pathname === '/api/orders' && method === 'GET') {
+      if (normalizedPath === '/api/orders' && method === 'GET') {
         const page = parseInt(new URL(route.request().url()).searchParams.get('page') || '1');
         const limit = parseInt(new URL(route.request().url()).searchParams.get('limit') || '20');
         const total = 42;
@@ -895,7 +1196,7 @@ export function setupMockApi(page: Page): void {
       }
 
       // GET /api/orders/:orderId — get single order (used by OrderSuccess page)
-      const getOrderIdMatch = pathname.match(/^\/api\/orders\/([a-zA-Z0-9_-]+)$/);
+      const getOrderIdMatch = normalizedPath.match(/^\/api\/orders\/([a-zA-Z0-9_-]+)$/);
       if (getOrderIdMatch && method === 'GET') {
         return route.fulfill({
           status: 200,
@@ -931,7 +1232,7 @@ export function setupMockApi(page: Page): void {
 
       // ── Landing Pages endpoints ────────────────────────────────────────────
 
-      const landingMatch = url.pathname.match(/^\/api\/landing\/stats$/);
+      const landingMatch = normalizedPath.match(/^\/api\/landing\/stats$/);
       if (landingMatch) {
         return route.fulfill({
           status: 200,
@@ -949,7 +1250,7 @@ export function setupMockApi(page: Page): void {
         });
       }
 
-      if (url.pathname === '/api/landing' && method === 'GET') {
+      if (normalizedPath === '/api/landing' && method === 'GET') {
         return route.fulfill({
           status: 200,
           contentType: 'application/json',
@@ -1011,7 +1312,7 @@ export function setupMockApi(page: Page): void {
 
       // ── Email Campaigns endpoints ─────────────────────────────────────────
 
-      if (url.pathname === '/api/email-campaigns' && method === 'GET') {
+      if (normalizedPath === '/api/email-campaigns' && method === 'GET') {
         return route.fulfill({
           status: 200,
           contentType: 'application/json',
@@ -1043,6 +1344,222 @@ export function setupMockApi(page: Page): void {
                 updatedAt: new Date(Date.now() - 259200000).toISOString(),
               },
             ],
+          }),
+        });
+      }
+
+      // ── CRM endpoints (page-load support) ─────────────────────────────────
+
+      // GET /api/crm — leads list
+      if (normalizedPath === '/api/crm' && method === 'GET') {
+        return route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            success: true,
+            data: {
+              leads: [
+                {
+                  id: 'lead1',
+                  contactName: 'Juan Pérez',
+                  contactEmail: 'juan@example.com',
+                  contactPhone: '+123456789',
+                  status: 'new',
+                  source: 'web',
+                  notes: 'Interested in property',
+                  createdAt: '2026-06-10T10:00:00Z',
+                  updatedAt: '2026-06-10T10:00:00Z',
+                },
+                {
+                  id: 'lead2',
+                  contactName: 'María García',
+                  contactEmail: 'maria@example.com',
+                  contactPhone: null,
+                  status: 'contacted',
+                  source: 'referral',
+                  notes: null,
+                  createdAt: '2026-06-12T14:00:00Z',
+                  updatedAt: '2026-06-12T14:00:00Z',
+                },
+              ],
+              total: 2,
+              page: 1,
+              limit: 20,
+              totalPages: 1,
+            },
+          }),
+        });
+      }
+
+      // GET /api/crm/stats
+      if (normalizedPath === '/api/crm/stats' && method === 'GET') {
+        return route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            success: true,
+            data: {
+              totalLeads: 2,
+              newLeads: 1,
+              contactedLeads: 1,
+              convertedLeads: 0,
+              conversionRate: 0,
+            },
+          }),
+        });
+      }
+
+      // GET /api/crm/tasks
+      if (normalizedPath === '/api/crm/tasks' && method === 'GET') {
+        return route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({ success: true, data: [] }),
+        });
+      }
+
+      // GET /api/crm/alerts
+      if (normalizedPath === '/api/crm/alerts' && method === 'GET') {
+        return route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({ success: true, data: [] }),
+        });
+      }
+
+      // ── Admin products ────────────────────────────────────────────────────
+
+      if (normalizedPath === '/api/admin/products' && method === 'GET') {
+        return route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            success: true,
+            data: {
+              products: [
+                {
+                  id: 'prod-001',
+                  name: 'Netflix Premium',
+                  platform: 'netflix',
+                  price: 15.99,
+                  currency: 'USD',
+                  durationDays: 30,
+                  isActive: true,
+                  description: 'Acceso a Netflix en calidad 4K',
+                  imageUrl: '/images/netflix.png',
+                },
+              ],
+              total: 1,
+              page: 1,
+              limit: 20,
+              totalPages: 1,
+            },
+          }),
+        });
+      }
+
+      // ── Admin vendors ─────────────────────────────────────────────────────
+
+      if (normalizedPath === '/api/admin/vendors' && method === 'GET') {
+        return route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            success: true,
+            data: { vendors: [], total: 0, page: 1, limit: 20, totalPages: 0 },
+          }),
+        });
+      }
+
+      // ── Vendor products ───────────────────────────────────────────────────
+
+      if (normalizedPath === '/api/vendors/me/products' && method === 'GET') {
+        return route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            success: true,
+            data: { products: [], total: 0, page: 1, limit: 20, totalPages: 0 },
+          }),
+        });
+      }
+
+      // ── Public landing page ───────────────────────────────────────────────
+
+      const publicLandingMatch = normalizedPath.match(/^\/api\/public\/landing\/([^/]+)$/);
+      if (publicLandingMatch && method === 'GET') {
+        return route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            success: true,
+            data: {
+              id: 'landing-1',
+              slug: publicLandingMatch[1],
+              title: 'Summer Promotion',
+              description: 'Summer promo landing page',
+              template: 'hero',
+              content: {
+                headline: 'Summer Sale!',
+                subheadline: 'Get 20% off',
+                ctaText: 'Shop Now',
+                ctaColor: '#ff0000',
+                backgroundColor: '#ffffff',
+                textColor: '#000000',
+                showReferralCode: true,
+                showStats: true,
+              },
+              isActive: true,
+            },
+          }),
+        });
+      }
+
+      // ── Admin commission config ───────────────────────────────────────────
+
+      if (normalizedPath === '/api/admin/commissions/config' && method === 'GET') {
+        return route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            success: true,
+            data: [
+              {
+                id: 'cc1',
+                businessType: 'property_rental',
+                level: 'ejecutivo',
+                percentage: 5,
+                isActive: true,
+              },
+            ],
+          }),
+        });
+      }
+
+      // GET /api/admin/commissions/rates/:businessType
+      const commRatesMatch = normalizedPath.match(/^\/api\/admin\/commissions\/rates\/([^/]+)$/);
+      if (commRatesMatch && method === 'GET') {
+        return route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            success: true,
+            data: {
+              businessType: commRatesMatch[1],
+              rates: [{ level: 'ejecutivo', percentage: 5 }],
+            },
+          }),
+        });
+      }
+
+      // GET /api/admin/reports/commissions
+      if (normalizedPath === '/api/admin/reports/commissions' && method === 'GET') {
+        return route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            success: true,
+            data: { reports: [], total: 0, page: 1, limit: 20, totalPages: 0 },
           }),
         });
       }
