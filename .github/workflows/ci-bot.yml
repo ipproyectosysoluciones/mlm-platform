@@ -12,6 +12,11 @@ on:
       - 'bot/**'
       - 'pnpm-lock.yaml'
 
+# Cancel duplicate runs for the same branch/PR
+concurrency:
+  group: ci-bot-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   FORCE_NODE24: true
 
