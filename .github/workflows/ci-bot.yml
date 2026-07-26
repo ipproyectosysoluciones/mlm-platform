@@ -2,15 +2,20 @@ name: CI Bot
 
 on:
   push:
-    branches: [main, development]
+    branches: [development]
     paths:
       - 'bot/**'
       - 'pnpm-lock.yaml'
   pull_request:
-    branches: [main, development]
+    branches: [main, release]
     paths:
       - 'bot/**'
       - 'pnpm-lock.yaml'
+
+# Cancel duplicate runs for the same branch/PR
+concurrency:
+  group: ci-bot-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   FORCE_NODE24: true

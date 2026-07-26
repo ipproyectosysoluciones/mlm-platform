@@ -4,6 +4,9 @@ on:
   push:
     branches: [release]
     tags: ['v*']
+    paths:
+      - 'bot/**'
+      - 'pnpm-lock.yaml'
 
 env:
   REGISTRY: docker.io

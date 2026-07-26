@@ -8,7 +8,7 @@
  *
  * @module e2e/carts.spec
  */
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import { baseURL, login, waitForPageReady } from './helpers';
 
 test.describe('Abandoned Cart Recovery', () => {

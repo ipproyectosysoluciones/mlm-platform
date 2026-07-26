@@ -3,7 +3,7 @@
  * @description T2.2.2: Verifica búsqueda de propiedades, filtros y navegación a detalle
  */
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import { baseURL, login } from './helpers';
 
 const MOCK_PROPERTIES = [

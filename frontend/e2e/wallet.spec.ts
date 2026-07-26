@@ -4,7 +4,7 @@
  *
  * @module e2e/wallet.spec
  */
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import { baseURL, login } from './helpers';
 
 test.describe('Wallet Digital', () => {

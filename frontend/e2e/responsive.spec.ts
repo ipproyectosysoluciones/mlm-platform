@@ -3,7 +3,7 @@
  * @description T2.2.5: Verifica layout responsive en mobile, tablet y desktop
  */
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import { baseURL, login } from './helpers';
 
 // ── Viewport definitions ─────────────────────────────────────────────────────

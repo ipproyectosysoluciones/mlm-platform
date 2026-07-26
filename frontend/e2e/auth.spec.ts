@@ -5,7 +5,7 @@
  *
  * @module e2e/auth.spec
  */
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import { baseURL, testUser } from './helpers';
 import { setupMockApi } from './mock-api';
 

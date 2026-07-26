@@ -9,7 +9,7 @@
  *       localStorage on every full page load).
  */
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import { baseURL, login } from './helpers';
 
 test.describe('Reservation Wizard', () => {

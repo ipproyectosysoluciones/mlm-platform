@@ -4,8 +4,8 @@ export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: 1,
+  retries: process.env.CI ? 1 : 0,
+  workers: process.env.CI ? 4 : 1,
   reporter: 'html',
   globalSetup: './e2e/global-setup.ts',
 
@@ -13,8 +13,8 @@ export default defineConfig({
     baseURL:
       process.env.BASE_URL || (process.env.CI ? 'http://localhost:4173' : 'http://localhost:5173'),
     trace: 'on-first-retry',
-    screenshot: 'always',
-    video: 'on',
+    screenshot: 'only-on-failure',
+    video: 'on-first-retry',
   },
 
   outputDir: './test-results',

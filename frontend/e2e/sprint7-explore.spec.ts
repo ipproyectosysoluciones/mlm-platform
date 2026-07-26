@@ -6,7 +6,7 @@
  *              antes de escribir los tests de Phase 2.
  * @module e2e/sprint7-explore
  */
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import { baseURL } from './helpers';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
