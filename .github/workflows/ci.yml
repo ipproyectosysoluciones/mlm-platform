@@ -143,34 +143,32 @@ jobs:
           path: frontend/dist
           retention-days: 1
 
-  # Playwright E2E tests - ONLY runs on development branch
-  # Heavy tests, not suitable for all PRs (cost optimization)
-  playwright:
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/development'
-    needs: [frontend, changes]
-    steps:
-      - uses: actions/checkout@v4
-      - run: corepack enable
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-          cache: 'pnpm'
-      - run: corepack prepare pnpm@latest --activate
-
-      - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
-
-      - name: Install Playwright Browsers
-        run: cd frontend && npx playwright install --with-deps chromium
-
-      - name: Download frontend build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: frontend-dist
-          path: frontend/dist
-
-      - name: Run Playwright tests
-        run: cd frontend && npx playwright test
-        env:
-          VITE_API_URL: http://localhost:3000/api
+  # ── Playwright E2E tests (DISABLED — needs real backend or full mock rework)
+  #    ~30 min per run, 179/276 tests fail without backend.
+  #    Re-enable when: mock API covers all SPA post-login chain, or CI spins up backend.
+  #
+  # playwright:
+  #   runs-on: ubuntu-latest
+  #   if: github.ref == 'refs/heads/development'
+  #   needs: [frontend, changes]
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - run: corepack enable
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version: '24'
+  #         cache: 'pnpm'
+  #     - run: corepack prepare pnpm@latest --activate
+  #     - name: Install dependencies
+  #       run: pnpm install --no-frozen-lockfile
+  #     - name: Install Playwright Browsers
+  #       run: cd frontend && npx playwright install --with-deps chromium
+  #     - name: Download frontend build artifact
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: frontend-dist
+  #         path: frontend/dist
+  #     - name: Run Playwright tests
+  #       run: cd frontend && npx playwright test
+  #       env:
+  #         VITE_API_URL: http://localhost:3000/api
