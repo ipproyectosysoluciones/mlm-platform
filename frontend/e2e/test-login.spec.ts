@@ -7,6 +7,7 @@
  */
 import { test, expect } from '@playwright/test';
 import { setupMockApi } from './mock-api';
+import { baseURL } from './helpers';
 
 test('debug login with exact credentials', async ({ page }) => {
   // Set up mock API BEFORE navigation
@@ -24,7 +25,7 @@ test('debug login with exact credentials', async ({ page }) => {
 
   // Clear pre-existing auth from storageState to start at login page
   await page.context().clearCookies();
-  await page.goto('http://localhost:5173/login', { waitUntil: 'domcontentloaded' });
+  await page.goto(`${baseURL}/login`, { waitUntil: 'domcontentloaded' });
 
   // Clear localStorage injected by storageState (token + mlm_user_cache)
   await page.evaluate(() => {
