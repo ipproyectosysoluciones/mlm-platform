@@ -5,7 +5,7 @@
  * Phase 3: Visual Tree UI
  * @module e2e/tree.spec
  */
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import { baseURL } from './helpers';
 import { setupMockApi } from './mock-api';
 

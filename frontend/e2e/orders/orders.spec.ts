@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../fixtures';
 import { setupMockApi } from '../mock-api';
 import { OrdersListPage } from './orders-list-page';
 import { OrderDetailPage } from './order-detail-page';

@@ -4,7 +4,7 @@
  *
  * @module e2e/navigation.spec
  */
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import { baseURL, login, getUserMenuButton, waitForPageReady } from './helpers';
 import { setupMockApi } from './mock-api';
 

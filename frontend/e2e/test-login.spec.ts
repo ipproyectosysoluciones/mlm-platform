@@ -5,7 +5,7 @@
  *
  * @module e2e/test-login
  */
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import { setupMockApi } from './mock-api';
 import { baseURL } from './helpers';
 

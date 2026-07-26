@@ -3,7 +3,7 @@
  * @description T2.2.4: Verifica el selector de idioma ES/EN en la navbar
  */
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import { baseURL, login } from './helpers';
 
 test.describe('i18n Language Toggle', () => {

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import { login } from './helpers';
 
 // Start without auth — login() handles the full login flow

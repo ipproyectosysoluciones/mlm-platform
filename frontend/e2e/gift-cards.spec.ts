@@ -8,7 +8,7 @@
  *
  * @module e2e/gift-cards.spec
  */
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import { baseURL, waitForPageReady } from './helpers';
 import { setupMockApi } from './mock-api';
 

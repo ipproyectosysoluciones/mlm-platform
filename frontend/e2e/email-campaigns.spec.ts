@@ -8,7 +8,7 @@
  *
  * @module e2e/email-campaigns.spec
  */
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import { baseURL, waitForPageReady } from './helpers';
 import { setupMockApi } from './mock-api';
 
