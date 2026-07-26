@@ -25,7 +25,6 @@ import {
   getCategoryAdmin,
   listCategoriesAdmin,
 } from '../controllers/CategoryController.js';
-import { asyncHandler } from '../middleware/asyncHandler.js';
 
 const router: ExpressRouter = Router();
 

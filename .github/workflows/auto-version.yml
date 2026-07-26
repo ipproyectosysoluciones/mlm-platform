@@ -9,7 +9,55 @@ permissions:
   contents: write
 
 jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'pnpm'
+
+      - run: corepack enable && corepack prepare pnpm@latest --activate
+
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Typecheck backend
+        run: cd backend && pnpm build:tsc
+
+      - name: Typecheck frontend
+        run: cd frontend && npx tsc -b
+
+      - name: Typecheck bot
+        run: cd bot && npx tsc --noEmit
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Format check
+        run: pnpm format:check
+
+      - name: Build backend
+        run: cd backend && pnpm build
+
+      - name: Build frontend
+        run: cd frontend && pnpm build
+
+      - name: Build bot
+        run: cd bot && pnpm build
+
+      - name: Unit tests frontend
+        run: cd frontend && pnpm test:run
+
+      - name: Unit tests bot
+        run: cd bot && pnpm test
+
   version-bump:
+    needs: [validate]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

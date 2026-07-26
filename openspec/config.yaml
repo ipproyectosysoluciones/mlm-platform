@@ -51,10 +51,11 @@ context: |
     - knowledge-base.md      - KB completa bilingue (ES/EN), 7 secciones
 
   Estado actual: v2.4.0, Sprint 8 completado ✅, Sprint 9 planeado
-  Branch activo: development (main = v2.4.0)
+  Branch activo: development (HEAD: 8e2e18e)
   Próximo: Sprint 9
   GPG signing: EXPIRADO - usar --no-gpg-sign en todos los commits
   Repo GitHub Project: https://github.com/users/ipproyectosysoluciones/projects/4
+  SDD initialized: 2026-07-22
 
 rules:
   proposal:
@@ -74,14 +75,34 @@ rules:
     - Use hierarchical numbering (1.1, 1.2, etc.)
     - Keep tasks small enough to complete in one session
   apply:
-    - Follow existing code patterns and conventions
-    - Bot code MUST be ESM ("type": "module") — required by BuilderBot + Baileys
-    - Bot MUST never hallucinate - KB is the only source of truth
-    - Load relevant coding skills for the project stack
+    guidelines:
+      - Follow existing code patterns and conventions
+      - Bot code MUST be ESM ("type": "module") — required by BuilderBot + Baileys
+      - Bot MUST never hallucinate - KB is the only source of truth
+      - Load relevant coding skills for the project stack
+    tdd: true
+    test_command: "cd backend && pnpm test && cd ../frontend && pnpm test:run && cd ../bot && pnpm test"
   verify:
-    - Run tests if test infrastructure exists
-    - Compare implementation against every spec scenario
-    - Bot: verify escalation to human always works
+    test_command: "cd backend && pnpm test && cd ../frontend && pnpm test:run && cd ../bot && pnpm test"
+    build_command: "cd backend && pnpm build && cd ../frontend && pnpm build"
+    coverage_threshold: 65
   archive:
     - Warn before merging destructive deltas (large removals)
     - Update prompt_kb/ files when KB content changes
+
+testing:
+  strict_tdd: true
+  backend:
+    test_command: "cd backend && pnpm test"
+    coverage_command: "cd backend && pnpm test:coverage"
+    lint_command: "cd backend && pnpm lint"
+    typecheck_command: "cd backend && tsc --noEmit -p tsconfig.check.json"
+  frontend:
+    test_command: "cd frontend && pnpm test:run"
+    coverage_command: "cd frontend && pnpm test:run --coverage"
+    e2e_command: "cd frontend && pnpm test:e2e"
+    lint_command: "cd frontend && pnpm lint"
+    typecheck_command: "cd frontend && tsc -b --noEmit"
+  bot:
+    test_command: "cd bot && pnpm test"
+    coverage_command: "cd bot && pnpm test:coverage"

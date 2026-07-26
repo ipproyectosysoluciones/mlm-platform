@@ -64,11 +64,6 @@ function createMockNext() {
   return jest.fn();
 }
 
-/** Flush microtasks (asyncHandler compat) */
-function flushPromises() {
-  return new Promise<void>((resolve) => process.nextTick(resolve));
-}
-
 // ── Tests: getAutomationStatus ────────────────────────────────────────────────
 
 describe('AutomationController - getAutomationStatus', () => {

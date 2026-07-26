@@ -7,7 +7,7 @@
 import { Response } from 'express';
 import { Op, WhereOptions } from 'sequelize';
 import { User, Commission } from '../../models/index.js';
-import type { UserAttributes, UserRole, USER_ROLES } from '../../types/index.js';
+import type { UserAttributes, UserRole } from '../../types/index.js';
 
 // Type for User where clauses
 type UserWhereClause = WhereOptions<UserAttributes>;
@@ -15,7 +15,6 @@ import { TreeService } from '../../services/TreeService.js';
 import type { AuthenticatedRequest } from '../../middleware/auth.middleware.js';
 import { ResponseUtil } from '../../utils/response.util.js';
 import { Lead } from '../../models/Lead.js';
-import { ADMIN_ROLES } from '../../types/index.js';
 
 // All roles assignable via API — super_admin is excluded for security
 // Todos los roles asignables por API — super_admin se excluye por seguridad
