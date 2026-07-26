@@ -36,6 +36,7 @@ describe('env.ts — security hardening', () => {
       jest.mock('dotenv', () => ({ config: jest.fn() }));
 
       expect(() => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         require('../../config/env');
       }).toThrow('FATAL: JWT_SECRET environment variable is required');
     });
@@ -50,6 +51,7 @@ describe('env.ts — security hardening', () => {
       jest.mock('dotenv', () => ({ config: jest.fn() }));
 
       expect(() => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         require('../../config/env');
       }).toThrow('FATAL: TWO_FACTOR_SECRET_KEY environment variable is required');
     });
@@ -63,6 +65,7 @@ describe('env.ts — security hardening', () => {
 
       // JWT_SECRET is checked first, so it should throw for JWT
       expect(() => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         require('../../config/env');
       }).toThrow('FATAL: JWT_SECRET environment variable is required');
     });
@@ -77,6 +80,7 @@ describe('env.ts — security hardening', () => {
       // Prevent dotenv from overwriting our test values
       jest.mock('dotenv', () => ({ config: jest.fn() }));
 
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { config } = require('../../config/env');
 
       // The config should use the env var value, not a hardcoded default
@@ -91,6 +95,7 @@ describe('env.ts — security hardening', () => {
       // Prevent dotenv from overwriting our test values
       jest.mock('dotenv', () => ({ config: jest.fn() }));
 
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { config } = require('../../config/env');
 
       expect(config.twoFactor.secretKey).toBe('real-2fa-value');
@@ -108,6 +113,7 @@ describe('env.ts — security hardening', () => {
       jest.mock('dotenv', () => ({ config: jest.fn() }));
 
       expect(() => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const { config } = require('../../config/env');
         // Verify the values are correctly assigned
         expect(config.jwt.secret).toBe('test-jwt-secret');

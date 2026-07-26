@@ -7,7 +7,7 @@
  * To test handlers, we call WITHOUT await and flush pending microtasks.
  */
 
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 
 // ── Mocks (before any import) ─────────────────────────────────────────────────
 
