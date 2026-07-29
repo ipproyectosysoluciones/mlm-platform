@@ -1,3 +1,10 @@
+## [3.4.4] - 2026-07-29(https://github.com/ipproyectosysoluciones/mlm-platform/compare/v3.4.3...v3.4.4) (2026-07-29)
+
+### Bug Fixes
+
+- **ci:** add --latest flag to gh release create (avoids draft) ([4126900](https://github.com/ipproyectosysoluciones/mlm-platform/commit/412690017282d8fb40483cbbbbf01ff12ae96eca))
+- **ci:** trigger cd-backend via workflow_dispatch to bypass GITHUB_TOKEN push limit ([59b29de](https://github.com/ipproyectosysoluciones/mlm-platform/commit/59b29dede6425e368d4e01847df046fd1e31a586))
+
 ## [3.4.3] - 2026-07-29(https://github.com/ipproyectosysoluciones/mlm-platform/compare/v3.4.2...v3.4.3) (2026-07-29)
 
 ### Bug Fixes
