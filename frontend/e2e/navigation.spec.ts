@@ -365,6 +365,15 @@ test.describe('Mobile Navigation', () => {
 
 test.describe('Protected Route Navigation', () => {
   test('should redirect to login when accessing protected route without auth', async ({ page }) => {
+    // Override auth/me to return 401 so ProtectedRoute redirects to /login
+    // even though storageState has a valid token.
+    await page.route('**/api/auth/me', async (route) => {
+      await route.fulfill({
+        status: 401,
+        contentType: 'application/json',
+        body: JSON.stringify({ success: false, error: 'Unauthorized' }),
+      });
+    });
     await page.context().clearCookies();
     await page.goto(`${baseURL}/dashboard`);
     await waitForPageReady(page, 2000);

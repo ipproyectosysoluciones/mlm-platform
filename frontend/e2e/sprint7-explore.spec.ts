@@ -43,6 +43,14 @@ test.describe('Public Routes', () => {
   });
 
   test('login page', async ({ page }) => {
+    // Override auth/me to return 401 so PublicRoute doesn't redirect to dashboard
+    await page.route('**/api/auth/me', async (route) => {
+      await route.fulfill({
+        status: 401,
+        contentType: 'application/json',
+        body: JSON.stringify({ success: false, error: 'Unauthorized' }),
+      });
+    });
     await page.goto(`${baseURL}/login`, { waitUntil: 'networkidle' });
     await page.waitForTimeout(1000);
     await page.screenshot({ path: SHOT('04-login'), fullPage: true });
@@ -50,6 +58,14 @@ test.describe('Public Routes', () => {
   });
 
   test('register page', async ({ page }) => {
+    // Override auth/me to return 401 so PublicRoute doesn't redirect to dashboard
+    await page.route('**/api/auth/me', async (route) => {
+      await route.fulfill({
+        status: 401,
+        contentType: 'application/json',
+        body: JSON.stringify({ success: false, error: 'Unauthorized' }),
+      });
+    });
     await page.goto(`${baseURL}/register`, { waitUntil: 'networkidle' });
     await page.waitForTimeout(1000);
     await page.screenshot({ path: SHOT('05-register'), fullPage: true });
