@@ -9,20 +9,16 @@
  *       localStorage on every full page load).
  */
 
-import { test, expect } from '@playwright/test';
-import { baseURL, login } from './helpers';
+import { test, expect } from './fixtures';
+import { baseURL } from './helpers';
 
 test.describe('Reservation Wizard', () => {
-  test.beforeEach(async ({ page }) => {
-    await login(page);
-  });
-
   /**
-   * Navigate to properties page via SPA link click (not goto) to preserve auth.
+   * Navigate to properties page via goto (storageState preserves auth across
+   * full page navigations, unlike login() which uses addInitScript).
    */
-  async function gotoProperties(page: Parameters<typeof login>[0]) {
-    await page.locator('nav a[href*="properties"]').first().click();
-    await page.waitForURL('/properties', { timeout: 15000 });
+  async function gotoProperties(page: Parameters<typeof test.extend<{}>>[0]) {
+    await page.goto(`${baseURL}/properties`);
     await page.waitForLoadState('networkidle');
   }
 
@@ -43,12 +39,12 @@ test.describe('Reservation Wizard', () => {
     await page.waitForURL(/\/properties\/[^/]+$/, { timeout: 15000 });
     await page.waitForLoadState('networkidle');
 
-    // Click the reserve / consult button
+    // Click the reserve / consult button (detail page uses "Secure Payment" / "Pago seguro")
     const reserveBtn = page.locator('button').filter({
-      hasText: /Request visit|Solicitar visita|Consultar|Schedule tour/i,
+      hasText: /Secure Payment|Pago seguro|Book Now|Reservar ahora/i,
     });
-    await expect(reserveBtn).toBeVisible({ timeout: 10000 });
-    await reserveBtn.click();
+    await expect(reserveBtn.first()).toBeVisible({ timeout: 10000 });
+    await reserveBtn.first().click();
 
     // Should navigate to /reservations/new
     await page.waitForURL(/\/reservations\/new/, { timeout: 15000 });
@@ -86,26 +82,24 @@ test.describe('Reservation Wizard', () => {
     await page.waitForLoadState('networkidle');
 
     const reserveBtn = page.locator('button').filter({
-      hasText: /Request visit|Solicitar visita|Consultar|Schedule tour/i,
+      hasText: /Secure Payment|Pago seguro|Book Now|Reservar ahora/i,
     });
-    await reserveBtn.click();
+    await reserveBtn.first().click();
     await page.waitForURL(/\/reservations\/new/, { timeout: 15000 });
 
-    // Check-in / Check-out inputs should be visible for property type
-    const checkInInput = page.locator('input[type="date"]').first();
-    const hasDateInputs = (await checkInInput.count()) > 0;
-
     // Either dates step (property rental) or guests step (sale/mgmt or tour)
-    const stepLabels = page.locator('.text-emerald-600');
-    const visible = await stepLabels.first().isVisible();
-    expect(visible).toBeTruthy();
+    await expect(page.locator('.text-emerald-600').first()).toBeVisible();
 
     // Confirm wizard is rendered
     await expect(page.locator('text=/Cancelar|Cancel/i').first()).toBeVisible();
-    expect(
-      hasDateInputs ||
-        (await page.locator('text=/¿Cuántas personas?|How many people?/i').isVisible())
-    ).toBeTruthy();
+
+    // Should show either date inputs (rental) or guest count input
+    await expect(
+      page
+        .locator('input[type="date"]')
+        .first()
+        .or(page.locator('text=/¿Cuántas personas?|How many people?/i').first())
+    ).toBeVisible({ timeout: 10000 });
   });
 
   test('should redirect home if wizard accessed without data', async ({ page }) => {
@@ -155,14 +149,14 @@ test.describe('Reservation Wizard', () => {
 
     // Only proceed if it's a rental (dates step)
     const reserveBtn = page.locator('button', {
-      hasText: /Request visit|Solicitar visita|Schedule tour/i,
+      hasText: /Secure Payment|Pago seguro|Schedule tour/i,
     });
     if ((await reserveBtn.count()) === 0) {
       test.skip();
       return;
     }
 
-    await reserveBtn.click();
+    await reserveBtn.first().click();
     await page.waitForURL(/\/reservations\/new/, { timeout: 15000 });
     await page.waitForLoadState('networkidle');
 

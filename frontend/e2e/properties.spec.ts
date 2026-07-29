@@ -12,7 +12,7 @@
  * @author Nexo Real Development Team
  */
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 import { baseURL } from './helpers';

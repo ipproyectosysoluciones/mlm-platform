@@ -35,8 +35,6 @@ import { CommissionConfig } from '../../models';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-const flushMicrotasks = () => new Promise<void>((r) => setImmediate(r));
-
 const VALID_UUID = 'a1b2c3d4-e5f6-7890-abcd-ef1234567890';
 
 function makeReq(overrides: Record<string, unknown> = {}) {

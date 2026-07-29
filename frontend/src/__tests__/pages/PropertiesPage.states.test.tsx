@@ -67,8 +67,8 @@ describe('PropertiesPage — Content States (T2.5)', () => {
     });
     renderPropertiesPage();
 
-    // EmptyState type="search" uses the i18n key tree.search.noResults
-    const emptyTitle = await screen.findByText('tree.search.noResults');
+    // EmptyState type="search" uses the i18n key search.noResults
+    const emptyTitle = await screen.findByText('search.noResults');
     expect(emptyTitle).toBeInTheDocument();
   });
 });

@@ -32,7 +32,7 @@ vi.mock('../../stores/cartStore', () => ({
 }));
 
 vi.mock('../../components/Cart/CartPreview', () => ({
-  CartPreview: ({ cart }: { cart: unknown }) => <div data-testid="cart-preview">Cart Preview</div>,
+  CartPreview: (_: { cart: unknown }) => <div data-testid="cart-preview">Cart Preview</div>,
 }));
 
 // Must mock useSearchParams to provide the token

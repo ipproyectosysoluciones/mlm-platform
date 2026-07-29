@@ -64,7 +64,7 @@ export function EmptyState({
     },
     search: {
       icon: Search,
-      defaultTitle: t('tree.search.noResults'),
+      defaultTitle: t('search.noResults'),
       defaultDescription: '',
     },
     error: {

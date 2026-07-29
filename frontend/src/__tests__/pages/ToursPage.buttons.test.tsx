@@ -120,7 +120,7 @@ describe('ToursPage — Button migration (T1.4)', () => {
 
   it('pagination buttons use outline variant (secondary action)', async () => {
     mockGetTours.mockResolvedValue(MOCK_PAGINATED_RESPONSE);
-    const { container } = renderToursPage();
+    renderToursPage();
 
     await screen.findByText('Test Tour Alpha');
 

@@ -13,7 +13,7 @@ import {
 import { asyncHandler } from '../middleware/asyncHandler.js';
 import { body } from 'express-validator';
 import { validate } from '../middleware/validate.middleware.js';
-import { USER_ROLES, ADMIN_ROLES } from '../types/index.js';
+import { ADMIN_ROLES } from '../types/index.js';
 
 const router: ExpressRouter = Router();
 

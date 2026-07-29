@@ -4,7 +4,7 @@
  * @module e2e/pwa
  */
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import { baseURL, login } from './helpers';
 
 test.describe('PWA Functionality', () => {
@@ -60,12 +60,13 @@ test.describe('PWA Functionality', () => {
     // Go to the app
     await page.goto(baseURL, { waitUntil: 'networkidle' });
 
-    // Try to access manifest
+    // Try to access manifest — <link> elements have zero bounding box, use toHaveCount
+    // Both index.html and Vite PWA plugin each inject a manifest link
     const manifestLink = page.locator('link[rel="manifest"]');
-    await expect(manifestLink).toBeVisible();
+    await expect(manifestLink).toHaveCount(2);
 
-    // Get manifest href
-    const manifestHref = await manifestLink.getAttribute('href');
+    // Get manifest href from first element
+    const manifestHref = await manifestLink.first().getAttribute('href');
     console.log('Manifest href:', manifestHref);
 
     // Try to fetch the manifest

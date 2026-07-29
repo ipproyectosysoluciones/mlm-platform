@@ -1,7 +1,8 @@
 import { Page } from '@playwright/test';
 import { setupMockApi } from './mock-api';
 
-export const baseURL = 'http://localhost:5173';
+export const baseURL =
+  process.env.BASE_URL || (process.env.CI ? 'http://localhost:4173' : 'http://localhost:5173');
 
 export const testUser = {
   email: 'admin@mlm.com',

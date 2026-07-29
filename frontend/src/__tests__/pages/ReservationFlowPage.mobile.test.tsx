@@ -132,7 +132,7 @@ describe('ReservationFlowPage — Mobile responsive (T3.2)', () => {
   });
 
   it('guest counter buttons are 44px (h-11 w-11) for WCAG AA touch targets', () => {
-    const { container } = renderReservationFlow();
+    renderReservationFlow();
 
     // Guest counter buttons have the − and + text
     const decrementBtn = screen.getByRole('button', { name: /−/ });

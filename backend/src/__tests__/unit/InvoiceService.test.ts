@@ -41,7 +41,6 @@ import type { InvoiceCreationAttributes, InvoiceStatus } from '../../types';
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 const VALID_UUID = 'a1b2c3d4-e5f6-7890-abcd-ef1234567890';
-const OTHER_UUID = 'b2c3d4e5-f6a7-8901-bcde-f12345678901';
 
 function buildMockInvoice(overrides: Record<string, unknown> = {}) {
   return {

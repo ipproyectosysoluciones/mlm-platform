@@ -476,7 +476,7 @@ async function seedUsers(): Promise<void> {
     'COP'
   );
 
-  const vendor2 = await createUser(
+  await createUser(
     SEED_IDS.VENDOR_2,
     `isabella.vargas@${platformDomain}`,
     'Nexo2024!',

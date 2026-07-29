@@ -9,7 +9,7 @@ import { Request, Response } from 'express';
 import { ContractService } from '../services/ContractService.js';
 import { type AuthenticatedRequest } from '../middleware/auth.middleware.js';
 import { logger } from '../utils/logger.js';
-import { hasStatusCode, getErrorMessage } from '../utils/HttpError.js';
+import { hasStatusCode } from '../utils/HttpError.js';
 
 const contractService = new ContractService();
 

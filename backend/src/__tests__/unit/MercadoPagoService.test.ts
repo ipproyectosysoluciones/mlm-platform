@@ -35,7 +35,7 @@ jest.mock('../../utils/logger', () => ({
   },
 }));
 
-import { Preference, Payment, PaymentRefund, __mockCreate, __mockGet } from 'mercadopago';
+import { __mockCreate, __mockGet } from 'mercadopago';
 import { mercadoPagoService } from '../../services/MercadoPagoService';
 import { logger } from '../../utils/logger';
 
