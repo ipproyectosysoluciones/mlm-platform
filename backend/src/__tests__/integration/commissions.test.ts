@@ -9,7 +9,7 @@ import { testAgent } from '../setup';
 import { createTestUser, createAdminUser, getAuthHeaders, createUplineChain } from '../fixtures';
 import { Commission, CommissionConfig, Purchase } from '../../models';
 import { sequelize } from '../../config/database';
-import { QueryTypes } from 'sequelize';
+
 import { CommissionService } from '../../services/CommissionService';
 
 describe('Commission Integration Tests', () => {

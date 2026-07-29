@@ -29,7 +29,6 @@ import {
   recordReturn,
   getInventoryMovements,
 } from '../controllers/products/ProductInventoryController.js';
-import { asyncHandler } from '../middleware/asyncHandler.js';
 
 const router: ExpressRouter = Router();
 

@@ -6,7 +6,7 @@
  * @module __tests__/pages/Checkout.buttons.test
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 
@@ -44,7 +44,7 @@ vi.mock('../../components/CheckoutForm', () => ({
 }));
 
 vi.mock('../../components/EmptyState', () => ({
-  EmptyState: ({ title, onAction }: { title: string; onAction?: () => void }) => (
+  EmptyState: ({ title }: { title: string; onAction?: () => void }) => (
     <div data-testid="empty-state">{title}</div>
   ),
 }));
@@ -100,7 +100,7 @@ describe('Checkout — Button migration (T1.7)', () => {
   });
 
   it('modal confirm uses default variant and cancel uses outline variant', async () => {
-    const { container } = renderCheckout();
+    renderCheckout();
     await screen.findByText('Checkout');
 
     // Trigger modal by clicking the mocked pay button
@@ -127,7 +127,7 @@ describe('Checkout — Button migration (T1.7)', () => {
   });
 
   it('modal confirm button has Lock icon for secure payment', async () => {
-    const { container } = renderCheckout();
+    renderCheckout();
     await screen.findByText('Checkout');
 
     // Trigger modal

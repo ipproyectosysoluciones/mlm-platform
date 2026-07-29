@@ -14,7 +14,6 @@
  */
 import { Router, Router as ExpressRouter } from 'express';
 import { getProducts, getProductById } from '../controllers/ProductController.js';
-import { asyncHandler } from '../middleware/asyncHandler.js';
 import { param, query } from 'express-validator';
 
 const router: ExpressRouter = Router();

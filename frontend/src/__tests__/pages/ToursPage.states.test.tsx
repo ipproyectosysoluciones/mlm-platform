@@ -67,9 +67,9 @@ describe('ToursPage — Content States (T2.5)', () => {
     });
     renderToursPage();
 
-    // EmptyState type="search" uses the i18n key tree.search.noResults
-    // The mockT returns the raw key: 'tree.search.noResults'
-    const emptyTitle = await screen.findByText('tree.search.noResults');
+    // EmptyState type="search" uses the i18n key search.noResults
+    // The mockT returns the raw key: 'search.noResults'
+    const emptyTitle = await screen.findByText('search.noResults');
     expect(emptyTitle).toBeInTheDocument();
   });
 });

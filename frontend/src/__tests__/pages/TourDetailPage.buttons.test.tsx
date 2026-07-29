@@ -179,7 +179,7 @@ describe('TourDetailPage — Button migration (T1.5)', () => {
 
   it('gallery navigation buttons use ghost variant with icon size', async () => {
     mockGetTour.mockResolvedValue(MOCK_TOUR);
-    const { container } = renderTourDetailPage();
+    renderTourDetailPage();
 
     await screen.findByText('Adventure in Patagonia');
 

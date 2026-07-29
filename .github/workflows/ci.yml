@@ -25,7 +25,7 @@ jobs:
       backend: ${{ steps.filter.outputs.backend }}
       frontend: ${{ steps.filter.outputs.frontend }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: dorny/paths-filter@v3
         id: filter
         with:
@@ -60,9 +60,9 @@ jobs:
         ports: [6379:6379]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - run: corepack enable
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: '24'
           cache: 'pnpm'
@@ -118,9 +118,9 @@ jobs:
     needs: [changes]
     if: github.event_name != 'pull_request' || needs.changes.outputs.frontend == 'true'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - run: corepack enable
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: '24'
           cache: 'pnpm'
@@ -143,32 +143,34 @@ jobs:
           path: frontend/dist
           retention-days: 1
 
-  # ── Playwright E2E tests (DISABLED — needs real backend or full mock rework)
-  #    ~30 min per run, 179/276 tests fail without backend.
-  #    Re-enable when: mock API covers all SPA post-login chain, or CI spins up backend.
-  #
-  # playwright:
-  #   runs-on: ubuntu-latest
-  #   if: github.ref == 'refs/heads/development'
-  #   needs: [frontend, changes]
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - run: corepack enable
-  #     - uses: actions/setup-node@v4
-  #       with:
-  #         node-version: '24'
-  #         cache: 'pnpm'
-  #     - run: corepack prepare pnpm@latest --activate
-  #     - name: Install dependencies
-  #       run: pnpm install --no-frozen-lockfile
-  #     - name: Install Playwright Browsers
-  #       run: cd frontend && npx playwright install --with-deps chromium
-  #     - name: Download frontend build artifact
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: frontend-dist
-  #         path: frontend/dist
-  #     - name: Run Playwright tests
-  #       run: cd frontend && npx playwright test
-  #       env:
-  #         VITE_API_URL: http://localhost:3000/api
+  # ── Playwright E2E tests (mock-based, ~5 min)
+  playwright:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/development'
+    needs: [frontend, changes]
+    steps:
+      - uses: actions/checkout@v7
+      - run: corepack enable
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: 'pnpm'
+      - run: corepack prepare pnpm@latest --activate
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+      - name: Install Playwright Browsers
+        run: cd frontend && npx playwright install --with-deps chromium
+      - name: Download frontend build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-dist
+          path: frontend/dist
+      - name: Run Playwright tests
+        run: cd frontend && npx playwright test
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: frontend/playwright-report
+          retention-days: 7

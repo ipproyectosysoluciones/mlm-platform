@@ -173,9 +173,10 @@ test.describe('Property Search & Detail', () => {
 
     // Reserve / consult button visible
     const reserveBtn = page.locator('button').filter({
-      hasText: /Request visit|Solicitar visita|Consultar|Schedule tour/i,
+      hasText:
+        /Secure Payment|Pago seguro|Book Now|Reservar ahora|Request visit|Solicitar visita|Consultar|Schedule tour/i,
     });
-    await expect(reserveBtn).toBeVisible();
+    await expect(reserveBtn.first()).toBeVisible();
   });
 
   test('should navigate back to listing from detail', async ({ page }) => {

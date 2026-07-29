@@ -88,7 +88,7 @@ describe('Checkout — Payment loading overlay (T3.5)', () => {
   });
 
   it('payment form container has relative class for overlay positioning', async () => {
-    const { container } = renderCheckout();
+    renderCheckout();
 
     await screen.findByText('Checkout');
 

@@ -141,6 +141,18 @@ test.describe('Abandoned Cart Recovery', () => {
     '21.4 - Expired recovery token shows appropriate error',
     { tag: ['@high', '@e2e', '@carts', '@CART-E2E-004'] },
     async ({ page }) => {
+      // Mock the cart recovery endpoint to return 410 Gone (expired token)
+      await page.route('**/api/carts/recover/**', async (route) => {
+        await route.fulfill({
+          status: 410,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            success: false,
+            error: 'This recovery link has expired',
+          }),
+        });
+      });
+
       // Navigate with a deliberately invalid token
       await page.goto(`${baseURL}/recover-cart?token=definitely-expired-invalid-token`);
       await page.waitForLoadState('networkidle');

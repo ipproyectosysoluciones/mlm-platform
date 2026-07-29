@@ -16,7 +16,6 @@ import { Router, Router as ExpressRouter } from 'express';
 import { createOrder, getOrders, getOrderById } from '../controllers/OrderController.js';
 import { authenticateToken } from '../middleware/auth.middleware.js';
 import { validate } from '../middleware/validate.middleware.js';
-import { asyncHandler } from '../middleware/asyncHandler.js';
 import { body, param, query } from 'express-validator';
 
 const router: ExpressRouter = Router();
