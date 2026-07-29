@@ -130,6 +130,10 @@ jobs:
 
           echo "=== Bumping ${CURRENT} → ${NEW_VERSION} ==="
 
+          # Configure git identity for the commit
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
           # Create branch with version bump
           git checkout -b "$BRANCH"
           npm version "$NEW_VERSION" --no-git-tag-version
