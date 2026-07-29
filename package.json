@@ -1,7 +1,7 @@
 {
   "name": "nexo-real",
   "private": true,
-  "version": "1.0.0",
+  "version": "3.4.2",
   "description": "Nexo Real - Plataforma de Afiliaciones",
   "scripts": {
     "prepare": "husky",
