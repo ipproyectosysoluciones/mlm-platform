@@ -137,7 +137,7 @@ describe('PropertyDetailPage — Button migration (T1.5)', () => {
 
   it('gallery navigation buttons use shadcn Button classes', async () => {
     mockGetProperty.mockResolvedValue(MOCK_PROPERTY_RENTAL);
-    const { container } = renderPropertyDetailPage();
+    renderPropertyDetailPage();
 
     await screen.findByText('Modern Apartment Palermo');
 
