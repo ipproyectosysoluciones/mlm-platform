@@ -1,3 +1,10 @@
+## [3.4.3] - 2026-07-29(https://github.com/ipproyectosysoluciones/mlm-platform/compare/v3.4.2...v3.4.3) (2026-07-29)
+
+### Bug Fixes
+
+- **ci:** add git user config before commit in auto-version ([795ef7b](https://github.com/ipproyectosysoluciones/mlm-platform/commit/795ef7b11af35aaf06bf0c605580fae5d2cda971))
+- **ci:** auto-version creates PR, tag AND GitHub Release ([0b147ad](https://github.com/ipproyectosysoluciones/mlm-platform/commit/0b147ad18af389478b29b54e614558ddbcf7b72b))
+
 ## [3.4.2] - 2026-07-29
 
 ### Fixed — CI/CD Pipeline
