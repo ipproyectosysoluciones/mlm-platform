@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   validate:
@@ -107,6 +108,7 @@ jobs:
           echo "New version: ${NEW}"
 
       - name: Check tag does not exist
+        id: tag-check
         if: steps.version.outputs.new != ''
         run: |
           TAG="v${{ steps.version.outputs.new }}"
@@ -116,30 +118,57 @@ jobs:
           else
             echo "skip=false" >> "$GITHUB_OUTPUT"
           fi
-        id: tag-check
 
-      - name: Bump version in package.json
+      - name: Create release branch, tag, PR, and GitHub Release
         if: steps.version.outputs.new != '' && steps.tag-check.outputs.skip != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          npm version "${{ steps.version.outputs.new }}" --no-git-tag-version
+          NEW_VERSION="${{ steps.version.outputs.new }}"
+          CURRENT="${{ steps.version.current }}"
+          BRANCH="chore/release-v${NEW_VERSION}"
 
-      - name: Generate CHANGELOG
-        if: steps.version.outputs.new != '' && steps.tag-check.outputs.skip != 'true'
-        run: |
+          echo "=== Bumping ${CURRENT} → ${NEW_VERSION} ==="
+
+          # Create branch with version bump
+          git checkout -b "$BRANCH"
+          npm version "$NEW_VERSION" --no-git-tag-version
+
+          # Generate CHANGELOG
           npx conventional-changelog -p angular -i CHANGELOG.md -s --pkg package.json
-          # Prepend date to the new section if not present
           TODAY=$(date +%Y-%m-%d)
-          sed -i "s/## \[${{ steps.version.outputs.new }}\]/## [${{ steps.version.outputs.new }}] - ${TODAY}/" CHANGELOG.md
+          sed -i "s/## \[${NEW_VERSION}\]/## [${NEW_VERSION}] - ${TODAY}/" CHANGELOG.md
 
-      - name: Commit and tag
-        if: steps.version.outputs.new != '' && steps.tag-check.outputs.skip != 'true'
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          # Commit and push branch
           git add package.json pnpm-lock.yaml CHANGELOG.md
-          git commit -m "chore(release): v${{ steps.version.outputs.new }} [skip ci]"
-          git tag "v${{ steps.version.outputs.new }}"
-          git push origin HEAD "v${{ steps.version.outputs.new }}"
+          git commit -m "chore(release): v${NEW_VERSION}"
+          git push origin "$BRANCH"
+
+          # Create tag and push (triggers cd-backend.yml)
+          git tag "v${NEW_VERSION}"
+          git push origin "v${NEW_VERSION}"
+          echo "✅ Tag v${NEW_VERSION} pushed"
+
+          # Create GitHub Release
+          gh release create "v${NEW_VERSION}" \
+            --title "v${NEW_VERSION}" \
+            --generate-notes
+          echo "✅ Release v${NEW_VERSION} created"
+
+          # Create and auto-merge PR to release
+          PR_URL=$(gh pr create \
+            --base release \
+            --head "$BRANCH" \
+            --title "chore(release): v${NEW_VERSION}" \
+            --body "Automated version bump: ${CURRENT} → ${NEW_VERSION}" \
+            --label release)
+          echo "✅ PR created: $PR_URL"
+
+          gh pr merge "$PR_URL" \
+            --merge \
+            --admin \
+            --subject "chore(release): v${NEW_VERSION} [skip ci]"
+          echo "✅ PR merged (skip ci)"
 
       - name: Summary
         if: steps.version.outputs.new != '' && steps.tag-check.outputs.skip != 'true'
@@ -147,4 +176,5 @@ jobs:
           echo "## 🏷️ Version Bumped" >> "$GITHUB_STEP_SUMMARY"
           echo "**${{ steps.version.outputs.current }}** → **${{ steps.version.outputs.new }}**" >> "$GITHUB_STEP_SUMMARY"
           echo "**Tag:** \`v${{ steps.version.outputs.new }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Release:** https://github.com/${{ github.repository }}/releases/tag/v${{ steps.version.outputs.new }}" >> "$GITHUB_STEP_SUMMARY"
           echo "**Bump type:** ${{ steps.bump.outputs.type }}" >> "$GITHUB_STEP_SUMMARY"
