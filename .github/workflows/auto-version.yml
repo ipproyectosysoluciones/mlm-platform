@@ -148,7 +148,7 @@ jobs:
           git commit -m "chore(release): v${NEW_VERSION}"
           git push origin "$BRANCH"
 
-          # Create tag and push (triggers cd-backend.yml)
+          # Create tag and push (manual/3rd-party pushes trigger cd-backend)
           git tag "v${NEW_VERSION}"
           git push origin "v${NEW_VERSION}"
           echo "✅ Tag v${NEW_VERSION} pushed"
@@ -159,13 +159,16 @@ jobs:
             --generate-notes
           echo "✅ Release v${NEW_VERSION} created"
 
+          # Trigger cd-backend directly (tag pushes from GITHUB_TOKEN don't trigger other workflows)
+          gh workflow run cd-backend.yml --ref "v${NEW_VERSION}"
+          echo "✅ cd-backend triggered for v${NEW_VERSION}"
+
           # Create and auto-merge PR to release
           PR_URL=$(gh pr create \
             --base release \
             --head "$BRANCH" \
             --title "chore(release): v${NEW_VERSION}" \
-            --body "Automated version bump: ${CURRENT} → ${NEW_VERSION}" \
-            --label release)
+            --body "Automated version bump: ${CURRENT} → ${NEW_VERSION}")
           echo "✅ PR created: $PR_URL"
 
           gh pr merge "$PR_URL" \
