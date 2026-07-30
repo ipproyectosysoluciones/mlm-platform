@@ -162,7 +162,7 @@ jobs:
           echo "✅ Release v${NEW_VERSION} created"
 
           # Trigger cd-backend directly (tag pushes from GITHUB_TOKEN don't trigger other workflows)
-          gh workflow run cd-backend.yml --ref "v${NEW_VERSION}"
+          gh workflow run cd-backend.yml --ref "v${NEW_VERSION}" --field version="v${NEW_VERSION}"
           echo "✅ cd-backend triggered for v${NEW_VERSION}"
 
           # Create and auto-merge PR to release
