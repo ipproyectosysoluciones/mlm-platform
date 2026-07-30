@@ -24,6 +24,14 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 
 ---
 
+## [3.4.6] - 2026-07-30
+
+### Fixed — CI/CD Pipeline
+
+No user-facing changes. Automatic version bump triggered by CHANGELOG sync push to `release` branch before auto-version.yml fix was synced.
+
+---
+
 ## [3.4.5] - 2026-07-30
 
 ### Fixed — CI/CD Pipeline
