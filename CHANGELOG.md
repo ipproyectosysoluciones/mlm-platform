@@ -24,6 +24,57 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 
 ---
 
+## [3.4.5] - 2026-07-30
+
+### Fixed — CI/CD Pipeline
+
+- **Workflow permissions** — Add `actions: write` permission for `gh workflow run` trigger in auto-version
+
+---
+
+## [3.4.4] - 2026-07-29
+
+### Fixed — CI/CD Pipeline
+
+- **Draft releases** — Add `--latest` flag to `gh release create` to prevent draft releases
+- **Workflow trigger** — Trigger cd-backend via `workflow_dispatch` to bypass GITHUB_TOKEN push limit
+
+---
+
+## [3.4.3] - 2026-07-29
+
+### Fixed — CI/CD Pipeline
+
+- **Git identity** — Add git user config before commit in auto-version workflow
+- **Full auto-version** — Auto-version now creates PR, tag AND GitHub Release (previously only tagged)
+
+---
+
+## [3.4.2] - 2026-07-29
+
+### Fixed — CI/CD Pipeline
+
+- **corepack** — Run `corepack enable` before `setup-node@v7` in auto-version workflow
+- **Tag triggers** — Remove path filter from cd-backend tag trigger so auto-version tags trigger Docker deploy
+- **Concurrency** — Add concurrency groups to cancel duplicate push+PR runs
+- **Cleanup** — Remove broken deploy-development job (no server configured)
+- **PR dedup** — Remove development from PR branches to prevent duplicate runs
+- **Playwright CI** — Use CI-aware baseURL instead of hardcoded localhost:5173
+- **Dependabot #184** — Override `@conventional-changelog/git-client` >= 2.0.0
+- **Empty state assertions** — Update to match new `search.noResults` key
+- **TypeScript portability** — Resolve 114 TS2742 type declaration portability errors and 26 lint errors
+
+### Performance
+
+- **Playwright CI** — Optimize with 4 workers, retries 1, and artifact reuse
+
+### Tests
+
+- **Backend**: ~878 tests passing
+- **Frontend**: ~654 tests passing
+
+---
+
 ## [3.4.0] - 2026-07-24
 
 ### Removed — Azure Infrastructure Cleanup
