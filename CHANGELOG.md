@@ -1,3 +1,9 @@
+## [3.4.5] - 2026-07-30(https://github.com/ipproyectosysoluciones/mlm-platform/compare/v3.4.4...v3.4.5) (2026-07-30)
+
+### Bug Fixes
+
+- **ci:** add actions:write permission for gh workflow run trigger ([fe9938c](https://github.com/ipproyectosysoluciones/mlm-platform/commit/fe9938c38d6db98b70f8db350265b75a8c2d0d53))
+
 ## [3.4.4] - 2026-07-29(https://github.com/ipproyectosysoluciones/mlm-platform/compare/v3.4.3...v3.4.4) (2026-07-29)
 
 ### Bug Fixes
