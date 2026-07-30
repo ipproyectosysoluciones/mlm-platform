@@ -1,48 +1,3 @@
-## [3.4.5] - 2026-07-30(https://github.com/ipproyectosysoluciones/mlm-platform/compare/v3.4.4...v3.4.5) (2026-07-30)
-
-### Bug Fixes
-
-- **ci:** add actions:write permission for gh workflow run trigger ([fe9938c](https://github.com/ipproyectosysoluciones/mlm-platform/commit/fe9938c38d6db98b70f8db350265b75a8c2d0d53))
-
-## [3.4.4] - 2026-07-29(https://github.com/ipproyectosysoluciones/mlm-platform/compare/v3.4.3...v3.4.4) (2026-07-29)
-
-### Bug Fixes
-
-- **ci:** add --latest flag to gh release create (avoids draft) ([4126900](https://github.com/ipproyectosysoluciones/mlm-platform/commit/412690017282d8fb40483cbbbbf01ff12ae96eca))
-- **ci:** trigger cd-backend via workflow_dispatch to bypass GITHUB_TOKEN push limit ([59b29de](https://github.com/ipproyectosysoluciones/mlm-platform/commit/59b29dede6425e368d4e01847df046fd1e31a586))
-
-## [3.4.3] - 2026-07-29(https://github.com/ipproyectosysoluciones/mlm-platform/compare/v3.4.2...v3.4.3) (2026-07-29)
-
-### Bug Fixes
-
-- **ci:** add git user config before commit in auto-version ([795ef7b](https://github.com/ipproyectosysoluciones/mlm-platform/commit/795ef7b11af35aaf06bf0c605580fae5d2cda971))
-- **ci:** auto-version creates PR, tag AND GitHub Release ([0b147ad](https://github.com/ipproyectosysoluciones/mlm-platform/commit/0b147ad18af389478b29b54e614558ddbcf7b72b))
-
-## [3.4.2] - 2026-07-29
-
-### Fixed — CI/CD Pipeline
-
-- **ci:** run corepack enable before setup-node@v7 in auto-version ([945df5b](https://github.com/ipproyectosysoluciones/mlm-platform/commit/945df5b43e081a67c9e9e5a53ae40b13eae3dffe))
-- **ci:** remove path filter from cd-backend tag trigger so auto-version tags trigger Docker deploy ([61db62a](https://github.com/ipproyectosysoluciones/mlm-platform/commit/61db62accd2ca72e6a9e57714575e6a4a78347f5))
-- **ci:** add concurrency groups to cancel duplicate push+PR runs ([b56f5df](https://github.com/ipproyectosysoluciones/mlm-platform/commit/b56f5df2b5172b1b30ac14694f4294de02d5f978))
-- **ci:** remove broken deploy-development job (no server configured) ([f577e94](https://github.com/ipproyectosysoluciones/mlm-platform/commit/f577e94eb3f0122ca6073332f088cc9e69841a77))
-- **ci:** remove development from PR branches to prevent duplicate runs ([6357eeb](https://github.com/ipproyectosysoluciones/mlm-platform/commit/6357eebb257176cf6f69d70b4802c1108ad9332d))
-- **e2e:** use CI-aware baseURL instead of hardcoded localhost:5173 ([e16c3dc](https://github.com/ipproyectosysoluciones/mlm-platform/commit/e16c3dca105df124e12e2b33520a6b8f41781205))
-- **security:** override @conventional-changelog/git-client >= 2.0.0 (Dependabot [#184](https://github.com/ipproyectosysoluciones/mlm-platform/issues/184)) ([1524fd5](https://github.com/ipproyectosysoluciones/mlm-platform/commit/1524fd53a5ff27a538bf61a8da38626173c9d509))
-- **frontend:** update empty state assertions to match new search.noResults key ([0043ac0](https://github.com/ipproyectosysoluciones/mlm-platform/commit/0043ac0b120ba279d94a82e80980f303f7304ab7))
-- **frontend:** resolve 114 TS2742 type declaration portability errors, 26 lint errors ([3c7c114](https://github.com/ipproyectosysoluciones/mlm-platform/commit/3c7c11453f9fb57bcb9a76f597a87dc9fa5790f8))
-
-### Performance
-
-- **ci:** optimize Playwright — 4 workers, retries 1, artifact reuse ([7274122](https://github.com/ipproyectosysoluciones/mlm-platform/commit/7274122ae8cd445a414a85a63a7d07f467052c98))
-
----
-
-### Tests
-
-- **Backend**: ~878 tests passing
-- **Frontend**: ~654 tests passing
-
 # Changelog
 
 Todos los cambios notables de este proyecto serán documentados en este archivo.
@@ -66,6 +21,57 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 - **Backend**: 878 tests passing (1 skipped)
 - **Frontend**: 654 tests passing (1 skipped)
 - **CI gate**: `tsc --noEmit -p tsconfig.check.json` — 0 errors
+
+---
+
+## [3.4.5] - 2026-07-30
+
+### Fixed — CI/CD Pipeline
+
+- **Workflow permissions** — Add `actions: write` permission for `gh workflow run` trigger in auto-version
+
+---
+
+## [3.4.4] - 2026-07-29
+
+### Fixed — CI/CD Pipeline
+
+- **Draft releases** — Add `--latest` flag to `gh release create` to prevent draft releases
+- **Workflow trigger** — Trigger cd-backend via `workflow_dispatch` to bypass GITHUB_TOKEN push limit
+
+---
+
+## [3.4.3] - 2026-07-29
+
+### Fixed — CI/CD Pipeline
+
+- **Git identity** — Add git user config before commit in auto-version workflow
+- **Full auto-version** — Auto-version now creates PR, tag AND GitHub Release (previously only tagged)
+
+---
+
+## [3.4.2] - 2026-07-29
+
+### Fixed — CI/CD Pipeline
+
+- **corepack** — Run `corepack enable` before `setup-node@v7` in auto-version workflow
+- **Tag triggers** — Remove path filter from cd-backend tag trigger so auto-version tags trigger Docker deploy
+- **Concurrency** — Add concurrency groups to cancel duplicate push+PR runs
+- **Cleanup** — Remove broken deploy-development job (no server configured)
+- **PR dedup** — Remove development from PR branches to prevent duplicate runs
+- **Playwright CI** — Use CI-aware baseURL instead of hardcoded localhost:5173
+- **Dependabot #184** — Override `@conventional-changelog/git-client` >= 2.0.0
+- **Empty state assertions** — Update to match new `search.noResults` key
+- **TypeScript portability** — Resolve 114 TS2742 type declaration portability errors and 26 lint errors
+
+### Performance
+
+- **Playwright CI** — Optimize with 4 workers, retries 1, and artifact reuse
+
+### Tests
+
+- **Backend**: ~878 tests passing
+- **Frontend**: ~654 tests passing
 
 ---
 
