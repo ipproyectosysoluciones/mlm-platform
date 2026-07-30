@@ -1,3 +1,5 @@
+## [3.4.6] - 2026-07-30(https://github.com/ipproyectosysoluciones/mlm-platform/compare/v3.4.5...v3.4.6) (2026-07-30)
+
 # Changelog
 
 Todos los cambios notables de este proyecto serán documentados en este archivo.
