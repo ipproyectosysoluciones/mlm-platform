@@ -22,7 +22,6 @@ build/
 .env.*.local
 .env.production
 .env.production.local
-
 # ===========================================
 # Logs
 # ===========================================
@@ -110,6 +109,8 @@ postman/
 # ===========================================
 deploy.sh
 deploy.prod.sh
+# Allow infrastructure deploy script (infrastructure-as-code, versioned)
+!infrastructure/scripts/deploy.sh
 
 # ===========================================
 # Sentry
@@ -135,7 +136,6 @@ backend/swagger.json
 # /prompt_kb/  ← removed: prompt_kb is now baked into the bot Docker image
 
 /.vscodeioredis
-# Local AI runtime state
-.atl/
 
-.archive/
+# Environment files with secrets
+.env.monitoring
