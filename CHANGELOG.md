@@ -1,5 +1,3 @@
-## [3.4.6] - 2026-07-30(https://github.com/ipproyectosysoluciones/mlm-platform/compare/v3.4.5...v3.4.6) (2026-07-30)
-
 # Changelog
 
 Todos los cambios notables de este proyecto serán documentados en este archivo.
@@ -23,6 +21,14 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 - **Backend**: 878 tests passing (1 skipped)
 - **Frontend**: 654 tests passing (1 skipped)
 - **CI gate**: `tsc --noEmit -p tsconfig.check.json` — 0 errors
+
+---
+
+## [3.4.6] - 2026-07-30
+
+### Fixed — CI/CD Pipeline
+
+No user-facing changes. Automatic version bump triggered by CHANGELOG sync push to `release` branch before auto-version.yml fix was synced.
 
 ---
 
