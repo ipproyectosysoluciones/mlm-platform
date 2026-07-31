@@ -20,6 +20,7 @@ import {
   StepConfirm,
   StepPayment,
 } from '../components/reservation';
+import { usePayment } from '../hooks/usePayment';
 
 // ============================================
 // Constants / Constantes
@@ -50,6 +51,7 @@ export default function ReservationFlowPage() {
   const { wizardData, wizardStep, closeWizard, setWizardStep } = useReservationWizard();
 
   const breakdown = useMemo(() => computePriceBreakdown(wizardData), [wizardData]);
+  const payment = usePayment(breakdown);
 
   // If no wizard data, redirect home
   useEffect(() => {
@@ -131,6 +133,13 @@ export default function ReservationFlowPage() {
               navigate('/mis-reservas');
             }}
             breakdown={breakdown}
+            processingMethod={payment.processingMethod}
+            isProcessingPayment={payment.isProcessingPayment}
+            paymentError={payment.paymentError}
+            hasEnoughWalletBalance={payment.hasEnoughWalletBalance}
+            walletBalanceDisplay={payment.walletBalanceDisplay}
+            onPayPal={payment.handlePayPal}
+            onMercadoPago={payment.handleMercadoPago}
           />
         )}
       </div>

@@ -6,17 +6,14 @@
  * @author Nexo Real Development Team
  */
 
-import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Wallet, Shield, Clock, AlertCircle, Loader2, ChevronRight } from 'lucide-react';
 import { Button } from '../ui/button';
-import { useReservationWizard, formatPrice } from '../../stores/reservationStore';
+import { formatPrice } from '../../stores/reservationStore';
 import type { PriceBreakdown } from '../../stores/reservationStore';
 import PriceBreakdownCard from './price-breakdown-card';
-import { paymentService } from '../../services/paymentService';
-import { useWalletBalance } from '../../stores/walletStore';
-import { cn } from '../../lib/utils';
 import { featureFlags } from '../../utils/featureFlags';
+import { cn } from '../../lib/utils';
 
 // ============================================
 // Props / Propiedades
@@ -26,6 +23,15 @@ export interface StepPaymentProps {
   onDone: () => void;
   onGoToReservations: () => void;
   breakdown: PriceBreakdown | null;
+
+  // From usePayment hook
+  processingMethod: string | null;
+  isProcessingPayment: boolean;
+  paymentError: string | null;
+  hasEnoughWalletBalance: boolean;
+  walletBalanceDisplay: string;
+  onPayPal: () => void;
+  onMercadoPago: () => void;
 }
 
 // ============================================
@@ -36,82 +42,22 @@ export interface StepPaymentProps {
  * Payment method selection step — wizard step 4, choose PayPal, MercadoPago or Wallet
  * Paso de selección de método de pago — paso 4 del wizard
  */
-export default function StepPayment({ onDone, onGoToReservations, breakdown }: StepPaymentProps) {
+export default function StepPayment({
+  onDone,
+  onGoToReservations,
+  breakdown,
+  processingMethod,
+  isProcessingPayment,
+  paymentError,
+  hasEnoughWalletBalance,
+  walletBalanceDisplay,
+  onPayPal,
+  onMercadoPago,
+}: StepPaymentProps) {
   const { t } = useTranslation();
-  const {
-    createdReservation,
-    isProcessingPayment,
-    paymentError,
-    setPaymentProcessing,
-    setPaymentError,
-  } = useReservationWizard();
-  const { balance } = useWalletBalance();
-  const [processingMethod, setProcessingMethod] = useState<string | null>(null);
 
-  const walletBalance = balance?.balance ?? 0;
-  const walletCurrency = balance?.currency ?? 'USD';
   const totalPrice = breakdown?.totalPrice ?? 0;
   const currency = breakdown?.currency ?? 'USD';
-  const hasEnoughBalance = walletBalance >= totalPrice && totalPrice > 0;
-
-  const handlePayPal = useCallback(async () => {
-    if (!createdReservation || !breakdown) return;
-    setProcessingMethod('paypal');
-    setPaymentProcessing(true);
-    setPaymentError(null);
-
-    try {
-      const result = await paymentService.createPayPalOrder({
-        amount: breakdown.totalPrice,
-        currency: breakdown.currency,
-        description: `Nexo Real - Reservation ${createdReservation.id}`,
-        orderId: createdReservation.id,
-      });
-
-      if (result.data.approvalUrl) {
-        window.location.href = result.data.approvalUrl;
-      }
-    } catch {
-      setPaymentError(t('reservation.paymentError'));
-    } finally {
-      setPaymentProcessing(false);
-      setProcessingMethod(null);
-    }
-  }, [createdReservation, breakdown, setPaymentProcessing, setPaymentError, t]);
-
-  const handleMercadoPago = useCallback(async () => {
-    if (!createdReservation || !breakdown) return;
-    setProcessingMethod('mercadopago');
-    setPaymentProcessing(true);
-    setPaymentError(null);
-
-    try {
-      const itemTitle = createdReservation.propertyId
-        ? `Nexo Real - Property Reservation`
-        : `Nexo Real - Tour Reservation`;
-
-      const result = await paymentService.createMercadoPagoPreference(
-        [
-          {
-            id: createdReservation.id,
-            title: itemTitle,
-            quantity: 1,
-            unit_price: breakdown.totalPrice,
-            currency_id: breakdown.currency,
-          },
-        ],
-        undefined,
-        createdReservation.id
-      );
-
-      paymentService.redirectToMercadoPago(result.initPoint);
-    } catch {
-      setPaymentError(t('reservation.paymentError'));
-    } finally {
-      setPaymentProcessing(false);
-      setProcessingMethod(null);
-    }
-  }, [createdReservation, breakdown, setPaymentProcessing, setPaymentError, t]);
 
   return (
     <div className="space-y-6 py-2">
@@ -137,7 +83,7 @@ export default function StepPayment({ onDone, onGoToReservations, breakdown }: S
         {/* PayPal */}
         <Button
           variant="outline"
-          onClick={handlePayPal}
+          onClick={onPayPal}
           disabled={isProcessingPayment}
           className="w-full flex items-center gap-4 p-4 rounded-xl h-auto hover:border-emerald-300 hover:bg-emerald-50/30 group"
         >
@@ -160,7 +106,7 @@ export default function StepPayment({ onDone, onGoToReservations, breakdown }: S
         {/* MercadoPago */}
         <Button
           variant="outline"
-          onClick={handleMercadoPago}
+          onClick={onMercadoPago}
           disabled={isProcessingPayment}
           className="w-full flex items-center gap-4 p-4 rounded-xl h-auto hover:border-emerald-300 hover:bg-emerald-50/30 group"
         >
@@ -185,10 +131,10 @@ export default function StepPayment({ onDone, onGoToReservations, breakdown }: S
           <Button
             variant="outline"
             onClick={onDone}
-            disabled={!hasEnoughBalance || isProcessingPayment}
+            disabled={!hasEnoughWalletBalance || isProcessingPayment}
             className={cn(
               'w-full flex items-center gap-4 p-4 rounded-xl h-auto group',
-              hasEnoughBalance
+              hasEnoughWalletBalance
                 ? 'hover:border-emerald-300 hover:bg-emerald-50/30'
                 : 'border-slate-100 bg-slate-50 opacity-60 cursor-not-allowed'
             )}
@@ -200,7 +146,7 @@ export default function StepPayment({ onDone, onGoToReservations, breakdown }: S
               <span
                 className={cn(
                   'font-semibold',
-                  hasEnoughBalance
+                  hasEnoughWalletBalance
                     ? 'text-slate-800 group-hover:text-emerald-700 transition-colors'
                     : 'text-slate-500'
                 )}
@@ -208,14 +154,14 @@ export default function StepPayment({ onDone, onGoToReservations, breakdown }: S
                 {t('reservation.payWithWallet')}
               </span>
               <p className="text-xs text-slate-400 mt-0.5">
-                {hasEnoughBalance
+                {hasEnoughWalletBalance
                   ? t('reservation.walletBalance', {
-                      balance: formatPrice(walletBalance, walletCurrency),
+                      balance: walletBalanceDisplay,
                     })
                   : t('reservation.insufficientBalance')}
               </p>
             </div>
-            {hasEnoughBalance ? (
+            {hasEnoughWalletBalance ? (
               <ChevronRight className="w-5 h-5 text-slate-300 group-hover:text-emerald-500 transition-colors" />
             ) : (
               <AlertCircle className="w-5 h-5 text-slate-300" />
