@@ -70,8 +70,10 @@ function normalizeListResponse<T>(
  */
 export function createCrudApi<T extends { id: string }>(config: {
   list: (params: ListParams) => Promise<unknown>;
-  create?: (data: Partial<T>) => Promise<T>;
-  update?: (id: string, data: Partial<T>) => Promise<T>;
+  /** Internal wiring callback — receives the form data at runtime */
+  create?: (data: any) => Promise<T>;
+  /** Internal wiring callback — receives partial data at runtime */
+  update?: (id: string, data: any) => Promise<T>;
   delete?: (id: string) => Promise<void>;
   toggleStatus?: (id: string) => Promise<T>;
   updateStatus?: (id: string, status: string, notes?: string) => Promise<T>;
