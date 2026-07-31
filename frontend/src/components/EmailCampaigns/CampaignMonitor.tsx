@@ -8,8 +8,8 @@
  * @author Nexo Real Development Team
  */
 
-import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { usePolling } from '../../hooks/usePolling';
 import {
   BarChart3,
   Send,
@@ -90,20 +90,12 @@ export function CampaignMonitor({ campaignId, onBack, onViewLogs }: CampaignMoni
     fetchCampaignDetail,
     sendCampaign,
     retryFailed,
-    startPolling,
-    stopPolling,
   } = useEmailCampaignMonitor();
 
-  // Fetch detail and start polling on mount / Al montar: obtener detalle e iniciar polling
-  useEffect(() => {
+  // Poll every 10s (immediate fetch + interval) / Polling cada 10s (fetch inicial + intervalo)
+  usePolling(() => {
     fetchCampaignDetail(campaignId);
-    startPolling(campaignId, 10_000);
-
-    return () => {
-      stopPolling();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [campaignId]);
+  }, 10_000);
 
   // ==========================================
   // Handlers / Manejadores

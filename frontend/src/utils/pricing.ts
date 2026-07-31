@@ -5,7 +5,8 @@
  * @module utils/pricing
  */
 
-import type { WizardData, PriceBreakdown } from '../stores/reservationStore';
+import type { WizardData } from '../stores/reservationStore';
+import type { PriceBreakdown } from '../types/reservation';
 
 /**
  * Calculate the number of days between two date strings

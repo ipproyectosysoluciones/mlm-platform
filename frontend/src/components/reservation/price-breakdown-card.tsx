@@ -9,7 +9,7 @@
 import { useTranslation } from 'react-i18next';
 import { CreditCard } from 'lucide-react';
 import { formatPrice } from '../../stores/reservationStore';
-import type { PriceBreakdown } from '../../stores/reservationStore';
+import type { PriceBreakdown } from '../../types/reservation';
 
 // ============================================
 // Props / Propiedades
