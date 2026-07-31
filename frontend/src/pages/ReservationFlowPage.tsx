@@ -18,7 +18,6 @@ import {
   Compass,
   Loader2,
   AlertCircle,
-  CreditCard,
   Wallet,
   Shield,
   Clock,
@@ -28,6 +27,7 @@ import { Button } from '../components/ui/button';
 import { useReservationWizard } from '../stores/reservationStore';
 import { computePriceBreakdown, formatPrice } from '../stores/reservationStore';
 import type { WizardStep, PriceBreakdown } from '../stores/reservationStore';
+import { PriceBadge, PriceBreakdownCard, StepIndicator } from '../components/reservation';
 import { paymentService } from '../services/paymentService';
 import { useWalletBalance } from '../stores/walletStore';
 import { cn } from '../lib/utils';
@@ -47,196 +47,6 @@ const STEPS: { id: WizardStep; labelKey: string }[] = [
   { id: 'confirm', labelKey: 'reservation.confirmation' },
   { id: 'payment', labelKey: 'reservation.payment' },
 ];
-
-// ============================================
-// PriceBadge - Inline price indicator
-// ============================================
-
-/**
- * Compact price badge shown throughout the wizard
- * Badge compacto de precio mostrado a lo largo del wizard
- */
-interface PriceBadgeProps {
-  breakdown: PriceBreakdown;
-  compact?: boolean;
-}
-
-function PriceBadge({ breakdown, compact = false }: PriceBadgeProps) {
-  const { t } = useTranslation();
-
-  if (breakdown.totalPrice <= 0 && breakdown.isProperty) return null;
-
-  return (
-    <div
-      className={cn(
-        'rounded-lg border border-emerald-200 bg-emerald-50/50',
-        compact ? 'px-3 py-2' : 'px-4 py-3'
-      )}
-    >
-      {breakdown.isProperty ? (
-        <div className="flex items-center justify-between gap-4">
-          <span className="text-sm text-slate-600">
-            {t('reservation.pricePerNight')}:{' '}
-            <span className="font-semibold text-slate-800">
-              {formatPrice(breakdown.pricePerUnit, breakdown.currency)}
-            </span>
-          </span>
-          {breakdown.totalNights > 0 && (
-            <span className="text-sm font-bold text-emerald-600">
-              {t('reservation.total')}: {formatPrice(breakdown.totalPrice, breakdown.currency)}
-            </span>
-          )}
-        </div>
-      ) : (
-        <div className="flex items-center justify-between gap-4">
-          <span className="text-sm text-slate-600">
-            {t('reservation.pricePerPerson')}:{' '}
-            <span className="font-semibold text-slate-800">
-              {formatPrice(breakdown.pricePerUnit, breakdown.currency)}
-            </span>
-          </span>
-          <span className="text-sm font-bold text-emerald-600">
-            {t('reservation.total')}: {formatPrice(breakdown.totalPrice, breakdown.currency)}
-          </span>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ============================================
-// PriceBreakdownCard - Full breakdown for confirmation
-// ============================================
-
-/**
- * Detailed price breakdown card for the confirmation/payment steps
- * Tarjeta de desglose de precio detallado para pasos de confirmación/pago
- */
-interface PriceBreakdownCardProps {
-  breakdown: PriceBreakdown;
-}
-
-function PriceBreakdownCard({ breakdown }: PriceBreakdownCardProps) {
-  const { t } = useTranslation();
-  const { currency } = breakdown;
-
-  return (
-    <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-3">
-      <h3 className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-        <CreditCard className="w-4 h-4 text-emerald-500" />
-        {t('reservation.priceBreakdown')}
-      </h3>
-
-      <div className="space-y-2 text-sm">
-        {/* Price per unit */}
-        <div className="flex justify-between text-slate-600">
-          <span>
-            {breakdown.isProperty
-              ? t('reservation.pricePerNight')
-              : t('reservation.pricePerPerson')}
-          </span>
-          <span className="font-medium text-slate-800">
-            {formatPrice(breakdown.pricePerUnit, currency)}
-          </span>
-        </div>
-
-        {/* Nights (only for properties) */}
-        {breakdown.isProperty && (
-          <div className="flex justify-between text-slate-600">
-            <span>{t('reservation.totalNights', { count: breakdown.totalNights })}</span>
-            <span className="font-medium text-slate-800">× {breakdown.totalNights}</span>
-          </div>
-        )}
-
-        {/* Subtotal */}
-        {breakdown.isProperty && breakdown.guestCount > 1 && (
-          <div className="flex justify-between text-slate-600">
-            <span>{t('reservation.subtotal')}</span>
-            <span className="font-medium text-slate-800">
-              {formatPrice(breakdown.subtotal, currency)}
-            </span>
-          </div>
-        )}
-
-        {/* Guests */}
-        {breakdown.guestCount > 1 && (
-          <div className="flex justify-between text-slate-600">
-            <span>{t('reservation.totalGuests', { count: breakdown.guestCount })}</span>
-            <span className="font-medium text-slate-800">× {breakdown.guestCount}</span>
-          </div>
-        )}
-
-        {/* Divider */}
-        <div className="border-t border-slate-200 pt-2 mt-2">
-          <div className="flex justify-between items-baseline">
-            <span className="font-semibold text-slate-800">{t('reservation.total')}</span>
-            <span className="text-lg font-bold text-emerald-600">
-              {formatPrice(breakdown.totalPrice, currency)}
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ============================================
-// Step indicator / Indicador de pasos
-// ============================================
-
-interface StepIndicatorProps {
-  currentStep: WizardStep;
-  /** Steps to show (tour skips 'dates') / Pasos a mostrar (tour omite 'dates') */
-  visibleSteps: typeof STEPS;
-}
-
-function StepIndicator({ currentStep, visibleSteps }: StepIndicatorProps) {
-  const { t } = useTranslation();
-  const visibleOrder = visibleSteps.map((s) => s.id);
-  const currentIndex = visibleOrder.indexOf(currentStep);
-
-  return (
-    <div className="flex items-center justify-center gap-0 mb-8 overflow-x-auto">
-      {visibleSteps.map((step, i) => {
-        const isDone = i < currentIndex;
-        const isCurrent = i === currentIndex;
-
-        return (
-          <div key={step.id} className="flex items-center">
-            <div className="flex flex-col items-center">
-              <div
-                className={cn(
-                  'w-9 h-9 shrink-0 rounded-full flex items-center justify-center text-sm font-semibold border-2 transition-all',
-                  isDone && 'bg-emerald-500 border-emerald-500 text-white',
-                  isCurrent && 'bg-white border-emerald-500 text-emerald-600',
-                  !isDone && !isCurrent && 'bg-white border-slate-200 text-slate-400'
-                )}
-              >
-                {isDone ? <CheckCircle2 className="w-5 h-5" /> : i + 1}
-              </div>
-              <span
-                className={cn(
-                  'text-xs mt-1 whitespace-nowrap min-w-0',
-                  isCurrent ? 'text-emerald-600 font-medium' : 'text-slate-400'
-                )}
-              >
-                {t(step.labelKey)}
-              </span>
-            </div>
-            {i < visibleSteps.length - 1 && (
-              <div
-                className={cn(
-                  'w-12 sm:w-16 h-0.5 mb-4 mx-1 transition-all',
-                  i < currentIndex ? 'bg-emerald-500' : 'bg-slate-200'
-                )}
-              />
-            )}
-          </div>
-        );
-      })}
-    </div>
-  );
-}
 
 // ============================================
 // Step 1: Dates (property only)
