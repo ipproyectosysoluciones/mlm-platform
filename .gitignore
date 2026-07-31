@@ -139,3 +139,4 @@ backend/swagger.json
 
 # Environment files with secrets
 .env.monitoring
+sdd/
