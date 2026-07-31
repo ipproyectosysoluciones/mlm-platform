@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { CheckCircle2, Lock, ChevronRight } from 'lucide-react';
 import { Button } from '../ui/button';
 import { useReservationWizard } from '../../stores/reservationStore';
-import type { PriceBreakdown } from '../../stores/reservationStore';
+import type { PriceBreakdown } from '../../types/reservation';
 import PriceBreakdownCard from './price-breakdown-card';
 
 // ============================================

@@ -7,7 +7,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { usePayment } from '../usePayment';
-import type { PriceBreakdown } from '../../stores/reservationStore';
+import type { PriceBreakdown } from '../../types/reservation';
 
 // ── Mock Data ───────────────────────────────────────────────────────────────
 

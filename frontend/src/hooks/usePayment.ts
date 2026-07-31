@@ -9,7 +9,7 @@
 import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useReservationWizard, formatPrice } from '../stores/reservationStore';
-import type { PriceBreakdown } from '../stores/reservationStore';
+import type { PriceBreakdown } from '../types/reservation';
 import { paymentService } from '../services/paymentService';
 import { useWalletBalance } from '../stores/walletStore';
 

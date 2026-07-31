@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { Wallet, Shield, Clock, AlertCircle, Loader2, ChevronRight } from 'lucide-react';
 import { Button } from '../ui/button';
 import { formatPrice } from '../../stores/reservationStore';
-import type { PriceBreakdown } from '../../stores/reservationStore';
+import type { PriceBreakdown } from '../../types/reservation';
 import PriceBreakdownCard from './price-breakdown-card';
 import { featureFlags } from '../../utils/featureFlags';
 import { cn } from '../../lib/utils';
