@@ -53,8 +53,10 @@ export function usePolling(
 
   const callbackRef = useRef(callback);
 
-  // Always keep the ref up-to-date / Mantener la ref actualizada
-  callbackRef.current = callback;
+  // Keep the ref up-to-date outside render / Mantener la ref actualizada fuera del render
+  useEffect(() => {
+    callbackRef.current = callback;
+  });
 
   useEffect(() => {
     if (!enabled) return;

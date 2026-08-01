@@ -14,41 +14,39 @@ import Register from '../pages/Register';
 import TwoFactorLoginPage from '../pages/TwoFactorLoginPage';
 import PublicProfile from '../pages/PublicProfile';
 
-export function AuthRoutes() {
-  return (
-    <>
-      <Route
-        path="/login"
-        element={
-          <PublicRoute>
-            <Login />
-          </PublicRoute>
-        }
-      />
-      <Route
-        path="/register"
-        element={
-          <PublicRoute>
-            <Register />
-          </PublicRoute>
-        }
-      />
-      <Route
-        path="/login/2fa"
-        element={
-          <PublicRoute>
-            <TwoFactorLoginPage />
-          </PublicRoute>
-        }
-      />
-      <Route
-        path="/ref/:code"
-        element={
-          <PublicProfileRoute>
-            <PublicProfile />
-          </PublicProfileRoute>
-        }
-      />
-    </>
-  );
-}
+export const authRoutes = (
+  <>
+    <Route
+      path="/login"
+      element={
+        <PublicRoute>
+          <Login />
+        </PublicRoute>
+      }
+    />
+    <Route
+      path="/register"
+      element={
+        <PublicRoute>
+          <Register />
+        </PublicRoute>
+      }
+    />
+    <Route
+      path="/login/2fa"
+      element={
+        <PublicRoute>
+          <TwoFactorLoginPage />
+        </PublicRoute>
+      }
+    />
+    <Route
+      path="/ref/:code"
+      element={
+        <PublicProfileRoute>
+          <PublicProfile />
+        </PublicProfileRoute>
+      }
+    />
+  </>
+);

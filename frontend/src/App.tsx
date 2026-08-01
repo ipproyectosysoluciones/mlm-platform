@@ -16,7 +16,7 @@ import { hasAuthToken } from './lib/authGuard';
 import OfflineBanner from './components/OfflineBanner';
 import { preloadData } from './lib/preload';
 import { dashboardService, authService } from './services/api';
-import { AppRoutes } from './routes';
+import { appRoutes } from './routes';
 
 function App() {
   // Preload critical data on app init — ONLY when authenticated
@@ -33,9 +33,7 @@ function App() {
       <AuthProvider>
         <OfflineBanner />
         <BrowserRouter>
-          <Routes>
-            <AppRoutes />
-          </Routes>
+          <Routes>{appRoutes}</Routes>
         </BrowserRouter>
         <Analytics />
       </AuthProvider>

@@ -18,73 +18,71 @@ import CRM from '../pages/CRM';
 import LeaderboardPage from '../pages/LeaderboardPage';
 import AchievementsPage from '../pages/AchievementsPage';
 
-export function MemberRoutes() {
-  return (
-    <>
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/tree"
-        element={
-          <ProtectedRoute>
-            <TreeView />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/crm"
-        element={
-          <ProtectedRoute>
-            <CRM />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/leaderboard"
-        element={
-          <ProtectedRoute>
-            <LeaderboardPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/achievements"
-        element={
-          <ProtectedRoute>
-            <AchievementsPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/profile"
-        element={
-          <ProtectedRoute>
-            <Profile />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/profile/2fa"
-        element={
-          <ProtectedRoute>
-            <TwoFactor />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/landing-pages"
-        element={
-          <ProtectedRoute>
-            <LandingPages />
-          </ProtectedRoute>
-        }
-      />
-    </>
-  );
-}
+export const memberRoutes = (
+  <>
+    <Route
+      path="/dashboard"
+      element={
+        <ProtectedRoute>
+          <Dashboard />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="/tree"
+      element={
+        <ProtectedRoute>
+          <TreeView />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="/crm"
+      element={
+        <ProtectedRoute>
+          <CRM />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="/leaderboard"
+      element={
+        <ProtectedRoute>
+          <LeaderboardPage />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="/achievements"
+      element={
+        <ProtectedRoute>
+          <AchievementsPage />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="/profile"
+      element={
+        <ProtectedRoute>
+          <Profile />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="/profile/2fa"
+      element={
+        <ProtectedRoute>
+          <TwoFactor />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="/landing-pages"
+      element={
+        <ProtectedRoute>
+          <LandingPages />
+        </ProtectedRoute>
+      }
+    />
+  </>
+);

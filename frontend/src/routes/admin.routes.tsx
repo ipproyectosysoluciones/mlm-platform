@@ -7,6 +7,8 @@
  * @module routes/admin.routes
  */
 
+/* eslint-disable react-refresh/only-export-components -- route table file: exports route fragments and declares lazy page components; fast refresh is not applicable */
+
 import { lazy, Suspense } from 'react';
 import { Route } from 'react-router';
 import { AdminRoute } from '../components/routes';
@@ -22,69 +24,67 @@ const AdminPropertiesPage = lazy(() => import('../pages/AdminPropertiesPage'));
 const AdminToursPage = lazy(() => import('../pages/AdminToursPage'));
 const AdminReservationsPage = lazy(() => import('../pages/AdminReservationsPage'));
 
-export function AdminRoutes() {
-  return (
-    <>
-      <Route
-        path="/admin"
-        element={
-          <AdminRoute>
-            <AdminDashboard />
-          </AdminRoute>
-        }
-      />
-      <Route
-        path="/admin/commissions"
-        element={
-          <AdminRoute>
-            <CommissionConfigPage />
-          </AdminRoute>
-        }
-      />
+export const adminRoutes = (
+  <>
+    <Route
+      path="/admin"
+      element={
+        <AdminRoute>
+          <AdminDashboard />
+        </AdminRoute>
+      }
+    />
+    <Route
+      path="/admin/commissions"
+      element={
+        <AdminRoute>
+          <CommissionConfigPage />
+        </AdminRoute>
+      }
+    />
 
-      {/* Email Campaign Management - Admin */}
-      <Route
-        path="/admin/email-campaigns"
-        element={
-          <AdminRoute>
-            <Suspense fallback={<PageLoader />}>
-              <EmailCampaignPage />
-            </Suspense>
-          </AdminRoute>
-        }
-      />
+    {/* Email Campaign Management - Admin */}
+    <Route
+      path="/admin/email-campaigns"
+      element={
+        <AdminRoute>
+          <Suspense fallback={<PageLoader />}>
+            <EmailCampaignPage />
+          </Suspense>
+        </AdminRoute>
+      }
+    />
 
-      {/* Admin Real Estate & Tourism CRUD Routes (Sprint 6) */}
-      <Route
-        path="/admin/properties"
-        element={
-          <AdminRoute>
-            <Suspense fallback={<PageLoader />}>
-              <AdminPropertiesPage />
-            </Suspense>
-          </AdminRoute>
-        }
-      />
-      <Route
-        path="/admin/tours"
-        element={
-          <AdminRoute>
-            <Suspense fallback={<PageLoader />}>
-              <AdminToursPage />
-            </Suspense>
-          </AdminRoute>
-        }
-      />
-      <Route
-        path="/admin/reservations"
-        element={
-          <AdminRoute>
-            <Suspense fallback={<PageLoader />}>
-              <AdminReservationsPage />
-            </Suspense>
-          </AdminRoute>
-        }
-      />
-    </>
-  );
-}
+    {/* Admin Real Estate & Tourism CRUD Routes (Sprint 6) */}
+    <Route
+      path="/admin/properties"
+      element={
+        <AdminRoute>
+          <Suspense fallback={<PageLoader />}>
+            <AdminPropertiesPage />
+          </Suspense>
+        </AdminRoute>
+      }
+    />
+    <Route
+      path="/admin/tours"
+      element={
+        <AdminRoute>
+          <Suspense fallback={<PageLoader />}>
+            <AdminToursPage />
+          </Suspense>
+        </AdminRoute>
+      }
+    />
+    <Route
+      path="/admin/reservations"
+      element={
+        <AdminRoute>
+          <Suspense fallback={<PageLoader />}>
+            <AdminReservationsPage />
+          </Suspense>
+        </AdminRoute>
+      }
+    />
+  </>
+);

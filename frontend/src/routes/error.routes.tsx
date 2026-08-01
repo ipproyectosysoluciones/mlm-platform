@@ -9,15 +9,13 @@ import { Route, Navigate } from 'react-router';
 import NotFound from '../pages/NotFound';
 import Offline from '../pages/Offline';
 
-export function ErrorRoutes() {
-  return (
-    <>
-      {/* Error Pages */}
-      <Route path="/404" element={<NotFound />} />
-      <Route path="/offline" element={<Offline />} />
+export const errorRoutes = (
+  <>
+    {/* Error Pages */}
+    <Route path="/404" element={<NotFound />} />
+    <Route path="/offline" element={<Offline />} />
 
-      {/* Catch-all: Redirect unknown routes to 404 */}
-      <Route path="*" element={<Navigate to="/404" replace />} />
-    </>
-  );
-}
+    {/* Catch-all: Redirect unknown routes to 404 */}
+    <Route path="*" element={<Navigate to="/404" replace />} />
+  </>
+);

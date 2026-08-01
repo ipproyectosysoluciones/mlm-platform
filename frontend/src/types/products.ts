@@ -120,7 +120,7 @@ export interface InventoryMovement {
  * Product list params with generic filters
  * Params de listado de productos con filtros genéricos
  */
-export interface GenericProductListParams extends ProductListParams {}
+export type GenericProductListParams = ProductListParams;
 
 // ============================================
 // ADMIN PRODUCT TYPES
