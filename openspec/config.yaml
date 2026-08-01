@@ -56,6 +56,8 @@ context: |
   GPG signing: EXPIRADO - usar --no-gpg-sign en todos los commits
   Repo GitHub Project: https://github.com/users/ipproyectosysoluciones/projects/4
   SDD initialized: 2026-07-22
+  Review: TODAS las issues y TODOS los PRs se asignan SIEMPRE al usuario (owner) para review ANTES de merge. Ninguna issue/PR se cierra ni mergea sin su aprobación explícita.
+  TODO tags: los pendientes en código se etiquetan con // TODO: + comentario (extensión Gruntfuggly.todo-tree).
 
 rules:
   proposal:
