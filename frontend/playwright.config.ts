@@ -35,11 +35,14 @@ export default defineConfig({
   // causing #root to stay empty (React never receives its bundle).
   //
   // Local: build + preview on port 5173 (same port as pnpm dev for compat).
-  // CI: preview only (CI builds separately), port 4173.
+  // The local build must keep VITE_API_URL=/api so the served bundle goes
+  // through the vite preview proxy to the local backend (localhost:3000);
+  // otherwise the app calls the production API and fails CORS from localhost.
+  // CI: preview only (CI builds separately, with .env.production), port 4173.
   webServer: {
     command: process.env.CI
       ? 'pnpm preview --port 4173'
-      : 'npx vite build && npx vite preview --port 5173',
+      : 'VITE_API_URL=/api npx vite build && npx vite preview --port 5173',
     url: process.env.CI ? 'http://localhost:4173' : 'http://localhost:5173',
     reuseExistingServer: false,
     timeout: 120 * 1000,
