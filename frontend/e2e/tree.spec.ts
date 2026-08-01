@@ -174,8 +174,24 @@ test.describe('TreeView', () => {
  */
 test.describe('TreeView - Auth Required', () => {
   test('should redirect to login when not authenticated', async ({ page }) => {
-    // Clear any existing session
-    await page.context().clearCookies();
+    // Clear auth state BEFORE any page JS runs: storageState injects a token
+    // and user cache into localStorage, and clearCookies() does not touch
+    // localStorage, so without this the app considers the session valid.
+    await page.addInitScript(() => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('mlm_user_cache');
+      sessionStorage.clear();
+    });
+    // Override auth/me to 401 so the app does not authenticate via the
+    // shared mock handler (which returns 200 for the admin user).
+    await page.route('**/api/auth/me', async (route) => {
+      await route.fulfill({
+        status: 401,
+        contentType: 'application/json',
+        body: JSON.stringify({ success: false, error: 'Unauthorized' }),
+      });
+    });
+
     await page.goto(`${baseURL}/tree`);
     await page.waitForLoadState('networkidle');
 
