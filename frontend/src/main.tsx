@@ -1,6 +1,7 @@
 import * as Sentry from '@sentry/react';
 import { createRoot } from 'react-dom/client';
 import { HelmetProvider } from 'react-helmet-async';
+import { ThemeProvider } from 'next-themes';
 import './index.css';
 import './i18n'; // i18n configuration / Configuración de i18n
 import App from './App.tsx';
@@ -32,7 +33,9 @@ if (import.meta.env.VITE_SENTRY_DSN) {
  * (title, meta description, Open Graph, JSON-LD) en todas las páginas.
  */
 createRoot(document.getElementById('root')!).render(
-  <HelmetProvider>
-    <App />
-  </HelmetProvider>
+  <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+    <HelmetProvider>
+      <App />
+    </HelmetProvider>
+  </ThemeProvider>
 );

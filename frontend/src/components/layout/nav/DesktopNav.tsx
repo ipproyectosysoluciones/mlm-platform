@@ -61,8 +61,8 @@ export function DesktopNav() {
                   className={cn(
                     'relative flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 outline-none',
                     isAdminRouteActive
-                      ? 'text-white'
-                      : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                      ? 'text-slate-900 dark:text-white'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800/50'
                   )}
                 >
                   {isAdminRouteActive && (
@@ -71,7 +71,7 @@ export function DesktopNav() {
                   <Shield
                     className={cn(
                       'w-4 h-4 relative z-10',
-                      isAdminRouteActive && 'text-emerald-400'
+                      isAdminRouteActive && 'text-emerald-600 dark:text-emerald-400'
                     )}
                   />
                   <span className="relative z-10">{t('nav.admin')}</span>
@@ -80,12 +80,12 @@ export function DesktopNav() {
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="start"
-                className="bg-slate-800/95 backdrop-blur-xl border-slate-700/50 min-w-[200px]"
+                className="bg-white border-slate-200 dark:bg-slate-800/95 dark:border-slate-700/50 min-w-[200px]"
               >
-                <DropdownMenuLabel className="text-slate-400 text-xs uppercase tracking-wider">
+                <DropdownMenuLabel className="text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">
                   {t('nav.administration')}
                 </DropdownMenuLabel>
-                <DropdownMenuSeparator className="bg-slate-700/50" />
+                <DropdownMenuSeparator className="bg-slate-200 dark:bg-slate-700/50" />
                 {ADMIN_NAV_ITEMS.map((item) => {
                   const Icon = item.icon;
                   const isActive = location.pathname === item.path;
@@ -96,8 +96,8 @@ export function DesktopNav() {
                       className={cn(
                         'cursor-pointer rounded-md',
                         isActive
-                          ? 'text-emerald-400'
-                          : 'text-slate-300 hover:text-white hover:bg-slate-700/50 focus:bg-slate-700/50 focus:text-white'
+                          ? 'text-emerald-600 dark:text-emerald-400'
+                          : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 focus:bg-slate-100 focus:text-slate-900 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-700/50 dark:focus:bg-slate-700/50 dark:focus:text-white'
                       )}
                     >
                       <Link to={item.path} className="flex items-center gap-2">
