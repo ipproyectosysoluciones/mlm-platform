@@ -45,7 +45,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="md:hidden bg-slate-900/95 backdrop-blur-xl border-t border-slate-700/50">
+    <div className="md:hidden bg-white border-t border-slate-200 dark:bg-slate-900/95 dark:border-slate-700/50">
       <div className="px-4 py-6 space-y-4">
         {user ? (
           <>
@@ -62,7 +62,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
 
             {/* Admin section — only for admin users */}
             {isAdmin && (
-              <div className="pt-3 border-t border-slate-700/50">
+              <div className="pt-3 border-t border-slate-200 dark:border-slate-700/50">
                 <p className="px-4 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider flex items-center gap-2">
                   <Shield className="w-3.5 h-3.5" />
                   {t('nav.administration')}
@@ -93,7 +93,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
         )}
 
         {/* Mobile auth buttons */}
-        <div className="pt-4 border-t border-slate-700/50">
+        <div className="pt-4 border-t border-slate-200 dark:border-slate-700/50">
           {user ? (
             <div className="px-4">
               <UserMenu />

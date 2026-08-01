@@ -127,7 +127,8 @@
     "properties": "Propiedades",
     "tours": "Tours",
     "reservations": "Mis Reservas",
-    "signIn": "Ingresar"
+    "signIn": "Ingresar",
+    "toggleTheme": "Cambiar tema"
   },
   "twoFactor": {
     "title": "Autenticación de Dos Factores",

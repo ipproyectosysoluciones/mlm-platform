@@ -131,7 +131,8 @@
     "properties": "Properties",
     "tours": "Tours",
     "reservations": "My Reservations",
-    "signIn": "Sign In"
+    "signIn": "Sign In",
+    "toggleTheme": "Toggle theme"
   },
   "twoFactor": {
     "title": "Two-Factor Authentication",

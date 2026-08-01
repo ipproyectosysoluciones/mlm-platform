@@ -35,12 +35,13 @@ const desktopStyles = {
     'relative flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium',
     'transition-all duration-300'
   ),
-  linkInactive: 'text-slate-400 hover:text-white hover:bg-slate-800/50',
-  linkActive: 'text-white',
+  linkInactive:
+    'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800/50',
+  linkActive: 'text-slate-900 dark:text-white',
   activeBg:
     'absolute inset-0 bg-gradient-to-r from-emerald-500/20 to-teal-500/20 rounded-xl border border-emerald-500/30',
   icon: 'w-4 h-4 relative z-10',
-  iconActive: 'text-emerald-400',
+  iconActive: 'text-emerald-600 dark:text-emerald-400',
   iconInactive: '',
   label: 'relative z-10',
 };
@@ -50,12 +51,13 @@ const mobileStyles = {
     'flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium',
     'transition-all duration-300'
   ),
-  linkInactive: 'text-slate-400 hover:text-white hover:bg-slate-800/50',
+  linkInactive:
+    'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800/50',
   linkActive:
-    'bg-gradient-to-r from-emerald-500/20 to-teal-500/20 text-white border border-emerald-500/30',
+    'bg-gradient-to-r from-emerald-500/20 to-teal-500/20 text-slate-900 dark:text-white border border-emerald-500/30',
   activeBg: '',
   icon: 'w-5 h-5',
-  iconActive: 'text-emerald-400',
+  iconActive: 'text-emerald-600 dark:text-emerald-400',
   iconInactive: '',
   label: '',
 };
