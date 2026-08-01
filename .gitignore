@@ -20,7 +20,8 @@ build/
 .env
 .env.local
 .env.*.local
-.env.production
+# .env.production is TRACKED on purpose: VITE_* vars are public build config
+# (API URL, PWA metadata, VAPID public key) and CI/fresh checkouts need them.
 .env.production.local
 # ===========================================
 # Logs
