@@ -55,6 +55,7 @@ const LEGACY_MIGRATION_FILES = [
   '20260409000000-add-whatsapp-bot-source.js',
   '20260412000001-commission-type-to-varchar.js',
   '20260412000002-seed-unilevel-commission-configs.js',
+  '20260801000001-add-destination-to-withdrawal-requests.js',
 ];
 
 interface DbConfig {
