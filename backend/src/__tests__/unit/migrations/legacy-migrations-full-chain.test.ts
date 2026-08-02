@@ -287,10 +287,20 @@ describe('legacy migration chain (17) runs end-to-end on PostgreSQL', () => {
     const result = runCli(['db:migrate:undo', '--options-path', tempOptionsPath]);
     expect(result.status).toBe(0);
     await withPg({ ...runtimeDbConfig(), database: tempDbName }, async (client) => {
+      // The last migration is now the wallet one (20260801000001): its down()
+      // drops the payout columns from withdrawal_requests.
+      const walletCols = await client.query(
+        `SELECT count(*)::int AS n FROM information_schema.columns
+           WHERE table_name = 'withdrawal_requests'
+             AND column_name IN ('destination', 'gateway_payout_id', 'gateway_status',
+                                 'last_gateway_sync_at', 'last_notified_status', 'last_notified_at')`
+      );
+      expect(walletCols.rows[0].n).toBe(0);
+      // The seed migration is no longer last, so its rows must still be there.
       const seeded = await client.query(
         `SELECT count(*)::int AS n FROM "commission_configs" WHERE "business_type" = 'membresia'`
       );
-      expect(seeded.rows[0].n).toBe(0);
+      expect(seeded.rows[0].n).toBe(10);
       const meta = await client.query('SELECT name FROM "SequelizeMeta"');
       expect(meta.rows.length).toBe(LEGACY_MIGRATION_FILES.length - 1);
     });
