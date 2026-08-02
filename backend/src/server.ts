@@ -320,14 +320,21 @@ async function startServer(): Promise<void> {
     await connectDatabase();
     initModels();
 
-    // Sync database schema on startup (safe - only alters, doesn't drop)
+    // Sync database schema on startup.
+    //   --force-sync → sequelize.sync({ force: true })  (dev/test only: drops tables)
+    //   --alter      → sequelize.sync({ alter: true })  (Dockerfile entrypoint: safe alters)
+    //   (default)    → sequelize.sync({})               (create-if-missing)
     const forceSync = process.argv.includes('--force-sync');
+    const alterSync = process.argv.includes('--alter');
     if (forceSync) {
       await syncDatabase(true);
       logger.warn('Database synced with force=true (drop tables)');
+    } else if (alterSync) {
+      await syncDatabase({ alter: true });
+      logger.info('Database schema synced with alter=true (safe alters)');
     } else {
       await syncDatabase(false);
-      logger.info('Database schema synced (alter mode)');
+      logger.info('Database schema synced (create-if-missing)');
     }
 
     // Auto-seed if database is empty
