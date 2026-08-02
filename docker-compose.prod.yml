@@ -102,6 +102,7 @@ services:
       PAYPAL_CLIENT_ID: ${PAYPAL_CLIENT_ID:-}
       PAYPAL_CLIENT_SECRET: ${PAYPAL_CLIENT_SECRET:-}
       PAYPAL_WEBHOOK_ID: ${PAYPAL_WEBHOOK_ID:-}
+      PAYPAL_PAYOUT_WEBHOOK_ID: ${PAYPAL_PAYOUT_WEBHOOK_ID:-}
 
       # ── MercadoPago ───────────────────────────────────────────────────
       MERCADOPAGO_ACCESS_TOKEN: ${MERCADOPAGO_ACCESS_TOKEN:-}
