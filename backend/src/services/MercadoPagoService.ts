@@ -108,6 +108,14 @@ class MercadoPagoService {
   }
 
   /**
+   * Expose the MercadoPago access token for the payout gateway (money-out REST calls).
+   * Exponer el access token para la pasarela de payout (money-out).
+   */
+  getAccessToken(): string {
+    return config.mercadopago.accessToken;
+  }
+
+  /**
    * Get payment status by ID
    */
   async getPayment(paymentId: string): Promise<PaymentResult> {

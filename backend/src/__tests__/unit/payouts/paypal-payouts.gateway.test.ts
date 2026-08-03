@@ -41,6 +41,16 @@ jest.mock('../../../services/PayPalService', () => ({
   },
 }));
 
+// Breaks the MercadoPagoService → MercadoPagoConfig chain pulled in by the payout
+// factory import (MercadoPagoMoneyOutGateway), same pattern as the MP gateway test.
+jest.mock('../../../services/MercadoPagoService', () => ({
+  mercadoPagoService: {
+    getAccessToken: jest.fn(),
+    getPayment: jest.fn(),
+    verifyWebhookSignature: jest.fn(),
+  },
+}));
+
 import axios from 'axios';
 import { AppError } from '../../../middleware/error.middleware';
 import { paypalService } from '../../../services/PayPalService';
@@ -143,7 +153,7 @@ describe('PayPalPayoutsGateway.createPayout', () => {
     await expect(
       gateway.createPayout({
         ...basePayoutRequest,
-        destination: { method: 'paypal' },
+        destination: { method: 'paypal', accountId: 'MP_123' },
       })
     ).rejects.toMatchObject({ statusCode: 400, code: 'INVALID_DESTINATION' });
 
@@ -263,7 +273,16 @@ describe('getPayoutGateway factory', () => {
     expect(typeof gatewayForEmail.verifyWebhook).toBe('function');
   });
 
-  it('rejects destinations without a PayPal email (INVALID_DESTINATION)', () => {
+  it('returns the MercadoPago gateway for accountId destinations (implemented in PR 2b)', () => {
+    const gatewayForAccount = getPayoutGateway({ method: 'mercadopago', accountId: 'MP_123' });
+
+    expect(gatewayForAccount.type).toBe('mercadopago');
+    expect(typeof gatewayForAccount.createPayout).toBe('function');
+    expect(typeof gatewayForAccount.getStatus).toBe('function');
+    expect(typeof gatewayForAccount.verifyWebhook).toBe('function');
+  });
+
+  it('rejects destinations with neither an email nor an accountId', () => {
     expect(() => getPayoutGateway({ method: 'paypal' })).toThrowError(AppError);
     expect(() => getPayoutGateway({ method: 'paypal' })).toThrowError(
       expect.objectContaining({ statusCode: 400, code: 'INVALID_DESTINATION' })
