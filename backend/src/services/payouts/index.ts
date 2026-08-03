@@ -1,13 +1,13 @@
 /**
  * @fileoverview Payout gateway registry / factory
  * @description Derives the payout gateway adapter from the withdrawal
- *   destination shape: `email` → PayPal Payouts, `accountId` → MercadoPago
- *   money-out (reserved slot, implemented in PR 2b). Consumers (WalletService,
- *   webhook controller) must go through `getPayoutGateway` and never
- *   instantiate adapters directly.
+ *   destination: `email` → PayPal Payouts (the only supported money-out
+ *   provider; MercadoPago has no payout API to third parties). Consumers
+ *   (WalletService, webhook controller) must go through `getPayoutGateway`
+ *   and never instantiate adapters directly.
  *
- *   Fábrica de pasarelas de payout: deriva el adaptador de la forma del
- *   destino del retiro (email → PayPal, accountId → MercadoPago).
+ *   Fábrica de pasarelas de payout: deriva el adaptador del destino del
+ *   retiro (email → PayPal Payouts, única vía de money-out soportada).
  * @module services/payouts
  */
 
@@ -22,28 +22,14 @@ export type { PayoutGateway, PayoutRequest, PayoutResult, PayoutStatus } from '.
 
 /**
  * Resolve the payout gateway for a withdrawal destination.
- * The provider is derived from the destination shape (ADR-3): email → paypal,
- * accountId → mercadopago.
+ * The provider is derived from the destination shape (ADR-3): email → paypal.
  *
  * Resuelve la pasarela de payout para un destino de retiro.
- * @throws {AppError} 501 GATEWAY_NOT_IMPLEMENTED for MercadoPago (PR 2b)
- * @throws {AppError} 400 INVALID_DESTINATION when no provider shape matches
+ * @throws {AppError} 400 INVALID_DESTINATION when the destination lacks a paypal email
  */
 export function getPayoutGateway(destination: WithdrawalDestination): PayoutGateway {
   if (destination.email) {
     return paypalPayoutsGateway;
   }
-  if (destination.accountId) {
-    // TODO(wallet 2b): MercadoPagoMoneyOutGateway — SDK payment.get + REST disbursements
-    throw new AppError(
-      501,
-      'GATEWAY_NOT_IMPLEMENTED',
-      'MercadoPago payout gateway is not implemented yet'
-    );
-  }
-  throw new AppError(
-    400,
-    'INVALID_DESTINATION',
-    'Destination must provide a paypal email or a MercadoPago accountId'
-  );
+  throw new AppError(400, 'INVALID_DESTINATION', 'Destination must provide a paypal email');
 }

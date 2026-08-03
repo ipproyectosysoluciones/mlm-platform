@@ -143,7 +143,7 @@ describe('PayPalPayoutsGateway.createPayout', () => {
     await expect(
       gateway.createPayout({
         ...basePayoutRequest,
-        destination: { method: 'paypal', accountId: 'MP_123' },
+        destination: { method: 'paypal' },
       })
     ).rejects.toMatchObject({ statusCode: 400, code: 'INVALID_DESTINATION' });
 
@@ -263,16 +263,7 @@ describe('getPayoutGateway factory', () => {
     expect(typeof gatewayForEmail.verifyWebhook).toBe('function');
   });
 
-  it('reserves the MercadoPago slot for accountId destinations (not implemented in PR 2a)', () => {
-    expect(() => getPayoutGateway({ method: 'mercadopago', accountId: 'MP_123' })).toThrowError(
-      AppError
-    );
-    expect(() => getPayoutGateway({ method: 'mercadopago', accountId: 'MP_123' })).toThrowError(
-      expect.objectContaining({ statusCode: 501, code: 'GATEWAY_NOT_IMPLEMENTED' })
-    );
-  });
-
-  it('rejects destinations with neither an email nor an accountId', () => {
+  it('rejects destinations without a PayPal email (INVALID_DESTINATION)', () => {
     expect(() => getPayoutGateway({ method: 'paypal' })).toThrowError(AppError);
     expect(() => getPayoutGateway({ method: 'paypal' })).toThrowError(
       expect.objectContaining({ statusCode: 400, code: 'INVALID_DESTINATION' })
