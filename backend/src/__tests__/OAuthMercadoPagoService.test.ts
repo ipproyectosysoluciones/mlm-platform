@@ -467,6 +467,86 @@ describe('OAuthMercadoPagoService (A9 / D7 / BE-6)', () => {
     });
   });
 
+  describe('ensureValidToken (OAUTH-3 lazy refresh)', () => {
+    const hoursFromNow = (h: number) => new Date(Date.now() + h * 3600 * 1000);
+
+    it('returns the account unchanged when the token is valid (no refresh)', async () => {
+      const account = new (jest.requireMock('../models/index.js').VendorMercadoPagoAccount)(
+        accountProps({
+          status: 'connected',
+          accessTokenEncrypted: 'enc:AT',
+          refreshTokenEncrypted: 'enc:RT',
+          accessTokenExpiresAt: hoursFromNow(2),
+        })
+      );
+
+      const result = await oauthMercadoPagoService.ensureValidToken(account as never);
+
+      expect(result).toBe(account);
+      expect(mockOAuthInstances[0].refresh).not.toHaveBeenCalled();
+    });
+
+    it('refreshes when the token expires within the 5-minute margin', async () => {
+      const account = new (jest.requireMock('../models/index.js').VendorMercadoPagoAccount)(
+        accountProps({
+          status: 'connected',
+          accessTokenEncrypted: 'enc:AT',
+          refreshTokenEncrypted: 'enc:RT',
+          accessTokenExpiresAt: new Date(Date.now() + 4 * 60 * 1000), // 4 min left
+        })
+      );
+
+      const result = await oauthMercadoPagoService.ensureValidToken(account as never);
+
+      expect(mockOAuthInstances[0].refresh).toHaveBeenCalled();
+      expect(result.status).toBe('connected');
+      expect(account.accessTokenEncrypted).toBe('enc:NEW_ACCESS_TOKEN');
+    });
+
+    it('refreshes when the token has no expiry stored', async () => {
+      const account = new (jest.requireMock('../models/index.js').VendorMercadoPagoAccount)(
+        accountProps({
+          status: 'connected',
+          accessTokenEncrypted: 'enc:AT',
+          refreshTokenEncrypted: 'enc:RT',
+          accessTokenExpiresAt: null,
+        })
+      );
+
+      await oauthMercadoPagoService.ensureValidToken(account as never);
+
+      expect(mockOAuthInstances[0].refresh).toHaveBeenCalled();
+    });
+
+    it('throws CONNECT_MP_REQUIRED when no access token is stored', async () => {
+      const account = new (jest.requireMock('../models/index.js').VendorMercadoPagoAccount)(
+        accountProps({ status: 'connected', accessTokenEncrypted: null })
+      );
+
+      await expect(oauthMercadoPagoService.ensureValidToken(account as never)).rejects.toThrow(
+        /CONNECT_MP_REQUIRED/
+      );
+      expect(mockOAuthInstances[0].refresh).not.toHaveBeenCalled();
+    });
+
+    it('marks the account expired and throws CONNECT_MP_REQUIRED on invalid_grant refresh', async () => {
+      const account = new (jest.requireMock('../models/index.js').VendorMercadoPagoAccount)(
+        accountProps({
+          status: 'connected',
+          accessTokenEncrypted: 'enc:AT',
+          refreshTokenEncrypted: 'enc:RT',
+          accessTokenExpiresAt: new Date(Date.now() - 1000), // already expired
+        })
+      );
+      mockOAuthInstances[0].refresh.mockRejectedValueOnce(new Error('invalid_grant'));
+
+      await expect(oauthMercadoPagoService.ensureValidToken(account as never)).rejects.toThrow(
+        /CONNECT_MP_REQUIRED/
+      );
+      expect(account.status).toBe('expired');
+    });
+  });
+
   describe('getConnectionStatus (OAUTH-4)', () => {
     it('returns never when no account row exists', async () => {
       mockAccountFindOne.mockResolvedValueOnce(null);
