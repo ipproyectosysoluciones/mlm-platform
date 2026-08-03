@@ -34,6 +34,8 @@ export interface MercadoPagoPreference {
     pending?: string;
     failure?: string;
   };
+  /** Fee charged by the platform in COP / Fee de la plataforma en COP */
+  marketplace_fee?: number;
 }
 
 export interface CreatePreferenceResult {
@@ -55,6 +57,22 @@ export interface PaymentResult {
     items?: Array<{ id?: string; title?: string; quantity?: string; unit_price?: string }>;
     [key: string]: unknown;
   };
+  /** Approval timestamp / Fecha de aprobación */
+  date_approved?: string;
+  /** Refunds applied to the payment / Reembolsos aplicados al pago */
+  refunds?: Array<{
+    id: number;
+    amount?: number;
+    status?: string;
+    date_created?: string;
+  }>;
+}
+
+export interface RefundOptions {
+  /** Partial amount to refund (COP) / Monto parcial a reembolsar (COP) */
+  amount?: number;
+  /** Vendor access token / Access token del negocio */
+  accessToken?: string;
 }
 
 class MercadoPagoService {
@@ -63,12 +81,30 @@ class MercadoPagoService {
   private paymentRefund = new PaymentRefund(client);
 
   /**
+   * Return a client configured with the given access token, or the platform
+   * client when no token is provided.
+   * Devolver un cliente con el access token dado, o el de la plataforma.
+   */
+  private getClient(accessToken?: string): MercadoPagoConfig {
+    if (accessToken) {
+      return new MercadoPagoConfig({ accessToken });
+    }
+    return client;
+  }
+
+  /**
    * Create a payment preference
+   * @param preference - Preference payload (marketplace_fee for vendor charges)
+   * @param accessToken - Vendor access token (omitted = platform account)
    * @see https://www.mercadopago.com/developers/en/docs/checkout-api/integration-configuration
    */
-  async createPreference(preference: MercadoPagoPreference): Promise<CreatePreferenceResult> {
+  async createPreference(
+    preference: MercadoPagoPreference,
+    accessToken?: string
+  ): Promise<CreatePreferenceResult> {
     try {
-      const result = await this.preference.create({ body: preference });
+      const pref = accessToken ? new Preference(this.getClient(accessToken)) : this.preference;
+      const result = await pref.create({ body: preference });
 
       return {
         id: result.id!,
@@ -131,6 +167,8 @@ class MercadoPagoService {
         currency_id: result.currency_id ?? undefined,
         external_reference: result.external_reference ?? undefined,
         additional_info: result.additional_info as PaymentResult['additional_info'],
+        date_approved: result.date_approved ?? undefined,
+        refunds: result.refunds as PaymentResult['refunds'],
       };
     } catch (error) {
       logger.error(
@@ -143,25 +181,33 @@ class MercadoPagoService {
 
   /**
    * Process a payment (for direct checkout)
+   * @param paymentData - Payment payload (applicationFee for vendor charges)
+   * @param accessToken - Vendor access token (omitted = platform account)
    */
-  async processPayment(paymentData: {
-    token: string;
-    issuerId?: string;
-    paymentMethodId: string;
-    transactionAmount: number;
-    installments: number;
-    description: string;
-    externalReference: string;
-    payer: {
-      email: string;
-      identification?: {
-        type: string;
-        number: string;
+  async processPayment(
+    paymentData: {
+      token: string;
+      issuerId?: string;
+      paymentMethodId: string;
+      transactionAmount: number;
+      installments: number;
+      description: string;
+      externalReference: string;
+      payer: {
+        email: string;
+        identification?: {
+          type: string;
+          number: string;
+        };
       };
-    };
-  }): Promise<PaymentResult> {
+      /** Fee charged by the platform in COP / Fee de la plataforma en COP */
+      applicationFee?: number;
+    },
+    accessToken?: string
+  ): Promise<PaymentResult> {
     try {
-      const result = await this.payment.create({
+      const payment = accessToken ? new Payment(this.getClient(accessToken)) : this.payment;
+      const result = await payment.create({
         body: {
           token: paymentData.token,
           issuer_id: paymentData.issuerId ? parseInt(paymentData.issuerId) : undefined,
@@ -171,6 +217,9 @@ class MercadoPagoService {
           description: paymentData.description,
           external_reference: paymentData.externalReference,
           payer: paymentData.payer,
+          ...(paymentData.applicationFee !== undefined
+            ? { application_fee: paymentData.applicationFee }
+            : {}),
         },
       });
 
@@ -182,6 +231,8 @@ class MercadoPagoService {
         transaction_amount: result.transaction_amount ?? undefined,
         currency_id: result.currency_id ?? undefined,
         external_reference: result.external_reference ?? undefined,
+        date_approved: result.date_approved ?? undefined,
+        refunds: result.refunds as PaymentResult['refunds'],
       };
     } catch (error) {
       logger.error(
@@ -193,11 +244,19 @@ class MercadoPagoService {
   }
 
   /**
-   * Refund a payment
+   * Refund a payment (full or partial)
+   * @param paymentId - MercadoPago payment id
+   * @param options - { amount, accessToken } for partial/vendor refunds
    */
-  async refundPayment(paymentId: string): Promise<{ status: string }> {
+  async refundPayment(paymentId: string, options?: RefundOptions): Promise<{ status: string }> {
     try {
-      const result = await this.paymentRefund.create({ payment_id: parseInt(paymentId) });
+      const refund = options?.accessToken
+        ? new PaymentRefund(this.getClient(options.accessToken))
+        : this.paymentRefund;
+      const result = await refund.create({
+        payment_id: parseInt(paymentId),
+        ...(options?.amount !== undefined ? { body: { amount: options.amount } } : {}),
+      });
 
       return {
         status: result.status ?? 'approved',
