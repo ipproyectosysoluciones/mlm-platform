@@ -18,6 +18,9 @@ import { TwoFactorService } from './TwoFactorService.js';
 /** OAuth state TTL in ms (≤ 15 min per OAUTH-1) / TTL del state en ms */
 export const OAUTH_STATE_TTL_MS = 15 * 60 * 1000;
 
+/** Refresh margin: refresh when ≤ 5 min left (OAUTH-3) / Margen de refresh */
+export const ACCESS_TOKEN_REFRESH_MARGIN_MS = 5 * 60 * 1000;
+
 /**
  * Country → authorization base URL
  * País → URL base de autorización
@@ -280,6 +283,32 @@ class OAuthMercadoPagoService {
     });
 
     return { account: vendorAccount, token };
+  }
+
+  /**
+   * Lazy token refresh: refresh when the access token expires within the
+   * margin (≤ 5 min) or is missing an expiry (OAUTH-3).
+   * Refresh perezoso: renovar cuando el access token expira dentro del margen.
+   *
+   * @param vendorAccount - Account to validate
+   * @returns The account with a valid (possibly refreshed) access token
+   */
+  async ensureValidToken(
+    vendorAccount: VendorMercadoPagoAccount
+  ): Promise<VendorMercadoPagoAccount> {
+    if (!vendorAccount.accessTokenEncrypted) {
+      throw new Error('CONNECT_MP_REQUIRED: vendor must connect MercadoPago first');
+    }
+
+    const expiresAt = vendorAccount.accessTokenExpiresAt;
+    const expiresSoon =
+      !expiresAt || expiresAt.getTime() - Date.now() <= ACCESS_TOKEN_REFRESH_MARGIN_MS;
+
+    if (expiresSoon) {
+      const { account } = await this.refreshAccessToken(vendorAccount);
+      return account;
+    }
+    return vendorAccount;
   }
 
   /**
