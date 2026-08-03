@@ -7,7 +7,8 @@
 import { Router } from 'express';
 import { PaymentPayPalController } from '../controllers/PaymentPayPalController.js';
 import { PaymentMercadoPagoController } from '../controllers/PaymentMercadoPagoController.js';
-import { authenticate } from '../middleware/auth.middleware.js';
+import { MercadoPagoOAuthController } from '../controllers/MercadoPagoOAuthController.js';
+import { authenticate, requireVendor } from '../middleware/auth.middleware.js';
 
 const router = Router();
 
@@ -482,5 +483,97 @@ router.get(
  *         description: Invalid webhook signature / Firma de webhook inválida
  */
 router.post('/mercadopago/webhook', PaymentMercadoPagoController.webhook);
+
+/**
+ * @swagger
+ * /payment/mercadopago/oauth/authorize:
+ *   get:
+ *     summary: Start MercadoPago OAuth for a vendor / Iniciar OAuth MercadoPago
+ *     tags: [Payment]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Authorization URL + state / URL de autorización + state
+ *       403:
+ *         description: Vendor not approved / Vendor no aprobado
+ */
+router.get(
+  '/mercadopago/oauth/authorize',
+  authenticate,
+  requireVendor,
+  MercadoPagoOAuthController.authorize
+);
+
+/**
+ * @swagger
+ * /payment/mercadopago/oauth/callback:
+ *   post:
+ *     summary: OAuth callback (code exchange) / Callback OAuth
+ *     tags: [Payment]
+ *     responses:
+ *       200:
+ *         description: Tokens stored / Tokens guardados
+ */
+router.post('/mercadopago/oauth/callback', MercadoPagoOAuthController.callback);
+
+/**
+ * @swagger
+ * /payment/mercadopago/oauth/refresh:
+ *   post:
+ *     summary: Refresh OAuth tokens / Renovar tokens OAuth
+ *     tags: [Payment]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Tokens refreshed / Tokens renovados
+ *       409:
+ *         description: CONNECT_MP_REQUIRED — reconnection needed
+ */
+router.post(
+  '/mercadopago/oauth/refresh',
+  authenticate,
+  requireVendor,
+  MercadoPagoOAuthController.refresh
+);
+
+/**
+ * @swagger
+ * /payment/mercadopago/oauth/status:
+ *   get:
+ *     summary: Connection status / Estado de conexión
+ *     tags: [Payment]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Connection status / Estado de conexión
+ */
+router.get(
+  '/mercadopago/oauth/status',
+  authenticate,
+  requireVendor,
+  MercadoPagoOAuthController.status
+);
+
+/**
+ * @swagger
+ * /payment/mercadopago/oauth/disconnect:
+ *   post:
+ *     summary: Disconnect MercadoPago account / Desconectar cuenta
+ *     tags: [Payment]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Disconnected / Desconectado
+ */
+router.post(
+  '/mercadopago/oauth/disconnect',
+  authenticate,
+  requireVendor,
+  MercadoPagoOAuthController.disconnect
+);
 
 export default router;
