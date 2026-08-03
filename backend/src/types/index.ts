@@ -1398,6 +1398,59 @@ export interface VendorCreationAttributes {
 }
 
 /**
+ * Vendor MercadoPago connection status
+ * Estado de conexión de la cuenta MercadoPago del vendedor
+ */
+export const MERCADOPAGO_ACCOUNT_STATUS = {
+  PROCESSING: 'processing',
+  CONNECTED: 'connected',
+  EXPIRED: 'expired',
+  DISCONNECTED: 'disconnected',
+} as const;
+
+export type MercadoPagoAccountStatus =
+  (typeof MERCADOPAGO_ACCOUNT_STATUS)[keyof typeof MERCADOPAGO_ACCOUNT_STATUS];
+
+/**
+ * Vendor MercadoPago account attributes
+ * Atributos de la cuenta MercadoPago del vendedor
+ */
+export interface VendorMercadoPagoAccountAttributes {
+  id: string;
+  vendorId: string;
+  /** MercadoPago user_id of the connected seller / user_id de MercadoPago */
+  mpUserId: string | null;
+  status: MercadoPagoAccountStatus;
+  country: string;
+  /** Encrypted access token / Access token cifrado */
+  accessTokenEncrypted: string | null;
+  /** Encrypted refresh token / Refresh token cifrado */
+  refreshTokenEncrypted: string | null;
+  /** Encrypted PKCE code verifier (during authorization) / Code verifier cifrado */
+  codeVerifierEncrypted: string | null;
+  accessTokenExpiresAt: Date | null;
+  lastConnectedAt: Date | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+/**
+ * Vendor MercadoPago account creation attributes
+ * Atributos para crear la cuenta MercadoPago del vendedor
+ */
+export interface VendorMercadoPagoAccountCreationAttributes {
+  vendorId: string;
+  mpUserId?: string | null;
+  status?: MercadoPagoAccountStatus;
+  country?: string;
+  accessTokenEncrypted?: string | null;
+  refreshTokenEncrypted?: string | null;
+  codeVerifierEncrypted?: string | null;
+  accessTokenExpiresAt?: Date | null;
+  lastConnectedAt?: Date | null;
+}
+
+/**
  * Vendor order attributes
  * Atributos del pedido del vendedor
  */
