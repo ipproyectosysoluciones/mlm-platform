@@ -1428,6 +1428,8 @@ export interface VendorMercadoPagoAccountAttributes {
   refreshTokenEncrypted: string | null;
   /** Encrypted PKCE code verifier (during authorization) / Code verifier cifrado */
   codeVerifierEncrypted: string | null;
+  /** OAuth state expiry (TTL ≤ 15 min) / Expiración del state OAuth */
+  stateExpiresAt: Date | null;
   accessTokenExpiresAt: Date | null;
   lastConnectedAt: Date | null;
   createdAt?: Date;
@@ -1446,6 +1448,7 @@ export interface VendorMercadoPagoAccountCreationAttributes {
   accessTokenEncrypted?: string | null;
   refreshTokenEncrypted?: string | null;
   codeVerifierEncrypted?: string | null;
+  stateExpiresAt?: Date | null;
   accessTokenExpiresAt?: Date | null;
   lastConnectedAt?: Date | null;
 }

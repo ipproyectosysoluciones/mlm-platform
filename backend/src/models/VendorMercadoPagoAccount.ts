@@ -33,6 +33,7 @@ export class VendorMercadoPagoAccount
   declare accessTokenEncrypted: string | null;
   declare refreshTokenEncrypted: string | null;
   declare codeVerifierEncrypted: string | null;
+  declare stateExpiresAt: Date | null;
   declare accessTokenExpiresAt: Date | null;
   declare lastConnectedAt: Date | null;
   declare readonly createdAt: Date;
@@ -84,6 +85,11 @@ VendorMercadoPagoAccount.init(
       type: DataTypes.TEXT,
       allowNull: true,
       field: 'code_verifier_encrypted',
+    },
+    stateExpiresAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'state_expires_at',
     },
     accessTokenExpiresAt: {
       type: DataTypes.DATE,

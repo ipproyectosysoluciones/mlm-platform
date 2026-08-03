@@ -1,7 +1,8 @@
 /**
  * @fileoverview Unit tests for OAuthMercadoPagoService (A9 / D7 / BE-6)
- * @description PKCE authorization URL build, code→token exchange, token refresh
- *              and encrypted token persistence for vendor accounts (CO-only).
+ * @description PKCE authorization URL with vendor eligibility + state TTL,
+ *              idempotent code→token exchange, refresh with invalid_grant
+ *              handling, status and disconnect (OAUTH-1..5).
  * @module __tests__/OAuthMercadoPagoService
  */
 
@@ -66,21 +67,34 @@ jest.mock('../config/env.js', () => ({
   },
 }));
 
-// ─── Model mock ──────────────────────────────────────────────────────────────
-const mockFindOne = jest.fn();
-const mockCreate = jest.fn();
+// ─── Model mocks ─────────────────────────────────────────────────────────────
+const mockVendorFindByPk = jest.fn();
+const mockAccountFindOne = jest.fn();
+const mockAccountCreate = jest.fn();
 
 jest.mock('../models/index.js', () => {
+  class MockVendor {
+    static findByPk = mockVendorFindByPk;
+    id: string;
+    status: string;
+    constructor(props: Record<string, unknown> = {}) {
+      Object.assign(this, props);
+    }
+  }
+
   class MockVendorAccount {
-    static findOne = mockFindOne;
-    static create = mockCreate;
+    static findOne = mockAccountFindOne;
+    static create = mockAccountCreate;
     vendorId: string;
+    mpUserId: string | null;
     codeVerifierEncrypted: string | null;
+    stateExpiresAt: Date | null;
     status: string;
     country: string;
     accessTokenEncrypted: string | null;
     refreshTokenEncrypted: string | null;
     accessTokenExpiresAt: Date | null;
+    lastConnectedAt: Date | null;
     update: jest.Mock;
     constructor(props: Record<string, unknown> = {}) {
       Object.assign(this, props);
@@ -90,7 +104,7 @@ jest.mock('../models/index.js', () => {
       });
     }
   }
-  return { VendorMercadoPagoAccount: MockVendorAccount };
+  return { Vendor: MockVendor, VendorMercadoPagoAccount: MockVendorAccount };
 });
 
 jest.mock('../utils/logger', () => ({
@@ -115,23 +129,47 @@ jest.mock('../services/TwoFactorService.js', () => {
   return { TwoFactorService: MockTwoFactorService };
 });
 
-import { oauthMercadoPagoService } from '../services/OAuthMercadoPagoService.js';
+import {
+  oauthMercadoPagoService,
+  OAUTH_STATE_TTL_MS,
+} from '../services/OAuthMercadoPagoService.js';
 
 const VENDOR_ID = '11111111-1111-4111-8111-111111111111';
+const VERIFIER = 'v'.repeat(43); // deterministic 43-char verifier
+
+const accountProps = (overrides: Record<string, unknown> = {}) => ({
+  vendorId: VENDOR_ID,
+  mpUserId: null,
+  codeVerifierEncrypted: `enc:${VERIFIER}`,
+  stateExpiresAt: new Date(Date.now() + OAUTH_STATE_TTL_MS),
+  status: 'processing',
+  country: 'CO',
+  accessTokenEncrypted: null,
+  refreshTokenEncrypted: null,
+  accessTokenExpiresAt: null,
+  lastConnectedAt: null,
+  ...overrides,
+});
 
 describe('OAuthMercadoPagoService (A9 / D7 / BE-6)', () => {
   beforeEach(() => {
-    // NOTE: tracking arrays are cumulative — the platform OAuth instance and
-    // its client are created once at module import (index 0) and must never
-    // be wiped from the arrays.
-    mockFindOne.mockReset();
-    mockCreate.mockReset();
+    // NOTE: tracking arrays are cumulative — the platform OAuth instance is
+    // created once at module import (index 0) and must never be wiped.
+    mockVendorFindByPk.mockReset();
+    mockAccountFindOne.mockReset();
+    mockAccountCreate.mockReset();
     jest.clearAllMocks();
   });
 
-  describe('buildAuthorizationUrl', () => {
+  const approveVendor = () =>
+    mockVendorFindByPk.mockResolvedValueOnce(
+      new (jest.requireMock('../models/index.js').Vendor)({ id: VENDOR_ID, status: 'approved' })
+    );
+
+  describe('buildAuthorizationUrl (OAUTH-1)', () => {
     it('returns a PKCE authorization URL for MercadoPago CO', async () => {
-      mockFindOne.mockResolvedValueOnce(null);
+      approveVendor();
+      mockAccountFindOne.mockResolvedValueOnce(null);
 
       const { url, state } = await oauthMercadoPagoService.buildAuthorizationUrl(VENDOR_ID);
 
@@ -148,25 +186,35 @@ describe('OAuthMercadoPagoService (A9 / D7 / BE-6)', () => {
       expect(params.get('state')).toBe(state);
     });
 
-    it('persists an encrypted code_verifier with status processing', async () => {
-      mockFindOne.mockResolvedValueOnce(null);
+    it('persists an encrypted code_verifier with status processing and state TTL', async () => {
+      approveVendor();
+      mockAccountFindOne.mockResolvedValueOnce(null);
 
       await oauthMercadoPagoService.buildAuthorizationUrl(VENDOR_ID);
 
-      expect(mockCreate).toHaveBeenCalledTimes(1);
-      const created = mockCreate.mock.calls[0][0];
+      expect(mockAccountCreate).toHaveBeenCalledTimes(1);
+      const created = mockAccountCreate.mock.calls[0][0];
       expect(created.vendorId).toBe(VENDOR_ID);
       expect(created.status).toBe('processing');
       expect(created.country).toBe('CO');
       expect(created.codeVerifierEncrypted).toMatch(/^enc:/);
+      expect(created.stateExpiresAt).toBeInstanceOf(Date);
+      // TTL ≤ 15 min
+      const ttl = created.stateExpiresAt.getTime() - Date.now();
+      expect(ttl).toBeGreaterThan(0);
+      expect(ttl).toBeLessThanOrEqual(OAUTH_STATE_TTL_MS);
     });
 
     it('uses S256 challenge = base64url(sha256(verifier)) and 43-char verifier', async () => {
-      mockFindOne.mockResolvedValueOnce(null);
+      approveVendor();
+      mockAccountFindOne.mockResolvedValueOnce(null);
 
       const { url } = await oauthMercadoPagoService.buildAuthorizationUrl(VENDOR_ID);
 
-      const storedVerifier = mockCreate.mock.calls[0][0].codeVerifierEncrypted.replace('enc:', '');
+      const storedVerifier = mockAccountCreate.mock.calls[0][0].codeVerifierEncrypted.replace(
+        'enc:',
+        ''
+      );
       expect(storedVerifier).toHaveLength(43);
       const expectedChallenge = createHash('sha256').update(storedVerifier).digest('base64url');
       expect(expectedChallenge).toHaveLength(43);
@@ -174,27 +222,45 @@ describe('OAuthMercadoPagoService (A9 / D7 / BE-6)', () => {
     });
 
     it('updates the existing account instead of creating a new one', async () => {
-      const existing = {
-        vendorId: VENDOR_ID,
-        status: 'connected',
-        country: 'CO',
-        codeVerifierEncrypted: 'enc:old',
-        update: jest.fn().mockImplementation(function (this: any, vals: any) {
-          Object.assign(this, vals);
-          return Promise.resolve(this);
-        }),
-      };
-      mockFindOne.mockResolvedValueOnce(existing);
+      approveVendor();
+      const existing = new (jest.requireMock('../models/index.js').VendorMercadoPagoAccount)(
+        accountProps({ status: 'connected' })
+      );
+      mockAccountFindOne.mockResolvedValueOnce(existing);
 
       await oauthMercadoPagoService.buildAuthorizationUrl(VENDOR_ID);
 
-      expect(mockCreate).not.toHaveBeenCalled();
+      expect(mockAccountCreate).not.toHaveBeenCalled();
       expect(existing.update).toHaveBeenCalledWith(
         expect.objectContaining({
           status: 'processing',
           codeVerifierEncrypted: expect.stringMatching(/^enc:/),
+          stateExpiresAt: expect.any(Date),
         })
       );
+    });
+
+    it('rejects non-approved vendors (403)', async () => {
+      mockVendorFindByPk.mockResolvedValueOnce(
+        new (jest.requireMock('../models/index.js').Vendor)({ id: VENDOR_ID, status: 'pending' })
+      );
+      await expect(oauthMercadoPagoService.buildAuthorizationUrl(VENDOR_ID)).rejects.toThrow(
+        /not approved/i
+      );
+      expect(mockAccountCreate).not.toHaveBeenCalled();
+    });
+
+    it('rejects unsupported countries (400 MARKETPLACE_COUNTRY_UNSUPPORTED)', async () => {
+      approveVendor();
+      const envMock = jest.requireMock('../config/env.js');
+      envMock.config.marketplace.country = 'MX';
+      try {
+        await expect(oauthMercadoPagoService.buildAuthorizationUrl(VENDOR_ID)).rejects.toThrow(
+          /MARKETPLACE_COUNTRY_UNSUPPORTED/
+        );
+      } finally {
+        envMock.config.marketplace.country = 'CO';
+      }
     });
 
     it('rejects when the marketplace is disabled', async () => {
@@ -208,38 +274,23 @@ describe('OAuthMercadoPagoService (A9 / D7 / BE-6)', () => {
         envMock.config.marketplace.enabled = true;
       }
     });
-
-    it('rejects when the configured country is not CO', async () => {
-      const envMock = jest.requireMock('../config/env.js');
-      envMock.config.marketplace.country = 'MX';
-      try {
-        await expect(oauthMercadoPagoService.buildAuthorizationUrl(VENDOR_ID)).rejects.toThrow(
-          /CO/i
-        );
-      } finally {
-        envMock.config.marketplace.country = 'CO';
-      }
-    });
   });
 
-  describe('exchangeCodeForToken', () => {
+  describe('exchangeCodeForToken (OAUTH-2)', () => {
     const state = Buffer.from(VENDOR_ID).toString('base64url');
 
     it('exchanges the code with client credentials and redirect_uri', async () => {
-      mockFindOne.mockResolvedValueOnce(
-        new (jest.requireMock('../models/index.js').VendorMercadoPagoAccount)({
-          vendorId: VENDOR_ID,
-          status: 'processing',
-          codeVerifierEncrypted: 'enc:verifier-43-chars-xxxxxxxxxxxxxxxxxxxxxxxx',
-        })
+      mockAccountFindOne.mockResolvedValueOnce(
+        new (jest.requireMock('../models/index.js').VendorMercadoPagoAccount)(accountProps())
       );
 
-      await oauthMercadoPagoService.exchangeCodeForToken({
+      const result = await oauthMercadoPagoService.exchangeCodeForToken({
         code: 'auth-code',
         state,
         vendorId: VENDOR_ID,
       });
 
+      expect(result.alreadyConnected).toBe(false);
       expect(mockOAuthInstances[0].create).toHaveBeenCalledWith({
         body: {
           client_secret: 'app-secret',
@@ -250,13 +301,11 @@ describe('OAuthMercadoPagoService (A9 / D7 / BE-6)', () => {
       });
     });
 
-    it('persists tokens encrypted and marks the account connected', async () => {
-      const account = new (jest.requireMock('../models/index.js').VendorMercadoPagoAccount)({
-        vendorId: VENDOR_ID,
-        status: 'processing',
-        codeVerifierEncrypted: 'enc:verifier-43-chars-xxxxxxxxxxxxxxxxxxxxxxxx',
-      });
-      mockFindOne.mockResolvedValueOnce(account);
+    it('persists tokens encrypted, marks connected and consumes the state', async () => {
+      const account = new (jest.requireMock('../models/index.js').VendorMercadoPagoAccount)(
+        accountProps()
+      );
+      mockAccountFindOne.mockResolvedValueOnce(account);
 
       const result = await oauthMercadoPagoService.exchangeCodeForToken({
         code: 'auth-code',
@@ -270,12 +319,53 @@ describe('OAuthMercadoPagoService (A9 / D7 / BE-6)', () => {
           refreshTokenEncrypted: 'enc:REFRESH_TOKEN',
           status: 'connected',
           codeVerifierEncrypted: null,
+          stateExpiresAt: null,
+          mpUserId: '123456',
         })
       );
       const updateArgs = account.update.mock.calls[0][0];
       expect(updateArgs.accessTokenExpiresAt).toBeInstanceOf(Date);
       expect(account.status).toBe('connected');
       expect(result.account).toBe(account);
+    });
+
+    it('is idempotent: repeated callback does not rewrite tokens', async () => {
+      const account = new (jest.requireMock('../models/index.js').VendorMercadoPagoAccount)(
+        accountProps({
+          status: 'connected',
+          accessTokenEncrypted: 'enc:EXISTING',
+          codeVerifierEncrypted: null,
+          stateExpiresAt: null,
+        })
+      );
+      mockAccountFindOne.mockResolvedValueOnce(account);
+
+      const result = await oauthMercadoPagoService.exchangeCodeForToken({
+        code: 'auth-code-2',
+        state,
+        vendorId: VENDOR_ID,
+      });
+
+      expect(result.alreadyConnected).toBe(true);
+      expect(result.token).toBeNull();
+      expect(mockOAuthInstances[0].create).not.toHaveBeenCalled();
+      expect(account.update).not.toHaveBeenCalled();
+      expect(account.accessTokenEncrypted).toBe('enc:EXISTING');
+    });
+
+    it('rejects an expired state', async () => {
+      mockAccountFindOne.mockResolvedValueOnce(
+        new (jest.requireMock('../models/index.js').VendorMercadoPagoAccount)(
+          accountProps({ stateExpiresAt: new Date(Date.now() - 60_000) })
+        )
+      );
+      await expect(
+        oauthMercadoPagoService.exchangeCodeForToken({
+          code: 'auth-code',
+          state,
+          vendorId: VENDOR_ID,
+        })
+      ).rejects.toThrow(/expired/i);
     });
 
     it('throws when the state does not decode to the given vendorId', async () => {
@@ -289,7 +379,7 @@ describe('OAuthMercadoPagoService (A9 / D7 / BE-6)', () => {
     });
 
     it('throws when no account is found for the vendor', async () => {
-      mockFindOne.mockResolvedValueOnce(null);
+      mockAccountFindOne.mockResolvedValueOnce(null);
       await expect(
         oauthMercadoPagoService.exchangeCodeForToken({
           code: 'auth-code',
@@ -300,12 +390,10 @@ describe('OAuthMercadoPagoService (A9 / D7 / BE-6)', () => {
     });
 
     it('throws when the OAuth flow was never initiated (no verifier stored)', async () => {
-      mockFindOne.mockResolvedValueOnce(
-        new (jest.requireMock('../models/index.js').VendorMercadoPagoAccount)({
-          vendorId: VENDOR_ID,
-          status: 'connected',
-          codeVerifierEncrypted: null,
-        })
+      mockAccountFindOne.mockResolvedValueOnce(
+        new (jest.requireMock('../models/index.js').VendorMercadoPagoAccount)(
+          accountProps({ codeVerifierEncrypted: null, stateExpiresAt: null, status: 'connected' })
+        )
       );
       await expect(
         oauthMercadoPagoService.exchangeCodeForToken({
@@ -317,13 +405,11 @@ describe('OAuthMercadoPagoService (A9 / D7 / BE-6)', () => {
     });
   });
 
-  describe('refreshAccessToken', () => {
+  describe('refreshAccessToken (OAUTH-3)', () => {
     it('refreshes with the stored refresh token and persists new tokens', async () => {
-      const account = new (jest.requireMock('../models/index.js').VendorMercadoPagoAccount)({
-        vendorId: VENDOR_ID,
-        status: 'connected',
-        refreshTokenEncrypted: 'enc:REFRESH_TOKEN',
-      });
+      const account = new (jest.requireMock('../models/index.js').VendorMercadoPagoAccount)(
+        accountProps({ status: 'connected', refreshTokenEncrypted: 'enc:REFRESH_TOKEN' })
+      );
 
       const result = await oauthMercadoPagoService.refreshAccessToken(account as never);
 
@@ -343,23 +429,95 @@ describe('OAuthMercadoPagoService (A9 / D7 / BE-6)', () => {
       expect(result.account).toBe(account);
     });
 
+    it('marks the account expired and throws CONNECT_MP_REQUIRED on invalid_grant', async () => {
+      const account = new (jest.requireMock('../models/index.js').VendorMercadoPagoAccount)(
+        accountProps({ status: 'connected', refreshTokenEncrypted: 'enc:REFRESH_TOKEN' })
+      );
+      mockOAuthInstances[0].refresh.mockRejectedValueOnce(new Error('invalid_grant'));
+
+      await expect(oauthMercadoPagoService.refreshAccessToken(account as never)).rejects.toThrow(
+        /CONNECT_MP_REQUIRED/
+      );
+
+      expect(account.status).toBe('expired');
+      expect(account.update).toHaveBeenCalledWith({ status: 'expired' });
+    });
+
+    it('keeps the account connected on transient errors (no status change)', async () => {
+      const account = new (jest.requireMock('../models/index.js').VendorMercadoPagoAccount)(
+        accountProps({ status: 'connected', refreshTokenEncrypted: 'enc:REFRESH_TOKEN' })
+      );
+      mockOAuthInstances[0].refresh.mockRejectedValueOnce(new Error('network timeout'));
+
+      await expect(oauthMercadoPagoService.refreshAccessToken(account as never)).rejects.toThrow(
+        /network timeout/
+      );
+
+      expect(account.status).toBe('connected');
+      expect(account.update).not.toHaveBeenCalled();
+    });
+
     it('throws when no refresh token is stored', async () => {
-      const account = new (jest.requireMock('../models/index.js').VendorMercadoPagoAccount)({
-        vendorId: VENDOR_ID,
-        status: 'connected',
-        refreshTokenEncrypted: null,
-      });
+      const account = new (jest.requireMock('../models/index.js').VendorMercadoPagoAccount)(
+        accountProps({ status: 'connected', refreshTokenEncrypted: null })
+      );
       await expect(oauthMercadoPagoService.refreshAccessToken(account as never)).rejects.toThrow(
         /refresh token/i
       );
     });
   });
 
+  describe('getConnectionStatus (OAUTH-4)', () => {
+    it('returns never when no account row exists', async () => {
+      mockAccountFindOne.mockResolvedValueOnce(null);
+      await expect(oauthMercadoPagoService.getConnectionStatus(VENDOR_ID)).resolves.toBe('never');
+    });
+
+    it('returns the account status when a row exists', async () => {
+      mockAccountFindOne.mockResolvedValueOnce(
+        new (jest.requireMock('../models/index.js').VendorMercadoPagoAccount)(
+          accountProps({ status: 'connected' })
+        )
+      );
+      await expect(oauthMercadoPagoService.getConnectionStatus(VENDOR_ID)).resolves.toBe(
+        'connected'
+      );
+    });
+  });
+
+  describe('disconnect (OAUTH-5)', () => {
+    it('discards tokens and marks the account disconnected', async () => {
+      const account = new (jest.requireMock('../models/index.js').VendorMercadoPagoAccount)(
+        accountProps({
+          status: 'connected',
+          accessTokenEncrypted: 'enc:AT',
+          refreshTokenEncrypted: 'enc:RT',
+        })
+      );
+      mockAccountFindOne.mockResolvedValueOnce(account);
+
+      await oauthMercadoPagoService.disconnect(VENDOR_ID);
+
+      expect(account.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          accessTokenEncrypted: null,
+          refreshTokenEncrypted: null,
+          status: 'disconnected',
+        })
+      );
+    });
+
+    it('is a no-op when no account exists', async () => {
+      mockAccountFindOne.mockResolvedValueOnce(null);
+      await expect(oauthMercadoPagoService.disconnect(VENDOR_ID)).resolves.toBeUndefined();
+    });
+  });
+
   describe('getAuthorizedClient', () => {
     it('returns a MercadoPagoConfig with the decrypted access token', () => {
-      const account = new (jest.requireMock('../models/index.js').VendorMercadoPagoAccount)({
-        accessTokenEncrypted: 'enc:VENDOR_ACCESS',
-      });
+      const account = new (jest.requireMock('../models/index.js').VendorMercadoPagoAccount)(
+        accountProps({ accessTokenEncrypted: 'enc:VENDOR_ACCESS' })
+      );
 
       const client = oauthMercadoPagoService.getAuthorizedClient(account as never);
 
