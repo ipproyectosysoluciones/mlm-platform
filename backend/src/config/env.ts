@@ -212,7 +212,55 @@ export const config = {
     /** MercadoPago webhook secret for HMAC-SHA256 signature verification (optional in dev) */
     webhookSecret: process.env.MERCADOPAGO_WEBHOOK_SECRET || '',
   },
+
+  /**
+   * Marketplace configuration — per-vendor MercadoPago charging (BE-3).
+   * Configuración del marketplace — cobro por negocio vía MercadoPago.
+   *
+   * Behind `MARKETPLACE_ENABLED` (default false) → zero behavior change until the
+   * MP marketplace is enabled for the CO app. Detrás de `MARKETPLACE_ENABLED`
+   * (default false) → cero cambio de comportamiento hasta habilitar la app.
+   */
+  marketplace: {
+    /** MercadoPago app client ID for OAuth / Client ID de la app MP para OAuth */
+    clientId: process.env.MERCADOPAGO_CLIENT_ID || '',
+    /** MercadoPago app client secret for OAuth / Client secret de la app MP para OAuth */
+    clientSecret: process.env.MERCADOPAGO_CLIENT_SECRET || '',
+    /** OAuth redirect URI (HTTPS required, NFR-5) / URI de redirect OAuth (HTTPS obligatorio) */
+    redirectUri: process.env.MERCADOPAGO_REDIRECT_URI || '',
+    /** Marketplace feature flag (default false) / Flag del feature marketplace (default false) */
+    enabled: process.env.MARKETPLACE_ENABLED === 'true',
+    /** Supported marketplace country (only CO) / País soportado por el marketplace (solo CO) */
+    country: process.env.MARKETPLACE_COUNTRY || 'CO',
+    /** VAT rates by country (CO active; MX/AR/CL/ES defined but inactive) / Tasas IVA por país */
+    vatRates: parseMarketplaceVatRates(),
+  },
 };
+
+/**
+ * Parse VAT rates from env (JSON override) or return the defaults.
+ * CO 0.19 active; MX 0.16, AR 0.21, CL 0.19, ES 0.21 defined but inactive.
+ *
+ * Parsea tasas IVA desde env (override JSON) o devuelve los defaults.
+ */
+function parseMarketplaceVatRates(): Record<string, number> {
+  const defaults: Record<string, number> = {
+    CO: 0.19,
+    MX: 0.16,
+    AR: 0.21,
+    CL: 0.19,
+    ES: 0.21,
+  };
+
+  if (!process.env.MARKETPLACE_VAT_RATES) return defaults;
+
+  try {
+    return { ...defaults, ...JSON.parse(process.env.MARKETPLACE_VAT_RATES) };
+  } catch {
+    logger.warn('MARKETPLACE_VAT_RATES is not valid JSON — using default VAT rates');
+    return defaults;
+  }
+}
 
 /**
  * Fail-fast validation for critical security secrets
