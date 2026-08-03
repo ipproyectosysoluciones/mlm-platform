@@ -2,13 +2,13 @@
 
 /**
  * @fileoverview Migration: Add payout destination + gateway tracking to withdrawal_requests
- * @description Adds `destination` JSONB (payout destination: { method, email?, accountId? })
+ * @description Adds `destination` JSONB (payout destination: { method, email })
  *              plus gateway/notification tracking columns to support real money-out
- *              (PayPal Payouts / MercadoPago). All columns are NULL-able so legacy rows
+ *              (PayPal Payouts). All columns are NULL-able so legacy rows
  *              (0 dormant withdrawals) remain valid.
  *
  *              Agrega `destination` JSONB (destino de payout) y columnas de seguimiento
- *              de pasarela/notificación para soportar money-out real (PayPal/MercadoPago).
+ *              de pasarela/notificación para soportar money-out real (PayPal Payouts).
  *              Todas las columnas son NULL-ables para mantener válidas las filas legacy.
  *
  * @issue wallet-integration — Payouts Reales (PR 1: Schema+Migración)
@@ -27,7 +27,7 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     const t = await queryInterface.sequelize.transaction();
     try {
-      // Payout destination: { method: 'paypal'|'mercadopago', email?, accountId? }
+      // Payout destination: { method: 'paypal', email }
       await queryInterface.sequelize.query(
         `ALTER TABLE "withdrawal_requests" ADD COLUMN IF NOT EXISTS "destination" JSONB;`,
         { transaction: t }

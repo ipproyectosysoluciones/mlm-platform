@@ -385,18 +385,17 @@ export type WithdrawalStatus = (typeof WITHDRAWAL_STATUS)[keyof typeof WITHDRAWA
  * Supported payout gateways for withdrawal money-out
  * Pasarelas de payout soportadas para el money-out de retiros
  */
-export type PayoutGatewayType = 'paypal' | 'mercadopago';
+export type PayoutGatewayType = 'paypal';
 
 /**
  * Withdrawal payout destination — the gateway is derived from `method`;
- * each provider requires a different identifier (email vs accountId).
+ * the provider requires an email identifier.
  * Destino de pago del retiro — la pasarela se deriva de `method`;
- * cada proveedor exige un identificador distinto (email vs accountId).
+ * el proveedor exige un identificador de tipo email.
  */
 export interface WithdrawalDestination {
   method: PayoutGatewayType;
-  email?: string;
-  accountId?: string;
+  email: string;
 }
 
 /**
