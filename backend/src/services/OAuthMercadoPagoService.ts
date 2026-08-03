@@ -21,6 +21,15 @@ export const OAUTH_STATE_TTL_MS = 15 * 60 * 1000;
 /** Refresh margin: refresh when ≤ 5 min left (OAUTH-3) / Margen de refresh */
 export const ACCESS_TOKEN_REFRESH_MARGIN_MS = 5 * 60 * 1000;
 
+/** Retry delays (ms) for transient refresh errors (OAUTH-3 fallo transitorio).
+ *  3 attempts total: initial + 2 retries with backoff. */
+export const REFRESH_RETRY_DELAYS_MS = [250, 500];
+
+/** Promise-based sleep for backoff / Espera con backoff */
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 /**
  * Country → authorization base URL
  * País → URL base de autorización
@@ -253,21 +262,35 @@ class OAuthMercadoPagoService {
     );
     const { clientId, clientSecret } = config.marketplace;
 
-    let token: OAuthTokenResult;
-    try {
-      token = (await this.oauth.refresh({
-        body: {
-          client_secret: clientSecret,
-          client_id: clientId,
-          refresh_token: refreshToken,
-        },
-      })) as unknown as OAuthTokenResult;
-    } catch (error) {
-      if (isInvalidGrantError(error)) {
-        await vendorAccount.update({ status: 'expired' });
-        throw new Error('CONNECT_MP_REQUIRED: refresh token invalid, reconnection required');
+    // Retry transient failures with backoff (OAUTH-3 fallo transitorio);
+    // invalid_grant fails fast and marks the account expired.
+    let token: OAuthTokenResult | null = null;
+    let lastError: unknown = null;
+    const attempts = REFRESH_RETRY_DELAYS_MS.length + 1;
+
+    for (let attempt = 0; attempt < attempts && !token; attempt += 1) {
+      try {
+        token = (await this.oauth.refresh({
+          body: {
+            client_secret: clientSecret,
+            client_id: clientId,
+            refresh_token: refreshToken,
+          },
+        })) as unknown as OAuthTokenResult;
+      } catch (error) {
+        if (isInvalidGrantError(error)) {
+          await vendorAccount.update({ status: 'expired' });
+          throw new Error('CONNECT_MP_REQUIRED: refresh token invalid, reconnection required');
+        }
+        lastError = error;
+        if (attempt < REFRESH_RETRY_DELAYS_MS.length) {
+          await sleep(REFRESH_RETRY_DELAYS_MS[attempt]);
+        }
       }
-      throw error;
+    }
+
+    if (!token) {
+      throw lastError;
     }
 
     const accessTokenExpiresAt = new Date(Date.now() + token.expires_in * 1000);

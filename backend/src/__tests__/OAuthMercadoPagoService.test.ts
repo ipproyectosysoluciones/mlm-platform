@@ -439,22 +439,60 @@ describe('OAuthMercadoPagoService (A9 / D7 / BE-6)', () => {
         /CONNECT_MP_REQUIRED/
       );
 
+      expect(mockOAuthInstances[0].refresh).toHaveBeenCalledTimes(1); // invalid_grant: no retry
       expect(account.status).toBe('expired');
       expect(account.update).toHaveBeenCalledWith({ status: 'expired' });
     });
 
-    it('keeps the account connected on transient errors (no status change)', async () => {
-      const account = new (jest.requireMock('../models/index.js').VendorMercadoPagoAccount)(
-        accountProps({ status: 'connected', refreshTokenEncrypted: 'enc:REFRESH_TOKEN' })
-      );
-      mockOAuthInstances[0].refresh.mockRejectedValueOnce(new Error('network timeout'));
+    it('retries with backoff on transient errors and recovers (OAUTH-3 fallo transitorio)', async () => {
+      jest.useFakeTimers({ advanceTimers: true });
+      try {
+        const account = new (jest.requireMock('../models/index.js').VendorMercadoPagoAccount)(
+          accountProps({ status: 'connected', refreshTokenEncrypted: 'enc:REFRESH_TOKEN' })
+        );
+        mockOAuthInstances[0].refresh
+          .mockRejectedValueOnce(new Error('network timeout'))
+          .mockRejectedValueOnce(new Error('ECONNRESET'))
+          .mockResolvedValueOnce({
+            access_token: 'RECOVERED_ACCESS_TOKEN',
+            refresh_token: 'RECOVERED_REFRESH_TOKEN',
+            expires_in: 21600,
+            token_type: 'Bearer',
+            live_mode: false,
+          });
 
-      await expect(oauthMercadoPagoService.refreshAccessToken(account as never)).rejects.toThrow(
-        /network timeout/
-      );
+        const result = await oauthMercadoPagoService.refreshAccessToken(account as never);
 
-      expect(account.status).toBe('connected');
-      expect(account.update).not.toHaveBeenCalled();
+        expect(mockOAuthInstances[0].refresh).toHaveBeenCalledTimes(3);
+        expect(account.status).toBe('connected');
+        expect(account.accessTokenEncrypted).toBe('enc:RECOVERED_ACCESS_TOKEN');
+        expect(result.account).toBe(account);
+      } finally {
+        jest.useRealTimers();
+      }
+    });
+
+    it('exhausts retries on persistent transient errors and keeps status connected', async () => {
+      jest.useFakeTimers({ advanceTimers: true });
+      try {
+        const account = new (jest.requireMock('../models/index.js').VendorMercadoPagoAccount)(
+          accountProps({ status: 'connected', refreshTokenEncrypted: 'enc:REFRESH_TOKEN' })
+        );
+        mockOAuthInstances[0].refresh
+          .mockRejectedValueOnce(new Error('network timeout'))
+          .mockRejectedValueOnce(new Error('network timeout'))
+          .mockRejectedValueOnce(new Error('network timeout')); // 3 attempts, all transient
+
+        await expect(oauthMercadoPagoService.refreshAccessToken(account as never)).rejects.toThrow(
+          /network timeout/
+        );
+
+        expect(mockOAuthInstances[0].refresh).toHaveBeenCalledTimes(3);
+        expect(account.status).toBe('connected');
+        expect(account.update).not.toHaveBeenCalled();
+      } finally {
+        jest.useRealTimers();
+      }
     });
 
     it('throws when no refresh token is stored', async () => {
