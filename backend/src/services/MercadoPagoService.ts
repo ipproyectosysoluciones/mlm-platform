@@ -36,6 +36,8 @@ export interface MercadoPagoPreference {
   };
   /** Fee charged by the platform in COP / Fee de la plataforma en COP */
   marketplace_fee?: number;
+  /** Free-form metadata for traceability (SPLIT-2: vendorId, country) */
+  metadata?: Record<string, string>;
 }
 
 export interface CreatePreferenceResult {

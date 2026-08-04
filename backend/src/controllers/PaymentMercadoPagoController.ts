@@ -10,9 +10,10 @@ import { mercadoPagoService } from '../services/MercadoPagoService.js';
 import { ResponseUtil } from '../utils/response.util.js';
 import { config } from '../config/env.js';
 import { logger } from '../utils/logger.js';
-import { Purchase, Order, Product } from '../models/index.js';
+import { Purchase, Order, Product, Reservation, Vendor } from '../models/index.js';
 import { WebhookEvent } from '../models/WebhookEvent.js';
 import { CommissionService } from '../services/CommissionService.js';
+import { marketplaceSplitService } from '../services/MarketplaceSplitService.js';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
 
 /**
@@ -45,7 +46,7 @@ export class PaymentMercadoPagoController {
    * Create a MercadoPago payment preference
    */
   static createPreference = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
-    const { items, externalReference, description } = req.body;
+    const { items, externalReference, description, vendorId, reservationId } = req.body;
     const userId = req.user?.id;
     const userEmail = req.user?.email;
 
@@ -53,26 +54,93 @@ export class PaymentMercadoPagoController {
       return res.status(400).json(ResponseUtil.error('INVALID_ITEMS', 'Items are required', 400));
     }
 
-    const preference = await mercadoPagoService.createPreference({
-      items: items.map((item: PreferenceItemInput) => ({
-        id: item.id ?? item.productId ?? '',
-        title: item.title ?? item.name ?? '',
-        description: item.description || description || 'Nexo Real - Compra',
-        quantity: item.quantity || 1,
-        currency_id: item.currency_id || 'COP',
-        unit_price: parseFloat(String(item.unit_price ?? item.price ?? '0')),
-      })),
-      payer: {
-        email: userEmail,
+    // Resolve the vendor for the charge (B3 / SPLIT-1 / RC-1):
+    // - explicit vendorId (product flow)
+    // - reservationId → reservation's vendor (reservation flow)
+    let resolvedVendorId: string | null = vendorId ?? null;
+    if (reservationId) {
+      const reservation = await Reservation.findByPk(reservationId);
+      if (!reservation) {
+        return res
+          .status(404)
+          .json(ResponseUtil.error('RESERVATION_NOT_FOUND', 'Reservation not found', 404));
+      }
+      if (reservation.userId !== userId) {
+        return res
+          .status(403)
+          .json(ResponseUtil.error('FORBIDDEN', 'Reservation does not belong to the user', 403));
+      }
+      resolvedVendorId = reservation.vendorId ?? null;
+    }
+
+    const externalRef = reservationId
+      ? `reservation:${reservationId}`
+      : externalReference || userId;
+
+    // Marketplace split (SPLIT-1/SPLIT-2): business token + marketplace_fee + metadata.
+    // Without a vendor (or flag OFF) → previous behavior: platform client, no fee.
+    let accessToken: string | undefined;
+    let marketplaceFee: number | undefined;
+    let metadata: Record<string, string> | undefined;
+    if (resolvedVendorId && config.marketplace.enabled) {
+      try {
+        accessToken = await marketplaceSplitService.resolveToken(resolvedVendorId);
+      } catch (error) {
+        if (error instanceof Error && error.message.includes('CONNECT_MP_REQUIRED')) {
+          return res
+            .status(400)
+            .json(ResponseUtil.error('CONNECT_MP_REQUIRED', error.message, 400));
+        }
+        throw error;
+      }
+
+      const vendor = await Vendor.findByPk(resolvedVendorId);
+      if (!vendor) {
+        return res
+          .status(404)
+          .json(ResponseUtil.error('VENDOR_NOT_FOUND', 'Vendor not found', 404));
+      }
+
+      const base = items.reduce(
+        (sum: number, item: PreferenceItemInput) =>
+          sum + parseFloat(String(item.unit_price ?? item.price ?? '0')) * (item.quantity || 1),
+        0
+      );
+      const breakdown = marketplaceSplitService.createFeeBreakdown(
+        base,
+        vendor,
+        config.marketplace.country,
+        externalRef
+      );
+      marketplaceFee = breakdown.fee;
+      metadata = { vendorId: resolvedVendorId, country: config.marketplace.country };
+    }
+
+    const preference = await mercadoPagoService.createPreference(
+      {
+        items: items.map((item: PreferenceItemInput) => ({
+          id: item.id ?? item.productId ?? '',
+          title: item.title ?? item.name ?? '',
+          description: item.description || description || 'Nexo Real - Compra',
+          quantity: item.quantity || 1,
+          currency_id: item.currency_id || 'COP',
+          unit_price: parseFloat(String(item.unit_price ?? item.price ?? '0')),
+        })),
+        payer: {
+          email: userEmail,
+        },
+        external_reference: externalRef,
+        notification_url: `${config.app.url}/api/payment/mercadopago/webhook`,
+        back_urls: {
+          success: `${config.app.frontendUrl}/orders/success`,
+          pending: `${config.app.frontendUrl}/orders/pending`,
+          failure: `${config.app.frontendUrl}/checkout`,
+        },
+        ...(marketplaceFee !== undefined ? { marketplace_fee: marketplaceFee } : {}),
+        ...(metadata ? { metadata } : {}),
       },
-      external_reference: externalReference || userId,
-      notification_url: `${config.app.url}/api/payment/mercadopago/webhook`,
-      back_urls: {
-        success: `${config.app.frontendUrl}/orders/success`,
-        pending: `${config.app.frontendUrl}/orders/pending`,
-        failure: `${config.app.frontendUrl}/checkout`,
-      },
-    });
+      accessToken
+    );
 
     return res.status(201).json({
       success: true,
