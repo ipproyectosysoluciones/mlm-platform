@@ -376,6 +376,60 @@ router.post('/mercadopago/process', authenticate, PaymentMercadoPagoController.p
 
 /**
  * @swagger
+ * /payment/mercadopago/refund:
+ *   post:
+ *     summary: Refund a MercadoPago vendor payment / Reembolsar un pago MercadoPago con vendor
+ *     description: >-
+ *       Refunds a vendor payment (full or partial) within 180 days of approval
+ *       (SPLIT-6). Uses the vendor's business token. The proportional ledger
+ *       reversal is applied by the webhook (payment.refunded).
+ *     tags: [Payment]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [paymentId]
+ *             properties:
+ *               paymentId:
+ *                 type: string
+ *                 description: MercadoPago payment id / ID de pago de MercadoPago
+ *               amount:
+ *                 type: number
+ *                 description: Partial amount to refund (omitted = full) / Monto parcial a reembolsar (omitir = total)
+ *     responses:
+ *       200:
+ *         description: Refund processed / Reembolso procesado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *       400:
+ *         description: >-
+ *           REFUND_PERIOD_EXPIRED (window > 180 days) / CONNECT_MP_REQUIRED /
+ *           MISSING_PAYMENT_ID
+ *       404:
+ *         description: ORDER_NOT_FOUND — no marketplace order for the payment
+ *       401:
+ *         description: Not authenticated / No autenticado
+ *       500:
+ *         description: Internal error / Error interno
+ */
+router.post('/mercadopago/refund', authenticate, PaymentMercadoPagoController.refund);
+
+/**
+ * @swagger
  * /payment/mercadopago/payment/{paymentId}:
  *   get:
  *     summary: Get MercadoPago payment status / Obtener estado de pago de MercadoPago
