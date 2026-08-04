@@ -245,6 +245,48 @@ export class PaymentMercadoPagoController {
   });
 
   /**
+   * POST /api/payment/mercadopago/refund
+   * Refund a vendor payment (full or partial) within the 180-day window.
+   * Triggers the MercadoPago refund; the ledger reversal (feeRefunded,
+   * VendorOrder cancelled, Reservation refunded) is applied by the webhook.
+   */
+  static refund = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
+    const { paymentId, amount } = req.body;
+
+    if (!paymentId) {
+      return res
+        .status(400)
+        .json(ResponseUtil.error('MISSING_PAYMENT_ID', 'Payment ID is required', 400));
+    }
+
+    try {
+      const result = await marketplaceSplitService.refundPayment(String(paymentId), {
+        ...(amount !== undefined ? { amount } : {}),
+      });
+
+      return res.status(200).json({
+        success: true,
+        data: {
+          status: result.status,
+        },
+      });
+    } catch (error) {
+      if (error instanceof Error && error.message.includes('REFUND_PERIOD_EXPIRED')) {
+        return res
+          .status(400)
+          .json(ResponseUtil.error('REFUND_PERIOD_EXPIRED', error.message, 400));
+      }
+      if (error instanceof Error && error.message.includes('CONNECT_MP_REQUIRED')) {
+        return res.status(400).json(ResponseUtil.error('CONNECT_MP_REQUIRED', error.message, 400));
+      }
+      if (error instanceof Error && error.message.includes('ORDER_NOT_FOUND')) {
+        return res.status(404).json(ResponseUtil.error('ORDER_NOT_FOUND', error.message, 404));
+      }
+      throw error;
+    }
+  });
+
+  /**
    * POST /api/payment/mercadopago/webhook
    * Handle MercadoPago webhook notifications
    */

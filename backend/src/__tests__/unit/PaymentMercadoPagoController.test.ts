@@ -8,6 +8,7 @@
 
 const mockResolveToken = jest.fn();
 const mockCreateFeeBreakdown = jest.fn();
+const mockRefundPayment = jest.fn();
 const mockReservationFindByPk = jest.fn();
 const mockVendorFindByPk = jest.fn();
 
@@ -18,6 +19,7 @@ jest.mock('../../services/MercadoPagoService', () => ({
     getPayment: jest.fn(),
     getPaymentMethods: jest.fn(),
     verifyWebhookSignature: jest.fn(),
+    refundPayment: jest.fn(),
   },
 }));
 
@@ -25,6 +27,7 @@ jest.mock('../../services/MarketplaceSplitService', () => ({
   marketplaceSplitService: {
     resolveToken: mockResolveToken,
     createFeeBreakdown: mockCreateFeeBreakdown,
+    refundPayment: mockRefundPayment,
   },
 }));
 
@@ -528,6 +531,125 @@ describe('PaymentMercadoPagoController', () => {
 
       // Restore
       (config.mercadopago as any).webhookSecret = '';
+    });
+  });
+
+  // ── refund (B5 / SPLIT-6) ──────────────────────────────────────────────────
+
+  describe('refund', () => {
+    it('returns 400 when paymentId is missing', async () => {
+      const req = createMockReq({ body: {} });
+      const res = createMockRes();
+      const next = jest.fn();
+
+      await PaymentMercadoPagoController.refund(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(mockRefundPayment).not.toHaveBeenCalled();
+    });
+
+    it('refunds a payment and returns 200 with the status (full refund)', async () => {
+      mockRefundPayment.mockResolvedValue({ status: 'approved' });
+
+      const req = createMockReq({ body: { paymentId: '888777666' } });
+      const res = createMockRes();
+      const next = jest.fn();
+
+      await PaymentMercadoPagoController.refund(req, res, next);
+
+      expect(mockRefundPayment).toHaveBeenCalledWith('888777666', {});
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: true,
+          data: expect.objectContaining({ status: 'approved' }),
+        })
+      );
+    });
+
+    it('passes the partial amount through to the service', async () => {
+      mockRefundPayment.mockResolvedValue({ status: 'approved' });
+
+      const req = createMockReq({ body: { paymentId: '888777666', amount: 400000 } });
+      const res = createMockRes();
+      const next = jest.fn();
+
+      await PaymentMercadoPagoController.refund(req, res, next);
+
+      expect(mockRefundPayment).toHaveBeenCalledWith('888777666', { amount: 400000 });
+      expect(res.status).toHaveBeenCalledWith(200);
+    });
+
+    it('returns 400 REFUND_PERIOD_EXPIRED when the refund window has expired', async () => {
+      mockRefundPayment.mockRejectedValue(
+        new Error('REFUND_PERIOD_EXPIRED: refund window (180 days) has expired')
+      );
+
+      const req = createMockReq({ body: { paymentId: '888777666' } });
+      const res = createMockRes();
+      const next = jest.fn();
+
+      await PaymentMercadoPagoController.refund(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          error: expect.objectContaining({ code: 'REFUND_PERIOD_EXPIRED' }),
+        })
+      );
+    });
+
+    it('returns 400 CONNECT_MP_REQUIRED when the vendor has no connected account', async () => {
+      mockRefundPayment.mockRejectedValue(
+        new Error('CONNECT_MP_REQUIRED: vendor must connect MercadoPago first')
+      );
+
+      const req = createMockReq({ body: { paymentId: '888777666' } });
+      const res = createMockRes();
+      const next = jest.fn();
+
+      await PaymentMercadoPagoController.refund(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          error: expect.objectContaining({ code: 'CONNECT_MP_REQUIRED' }),
+        })
+      );
+    });
+
+    it('returns 404 ORDER_NOT_FOUND when there is no marketplace order for the payment', async () => {
+      mockRefundPayment.mockRejectedValue(
+        new Error('ORDER_NOT_FOUND: marketplace order not found for payment')
+      );
+
+      const req = createMockReq({ body: { paymentId: '888777666' } });
+      const res = createMockRes();
+      const next = jest.fn();
+
+      await PaymentMercadoPagoController.refund(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(404);
+      expect(res.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          error: expect.objectContaining({ code: 'ORDER_NOT_FOUND' }),
+        })
+      );
+    });
+
+    it('calls next with the error when the service throws an unknown error', async () => {
+      const error = new Error('MP API error');
+      mockRefundPayment.mockRejectedValue(error);
+
+      const req = createMockReq({ body: { paymentId: '888777666' } });
+      const res = createMockRes();
+      const next = jest.fn();
+
+      PaymentMercadoPagoController.refund(req, res, next);
+      // asyncHandler is fire-and-forget — flush pending microtasks
+      await new Promise((r) => setImmediate(r));
+
+      expect(next).toHaveBeenCalledWith(error);
     });
   });
 });

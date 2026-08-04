@@ -23,6 +23,7 @@ import {
 import { oauthMercadoPagoService } from './OAuthMercadoPagoService.js';
 import { TwoFactorService } from './TwoFactorService.js';
 import { CommissionService } from './CommissionService.js';
+import { mercadoPagoService } from './MercadoPagoService.js';
 import type { PaymentResult } from './MercadoPagoService.js';
 import type { FeeBreakdown } from '../types/index.js';
 
@@ -31,6 +32,9 @@ export const RESERVATION_REF_PREFIX = 'reservation:';
 
 /** Order note marker used to find the Order for a MercadoPago payment */
 export const MP_ORDER_NOTE_PREFIX = 'mercadopago:';
+
+/** Refund window: 180 days after approval (SPLIT-6) / Ventana de reembolso: 180 días */
+export const REFUND_WINDOW_MS = 180 * 24 * 60 * 60 * 1000;
 
 /**
  * Generate a human-readable order number (mirrors the webhook convention).
@@ -204,6 +208,53 @@ export class MarketplaceSplitService {
       { service: 'MarketplaceSplitService', paymentId: payment.id, orderId: order.id },
       'Reservation approved — Order + VendorOrder created'
     );
+  }
+
+  /**
+   * Refund a vendor payment (full or partial) within the 180-day window (SPLIT-6 / B5).
+   * Reembolsar un pago con vendor (total o parcial) dentro de la ventana de 180 días.
+   *
+   * Orchestrates the trigger side of a refund: validates the payment window,
+   * resolves the marketplace Order to obtain the vendor, resolves the business
+   * token and executes the MercadoPago refund. The ledger reversal (feeRefunded
+   * proportional, VendorOrder → cancelled, Reservation → refunded) is applied by
+   * the webhook via handleRefund once MercadoPago delivers `payment.refunded`.
+   *
+   * Errors (thrown as Error with a machine-readable prefix):
+   * - REFUND_PERIOD_EXPIRED: payment older than 180 days or no approval date
+   * - ORDER_NOT_FOUND: no marketplace order (vendor split) for this payment
+   * - CONNECT_MP_REQUIRED: vendor no longer connected (NFR-6)
+   *
+   * @param paymentId - MercadoPago payment id
+   * @param options - { amount } for partial refunds (omitted = full refund)
+   * @returns The MercadoPago refund status
+   */
+  async refundPayment(
+    paymentId: string,
+    options?: { amount?: number }
+  ): Promise<{ status: string }> {
+    const payment = await mercadoPagoService.getPayment(paymentId);
+
+    // SPLIT-6: refunds only within 180 days of approval. A payment without an
+    // approval date cannot prove eligibility → treated as expired.
+    const approvalMs = payment.date_approved ? new Date(payment.date_approved).getTime() : NaN;
+    if (Number.isNaN(approvalMs) || Date.now() - approvalMs > REFUND_WINDOW_MS) {
+      throw new Error('REFUND_PERIOD_EXPIRED: refund window (180 days) has expired');
+    }
+
+    const order = await Order.findOne({
+      where: { notes: `${MP_ORDER_NOTE_PREFIX}${paymentId}` },
+    });
+    if (!order || !order.vendorId) {
+      throw new Error('ORDER_NOT_FOUND: marketplace order not found for payment');
+    }
+
+    const accessToken = await this.resolveToken(order.vendorId);
+
+    return mercadoPagoService.refundPayment(paymentId, {
+      ...(options?.amount !== undefined ? { amount: options.amount } : {}),
+      accessToken,
+    });
   }
 
   /**

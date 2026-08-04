@@ -42,6 +42,14 @@ jest.mock('../services/TwoFactorService.js', () => ({
   TwoFactorService: { decryptSecretFromStorage: mockDecryptSecretFromStorage },
 }));
 
+// ─── MercadoPagoService mock (refund trigger — B5 / SPLIT-6) ────────────────
+const mockGetPayment = jest.fn();
+const mockRefundPayment = jest.fn();
+
+jest.mock('../services/MercadoPagoService.js', () => ({
+  mercadoPagoService: { getPayment: mockGetPayment, refundPayment: mockRefundPayment },
+}));
+
 // ─── Model mocks ─────────────────────────────────────────────────────────────
 const mockVendorFindByPk = jest.fn();
 const mockAccountFindOne = jest.fn();
@@ -332,5 +340,93 @@ describe('MarketplaceSplitService.handleRefund (SPLIT-6 / D9 / RC-4)', () => {
       refunds: [{ id: 1, amount: 50000 }],
     };
     await expect(service.handleRefund(payment, 999)).rejects.toThrow(/refund not found/i);
+  });
+});
+
+describe('MarketplaceSplitService.refundPayment (SPLIT-6 / B5)', () => {
+  const PAYMENT_ID = '888777666';
+  const mockApprovedPayment: PaymentResult = {
+    id: PAYMENT_ID,
+    status: 'approved',
+    external_reference: 'reservation:res-1',
+    transaction_amount: 1000000,
+    currency_id: 'COP',
+    date_approved: new Date().toISOString(), // now → inside the 180-day window
+  };
+
+  const mockConnectedAccount = { status: 'connected', accessTokenEncrypted: 'enc:x' };
+
+  it('refunds the full payment with the vendor token (no amount → full)', async () => {
+    mockGetPayment.mockResolvedValue(mockApprovedPayment);
+    mockOrderFindOne.mockResolvedValue({ id: 'order-1', vendorId: 'vendor-1' });
+    mockAccountFindOne.mockResolvedValue(mockConnectedAccount);
+    mockRefundPayment.mockResolvedValue({ status: 'approved' });
+
+    const result = await service.refundPayment(PAYMENT_ID);
+
+    expect(mockGetPayment).toHaveBeenCalledWith(PAYMENT_ID);
+    expect(mockOrderFindOne).toHaveBeenCalledWith({
+      where: { notes: `mercadopago:${PAYMENT_ID}` },
+    });
+    expect(mockRefundPayment).toHaveBeenCalledWith(PAYMENT_ID, {
+      accessToken: 'vendor-access-token',
+    });
+    expect(result.status).toBe('approved');
+  });
+
+  it('refunds a partial amount, passing it through to the SDK', async () => {
+    mockGetPayment.mockResolvedValue(mockApprovedPayment);
+    mockOrderFindOne.mockResolvedValue({ id: 'order-1', vendorId: 'vendor-1' });
+    mockAccountFindOne.mockResolvedValue(mockConnectedAccount);
+    mockRefundPayment.mockResolvedValue({ status: 'approved' });
+
+    await service.refundPayment(PAYMENT_ID, { amount: 400000 });
+
+    expect(mockRefundPayment).toHaveBeenCalledWith(PAYMENT_ID, {
+      amount: 400000,
+      accessToken: 'vendor-access-token',
+    });
+  });
+
+  it('throws REFUND_PERIOD_EXPIRED when the payment is older than 180 days', async () => {
+    const olderThanWindow = new Date(Date.now() - 200 * 24 * 60 * 60 * 1000).toISOString();
+    mockGetPayment.mockResolvedValue({ ...mockApprovedPayment, date_approved: olderThanWindow });
+    mockOrderFindOne.mockResolvedValue({ id: 'order-1', vendorId: 'vendor-1' });
+
+    await expect(service.refundPayment(PAYMENT_ID)).rejects.toThrow(/REFUND_PERIOD_EXPIRED/);
+    expect(mockRefundPayment).not.toHaveBeenCalled();
+  });
+
+  it('throws REFUND_PERIOD_EXPIRED when the payment has no date_approved', async () => {
+    mockGetPayment.mockResolvedValue({ ...mockApprovedPayment, date_approved: undefined });
+    mockOrderFindOne.mockResolvedValue({ id: 'order-1', vendorId: 'vendor-1' });
+
+    await expect(service.refundPayment(PAYMENT_ID)).rejects.toThrow(/REFUND_PERIOD_EXPIRED/);
+    expect(mockRefundPayment).not.toHaveBeenCalled();
+  });
+
+  it('throws ORDER_NOT_FOUND when there is no marketplace order for the payment', async () => {
+    mockGetPayment.mockResolvedValue(mockApprovedPayment);
+    mockOrderFindOne.mockResolvedValue(null);
+
+    await expect(service.refundPayment(PAYMENT_ID)).rejects.toThrow(/ORDER_NOT_FOUND/);
+    expect(mockRefundPayment).not.toHaveBeenCalled();
+  });
+
+  it('throws ORDER_NOT_FOUND when the order has no vendorId (platform payment)', async () => {
+    mockGetPayment.mockResolvedValue(mockApprovedPayment);
+    mockOrderFindOne.mockResolvedValue({ id: 'order-1', vendorId: null });
+
+    await expect(service.refundPayment(PAYMENT_ID)).rejects.toThrow(/ORDER_NOT_FOUND/);
+    expect(mockRefundPayment).not.toHaveBeenCalled();
+  });
+
+  it('propagates CONNECT_MP_REQUIRED when the vendor has no connected account', async () => {
+    mockGetPayment.mockResolvedValue(mockApprovedPayment);
+    mockOrderFindOne.mockResolvedValue({ id: 'order-1', vendorId: 'vendor-1' });
+    mockAccountFindOne.mockResolvedValue(null);
+
+    await expect(service.refundPayment(PAYMENT_ID)).rejects.toThrow(/CONNECT_MP_REQUIRED/);
+    expect(mockRefundPayment).not.toHaveBeenCalled();
   });
 });
