@@ -335,6 +335,41 @@ class OAuthMercadoPagoService {
   }
 
   /**
+   * Hourly token rotation for all connected vendors (B7).
+   * Rotación horaria de tokens para todos los vendedores conectados.
+   *
+   * Best-effort: each account is validated via ensureValidToken (lazy refresh
+   * when the access token expires within the margin). A failing account is
+   * logged and skipped — it never aborts the sweep.
+   *
+   * @returns { refreshed, failed } — refreshed: accounts left with a valid token;
+   *          failed: accounts whose token could not be validated (e.g. expired)
+   */
+  async refreshTokens(): Promise<{ refreshed: number; failed: number }> {
+    const accounts = await VendorMercadoPagoAccount.findAll({
+      where: { status: 'connected' },
+    });
+
+    let refreshed = 0;
+    let failed = 0;
+
+    for (const account of accounts) {
+      try {
+        await this.ensureValidToken(account);
+        refreshed += 1;
+      } catch (error) {
+        failed += 1;
+        logger.warn(
+          { service: 'OAuthMercadoPagoService', vendorId: account.vendorId, error },
+          'Token refresh failed for vendor'
+        );
+      }
+    }
+
+    return { refreshed, failed };
+  }
+
+  /**
    * Connection status for the dashboard (OAUTH-4).
    * Estado de conexión para el dashboard.
    *
