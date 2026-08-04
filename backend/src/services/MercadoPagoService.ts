@@ -48,7 +48,7 @@ export interface CreatePreferenceResult {
 
 export interface PaymentResult {
   id: string;
-  status: 'pending' | 'approved' | 'rejected' | 'cancelled';
+  status: 'pending' | 'approved' | 'rejected' | 'cancelled' | 'refunded';
   status_detail?: string;
   payment_type_id?: string;
   transaction_amount?: number;
