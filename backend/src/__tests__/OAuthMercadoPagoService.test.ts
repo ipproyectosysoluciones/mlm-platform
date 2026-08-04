@@ -70,6 +70,7 @@ jest.mock('../config/env.js', () => ({
 // ─── Model mocks ─────────────────────────────────────────────────────────────
 const mockVendorFindByPk = jest.fn();
 const mockAccountFindOne = jest.fn();
+const mockAccountFindAll = jest.fn();
 const mockAccountCreate = jest.fn();
 
 jest.mock('../models/index.js', () => {
@@ -84,6 +85,7 @@ jest.mock('../models/index.js', () => {
 
   class MockVendorAccount {
     static findOne = mockAccountFindOne;
+    static findAll = mockAccountFindAll;
     static create = mockAccountCreate;
     vendorId: string;
     mpUserId: string | null;
@@ -642,6 +644,50 @@ describe('OAuthMercadoPagoService (A9 / D7 / BE-6)', () => {
       expect(client).toBeDefined();
       const created = mockConfigs[mockConfigs.length - 1];
       expect(created.accessToken).toBe('VENDOR_ACCESS');
+    });
+  });
+
+  describe('refreshTokens (B7 — hourly token rotation)', () => {
+    const validAccount = () =>
+      new (jest.requireMock('../models/index.js').VendorMercadoPagoAccount)(
+        accountProps({
+          status: 'connected',
+          accessTokenEncrypted: 'enc:AT_VALID',
+          refreshTokenEncrypted: 'enc:RT',
+          accessTokenExpiresAt: new Date(Date.now() + 60 * 60 * 1000), // not expiring soon
+        })
+      );
+
+    it('returns zeroes when there are no connected accounts', async () => {
+      mockAccountFindAll.mockResolvedValueOnce([]);
+
+      await expect(oauthMercadoPagoService.refreshTokens()).resolves.toEqual({
+        refreshed: 0,
+        failed: 0,
+      });
+
+      expect(mockAccountFindAll).toHaveBeenCalledWith({ where: { status: 'connected' } });
+    });
+
+    it('validates every connected account and reports the count', async () => {
+      mockAccountFindAll.mockResolvedValueOnce([validAccount(), validAccount()]);
+
+      await expect(oauthMercadoPagoService.refreshTokens()).resolves.toEqual({
+        refreshed: 2,
+        failed: 0,
+      });
+    });
+
+    it('keeps going when one account fails and reports failures', async () => {
+      const broken = new (jest.requireMock('../models/index.js').VendorMercadoPagoAccount)(
+        accountProps({ status: 'connected', accessTokenEncrypted: null })
+      );
+      mockAccountFindAll.mockResolvedValueOnce([validAccount(), broken]);
+
+      await expect(oauthMercadoPagoService.refreshTokens()).resolves.toEqual({
+        refreshed: 1,
+        failed: 1,
+      });
     });
   });
 });
