@@ -23,7 +23,7 @@ import { sequelize } from '../config/database.js';
 import { User } from './User.js';
 import { Product } from './Product.js';
 import { Purchase } from './Purchase.js';
-import type { OrderAttributes, ShippingStatus } from '../types/index.js';
+import type { FeeBreakdown, OrderAttributes, ShippingStatus } from '../types/index.js';
 
 type OrderCreation = Optional<OrderAttributes, 'id' | 'createdAt' | 'updatedAt'>;
 
@@ -35,13 +35,18 @@ export class Order extends Model<OrderAttributes, OrderCreation> {
   declare id: string;
   declare orderNumber: string;
   declare userId: ForeignKey<User['id']>;
-  declare productId: string; // FK to products table
+  declare productId: string | null; // FK to products table (nullable for marketplace/reservation orders — D6)
   declare purchaseId: string | null; // FK to purchases table (nullable)
   declare totalAmount: number;
   declare currency: string;
   declare status: 'pending' | 'completed' | 'failed';
   declare paymentMethod: 'manual' | 'simulated' | 'paypal' | 'mercadopago';
   declare notes: string | null;
+  // Marketplace split fields (B1 / BE-2 / SPLIT-4)
+  declare vendorId: string | null; // FK to vendors table
+  declare country: string | null; // ISO 3166-1 alpha-2 (e.g. 'CO')
+  declare marketplaceFee: number | null; // BIGINT — integer COP fee charged by MP (HALF_UP)
+  declare feeBreakdown: FeeBreakdown | null; // JSONB breakdown of the marketplace fee
   // Shipping fields (Phase 3)
   declare shippingAddressId: string | null;
   declare shippingCost: number | null;
@@ -75,13 +80,41 @@ Order.init(
     },
     productId: {
       type: DataTypes.UUID,
-      allowNull: false,
+      allowNull: true, // nullable for marketplace/reservation orders (migration A2 — D6)
       field: 'product_id',
     },
     purchaseId: {
       type: DataTypes.UUID,
       allowNull: true,
       field: 'purchase_id',
+    },
+    // Marketplace split fields (B1 / BE-2 / SPLIT-4)
+    vendorId: {
+      type: DataTypes.UUID,
+      allowNull: true,
+      field: 'vendor_id',
+      references: {
+        model: 'vendors',
+        key: 'id',
+      },
+      comment: 'FK to vendors table — set NULL on vendor delete',
+    },
+    country: {
+      type: DataTypes.STRING(2),
+      allowNull: true,
+      comment: 'ISO 3166-1 alpha-2 country of the vendor charge (CO only)',
+    },
+    marketplaceFee: {
+      type: DataTypes.BIGINT,
+      allowNull: true,
+      field: 'marketplace_fee',
+      comment: 'Integer COP marketplace fee charged by MP (HALF_UP)',
+    },
+    feeBreakdown: {
+      type: DataTypes.JSONB,
+      allowNull: true,
+      field: 'fee_breakdown',
+      comment: 'JSONB breakdown of the marketplace fee',
     },
     totalAmount: {
       type: DataTypes.DECIMAL(10, 2),
@@ -146,6 +179,8 @@ Order.init(
       { fields: ['product_id'] },
       { fields: ['purchase_id'] },
       { fields: ['status'] },
+      { fields: ['vendor_id'] },
+      { fields: ['marketplace_fee'] },
       { fields: ['shipping_address_id'] },
       { fields: ['shipping_status'] },
     ],

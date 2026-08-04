@@ -322,13 +322,18 @@ export interface OrderAttributes {
   id: string;
   orderNumber: string; // Human-readable order number (e.g., "ORD-20260325-001")
   userId: string;
-  productId: string; // FK to products table
+  productId: string | null; // FK to products table (nullable for marketplace/reservation orders — D6)
   purchaseId: string | null; // FK to purchases table (nullable)
   totalAmount: number; // Order total (matches product price)
   currency: string; // Default: 'USD'
   status: 'pending' | 'completed' | 'failed';
   paymentMethod: 'manual' | 'simulated' | 'paypal' | 'mercadopago'; // Payment methods
   notes: string | null; // Optional internal notes
+  // Marketplace split fields (B1 / BE-2 / SPLIT-4)
+  vendorId: string | null; // FK to vendors table (null for platform-only orders)
+  country: string | null; // ISO 3166-1 alpha-2 (e.g. 'CO')
+  marketplaceFee: number | null; // BIGINT — integer COP fee charged by MP (HALF_UP)
+  feeBreakdown: FeeBreakdown | null; // JSONB breakdown of the marketplace fee
   // Shipping fields (Phase 3 - Delivery Integration)
   shippingAddressId: string | null;
   shippingCost: number | null;
@@ -339,13 +344,35 @@ export interface OrderAttributes {
 
 export interface OrderCreationAttributes {
   userId: string;
-  productId: string;
+  productId?: string | null;
   purchaseId?: string | null;
   totalAmount: number;
   currency?: string;
   status?: 'pending' | 'completed' | 'failed';
   paymentMethod?: 'manual' | 'simulated' | 'paypal' | 'mercadopago';
   notes?: string | null;
+  // Marketplace split fields (B1 / BE-2 / SPLIT-4)
+  vendorId?: string | null;
+  country?: string | null;
+  marketplaceFee?: number | null;
+  feeBreakdown?: FeeBreakdown | null;
+}
+
+/**
+ * Marketplace fee breakdown stored on an Order (SPLIT-4 / D4)
+ * Desglose de la comisión de mercado de un pedido
+ */
+export interface FeeBreakdown {
+  base: number; // Order base total (COP integer)
+  commissionRate: number; // Vendor commission rate (0..1), e.g. 0.7
+  pctPlataforma: number; // Platform percentage = 1 - commissionRate, e.g. 0.3
+  commission: number; // Platform commission = base * pctPlataforma (HALF_UP, integer COP)
+  taxRate: number | null; // IVA rate applied to the commission (0.19 for CO)
+  tax: number; // IVA = commission * taxRate (HALF_UP, integer COP)
+  fee: number; // marketplace_fee = commission + tax (HALF_UP, integer COP)
+  externalReference: string; // Reference passed to MP (reservation:{id} or order:{id})
+  country: string; // ISO 3166-1 alpha-2 (e.g. 'CO')
+  feeRefunded: number; // Accumulated refunded marketplace fee (D9)
 }
 
 // ============================================
@@ -1497,6 +1524,10 @@ export interface VendorOrderAttributes {
   platformAmount: number; // DECIMAL(10,4)
   status: VendorOrderStatus;
   notes: string | null;
+  // Marketplace tax fields (B1 / BE-2)
+  taxRate: number | null; // DECIMAL(5,4) — IVA rate applied to platform commission (0.19 CO)
+  taxAmount: number | null; // DECIMAL(10,4) — IVA over commission
+  country: string | null; // ISO 3166-1 alpha-2 (e.g. 'CO')
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -1514,6 +1545,10 @@ export interface VendorOrderCreationAttributes {
   platformAmount?: number;
   status?: VendorOrderStatus;
   notes?: string | null;
+  // Marketplace tax fields (B1 / BE-2)
+  taxRate?: number | null;
+  taxAmount?: number | null;
+  country?: string | null;
 }
 
 /**
