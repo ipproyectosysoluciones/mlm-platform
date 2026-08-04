@@ -83,6 +83,21 @@ jest.mock('../models/index.js', () => ({
     hasMany: jest.fn(),
     belongsTo: jest.fn(),
   },
+  // B4 / marketplace split: models consumed by MarketplaceSplitService (mocked below)
+  Reservation: {
+    findByPk: jest.fn(),
+    update: jest.fn(),
+    init: jest.fn(),
+  },
+  Vendor: {
+    findByPk: jest.fn(),
+    init: jest.fn(),
+  },
+  VendorOrder: {
+    create: jest.fn(),
+    update: jest.fn(),
+    init: jest.fn(),
+  },
 }));
 
 // ─── Mock WebhookEvent model (persistent idempotency) ────────────────────────
@@ -119,6 +134,19 @@ jest.mock('../services/MercadoPagoService.js', () => ({
   },
 }));
 
+// ─── Mock MarketplaceSplitService (B4 webhook wiring) ─────────────────────────
+const mockHandleApprovedReservation = jest.fn();
+const mockHandleRefund = jest.fn();
+
+jest.mock('../services/MarketplaceSplitService.js', () => ({
+  marketplaceSplitService: {
+    handleApprovedReservation: mockHandleApprovedReservation,
+    handleRefund: mockHandleRefund,
+  },
+  RESERVATION_REF_PREFIX: 'reservation:',
+  MP_ORDER_NOTE_PREFIX: 'mercadopago:',
+}));
+
 // ─── Mock env config ──────────────────────────────────────────────────────────
 const mockConfig = {
   mercadopago: {
@@ -128,6 +156,11 @@ const mockConfig = {
   app: {
     url: 'http://localhost:3000',
     frontendUrl: 'http://localhost:5173',
+  },
+  // B4 / NFR-4: marketplace flow behind the flag
+  marketplace: {
+    enabled: true,
+    country: 'CO',
   },
 };
 
@@ -265,6 +298,16 @@ describe('MercadoPago — webhook handler', () => {
     currency_id: 'COP',
   };
 
+  // B4: refunded payment carrying the MP refunds array
+  const mockRefundedPayment = {
+    id: PAYMENT_ID,
+    status: 'refunded' as const,
+    external_reference: 'reservation:res-1',
+    transaction_amount: 1000000,
+    currency_id: 'COP',
+    refunds: [{ id: 11, amount: 400000 }],
+  };
+
   const mockPurchase = {
     id: 'purchase-new-1',
     userId: USER_ID,
@@ -287,8 +330,15 @@ describe('MercadoPago — webhook handler', () => {
     // Default: webhook secret IS configured
     mockConfig.mercadopago.webhookSecret = 'test-webhook-secret';
 
+    // Default: marketplace flow enabled (NFR-4 flag)
+    mockConfig.marketplace.enabled = true;
+
     // Default: signature verification passes
     mockVerifyWebhookSignature.mockReturnValue(true);
+
+    // Default: marketplace split handlers succeed
+    mockHandleApprovedReservation.mockResolvedValue(undefined);
+    mockHandleRefund.mockResolvedValue(undefined);
 
     // Default: no existing order (secondary reference check)
     (Order.findOne as jest.Mock).mockResolvedValue(null);
@@ -332,6 +382,9 @@ describe('MercadoPago — webhook handler', () => {
 
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({ received: true });
+
+    // B4 regression: non-reservation approved payments keep the product flow
+    expect(mockHandleApprovedReservation).not.toHaveBeenCalled();
 
     expect(Purchase.create).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -496,6 +549,149 @@ describe('MercadoPago — webhook handler', () => {
 
     expect(Purchase.create).toHaveBeenCalled();
     expect(Order.create).toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledWith(200);
+  });
+
+  // ── B4 / SPLIT-5..6 / RC-2..4 / BE-6: reservation approvals & refunds ─────
+
+  /**
+   * Test 9: approved + external_reference='reservation:<id>' + flag ON
+   * → routes to MarketplaceSplitService.handleApprovedReservation; no Purchase/Order.
+   */
+  it('should route approved reservation payments to handleApprovedReservation (no Purchase/Order)', async () => {
+    mockGetPayment.mockResolvedValue({
+      ...mockApprovedPayment,
+      external_reference: 'reservation:res-1',
+    });
+
+    const { req, res } = buildReqRes({
+      query: { topic: 'payment' },
+      body: { id: PAYMENT_ID, topic: 'payment' },
+      headers: { 'x-signature': 'ts=123456,v1=abc' },
+    });
+
+    await (PaymentMercadoPagoController.webhook as (...args: unknown[]) => Promise<void>)(req, res);
+
+    expect(mockHandleApprovedReservation).toHaveBeenCalledWith(
+      expect.objectContaining({ id: PAYMENT_ID, external_reference: 'reservation:res-1' })
+    );
+    expect(Purchase.create).not.toHaveBeenCalled();
+    expect(Order.create).not.toHaveBeenCalled();
+    expect(mockCalculateCommissions).not.toHaveBeenCalled();
+    // Persistent idempotency keyed by the payment id
+    expect(mockWebhookEventCreate).toHaveBeenCalledWith(
+      expect.objectContaining({ eventId: String(PAYMENT_ID), provider: 'mercadopago' })
+    );
+    expect(res.status).toHaveBeenCalledWith(200);
+  });
+
+  /**
+   * Test 10: approved + reservation:<id> + flag OFF → marketplace flow skipped (NFR-4)
+   */
+  it('should skip the reservation flow when the marketplace flag is OFF (NFR-4)', async () => {
+    mockConfig.marketplace.enabled = false;
+    mockGetPayment.mockResolvedValue({
+      ...mockApprovedPayment,
+      external_reference: 'reservation:res-1',
+    });
+
+    const { req, res } = buildReqRes({
+      query: { topic: 'payment' },
+      body: { id: PAYMENT_ID, topic: 'payment' },
+      headers: { 'x-signature': 'ts=123456,v1=abc' },
+    });
+
+    await (PaymentMercadoPagoController.webhook as (...args: unknown[]) => Promise<void>)(req, res);
+
+    expect(mockHandleApprovedReservation).not.toHaveBeenCalled();
+    expect(Purchase.create).not.toHaveBeenCalled();
+    expect(Order.create).not.toHaveBeenCalled();
+    expect(mockWebhookEventCreate).not.toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledWith(200);
+  });
+
+  /**
+   * Test 11: status='refunded' + flag ON → proportional reversal per refund
+   * with idempotency key `${paymentId}:${refundId}` (BE-6 / SPLIT-6 / D9)
+   */
+  it('should process a refunded payment via handleRefund with eventId paymentId:refundId', async () => {
+    mockGetPayment.mockResolvedValue(mockRefundedPayment);
+
+    const { req, res } = buildReqRes({
+      query: { topic: 'payment' },
+      body: { id: PAYMENT_ID, topic: 'payment' },
+      headers: { 'x-signature': 'ts=123456,v1=abc' },
+    });
+
+    await (PaymentMercadoPagoController.webhook as (...args: unknown[]) => Promise<void>)(req, res);
+
+    expect(mockHandleRefund).toHaveBeenCalledWith(expect.objectContaining({ id: PAYMENT_ID }), 11);
+    expect(mockWebhookEventCreate).toHaveBeenCalledWith(
+      expect.objectContaining({ eventId: `${PAYMENT_ID}:11`, eventType: 'payment.refunded' })
+    );
+    expect(res.status).toHaveBeenCalledWith(200);
+  });
+
+  /**
+   * Test 12: refund duplicate → WebhookEvent `${paymentId}:${refundId}` exists → skipped
+   */
+  it('should skip a duplicate refund when the WebhookEvent already exists', async () => {
+    mockGetPayment.mockResolvedValue(mockRefundedPayment);
+    mockWebhookEventFindOne.mockResolvedValue({
+      id: 'we-refund-existing',
+      eventId: `${PAYMENT_ID}:11`,
+      provider: 'mercadopago',
+    });
+
+    const { req, res } = buildReqRes({
+      query: { topic: 'payment' },
+      body: { id: PAYMENT_ID, topic: 'payment' },
+      headers: { 'x-signature': 'ts=123456,v1=abc' },
+    });
+
+    await (PaymentMercadoPagoController.webhook as (...args: unknown[]) => Promise<void>)(req, res);
+
+    expect(mockHandleRefund).not.toHaveBeenCalled();
+    expect(mockWebhookEventCreate).not.toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledWith(200);
+  });
+
+  /**
+   * Test 13: refunded + flag OFF → marketplace flow skipped (NFR-4)
+   */
+  it('should skip refund processing when the marketplace flag is OFF (NFR-4)', async () => {
+    mockConfig.marketplace.enabled = false;
+    mockGetPayment.mockResolvedValue(mockRefundedPayment);
+
+    const { req, res } = buildReqRes({
+      query: { topic: 'payment' },
+      body: { id: PAYMENT_ID, topic: 'payment' },
+      headers: { 'x-signature': 'ts=123456,v1=abc' },
+    });
+
+    await (PaymentMercadoPagoController.webhook as (...args: unknown[]) => Promise<void>)(req, res);
+
+    expect(mockHandleRefund).not.toHaveBeenCalled();
+    expect(mockWebhookEventCreate).not.toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledWith(200);
+  });
+
+  /**
+   * Test 14: refunded + empty refunds array → 200 without processing
+   */
+  it('should return 200 without processing when a refunded payment has no refunds', async () => {
+    mockGetPayment.mockResolvedValue({ ...mockRefundedPayment, refunds: [] });
+
+    const { req, res } = buildReqRes({
+      query: { topic: 'payment' },
+      body: { id: PAYMENT_ID, topic: 'payment' },
+      headers: { 'x-signature': 'ts=123456,v1=abc' },
+    });
+
+    await (PaymentMercadoPagoController.webhook as (...args: unknown[]) => Promise<void>)(req, res);
+
+    expect(mockHandleRefund).not.toHaveBeenCalled();
+    expect(mockWebhookEventCreate).not.toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(200);
   });
 });

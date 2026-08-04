@@ -13,7 +13,10 @@ import { logger } from '../utils/logger.js';
 import { Purchase, Order, Product, Reservation, Vendor } from '../models/index.js';
 import { WebhookEvent } from '../models/WebhookEvent.js';
 import { CommissionService } from '../services/CommissionService.js';
-import { marketplaceSplitService } from '../services/MarketplaceSplitService.js';
+import {
+  marketplaceSplitService,
+  RESERVATION_REF_PREFIX,
+} from '../services/MarketplaceSplitService.js';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
 
 /**
@@ -299,8 +302,38 @@ export class PaymentMercadoPagoController {
               logger.info({ component: 'MercadoPago', paymentId: payment.id }, 'Payment approved');
 
               try {
+                const externalReference = payment.external_reference ?? '';
+                const isReservationPayment = externalReference.startsWith(RESERVATION_REF_PREFIX);
+
+                // ── Reservation flow (B4 / RC-2..3 / BE-6): split-payment charging ──
+                // Resolves the reservation from external_reference, marks it paid,
+                // persists Order + VendorOrder with the fee breakdown (idempotent).
+                if (isReservationPayment) {
+                  if (!config.marketplace.enabled) {
+                    // NFR-4: marketplace flow is behind the flag — never act when OFF
+                    logger.warn(
+                      { component: 'MercadoPago Webhook', paymentId: payment.id },
+                      'Reservation payment received with marketplace flag OFF — skipping'
+                    );
+                    break;
+                  }
+
+                  await marketplaceSplitService.handleApprovedReservation(payment);
+                  await WebhookEvent.create({
+                    eventId: String(payment.id),
+                    provider: 'mercadopago',
+                    eventType: 'payment.approved.reservation',
+                    processedAt: new Date(),
+                  });
+                  logger.info(
+                    { component: 'MercadoPago Webhook', paymentId: payment.id },
+                    'Reservation approved — Order + VendorOrder created with split'
+                  );
+                  break;
+                }
+
                 // ── Step 1: Extract buyer info from external_reference (= userId) ──
-                const userId = payment.external_reference;
+                const userId = externalReference;
                 if (!userId) {
                   logger.error(
                     { component: 'MercadoPago Webhook', paymentId: payment.id },
@@ -410,6 +443,51 @@ export class PaymentMercadoPagoController {
                 // Non-fatal — MP must receive 200 regardless
               }
 
+              break;
+            }
+            case 'refunded': {
+              // B4 / BE-6 / SPLIT-6 / D9: proportional commission+tax reversal per refund.
+              // Idempotency key `${paymentId}:${refundId}` (WebhookEvent).
+              logger.info({ component: 'MercadoPago', paymentId: payment.id }, 'Payment refunded');
+
+              if (!config.marketplace.enabled) {
+                // NFR-4: marketplace flow is behind the flag — never act when OFF
+                logger.warn(
+                  { component: 'MercadoPago Webhook', paymentId: payment.id },
+                  'Refund received with marketplace flag OFF — skipping'
+                );
+                break;
+              }
+
+              for (const refund of payment.refunds ?? []) {
+                const eventId = `${payment.id}:${refund.id}`;
+                const existingRefund = await WebhookEvent.findOne({
+                  where: { eventId, provider: 'mercadopago' },
+                });
+                if (existingRefund) {
+                  logger.info(
+                    {
+                      component: 'MercadoPago Webhook',
+                      paymentId: payment.id,
+                      refundId: refund.id,
+                    },
+                    'Refund already processed — skipping'
+                  );
+                  continue;
+                }
+
+                await marketplaceSplitService.handleRefund(payment, refund.id);
+                await WebhookEvent.create({
+                  eventId,
+                  provider: 'mercadopago',
+                  eventType: 'payment.refunded',
+                  processedAt: new Date(),
+                });
+                logger.info(
+                  { component: 'MercadoPago Webhook', paymentId: payment.id, refundId: refund.id },
+                  'Refund processed — fee reversed proportionally'
+                );
+              }
               break;
             }
             case 'pending':
