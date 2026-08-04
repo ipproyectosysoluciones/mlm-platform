@@ -111,16 +111,21 @@ export const paymentService = {
    * Create a MercadoPago Checkout Pro preference
    * POST /api/payment/mercadopago/create-preference
    * Returns init_point URL to redirect the user to MP's hosted checkout
+   *
+   * @param vendorId - Marketplace vendor whose account charges the payment
+   *                   (B10 / split payments). Omit for the platform flow.
    */
   createMercadoPagoPreference: async (
     items: MPItem[],
     payer?: MPPayer,
-    externalReference?: string
+    externalReference?: string,
+    vendorId?: string
   ): Promise<MPPreferenceResponse> => {
     const response = await api.post('/payment/mercadopago/create-preference', {
       items,
       payer,
       externalReference,
+      vendorId,
     });
     return response.data;
   },
