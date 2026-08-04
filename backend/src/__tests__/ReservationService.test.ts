@@ -86,8 +86,16 @@ jest.mock('../models', () => ({
   },
 }));
 
+// Mock the split service (B6 / RC-4: cancel() refunds paid reservations)
+jest.mock('../services/MarketplaceSplitService', () => ({
+  marketplaceSplitService: {
+    refundPayment: jest.fn(),
+  },
+}));
+
 import { ReservationService } from '../services/ReservationService';
 import { Reservation, TourAvailability } from '../models';
+import { marketplaceSplitService } from '../services/MarketplaceSplitService';
 
 describe('ReservationService', () => {
   let reservationService: ReservationService;
@@ -149,6 +157,7 @@ describe('ReservationService', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     reservationService = new ReservationService();
+    (marketplaceSplitService.refundPayment as jest.Mock).mockResolvedValue({ status: 'approved' });
   });
 
   // ============================================================
@@ -450,6 +459,95 @@ describe('ReservationService', () => {
       expect(mockReservation.status).toBe('cancelled');
       expect(saveMock).toHaveBeenCalled();
       expect(TourAvailability.decrement).not.toHaveBeenCalled();
+    });
+
+    /**
+     * Test 15b (B6 / RC-4): Paid reservation → full refund + paymentStatus=refunded
+     * Verifies cancel() triggers refundPayment for a paid reservation within the window
+     */
+    it('should refund a paid reservation and mark paymentStatus refunded', async () => {
+      const saveMock = jest.fn().mockResolvedValue(undefined);
+      const mockReservation = {
+        ...mockTourReservation,
+        paymentId: '888777666',
+        save: saveMock,
+      };
+      (Reservation.findByPk as jest.Mock).mockResolvedValue(mockReservation);
+
+      await reservationService.cancel('reservation-2', 'Guest refund');
+
+      expect(marketplaceSplitService.refundPayment).toHaveBeenCalledWith('888777666');
+      expect(mockReservation.paymentStatus).toBe('refunded');
+      expect(mockReservation.status).toBe('cancelled');
+      expect(saveMock).toHaveBeenCalled();
+    });
+
+    /**
+     * Test 15c (B6 / RC-4): Paid reservation outside the 180-day window
+     * Verifies cancel() skips the refund (no-refund policy) but still cancels
+     */
+    it('should skip the refund and still cancel when the refund window has expired', async () => {
+      const saveMock = jest.fn().mockResolvedValue(undefined);
+      const mockReservation = {
+        ...mockTourReservation,
+        paymentId: '888777666',
+        save: saveMock,
+      };
+      (Reservation.findByPk as jest.Mock).mockResolvedValue(mockReservation);
+      (marketplaceSplitService.refundPayment as jest.Mock).mockRejectedValue(
+        new Error('REFUND_PERIOD_EXPIRED: refund window (180 days) has expired')
+      );
+
+      await expect(reservationService.cancel('reservation-2')).resolves.toBe(mockReservation);
+
+      expect(marketplaceSplitService.refundPayment).toHaveBeenCalledWith('888777666');
+      expect(mockReservation.paymentStatus).toBe('paid');
+      expect(mockReservation.status).toBe('cancelled');
+      expect(saveMock).toHaveBeenCalled();
+    });
+
+    /**
+     * Test 15d (B6): Refund failure (non-window) propagates and aborts cancellation
+     * Verifies operational refund errors are not swallowed
+     */
+    it('should propagate a refund failure that is not the expiry policy', async () => {
+      const saveMock = jest.fn().mockResolvedValue(undefined);
+      const mockReservation = {
+        ...mockTourReservation,
+        paymentId: '888777666',
+        save: saveMock,
+      };
+      (Reservation.findByPk as jest.Mock).mockResolvedValue(mockReservation);
+      (marketplaceSplitService.refundPayment as jest.Mock).mockRejectedValue(
+        new Error('CONNECT_MP_REQUIRED: vendor must connect MercadoPago first')
+      );
+
+      await expect(reservationService.cancel('reservation-2')).rejects.toThrow(
+        'CONNECT_MP_REQUIRED'
+      );
+
+      expect(mockReservation.status).not.toBe('cancelled');
+      expect(saveMock).not.toHaveBeenCalled();
+    });
+
+    /**
+     * Test 15e (B6): Unpaid reservation → no refund is triggered
+     * Verifies cancel() only refunds when paymentStatus === 'paid'
+     */
+    it('should not call refundPayment for an unpaid reservation', async () => {
+      const saveMock = jest.fn().mockResolvedValue(undefined);
+      const mockReservation = {
+        ...mockPropertyReservation,
+        paymentStatus: 'pending' as const,
+        paymentId: null,
+        save: saveMock,
+      };
+      (Reservation.findByPk as jest.Mock).mockResolvedValue(mockReservation);
+
+      await reservationService.cancel('reservation-1');
+
+      expect(marketplaceSplitService.refundPayment).not.toHaveBeenCalled();
+      expect(mockReservation.status).toBe('cancelled');
     });
 
     /**
