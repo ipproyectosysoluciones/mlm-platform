@@ -548,6 +548,21 @@
     "level3": "Referidos Nivel 3",
     "level4": "Referidos Nivel 4"
   },
+  "vendor": {
+    "mpConnect": {
+      "title": "Conectá tu cuenta de MercadoPago",
+      "subtitle": "Recibí pagos divididos por tus servicios directamente en tu cuenta.",
+      "connectedTitle": "Cuenta de MercadoPago conectada",
+      "connectedSubtitle": "Los pagos de tus reservas se acreditan directamente en tu cuenta.",
+      "expiredTitle": "Conexión de MercadoPago expirada",
+      "expiredSubtitle": "Reconectá tu cuenta para seguir recibiendo pagos.",
+      "connect": "Conectar",
+      "reconnect": "Reconectar",
+      "disconnect": "Desconectar",
+      "accountId": "ID de cuenta",
+      "expiresAt": "Vence"
+    }
+  },
   "tours": {
     "spotsAvailable": "{{count}} plazas disponibles",
     "spotsOf": "{{available}} de {{total}} plazas",

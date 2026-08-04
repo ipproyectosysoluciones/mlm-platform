@@ -15,9 +15,13 @@ import { ReferralChart } from '../components/dashboard/ReferralChart';
 import { CommissionChart } from '../components/dashboard/CommissionChart';
 import { CommissionTierBreakdown } from '../components/dashboard/CommissionTierBreakdown';
 import { RecentActivity } from '../components/dashboard/RecentActivity';
+import { useAuth } from '../context/useAuth';
+import MercadoPagoConnectCard from '../components/vendor/MercadoPagoConnectCard';
 
 export default function Dashboard() {
   const { t } = useTranslation();
+  const { user } = useAuth();
+  const isVendor = user?.role === 'vendor';
   const [data, setData] = useState<DashboardData | null>(null);
   const [copied, setCopied] = useState(false);
   const [showQR, setShowQR] = useState(false);
@@ -97,6 +101,9 @@ export default function Dashboard() {
         <h1 className="text-2xl lg:text-3xl font-bold text-slate-900">{t('dashboard.welcome')}</h1>
         <p className="text-slate-500 mt-1">{t('dashboard.subtitle')}</p>
       </div>
+
+      {/* Vendor MercadoPago connection card (B11 / FE-1) — only for vendor role */}
+      {isVendor && <MercadoPagoConnectCard />}
 
       {/* Stats grid */}
       <StatsCards data={data} />
