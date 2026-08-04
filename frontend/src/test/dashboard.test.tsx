@@ -13,6 +13,25 @@ vi.mock('../services/api', () => ({
   dashboardService: {
     getDashboard: vi.fn(),
   },
+  // Default export is the axios client used by MercadoPagoConnectCard (B11)
+  default: {
+    get: vi.fn().mockResolvedValue({ data: { success: true, data: { status: 'never' } } }),
+    post: vi.fn().mockResolvedValue({ data: { success: true, data: { status: 'disconnected' } } }),
+    put: vi.fn(),
+    patch: vi.fn(),
+    delete: vi.fn(),
+  },
+}));
+
+vi.mock('../context/useAuth', () => ({
+  useAuth: vi.fn(() => ({
+    user: { id: 'user-1', email: 'test@example.com', referralCode: 'ABC123', level: 1 },
+    token: 'token',
+    isAuthenticated: true,
+    isLoading: false,
+    login: vi.fn(),
+    logout: vi.fn(),
+  })),
 }));
 
 vi.mock('qrcode', () => ({
@@ -24,6 +43,7 @@ vi.mock('qrcode', () => ({
 
 import Dashboard from '../pages/Dashboard';
 import { dashboardService } from '../services/api';
+import { useAuth } from '../context/useAuth';
 import type { Commission, Referral } from '../types';
 
 const mockCommissions: Commission[] = [
@@ -267,5 +287,42 @@ describe('Dashboard', () => {
     });
 
     vi.useRealTimers();
+  });
+
+  // ==========================================
+  // Vendor role — MercadoPago connect card (B11 / FE-1)
+  // ==========================================
+
+  it('renders the MercadoPago connect card for vendor role', async () => {
+    vi.mocked(useAuth).mockReturnValue({
+      user: {
+        id: 'vendor-1',
+        email: 'vendor@test.com',
+        referralCode: 'VND001',
+        level: 1,
+        role: 'vendor',
+      },
+      token: 'token',
+      isAuthenticated: true,
+      isLoading: false,
+      login: vi.fn(),
+      logout: vi.fn(),
+    });
+    vi.mocked(dashboardService.getDashboard).mockResolvedValue(mockDashboardData);
+
+    renderDashboard();
+
+    expect(await screen.findByText('vendor.mpConnect.title')).toBeInTheDocument();
+  });
+
+  it('does not render the MercadoPago connect card for non-vendor roles', async () => {
+    vi.mocked(dashboardService.getDashboard).mockResolvedValue(mockDashboardData);
+
+    renderDashboard();
+
+    await waitFor(() => {
+      expect(screen.getByText('Bienvenido')).toBeInTheDocument();
+    });
+    expect(screen.queryByText('vendor.mpConnect.title')).not.toBeInTheDocument();
   });
 });

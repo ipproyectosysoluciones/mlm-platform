@@ -552,6 +552,21 @@
     "level3": "Level 3 Referrals",
     "level4": "Level 4 Referrals"
   },
+  "vendor": {
+    "mpConnect": {
+      "title": "Connect your MercadoPago account",
+      "subtitle": "Receive split payments for your services directly in your account.",
+      "connectedTitle": "MercadoPago account connected",
+      "connectedSubtitle": "Payments from your reservations are deposited directly into your account.",
+      "expiredTitle": "MercadoPago connection expired",
+      "expiredSubtitle": "Reconnect your account to keep receiving payments.",
+      "connect": "Connect",
+      "reconnect": "Reconnect",
+      "disconnect": "Disconnect",
+      "accountId": "Account ID",
+      "expiresAt": "Expires"
+    }
+  },
   "tours": {
     "spotsAvailable": "{{count}} spots available",
     "spotsOf": "{{available}} of {{total}} spots",
