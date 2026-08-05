@@ -495,6 +495,8 @@
     "processing": "Procesando...",
     "simulatedWarning": "Este es un pago simulado. No se realizará ningún cargo real.",
     "mpRedirectInfo": "Serás redirigido a MercadoPago para completar tu pago de forma segura.",
+    "mpVendorNotConnected": "El negocio aún no conecta MercadoPago.",
+    "paymentToBusinessAccount": "El pago se realizará a la cuenta del negocio.",
     "payWithMercadoPago": "Pagar con MercadoPago",
     "mpError": "No se pudo crear la preferencia de pago. Por favor intentá de nuevo.",
     "success": "Pago Exitoso",
@@ -624,6 +626,7 @@
     "back": "Atrás",
     "continue": "Continuar",
     "paymentError": "Error al procesar el pago. Por favor intentá de nuevo.",
+    "mpVendorNotConnected": "El negocio aún no conecta MercadoPago. Podés pagar con PayPal o con tu billetera.",
     "secure": "Pago seguro",
     "secureDesc": "Todas las transacciones están encriptadas y protegidas."
   },

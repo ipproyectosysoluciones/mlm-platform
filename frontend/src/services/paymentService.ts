@@ -138,3 +138,18 @@ export const paymentService = {
     window.location.href = initPoint;
   },
 };
+
+/**
+ * Extract the backend error code from an API error, if present.
+ * The backend standardizes errors as { success:false, error:{ code, message } }.
+ * Extrae el código de error del backend de un error de API, si existe.
+ *
+ * @param err - Thrown error (typically an axios error) / Error lanzado (típicamente de axios)
+ * @returns Error code (e.g. 'CONNECT_MP_REQUIRED') or undefined / Código o undefined
+ */
+export function getApiErrorCode(err: unknown): string | undefined {
+  const axiosErr = err as {
+    response?: { data?: { error?: { code?: string } } };
+  };
+  return axiosErr.response?.data?.error?.code;
+}
