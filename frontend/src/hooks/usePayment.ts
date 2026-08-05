@@ -10,7 +10,7 @@ import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useReservationWizard, formatPrice } from '../stores/reservationStore';
 import type { PriceBreakdown } from '../types/reservation';
-import { paymentService } from '../services/paymentService';
+import { paymentService, getApiErrorCode } from '../services/paymentService';
 import { useWalletBalance } from '../stores/walletStore';
 
 // ============================================
@@ -103,12 +103,22 @@ export function usePayment(breakdown: PriceBreakdown | null) {
           },
         ],
         undefined,
-        createdReservation.id
+        createdReservation.id,
+        // B12 (FE-2): forward the vendor so the backend charges the business
+        // account (MarketplaceSplitService.resolveToken). Absent vendor → platform flow.
+        createdReservation.vendorId
       );
 
       paymentService.redirectToMercadoPago(result.initPoint);
-    } catch {
-      setPaymentError(t('reservation.paymentError'));
+    } catch (err) {
+      // B12 (FE-2): a vendor without a connected MercadoPago account is a
+      // distinct, actionable case — surface a dedicated aviso instead of the
+      // generic error so the guest can choose PayPal or wallet.
+      if (getApiErrorCode(err) === 'CONNECT_MP_REQUIRED') {
+        setPaymentError(t('reservation.mpVendorNotConnected'));
+      } else {
+        setPaymentError(t('reservation.paymentError'));
+      }
     } finally {
       setPaymentProcessing(false);
       setProcessingMethod(null);

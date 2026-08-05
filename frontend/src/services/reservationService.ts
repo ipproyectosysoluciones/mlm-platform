@@ -31,6 +31,7 @@ export type PaymentStatus = 'pending' | 'paid' | 'failed' | 'refunded';
 export interface Reservation {
   id: string;
   userId: string;
+  vendorId?: string;
   propertyId?: string;
   tourPackageId?: string;
   tourAvailabilityId?: string;
