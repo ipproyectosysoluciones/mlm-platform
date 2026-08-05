@@ -5,7 +5,8 @@ on:
     branches: [development]
     tags-ignore: ['v*']
   pull_request:
-    branches: [main, release]
+    branches: [main, release, development, 'feature/**']
+  workflow_dispatch:
 
 # Cancel duplicate runs for the same branch/PR
 concurrency:
