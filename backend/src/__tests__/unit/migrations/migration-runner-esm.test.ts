@@ -218,10 +218,14 @@ describe('migration runner (sequelize-cli under Node ESM)', () => {
 
     beforeAll(async () => {
       if (!postgresReachable) return;
-      // Remove residue from a previous failed run.
+      // Remove residue from a previous failed run. SequelizeMeta may not exist
+      // yet on a clean database — db:migrate creates it in the first test — so
+      // ignore the case where there is nothing to clean.
       await withPg(async (client) => {
         await client.query('DROP TABLE IF EXISTS "migration_runner_probe"');
-        await client.query('DELETE FROM "SequelizeMeta" WHERE name = $1', [FIXTURE_MIGRATION_FILE]);
+        await client
+          .query('DELETE FROM "SequelizeMeta" WHERE name = $1', [FIXTURE_MIGRATION_FILE])
+          .catch(() => {});
       });
     });
 
