@@ -104,6 +104,22 @@ describe('env.ts — security hardening', () => {
     });
   });
 
+  describe('payout webhook env (PR 2a)', () => {
+    it('should read PAYPAL_PAYOUT_WEBHOOK_ID into config.paypal.payoutWebhookId', () => {
+      process.env.JWT_SECRET = 'real-secret-value';
+      process.env.TWO_FACTOR_SECRET_KEY = 'real-2fa-value';
+      process.env.PAYPAL_PAYOUT_WEBHOOK_ID = 'payout-webhook-abc';
+
+      // Prevent dotenv from overwriting our test values
+      jest.mock('dotenv', () => ({ config: jest.fn() }));
+
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const { config } = require('../../config/env');
+
+      expect(config.paypal.payoutWebhookId).toBe('payout-webhook-abc');
+    });
+  });
+
   describe('loads correctly with valid secrets', () => {
     it('should load config without throwing when both secrets are set', () => {
       process.env.JWT_SECRET = 'test-jwt-secret';

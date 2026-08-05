@@ -184,6 +184,8 @@ export const config = {
     clientSecret: process.env.PAYPAL_CLIENT_SECRET || '',
     /** PayPal webhook ID for signature verification / Webhook ID de PayPal para verificación de firma */
     webhookId: process.env.PAYPAL_WEBHOOK_ID || '',
+    /** PayPal Payouts webhook ID (separate webhook for PAYMENT.PAYOUTS.* events) / Webhook ID de PayPal Payouts */
+    payoutWebhookId: process.env.PAYPAL_PAYOUT_WEBHOOK_ID || '',
   },
 
   /**

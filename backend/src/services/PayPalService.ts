@@ -95,8 +95,10 @@ class PayPalService {
 
   /**
    * Get OAuth token from PayPal
+   * Public: reused by payout/refund adapters that call the same REST API.
+   * Public: reutilizado por los adaptadores de payout que llaman a la misma API REST.
    */
-  private async getAccessToken(): Promise<string> {
+  async getAccessToken(): Promise<string> {
     // Return cached token if still valid
     if (this.accessToken && Date.now() < this.tokenExpiry) {
       return this.accessToken;
@@ -255,11 +257,19 @@ class PayPalService {
    *
    * @param headers - HTTP headers from the incoming webhook request
    * @param rawBody - Raw JSON string body of the webhook event
+   * @param webhookId - Optional webhook id override (payouts webhook uses its own id).
+   *                    Defaults to config.paypal.webhookId.
+   *                    Webhook id opcional (el webhook de payouts usa su propio id).
    * @returns true if signature is valid (or dev mode bypass), false otherwise
    */
-  async verifyWebhookSignature(headers: Record<string, string>, rawBody: string): Promise<boolean> {
+  async verifyWebhookSignature(
+    headers: Record<string, string>,
+    rawBody: string,
+    webhookId?: string
+  ): Promise<boolean> {
+    const effectiveWebhookId = webhookId ?? config.paypal.webhookId;
     // Dev mode bypass: if no webhook ID is configured, skip verification
-    if (!config.paypal.webhookId) {
+    if (!effectiveWebhookId) {
       return true;
     }
 
@@ -273,7 +283,7 @@ class PayPalService {
         transmission_id: headers['paypal-transmission-id'],
         transmission_sig: headers['paypal-transmission-sig'],
         transmission_time: headers['paypal-transmission-time'],
-        webhook_id: config.paypal.webhookId,
+        webhook_id: effectiveWebhookId,
         webhook_event: JSON.parse(rawBody) as unknown,
       };
 
