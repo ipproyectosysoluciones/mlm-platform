@@ -205,6 +205,8 @@ export const config = {
     publicKey: process.env.MERCADOPAGO_PUBLIC_KEY || '',
     /** MercadoPago webhook ID / Webhook ID de MercadoPago */
     webhookId: process.env.MERCADOPAGO_WEBHOOK_ID || '',
+    /** MercadoPago payout webhook ID (reserved for payout-event identification) / Webhook ID de payout */
+    payoutWebhookId: process.env.MERCADOPAGO_PAYOUT_WEBHOOK_ID || '',
     /** MercadoPago integration type: 'checkout' or 'wallet' */
     integrationType: process.env.MERCADOPAGO_INTEGRATION_TYPE || 'checkout',
     /** MercadoPago webhook secret for HMAC-SHA256 signature verification (optional in dev) */
