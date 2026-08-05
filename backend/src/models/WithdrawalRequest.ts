@@ -17,7 +17,11 @@
 import { DataTypes, Model, Optional, ForeignKey } from 'sequelize';
 import { sequelize } from '../config/database.js';
 import { User } from './User.js';
-import type { WithdrawalRequestAttributes, WithdrawalStatus } from '../types/index.js';
+import type {
+  WithdrawalDestination,
+  WithdrawalRequestAttributes,
+  WithdrawalStatus,
+} from '../types/index.js';
 
 type WithdrawalRequestCreation = Optional<
   WithdrawalRequestAttributes,
@@ -37,6 +41,13 @@ export class WithdrawalRequest extends Model<
   declare rejectionReason: string | null;
   declare approvalComment: string | null;
   declare processedAt: Date | null;
+  /** Payout destination (nullable for legacy rows) / Destino de pago (nullable para filas legacy) */
+  declare destination: WithdrawalDestination | null;
+  declare gatewayPayoutId: string | null;
+  declare gatewayStatus: string | null;
+  declare lastGatewaySyncAt: Date | null;
+  declare lastNotifiedStatus: string | null;
+  declare lastNotifiedAt: Date | null;
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
   declare user?: User | null;
@@ -88,6 +99,35 @@ WithdrawalRequest.init(
       type: DataTypes.DATE,
       allowNull: true,
       field: 'processed_at',
+    },
+    destination: {
+      type: DataTypes.JSONB,
+      allowNull: true,
+    },
+    gatewayPayoutId: {
+      type: DataTypes.STRING(191),
+      allowNull: true,
+      field: 'gateway_payout_id',
+    },
+    gatewayStatus: {
+      type: DataTypes.STRING(50),
+      allowNull: true,
+      field: 'gateway_status',
+    },
+    lastGatewaySyncAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'last_gateway_sync_at',
+    },
+    lastNotifiedStatus: {
+      type: DataTypes.STRING(50),
+      allowNull: true,
+      field: 'last_notified_status',
+    },
+    lastNotifiedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'last_notified_at',
     },
   },
   {

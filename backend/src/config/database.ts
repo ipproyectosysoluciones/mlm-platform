@@ -67,9 +67,24 @@ export async function connectDatabase(): Promise<void> {
   }
 }
 
-export async function syncDatabase(force: boolean = false): Promise<void> {
+export interface SyncDatabaseOptions {
+  force?: boolean;
+  alter?: boolean;
+}
+
+/**
+ * Synchronizes the schema with the Sequelize models.
+ *
+ * Accepts either the modern options object `{ force?, alter? }` or the legacy
+ * boolean form (`true` → `{ force: true }`, `false` → `{}`). The legacy boolean
+ * was the root cause of init-db.sh dropping tables: it passed `{ alter: true }`
+ * to a boolean-only API, which treated the object as truthy → force.
+ */
+export async function syncDatabase(options: SyncDatabaseOptions | boolean = {}): Promise<void> {
+  const syncOptions: SyncDatabaseOptions =
+    typeof options === 'boolean' ? (options ? { force: true } : {}) : options;
   try {
-    await sequelize.sync({ force });
+    await sequelize.sync(syncOptions);
     logger.info('Database synchronized');
   } catch (error) {
     logger.error({ err: error }, 'Error synchronizing database');

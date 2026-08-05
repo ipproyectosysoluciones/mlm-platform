@@ -175,4 +175,38 @@ describe('PayPalService — SSRF Prevention', () => {
       expect(mockedAxios.post).not.toHaveBeenCalled();
     });
   });
+
+  // ============================================
+  // verifyWebhookSignature — payout webhook id override (PR 2a)
+  // ============================================
+
+  describe('verifyWebhookSignature() — optional webhookId override', () => {
+    it('should use the provided webhookId in the verification payload when given', async () => {
+      // Dev bypass is skipped because an explicit webhookId is provided
+      mockAccessToken();
+      mockedAxios.post.mockResolvedValueOnce({
+        data: { verification_status: 'SUCCESS' },
+      });
+
+      const headers = {
+        'paypal-auth-algo': 'SHA256withRSA',
+        'paypal-cert-url': 'https://api-m.sandbox.paypal.com/v1/notifications/certs/CERT-1',
+        'paypal-transmission-id': 'TXN-1',
+        'paypal-transmission-sig': 'sig',
+        'paypal-transmission-time': '2026-08-01T12:00:00Z',
+      };
+      const rawBody = JSON.stringify({ id: 'WH-1', event_type: 'PAYMENT.PAYOUTS.ITEM.SUCCEEDED' });
+
+      const result = await paypalService.verifyWebhookSignature(
+        headers,
+        rawBody,
+        'payout-webhook-123'
+      );
+
+      expect(result).toBe(true);
+      // call[0] is the OAuth token fetch — the verify call is call[1]
+      const verifyPayload = mockedAxios.post.mock.calls[1]?.[1] as { webhook_id?: string };
+      expect(verifyPayload.webhook_id).toBe('payout-webhook-123');
+    });
+  });
 });
