@@ -18,6 +18,8 @@ import {
   RESERVATION_REF_PREFIX,
 } from '../services/MarketplaceSplitService.js';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
+import { ADMIN_ROLES } from '../types/index.js';
+import { MP_ORDER_NOTE_PREFIX } from '../services/MarketplaceSplitService.js';
 
 /**
  * Request with raw body for webhook signature verification.
@@ -257,6 +259,39 @@ export class PaymentMercadoPagoController {
       return res
         .status(400)
         .json(ResponseUtil.error('MISSING_PAYMENT_ID', 'Payment ID is required', 400));
+    }
+
+    // R1-002: authorization — only the order buyer (order.userId), the vendor
+    // (order.vendorId), or an admin may trigger a refund. Prevents any
+    // authenticated user from refunding arbitrary vendor payments by
+    // enumerating MercadoPago payment ids (sequential integers).
+    const user = req.user;
+    if (!user) {
+      return res
+        .status(401)
+        .json(ResponseUtil.error('UNAUTHORIZED', 'Authentication required', 401));
+    }
+
+    const order = await Order.findOne({
+      where: { notes: `${MP_ORDER_NOTE_PREFIX}${String(paymentId)}` },
+    });
+    if (!order || !order.vendorId) {
+      return res
+        .status(404)
+        .json(
+          ResponseUtil.error('ORDER_NOT_FOUND', 'Marketplace order not found for this payment', 404)
+        );
+    }
+
+    const isBuyer = order.userId === user.id;
+    const isVendor = order.vendorId === user.id;
+    const isAdmin = ADMIN_ROLES.includes(user.role);
+    if (!isBuyer && !isVendor && !isAdmin) {
+      return res
+        .status(403)
+        .json(
+          ResponseUtil.error('FORBIDDEN', 'You are not authorized to refund this payment', 403)
+        );
     }
 
     try {
