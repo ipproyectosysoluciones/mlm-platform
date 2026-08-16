@@ -67,6 +67,7 @@ jest.mock('../../utils/logger', () => ({
 
 import { PaymentMercadoPagoController } from '../../controllers/PaymentMercadoPagoController';
 import { mercadoPagoService } from '../../services/MercadoPagoService';
+import { Order } from '../../models/index';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -542,6 +543,12 @@ describe('PaymentMercadoPagoController', () => {
       const res = createMockRes();
       const next = jest.fn();
 
+      (Order.findOne as jest.Mock).mockResolvedValue({
+        id: 'order-1',
+        userId: 'user-uuid',
+        vendorId: 'vendor-1',
+        notes: 'mercadopago:888777666',
+      });
       await PaymentMercadoPagoController.refund(req, res, next);
 
       expect(res.status).toHaveBeenCalledWith(400);
@@ -555,6 +562,12 @@ describe('PaymentMercadoPagoController', () => {
       const res = createMockRes();
       const next = jest.fn();
 
+      (Order.findOne as jest.Mock).mockResolvedValue({
+        id: 'order-1',
+        userId: 'user-uuid',
+        vendorId: 'vendor-1',
+        notes: 'mercadopago:888777666',
+      });
       await PaymentMercadoPagoController.refund(req, res, next);
 
       expect(mockRefundPayment).toHaveBeenCalledWith('888777666', {});
@@ -574,6 +587,12 @@ describe('PaymentMercadoPagoController', () => {
       const res = createMockRes();
       const next = jest.fn();
 
+      (Order.findOne as jest.Mock).mockResolvedValue({
+        id: 'order-1',
+        userId: 'user-uuid',
+        vendorId: 'vendor-1',
+        notes: 'mercadopago:888777666',
+      });
       await PaymentMercadoPagoController.refund(req, res, next);
 
       expect(mockRefundPayment).toHaveBeenCalledWith('888777666', { amount: 400000 });
@@ -589,6 +608,12 @@ describe('PaymentMercadoPagoController', () => {
       const res = createMockRes();
       const next = jest.fn();
 
+      (Order.findOne as jest.Mock).mockResolvedValue({
+        id: 'order-1',
+        userId: 'user-uuid',
+        vendorId: 'vendor-1',
+        notes: 'mercadopago:888777666',
+      });
       await PaymentMercadoPagoController.refund(req, res, next);
 
       expect(res.status).toHaveBeenCalledWith(400);
@@ -645,6 +670,12 @@ describe('PaymentMercadoPagoController', () => {
       const res = createMockRes();
       const next = jest.fn();
 
+      (Order.findOne as jest.Mock).mockResolvedValue({
+        id: 'order-1',
+        userId: 'user-uuid',
+        vendorId: 'vendor-1',
+        notes: 'mercadopago:888777666',
+      });
       PaymentMercadoPagoController.refund(req, res, next);
       // asyncHandler is fire-and-forget — flush pending microtasks
       await new Promise((r) => setImmediate(r));
