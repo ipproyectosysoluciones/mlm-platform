@@ -42,7 +42,11 @@ rm -f backend/pnpm-lock.yaml
 
 # Load env and start all services (no frontend — Vercel)
 echo "🐳 Starting services..."
-docker compose -f docker-compose.prod.yml --env-file .env.production up -d
+if [ -f .env.production.local ]; then
+  docker compose -f docker-compose.prod.yml --env-file .env.production --env-file .env.production.local up -d
+else
+  docker compose -f docker-compose.prod.yml --env-file .env.production up -d
+fi
 
 # Wait for services to initialize
 echo "⏳ Waiting for services to start..."
