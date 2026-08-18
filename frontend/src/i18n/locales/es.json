@@ -495,6 +495,8 @@
     "processing": "Procesando...",
     "simulatedWarning": "Este es un pago simulado. No se realizará ningún cargo real.",
     "mpRedirectInfo": "Serás redirigido a MercadoPago para completar tu pago de forma segura.",
+    "mpVendorNotConnected": "El negocio aún no conecta MercadoPago.",
+    "paymentToBusinessAccount": "El pago se realizará a la cuenta del negocio.",
     "payWithMercadoPago": "Pagar con MercadoPago",
     "mpError": "No se pudo crear la preferencia de pago. Por favor intentá de nuevo.",
     "success": "Pago Exitoso",
@@ -547,6 +549,21 @@
     "level2": "Referidos Nivel 2",
     "level3": "Referidos Nivel 3",
     "level4": "Referidos Nivel 4"
+  },
+  "vendor": {
+    "mpConnect": {
+      "title": "Conectá tu cuenta de MercadoPago",
+      "subtitle": "Recibí pagos divididos por tus servicios directamente en tu cuenta.",
+      "connectedTitle": "Cuenta de MercadoPago conectada",
+      "connectedSubtitle": "Los pagos de tus reservas se acreditan directamente en tu cuenta.",
+      "expiredTitle": "Conexión de MercadoPago expirada",
+      "expiredSubtitle": "Reconectá tu cuenta para seguir recibiendo pagos.",
+      "connect": "Conectar",
+      "reconnect": "Reconectar",
+      "disconnect": "Desconectar",
+      "accountId": "ID de cuenta",
+      "expiresAt": "Vence"
+    }
   },
   "tours": {
     "spotsAvailable": "{{count}} plazas disponibles",
@@ -609,6 +626,7 @@
     "back": "Atrás",
     "continue": "Continuar",
     "paymentError": "Error al procesar el pago. Por favor intentá de nuevo.",
+    "mpVendorNotConnected": "El negocio aún no conecta MercadoPago. Podés pagar con PayPal o con tu billetera.",
     "secure": "Pago seguro",
     "secureDesc": "Todas las transacciones están encriptadas y protegidas."
   },

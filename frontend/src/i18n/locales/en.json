@@ -499,6 +499,8 @@
     "processing": "Processing...",
     "simulatedWarning": "This is a simulated payment. No real charge will be made.",
     "mpRedirectInfo": "You will be redirected to MercadoPago to complete your payment securely.",
+    "mpVendorNotConnected": "The business hasn't connected MercadoPago yet.",
+    "paymentToBusinessAccount": "The payment will be made to the business account.",
     "payWithMercadoPago": "Pay with MercadoPago",
     "mpError": "Could not create payment preference. Please try again.",
     "success": "Payment Successful",
@@ -551,6 +553,21 @@
     "level2": "Level 2 Referrals",
     "level3": "Level 3 Referrals",
     "level4": "Level 4 Referrals"
+  },
+  "vendor": {
+    "mpConnect": {
+      "title": "Connect your MercadoPago account",
+      "subtitle": "Receive split payments for your services directly in your account.",
+      "connectedTitle": "MercadoPago account connected",
+      "connectedSubtitle": "Payments from your reservations are deposited directly into your account.",
+      "expiredTitle": "MercadoPago connection expired",
+      "expiredSubtitle": "Reconnect your account to keep receiving payments.",
+      "connect": "Connect",
+      "reconnect": "Reconnect",
+      "disconnect": "Disconnect",
+      "accountId": "Account ID",
+      "expiresAt": "Expires"
+    }
   },
   "tours": {
     "spotsAvailable": "{{count}} spots available",
@@ -613,6 +630,7 @@
     "back": "Back",
     "continue": "Continue",
     "paymentError": "Failed to process payment. Please try again.",
+    "mpVendorNotConnected": "The business hasn't connected MercadoPago yet. You can pay with PayPal or your wallet.",
     "secure": "Secure payment",
     "secureDesc": "All transactions are encrypted and protected."
   },

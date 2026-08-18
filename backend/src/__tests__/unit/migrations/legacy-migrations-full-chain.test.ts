@@ -191,12 +191,23 @@ describe('legacy migration chain (17) runs end-to-end on PostgreSQL', () => {
         },
       })
     );
+    // 2b. Build a legacy-only migration snapshot (exclude marketplace migrations
+    // (20260803*) so the chain assertion LEGACY_MIGRATION_FILES stays accurate).
+    const LEGACY_MIGRATIONS_SNAPSHOT = path.join(tempDir, 'legacy-migrations');
+    fs.mkdirSync(LEGACY_MIGRATIONS_SNAPSHOT, { recursive: true });
+    for (const file of LEGACY_MIGRATION_FILES) {
+      fs.copyFileSync(
+        path.join(REAL_MIGRATIONS_DIR, file),
+        path.join(LEGACY_MIGRATIONS_SNAPSHOT, file)
+      );
+    }
+
     tempOptionsPath = path.join(tempDir, 'options.json');
     fs.writeFileSync(
       tempOptionsPath,
       JSON.stringify({
         config: configPath,
-        'migrations-path': REAL_MIGRATIONS_DIR,
+        'migrations-path': LEGACY_MIGRATIONS_SNAPSHOT,
         'seeders-path': path.join(BACKEND_ROOT, 'database', 'seeders'),
         'models-path': path.join(BACKEND_ROOT, 'src', 'models'),
       })

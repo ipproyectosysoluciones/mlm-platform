@@ -72,6 +72,8 @@ vi.mock('../../services/paymentService', () => ({
     createMercadoPagoPreference: vi.fn(),
     redirectToMercadoPago: vi.fn(),
   },
+  getApiErrorCode: (err: unknown) =>
+    (err as { response?: { data?: { error?: { code?: string } } } })?.response?.data?.error?.code,
 }));
 
 // Bring in mocked modules for assertions
@@ -234,7 +236,8 @@ describe('usePayment', () => {
           },
         ],
         undefined,
-        'res-123'
+        'res-123',
+        undefined
       );
       expect(mockPaymentService.redirectToMercadoPago).toHaveBeenCalledWith(
         'https://mercadopago.com/checkout/abc'
@@ -278,7 +281,88 @@ describe('usePayment', () => {
           }),
         ]),
         undefined,
-        'res-123'
+        'res-123',
+        undefined
+      );
+    });
+
+    it('should forward the reservation vendorId to createMercadoPagoPreference (FE-2)', async () => {
+      mockCreatedReservationValue = {
+        ...MOCK_RESERVATION,
+        vendorId: 'vendor-42',
+      };
+
+      mockPaymentService.createMercadoPagoPreference.mockResolvedValue({
+        preferenceId: 'mp-pref-vendor',
+        initPoint: 'https://mercadopago.com/checkout/vendor',
+        sandboxInitPoint: '',
+      });
+
+      const { result } = renderHook(() => usePayment(MOCK_BREAKDOWN));
+
+      await act(async () => {
+        await result.current.handleMercadoPago();
+      });
+
+      expect(mockPaymentService.createMercadoPagoPreference).toHaveBeenCalledWith(
+        expect.any(Array),
+        undefined,
+        'res-123',
+        'vendor-42'
+      );
+      expect(mockPaymentService.redirectToMercadoPago).toHaveBeenCalledWith(
+        'https://mercadopago.com/checkout/vendor'
+      );
+    });
+
+    it('should pass undefined vendorId for reservations without a vendor (FE-2)', async () => {
+      mockPaymentService.createMercadoPagoPreference.mockResolvedValue({
+        preferenceId: 'mp-pref-1',
+        initPoint: 'https://mercadopago.com/checkout/abc',
+        sandboxInitPoint: '',
+      });
+
+      const { result } = renderHook(() => usePayment(MOCK_BREAKDOWN));
+
+      await act(async () => {
+        await result.current.handleMercadoPago();
+      });
+
+      expect(mockPaymentService.createMercadoPagoPreference).toHaveBeenCalledWith(
+        expect.any(Array),
+        undefined,
+        'res-123',
+        undefined
+      );
+    });
+
+    it('should show the vendor-not-connected aviso on CONNECT_MP_REQUIRED (FE-2)', async () => {
+      mockCreatedReservationValue = {
+        ...MOCK_RESERVATION,
+        vendorId: 'vendor-42',
+      };
+
+      mockPaymentService.createMercadoPagoPreference.mockRejectedValue({
+        response: {
+          data: {
+            success: false,
+            error: {
+              code: 'CONNECT_MP_REQUIRED',
+              message: 'vendor must connect MercadoPago first',
+            },
+          },
+          status: 400,
+        },
+      });
+
+      const { result } = renderHook(() => usePayment(MOCK_BREAKDOWN));
+
+      await act(async () => {
+        await result.current.handleMercadoPago();
+      });
+
+      expect(mockSetPaymentError).toHaveBeenCalledWith(
+        'El negocio aún no conecta MercadoPago. Podés pagar con PayPal o con tu billetera.'
       );
     });
 

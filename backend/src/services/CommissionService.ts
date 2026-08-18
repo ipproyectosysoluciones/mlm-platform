@@ -26,10 +26,64 @@ import { COMMISSION_RATES, generateLevelKey } from '../types/index.js';
 import type { BusinessType } from '../types/index.js';
 import { walletService } from './WalletService.js';
 import { emailService } from './EmailService.js';
+import { VatRateService } from './VatRateService.js';
 import { logger } from '../utils/logger.js';
 import { config } from '../config/env.js';
 
+export interface MarketplaceFeeArgs {
+  /** Base amount in COP (integer) / Monto base en COP (entero) */
+  base: number;
+  /** Vendor commission rate (e.g. 0.7 = 70%) / Tasa de comisión del negocio */
+  commissionRate: number;
+  /** ISO country code used for the VAT rate / Código de país para la tasa IVA */
+  country: string;
+}
+
+export interface MarketplaceFeeResult {
+  /** Vendor commission rate input / Tasa de comisión del negocio (input) */
+  commissionRate: number;
+  /** Platform share = 1 - commissionRate / Participación de la plataforma */
+  pctPlataforma: number;
+  /** Platform commission (base × pct_plataforma, HALF_UP integer COP) */
+  commission: number;
+  /** VAT rate applied / Tasa IVA aplicada */
+  taxRate: number;
+  /** VAT over commission (HALF_UP integer COP) / IVA sobre la comisión */
+  tax: number;
+  /** Fee charged by the platform = commission + tax / Fee de la plataforma */
+  fee: number;
+}
+
 export class CommissionService {
+  /**
+   * Calculate the marketplace fee for a vendor charge (A7 / D4 / SPLIT-4).
+   * Calcular el fee de marketplace para un cobro de negocio.
+   *
+   * pct_plataforma = 1 − commissionRate
+   * commission      = base × pct_plataforma
+   * tax             = commission × VAT(country)
+   * fee             = commission + tax
+   *
+   * All money values are rounded HALF_UP to integer COP, and the result
+   * always satisfies commission + tax === fee.
+   *
+   * @param args - { base, commissionRate, country }
+   * @returns MarketplaceFeeResult
+   */
+  static calculateMarketplaceFee({
+    base,
+    commissionRate,
+    country,
+  }: MarketplaceFeeArgs): MarketplaceFeeResult {
+    const pctPlataforma = 1 - commissionRate;
+    const commission = roundHalfUp(base * pctPlataforma);
+    const taxRate = VatRateService.getVatRate(country);
+    const tax = roundHalfUp(commission * taxRate);
+    const fee = commission + tax;
+
+    return { commissionRate, pctPlataforma, commission, taxRate, tax, fee };
+  }
+
   /**
    * Get commission rate for a business type and level
    * Falls back to static rates if no config exists
@@ -483,4 +537,15 @@ export class CommissionService {
 
     return createdCommissions;
   }
+}
+
+/**
+ * Round a number HALF_UP to the nearest integer.
+ * Redondear un número HALF_UP al entero más cercano.
+ *
+ * Math.round implements half-up for positive values (0.5 → 1).
+ * Fees are always positive, so this matches the HALF_UP contract.
+ */
+function roundHalfUp(value: number): number {
+  return Math.round(value);
 }

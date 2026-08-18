@@ -6,7 +6,7 @@ export interface User {
   referralCode: string;
   level: number;
   levelName?: string;
-  role?: 'admin' | 'user';
+  role?: 'admin' | 'user' | 'vendor';
   sponsorId?: string;
   firstName?: string;
   lastName?: string;
