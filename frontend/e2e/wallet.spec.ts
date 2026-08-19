@@ -20,7 +20,13 @@ test.describe('Wallet Digital', () => {
     await page.waitForTimeout(1500);
 
     // Check for wallet balance text on dashboard card
-    const walletCard = page.locator('a[href="/wallet"]');
+    // cryptoWallet flag makes /wallet appear BOTH in nav AND as a dashboard
+    // card, so a bare `a[href="/wallet"]` locator is ambiguous (strict-mode
+    // violation). Scope to the dashboard card, which carries the balance text.
+    const walletCard = page
+      .locator('a[href="/wallet"]')
+      .filter({ has: page.locator('text=/Wallet Balance|Saldo de Wallet|wallet\.balance/i') })
+      .first();
     await expect(walletCard).toBeVisible({ timeout: 10000 });
 
     // Verify it shows wallet balance label
@@ -29,7 +35,13 @@ test.describe('Wallet Digital', () => {
 
   test('should navigate to wallet page', async ({ page }) => {
     // Click on wallet card in dashboard
-    const walletLink = page.locator('a[href="/wallet"]');
+    // cryptoWallet flag renders /wallet BOTH as a nav link and as a dashboard
+    // card; scope to the card (carries the balance text) to avoid the strict-mode
+    // ambiguity that a bare `a[href="/wallet"]` locator would hit.
+    const walletLink = page
+      .locator('a[href="/wallet"]')
+      .filter({ has: page.locator('text=/Wallet Balance|Saldo de Wallet|wallet\.balance/i') })
+      .first();
     await walletLink.click();
 
     // Wait for navigation and page load
