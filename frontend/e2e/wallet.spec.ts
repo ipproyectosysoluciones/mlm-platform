@@ -5,13 +5,21 @@
  * @module e2e/wallet.spec
  */
 import { test, expect } from './fixtures';
-import { baseURL, login } from './helpers';
+import { baseURL } from './helpers';
 
 test.describe('Wallet Digital', () => {
   test.beforeEach(async ({ page }) => {
-    await login(page);
-    // Wait for dashboard to load
-    await page.waitForTimeout(2000);
+    // NOTE: intentionally do NOT call login() here. login() installs an
+    // addInitScript that strips the auth token on every full page navigation
+    // (see helpers.ts), which breaks the page.goto('/wallet') and
+    // page.goto('/dashboard') calls below: ProtectedRoute would lose
+    // isAuthenticated, redirect to /login, and WalletPage would never mount —
+    // so balance/transactions never fetch and the content assertions fail.
+    // Auth state is already present via the `page` fixture's storageState
+    // (e2e/.auth/admin.json, injected by global-setup) and the mock API is
+    // auto-applied by the same `page` fixture in fixtures.ts.
+    await page.goto(`${baseURL}/dashboard`);
+    await page.waitForTimeout(1500);
     await page.waitForLoadState('networkidle');
   });
 
