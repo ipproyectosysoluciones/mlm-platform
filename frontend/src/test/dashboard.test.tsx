@@ -115,6 +115,22 @@ function renderDashboard() {
 describe('Dashboard', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Reset the useAuth mock implementation so the vendor-role override set in
+    // the "renders the MercadoPago connect card for vendor role" test (which calls
+    // vi.mocked(useAuth).mockReturnValue({...role:'vendor'})) does not bleed into
+    // the non-vendor test via mockReturnValue persistence. clearAllMocks does NOT
+    // reset mock implementations, so without this the non-vendor case still sees
+    // role === 'vendor' and renders the MercadoPagoConnectCard, failing its
+    // `not.toBeInTheDocument` assertion. (B11 / FE-1 — fixes pre-existing leak)
+    vi.mocked(useAuth).mockReset();
+    vi.mocked(useAuth).mockReturnValue({
+      user: { id: 'user-1', email: 'test@example.com', referralCode: 'ABC123', level: 1 },
+      token: 'token',
+      isAuthenticated: true,
+      isLoading: false,
+      login: vi.fn(),
+      logout: vi.fn(),
+    });
     // Mock clipboard API
     Object.defineProperty(navigator, 'clipboard', {
       value: { writeText: vi.fn().mockResolvedValue(undefined) },
