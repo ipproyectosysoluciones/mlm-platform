@@ -97,7 +97,6 @@
     "earnings": "Ganancias",
     "commissionBreakdown": "Desglose de Comisiones",
     "level": "Nivel {{n}}",
-    "directReferrals": "Referidos Directos",
     "rate": "Tasa",
     "referrals": "Referidos",
     "bonuses": "Bonificaciones",
@@ -162,21 +161,23 @@
     "withdrawalWarning": "El monto mínimo de retiro es de $20.",
     "confirm": "Confirmar",
     "confirmWithdrawal": "Confirmar retiro",
-    "processing": "Procesando..."
+    "processing": "Procesando...",
+    "minWithdrawal": "El retiro mínimo es de $20",
+    "minNote": "Monto mínimo de retiro: $20"
   },
   "vendor": {
     "mpConnect": {
-      "title": "MercadoPago no conectado",
-      "subtitle": "Conectá tu cuenta de MercadoPago para recibir pagos de tu negocio.",
-      "connectedTitle": "MercadoPago conectado",
-      "connectedSubtitle": "Tu cuenta de MercadoPago está conectada y recibiendo pagos.",
-      "expiredTitle": "Token de MercadoPago vencido",
-      "expiredSubtitle": "Tu token de MercadoPago expiró. Reconectá tu cuenta.",
+      "title": "Conectá tu cuenta de MercadoPago",
+      "subtitle": "Recibí pagos divididos por tus servicios directamente en tu cuenta.",
+      "connectedTitle": "Cuenta de MercadoPago conectada",
+      "connectedSubtitle": "Los pagos de tus reservas se acreditan directamente en tu cuenta.",
+      "expiredTitle": "Conexión de MercadoPago expirada",
+      "expiredSubtitle": "Reconectá tu cuenta para seguir recibiendo pagos.",
+      "connect": "Conectar",
+      "reconnect": "Reconectar",
+      "disconnect": "Desconectar",
       "accountId": "ID de cuenta",
-      "expiresAt": "Vence el",
-      "connect": "Conectar MercadoPago",
-      "reconnect": "Reconectar MercadoPago",
-      "disconnect": "Desconectar"
+      "expiresAt": "Vence"
     }
   },
   "twoFactor": {
@@ -599,21 +600,6 @@
     "level3": "Referidos Nivel 3",
     "level4": "Referidos Nivel 4"
   },
-  "vendor": {
-    "mpConnect": {
-      "title": "Conectá tu cuenta de MercadoPago",
-      "subtitle": "Recibí pagos divididos por tus servicios directamente en tu cuenta.",
-      "connectedTitle": "Cuenta de MercadoPago conectada",
-      "connectedSubtitle": "Los pagos de tus reservas se acreditan directamente en tu cuenta.",
-      "expiredTitle": "Conexión de MercadoPago expirada",
-      "expiredSubtitle": "Reconectá tu cuenta para seguir recibiendo pagos.",
-      "connect": "Conectar",
-      "reconnect": "Reconectar",
-      "disconnect": "Desconectar",
-      "accountId": "ID de cuenta",
-      "expiresAt": "Vence"
-    }
-  },
   "tours": {
     "spotsAvailable": "{{count}} plazas disponibles",
     "spotsOf": "{{available}} de {{total}} plazas",
@@ -761,7 +747,6 @@
         "title": "Comisiones Multinivel",
         "description": "Ganá hasta 5 niveles de profundidad con tracking de comisiones transparente y en tiempo real."
       },
-
       "payments": {
         "title": "Pagos Globales",
         "description": "Soporte para PayPal, MercadoPago y billetera crypto para cobrar desde cualquier lugar."

@@ -99,14 +99,9 @@ test.describe('Wallet Digital', () => {
 
     // Check for minimum amount information ($20 minimum)
     page.locator(/\$20|20 USD|minimum|minimo/i).first();
-    // May or may not be visible depending on form state
-    // Just verify form exists
-    await expect(page.getByPlaceholder(/amount|monto|monto/i))
-      .toBeVisible({ timeout: 5000 })
-      .catch(() => {
-        // If placeholder not found, check for input field
-        return expect(page.locator('input[type="number"]')).toBeVisible({ timeout: 5000 });
-      });
+    // The amount input is a text input (currency, $ prefix icon) with id="amount".
+    // It is NOT type="number" — deliberate, to avoid spinner/keyboard pitfalls for money.
+    await expect(page.locator('#amount')).toBeVisible({ timeout: 5000 });
   });
 
   test('should validate withdrawal amount (reject below minimum)', async ({ page }) => {

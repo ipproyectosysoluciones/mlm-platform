@@ -128,8 +128,6 @@
     "logout": "Logout",
     "myProfile": "My Profile",
     "twoFactor": "Two-Factor Authentication",
-    "properties": "Properties",
-    "tours": "Tours",
     "reservations": "My Reservations",
     "signIn": "Sign In",
     "toggleTheme": "Toggle theme"
@@ -166,21 +164,23 @@
     "withdrawalWarning": "Minimum withdrawal amount is $20.",
     "confirm": "Confirm",
     "confirmWithdrawal": "Confirm Withdrawal",
-    "processing": "Processing..."
+    "processing": "Processing...",
+    "minWithdrawal": "Minimum withdrawal is $20",
+    "minNote": "Minimum withdrawal: $20"
   },
   "vendor": {
     "mpConnect": {
-      "title": "MercadoPago Not Connected",
-      "subtitle": "Connect your MercadoPago account to receive payments from your business.",
-      "connectedTitle": "MercadoPago Connected",
-      "connectedSubtitle": "Your MercadoPago account is connected and receiving payments.",
-      "expiredTitle": "MercadoPago Token Expired",
-      "expiredSubtitle": "Your MercadoPago token has expired. Please reconnect your account.",
+      "title": "Connect your MercadoPago account",
+      "subtitle": "Receive split payments for your services directly in your account.",
+      "connectedTitle": "MercadoPago account connected",
+      "connectedSubtitle": "Payments from your reservations are deposited directly into your account.",
+      "expiredTitle": "MercadoPago connection expired",
+      "expiredSubtitle": "Reconnect your account to keep receiving payments.",
+      "connect": "Connect",
+      "reconnect": "Reconnect",
+      "disconnect": "Disconnect",
       "accountId": "Account ID",
-      "expiresAt": "Expires at",
-      "connect": "Connect MercadoPago",
-      "reconnect": "Reconnect MercadoPago",
-      "disconnect": "Disconnect"
+      "expiresAt": "Expires"
     }
   },
   "twoFactor": {
@@ -603,21 +603,6 @@
     "level3": "Level 3 Referrals",
     "level4": "Level 4 Referrals"
   },
-  "vendor": {
-    "mpConnect": {
-      "title": "Connect your MercadoPago account",
-      "subtitle": "Receive split payments for your services directly in your account.",
-      "connectedTitle": "MercadoPago account connected",
-      "connectedSubtitle": "Payments from your reservations are deposited directly into your account.",
-      "expiredTitle": "MercadoPago connection expired",
-      "expiredSubtitle": "Reconnect your account to keep receiving payments.",
-      "connect": "Connect",
-      "reconnect": "Reconnect",
-      "disconnect": "Disconnect",
-      "accountId": "Account ID",
-      "expiresAt": "Expires"
-    }
-  },
   "tours": {
     "spotsAvailable": "{{count}} spots available",
     "spotsOf": "{{available}} of {{total}} spots",
@@ -765,7 +750,6 @@
         "title": "Multi-Level Commissions",
         "description": "Earn up to 5 levels deep with transparent, real-time commission tracking."
       },
-
       "payments": {
         "title": "Global Payments",
         "description": "PayPal, MercadoPago, and crypto wallet support to collect from anywhere."
