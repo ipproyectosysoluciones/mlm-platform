@@ -140,10 +140,11 @@ jobs:
           git checkout -b "$BRANCH"
           npm version "$NEW_VERSION" --no-git-tag-version
 
-          # Generate CHANGELOG
+          # Generate CHANGELOG. conventional-changelog -s/--same-file writes the
+          # version section with header `## [vX.Y.Z](compare-url) (date)` directly
+          # to CHANGELOG.md (date + URL incluidos). No sed: a previous sed duplicated
+          # the date and broke the URL link in the release header.
           npx conventional-changelog -p angular -i CHANGELOG.md -s --pkg package.json
-          TODAY=$(date +%Y-%m-%d)
-          sed -i "s/## \[${NEW_VERSION}\]/## [${NEW_VERSION}] - ${TODAY}/" CHANGELOG.md
 
           # Commit and push branch
           git add package.json pnpm-lock.yaml CHANGELOG.md
