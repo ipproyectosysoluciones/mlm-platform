@@ -104,6 +104,7 @@ describe('SchedulerService — MercadoPago Token Refresh Job (B7)', () => {
   });
 
   it('runs refreshTokens when MARKETPLACE_ENABLED is true', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports -- lazy require of env config per-case
     const config = require('../../config/env').config as {
       marketplace: { enabled: boolean };
     };
@@ -118,6 +119,7 @@ describe('SchedulerService — MercadoPago Token Refresh Job (B7)', () => {
   });
 
   it('skips refreshTokens when MARKETPLACE_ENABLED is false', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports -- lazy require of env config per-case
     const config = require('../../config/env').config as {
       marketplace: { enabled: boolean };
     };

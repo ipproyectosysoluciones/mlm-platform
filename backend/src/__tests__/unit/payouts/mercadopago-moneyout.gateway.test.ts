@@ -60,7 +60,6 @@ jest.mock('../../../services/MercadoPagoService', () => ({
 }));
 
 import axios from 'axios';
-import { AppError } from '../../../middleware/error.middleware';
 import { mercadoPagoService } from '../../../services/MercadoPagoService';
 import {
   MercadoPagoMoneyOutGateway,
