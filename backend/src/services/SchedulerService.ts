@@ -28,6 +28,7 @@ import { cartRecoveryEmailService } from './CartRecoveryEmailService.js';
 import { cartService } from './CartService.js';
 import { emailQueueService } from './EmailQueueService.js';
 import { emailCampaignService } from './EmailCampaignService.js';
+import { oauthMercadoPagoService } from './OAuthMercadoPagoService.js';
 import { EmailCampaign } from '../models/index.js';
 import { Op } from 'sequelize';
 import { EMAIL_CAMPAIGN_STATUS } from '../types/index.js';
@@ -52,11 +53,18 @@ const EMAIL_CAMPAIGN_CRON = '* * * * *';
  */
 const EMAIL_QUEUE_CRON = '* * * * *';
 
+/**
+ * MercadoPago vendor token refresh cron: hourly
+ * Cron de refresco de tokens MercadoPago de vendedores: cada hora
+ */
+const MP_TOKEN_REFRESH_CRON = '0 * * * *';
+
 export class SchedulerService {
   private job: unknown | null = null;
   private abandonedCartJob: unknown | null = null;
   private emailCampaignJob: unknown | null = null;
   private emailQueueJob: unknown | null = null;
+  private mpTokenRefreshJob: unknown | null = null;
   private isRunning: boolean = false;
 
   /**
@@ -142,6 +150,31 @@ export class SchedulerService {
       }
     });
 
+    // MercadoPago vendor token rotation: hourly (only if marketplace enabled)
+    // Rotación de tokens MercadoPago de vendedores: cada hora (solo si marketplace habilitado)
+    this.mpTokenRefreshJob = cron.schedule(MP_TOKEN_REFRESH_CRON, async () => {
+      if (!config.marketplace.enabled) {
+        logger.debug(
+          { service: 'SchedulerService' },
+          'Skipping MercadoPago token refresh — marketplace disabled'
+        );
+        return;
+      }
+      logger.info({ service: 'SchedulerService' }, 'Running MercadoPago token refresh job');
+      try {
+        const result = await oauthMercadoPagoService.refreshTokens();
+        logger.info(
+          { service: 'SchedulerService', ...result },
+          'MercadoPago token refresh job completed'
+        );
+      } catch (error) {
+        logger.error(
+          { err: error, service: 'SchedulerService' },
+          'Error running MercadoPago token refresh job'
+        );
+      }
+    });
+
     logger.info(
       {
         service: 'SchedulerService',
@@ -150,6 +183,7 @@ export class SchedulerService {
         emailCampaign: EMAIL_CAMPAIGN_CRON,
         emailQueue: EMAIL_QUEUE_CRON,
         weeklyDigest: 'Every Sunday at 9:00 AM UTC',
+        mpTokenRefresh: MP_TOKEN_REFRESH_CRON,
       },
       'Scheduler initialized'
     );
@@ -177,6 +211,10 @@ export class SchedulerService {
     if (this.emailQueueJob) {
       (this.emailQueueJob as { stop(): void }).stop();
       this.emailQueueJob = null;
+    }
+    if (this.mpTokenRefreshJob) {
+      (this.mpTokenRefreshJob as { stop(): void }).stop();
+      this.mpTokenRefreshJob = null;
     }
     // Stop weekly digest job
     notificationService.stopWeeklyDigest();

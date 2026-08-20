@@ -425,7 +425,7 @@ export function setupMockApi(page: Page): void {
           contentType: 'application/json',
           body: JSON.stringify({
             success: true,
-            data: { transactions: [], total: 0, page: 1, limit: 20, totalPages: 0 },
+            data: { data: [], pagination: { total: 0, page: 1, limit: 20, totalPages: 0 } },
           }),
         });
       }
@@ -473,7 +473,7 @@ export function setupMockApi(page: Page): void {
           contentType: 'application/json',
           body: JSON.stringify({
             success: true,
-            data: { withdrawals: [], total: 0, page: 1, limit: 20, totalPages: 0 },
+            data: { data: [], pagination: { total: 0, page: 1, limit: 20, totalPages: 0 } },
           }),
         });
       }

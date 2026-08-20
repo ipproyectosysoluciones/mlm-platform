@@ -43,6 +43,9 @@ rm -f backend/pnpm-lock.yaml
 echo ""
 echo "🔍 Testing backend locally (starting all services)..."
 export $(cat .env.production | grep -v '^#' | grep -v '^$' | xargs)
+if [ -f .env.production.local ]; then
+  export $(cat .env.production.local | grep -v '^#' | grep -v '^$' | xargs)
+fi
 docker compose -f docker-compose.prod.yml up -d
 
 sleep 15

@@ -14,7 +14,7 @@ type AsyncRequestHandler = (req: any, res: Response, next: NextFunction) => Prom
 export function asyncHandler(fn: AsyncRequestHandler): RequestHandler {
   return (req: Request, res: Response, next: NextFunction) => {
     logger.debug('asyncHandler called');
-    Promise.resolve(fn(req, res, next)).catch((e) => {
+    return Promise.resolve(fn(req, res, next)).catch((e) => {
       logger.debug({ err: e }, 'asyncHandler caught error');
       next(e);
     });

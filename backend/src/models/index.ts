@@ -31,6 +31,7 @@ import { InventoryMovement } from './InventoryMovement.js';
 import { Vendor } from './Vendor.js';
 import { VendorOrder } from './VendorOrder.js';
 import { VendorPayout } from './VendorPayout.js';
+import { VendorMercadoPagoAccount } from './VendorMercadoPagoAccount.js';
 import { ShippingAddress } from './ShippingAddress.js';
 import { DeliveryProvider } from './DeliveryProvider.js';
 import { ShipmentTracking } from './ShipmentTracking.js';
@@ -339,6 +340,16 @@ VendorOrder.belongsTo(Vendor, { as: 'vendor', foreignKey: 'vendorId', targetKey:
 // Vendor - VendorPayout
 Vendor.hasMany(VendorPayout, { as: 'payouts', foreignKey: 'vendorId', sourceKey: 'id' });
 VendorPayout.belongsTo(Vendor, { as: 'vendor', foreignKey: 'vendorId', targetKey: 'id' });
+Vendor.hasOne(VendorMercadoPagoAccount, {
+  as: 'mercadopagoAccount',
+  foreignKey: 'vendorId',
+  sourceKey: 'id',
+});
+VendorMercadoPagoAccount.belongsTo(Vendor, {
+  as: 'vendor',
+  foreignKey: 'vendorId',
+  targetKey: 'id',
+});
 
 // Product - Vendor (marketplace)
 Vendor.hasMany(Product, { as: 'products', foreignKey: 'vendorId', sourceKey: 'id' });
@@ -537,6 +548,7 @@ export {
   Vendor,
   VendorOrder,
   VendorPayout,
+  VendorMercadoPagoAccount,
   ShippingAddress,
   DeliveryProvider,
   ShipmentTracking,

@@ -12,7 +12,7 @@
  * @author Nexo Real Development Team
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
@@ -26,11 +26,14 @@ import {
   ChevronRight,
   Check,
   Lock,
+  SearchX,
+  RefreshCw,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { propertyService } from '../services/propertyService';
 import type { Property, PropertyType } from '../services/propertyService';
 import { useReservationStore } from '../stores/reservationStore';
+import { isNotFoundError } from '../lib/error';
 import { cn } from '../lib/utils';
 import { APP_URL, APP_OG_DEFAULT_IMAGE } from '../config/app.config';
 
@@ -181,8 +184,15 @@ export default function PropertyDetailPage() {
   const [property, setProperty] = useState<Property | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isNotFound, setIsNotFound] = useState(false);
 
-  useEffect(() => {
+  /**
+   * Load the property for the current URL id.
+   * Stable callback so the Retry button can re-trigger the fetch without a reload.
+   * Carga la propiedad del id actual de la URL.
+   * Callback estable para que el botón Reintentar pueda re-disparar la carga sin recargar.
+   */
+  const loadProperty = useCallback(() => {
     if (!id) return;
 
     let cancelled = false;
@@ -193,11 +203,13 @@ export default function PropertyDetailPage() {
         if (!cancelled) {
           setProperty(data);
           setError(null);
+          setIsNotFound(false);
         }
       })
-      .catch(() => {
+      .catch((err: unknown) => {
         if (!cancelled) {
           setError('No se pudo cargar la propiedad. Verificá que el ID sea correcto.');
+          setIsNotFound(isNotFoundError(err));
         }
       })
       .finally(() => {
@@ -211,19 +223,58 @@ export default function PropertyDetailPage() {
     };
   }, [id]);
 
+  useEffect(() => {
+    const cancel = loadProperty();
+    return cancel;
+  }, [loadProperty]);
+
   if (isLoading) return <PropertyDetailSkeleton />;
 
-  if (error || !property) {
+  // Not found state (400/404 from the API) / Estado "no encontrado" (400/404 de la API)
+  if (isNotFound) {
     return (
       <div className="max-w-5xl mx-auto px-4 py-20 text-center">
-        <p className="text-red-500 mb-4">{error ?? 'Propiedad no encontrada'}</p>
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-100 mb-6">
+          <SearchX className="w-8 h-8 text-slate-400" />
+        </div>
+        <h1 className="text-2xl font-bold text-slate-800 mb-2">No encontramos lo que buscás</h1>
+        <p className="max-w-md mx-auto text-slate-500 mb-8">
+          La propiedad que buscás no existe o ya no está disponible.
+        </p>
         <Button
-          variant="ghost"
           onClick={() => navigate('/properties')}
-          className="text-emerald-600 hover:underline text-sm"
+          className="bg-emerald-600 text-white hover:bg-emerald-700"
         >
           Volver al listado
         </Button>
+      </div>
+    );
+  }
+
+  // Retryable error state (network, 5xx, etc.) / Estado de error reintentable (red, 5xx, etc.)
+  if (error || !property) {
+    return (
+      <div className="max-w-5xl mx-auto px-4 py-20 text-center">
+        <p className="text-red-500 mb-6">{error ?? 'Propiedad no encontrada'}</p>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <Button
+            onClick={() => {
+              setIsLoading(true);
+              loadProperty();
+            }}
+            className="bg-emerald-600 text-white hover:bg-emerald-700"
+          >
+            <RefreshCw className="w-4 h-4 mr-2" />
+            Reintentar
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={() => navigate('/properties')}
+            className="text-emerald-600 hover:underline text-sm"
+          >
+            Volver al listado
+          </Button>
+        </div>
       </div>
     );
   }

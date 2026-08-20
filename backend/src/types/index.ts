@@ -322,13 +322,18 @@ export interface OrderAttributes {
   id: string;
   orderNumber: string; // Human-readable order number (e.g., "ORD-20260325-001")
   userId: string;
-  productId: string; // FK to products table
+  productId: string | null; // FK to products table (nullable for marketplace/reservation orders — D6)
   purchaseId: string | null; // FK to purchases table (nullable)
   totalAmount: number; // Order total (matches product price)
   currency: string; // Default: 'USD'
   status: 'pending' | 'completed' | 'failed';
   paymentMethod: 'manual' | 'simulated' | 'paypal' | 'mercadopago'; // Payment methods
   notes: string | null; // Optional internal notes
+  // Marketplace split fields (B1 / BE-2 / SPLIT-4)
+  vendorId: string | null; // FK to vendors table (null for platform-only orders)
+  country: string | null; // ISO 3166-1 alpha-2 (e.g. 'CO')
+  marketplaceFee: number | null; // BIGINT — integer COP fee charged by MP (HALF_UP)
+  feeBreakdown: FeeBreakdown | null; // JSONB breakdown of the marketplace fee
   // Shipping fields (Phase 3 - Delivery Integration)
   shippingAddressId: string | null;
   shippingCost: number | null;
@@ -339,13 +344,35 @@ export interface OrderAttributes {
 
 export interface OrderCreationAttributes {
   userId: string;
-  productId: string;
+  productId?: string | null;
   purchaseId?: string | null;
   totalAmount: number;
   currency?: string;
   status?: 'pending' | 'completed' | 'failed';
   paymentMethod?: 'manual' | 'simulated' | 'paypal' | 'mercadopago';
   notes?: string | null;
+  // Marketplace split fields (B1 / BE-2 / SPLIT-4)
+  vendorId?: string | null;
+  country?: string | null;
+  marketplaceFee?: number | null;
+  feeBreakdown?: FeeBreakdown | null;
+}
+
+/**
+ * Marketplace fee breakdown stored on an Order (SPLIT-4 / D4)
+ * Desglose de la comisión de mercado de un pedido
+ */
+export interface FeeBreakdown {
+  base: number; // Order base total (COP integer)
+  commissionRate: number; // Vendor commission rate (0..1), e.g. 0.7
+  pctPlataforma: number; // Platform percentage = 1 - commissionRate, e.g. 0.3
+  commission: number; // Platform commission = base * pctPlataforma (HALF_UP, integer COP)
+  taxRate: number | null; // IVA rate applied to the commission (0.19 for CO)
+  tax: number; // IVA = commission * taxRate (HALF_UP, integer COP)
+  fee: number; // marketplace_fee = commission + tax (HALF_UP, integer COP)
+  externalReference: string; // Reference passed to MP (reservation:{id} or order:{id})
+  country: string; // ISO 3166-1 alpha-2 (e.g. 'CO')
+  feeRefunded: number; // Accumulated refunded marketplace fee (D9)
 }
 
 // ============================================
@@ -380,6 +407,24 @@ export const WITHDRAWAL_STATUS = {
 } as const;
 
 export type WithdrawalStatus = (typeof WITHDRAWAL_STATUS)[keyof typeof WITHDRAWAL_STATUS];
+
+/**
+ * Supported payout gateways for withdrawal money-out
+ * Pasarelas de payout soportadas para el money-out de retiros
+ */
+export type PayoutGatewayType = 'paypal' | 'mercadopago';
+
+/**
+ * Withdrawal payout destination — the gateway is derived from `method`;
+ * each provider requires a different identifier (email vs accountId).
+ * Destino de pago del retiro — la pasarela se deriva de `method`;
+ * cada proveedor exige un identificador distinto (email vs accountId).
+ */
+export interface WithdrawalDestination {
+  method: PayoutGatewayType;
+  email?: string;
+  accountId?: string;
+}
 
 /**
  * Wallet attributes
@@ -449,6 +494,12 @@ export interface WithdrawalRequestAttributes {
   rejectionReason: string | null;
   approvalComment: string | null;
   processedAt: Date | null;
+  destination: WithdrawalDestination | null;
+  gatewayPayoutId: string | null;
+  gatewayStatus: string | null;
+  lastGatewaySyncAt: Date | null;
+  lastNotifiedStatus: string | null;
+  lastNotifiedAt: Date | null;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -466,6 +517,12 @@ export interface WithdrawalRequestCreationAttributes {
   rejectionReason?: string | null;
   approvalComment?: string | null;
   processedAt?: Date | null;
+  destination?: WithdrawalDestination | null;
+  gatewayPayoutId?: string | null;
+  gatewayStatus?: string | null;
+  lastGatewaySyncAt?: Date | null;
+  lastNotifiedStatus?: string | null;
+  lastNotifiedAt?: Date | null;
 }
 
 // ============================================
@@ -1398,6 +1455,62 @@ export interface VendorCreationAttributes {
 }
 
 /**
+ * Vendor MercadoPago connection status
+ * Estado de conexión de la cuenta MercadoPago del vendedor
+ */
+export const MERCADOPAGO_ACCOUNT_STATUS = {
+  PROCESSING: 'processing',
+  CONNECTED: 'connected',
+  EXPIRED: 'expired',
+  DISCONNECTED: 'disconnected',
+} as const;
+
+export type MercadoPagoAccountStatus =
+  (typeof MERCADOPAGO_ACCOUNT_STATUS)[keyof typeof MERCADOPAGO_ACCOUNT_STATUS];
+
+/**
+ * Vendor MercadoPago account attributes
+ * Atributos de la cuenta MercadoPago del vendedor
+ */
+export interface VendorMercadoPagoAccountAttributes {
+  id: string;
+  vendorId: string;
+  /** MercadoPago user_id of the connected seller / user_id de MercadoPago */
+  mpUserId: string | null;
+  status: MercadoPagoAccountStatus;
+  country: string;
+  /** Encrypted access token / Access token cifrado */
+  accessTokenEncrypted: string | null;
+  /** Encrypted refresh token / Refresh token cifrado */
+  refreshTokenEncrypted: string | null;
+  /** Encrypted PKCE code verifier (during authorization) / Code verifier cifrado */
+  codeVerifierEncrypted: string | null;
+  /** OAuth state expiry (TTL ≤ 15 min) / Expiración del state OAuth */
+  stateExpiresAt: Date | null;
+  accessTokenExpiresAt: Date | null;
+  lastConnectedAt: Date | null;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+/**
+ * Vendor MercadoPago account creation attributes
+ * Atributos para crear la cuenta MercadoPago del vendedor
+ */
+export interface VendorMercadoPagoAccountCreationAttributes {
+  vendorId: string;
+  mpUserId?: string | null;
+  status?: MercadoPagoAccountStatus;
+  country?: string;
+  accessTokenEncrypted?: string | null;
+  refreshTokenEncrypted?: string | null;
+  codeVerifierEncrypted?: string | null;
+  stateExpiresAt?: Date | null;
+  accessTokenExpiresAt?: Date | null;
+  lastConnectedAt?: Date | null;
+}
+
+/**
  * Vendor order attributes
  * Atributos del pedido del vendedor
  */
@@ -1411,6 +1524,10 @@ export interface VendorOrderAttributes {
   platformAmount: number; // DECIMAL(10,4)
   status: VendorOrderStatus;
   notes: string | null;
+  // Marketplace tax fields (B1 / BE-2)
+  taxRate: number | null; // DECIMAL(5,4) — IVA rate applied to platform commission (0.19 CO)
+  taxAmount: number | null; // DECIMAL(10,4) — IVA over commission
+  country: string | null; // ISO 3166-1 alpha-2 (e.g. 'CO')
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -1428,6 +1545,10 @@ export interface VendorOrderCreationAttributes {
   platformAmount?: number;
   status?: VendorOrderStatus;
   notes?: string | null;
+  // Marketplace tax fields (B1 / BE-2)
+  taxRate?: number | null;
+  taxAmount?: number | null;
+  country?: string | null;
 }
 
 /**

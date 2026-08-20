@@ -217,7 +217,7 @@ export class PaymentPayPalController {
           if (internalOrderId) {
             const existingInternalOrder = await Order.findByPk(internalOrderId);
             if (existingInternalOrder) {
-              productId = existingInternalOrder.productId;
+              productId = existingInternalOrder.productId ?? '';
             }
           }
           if (!productId) {

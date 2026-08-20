@@ -49,8 +49,7 @@ interface EmailCampaignState {
   templateError: string | null;
   campaignError: string | null;
 
-  // Polling / Polling
-  pollingInterval: ReturnType<typeof setInterval> | null;
+  // (Polling moved to hooks/usePolling.ts — CampaignMonitor uses it directly)
 
   // Template Actions / Acciones de plantillas
   createTemplate: (data: EmailTemplateCreatePayload) => Promise<EmailTemplate>;
@@ -68,9 +67,7 @@ interface EmailCampaignState {
   // Logs Actions / Acciones de logs
   fetchCampaignLogs: (id: string, params?: CampaignLogsParams) => Promise<void>;
 
-  // Polling Actions / Acciones de polling
-  startPolling: (campaignId: string, intervalMs?: number) => void;
-  stopPolling: () => void;
+  // (Polling actions moved to hooks/usePolling.ts)
 
   // Utils
   clearErrors: () => void;
@@ -98,7 +95,6 @@ const initialState = {
   error: null,
   templateError: null,
   campaignError: null,
-  pollingInterval: null,
 };
 
 // ============================================
@@ -283,39 +279,6 @@ export const useEmailCampaignStore = create<EmailCampaignState>((set, get) => ({
   },
 
   // ==========================================
-  // Polling Actions / Acciones de polling
-  // ==========================================
-
-  /**
-   * Start polling campaign stats every N ms (default 10s)
-   * Iniciar polling de estadísticas de campaña cada N ms (default 10s)
-   */
-  startPolling: (campaignId: string, intervalMs = 10_000) => {
-    const state = get();
-    if (state.pollingInterval) {
-      clearInterval(state.pollingInterval);
-    }
-
-    const interval = setInterval(() => {
-      get().fetchCampaignDetail(campaignId);
-    }, intervalMs);
-
-    set({ pollingInterval: interval });
-  },
-
-  /**
-   * Stop polling
-   * Detener polling
-   */
-  stopPolling: () => {
-    const state = get();
-    if (state.pollingInterval) {
-      clearInterval(state.pollingInterval);
-      set({ pollingInterval: null });
-    }
-  },
-
-  // ==========================================
   // Utils
   // ==========================================
 
@@ -330,10 +293,6 @@ export const useEmailCampaignStore = create<EmailCampaignState>((set, get) => ({
    * Resetear el store al estado inicial
    */
   reset: () => {
-    const state = get();
-    if (state.pollingInterval) {
-      clearInterval(state.pollingInterval);
-    }
     set(initialState);
   },
 }));
@@ -396,8 +355,6 @@ export const useEmailCampaignMonitor = () =>
       fetchCampaignDetail: state.fetchCampaignDetail,
       sendCampaign: state.sendCampaign,
       retryFailed: state.retryFailed,
-      startPolling: state.startPolling,
-      stopPolling: state.stopPolling,
     }))
   );
 

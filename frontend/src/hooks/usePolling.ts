@@ -30,13 +30,27 @@ export interface UsePollingOptions {
  * without needing to restart.
  *
  * ES: Hook que llama un callback al montar y luego a intervalo regular.
- * EN: Hook that calls a callback on mount and then at a regular interval.
+ * EN: Generic polling hook — calls callback on mount and then at fixed interval.
  *
  * @param callback - Async or sync function to call on each tick / Función a llamar en cada tick
- * @param options - Polling configuration / Configuración de polling
+ * @param options - Polling configuration ({ intervalMs, enabled? }) / Configuración de polling
  */
-export function usePolling(callback: () => void | Promise<void>, options: UsePollingOptions): void {
-  const { intervalMs, enabled = true } = options;
+export function usePolling(callback: () => void | Promise<void>, options: UsePollingOptions): void;
+/**
+ * Convenience overload — receives intervalMs directly as a number.
+ * Sobrecarga de conveniencia — recibe intervalMs directamente como número.
+ *
+ * @param callback - Function to call on each tick / Función a ejecutar en cada tick
+ * @param intervalMs - Polling interval in milliseconds / Intervalo de polling en ms
+ */
+export function usePolling(callback: () => void | Promise<void>, intervalMs: number): void;
+export function usePolling(
+  callback: () => void | Promise<void>,
+  optionsOrMs: UsePollingOptions | number
+): void {
+  const { intervalMs, enabled = true } =
+    typeof optionsOrMs === 'number' ? { intervalMs: optionsOrMs } : optionsOrMs;
+
   const callbackRef = useRef(callback);
 
   // Keep the ref up-to-date outside render / Mantener la ref actualizada fuera del render

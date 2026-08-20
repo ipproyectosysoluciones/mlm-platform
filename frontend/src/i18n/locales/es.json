@@ -97,7 +97,6 @@
     "earnings": "Ganancias",
     "commissionBreakdown": "Desglose de Comisiones",
     "level": "Nivel {{n}}",
-    "directReferrals": "Referidos Directos",
     "rate": "Tasa",
     "referrals": "Referidos",
     "bonuses": "Bonificaciones",
@@ -127,7 +126,59 @@
     "properties": "Propiedades",
     "tours": "Tours",
     "reservations": "Mis Reservas",
-    "signIn": "Ingresar"
+    "signIn": "Ingresar",
+    "toggleTheme": "Cambiar tema"
+  },
+  "wallet": {
+    "title": "Mi Billetera",
+    "subtitle": "Gestioná tus ganancias y retiros",
+    "balance": "Saldo de Wallet",
+    "availableBalance": "Saldo disponible",
+    "noWallet": "Sin billetera",
+    "ready": "Listo",
+    "lastUpdated": "Actualizado",
+    "clickToView": "Click para ver detalles →",
+    "transactions": "Transacciones",
+    "transactionHistory": "Historial de Transacciones",
+    "noTransactions": "Aún no hay transacciones",
+    "loadMore": "Cargar más",
+    "allTypes": "Todos los tipos",
+    "commissions": "Comisiones",
+    "withdrawals": "Retiros",
+    "refunds": "Reembolsos",
+    "amount": "Monto",
+    "enterAmount": "Por favor ingresá un monto",
+    "available": "Disponible",
+    "insufficientBalance": "Saldo insuficiente",
+    "fee": "Comisión",
+    "netAmount": "Monto neto",
+    "requestedAmount": "Monto solicitado",
+    "requestWithdrawal": "Solicitar retiro",
+    "withdrawalSuccess": "¡Solicitud de retiro creada exitosamente!",
+    "withdrawalPending": "Tu solicitud está pendiente de aprobación.",
+    "withdrawalFailed": "El retiro falló",
+    "withdrawalRequested": "¡Retiro solicitado!",
+    "withdrawalWarning": "El monto mínimo de retiro es de $20.",
+    "confirm": "Confirmar",
+    "confirmWithdrawal": "Confirmar retiro",
+    "processing": "Procesando...",
+    "minWithdrawal": "El retiro mínimo es de $20",
+    "minNote": "Monto mínimo de retiro: $20"
+  },
+  "vendor": {
+    "mpConnect": {
+      "title": "Conectá tu cuenta de MercadoPago",
+      "subtitle": "Recibí pagos divididos por tus servicios directamente en tu cuenta.",
+      "connectedTitle": "Cuenta de MercadoPago conectada",
+      "connectedSubtitle": "Los pagos de tus reservas se acreditan directamente en tu cuenta.",
+      "expiredTitle": "Conexión de MercadoPago expirada",
+      "expiredSubtitle": "Reconectá tu cuenta para seguir recibiendo pagos.",
+      "connect": "Conectar",
+      "reconnect": "Reconectar",
+      "disconnect": "Desconectar",
+      "accountId": "ID de cuenta",
+      "expiresAt": "Vence"
+    }
   },
   "twoFactor": {
     "title": "Autenticación de Dos Factores",
@@ -494,6 +545,8 @@
     "processing": "Procesando...",
     "simulatedWarning": "Este es un pago simulado. No se realizará ningún cargo real.",
     "mpRedirectInfo": "Serás redirigido a MercadoPago para completar tu pago de forma segura.",
+    "mpVendorNotConnected": "El negocio aún no conecta MercadoPago.",
+    "paymentToBusinessAccount": "El pago se realizará a la cuenta del negocio.",
     "payWithMercadoPago": "Pagar con MercadoPago",
     "mpError": "No se pudo crear la preferencia de pago. Por favor intentá de nuevo.",
     "success": "Pago Exitoso",
@@ -608,6 +661,7 @@
     "back": "Atrás",
     "continue": "Continuar",
     "paymentError": "Error al procesar el pago. Por favor intentá de nuevo.",
+    "mpVendorNotConnected": "El negocio aún no conecta MercadoPago. Podés pagar con PayPal o con tu billetera.",
     "secure": "Pago seguro",
     "secureDesc": "Todas las transacciones están encriptadas y protegidas."
   },
@@ -693,7 +747,6 @@
         "title": "Comisiones Multinivel",
         "description": "Ganá hasta 5 niveles de profundidad con tracking de comisiones transparente y en tiempo real."
       },
-
       "payments": {
         "title": "Pagos Globales",
         "description": "Soporte para PayPal, MercadoPago y billetera crypto para cobrar desde cualquier lugar."

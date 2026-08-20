@@ -20,7 +20,8 @@ build/
 .env
 .env.local
 .env.*.local
-.env.production
+# .env.production is TRACKED on purpose: VITE_* vars are public build config
+# (API URL, PWA metadata, VAPID public key) and CI/fresh checkouts need them.
 .env.production.local
 # ===========================================
 # Logs
@@ -136,6 +137,13 @@ backend/swagger.json
 # /prompt_kb/  ← removed: prompt_kb is now baked into the bot Docker image
 
 /.vscodeioredis
-
 # Environment files with secrets
 .env.monitoring
+.env.production
+sdd/
+
+# CodeGraph local index (per-checkout, never share across checkouts)
+.codegraph/
+
+# Windsurf local config
+.windsurf/
