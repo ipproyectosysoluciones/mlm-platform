@@ -7,10 +7,7 @@
  */
 import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '../config/database.js';
-import type {
-  VendorMercadoPagoAccountAttributes,
-  VendorMercadoPagoAccountCreationAttributes,
-} from '../types/index.js';
+import type { VendorMercadoPagoAccountAttributes } from '../types/index.js';
 
 type VendorMercadoPagoAccountCreation = Optional<
   VendorMercadoPagoAccountAttributes,
