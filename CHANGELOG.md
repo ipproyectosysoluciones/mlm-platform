@@ -1,3 +1,10 @@
+## [3.5.1] - 2026-08-20(https://github.com/ipproyectosysoluciones/mlm-platform/compare/v3.5.0...v3.5.1) (2026-08-20)
+
+### Bug Fixes
+
+- **ci:** align auto-version release PR to env secret RELEASE_PAT ([e244ff1](https://github.com/ipproyectosysoluciones/mlm-platform/commit/e244ff1f43844f096aa01a7aa0e0ece7edd9b394))
+- **ci:** use PAT for release PR creation in auto-version ([def219e](https://github.com/ipproyectosysoluciones/mlm-platform/commit/def219e2e868ab5d3eae469d7ab3832d7dd388d3))
+
 # [3.5.0](https://github.com/ipproyectosysoluciones/mlm-platform/compare/v3.4.6...v3.5.0) (2026-08-20)
 
 ### Bug Fixes
