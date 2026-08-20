@@ -36,6 +36,10 @@ export class VendorOrder
   declare platformAmount: number;
   declare status: 'pending' | 'processing' | 'completed' | 'cancelled';
   declare notes: string | null;
+  // Marketplace tax fields (B1 / BE-2)
+  declare taxRate: number | null; // DECIMAL(5,4) — IVA rate applied to platform commission (0.19 CO)
+  declare taxAmount: number | null; // DECIMAL(10,4) — IVA over commission
+  declare country: string | null; // ISO 3166-1 alpha-2 (e.g. 'CO')
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
 }
@@ -94,6 +98,26 @@ VendorOrder.init(
     notes: {
       type: DataTypes.TEXT,
       allowNull: true,
+    },
+    // Marketplace tax fields (B1 / BE-2)
+    taxRate: {
+      type: DataTypes.DECIMAL(5, 4),
+      allowNull: true,
+      defaultValue: 0,
+      field: 'tax_rate',
+      comment: 'IVA rate applied to the platform commission (0.19 CO)',
+    },
+    taxAmount: {
+      type: DataTypes.DECIMAL(10, 4),
+      allowNull: true,
+      defaultValue: 0,
+      field: 'tax_amount',
+      comment: 'IVA over the platform commission',
+    },
+    country: {
+      type: DataTypes.STRING(2),
+      allowNull: true,
+      comment: 'ISO 3166-1 alpha-2 country of the vendor charge (CO only)',
     },
   },
   {

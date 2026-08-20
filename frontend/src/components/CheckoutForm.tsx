@@ -10,7 +10,7 @@ import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import { CreditCard, AlertTriangle, Loader2, Check, ExternalLink } from 'lucide-react';
 import type { PaymentMethod } from '../types';
 import { cn } from '../utils/cn';
-import { paymentService } from '../services/paymentService';
+import { paymentService, getApiErrorCode } from '../services/paymentService';
 import type { MPItem } from '../services/paymentService';
 
 const PAYPAL_CLIENT_ID = import.meta.env.VITE_PAYPAL_CLIENT_ID || '';
@@ -39,6 +39,8 @@ interface CheckoutFormProps {
   /** Product data needed to build MP preference items */
   productId?: string;
   productName?: string;
+  /** Marketplace vendor owning the product (B12/FE-3). Omit for platform flow. */
+  vendorId?: string;
 }
 
 /**
@@ -166,6 +168,7 @@ export function CheckoutForm({
   onPayPalSuccess,
   productId,
   productName,
+  vendorId,
 }: CheckoutFormProps) {
   const { t } = useTranslation();
   const [selectedPayment, setSelectedPayment] = useState<PaymentMethod>('mercadopago');
@@ -221,12 +224,25 @@ export function CheckoutForm({
         },
       ];
 
-      const preference = await paymentService.createMercadoPagoPreference(items);
+      // B12 (FE-3): forward vendorId when the product belongs to a marketplace
+      // vendor so the backend charges the business account. Absent → platform flow.
+      const preference = await paymentService.createMercadoPagoPreference(
+        items,
+        undefined,
+        undefined,
+        vendorId
+      );
       const redirectUrl = MP_SANDBOX ? preference.sandboxInitPoint : preference.initPoint;
       paymentService.redirectToMercadoPago(redirectUrl);
     } catch (err) {
       console.error('MercadoPago preference creation failed:', err);
-      setMpError(t('checkout.mpError'));
+      // B12 (FE-2): a vendor without a connected MP account deserves a
+      // dedicated aviso instead of the generic error.
+      setMpError(
+        getApiErrorCode(err) === 'CONNECT_MP_REQUIRED'
+          ? t('checkout.mpVendorNotConnected')
+          : t('checkout.mpError')
+      );
     } finally {
       setMpLoading(false);
     }
@@ -319,7 +335,13 @@ export function CheckoutForm({
         {selectedPayment === 'mercadopago' && (
           <div className="flex items-start gap-3 rounded-lg border border-[#009ee3]/30 bg-[#009ee3]/10 p-4">
             <ExternalLink className="h-5 w-5 shrink-0 text-[#009ee3]" />
-            <p className="text-sm text-slate-200">{t('checkout.mpRedirectInfo')}</p>
+            <div className="flex flex-col gap-1">
+              <p className="text-sm text-slate-200">{t('checkout.mpRedirectInfo')}</p>
+              {/* FE-3: inform the payer the charge goes to the business account */}
+              {vendorId && (
+                <p className="text-sm text-slate-300">{t('checkout.paymentToBusinessAccount')}</p>
+              )}
+            </div>
           </div>
         )}
 

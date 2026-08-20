@@ -21,6 +21,7 @@ import type {
   ReservationCreationAttributes,
 } from '../models/Reservation.js';
 import { CalendarService } from './CalendarService.js';
+import { marketplaceSplitService } from './MarketplaceSplitService.js';
 import { logger } from '../utils/logger.js';
 
 // ============================================
@@ -244,6 +245,35 @@ export class ReservationService {
    */
   async cancel(id: string, reason?: string): Promise<Reservation> {
     const reservation = await this.findById(id);
+
+    // RC-4 (B6): a paid reservation within the 180-day window MUST be fully
+    // refunded (business token) and marked paymentStatus = refunded. The
+    // proportional commission/tax reversal is applied by the webhook once
+    // MercadoPago delivers payment.refunded.
+    // RC-4 (B6): una reserva pagada dentro de la ventana de 180 días DEBE
+    // reembolsarse por completo y marcarse paymentStatus = refunded.
+    const paymentId = reservation.paymentId;
+    if (reservation.paymentStatus === 'paid' && paymentId) {
+      try {
+        await marketplaceSplitService.refundPayment(paymentId);
+        reservation.paymentStatus = 'refunded';
+      } catch (error) {
+        // Out of the 180-day window → no-refund policy (RC-4); cancel proceeds.
+        // Fuera de la ventana de 180 días → política sin devolución; la cancelación continúa.
+        if (error instanceof Error && error.message.includes('REFUND_PERIOD_EXPIRED')) {
+          logger.warn(
+            {
+              service: 'ReservationService',
+              reservationId: reservation.id,
+              paymentId,
+            },
+            'Refund skipped: payment outside the 180-day refund window'
+          );
+        } else {
+          throw error;
+        }
+      }
+    }
 
     // Build admin notes / Construir notas de admin
     let adminNotes = reservation.adminNotes || '';

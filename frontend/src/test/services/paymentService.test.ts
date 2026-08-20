@@ -108,6 +108,22 @@ describe('paymentService', () => {
       });
     });
 
+    it('forwards vendorId to the API when provided (B10 split payments)', async () => {
+      const postSpy = vi.mocked(api.post);
+      const items = [
+        { id: 'item-1', title: 'Item', quantity: 1, unit_price: 50, currency_id: 'USD' },
+      ];
+
+      await paymentService.createMercadoPagoPreference(items, undefined, undefined, 'vendor-abc');
+
+      expect(postSpy).toHaveBeenCalledWith('/payment/mercadopago/create-preference', {
+        items,
+        payer: undefined,
+        externalReference: undefined,
+        vendorId: 'vendor-abc',
+      });
+    });
+
     it('returns preference response data', async () => {
       const result = await paymentService.createMercadoPagoPreference([
         { id: 'i1', title: 'Item', quantity: 1, unit_price: 10, currency_id: 'USD' },

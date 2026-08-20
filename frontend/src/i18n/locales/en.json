@@ -128,10 +128,60 @@
     "logout": "Logout",
     "myProfile": "My Profile",
     "twoFactor": "Two-Factor Authentication",
-    "properties": "Properties",
-    "tours": "Tours",
     "reservations": "My Reservations",
-    "signIn": "Sign In"
+    "signIn": "Sign In",
+    "toggleTheme": "Toggle theme"
+  },
+  "wallet": {
+    "title": "My Wallet",
+    "subtitle": "Manage your earnings and withdrawals",
+    "balance": "Wallet Balance",
+    "availableBalance": "Available Balance",
+    "noWallet": "No wallet found",
+    "ready": "Ready",
+    "lastUpdated": "Updated",
+    "clickToView": "Click to view details →",
+    "transactions": "Transactions",
+    "transactionHistory": "Transaction History",
+    "noTransactions": "No transactions yet",
+    "loadMore": "Load More",
+    "allTypes": "All Types",
+    "commissions": "Commissions",
+    "withdrawals": "Withdrawals",
+    "refunds": "Refunds",
+    "amount": "Amount",
+    "enterAmount": "Please enter an amount",
+    "available": "Available",
+    "insufficientBalance": "Insufficient balance",
+    "fee": "Fee",
+    "netAmount": "Net Amount",
+    "requestedAmount": "Requested Amount",
+    "requestWithdrawal": "Request Withdrawal",
+    "withdrawalSuccess": "Withdrawal request created successfully!",
+    "withdrawalPending": "Your request is pending approval.",
+    "withdrawalFailed": "Withdrawal failed",
+    "withdrawalRequested": "Withdrawal Requested!",
+    "withdrawalWarning": "Minimum withdrawal amount is $20.",
+    "confirm": "Confirm",
+    "confirmWithdrawal": "Confirm Withdrawal",
+    "processing": "Processing...",
+    "minWithdrawal": "Minimum withdrawal is $20",
+    "minNote": "Minimum withdrawal: $20"
+  },
+  "vendor": {
+    "mpConnect": {
+      "title": "Connect your MercadoPago account",
+      "subtitle": "Receive split payments for your services directly in your account.",
+      "connectedTitle": "MercadoPago account connected",
+      "connectedSubtitle": "Payments from your reservations are deposited directly into your account.",
+      "expiredTitle": "MercadoPago connection expired",
+      "expiredSubtitle": "Reconnect your account to keep receiving payments.",
+      "connect": "Connect",
+      "reconnect": "Reconnect",
+      "disconnect": "Disconnect",
+      "accountId": "Account ID",
+      "expiresAt": "Expires"
+    }
   },
   "twoFactor": {
     "title": "Two-Factor Authentication",
@@ -498,6 +548,8 @@
     "processing": "Processing...",
     "simulatedWarning": "This is a simulated payment. No real charge will be made.",
     "mpRedirectInfo": "You will be redirected to MercadoPago to complete your payment securely.",
+    "mpVendorNotConnected": "The business hasn't connected MercadoPago yet.",
+    "paymentToBusinessAccount": "The payment will be made to the business account.",
     "payWithMercadoPago": "Pay with MercadoPago",
     "mpError": "Could not create payment preference. Please try again.",
     "success": "Payment Successful",
@@ -612,6 +664,7 @@
     "back": "Back",
     "continue": "Continue",
     "paymentError": "Failed to process payment. Please try again.",
+    "mpVendorNotConnected": "The business hasn't connected MercadoPago yet. You can pay with PayPal or your wallet.",
     "secure": "Secure payment",
     "secureDesc": "All transactions are encrypted and protected."
   },
@@ -697,7 +750,6 @@
         "title": "Multi-Level Commissions",
         "description": "Earn up to 5 levels deep with transparent, real-time commission tracking."
       },
-
       "payments": {
         "title": "Global Payments",
         "description": "PayPal, MercadoPago, and crypto wallet support to collect from anywhere."

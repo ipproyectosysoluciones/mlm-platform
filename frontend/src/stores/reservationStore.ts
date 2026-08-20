@@ -17,64 +17,25 @@ import type {
 } from '../services/reservationService';
 import type { Property } from '../services/propertyService';
 import type { TourPackage, TourAvailability } from '../services/tourService';
+import type {
+  WizardStep,
+  WizardData,
+  PropertyWizardData,
+  TourWizardData,
+} from '../types/reservation';
 
 // ============================================
-// Types / Tipos
+// Types re-exported / Tipos re-exportados
 // ============================================
-
-/**
- * Wizard step enum (now includes 'payment' for post-confirmation flow)
- * Enum de paso del wizard (ahora incluye 'payment' para flujo post-confirmación)
- */
-export type WizardStep = 'dates' | 'guests' | 'confirm' | 'payment';
-
-/**
- * Wizard data for a property reservation
- * Datos del wizard para reserva de propiedad
- */
-export interface PropertyWizardData {
-  type: 'property';
-  property: Property;
-  checkIn: string;
-  checkOut: string;
-  guests: number;
-  notes: string;
-}
-
-/**
- * Wizard data for a tour reservation
- * Datos del wizard para reserva de tour
- */
-export interface TourWizardData {
-  type: 'tour';
-  tour: TourPackage;
-  availability: TourAvailability;
-  guests: number;
-  notes: string;
-}
-
-export type WizardData = PropertyWizardData | TourWizardData;
-
-/**
- * Computed price breakdown for the current wizard state
- * Desglose de precio calculado para el estado actual del wizard
- */
-export interface PriceBreakdown {
-  /** Price per unit (night for properties, person for tours) / Precio por unidad */
-  pricePerUnit: number;
-  /** Currency code / Código de moneda */
-  currency: string;
-  /** Number of nights (property) or 1 (tour) / Cantidad de noches o 1 */
-  totalNights: number;
-  /** Number of guests / Cantidad de huéspedes */
-  guestCount: number;
-  /** pricePerUnit × totalNights / Subtotal sin multiplicar por huéspedes */
-  subtotal: number;
-  /** pricePerUnit × totalNights × guestCount / Total final */
-  totalPrice: number;
-  /** Whether it's a property (per night) or tour (per person) / Si es propiedad o tour */
-  isProperty: boolean;
-}
+//
+// Types moved to types/reservation.ts — import from there in new code
+// Tipos movidos a types/reservation.ts — importar desde allí en código nuevo
+export type {
+  WizardStep,
+  WizardData,
+  PropertyWizardData,
+  TourWizardData,
+} from '../types/reservation';
 
 /**
  * Reservation store state interface
@@ -129,83 +90,7 @@ interface ReservationState {
 // Price Utilities / Utilidades de precio
 // ============================================
 
-/**
- * Calculate the number of days between two date strings
- * Calcular la cantidad de días entre dos strings de fecha
- * @param checkIn - ISO date string for check-in
- * @param checkOut - ISO date string for check-out
- * @returns Number of nights (minimum 1)
- */
-export function daysBetween(checkIn: string, checkOut: string): number {
-  if (!checkIn || !checkOut) return 0;
-  const start = new Date(checkIn);
-  const end = new Date(checkOut);
-  const diff = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
-  return Math.max(diff, 0);
-}
-
-/**
- * Compute full price breakdown from current wizard data
- * Calcular desglose completo de precio desde los datos del wizard
- * @param wizardData - Current wizard data / Datos actuales del wizard
- * @returns PriceBreakdown or null if data is insufficient
- */
-export function computePriceBreakdown(wizardData: WizardData | null): PriceBreakdown | null {
-  if (!wizardData) return null;
-
-  if (wizardData.type === 'property') {
-    const totalNights = daysBetween(wizardData.checkIn, wizardData.checkOut);
-    const pricePerUnit = Number(wizardData.property.price);
-    const currency = wizardData.property.currency;
-    const guestCount = wizardData.guests;
-    const subtotal = pricePerUnit * totalNights;
-    const totalPrice = subtotal * guestCount;
-
-    return {
-      pricePerUnit,
-      currency,
-      totalNights,
-      guestCount,
-      subtotal,
-      totalPrice,
-      isProperty: true,
-    };
-  }
-
-  // Tour: price is per person, 1 "night"
-  const pricePerUnit = Number(wizardData.tour.price);
-  const currency = wizardData.tour.currency;
-  const guestCount = wizardData.guests;
-  const totalNights = 1;
-  const subtotal = pricePerUnit * totalNights;
-  const totalPrice = subtotal * guestCount;
-
-  return {
-    pricePerUnit,
-    currency,
-    totalNights,
-    guestCount,
-    subtotal,
-    totalPrice,
-    isProperty: false,
-  };
-}
-
-/**
- * Format a price amount with currency symbol
- * Formatear un monto con símbolo de moneda
- * @param amount - Numeric amount
- * @param currency - Currency code (e.g. "USD", "ARS")
- * @returns Formatted string like "$1,200.00"
- */
-export function formatPrice(amount: number, currency: string): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: currency || 'USD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
-  }).format(amount);
-}
+export { daysBetween, computePriceBreakdown, formatPrice } from '../utils/pricing';
 
 // ============================================
 // Initial State / Estado inicial

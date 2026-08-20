@@ -92,8 +92,8 @@ test.describe('ToursPage — Tour Cards', () => {
               category: 'adventure',
               price: 85000,
               currency: 'ARS',
-              duration: 7,
-              maxGuests: 12,
+              durationDays: 7,
+              maxCapacity: 12,
               images: [],
             },
             {
@@ -103,8 +103,8 @@ test.describe('ToursPage — Tour Cards', () => {
               category: 'gastronomic',
               price: 45000,
               currency: 'ARS',
-              duration: 3,
-              maxGuests: 8,
+              durationDays: 3,
+              maxCapacity: 8,
               images: [],
             },
           ],
@@ -134,8 +134,8 @@ test.describe('ToursPage — Tour Cards', () => {
               category: 'adventure',
               price: 85000,
               currency: 'ARS',
-              duration: 7,
-              maxGuests: 12,
+              durationDays: 7,
+              maxCapacity: 12,
               images: [],
             },
           ],
@@ -167,8 +167,8 @@ test.describe('ToursPage — Tour Cards', () => {
               category: 'ecotourism',
               price: 30000,
               currency: 'ARS',
-              duration: 3,
-              maxGuests: 20,
+              durationDays: 3,
+              maxCapacity: 20,
               images: [],
             },
           ],
@@ -196,8 +196,8 @@ test.describe('ToursPage — Tour Cards', () => {
               category: 'luxury',
               price: 200000,
               currency: 'ARS',
-              duration: 2,
-              maxGuests: 6,
+              durationDays: 2,
+              maxCapacity: 6,
               images: [],
             },
           ],
@@ -225,8 +225,8 @@ test.describe('ToursPage — Tour Cards', () => {
               category: 'ecotourism',
               price: 55000,
               currency: 'ARS',
-              duration: 4,
-              maxGuests: 10,
+              durationDays: 4,
+              maxCapacity: 10,
               images: [],
             },
           ],
@@ -255,8 +255,8 @@ test.describe('ToursPage — Tour Cards', () => {
               category: 'relaxation',
               price: 25000,
               currency: 'ARS',
-              duration: 2,
-              maxGuests: 15,
+              durationDays: 2,
+              maxCapacity: 15,
               images: [],
             },
           ],
@@ -287,8 +287,8 @@ test.describe('ToursPage — Tour Cards', () => {
               category: 'adventure',
               price: 60000,
               currency: 'ARS',
-              duration: 5,
-              maxGuests: 12,
+              durationDays: 5,
+              maxCapacity: 12,
               images: [],
             },
           ],
@@ -339,8 +339,8 @@ test.describe('ToursPage — Tour Cards', () => {
               category: 'cultural',
               price: 15000,
               currency: 'ARS',
-              duration: 1,
-              maxGuests: 30,
+              durationDays: 1,
+              maxCapacity: 30,
               images: [],
             },
           ],
@@ -382,8 +382,8 @@ test.describe('ToursPage — Category Badges', () => {
                 category,
                 price: 40000,
                 currency: 'ARS',
-                duration: 2,
-                maxGuests: 10,
+                durationDays: 2,
+                maxCapacity: 10,
                 images: [],
               },
             ],
@@ -417,9 +417,11 @@ test.describe('ToursPage — States', () => {
     });
 
     await page.goto(`${baseURL}/tours`, { waitUntil: 'networkidle' });
-    await expect(page.getByText(/No tours found|No se encontraron tours/i)).toBeVisible();
     await expect(
-      page.getByText(/Try adjusting the filters|Probá ajustando los filtros/i)
+      page.getByRole('heading', {
+        level: 3,
+        name: /No results found|No se encontraron resultados/i,
+      })
     ).toBeVisible();
   });
 
@@ -549,8 +551,8 @@ test.describe('ToursPage — Pagination', () => {
             category: 'cultural',
             price: 20000,
             currency: 'ARS',
-            duration: 2,
-            maxGuests: 10,
+            durationDays: 2,
+            maxCapacity: 10,
             images: [],
           })),
           pagination: { total: 36, page: 1, limit: 12, totalPages: 3 },
@@ -578,8 +580,8 @@ test.describe('ToursPage — Pagination', () => {
             category: 'adventure',
             price: 10000,
             currency: 'ARS',
-            duration: 1,
-            maxGuests: 5,
+            durationDays: 1,
+            maxCapacity: 5,
             images: [],
           })),
           pagination: { total: 10, page: 1, limit: 5, totalPages: 2 },
@@ -605,8 +607,8 @@ test.describe('ToursPage — Pagination', () => {
             category: 'adventure',
             price: 10000,
             currency: 'ARS',
-            duration: 1,
-            maxGuests: 5,
+            durationDays: 1,
+            maxCapacity: 5,
             images: [],
           })),
           pagination: { total: 10, page: 2, limit: 5, totalPages: 2 },
@@ -615,6 +617,11 @@ test.describe('ToursPage — Pagination', () => {
     });
 
     await page.goto(`${baseURL}/tours`, { waitUntil: 'networkidle' });
+
+    // Advance to the last page (the component only disables "Siguiente"
+    // when its internal page state reaches totalPages)
+    await page.getByRole('button', { name: /Next|Siguiente/i }).click();
+
     await expect(page.getByRole('button', { name: /Next|Siguiente/i })).toBeDisabled();
   });
 
@@ -633,8 +640,8 @@ test.describe('ToursPage — Pagination', () => {
               category: 'relaxation',
               price: 12000,
               currency: 'ARS',
-              duration: 1,
-              maxGuests: 4,
+              durationDays: 1,
+              maxCapacity: 4,
               images: [],
             },
           ],

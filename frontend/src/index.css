@@ -1,8 +1,10 @@
 @import 'tailwindcss';
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Custom Design System for Nexo Real */
 @theme {
-  /* Brand Colors - Premium Dark Palette with OKLCH */
+  /* Brand Colors - Premium Palette with OKLCH */
   --color-brand-50: oklch(98% 0.02 260);
   --color-brand-100: oklch(94% 0.05 260);
   --color-brand-200: oklch(86% 0.08 260);
@@ -22,48 +24,48 @@
   --color-accent-warning: oklch(80% 0.18 45);
   --color-accent-danger: oklch(65% 0.22 25);
 
-  /* Background - Rich dark with depth */
-  --color-background: oklch(15% 0.02 260);
-  --color-background-subtle: oklch(18% 0.025 260);
-  --color-background-elevated: oklch(22% 0.03 260);
-  --color-foreground: oklch(98% 0.015 260);
-  --color-foreground-muted: oklch(70% 0.02 260);
-  --color-foreground-subtle: oklch(55% 0.025 260);
+  /* Background - Cool light with subtle depth */
+  --color-background: oklch(0.985 0.005 260);
+  --color-background-subtle: oklch(0.96 0.008 260);
+  --color-background-elevated: oklch(1 0 0);
+  --color-foreground: oklch(0.21 0.03 260);
+  --color-foreground-muted: oklch(0.45 0.02 260);
+  --color-foreground-subtle: oklch(0.55 0.02 260);
 
   /* Card & Surface */
-  --color-card: oklch(20% 0.03 260);
-  --color-card-foreground: oklch(98% 0.015 260);
-  --color-popover: oklch(24% 0.035 260);
-  --color-popover-foreground: oklch(98% 0.015 260);
+  --color-card: oklch(1 0 0);
+  --color-card-foreground: oklch(0.21 0.03 260);
+  --color-popover: oklch(1 0 0);
+  --color-popover-foreground: oklch(0.21 0.03 260);
 
   /* Primary - Deep indigo with authority */
-  --color-primary: oklch(55% 0.25 260);
-  --color-primary-foreground: oklch(98% 0.02 260);
-  --color-primary-hover: oklch(60% 0.28 260);
-  --color-primary-active: oklch(48% 0.22 260);
+  --color-primary: oklch(0.5 0.22 260);
+  --color-primary-foreground: oklch(0.985 0.02 260);
+  --color-primary-hover: oklch(0.55 0.24 260);
+  --color-primary-active: oklch(0.45 0.2 260);
 
   /* Secondary - Subtle distinction */
-  --color-secondary: oklch(28% 0.04 260);
-  --color-secondary-foreground: oklch(90% 0.02 260);
-  --color-secondary-hover: oklch(35% 0.05 260);
+  --color-secondary: oklch(0.92 0.01 260);
+  --color-secondary-foreground: oklch(0.3 0.03 260);
+  --color-secondary-hover: oklch(0.88 0.015 260);
 
   /* Muted - For secondary text and borders */
-  --color-muted: oklch(30% 0.04 260);
-  --color-muted-foreground: oklch(60% 0.03 260);
+  --color-muted: oklch(0.93 0.01 260);
+  --color-muted-foreground: oklch(0.5 0.02 260);
 
   /* Accent - Vibrant highlights */
-  --color-accent: oklch(55% 0.2 160);
-  --color-accent-foreground: oklch(20% 0.02 260);
+  --color-accent: oklch(0.65 0.16 160);
+  --color-accent-foreground: oklch(0.2 0.02 260);
 
   /* Destructive */
-  --color-destructive: oklch(60% 0.22 25);
-  --color-destructive-foreground: oklch(98% 0.02 260);
+  --color-destructive: oklch(0.58 0.2 25);
+  --color-destructive-foreground: oklch(0.98 0.02 260);
 
   /* Border & Input */
-  --color-border: oklch(35% 0.05 260);
-  --color-border-subtle: oklch(28% 0.04 260);
-  --color-input: oklch(30% 0.04 260);
-  --color-ring: oklch(55% 0.25 260);
+  --color-border: oklch(0.9 0.01 260);
+  --color-border-subtle: oklch(0.94 0.008 260);
+  --color-input: oklch(0.9 0.01 260);
+  --color-ring: oklch(0.55 0.22 260);
 
   /* Radius */
   --radius-xs: 0.25rem;
@@ -74,13 +76,13 @@
   --radius-2xl: 1.5rem;
   --radius-full: 9999px;
 
-  /* Shadows - Layered for depth */
-  --shadow-xs: 0 1px 2px oklch(0% 0 260 / 0.3);
-  --shadow-sm: 0 2px 4px oklch(0% 0 260 / 0.2), 0 4px 8px oklch(0% 0 260 / 0.1);
-  --shadow-md: 0 4px 8px oklch(0% 0 260 / 0.25), 0 8px 16px oklch(0% 0 260 / 0.15);
-  --shadow-lg: 0 8px 16px oklch(0% 0 260 / 0.3), 0 16px 32px oklch(0% 0 260 / 0.2);
-  --shadow-glow: 0 0 20px oklch(55% 0.25 260 / 0.3);
-  --shadow-glow-accent: 0 0 20px oklch(72% 0.22 160 / 0.4);
+  /* Shadows - Soft layered for light surfaces */
+  --shadow-xs: 0 1px 2px oklch(0% 0 0 / 0.05);
+  --shadow-sm: 0 2px 4px oklch(0% 0 0 / 0.04), 0 4px 8px oklch(0% 0 0 / 0.06);
+  --shadow-md: 0 4px 8px oklch(0% 0 0 / 0.06), 0 8px 16px oklch(0% 0 0 / 0.08);
+  --shadow-lg: 0 8px 16px oklch(0% 0 0 / 0.08), 0 16px 32px oklch(0% 0 0 / 0.1);
+  --shadow-glow: 0 0 20px oklch(55% 0.25 260 / 0.12);
+  --shadow-glow-accent: 0 0 20px oklch(72% 0.22 160 / 0.18);
 
   /* Animations */
   --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
@@ -98,7 +100,63 @@
 /* Base styles */
 @layer base {
   :root {
+    color-scheme: light;
+  }
+
+  /* Dark theme tokens - preserve the original dark look exactly */
+  .dark {
     color-scheme: dark;
+
+    /* Background - Rich dark with depth */
+    --color-background: oklch(15% 0.02 260);
+    --color-background-subtle: oklch(18% 0.025 260);
+    --color-background-elevated: oklch(22% 0.03 260);
+    --color-foreground: oklch(98% 0.015 260);
+    --color-foreground-muted: oklch(70% 0.02 260);
+    --color-foreground-subtle: oklch(55% 0.025 260);
+
+    /* Card & Surface */
+    --color-card: oklch(20% 0.03 260);
+    --color-card-foreground: oklch(98% 0.015 260);
+    --color-popover: oklch(24% 0.035 260);
+    --color-popover-foreground: oklch(98% 0.015 260);
+
+    /* Primary - Deep indigo with authority */
+    --color-primary: oklch(55% 0.25 260);
+    --color-primary-foreground: oklch(98% 0.02 260);
+    --color-primary-hover: oklch(60% 0.28 260);
+    --color-primary-active: oklch(48% 0.22 260);
+
+    /* Secondary - Subtle distinction */
+    --color-secondary: oklch(28% 0.04 260);
+    --color-secondary-foreground: oklch(90% 0.02 260);
+    --color-secondary-hover: oklch(35% 0.05 260);
+
+    /* Muted - For secondary text and borders */
+    --color-muted: oklch(30% 0.04 260);
+    --color-muted-foreground: oklch(60% 0.03 260);
+
+    /* Accent - Vibrant highlights */
+    --color-accent: oklch(55% 0.2 160);
+    --color-accent-foreground: oklch(20% 0.02 260);
+
+    /* Destructive */
+    --color-destructive: oklch(60% 0.22 25);
+    --color-destructive-foreground: oklch(98% 0.02 260);
+
+    /* Border & Input */
+    --color-border: oklch(35% 0.05 260);
+    --color-border-subtle: oklch(28% 0.04 260);
+    --color-input: oklch(30% 0.04 260);
+    --color-ring: oklch(55% 0.25 260);
+
+    /* Shadows - Layered for depth */
+    --shadow-xs: 0 1px 2px oklch(0% 0 260 / 0.3);
+    --shadow-sm: 0 2px 4px oklch(0% 0 260 / 0.2), 0 4px 8px oklch(0% 0 260 / 0.1);
+    --shadow-md: 0 4px 8px oklch(0% 0 260 / 0.25), 0 8px 16px oklch(0% 0 260 / 0.15);
+    --shadow-lg: 0 8px 16px oklch(0% 0 260 / 0.3), 0 16px 32px oklch(0% 0 260 / 0.2);
+    --shadow-glow: 0 0 20px oklch(55% 0.25 260 / 0.3);
+    --shadow-glow-accent: 0 0 20px oklch(72% 0.22 160 / 0.4);
   }
 
   * {
@@ -274,9 +332,13 @@
 
 /* Glass effect */
 .glass {
-  background: oklch(20% 0.03 260 / 0.8);
+  background: oklch(1 0 0 / 0.8);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+}
+
+.dark .glass {
+  background: oklch(20% 0.03 260 / 0.8);
 }
 
 /* Gradient backgrounds */
@@ -285,6 +347,10 @@
 }
 
 .bg-gradient-surface {
+  background: linear-gradient(180deg, oklch(1 0 0) 0%, oklch(0.985 0.005 260) 100%);
+}
+
+.dark .bg-gradient-surface {
   background: linear-gradient(180deg, oklch(20% 0.03 260) 0%, oklch(15% 0.02 260) 100%);
 }
 

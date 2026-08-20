@@ -123,6 +123,10 @@ test.describe('Push Notifications', () => {
   });
 
   test('should handle push subscription API errors gracefully', async ({ page }) => {
+    // Requires a real backend on localhost:3000 (vite preview proxy target).
+    // The CI runner has no backend, so the proxy returns 502. See #353.
+    test.skip(process.env.CI === 'true', 'requires local backend via vite preview proxy');
+
     // Go to app (not logged in - push subscription requires auth)
     await page.goto(baseURL, { waitUntil: 'networkidle' });
 
@@ -156,6 +160,10 @@ test.describe('Push Notifications', () => {
   });
 
   test('should be able to fetch VAPID public key from backend', async ({ page }) => {
+    // Requires a real backend on localhost:3000 (vite preview proxy target).
+    // The CI runner has no backend, so the proxy returns 502. See #353.
+    test.skip(process.env.CI === 'true', 'requires local backend via vite preview proxy');
+
     // The VAPID public key endpoint should be public
     const response = await page.request.get(`${baseURL}/api/push/vapid-public-key`);
 
@@ -168,6 +176,10 @@ test.describe('Push Notifications', () => {
   });
 
   test('should handle landing page API for products', async ({ page }) => {
+    // Requires a real backend on localhost:3000 (vite preview proxy target).
+    // The CI runner has no backend, so the proxy returns 502. See #353.
+    test.skip(process.env.CI === 'true', 'requires local backend via vite preview proxy');
+
     // Go to a product landing page
     // First we need a product ID - let's try a sample UUID format
     const productId = '00000000-0000-0000-0000-000000000001';
@@ -183,6 +195,10 @@ test.describe('Push Notifications', () => {
   });
 
   test('should handle public profile products API', async ({ page }) => {
+    // Requires a real backend on localhost:3000 (vite preview proxy target).
+    // The CI runner has no backend, so the proxy returns 502. See #353.
+    test.skip(process.env.CI === 'true', 'requires local backend via vite preview proxy');
+
     // Try to fetch products for a sample referral code
     const response = await page.request.get(`${baseURL}/api/public/profile/TESTCODE/products`);
 

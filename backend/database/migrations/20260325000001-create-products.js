@@ -24,7 +24,8 @@ module.exports = {
           'hbo_max',
           'amazon_prime',
           'youtube_premium',
-          'apple_tv'
+          'apple_tv',
+          'other'
         ),
         allowNull: false,
       },
@@ -55,7 +56,7 @@ module.exports = {
       updated_at: {
         type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
     });
 

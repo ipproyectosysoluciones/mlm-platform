@@ -220,10 +220,10 @@ describe('AdminPropertiesPage — integration', () => {
     const addButton = addButtons.find((el) => el.closest('button'));
     fireEvent.click(addButton!.closest('button')!);
 
-    // Assert - modal form header appears (the form title inside the modal)
+    // Assert - modal form appears (the form title inside the modal)
     await waitFor(() => {
-      // Modal shows h2 "Nueva propiedad" and a submit button "Crear propiedad"
-      expect(screen.getByRole('button', { name: /crear propiedad/i })).toBeInTheDocument();
+      // Modal shows h2 "Nueva propiedad" and a submit button "Guardar"
+      expect(screen.getByRole('button', { name: /guardar/i })).toBeInTheDocument();
     });
   });
 
@@ -238,7 +238,7 @@ describe('AdminPropertiesPage — integration', () => {
     fireEvent.click(addButton!.closest('button')!);
 
     // Wait for submit button to appear
-    const submitButton = await screen.findByRole('button', { name: /crear propiedad/i });
+    const submitButton = await screen.findByRole('button', { name: /guardar/i });
 
     // Fill all required fields using placeholder text (labels don't use htmlFor)
     const titleInput = screen.getByPlaceholderText(/apartamento moderno/i);
