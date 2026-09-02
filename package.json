@@ -65,7 +65,7 @@
       "esbuild": ">=0.28.1",
       "baileys": ">=7.0.0-rc12",
       "@opentelemetry/core": ">=2.8.0",
-      "fast-uri": ">=4.1.2",
+      "fast-uri": ">=4.1.4",
       "body-parser": ">=2.3.0",
       "sharp": ">=0.35.0",
       "@conventional-changelog/git-client": ">=2.0.0"
