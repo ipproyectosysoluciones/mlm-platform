@@ -65,19 +65,6 @@ export function WithdrawalForm({ onSuccess, onError, className }: WithdrawalForm
   const netAmount = parsedAmount - feeAmount;
   const availableBalance = balance?.balance || 0;
 
-  // Reset success when amount changes
-  useEffect(() => {
-    if (isSuccess && amount) setIsSuccess(false);
-  }, [amount, isSuccess]);
-
-  // Clear errors when inputs change
-  useEffect(() => {
-    if (validationError || withdrawalError) {
-      setValidationError(null);
-      clearError();
-    }
-  }, [amount, email]);
-
   const validate = (): string | null => {
     const num = parseFloat(amount);
 
@@ -106,6 +93,11 @@ export function WithdrawalForm({ onSuccess, onError, className }: WithdrawalForm
     const value = e.target.value;
     if (value && !/^\d*\.?\d{0,2}$/.test(value)) return;
     setAmount(value);
+    if (isSuccess) setIsSuccess(false);
+    if (validationError || withdrawalError) {
+      setValidationError(null);
+      clearError();
+    }
     if (value) {
       const error = validate();
       setValidationError(error);
@@ -116,6 +108,11 @@ export function WithdrawalForm({ onSuccess, onError, className }: WithdrawalForm
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
+    if (isSuccess) setIsSuccess(false);
+    if (validationError || withdrawalError) {
+      setValidationError(null);
+      clearError();
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

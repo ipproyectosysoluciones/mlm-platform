@@ -7,7 +7,6 @@
 import { useState } from 'react';
 import { X, Mail, CheckCircle, XCircle, Loader2 } from 'lucide-react';
 import { walletService } from '../../services/api';
-import { cn } from '../../utils/cn';
 import type { WithdrawalRequest } from '../../types';
 
 interface WithdrawalApprovalModalProps {

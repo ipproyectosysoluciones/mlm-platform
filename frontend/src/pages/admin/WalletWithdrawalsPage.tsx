@@ -5,9 +5,8 @@
  * @module pages/admin/WalletWithdrawalsPage
  */
 import { useState, useEffect, useCallback } from 'react';
-import { DollarSign, CheckCircle, XCircle, Mail, RefreshCw } from 'lucide-react';
+import { DollarSign, CheckCircle, Mail, RefreshCw } from 'lucide-react';
 import { walletService } from '../../services/api';
-import AdminStatusBadge from '../../components/admin/AdminStatusBadge';
 import WithdrawalApprovalModal from '../../components/admin/WithdrawalApprovalModal';
 import type { WithdrawalRequest, WithdrawalStatus, AdminListWithdrawalsParams } from '../../types';
 
@@ -38,7 +37,7 @@ function formatCurrency(amount: number): string {
   }).format(amount);
 }
 
-function formatDate(date: string): string {
+function formatDate(date: string | Date): string {
   return new Date(date).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',

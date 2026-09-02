@@ -33,9 +33,13 @@ interface TransactionHistoryProps {
  * Iconos de tipo de transacción
  */
 const transactionIcons: Record<WalletTransactionType, typeof ArrowDownCircle> = {
+  commission_earned: ArrowDownCircle,
   commission: ArrowDownCircle,
   withdrawal: ArrowUpCircle,
   refund: RefreshCcw,
+  fee: ArrowUpCircle,
+  adjustment: RefreshCcw,
+  deposit: ArrowDownCircle,
 };
 
 /**
@@ -43,9 +47,13 @@ const transactionIcons: Record<WalletTransactionType, typeof ArrowDownCircle> = 
  * Colores de tipo de transacción
  */
 const transactionColors: Record<WalletTransactionType, string> = {
+  commission_earned: 'text-emerald-500 bg-emerald-50',
   commission: 'text-emerald-500 bg-emerald-50',
   withdrawal: 'text-amber-500 bg-amber-50',
   refund: 'text-blue-500 bg-blue-50',
+  fee: 'text-red-500 bg-red-50',
+  adjustment: 'text-purple-500 bg-purple-50',
+  deposit: 'text-emerald-500 bg-emerald-50',
 };
 
 /**
