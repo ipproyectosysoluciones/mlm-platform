@@ -194,6 +194,48 @@ describe('InvoiceReadController - getInvoiceById', () => {
       })
     );
   });
+
+  it('returns 403 INVOICE_FORBIDDEN when non-owner non-admin requests invoice', async () => {
+    const error = new AppError(
+      403,
+      'INVOICE_FORBIDDEN',
+      'You do not have permission to view this invoice'
+    );
+    (invoiceService.findByIdForUser as jest.Mock).mockRejectedValue(error);
+
+    const req = createMockReq({
+      user: { id: 'other-user', email: 'other@test.com', role: 'user', referralCode: 'REF-002' },
+      params: { id: VALID_UUID },
+    });
+    const res = createMockRes();
+    const next = jest.fn();
+
+    await getInvoiceById(req, res, next);
+    await flushPromises();
+
+    expect(invoiceService.findByIdForUser).toHaveBeenCalledWith(VALID_UUID, 'other-user', 'user');
+    expect(next).toHaveBeenCalledWith(error);
+  });
+
+  it('returns 200 when admin requests another user invoice', async () => {
+    const mockInvoice = buildMockInvoice();
+    (invoiceService.findByIdForUser as jest.Mock).mockResolvedValue(mockInvoice);
+
+    const req = createMockReq({
+      user: { id: 'admin-uuid', email: 'admin@test.com', role: 'admin', referralCode: 'REF-ADMIN' },
+      params: { id: VALID_UUID },
+    });
+    const res = createMockRes();
+    const next = jest.fn();
+
+    await getInvoiceById(req, res, next);
+    await flushPromises();
+
+    expect(invoiceService.findByIdForUser).toHaveBeenCalledWith(VALID_UUID, 'admin-uuid', 'admin');
+    expect(res.json).toHaveBeenCalledWith(
+      expect.objectContaining({ success: true, data: mockInvoice })
+    );
+  });
 });
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -335,6 +377,48 @@ describe('InvoiceWriteController - cancelInvoice', () => {
     await flushPromises();
 
     expect(next).toHaveBeenCalledWith(error);
+  });
+
+  it('returns 403 INVOICE_FORBIDDEN when non-owner non-admin attempts to cancel invoice', async () => {
+    const error = new AppError(
+      403,
+      'INVOICE_FORBIDDEN',
+      'You do not have permission to cancel this invoice'
+    );
+    (invoiceService.cancel as jest.Mock).mockRejectedValue(error);
+
+    const req = createMockReq({
+      user: { id: 'other-user', email: 'other@test.com', role: 'user', referralCode: 'REF-002' },
+      params: { id: VALID_UUID },
+    });
+    const res = createMockRes();
+    const next = jest.fn();
+
+    await cancelInvoice(req, res, next);
+    await flushPromises();
+
+    expect(invoiceService.cancel).toHaveBeenCalledWith(VALID_UUID, 'other-user', 'user');
+    expect(next).toHaveBeenCalledWith(error);
+  });
+
+  it('returns 200 when admin cancels another user invoice', async () => {
+    const mockInvoice = buildMockInvoice();
+    (invoiceService.cancel as jest.Mock).mockResolvedValue(mockInvoice);
+
+    const req = createMockReq({
+      user: { id: 'admin-uuid', email: 'admin@test.com', role: 'admin', referralCode: 'REF-ADMIN' },
+      params: { id: VALID_UUID },
+    });
+    const res = createMockRes();
+    const next = jest.fn();
+
+    await cancelInvoice(req, res, next);
+    await flushPromises();
+
+    expect(invoiceService.cancel).toHaveBeenCalledWith(VALID_UUID, 'admin-uuid', 'admin');
+    expect(res.json).toHaveBeenCalledWith(
+      expect.objectContaining({ success: true, data: mockInvoice })
+    );
   });
 });
 
