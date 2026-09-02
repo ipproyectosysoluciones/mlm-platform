@@ -546,6 +546,78 @@ export class WalletService {
   }
 
   // ============================================
+  // Gateway sync — Sincronización con pasarela
+  // ============================================
+
+  /**
+   * Sync withdrawal status from gateway (webhook or poll)
+   * Sincronizar estado de retiro desde pasarela
+   *
+   * Only processes if: withdrawal exists, gatewayPayoutId matches, status is 'approved'
+   * paid→paid, failed/reversed/cancelled→failed
+   */
+  async syncFromGateway(payoutId: string, status: PayoutStatus): Promise<void> {
+    return sequelize.transaction(async (t) => {
+      const w = await WithdrawalRequest.findOne({
+        where: { gatewayPayoutId: payoutId },
+        transaction: t,
+        lock: (t as any).LOCK.UPDATE,
+      });
+
+      if (!w || w.status !== 'approved') {
+        return; // Only sync if still approved with matching payoutId
+      }
+
+      if (status === 'paid') {
+        w.status = 'paid';
+        w.processedAt = new Date();
+        w.gatewayStatus = 'PAID';
+      } else if (['failed', 'reversed', 'cancelled'].includes(status)) {
+        w.status = 'failed';
+        w.gatewayStatus = status.toUpperCase();
+      }
+
+      w.lastGatewaySyncAt = new Date();
+      await w.save({ transaction: t });
+
+      // Notification best-effort
+      try {
+        const { walletNotificationService } = await import('./WalletNotificationService.js');
+        walletNotificationService.notifyWithdrawalStatus(w, w.status).catch(() => {});
+      } catch {
+        // Ignore notification errors
+      }
+    });
+  }
+
+  /**
+   * Poll gateway for status updates on en-flight withdrawals
+   * Consultar pasarela para actualizaciones de estado
+   */
+  async syncPayoutStatuses(): Promise<void> {
+    const enFlight = await WithdrawalRequest.findAll({
+      where: {
+        status: 'approved',
+        gatewayPayoutId: { [Op.ne]: null },
+      },
+    });
+
+    for (const w of enFlight) {
+      if (!w.destination) continue;
+      try {
+        const gateway = getPayoutGateway(w.destination);
+        const status = await gateway.getStatus(w.gatewayPayoutId!);
+        await this.syncFromGateway(w.gatewayPayoutId!, status);
+      } catch (error) {
+        logger.error(
+          { service: 'WalletService', err: error, withdrawalId: w.id },
+          'Error syncing gateway status'
+        );
+      }
+    }
+  }
+
+  // ============================================
   // Admin operations — Operaciones admin
   // ============================================
 
