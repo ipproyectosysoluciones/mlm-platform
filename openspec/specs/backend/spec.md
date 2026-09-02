@@ -324,3 +324,161 @@ Then: No ReferenceError is thrown during module initialization
 **Fuente**: openspec/changes/archive/2026-04-09-sprint7-v2.3.5/ (Phase 3)
 **Versión**: v2.3.5
 **Archived**: 2026-04-10
+
+---
+
+## Backend Authorization Test Coverage (backend-test-gaps-authz)
+
+**Versión origen**: backend-test-gaps-authz
+**Change**: backend-test-gaps-authz — test-only, no implementation changes
+
+### Requirement: PaymentMercadoPagoController Refund Authorization Test
+
+The system SHALL verify that the refund endpoint returns 403 FORBIDDEN when an authenticated user who is not the order buyer, not the order vendor, and not an admin attempts to refund a payment.
+
+#### Scenario: Refund by unauthorized user returns 403
+
+- GIVEN an authenticated user with role 'user' (not admin)
+- AND a marketplace order exists with `userId: 'user-uuid'`, `vendorId: 'vendor-1'`, `notes: 'mercadopago:888777666'`
+- AND the requesting user's ID is different from both `order.userId` and `order.vendorId`
+- WHEN the user calls POST /api/payment/mercadopago/refund with `{ paymentId: '888777666' }`
+- THEN the response SHALL have status 403
+- AND the response body SHALL contain error code 'FORBIDDEN'
+- AND the refund service SHALL NOT be called
+
+---
+
+### Requirement: ShipmentTrackingController AddTracking Authorization Tests
+
+The system SHALL verify that the addTracking endpoint returns 403 FORBIDDEN when an authenticated user who is not the order owner and not an admin attempts to add tracking to an order.
+
+#### Scenario: Add tracking by non-owner non-admin returns 403
+
+- GIVEN an authenticated user with role 'user' (not admin)
+- AND an order exists with `userId: 'owner-uuid'`
+- AND the requesting user's ID is different from `order.userId`
+- WHEN the user calls PUT /api/orders/:id/shipping with valid tracking data
+- THEN the response SHALL have status 403
+- AND the response body SHALL contain error code 'FORBIDDEN'
+- AND the ShipmentTrackingService.addTracking SHALL NOT be called
+
+#### Scenario: Add tracking by order owner returns 201 (happy path)
+
+- GIVEN an authenticated user with role 'user'
+- AND an order exists with `userId` matching the requesting user's ID
+- WHEN the user calls PUT /api/orders/:id/shipping with valid tracking data
+- THEN the response SHALL have status 201
+- AND the response body SHALL contain the created tracking data
+- AND the ShipmentTrackingService.addTracking SHALL be called
+
+#### Scenario: Add tracking by admin returns 201 (happy path)
+
+- GIVEN an authenticated user with role 'admin'
+- AND an order exists with `userId` different from the requesting user's ID
+- WHEN the user calls PUT /api/orders/:id/shipping with valid tracking data
+- THEN the response SHALL have status 201
+- AND the response body SHALL contain the created tracking data
+
+---
+
+### Requirement: ShipmentTrackingController GetTracking Authorization Tests
+
+The system SHALL verify that the getTracking endpoint returns 403 FORBIDDEN when an authenticated user who is not the order owner and not an admin attempts to view tracking for an order.
+
+#### Scenario: Get tracking by non-owner non-admin returns 403
+
+- GIVEN an authenticated user with role 'user' (not admin)
+- AND an order exists with `userId: 'owner-uuid'`
+- AND the requesting user's ID is different from `order.userId`
+- WHEN the user calls GET /api/orders/:id/tracking
+- THEN the response SHALL have status 403
+- AND the response body SHALL contain error code 'FORBIDDEN'
+- AND the ShipmentTrackingService.getByOrder SHALL NOT be called
+
+#### Scenario: Get tracking by order owner returns 200 (happy path)
+
+- GIVEN an authenticated user with role 'user'
+- AND an order exists with `userId` matching the requesting user's ID
+- AND a shipment tracking record exists for the order
+- WHEN the user calls GET /api/orders/:id/tracking
+- THEN the response SHALL have status 200
+- AND the response body SHALL contain the tracking data
+
+#### Scenario: Get tracking by admin returns 200 (happy path)
+
+- GIVEN an authenticated user with role 'admin'
+- AND an order exists with `userId` different from the requesting user's ID
+- AND a shipment tracking record exists for the order
+- WHEN the user calls GET /api/orders/:id/tracking
+- THEN the response SHALL have status 200
+- AND the response body SHALL contain the tracking data
+
+---
+
+### Requirement: InvoiceController GetInvoiceById Authorization Test
+
+The system SHALL verify that the getInvoiceById endpoint returns 403 FORBIDDEN when a non-admin user requests an invoice belonging to another user.
+
+#### Scenario: Get invoice by non-owner non-admin returns 403
+
+- GIVEN an authenticated user with role 'user' (not admin)
+- AND an invoice exists with `userId: 'owner-uuid'`
+- AND the requesting user's ID is different from `invoice.userId`
+- WHEN the user calls GET /api/invoices/:id
+- THEN the response SHALL have status 403
+- AND the response body SHALL contain error code 'INVOICE_FORBIDDEN'
+- AND the InvoiceService.findByIdForUser SHALL be called and throw AppError(403)
+
+#### Scenario: Get invoice by owner returns 200 (happy path)
+
+- GIVEN an authenticated user with role 'user'
+- AND an invoice exists with `userId` matching the requesting user's ID
+- WHEN the user calls GET /api/invoices/:id
+- THEN the response SHALL have status 200
+- AND the response body SHALL contain the invoice data
+
+#### Scenario: Get invoice by admin returns 200 (happy path)
+
+- GIVEN an authenticated user with role 'admin'
+- AND an invoice exists with `userId` different from the requesting user's ID
+- WHEN the user calls GET /api/invoices/:id
+- THEN the response SHALL have status 200
+- AND the response body SHALL contain the invoice data
+
+---
+
+### Requirement: InvoiceController CancelInvoice Authorization Test
+
+The system SHALL verify that the cancelInvoice endpoint returns 403 FORBIDDEN when a non-admin user attempts to cancel an invoice belonging to another user.
+
+#### Scenario: Cancel invoice by non-owner non-admin returns 403
+
+- GIVEN an authenticated user with role 'user' (not admin)
+- AND an invoice exists with `userId: 'owner-uuid'` and status 'draft'
+- AND the requesting user's ID is different from `invoice.userId`
+- WHEN the user calls DELETE /api/invoices/:id
+- THEN the response SHALL have status 403
+- AND the response body SHALL contain error code 'INVOICE_FORBIDDEN'
+- AND the InvoiceService.cancel SHALL be called and throw AppError(403)
+
+#### Scenario: Cancel invoice by owner returns 200 (happy path)
+
+- GIVEN an authenticated user with role 'user'
+- AND an invoice exists with `userId` matching the requesting user's ID and status 'draft'
+- WHEN the user calls DELETE /api/invoices/:id
+- THEN the response SHALL have status 200
+- AND the response body SHALL contain the cancelled invoice data
+
+#### Scenario: Cancel invoice by admin returns 200 (happy path)
+
+- GIVEN an authenticated user with role 'admin'
+- AND an invoice exists with `userId` different from the requesting user's ID and status 'draft'
+- WHEN the user calls DELETE /api/invoices/:id
+- THEN the response SHALL have status 200
+- AND the response body SHALL contain the cancelled invoice data
+
+---
+
+**Fuente**: openspec/changes/backend-test-gaps-authz/specs/backend/spec.md
+**Versión**: backend-test-gaps-authz
+**Archived**: 2026-09-01

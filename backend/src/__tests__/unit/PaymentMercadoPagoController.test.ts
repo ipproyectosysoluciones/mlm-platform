@@ -682,5 +682,33 @@ describe('PaymentMercadoPagoController', () => {
 
       expect(next).toHaveBeenCalledWith(error);
     });
+
+    it('returns 403 FORBIDDEN when user is not buyer, vendor, or admin', async () => {
+      const req = createMockReq({
+        user: { id: 'other-user', email: 'other@test.com', role: 'user', referralCode: 'REF-002' },
+        body: { paymentId: '888777666' },
+      });
+      const res = createMockRes();
+      const next = jest.fn();
+
+      (Order.findOne as jest.Mock).mockResolvedValue({
+        id: 'order-1',
+        userId: 'user-uuid',
+        vendorId: 'vendor-1',
+        notes: 'mercadopago:888777666',
+      });
+
+      await PaymentMercadoPagoController.refund(req, res, next);
+      await new Promise((r) => setImmediate(r));
+
+      expect(res.status).toHaveBeenCalledWith(403);
+      expect(res.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          success: false,
+          error: expect.objectContaining({ code: 'FORBIDDEN' }),
+        })
+      );
+      expect(mockRefundPayment).not.toHaveBeenCalled();
+    });
   });
 });
