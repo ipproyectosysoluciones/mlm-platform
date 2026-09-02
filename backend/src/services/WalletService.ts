@@ -332,7 +332,15 @@ export class WalletService {
     const offset = (page - 1) * limit;
 
     const where: Record<string, unknown> = { walletId: wallet.id };
-    if (options?.type) where.type = options.type;
+
+    // Type mapping: frontend sends legacy values, backend maps transparently
+    const typeMap: Record<string, string> = {
+      commission: 'commission_earned',
+      refund: 'adjustment',
+    };
+    if (options?.type) {
+      where.type = typeMap[options.type] || options.type;
+    }
     if (options?.startDate || options?.endDate) {
       where.created_at = {};
       if (options?.startDate) {
