@@ -544,6 +544,129 @@ export class WalletService {
 
     return Number(results?.get('total')) || 0;
   }
+
+  // ============================================
+  // Admin operations — Operaciones admin
+  // ============================================
+
+  /**
+   * Approve a withdrawal request (admin only)
+   * Aprobar solicitud de retiro (solo admin)
+   *
+   * Allowed transitions: pending→approved, failed→approved (manual retry)
+   * SELECT FOR UPDATE to prevent double-approve
+   */
+  async approveWithdrawal(id: string, adminId: string): Promise<WithdrawalRequest> {
+    return sequelize.transaction(async (t) => {
+      const w = await WithdrawalRequest.findByPk(id, {
+        transaction: t,
+        lock: (t as any).LOCK.UPDATE,
+      });
+      if (!w) {
+        throw new Error('Withdrawal request not found');
+      }
+
+      // Only pending→approved or failed→approved (manual retry)
+      if (!['pending', 'failed'].includes(w.status)) {
+        throw new Error('INVALID_TRANSITION');
+      }
+
+      w.status = 'approved';
+      (w as any).approvedBy = adminId;
+      (w as any).approvedAt = new Date();
+      await w.save({ transaction: t });
+
+      // Notification best-effort (non-blocking)
+      try {
+        const { walletNotificationService } = await import('./WalletNotificationService.js');
+        walletNotificationService.notifyWithdrawalStatus(w, 'approved').catch(() => {});
+      } catch {
+        // Notification service not available — ignore
+      }
+
+      return w;
+    });
+  }
+
+  /**
+   * Reject a withdrawal request (admin only)
+   * Rechazar solicitud de retiro (solo admin)
+   *
+   * Allowed transition: pending→rejected only
+   * rejectionReason is required
+   */
+  async rejectWithdrawal(
+    id: string,
+    adminId: string,
+    rejectionReason: string
+  ): Promise<WithdrawalRequest> {
+    if (!rejectionReason) {
+      throw new Error('REJECTION_REASON_REQUIRED');
+    }
+
+    return sequelize.transaction(async (t) => {
+      const w = await WithdrawalRequest.findByPk(id, {
+        transaction: t,
+        lock: (t as any).LOCK.UPDATE,
+      });
+      if (!w) {
+        throw new Error('Withdrawal request not found');
+      }
+
+      if (w.status !== 'pending') {
+        throw new Error('INVALID_TRANSITION');
+      }
+
+      w.status = 'rejected';
+      w.rejectionReason = rejectionReason;
+      (w as any).rejectedBy = adminId;
+      (w as any).rejectedAt = new Date();
+      await w.save({ transaction: t });
+
+      // Notification best-effort (non-blocking)
+      try {
+        const { walletNotificationService } = await import('./WalletNotificationService.js');
+        walletNotificationService.notifyWithdrawalStatus(w, 'rejected').catch(() => {});
+      } catch {
+        // Notification service not available — ignore
+      }
+
+      return w;
+    });
+  }
+
+  /**
+   * List withdrawal requests (admin) with pagination and filters
+   * Listar solicitudes de retiro (admin) con paginación y filtros
+   */
+  async listWithdrawals(params: {
+    page?: number;
+    limit?: number;
+    status?: string;
+    gateway?: string;
+    search?: string;
+  }): Promise<{ rows: WithdrawalRequest[]; count: number }> {
+    const page = params.page || 1;
+    const limit = params.limit || 20;
+    const offset = (page - 1) * limit;
+
+    const where: Record<string, unknown> = {};
+    if (params.status) where.status = params.status;
+
+    return WithdrawalRequest.findAndCountAll({
+      where,
+      limit,
+      offset,
+      order: [['created_at', 'DESC']],
+      include: [
+        {
+          model: (await import('../models/index.js')).User,
+          as: 'user',
+          attributes: ['id', 'name', 'email'],
+        },
+      ],
+    });
+  }
 }
 
 // Export singleton instance
