@@ -181,7 +181,7 @@ export async function getTransactions(req: AuthenticatedRequest, res: Response):
  */
 export async function createWithdrawal(req: AuthenticatedRequest, res: Response): Promise<void> {
   const userId = req.user!.id;
-  const { amount } = req.body;
+  const { amount, destination } = req.body;
 
   if (!amount || typeof amount !== 'number' || amount <= 0) {
     const response: ApiResponse<never> = {
@@ -195,8 +195,20 @@ export async function createWithdrawal(req: AuthenticatedRequest, res: Response)
     return;
   }
 
+  if (!destination?.email) {
+    const response: ApiResponse<never> = {
+      success: false,
+      error: {
+        code: 'INVALID_DESTINATION',
+        message: 'Please provide a valid PayPal email destination',
+      },
+    };
+    res.status(400).json(response);
+    return;
+  }
+
   try {
-    const withdrawal = await walletService.createWithdrawal(userId, amount);
+    const withdrawal = await walletService.createWithdrawal(userId, amount, destination);
 
     const response: ApiResponse<{
       id: string;
