@@ -48,6 +48,19 @@ export interface SendEmailParams {
 }
 
 /**
+ * Transactional email send parameters (Brevo template-based)
+ * Parámetros de envío de email transaccional (basado en plantillas Brevo)
+ */
+export interface SendTransactionalEmailParams {
+  /** Recipient email address / Correo del destinatario */
+  to: string;
+  /** Brevo template ID / ID de plantilla de Brevo */
+  templateId: string;
+  /** Template variables / Variables de plantilla */
+  params: Record<string, string | number | undefined>;
+}
+
+/**
  * Email send result
  * Resultado de envío de email
  */
@@ -157,6 +170,87 @@ export class BrevoEmailService {
   }
 
   /**
+   * Send a transactional email via Brevo REST API using a template
+   * Enviar un email transaccional via API REST de Brevo usando una plantilla
+   *
+   * @param params - Transactional email params (to, templateId, params) / Parámetros de email transaccional
+   * @returns SendEmailResult with messageId
+   * @throws Error if both REST and SMTP fail / Error si ambos REST y SMTP fallan
+   */
+  async sendTransactionalEmail(params: SendTransactionalEmailParams): Promise<SendEmailResult> {
+    const payload = {
+      to: [{ email: params.to }],
+      templateId: params.templateId,
+      params: params.params,
+    };
+
+    if (this.circuitBreaker.fallbackToSMTP) {
+      logger.info(
+        { service: 'BrevoEmailService' },
+        'Circuit breaker active — sending transactional email via SMTP'
+      );
+      return this.sendViaSMTP(params);
+    }
+
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), REST_TIMEOUT_MS);
+
+      const response = await fetch(`${BREVO_API_BASE}/smtp/email`, {
+        method: 'POST',
+        headers: {
+          'api-key': config.brevo.apiKey,
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify(payload),
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeout);
+
+      if (response.status >= 500) {
+        throw new Error(`Brevo REST API 5xx error: ${response.status} ${response.statusText}`);
+      }
+
+      if (!response.ok) {
+        const errorBody = await response.text();
+        throw new Error(`Brevo REST API error: ${response.status} - ${errorBody}`);
+      }
+
+      const data = (await response.json()) as { messageId?: string };
+      this.circuitBreaker.failures = 0;
+      return { messageId: data.messageId || `brevo-transactional-${Date.now()}` };
+    } catch (error) {
+      logger.error(
+        { err: error, service: 'BrevoEmailService' },
+        'REST API failed for transactional email'
+      );
+
+      this.circuitBreaker.failures++;
+      logger.info(
+        {
+          service: 'BrevoEmailService',
+          failures: this.circuitBreaker.failures,
+          threshold: this.circuitBreaker.threshold,
+        },
+        'Circuit breaker failure count incremented for transactional email'
+      );
+
+      if (this.circuitBreaker.failures >= this.circuitBreaker.threshold) {
+        this.circuitBreaker.fallbackToSMTP = true;
+        logger.warn(
+          { service: 'BrevoEmailService' },
+          'Circuit breaker TRIPPED — switching to SMTP permanently for transactional email'
+        );
+      }
+
+      logger.info({ service: 'BrevoEmailService' }, 'Falling back to SMTP for transactional email');
+      return this.sendViaSMTP(params);
+    }
+  }
+
+  /**
    * Reset the circuit breaker (re-enable REST API)
    * Resetear el circuit breaker (re-habilitar API REST)
    */
@@ -244,7 +338,9 @@ export class BrevoEmailService {
    * @returns SendEmailResult with messageId from SMTP
    * @throws Error if SMTP send fails
    */
-  private async sendViaSMTP(params: SendEmailParams): Promise<SendEmailResult> {
+  private async sendViaSMTP(
+    params: SendEmailParams | SendTransactionalEmailParams
+  ): Promise<SendEmailResult> {
     const transporter = nodemailer.createTransport({
       host: 'smtp-relay.brevo.com',
       port: 587,
@@ -255,12 +351,21 @@ export class BrevoEmailService {
       },
     });
 
-    const info = await transporter.sendMail({
+    const mailOptions: any = {
       from: `"${config.brevo.senderName}" <${config.brevo.senderEmail}>`,
       to: params.to,
-      subject: params.subject,
-      html: params.htmlContent,
-    });
+    };
+
+    if ('templateId' in params) {
+      mailOptions.templateId = params.templateId;
+      mailOptions.templateParams = params.params;
+      mailOptions.smtpClient = 'Brevo';
+    } else {
+      mailOptions.subject = params.subject;
+      mailOptions.html = params.htmlContent;
+    }
+
+    const info = await transporter.sendMail(mailOptions);
 
     logger.info({ service: 'BrevoEmailService', messageId: info.messageId }, 'SMTP sent');
     return { messageId: info.messageId || `smtp-${Date.now()}` };
