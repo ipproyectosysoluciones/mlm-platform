@@ -5,22 +5,18 @@
  * @module pages/WalletPage
  * @author Nexo Real Development Team
  */
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Wallet as WalletIcon, Loader2, RefreshCw } from 'lucide-react';
 import { WalletBalance } from '../components/WalletBalance';
 import { TransactionHistory } from '../components/TransactionHistory';
 import { WithdrawalForm } from '../components/WithdrawalForm';
-import { WithdrawalModal } from '../components/WithdrawalModal';
 import { useWalletStore } from '../stores/walletStore';
 import { cn } from '../utils/cn';
 
 export default function WalletPage() {
   const { t } = useTranslation();
   const { fetchBalance, fetchTransactions, balance, isLoading, error } = useWalletStore();
-
-  const [showWithdrawalModal, setShowWithdrawalModal] = useState(false);
-  const [withdrawalAmount, setWithdrawalAmount] = useState(0);
 
   // Fetch initial data
   useEffect(() => {
@@ -85,7 +81,7 @@ export default function WalletPage() {
           <WalletBalance />
 
           {/* Withdrawal form */}
-          <WithdrawalForm onSuccess={() => setWithdrawalAmount(0)} />
+          <WithdrawalForm />
         </div>
 
         {/* Right column - Transaction history */}
@@ -95,13 +91,6 @@ export default function WalletPage() {
           </div>
         </div>
       </div>
-
-      {/* Withdrawal confirmation modal */}
-      <WithdrawalModal
-        isOpen={showWithdrawalModal}
-        onClose={() => setShowWithdrawalModal(false)}
-        amount={withdrawalAmount}
-      />
     </div>
   );
 }

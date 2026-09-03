@@ -101,6 +101,33 @@ export class SchedulerService {
       }
     });
 
+    // Poll reconciliation sweep (auto mode only)
+    if (config.wallet.payoutMode === 'auto') {
+      cron.schedule(config.wallet.pollCron, async () => {
+        if (!config.features.cryptoWallet) return;
+        logger.info({ service: 'SchedulerService' }, 'Running poll reconciliation sweep');
+        try {
+          await walletService.syncPayoutStatuses();
+        } catch (error) {
+          logger.error({ err: error, service: 'SchedulerService' }, 'Error in poll sweep');
+        }
+      });
+    }
+
+    // Notification retry sweep (every 30 min, regardless of payoutMode)
+    cron.schedule('*/30 * * * *', async () => {
+      if (!config.features.cryptoWallet) return;
+      try {
+        const { walletNotificationService } = await import('./WalletNotificationService.js');
+        await walletNotificationService.retryPendingNotifications();
+      } catch (error) {
+        logger.error(
+          { err: error, service: 'SchedulerService' },
+          'Error in notification retry sweep'
+        );
+      }
+    });
+
     // Abandoned cart detection job every 15 minutes
     this.abandonedCartJob = cron.schedule(ABANDONED_CART_CRON, async () => {
       logger.info({ service: 'SchedulerService' }, 'Running abandoned cart detection job');

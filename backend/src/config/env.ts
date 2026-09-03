@@ -158,10 +158,24 @@ export const config = {
   wallet: {
     /** Minimum withdrawal amount in USD / Monto mínimo de retiro en USD */
     minWithdrawal: parseFloat(process.env.WALLET_MIN_WITHDRAWAL || '20'),
+    /** Maximum withdrawal amount per request in USD / Monto máximo de retiro por solicitud en USD */
+    maxWithdrawal: parseFloat(process.env.WALLET_MAX_WITHDRAWAL || '500'),
+    /** Maximum daily withdrawal per user in UTC / Retiro máximo diario por usuario en UTC */
+    maxWithdrawalDailyPerUser: parseFloat(
+      process.env.WALLET_MAX_WITHDRAWAL_DAILY_PER_USER || '1000'
+    ),
     /** Withdrawal fee percentage / Porcentaje de fee de retiro */
     feePercentage: parseFloat(process.env.WALLET_FEE_PERCENTAGE || '5'),
+    /** Payout mode: 'manual' (flip approved→paid) or 'auto' (delegate to gateway) / Modo de payout */
+    payoutMode: (process.env.WALLET_PAYOUT_MODE as 'manual' | 'auto') || 'manual',
     /** Daily payout job cron schedule (default: midnight UTC) / Cron del job de pagos diarios */
     cronTime: process.env.WALLET_CRON_TIME || '0 0 * * *',
+    /** Poll reconciliation cron (auto mode only) / Cron de reconciliación */
+    pollCron: process.env.WALLET_POLL_CRON || '0 */4 * * *',
+    /** Daily budget for PayPal payouts in USD / Presupuesto diario para PayPal */
+    budgetPaypal: parseFloat(process.env.WALLET_BUDGET_PAYPAL || '5000'),
+    /** Daily budget for MercadoPago payouts in USD / Presupuesto diario para MercadoPago */
+    budgetMercadopago: parseFloat(process.env.WALLET_BUDGET_MERCADO || '0'),
   },
 
   /** VAPID configuration for Web Push notifications / Configuración VAPID para notificaciones push */

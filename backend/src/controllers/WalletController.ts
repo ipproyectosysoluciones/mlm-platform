@@ -8,6 +8,7 @@
 import { Response } from 'express';
 import { walletService } from '../services/WalletService.js';
 import { getCryptoPrices as fetchCryptoPrices } from '../services/CryptoPriceService.js';
+import { config } from '../config/env.js';
 import type { ApiResponse } from '../types/index.js';
 import type { AuthenticatedRequest } from '../middleware/auth.middleware.js';
 
@@ -180,7 +181,7 @@ export async function getTransactions(req: AuthenticatedRequest, res: Response):
  */
 export async function createWithdrawal(req: AuthenticatedRequest, res: Response): Promise<void> {
   const userId = req.user!.id;
-  const { amount } = req.body;
+  const { amount, destination } = req.body;
 
   if (!amount || typeof amount !== 'number' || amount <= 0) {
     const response: ApiResponse<never> = {
@@ -194,8 +195,20 @@ export async function createWithdrawal(req: AuthenticatedRequest, res: Response)
     return;
   }
 
+  if (!destination?.email) {
+    const response: ApiResponse<never> = {
+      success: false,
+      error: {
+        code: 'INVALID_DESTINATION',
+        message: 'Please provide a valid PayPal email destination',
+      },
+    };
+    res.status(400).json(response);
+    return;
+  }
+
   try {
-    const withdrawal = await walletService.createWithdrawal(userId, amount);
+    const withdrawal = await walletService.createWithdrawal(userId, amount, destination);
 
     const response: ApiResponse<{
       id: string;
@@ -420,4 +433,33 @@ export async function getCryptoPrices(req: AuthenticatedRequest, res: Response):
     };
     res.status(500).json(response);
   }
+}
+
+/**
+ * Get wallet configuration (fee, min, max, payoutMode)
+ * Obtener configuración de wallet
+ *
+ * @param req - Authenticated request
+ * @param res - Response with wallet config
+ */
+export async function getConfig(req: AuthenticatedRequest, res: Response): Promise<void> {
+  const response: ApiResponse<{
+    minWithdrawal: number;
+    maxWithdrawal: number;
+    maxWithdrawalDailyPerUser: number;
+    feePercentage: number;
+    payoutMode: 'manual' | 'auto';
+    gateways: string[];
+  }> = {
+    success: true,
+    data: {
+      minWithdrawal: config.wallet.minWithdrawal,
+      maxWithdrawal: config.wallet.maxWithdrawal,
+      maxWithdrawalDailyPerUser: config.wallet.maxWithdrawalDailyPerUser,
+      feePercentage: config.wallet.feePercentage,
+      payoutMode: config.wallet.payoutMode,
+      gateways: ['paypal'],
+    },
+  };
+  res.json(response);
 }

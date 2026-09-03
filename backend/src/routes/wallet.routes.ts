@@ -14,6 +14,7 @@ import {
   getWithdrawalStatus,
   cancelWithdrawal,
   getCryptoPrices,
+  getConfig,
 } from '../controllers/WalletController.js';
 import { authenticateToken } from '../middleware/auth.middleware.js';
 import { validate } from '../middleware/validate.middleware.js';
@@ -333,6 +334,21 @@ router.delete(
 // ============================================
 // Public routes - Rutas públicas
 // ============================================
+
+/**
+ * @swagger
+ * /wallet/config:
+ *   get:
+ *     summary: Get wallet configuration / Obtener configuración de wallet
+ *     description: Returns wallet fee, min/max, payout mode, and supported gateways
+ *     tags: [wallet]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Wallet configuration
+ */
+router.get('/config', asyncHandler(getConfig));
 
 /**
  * @swagger
