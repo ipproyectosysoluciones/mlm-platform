@@ -419,6 +419,23 @@ export function setupMockApi(page: Page): void {
         });
       }
 
+      if (normalizedPath === '/api/wallet/config' && method === 'GET') {
+        return route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            success: true,
+            data: {
+              minimumWithdrawal: 20,
+              maximumWithdrawal: 500,
+              maximumWithdrawalDailyPerUser: 1000,
+              payoutMode: 'manual',
+              feePercentage: 5,
+            },
+          }),
+        });
+      }
+
       if (normalizedPath === '/api/wallet/transactions' && method === 'GET') {
         return route.fulfill({
           status: 200,
@@ -449,6 +466,9 @@ export function setupMockApi(page: Page): void {
         } catch {
           /* ignore */
         }
+        const amount = Number(body.amount ?? 0);
+        const destination = body.destination as { method: string; email: string } | undefined;
+        const feeAmount = amount * 0.05;
         return route.fulfill({
           status: 201,
           contentType: 'application/json',
@@ -457,9 +477,11 @@ export function setupMockApi(page: Page): void {
             data: {
               id: 'wd-001',
               userId: '1',
-              amount: Number(body.amount ?? 0),
-              currency: 'USD',
+              requestedAmount: amount,
+              feeAmount: feeAmount,
+              netAmount: amount - feeAmount,
               status: 'pending',
+              destination: destination || { method: 'paypal', email: 'test@example.com' },
               createdAt: new Date().toISOString(),
             },
           }),
