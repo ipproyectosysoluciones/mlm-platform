@@ -70,6 +70,8 @@ export interface PayPalPayoutWebhookEvent {
     sender_batch_id?: string;
     payout_item_id?: string;
     transaction_id?: string;
+    batch_status?: string;
+    status?: string;
     payout_item?: {
       transaction_status?: string;
       amount?: { currency?: string; value?: string };
