@@ -22,8 +22,20 @@
 import { Wallet, WalletTransaction, WithdrawalRequest } from '../models/index.js';
 import { config } from '../config/env.js';
 import { WALLET_TRANSACTION_TYPE, WITHDRAWAL_STATUS } from '../types/index.js';
+import type { WithdrawalDestination } from '../types/index.js';
 import { Op } from 'sequelize';
+import { sequelize } from '../config/database.js';
 import { logger } from '../utils/logger.js';
+import { getPayoutGateway } from './payouts/index.js';
+import type { PayoutStatus } from './payouts/PayoutGateway.js';
+
+/**
+ * Validate email format (simple check)
+ * Validar formato de email
+ */
+function isValidEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
 
 // Simple exchange rates to USD (in production, use an external API)
 const EXCHANGE_RATES: Record<string, number> = {
@@ -165,34 +177,67 @@ export class WalletService {
    * // Returns: { id, userId, requestedAmount: 50, feeAmount: 2.50, netAmount: 47.50, status: 'pending' }
    *
    * // Español: Crear solicitud de retiro por $50
-   * const withdrawal = await walletService.createWithdrawal(userId, 50);
+   * const withdrawal = await walletService.createWithdrawal(userId, 50, { method: 'paypal', email: 'user@example.com' });
    */
-  async createWithdrawal(userId: string, requestedAmount: number): Promise<WithdrawalRequest> {
-    // Validate minimum amount
+  async createWithdrawal(
+    userId: string,
+    requestedAmount: number,
+    destination: WithdrawalDestination
+  ): Promise<WithdrawalRequest> {
+    // 1. Validate destination — must have valid email for PayPal
+    if (!destination?.email || !isValidEmail(destination.email)) {
+      throw new Error('Email de destino inválido para PayPal');
+    }
+
+    // 2. Validate minimum amount
     if (requestedAmount < config.wallet.minWithdrawal) {
       throw new Error(`Minimum withdrawal amount is ${config.wallet.minWithdrawal} USD`);
     }
 
-    // Validate sufficient balance
-    const hasSufficient = await this.validateSufficientBalance(userId, requestedAmount);
-    if (!hasSufficient) {
+    // 3. Validate max per withdrawal
+    if (requestedAmount > config.wallet.maxWithdrawal) {
+      throw new Error(`Withdrawal amount exceeds maximum of ${config.wallet.maxWithdrawal} USD`);
+    }
+
+    // 4. Validate daily UTC sum (pending + approved + paid today + this request ≤ limit)
+    const todayStart = new Date();
+    todayStart.setUTCHours(0, 0, 0, 0);
+    const todayEnd = new Date();
+    todayEnd.setUTCHours(23, 59, 59, 999);
+
+    const todayWithdrawals = await WithdrawalRequest.findAll({
+      where: {
+        userId,
+        status: { [Op.in]: ['pending', 'approved', 'paid'] },
+        createdAt: { [Op.between]: [todayStart, todayEnd] },
+      },
+    });
+    const dailySum = todayWithdrawals.reduce((sum, w) => sum + Number(w.requestedAmount), 0);
+    if (dailySum + requestedAmount > config.wallet.maxWithdrawalDailyPerUser) {
+      throw new Error(
+        `Daily withdrawal limit of ${config.wallet.maxWithdrawalDailyPerUser} USD exceeded`
+      );
+    }
+
+    // 5. Validate sufficient balance (amount + fee)
+    const feeAmount = this.calculateFee(requestedAmount);
+    const totalCost = requestedAmount + feeAmount;
+    const wallet = await this.getWallet(userId);
+    if (!wallet || Number(wallet.balance) < totalCost) {
       throw new Error('Insufficient balance');
     }
 
-    // Calculate fee
-    const feeAmount = this.calculateFee(requestedAmount);
+    // Calculate net
     const netAmount = requestedAmount - feeAmount;
 
-    // Get or create wallet
-    const wallet = await this.createWallet(userId);
-
-    // Create withdrawal request
+    // Create withdrawal request with destination
     const withdrawal = await WithdrawalRequest.create({
       userId,
       requestedAmount,
       feeAmount,
       netAmount,
       status: WITHDRAWAL_STATUS.PENDING,
+      destination,
     });
 
     // Deduct from wallet balance (reserve the amount)
@@ -287,7 +332,15 @@ export class WalletService {
     const offset = (page - 1) * limit;
 
     const where: Record<string, unknown> = { walletId: wallet.id };
-    if (options?.type) where.type = options.type;
+
+    // Type mapping: frontend sends legacy values, backend maps transparently
+    const typeMap: Record<string, string> = {
+      commission: 'commission_earned',
+      refund: 'adjustment',
+    };
+    if (options?.type) {
+      where.type = typeMap[options.type] || options.type;
+    }
     if (options?.startDate || options?.endDate) {
       where.created_at = {};
       if (options?.startDate) {
@@ -347,37 +400,352 @@ export class WalletService {
   }
 
   /**
-   * Process daily payouts - called by SchedulerService
-   * Procesar pagos diarios - llamado por SchedulerService
+   * Process daily payouts — called by SchedulerService
+   * Procesar pagos diarios — llamado por SchedulerService
+   *
+   * Manual mode: approved → paid (no gateway call)
+   * Auto mode: delegates to gateway, budget check per gateway, en-flight lock
    *
    * @returns Array of processed withdrawals / Array de retiros procesados
    */
   async processDailyPayouts(): Promise<WithdrawalRequest[]> {
-    const pendingWithdrawals = await WithdrawalRequest.findAll({
+    if (config.wallet.payoutMode === 'manual') {
+      return this.flipApprovedToPaid();
+    }
+    // AUTO MODE
+    return this.processAutoPayouts();
+  }
+
+  /**
+   * Manual mode: flip approved → paid without gateway
+   * Modo manual: cambiar approved → paid sin gateway
+   */
+  private async flipApprovedToPaid(): Promise<WithdrawalRequest[]> {
+    const approved = await WithdrawalRequest.findAll({
       where: { status: WITHDRAWAL_STATUS.APPROVED },
     });
 
     const processed: WithdrawalRequest[] = [];
-
-    for (const withdrawal of pendingWithdrawals) {
+    for (const w of approved) {
       try {
-        // In a real implementation, this would call a payment processor
-        // For MVP, we just mark as paid
-        withdrawal.status = WITHDRAWAL_STATUS.PAID;
-        withdrawal.processedAt = new Date();
-        await withdrawal.save();
-        processed.push(withdrawal);
+        w.status = WITHDRAWAL_STATUS.PAID;
+        w.processedAt = new Date();
+        await w.save();
+        processed.push(w);
       } catch (error) {
         logger.error(
-          { service: 'WalletService', err: error, withdrawalId: withdrawal.id },
-          'Error processing withdrawal'
+          { service: 'WalletService', err: error, withdrawalId: w.id },
+          'Error flipping withdrawal to paid'
         );
-        withdrawal.status = WITHDRAWAL_STATUS.FAILED;
-        await withdrawal.save();
+        w.status = WITHDRAWAL_STATUS.FAILED;
+        await w.save();
+      }
+    }
+    return processed;
+  }
+
+  /**
+   * Auto mode: delegate to gateway with budget check + en-flight lock
+   * Modo auto: delegar a gateway con verificación de presupuesto + lock
+   */
+  private async processAutoPayouts(): Promise<WithdrawalRequest[]> {
+    const approved = await WithdrawalRequest.findAll({
+      where: { status: WITHDRAWAL_STATUS.APPROVED },
+      order: [['createdAt', 'ASC']],
+    });
+
+    const processed: WithdrawalRequest[] = [];
+
+    for (const w of approved) {
+      if (!w.destination) {
+        logger.warn(
+          { service: 'WalletService', withdrawalId: w.id },
+          'Withdrawal has no destination — skipping'
+        );
+        continue;
+      }
+
+      let gateway;
+      try {
+        gateway = getPayoutGateway(w.destination);
+      } catch {
+        logger.error(
+          { service: 'WalletService', withdrawalId: w.id },
+          'No gateway for destination — marking failed'
+        );
+        w.status = WITHDRAWAL_STATUS.FAILED;
+        w.gatewayStatus = 'NO_GATEWAY';
+        await w.save();
+        continue;
+      }
+
+      // Budget check: sum netAmount of paid + en-flight (gatewayPayoutId not null) today UTC per gateway
+      const consumed = await this.getDailyConsumed(gateway.type);
+      const budgetKey =
+        `budget${gateway.type.charAt(0).toUpperCase() + gateway.type.slice(1)}` as keyof typeof config.wallet;
+      const budget = config.wallet[budgetKey] as number;
+      if (consumed + Number(w.netAmount) > budget) {
+        logger.info(
+          { service: 'WalletService', withdrawalId: w.id, consumed, budget },
+          'Budget exceeded — skipping withdrawal'
+        );
+        continue; // stays approved, queued for next cycle
+      }
+
+      // Idempotency: transaction + SELECT FOR UPDATE re-read
+      try {
+        await sequelize.transaction(async (t) => {
+          const fresh = await WithdrawalRequest.findByPk(w.id, {
+            transaction: t,
+            lock: (t as any).LOCK.UPDATE,
+          });
+          if (!fresh || fresh.status !== 'approved' || fresh.gatewayPayoutId) {
+            return; // already taken by another process
+          }
+
+          const result = await gateway.createPayout({
+            withdrawalId: fresh.id,
+            amount: Number(fresh.netAmount),
+            currency: 'USD',
+            destination: fresh.destination!,
+          });
+
+          fresh.gatewayPayoutId = result.payoutId;
+          fresh.gatewayStatus = 'SENT';
+          await fresh.save({ transaction: t });
+          processed.push(fresh);
+        });
+      } catch (error) {
+        logger.error(
+          { service: 'WalletService', err: error, withdrawalId: w.id },
+          'Gateway payout failed — marking failed'
+        );
+        // Mark as failed outside transaction (idempotent — status check in next cycle)
+        w.status = WITHDRAWAL_STATUS.FAILED;
+        w.gatewayStatus = 'FAILED';
+        await w.save();
       }
     }
 
     return processed;
+  }
+
+  /**
+   * Calculate daily consumed amount per gateway (paid + en-flight today UTC)
+   * Calcular monto consumido diario por pasarela
+   */
+  private async getDailyConsumed(gatewayType: string): Promise<number> {
+    const todayStart = new Date();
+    todayStart.setUTCHours(0, 0, 0, 0);
+    const todayEnd = new Date();
+    todayEnd.setUTCHours(23, 59, 59, 999);
+
+    const results = (await WithdrawalRequest.findAll({
+      where: {
+        status: { [Op.in]: ['paid'] },
+        gatewayPayoutId: { [Op.ne]: null },
+        createdAt: { [Op.between]: [todayStart, todayEnd] },
+      },
+      attributes: [[sequelize.fn('SUM', sequelize.col('net_amount')), 'total']],
+      plain: true,
+    })) as any;
+
+    return Number(results?.get('total')) || 0;
+  }
+
+  // ============================================
+  // Gateway sync — Sincronización con pasarela
+  // ============================================
+
+  /**
+   * Sync withdrawal status from gateway (webhook or poll)
+   * Sincronizar estado de retiro desde pasarela
+   *
+   * Only processes if: withdrawal exists, gatewayPayoutId matches, status is 'approved'
+   * paid→paid, failed/reversed/cancelled→failed
+   */
+  async syncFromGateway(payoutId: string, status: PayoutStatus): Promise<void> {
+    return sequelize.transaction(async (t) => {
+      const w = await WithdrawalRequest.findOne({
+        where: { gatewayPayoutId: payoutId },
+        transaction: t,
+        lock: (t as any).LOCK.UPDATE,
+      });
+
+      if (!w || w.status !== 'approved') {
+        return; // Only sync if still approved with matching payoutId
+      }
+
+      if (status === 'paid') {
+        w.status = 'paid';
+        w.processedAt = new Date();
+        w.gatewayStatus = 'PAID';
+      } else if (['failed', 'reversed', 'cancelled'].includes(status)) {
+        w.status = 'failed';
+        w.gatewayStatus = status.toUpperCase();
+      }
+
+      w.lastGatewaySyncAt = new Date();
+      await w.save({ transaction: t });
+
+      // Notification best-effort
+      try {
+        const { walletNotificationService } = await import('./WalletNotificationService.js');
+        walletNotificationService.notifyWithdrawalStatus(w, w.status).catch(() => {});
+      } catch {
+        // Ignore notification errors
+      }
+    });
+  }
+
+  /**
+   * Poll gateway for status updates on en-flight withdrawals
+   * Consultar pasarela para actualizaciones de estado
+   */
+  async syncPayoutStatuses(): Promise<void> {
+    const enFlight = await WithdrawalRequest.findAll({
+      where: {
+        status: 'approved',
+        gatewayPayoutId: { [Op.ne]: null },
+      },
+    });
+
+    for (const w of enFlight) {
+      if (!w.destination) continue;
+      try {
+        const gateway = getPayoutGateway(w.destination);
+        const status = await gateway.getStatus(w.gatewayPayoutId!);
+        await this.syncFromGateway(w.gatewayPayoutId!, status);
+      } catch (error) {
+        logger.error(
+          { service: 'WalletService', err: error, withdrawalId: w.id },
+          'Error syncing gateway status'
+        );
+      }
+    }
+  }
+
+  // ============================================
+  // Admin operations — Operaciones admin
+  // ============================================
+
+  /**
+   * Approve a withdrawal request (admin only)
+   * Aprobar solicitud de retiro (solo admin)
+   *
+   * Allowed transitions: pending→approved, failed→approved (manual retry)
+   * SELECT FOR UPDATE to prevent double-approve
+   */
+  async approveWithdrawal(id: string, adminId: string): Promise<WithdrawalRequest> {
+    return sequelize.transaction(async (t) => {
+      const w = await WithdrawalRequest.findByPk(id, {
+        transaction: t,
+        lock: (t as any).LOCK.UPDATE,
+      });
+      if (!w) {
+        throw new Error('Withdrawal request not found');
+      }
+
+      // Only pending→approved or failed→approved (manual retry)
+      if (!['pending', 'failed'].includes(w.status)) {
+        throw new Error('INVALID_TRANSITION');
+      }
+
+      w.status = 'approved';
+      (w as any).approvedBy = adminId;
+      (w as any).approvedAt = new Date();
+      await w.save({ transaction: t });
+
+      // Notification best-effort (non-blocking)
+      try {
+        const { walletNotificationService } = await import('./WalletNotificationService.js');
+        walletNotificationService.notifyWithdrawalStatus(w, 'approved').catch(() => {});
+      } catch {
+        // Notification service not available — ignore
+      }
+
+      return w;
+    });
+  }
+
+  /**
+   * Reject a withdrawal request (admin only)
+   * Rechazar solicitud de retiro (solo admin)
+   *
+   * Allowed transition: pending→rejected only
+   * rejectionReason is required
+   */
+  async rejectWithdrawal(
+    id: string,
+    adminId: string,
+    rejectionReason: string
+  ): Promise<WithdrawalRequest> {
+    if (!rejectionReason) {
+      throw new Error('REJECTION_REASON_REQUIRED');
+    }
+
+    return sequelize.transaction(async (t) => {
+      const w = await WithdrawalRequest.findByPk(id, {
+        transaction: t,
+        lock: (t as any).LOCK.UPDATE,
+      });
+      if (!w) {
+        throw new Error('Withdrawal request not found');
+      }
+
+      if (w.status !== 'pending') {
+        throw new Error('INVALID_TRANSITION');
+      }
+
+      w.status = 'rejected';
+      w.rejectionReason = rejectionReason;
+      (w as any).rejectedBy = adminId;
+      (w as any).rejectedAt = new Date();
+      await w.save({ transaction: t });
+
+      // Notification best-effort (non-blocking)
+      try {
+        const { walletNotificationService } = await import('./WalletNotificationService.js');
+        walletNotificationService.notifyWithdrawalStatus(w, 'rejected').catch(() => {});
+      } catch {
+        // Notification service not available — ignore
+      }
+
+      return w;
+    });
+  }
+
+  /**
+   * List withdrawal requests (admin) with pagination and filters
+   * Listar solicitudes de retiro (admin) con paginación y filtros
+   */
+  async listWithdrawals(params: {
+    page?: number;
+    limit?: number;
+    status?: string;
+    gateway?: string;
+    search?: string;
+  }): Promise<{ rows: WithdrawalRequest[]; count: number }> {
+    const page = params.page || 1;
+    const limit = params.limit || 20;
+    const offset = (page - 1) * limit;
+
+    const where: Record<string, unknown> = {};
+    if (params.status) where.status = params.status;
+
+    return WithdrawalRequest.findAndCountAll({
+      where,
+      limit,
+      offset,
+      order: [['created_at', 'DESC']],
+      include: [
+        {
+          model: (await import('../models/index.js')).User,
+          as: 'user',
+          attributes: ['id', 'name', 'email'],
+        },
+      ],
+    });
   }
 }
 

@@ -25,26 +25,29 @@ const mockWalletService = walletService as ReturnType<typeof vi.fn>;
 
 // Test data
 const mockBalance: WalletBalance = {
-  balance: '100.00',
+  id: 'w1',
+  userId: '1',
+  balance: 100.0,
   currency: 'USD',
-  availableBalance: '100.00',
-  pendingBalance: '0.00',
+  lastUpdated: new Date().toISOString(),
 };
 
 const mockTransactions: WalletTransaction[] = [
   {
     id: 'tx-1',
-    type: 'commission',
+    walletId: 'w1',
+    type: 'commission_earned',
     amount: 50.0,
-    balanceAfter: 150.0,
+    currency: 'USD',
     description: 'Test commission',
     createdAt: new Date(),
   },
   {
     id: 'tx-2',
+    walletId: 'w1',
     type: 'withdrawal',
     amount: -20.0,
-    balanceAfter: 130.0,
+    currency: 'USD',
     description: 'Test withdrawal',
     createdAt: new Date(),
   },
@@ -53,11 +56,11 @@ const mockTransactions: WalletTransaction[] = [
 const mockWithdrawal: WithdrawalRequest = {
   id: 'withdraw-1',
   userId: 'user-1',
-  requestedAmount: '30.00',
-  feeAmount: '1.50',
-  netAmount: '28.50',
+  requestedAmount: 30.0,
+  feeAmount: 1.5,
+  netAmount: 28.5,
   status: 'pending',
-  paymentMethod: 'bank_transfer',
+  destination: { method: 'paypal', email: 'test@example.com' },
   createdAt: new Date(),
 };
 
@@ -153,12 +156,13 @@ describe('useWalletStore', () => {
       mockWalletService.getBalance.mockResolvedValue(mockBalance);
 
       const { result } = renderHook(() => useWalletStore());
+      const destination = { method: 'paypal' as const, email: 'test@example.com' };
 
       await act(async () => {
-        await result.current.createWithdrawal(30);
+        await result.current.createWithdrawal(30, destination);
       });
 
-      expect(mockWalletService.createWithdrawal).toHaveBeenCalledWith(30);
+      expect(mockWalletService.createWithdrawal).toHaveBeenCalledWith(30, destination);
       expect(result.current.withdrawalRequests).toContainEqual(mockWithdrawal);
       expect(mockWalletService.getBalance).toHaveBeenCalled(); // Balance refresh
     });
@@ -167,10 +171,11 @@ describe('useWalletStore', () => {
       mockWalletService.createWithdrawal.mockRejectedValue(new Error('Insufficient balance'));
 
       const { result } = renderHook(() => useWalletStore());
+      const destination = { method: 'paypal' as const, email: 'test@example.com' };
 
       await expect(
         act(async () => {
-          await result.current.createWithdrawal(30);
+          await result.current.createWithdrawal(30, destination);
         })
       ).rejects.toThrow('Insufficient balance');
 
