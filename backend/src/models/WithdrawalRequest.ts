@@ -143,7 +143,6 @@ WithdrawalRequest.init(
   {
     sequelize,
     tableName: 'withdrawal_requests',
-    timestamps: true,
     underscored: true,
     indexes: [{ fields: ['user_id'] }, { fields: ['status'] }, { fields: ['created_at'] }],
   }
