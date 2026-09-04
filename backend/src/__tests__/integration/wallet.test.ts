@@ -81,6 +81,7 @@ describe('Wallet Integration Tests', () => {
         currency: 'USD',
       });
 
+      const now = new Date();
       await WalletTransaction.create({
         walletId: wallet.id,
         type: WALLET_TRANSACTION_TYPE.COMMISSION_EARNED,
@@ -89,6 +90,8 @@ describe('Wallet Integration Tests', () => {
         referenceId: null,
         description: 'Test commission',
         exchangeRate: 1.0,
+        createdAt: now,
+        updatedAt: now,
       });
 
       const res = await testAgent
@@ -109,6 +112,7 @@ describe('Wallet Integration Tests', () => {
         currency: 'USD',
       });
 
+      const now = new Date();
       // Create commission transaction
       await WalletTransaction.create({
         walletId: wallet.id,
@@ -118,6 +122,8 @@ describe('Wallet Integration Tests', () => {
         referenceId: null,
         description: 'Commission',
         exchangeRate: 1.0,
+        createdAt: now,
+        updatedAt: now,
       });
 
       // Create withdrawal transaction
@@ -129,6 +135,8 @@ describe('Wallet Integration Tests', () => {
         referenceId: null,
         description: 'Withdrawal',
         exchangeRate: 1.0,
+        createdAt: now,
+        updatedAt: now,
       });
 
       const res = await testAgent
