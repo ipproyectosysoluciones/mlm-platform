@@ -94,6 +94,7 @@ WalletTransaction.init(
   {
     sequelize,
     tableName: 'wallet_transactions',
+    timestamps: true,
     underscored: true,
     indexes: [
       { fields: ['wallet_id'] },
