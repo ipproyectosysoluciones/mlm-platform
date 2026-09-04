@@ -145,6 +145,7 @@ export class WalletService {
     // Convert to USD if not already USD
     const amountInUSD = convertToUSD(amount, currency);
     const exchangeRate = currency !== 'USD' ? EXCHANGE_RATES[currency] : null;
+    const now = new Date();
 
     await WalletTransaction.create({
       walletId: wallet.id,
