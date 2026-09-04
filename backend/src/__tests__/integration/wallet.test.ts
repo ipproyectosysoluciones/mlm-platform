@@ -159,6 +159,7 @@ describe('Wallet Integration Tests', () => {
         .set(authHeaders)
         .send({
           amount: 30,
+          destination: { email: 'test@example.com' },
         })
         .expect(201);
 
@@ -198,9 +199,13 @@ describe('Wallet Integration Tests', () => {
         currency: 'USD',
       });
 
-      const res = await testAgent.post('/api/v1/wallets/withdraw').set(authHeaders).send({
-        amount: 20,
-      });
+      const res = await testAgent
+        .post('/api/v1/wallets/withdraw')
+        .set(authHeaders)
+        .send({
+          amount: 20,
+          destination: { email: 'test@example.com' },
+        });
 
       // Could be 400 from validation (min 20) or from insufficient balance
       expect([400]).toContain(res.status);
