@@ -80,11 +80,20 @@ WalletTransaction.init(
       allowNull: true,
       field: 'exchange_rate',
     },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      field: 'created_at',
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      field: 'updated_at',
+    },
   },
   {
     sequelize,
     tableName: 'wallet_transactions',
-    timestamps: true,
     underscored: true,
     indexes: [
       { fields: ['wallet_id'] },
