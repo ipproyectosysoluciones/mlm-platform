@@ -231,6 +231,7 @@ export class WalletService {
 
     // Calculate net
     const netAmount = requestedAmount - feeAmount;
+    const now = new Date();
 
     // Create withdrawal request with destination
     const withdrawal = await WithdrawalRequest.create({
@@ -249,7 +250,6 @@ export class WalletService {
     await wallet.save();
 
     // Create fee transaction
-    const now = new Date();
     await WalletTransaction.create({
       walletId: wallet.id,
       type: WALLET_TRANSACTION_TYPE.FEE,
