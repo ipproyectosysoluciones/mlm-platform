@@ -154,6 +154,8 @@ export class WalletService {
       referenceId,
       description: description || `Commission earned from purchase`,
       exchangeRate,
+      createdAt: now,
+      updatedAt: now,
     });
 
     // Update wallet balance
@@ -238,6 +240,8 @@ export class WalletService {
       netAmount,
       status: WITHDRAWAL_STATUS.PENDING,
       destination,
+      createdAt: now,
+      updatedAt: now,
     });
 
     // Deduct from wallet balance (reserve the amount)
@@ -245,6 +249,7 @@ export class WalletService {
     await wallet.save();
 
     // Create fee transaction
+    const now = new Date();
     await WalletTransaction.create({
       walletId: wallet.id,
       type: WALLET_TRANSACTION_TYPE.FEE,
@@ -252,6 +257,8 @@ export class WalletService {
       currency: 'USD',
       referenceId: withdrawal.id,
       description: `Withdrawal fee for request ${withdrawal.id}`,
+      createdAt: now,
+      updatedAt: now,
     });
 
     // Create withdrawal transaction
@@ -262,6 +269,8 @@ export class WalletService {
       currency: 'USD',
       referenceId: withdrawal.id,
       description: `Withdrawal request ${withdrawal.id}`,
+      createdAt: now,
+      updatedAt: now,
     });
 
     return withdrawal;
