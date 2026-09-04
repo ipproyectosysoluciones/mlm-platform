@@ -129,6 +129,16 @@ WithdrawalRequest.init(
       allowNull: true,
       field: 'last_notified_at',
     },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      field: 'created_at',
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      field: 'updated_at',
+    },
   },
   {
     sequelize,
