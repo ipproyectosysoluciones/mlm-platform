@@ -7,7 +7,7 @@
 
 Conectamos tu negocio con el mundo. Plataforma de afiliaciones Unilevel con comisiones por niveles y visualización de árbol genealógico.
 
-**Versión actual: v3.4.1** — Security patches (2026-07-25)
+**Versión actual: v3.5.1** — Security patches (2026-09-05)
 
 ## 🚀 Características / Features
 
@@ -21,7 +21,7 @@ Conectamos tu negocio con el mundo. Plataforma de afiliaciones Unilevel con comi
 - **Landing Pages** - Creador de páginas de captura
 - **Panel de Administración** - Gestión completa de usuarios y comisiones
 - **API REST Documentada** - OpenAPI/Swagger bilingüe (ES/EN)
-- **Tests Automatizados** - ~1,701 tests (878 backend, 1 skipped; CI gate: tsc --noEmit 0 errors)
+- **Tests Automatizados** - ~1,850 tests (1155 backend + 695 frontend; CI gate: tsc --noEmit 0 errors)
 - **i18n** - Interfaz bilingüe (Español/Inglés)
 - **Wallet Digital** - Billetera digital con retiros y transacciones
 - **2FA (TOTP)** - Two-Factor Authentication con códigos de recuperación
@@ -51,6 +51,10 @@ Conectamos tu negocio con el mundo. Plataforma de afiliaciones Unilevel con comi
   - **CRM Refactoring** — ~894→537 líneas, 7 sub-componentes extraídos
   - **Frontend API Modularization** — `api.ts` dividido en 15 archivos por dominio
   - **Test Coverage Expansion** — 89% statements frontend, +55 tests backend
+  - **Wallet Integration** — PayPal Payouts + withdrawal system (9 chained PRs, PR #400)
+  - **Security Hardening** — 30 Dependabot alerts fixed via pnpm.overrides (v3.5.1)
+  - **Dev Dependency Updates** — nanoid>=3.3.18, browserslist>=4.28.7, @humanfs/node>=0.16.8, qs>=6.16.0, superagent>=9.0.0
+  - **Code Quality** — WalletService `now()` helper, PayoutWebhookController status mapping
 
 ## 🏗️ Infrastructure
 
@@ -60,6 +64,7 @@ Conectamos tu negocio con el mundo. Plataforma de afiliaciones Unilevel con comi
 - **Monitoring** - Dozzle (port 8080) for real-time logs, healthcheck script via cron, Telegram alerts
 - **Docker containers** - 5 services: backend, bot, postgres, redis, n8n (plus Dozzle)
 - **CI gate** - `tsc --noEmit -p tsconfig.check.json` enforces zero type errors before merge
+- **Security** - 30 Dependabot alerts resolved via `pnpm.overrides` in root `package.json`
 
 ## 📊 Estado de Implementación / Implementation Status
 
@@ -93,6 +98,7 @@ Conectamos tu negocio con el mundo. Plataforma de afiliaciones Unilevel con comi
 | sprint12-crm-refactoring-v3.1.0   | CRM refactoring, security hardening, 50 vulns fixed                            | ✅ Completo  | 2026-06-17 |
 | sprint12-order-history-v3.2.0     | Order history, frontend API modularization, test coverage, CI fixes, E2E fixes | ✅ Completo  | 2026-06-25 |
 | sprint19-api-versioning-v3.4.0    | API versioning /api/v1/, Azure cleanup, Docker Hub CI/CD, Cloudflare Tunnel    | ✅ Completo  | 2026-07-24 |
+| wallet-integration-continue       | PayPal Payouts + withdrawal system, 9 chained PRs (#400), security hardening   | ✅ Completo  | 2026-09-05 |
 
 ### 🚧 Cambios en Progreso
 

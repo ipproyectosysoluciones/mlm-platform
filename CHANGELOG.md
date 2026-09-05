@@ -5,6 +5,26 @@
 - **ci:** align auto-version release PR to env secret RELEASE_PAT ([e244ff1](https://github.com/ipproyectosysoluciones/mlm-platform/commit/e244ff1f43844f096aa01a7aa0e0ece7edd9b394))
 - **ci:** use PAT for release PR creation in auto-version ([def219e](https://github.com/ipproyectosysoluciones/mlm-platform/commit/def219e2e868ab5d3eae469d7ab3832d7dd388d3))
 
+### Security
+
+- **security:** resolve all 30 Dependabot alerts via pnpm.overrides (v3.5.1)
+- **security:** add pnpm.overrides for nanoid>=3.3.18, browserslist>=4.28.7, @humanfs/node>=0.16.8, qs>=6.16.0, superagent>=9.0.0
+- **security:** remove supertest duplicate from root package.json
+- **security:** resolve undici CRLF injection, cookie injection, cross-user disclosure (5 alerts)
+- **security:** resolve DOMPurify XSS, ip-address SSRF, brace-expansion DoS
+
+### Features
+
+- **wallet:** wallet-integration-continue - PayPal Payouts + withdrawal system (9 chained PRs, PR #400)
+- **wallet:** WalletService private now() helper for consistent timestamps
+- **wallet:** PayoutWebhookController getPayPalPayoutStatus() helper
+
+### Code Quality
+
+- **refactor:** WalletService const now = new Date() → private now() helper
+- **refactor:** PayoutWebhookController batch_status/status → getPayPalPayoutStatus()
+- **refactor:** remove unused gatewayType parameter lint warning
+
 # [3.5.0](https://github.com/ipproyectosysoluciones/mlm-platform/compare/v3.4.6...v3.5.0) (2026-08-20)
 
 ### Bug Fixes

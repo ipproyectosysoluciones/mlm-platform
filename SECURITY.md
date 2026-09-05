@@ -259,5 +259,55 @@ This prevents type confusion attacks where an attacker could manipulate the `fil
 
 ---
 
-_Last updated: 2026-07-25_
-_Version: 3.4.1_
+### Security Hardening (v3.5.1) — 2026-09-05
+
+#### All Dependabot Alerts Resolved via pnpm.overrides
+
+30 Dependabot alerts across 30+ transitive dependencies resolved by adding `pnpm.overrides` in root `package.json`:
+
+| Advisory                           | Severity       | Package                            | Patched Version |
+| ---------------------------------- | -------------- | ---------------------------------- | --------------- |
+| DOMPurify                          | XSS            | dompurify                          | >=3.4.13        |
+| ip-address                         | SSRF           | ip-address                         | >=10.4.0        |
+| brace-expansion                    | DoS            | brace-expansion                    | >=5.0.9         |
+| qs                                 | DoS            | qs                                 | >=6.16.0        |
+| nanoid                             | DoS            | nanoid                             | >=3.3.18        |
+| browserslist                       | XSS            | browserslist                       | >=4.28.7        |
+| @humanfs/node                      | RCE            | @humanfs/node                      | >=0.16.8        |
+| superagent                         | DoS            | superagent                         | >=9.0.0         |
+| undici (5 alerts)                  | Various        | undici                             | >=7.29.0        |
+| fast-uri (3 alerts)                | SSRF/Confusion | fast-uri                           | >=4.1.2         |
+| tar                                | DoS            | tar                                | >=7.5.21        |
+| ws                                 | DoS            | ws                                 | >=8.21.0        |
+| js-cookie                          | XSS            | js-cookie                          | >=3.0.7         |
+| fast-xml-parser                    | XSS            | fast-xml-parser                    | >=5.7.0         |
+| body-parser                        | DoS            | body-parser                        | >=2.3.0         |
+| uuid                               | DoS            | uuid                               | >=11.1.1        |
+| js-yaml                            | DoS            | js-yaml                            | >=5.2.2         |
+| sharp                              | DoS            | sharp                              | >=0.35.0        |
+| lodash                             | DoS            | lodash                             | >=4.17.21       |
+| serialize-javascript               | RCE            | serialize-javascript               | >=7.0.5         |
+| protobufjs                         | DoS            | protobufjs                         | >=7.6.5         |
+| @protobufjs/utf8                   | DoS            | @protobufjs/utf8                   | >=1.1.1         |
+| fast-xml-builder                   | XSS            | fast-xml-builder                   | >=1.1.7         |
+| nodemailer                         | SSRF           | nodemailer                         | >=9.0.1         |
+| follow-redirects                   | SSRF           | follow-redirects                   | >=1.16.0        |
+| @babel/core                        | DoS            | @babel/core                        | >=7.29.6        |
+| esbuild                            | DoS            | esbuild                            | >=0.28.1        |
+| sharp                              | DoS            | sharp                              | >=0.35.0        |
+| @conventional-changelog/git-client | DoS            | @conventional-changelog/git-client | >=2.0.0         |
+
+**Fix method**: `pnpm.overrides` in root `package.json` forces patched versions of all transitive dependencies. `pnpm install` regenerated `pnpn-lock.yaml`. `pnpm audit` confirms **0 vulnerabilities**.
+
+#### Code Quality Improvements
+
+| Change                                 | Description                                                                 | Files                                                |
+| -------------------------------------- | --------------------------------------------------------------------------- | ---------------------------------------------------- |
+| WalletService now() helper             | Replaced `const now = new Date()` pattern with `private now()` method       | `backend/src/services/WalletService.ts`              |
+| PayoutWebhookController status mapping | Extracted `getPayPalPayoutStatus()` helper for explicit batch_status/status | `backend/src/controllers/PayoutWebhookController.ts` |
+| Removed supertest from root            | Duplicate dependency already in backend/package.json                        | `package.json`                                       |
+
+---
+
+_Last updated: 2026-09-05_
+_Version: 3.5.1_

@@ -6,7 +6,7 @@
 
 | Documento                          | Descripción                          | Última Actualización |
 | ---------------------------------- | ------------------------------------ | -------------------- |
-| [README.md](../README.md)          | Documentación principal del proyecto | 2026-06-25           |
+| [README.md](../README.md)          | Documentación principal del proyecto | 2026-09-05           |
 | [PRD.md](PRD.md)                   | Product Requirements Document        | 2026-06-25           |
 | [ROADMAP.md](ROADMAP.md)           | Hoja de ruta completa                | 2026-06-25           |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Arquitectura del sistema             | 2026-04-01           |
