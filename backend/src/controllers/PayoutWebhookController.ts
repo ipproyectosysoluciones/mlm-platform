@@ -28,6 +28,11 @@ function mapPayPalPayoutStatus(batchStatus: string): PayoutStatus {
   return map[batchStatus] || 'unknown';
 }
 
+/** Extract payout status from PayPal webhook resource, checking batch_status then status */
+function getPayPalPayoutStatus(resource: Record<string, unknown>): string {
+  return (resource?.batch_status as string) || (resource?.status as string) || 'UNKNOWN';
+}
+
 /**
  * Handle PayPal payout webhook
  */
@@ -63,9 +68,7 @@ export async function paypalPayoutWebhook(req: Request, res: Response): Promise<
     // 4. Process PAYOUTS.* events
     if (event.event_type?.startsWith('PAYMENT.PAYOUTS.')) {
       const payoutId = event.resource?.payout_batch_id || event.resource?.payout_item_id;
-      const status = mapPayPalPayoutStatus(
-        event.resource?.batch_status || event.resource?.status || 'UNKNOWN'
-      );
+      const status = mapPayPalPayoutStatus(getPayPalPayoutStatus(event.resource || {}));
 
       if (payoutId && status !== 'unknown') {
         await walletService.syncFromGateway(payoutId, status);
