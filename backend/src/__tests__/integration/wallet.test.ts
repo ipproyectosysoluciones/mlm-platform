@@ -81,6 +81,7 @@ describe('Wallet Integration Tests', () => {
         currency: 'USD',
       });
 
+      const now = new Date();
       await WalletTransaction.create({
         walletId: wallet.id,
         type: WALLET_TRANSACTION_TYPE.COMMISSION_EARNED,
@@ -89,6 +90,8 @@ describe('Wallet Integration Tests', () => {
         referenceId: null,
         description: 'Test commission',
         exchangeRate: 1.0,
+        createdAt: now,
+        updatedAt: now,
       });
 
       const res = await testAgent
@@ -109,6 +112,7 @@ describe('Wallet Integration Tests', () => {
         currency: 'USD',
       });
 
+      const now = new Date();
       // Create commission transaction
       await WalletTransaction.create({
         walletId: wallet.id,
@@ -118,6 +122,8 @@ describe('Wallet Integration Tests', () => {
         referenceId: null,
         description: 'Commission',
         exchangeRate: 1.0,
+        createdAt: now,
+        updatedAt: now,
       });
 
       // Create withdrawal transaction
@@ -129,6 +135,8 @@ describe('Wallet Integration Tests', () => {
         referenceId: null,
         description: 'Withdrawal',
         exchangeRate: 1.0,
+        createdAt: now,
+        updatedAt: now,
       });
 
       const res = await testAgent
@@ -159,6 +167,7 @@ describe('Wallet Integration Tests', () => {
         .set(authHeaders)
         .send({
           amount: 30,
+          destination: { email: 'test@example.com' },
         })
         .expect(201);
 
@@ -198,9 +207,13 @@ describe('Wallet Integration Tests', () => {
         currency: 'USD',
       });
 
-      const res = await testAgent.post('/api/v1/wallets/withdraw').set(authHeaders).send({
-        amount: 20,
-      });
+      const res = await testAgent
+        .post('/api/v1/wallets/withdraw')
+        .set(authHeaders)
+        .send({
+          amount: 20,
+          destination: { email: 'test@example.com' },
+        });
 
       // Could be 400 from validation (min 20) or from insufficient balance
       expect([400]).toContain(res.status);
@@ -218,12 +231,15 @@ describe('Wallet Integration Tests', () => {
         currency: 'USD',
       });
 
+      const now = new Date();
       const withdrawal = await WithdrawalRequest.create({
         userId: testUser.id,
         requestedAmount: 30.0,
         feeAmount: 1.5,
         netAmount: 28.5,
         status: WITHDRAWAL_STATUS.PENDING,
+        createdAt: now,
+        updatedAt: now,
       });
 
       const res = await testAgent
@@ -255,12 +271,15 @@ describe('Wallet Integration Tests', () => {
         currency: 'USD',
       });
 
+      const now = new Date();
       const withdrawal = await WithdrawalRequest.create({
         userId: testUser.id,
         requestedAmount: 30.0,
         feeAmount: 1.5,
         netAmount: 28.5,
         status: WITHDRAWAL_STATUS.PENDING,
+        createdAt: now,
+        updatedAt: now,
       });
 
       const res = await testAgent
@@ -279,12 +298,15 @@ describe('Wallet Integration Tests', () => {
         currency: 'USD',
       });
 
+      const now = new Date();
       const withdrawal = await WithdrawalRequest.create({
         userId: testUser.id,
         requestedAmount: 30.0,
         feeAmount: 1.5,
         netAmount: 28.5,
         status: WITHDRAWAL_STATUS.APPROVED, // Not PENDING - cannot cancel
+        createdAt: now,
+        updatedAt: now,
       });
 
       const res = await testAgent
@@ -308,6 +330,7 @@ describe('Wallet Integration Tests', () => {
       });
 
       // Create approved withdrawal
+      const now = new Date();
       const withdrawal = await WithdrawalRequest.create({
         userId: testUser.id,
         requestedAmount: 30.0,
@@ -315,6 +338,8 @@ describe('Wallet Integration Tests', () => {
         netAmount: 28.5,
         status: WITHDRAWAL_STATUS.APPROVED,
         processedAt: null,
+        createdAt: now,
+        updatedAt: now,
       });
 
       // Trigger payout processing (would normally be called by scheduler)

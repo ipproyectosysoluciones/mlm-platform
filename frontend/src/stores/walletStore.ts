@@ -1,6 +1,6 @@
 /**
  * @fileoverview Wallet Store - Zustand store for wallet state management
- * @description Manages wallet balance, transactions, and withdrawal requests
+ * @description Manages wallet balance, transactions, and withdrawal requests with payout config
  *              Gestiona balance, transacciones y solicitudes de retiro del wallet
  * @module stores/walletStore
  * @author Nexo Real Development Team
@@ -9,8 +9,10 @@ import { create } from 'zustand';
 import { useShallow } from 'zustand/react/shallow';
 import type {
   WalletBalance,
+  WalletConfig,
   WalletTransaction,
   WithdrawalRequest,
+  WithdrawalDestination,
   WalletTransactionType,
   CryptoPrices,
 } from '../types';
@@ -19,6 +21,7 @@ import { walletService } from '../services/api';
 interface WalletState {
   // Data
   balance: WalletBalance | null;
+  config: WalletConfig | null;
   transactions: WalletTransaction[];
   withdrawalRequests: WithdrawalRequest[];
 
@@ -47,8 +50,12 @@ interface WalletState {
 
   // Actions
   fetchBalance: () => Promise<void>;
+  fetchConfig: () => Promise<void>;
   fetchTransactions: (reset?: boolean) => Promise<void>;
-  createWithdrawal: (amount: number) => Promise<WithdrawalRequest>;
+  createWithdrawal: (
+    amount: number,
+    destination: WithdrawalDestination
+  ) => Promise<WithdrawalRequest>;
   cancelWithdrawal: (id: string) => Promise<WithdrawalRequest>;
   fetchWithdrawalStatus: (id: string) => Promise<WithdrawalRequest>;
   fetchCryptoPrices: () => Promise<void>;
@@ -62,6 +69,7 @@ interface WalletState {
 
 const initialState = {
   balance: null,
+  config: null,
   transactions: [],
   withdrawalRequests: [],
   isLoading: false,
@@ -86,7 +94,6 @@ export const useWalletStore = create<WalletState>((set, get) => ({
 
   /**
    * Fetch wallet balance
-   * Obtiene el balance del wallet
    */
   fetchBalance: async () => {
     set({ isLoading: true, error: null });
@@ -100,8 +107,19 @@ export const useWalletStore = create<WalletState>((set, get) => ({
   },
 
   /**
+   * Fetch wallet config (min/max/payoutMode)
+   */
+  fetchConfig: async () => {
+    try {
+      const config = await walletService.getConfig();
+      set({ config });
+    } catch (error) {
+      console.error('Failed to fetch wallet config:', error);
+    }
+  },
+
+  /**
    * Fetch wallet transactions
-   * Obtiene transacciones del wallet
    */
   fetchTransactions: async (reset = false) => {
     const state = get();
@@ -133,23 +151,19 @@ export const useWalletStore = create<WalletState>((set, get) => ({
   },
 
   /**
-   * Create withdrawal request
-   * Crea solicitud de retiro
+   * Create withdrawal request with destination
    */
-  createWithdrawal: async (amount: number) => {
+  createWithdrawal: async (amount: number, destination: WithdrawalDestination) => {
     set({ isLoadingWithdrawals: true, withdrawalError: null });
     try {
-      const withdrawal = await walletService.createWithdrawal(amount);
+      const withdrawal = await walletService.createWithdrawal(amount, destination);
 
-      // Add to withdrawal requests list
       set((state) => ({
         withdrawalRequests: [withdrawal, ...state.withdrawalRequests],
         isLoadingWithdrawals: false,
       }));
 
-      // Refresh balance after withdrawal
       get().fetchBalance();
-
       return withdrawal;
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to create withdrawal';
@@ -160,22 +174,18 @@ export const useWalletStore = create<WalletState>((set, get) => ({
 
   /**
    * Cancel withdrawal request
-   * Cancela solicitud de retiro
    */
   cancelWithdrawal: async (id: string) => {
     set({ isLoadingWithdrawals: true, withdrawalError: null });
     try {
       const withdrawal = await walletService.cancelWithdrawal(id);
 
-      // Update in withdrawal requests list
       set((state) => ({
         withdrawalRequests: state.withdrawalRequests.map((w) => (w.id === id ? withdrawal : w)),
         isLoadingWithdrawals: false,
       }));
 
-      // Refresh balance after cancellation
       get().fetchBalance();
-
       return withdrawal;
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to cancel withdrawal';
@@ -186,14 +196,12 @@ export const useWalletStore = create<WalletState>((set, get) => ({
 
   /**
    * Fetch withdrawal status
-   * Obtiene estado de solicitud de retiro
    */
   fetchWithdrawalStatus: async (id: string) => {
     set({ isLoadingWithdrawals: true, withdrawalError: null });
     try {
       const withdrawal = await walletService.getWithdrawalStatus(id);
 
-      // Update in withdrawal requests list if exists
       set((state) => {
         const exists = state.withdrawalRequests.some((w) => w.id === id);
         return {
@@ -214,7 +222,6 @@ export const useWalletStore = create<WalletState>((set, get) => ({
 
   /**
    * Fetch cryptocurrency prices
-   * Obtiene precios de criptomonedas
    */
   fetchCryptoPrices: async () => {
     set({ isLoadingCryptoPrices: true });
@@ -229,7 +236,6 @@ export const useWalletStore = create<WalletState>((set, get) => ({
 
   /**
    * Set transaction type filter
-   * Establece filtro de tipo de transacción
    */
   setTransactionType: (type) => {
     set({ transactionType: type });
@@ -238,7 +244,6 @@ export const useWalletStore = create<WalletState>((set, get) => ({
 
   /**
    * Set date range filter
-   * Establece filtro de rango de fechas
    */
   setDateRange: (start, end) => {
     set({ startDate: start, endDate: end });
@@ -247,13 +252,11 @@ export const useWalletStore = create<WalletState>((set, get) => ({
 
   /**
    * Clear error
-   * Limpia error
    */
   clearError: () => set({ error: null, transactionError: null, withdrawalError: null }),
 
   /**
    * Reset store to initial state
-   * Resetea el store al estado inicial
    */
   reset: () => set(initialState),
 }));
@@ -266,6 +269,14 @@ export const useWalletBalance = () =>
       isLoading: state.isLoading,
       error: state.error,
       fetchBalance: state.fetchBalance,
+    }))
+  );
+
+export const useWalletConfig = () =>
+  useWalletStore(
+    useShallow((state) => ({
+      config: state.config,
+      fetchConfig: state.fetchConfig,
     }))
   );
 

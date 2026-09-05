@@ -5,10 +5,16 @@
 import api from './client';
 import type {
   WalletBalance,
+  WalletConfig,
   TransactionListParams,
   TransactionListResponse,
   WithdrawalRequest,
+  WithdrawalDestination,
   CryptoPrices,
+  AdminListWithdrawalsParams,
+  AdminListWithdrawalsResponse,
+  AdminApproveWithdrawalParams,
+  AdminRejectWithdrawalParams,
 } from '../../types';
 
 /**
@@ -19,7 +25,6 @@ export const walletService = {
   /**
    * Get wallet balance
    * Obtener balance del wallet
-   * @returns {Promise<WalletBalance>} Wallet balance / Balance del wallet
    */
   getBalance: async (): Promise<WalletBalance> => {
     const response = await api.get<{ success: boolean; data: WalletBalance }>('/wallet');
@@ -27,10 +32,17 @@ export const walletService = {
   },
 
   /**
+   * Get wallet config (min/max/payoutMode)
+   * Obtener configuración del wallet
+   */
+  getConfig: async (): Promise<WalletConfig> => {
+    const response = await api.get<{ success: boolean; data: WalletConfig }>('/wallet/config');
+    return response.data.data!;
+  },
+
+  /**
    * Get wallet transactions
    * Obtener transacciones del wallet
-   * @param {TransactionListParams} params - Query parameters / Parámetros de consulta
-   * @returns {Promise<TransactionListResponse>} Transaction list response / Respuesta de lista de transacciones
    */
   getTransactions: async (params?: TransactionListParams): Promise<TransactionListResponse> => {
     const response = await api.get<{ success: boolean; data: TransactionListResponse }>(
@@ -41,15 +53,16 @@ export const walletService = {
   },
 
   /**
-   * Create withdrawal request
-   * Crear solicitud de retiro
-   * @param {number} amount - Amount to withdraw / Monto a retirer
-   * @returns {Promise<WithdrawalRequest>} Created withdrawal request / Solicitud de retiro creada
+   * Create withdrawal request with destination
+   * Crear solicitud de retiro con destino
    */
-  createWithdrawal: async (amount: number): Promise<WithdrawalRequest> => {
+  createWithdrawal: async (
+    amount: number,
+    destination: WithdrawalDestination
+  ): Promise<WithdrawalRequest> => {
     const response = await api.post<{ success: boolean; data: WithdrawalRequest }>(
       '/wallet/withdraw',
-      { amount }
+      { amount, destination }
     );
     return response.data.data!;
   },
@@ -57,8 +70,6 @@ export const walletService = {
   /**
    * Get withdrawal status
    * Obtener estado del retiro
-   * @param {string} id - Withdrawal ID / ID del retiro
-   * @returns {Promise<WithdrawalRequest>} Withdrawal request / Solicitud de retiro
    */
   getWithdrawalStatus: async (id: string): Promise<WithdrawalRequest> => {
     const response = await api.get<{ success: boolean; data: WithdrawalRequest }>(
@@ -70,8 +81,6 @@ export const walletService = {
   /**
    * Cancel withdrawal request
    * Cancelar solicitud de retiro
-   * @param {string} id - Withdrawal ID / ID del retiro
-   * @returns {Promise<WithdrawalRequest>} Cancelled withdrawal request / Solicitud de retiro cancelada
    */
   cancelWithdrawal: async (id: string): Promise<WithdrawalRequest> => {
     const response = await api.delete<{ success: boolean; data: WithdrawalRequest }>(
@@ -83,10 +92,54 @@ export const walletService = {
   /**
    * Get current cryptocurrency prices
    * Obtener precios actuales de criptomonedas
-   * @returns {Promise<CryptoPrices>} Current crypto prices / Precios actuales de crypto
    */
   getCryptoPrices: async (): Promise<CryptoPrices> => {
     const response = await api.get<{ success: boolean; data: CryptoPrices }>('/wallet/prices');
+    return response.data.data!;
+  },
+
+  // ============================================
+  // Admin endpoints — Admin wallet operations
+  // ============================================
+
+  /**
+   * Admin: list all withdrawal requests with filters
+   */
+  adminListWithdrawals: async (
+    params?: AdminListWithdrawalsParams
+  ): Promise<AdminListWithdrawalsResponse> => {
+    const response = await api.get<{ success: boolean; data: AdminListWithdrawalsResponse }>(
+      '/admin/wallet/withdrawals',
+      { params }
+    );
+    return response.data.data!;
+  },
+
+  /**
+   * Admin: approve a withdrawal request
+   */
+  adminApproveWithdrawal: async (
+    id: string,
+    params?: AdminApproveWithdrawalParams
+  ): Promise<WithdrawalRequest> => {
+    const response = await api.post<{ success: boolean; data: WithdrawalRequest }>(
+      `/admin/wallet/withdrawals/${id}/approve`,
+      params || {}
+    );
+    return response.data.data!;
+  },
+
+  /**
+   * Admin: reject a withdrawal request
+   */
+  adminRejectWithdrawal: async (
+    id: string,
+    params: AdminRejectWithdrawalParams
+  ): Promise<WithdrawalRequest> => {
+    const response = await api.post<{ success: boolean; data: WithdrawalRequest }>(
+      `/admin/wallet/withdrawals/${id}/reject`,
+      params
+    );
     return response.data.data!;
   },
 };

@@ -33,7 +33,7 @@ test.describe('Wallet Digital', () => {
     // violation). Scope to the dashboard card, which carries the balance text.
     const walletCard = page
       .locator('a[href="/wallet"]')
-      .filter({ has: page.locator('text=/Wallet Balance|Saldo de Wallet|wallet\.balance/i') })
+      .filter({ has: page.locator('text=/Wallet Balance|Saldo de Wallet|wallet\\.balance/i') })
       .first();
     await expect(walletCard).toBeVisible({ timeout: 10000 });
 
@@ -48,7 +48,7 @@ test.describe('Wallet Digital', () => {
     // ambiguity that a bare `a[href="/wallet"]` locator would hit.
     const walletLink = page
       .locator('a[href="/wallet"]')
-      .filter({ has: page.locator('text=/Wallet Balance|Saldo de Wallet|wallet\.balance/i') })
+      .filter({ has: page.locator('text=/Wallet Balance|Saldo de Wallet|wallet\\.balance/i') })
       .first();
     await walletLink.click();
 
@@ -67,7 +67,9 @@ test.describe('Wallet Digital', () => {
     await page.waitForLoadState('networkidle');
 
     // Check for balance display (may show $0.00 if no wallet yet)
-    page.locator(/\$[\d,]+\.?\d*/).first();
+    const balanceLocator = page.locator('text=/\\$[\\d,]+\\.?\\d*/').first();
+    await expect(balanceLocator).toBeVisible({ timeout: 5000 });
+
     // Just verify page loaded - balance depends on user data
     await expect(page.getByText(/Balance|Saldo/i)).toBeVisible({ timeout: 5000 });
   });
@@ -98,7 +100,9 @@ test.describe('Wallet Digital', () => {
     await page.waitForLoadState('networkidle');
 
     // Check for minimum amount information ($20 minimum)
-    page.locator(/\$20|20 USD|minimum|minimo/i).first();
+    const minInfo = page.locator('text=/\\$20|20 USD|minimum|minimo/i').first();
+    await expect(minInfo).toBeVisible({ timeout: 5000 });
+
     // The amount input is a text input (currency, $ prefix icon) with id="amount".
     // It is NOT type="number" — deliberate, to avoid spinner/keyboard pitfalls for money.
     await expect(page.locator('#amount')).toBeVisible({ timeout: 5000 });
@@ -110,57 +114,53 @@ test.describe('Wallet Digital', () => {
     await page.waitForLoadState('networkidle');
 
     // Try to find and fill amount input
-    const amountInput = page.locator('input[type="number"]').first();
+    const amountInput = page.locator('#amount').first();
+    await expect(amountInput).toBeVisible({ timeout: 5000 });
 
-    // If input exists, test validation
-    const isVisible = await amountInput.isVisible().catch(() => false);
-    if (isVisible) {
-      // Enter amount below $20
-      await amountInput.fill('10');
+    // Enter amount below $20
+    await amountInput.fill('10');
+    await page.waitForTimeout(500);
 
-      // Look for submit button and click
-      const submitButton = page
-        .locator('button:has-text(/Solicitar|Request|Submit|Enviar/i)')
-        .first();
+    // Submit button should be disabled because amount is below minimum
+    const submitButton = page
+      .getByRole('button', { name: /Solicitar|Request|Submit|Enviar/i })
+      .first();
+    await expect(submitButton).toBeVisible({ timeout: 5000 });
+    await expect(submitButton).toBeDisabled();
 
-      if (await submitButton.isVisible().catch(() => false)) {
-        await submitButton.click();
-        await page.waitForTimeout(1000);
-
-        // Should show validation error for minimum amount
-        page.locator('text=/minimum|minimo|20|mínimo/i').first();
-        // Either shows error or form prevents submission
-      }
-    }
+    // Form validation prevents submission — minimum info should still be visible
+    const minInfo = page.locator('text=/\\$20|minimum/i').first();
+    await expect(minInfo).toBeVisible({ timeout: 5000 });
   });
 
-  test('should open withdrawal confirmation modal', async ({ page }) => {
+  test('should create withdrawal with PayPal destination', async ({ page }) => {
     await page.goto(`${baseURL}/wallet`);
     await page.waitForTimeout(2000);
     await page.waitForLoadState('networkidle');
 
-    // Find amount input
-    const amountInput = page.locator('input[type="number"]').first();
-    const isVisible = await amountInput.isVisible().catch(() => false);
+    // Fill in valid amount
+    const amountInput = page.locator('#amount').first();
+    await expect(amountInput).toBeVisible({ timeout: 5000 });
+    await amountInput.fill('30');
 
-    if (isVisible) {
-      // Enter valid amount ($20 or more)
-      await amountInput.fill('30');
+    // Fill in PayPal email
+    const emailInput = page.locator('#paypal-email').first();
+    await expect(emailInput).toBeVisible({ timeout: 5000 });
+    await emailInput.fill('test@example.com');
 
-      // Look for confirmation or submit
-      const confirmButton = page
-        .locator('button:has-text(/Confirmar|Confirm|Request|Enviar/i)')
-        .first();
+    // Click submit button
+    const submitButton = page
+      .getByRole('button', { name: /Solicitar|Request|Submit|Enviar/i })
+      .first();
+    await expect(submitButton).toBeVisible({ timeout: 5000 });
+    await submitButton.click();
 
-      if (await confirmButton.isVisible().catch(() => false)) {
-        await confirmButton.click();
-        await page.waitForTimeout(1000);
+    // Wait for success message
+    await page.waitForTimeout(2000);
 
-        // Should show confirmation modal or preview
-        page.locator('[role="dialog"], .modal, .fixed').first();
-        // Modal may or may not appear depending on implementation
-      }
-    }
+    // Verify success message appears
+    const successMessage = page.locator('text=/success|éxito|created|creado/i').first();
+    await expect(successMessage).toBeVisible({ timeout: 5000 });
   });
 
   test('should have wallet in navigation menu', async ({ page }) => {
@@ -172,14 +172,8 @@ test.describe('Wallet Digital', () => {
     const navWallet = page.locator('nav a[href="/wallet"], header a[href="/wallet"]');
 
     // Try English first, then Spanish
-    const hasEnglish = await navWallet
-      .filter({ hasText: /Wallet/i })
-      .isVisible()
-      .catch(() => false);
-    const hasSpanish = await navWallet
-      .filter({ hasText: /Billetera|Wallet/i })
-      .isVisible()
-      .catch(() => false);
+    const hasEnglish = await navWallet.filter({ hasText: /Wallet/i }).isVisible();
+    const hasSpanish = await navWallet.filter({ hasText: /Billetera|Wallet/i }).isVisible();
 
     expect(hasEnglish || hasSpanish).toBeTruthy();
   });

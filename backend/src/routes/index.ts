@@ -7,7 +7,10 @@ import dashboardRoutes from './dashboard.routes.js';
 import productRoutes from './product.routes.js';
 import orderRoutes from './order.routes.js';
 import walletRoutes from './wallet.routes.js';
+import adminWalletRoutes from './admin-wallet.routes.js';
+import webhookPayoutRoutes from './webhook-payout.routes.js';
 import { featureGuard } from '../middleware/featureGuard.js';
+import { authenticateToken } from '../middleware/auth.middleware.js';
 import twoFactorRoutes from './twoFactor.routes.js';
 import pushRoutes from './push.routes.js';
 import publicRoutes from './public.routes.js';
@@ -56,6 +59,10 @@ router.use('/products', productRoutes);
 router.use('/orders', orderRoutes);
 router.use('/wallet', featureGuard('cryptoWallet'), walletRoutes);
 router.use('/wallets', featureGuard('cryptoWallet'), walletRoutes); // Alias for test compatibility
+router.use('/admin/wallet', adminWalletRoutes);
+
+// Payout webhooks — no featureGuard, raw body needed
+router.use('/payment', webhookPayoutRoutes);
 router.use('/push', pushRoutes);
 router.use('/gift-cards', giftCardRoutes);
 router.use('/email-templates', emailTemplateRoutes);

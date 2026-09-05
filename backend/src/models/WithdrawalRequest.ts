@@ -129,11 +129,20 @@ WithdrawalRequest.init(
       allowNull: true,
       field: 'last_notified_at',
     },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      field: 'created_at',
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      field: 'updated_at',
+    },
   },
   {
     sequelize,
     tableName: 'withdrawal_requests',
-    timestamps: true,
     underscored: true,
     indexes: [{ fields: ['user_id'] }, { fields: ['status'] }, { fields: ['created_at'] }],
   }

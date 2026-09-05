@@ -42,9 +42,13 @@ export default defineConfig({
   webServer: {
     command: process.env.CI
       ? 'pnpm preview --port 4173'
-      : 'VITE_API_URL=/api npx vite build && npx vite preview --port 5173',
+      : 'VITE_API_URL=/api VITE_FEATURE_CRYPTO_WALLET=true npx vite build && npx vite preview --port 5173',
     url: process.env.CI ? 'http://localhost:4173' : 'http://localhost:5173',
     reuseExistingServer: false,
     timeout: 120 * 1000,
+    env: {
+      VITE_FEATURE_CRYPTO_WALLET: 'true',
+      VITE_API_URL: '/api',
+    },
   },
 });

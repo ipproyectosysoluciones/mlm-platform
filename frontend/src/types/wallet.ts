@@ -1,5 +1,14 @@
 /** Domain types for wallet / Tipos de dominio para billetera. @module types/wallet */
 
+// Wallet Config — Backend configuration response
+export interface WalletConfig {
+  minimumWithdrawal: number;
+  maximumWithdrawal: number;
+  maximumWithdrawalDailyPerUser: number;
+  payoutMode: 'manual' | 'auto';
+  feePercentage: number;
+}
+
 // Wallet Types - Digital Wallet
 export interface WalletBalance {
   id: string;
@@ -9,7 +18,14 @@ export interface WalletBalance {
   lastUpdated: string;
 }
 
-export type WalletTransactionType = 'commission' | 'withdrawal' | 'refund';
+export type WalletTransactionType =
+  | 'commission_earned'
+  | 'withdrawal'
+  | 'fee'
+  | 'adjustment'
+  | 'deposit'
+  | 'commission'
+  | 'refund';
 
 export interface WalletTransaction {
   id: string;
@@ -23,7 +39,20 @@ export interface WalletTransaction {
   createdAt: Date;
 }
 
-export type WithdrawalStatus = 'pending' | 'approved' | 'rejected' | 'processed' | 'cancelled';
+export type WithdrawalStatus =
+  | 'pending'
+  | 'approved'
+  | 'rejected'
+  | 'processed'
+  | 'cancelled'
+  | 'paid'
+  | 'failed';
+
+// Withdrawal Destination — Where to send the money
+export interface WithdrawalDestination {
+  method: 'paypal';
+  email: string;
+}
 
 export interface WithdrawalRequest {
   id: string;
@@ -32,8 +61,12 @@ export interface WithdrawalRequest {
   feeAmount: number;
   netAmount: number;
   status: WithdrawalStatus;
+  destination?: WithdrawalDestination;
+  gatewayPayoutId?: string;
+  gatewayStatus?: string;
   rejectionReason?: string;
   approvalComment?: string;
+  approvedBy?: string;
   processedAt?: Date;
   createdAt: Date;
 }
@@ -54,6 +87,31 @@ export interface TransactionListResponse {
     limit: number;
     totalPages: number;
   };
+}
+
+// Admin types — Admin wallet operations
+export interface AdminListWithdrawalsParams {
+  status?: WithdrawalStatus;
+  page?: number;
+  limit?: number;
+}
+
+export interface AdminListWithdrawalsResponse {
+  data: WithdrawalRequest[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
+export interface AdminApproveWithdrawalParams {
+  comment?: string;
+}
+
+export interface AdminRejectWithdrawalParams {
+  reason: string;
 }
 
 // Crypto Price Types
