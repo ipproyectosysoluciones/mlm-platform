@@ -75,8 +75,5 @@
       "esbuild",
       "sqlite3"
     ]
-  },
-  "dependencies": {
-    "supertest": "^7.2.2"
   }
 }
