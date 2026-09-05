@@ -1,3 +1,74 @@
+## [3.5.1] - 2026-08-20(https://github.com/ipproyectosysoluciones/mlm-platform/compare/v3.5.0...v3.5.1) (2026-08-20)
+
+### Bug Fixes
+
+- **ci:** align auto-version release PR to env secret RELEASE_PAT ([e244ff1](https://github.com/ipproyectosysoluciones/mlm-platform/commit/e244ff1f43844f096aa01a7aa0e0ece7edd9b394))
+- **ci:** use PAT for release PR creation in auto-version ([def219e](https://github.com/ipproyectosysoluciones/mlm-platform/commit/def219e2e868ab5d3eae469d7ab3832d7dd388d3))
+
+# [3.5.0](https://github.com/ipproyectosysoluciones/mlm-platform/compare/v3.4.6...v3.5.0) (2026-08-20)
+
+### Bug Fixes
+
+- **admin:** resolve TS build errors blocking Vercel ([fdc59c3](https://github.com/ipproyectosysoluciones/mlm-platform/commit/fdc59c37817b00e263d1e6f66ed09899e0c2e183))
+- **admin:** resolve TS build errors blocking Vercel ([dc21b5c](https://github.com/ipproyectosysoluciones/mlm-platform/commit/dc21b5cde0e803eb3a503ab2766f869a4fcf62ab))
+- **admin:** resolve TS build errors blocking Vercel ([d0b5559](https://github.com/ipproyectosysoluciones/mlm-platform/commit/d0b5559a55bd417cee0dea90a137c5bcc0024d38))
+- **admin:** resolve TS build errors blocking Vercel ([e30097c](https://github.com/ipproyectosysoluciones/mlm-platform/commit/e30097c385bd564af51ff18730d295a1047344d8))
+- **admin:** resolve TS build errors blocking Vercel ([7288f27](https://github.com/ipproyectosysoluciones/mlm-platform/commit/7288f270e792cdd2b2051223c229f39839a13479))
+- **asyncHandler:** return promise so await waits for async handler body ([158967e](https://github.com/ipproyectosysoluciones/mlm-platform/commit/158967e3c4fc0244a351abbe6c8424047d5e5fe4))
+- **backend:** default WebhookEvent timestamps so webhook events persist ([257ccaa](https://github.com/ipproyectosysoluciones/mlm-platform/commit/257ccaaa8e77de1729537f8a924d53df391c5a2e))
+- **ci:** pass version input to cd-backend workflow_dispatch ([15b332e](https://github.com/ipproyectosysoluciones/mlm-platform/commit/15b332ebd81428e8bc01d83e1e21533ab4f5ca80))
+- **ci:** pass version input to cd-backend workflow_dispatch [skip ci] ([c11fc52](https://github.com/ipproyectosysoluciones/mlm-platform/commit/c11fc52b7f98966b02590fc3d611ab051db084be))
+- **ci:** track .env.production so CI builds resolve the real API base URL ([d043079](https://github.com/ipproyectosysoluciones/mlm-platform/commit/d0430793e0b58ff1349379c87b4363cf713686a5)), closes [#350](https://github.com/ipproyectosysoluciones/mlm-platform/issues/350)
+- **database:** support { force, alter } sync options and honor --alter flag ([6ce7440](https://github.com/ipproyectosysoluciones/mlm-platform/commit/6ce7440222d20ce05fa10a26620220af2b38dfd3))
+- **deps:** bump undici to 7.29.0, ip-address to 10.4.0, brace-expansion to 5.0.9, fast-uri to 4.1.2 ([f71a00a](https://github.com/ipproyectosysoluciones/mlm-platform/commit/f71a00a96e6ed41c4508dc20c7dc2e87510cf00f))
+- **e2e:** align tours spec mocks with real API fields and fix 2 stale assertions ([e2d05d6](https://github.com/ipproyectosysoluciones/mlm-platform/commit/e2d05d6b99455dc29919892c22e923f3c3de2148)), closes [#348](https://github.com/ipproyectosysoluciones/mlm-platform/issues/348)
+- **e2e:** build local preview with VITE_API_URL=/api ([59c4bc7](https://github.com/ipproyectosysoluciones/mlm-platform/commit/59c4bc765375ca62ab89d4e19b3154fab7338a62))
+- **e2e:** scope wallet.spec.ts /wallet link selectors to dashboard card ([#347](https://github.com/ipproyectosysoluciones/mlm-platform/issues/347)) ([7112f86](https://github.com/ipproyectosysoluciones/mlm-platform/commit/7112f864ff5ab82b97b4a81e7d4717ac817fa909)), closes [#3-6](https://github.com/ipproyectosysoluciones/mlm-platform/issues/3-6) [#373](https://github.com/ipproyectosysoluciones/mlm-platform/issues/373)
+- **e2e:** skip backend-dependent push tests in CI, fix auth redirect test ([18812de](https://github.com/ipproyectosysoluciones/mlm-platform/commit/18812de577f2b32cd09aed346d3da4c13921df4e))
+- **frontend:** distinguish not-found from network errors in detail pages ([9473245](https://github.com/ipproyectosysoluciones/mlm-platform/commit/9473245bb5c9bc1ccc5d94dbb000321b723253ad))
+- **frontend:** restore router composition and clear lint errors ([e37a3a2](https://github.com/ipproyectosysoluciones/mlm-platform/commit/e37a3a2727c2e968ea23a2a82334396c68e82028))
+- **lint:** clear 4 eslint errors blocking Auto Version release validation ([#347](https://github.com/ipproyectosysoluciones/mlm-platform/issues/347)) ([b3ebc74](https://github.com/ipproyectosysoluciones/mlm-platform/commit/b3ebc74c8c54202efc80af5124f17fb6ac5f516e)), closes [#359-370](https://github.com/ipproyectosysoluciones/mlm-platform/issues/359-370)
+- **migrations:** align orders status/payment_method enums with models on PG ([02c9516](https://github.com/ipproyectosysoluciones/mlm-platform/commit/02c9516d6df3c0dc3874140b2bb8560308781144))
+- **migrations:** drop MySQL ON UPDATE CURRENT_TIMESTAMP for PG compatibility ([8286196](https://github.com/ipproyectosysoluciones/mlm-platform/commit/828619640e4a24f840f6f00ce436ab73afcf3280))
+- **migrations:** run sequelize-cli under Node ESM via JSON rc and CommonJS scope ([a7f4105](https://github.com/ipproyectosysoluciones/mlm-platform/commit/a7f41050fbb3f05d808f74318e8dc11b0940058a))
+- restore package.json to v3.4.6 after conflict resolution [skip ci] ([06f5223](https://github.com/ipproyectosysoluciones/mlm-platform/commit/06f5223b7e72ff4f49a2ae3a2f8127b6cbacef2f))
+- **security:** enforce dompurify>=3.4.13 via root override ([dcc8a20](https://github.com/ipproyectosysoluciones/mlm-platform/commit/dcc8a20092b3cf925f1698ced5275288b614581c))
+- **security:** enforce MP refund ownership + migrate .env.production secrets to .local ([3ecf903](https://github.com/ipproyectosysoluciones/mlm-platform/commit/3ecf90307d5cedcecb35a637a3a0f9edcb915815))
+- **tests:** reset useAuth mock in dashboard.test.tsx beforeEach ([#347](https://github.com/ipproyectosysoluciones/mlm-platform/issues/347)) ([9d063d6](https://github.com/ipproyectosysoluciones/mlm-platform/commit/9d063d6c09078fe6abe768e08825cadaea055fc3))
+- **tests:** tolerate missing SequelizeMeta in migration runner setup ([495cf99](https://github.com/ipproyectosysoluciones/mlm-platform/commit/495cf995b41507b4dc0ae91174288689221c70ed))
+- **tests:** tolerate missing SequelizeMeta in migration runner setup ([3c44052](https://github.com/ipproyectosysoluciones/mlm-platform/commit/3c440524891e743b2cbd5cfce9b32729d382d8ba))
+- **tests:** tolerate missing SequelizeMeta in migration runner setup ([132b836](https://github.com/ipproyectosysoluciones/mlm-platform/commit/132b8369a5065b5824c13e84263d79520abfdc0b))
+- **tests:** tolerate missing SequelizeMeta in migration runner setup ([297dd8b](https://github.com/ipproyectosysoluciones/mlm-platform/commit/297dd8b96980ec4bb7f986b6c1b1e11e54006c8c))
+
+### Features
+
+- **admin:** create shared CRUD core components ([60f33b7](https://github.com/ipproyectosysoluciones/mlm-platform/commit/60f33b730d86d504a6b2aa6f165c870e2cd17ff3))
+- **admin:** refactor Properties+Tours pages with AdminCrudTable ([e282bec](https://github.com/ipproyectosysoluciones/mlm-platform/commit/e282becfb0956af1fbbd08a0cd8a40c08ff4d821))
+- **admin:** refactor ReservationsPage with AdminCrudTable + AdminNotesModal ([4db9d6a](https://github.com/ipproyectosysoluciones/mlm-platform/commit/4db9d6aca19ee2b63977a3ffe86c6c4443098893))
+- **backend:** add hourly MercadoPago token refresh scheduler job ([c6a2f35](https://github.com/ipproyectosysoluciones/mlm-platform/commit/c6a2f35ab9705fbfda61c860e15af8bc14c76ce7))
+- **backend:** add marketplace split fields to Order and VendorOrder models ([552bf97](https://github.com/ipproyectosysoluciones/mlm-platform/commit/552bf970457aba451998fd923c91cba18b080fcf))
+- **backend:** add MarketplaceSplitService for vendor-charge orchestration ([f0d02d3](https://github.com/ipproyectosysoluciones/mlm-platform/commit/f0d02d3764e811ed3c855c3e5bcf8c0f33affbcd))
+- **backend:** add refund endpoint for vendor payments ([2c92c86](https://github.com/ipproyectosysoluciones/mlm-platform/commit/2c92c866a443fc9a96f0548959b3523098d8adca))
+- **backend:** refund MercadoPago payment when cancelling a paid reservation ([20180cf](https://github.com/ipproyectosysoluciones/mlm-platform/commit/20180cf50ff477f5d0d5658951f15272abb46fea))
+- **backend:** route reservation approvals and refunds through the split webhook ([540d9e3](https://github.com/ipproyectosysoluciones/mlm-platform/commit/540d9e3bfb1a62c9e90cf5554b0d8ab359ab53c1))
+- **backend:** support vendorId and reservationId in MercadoPago createPreference ([4e5056f](https://github.com/ipproyectosysoluciones/mlm-platform/commit/4e5056f5ed389aae4bff435f1f0b5aea8b7c0000))
+- **frontend:** add vendor MercadoPago connect card to the dashboard ([30d2ce7](https://github.com/ipproyectosysoluciones/mlm-platform/commit/30d2ce761da3e5b17c09c0ca47447a0fdfb3d358))
+- **frontend:** forward reservation vendorId and warn when the vendor has no MercadoPago account ([50045bf](https://github.com/ipproyectosysoluciones/mlm-platform/commit/50045bffd75045e057562f19fa0e95fc9592e865))
+- **frontend:** forward vendorId in MercadoPago preference creation ([4675802](https://github.com/ipproyectosysoluciones/mlm-platform/commit/467580264fdd5a39009b86df0567a5c90cfe3ccd))
+- **marketplace:** add marketplace config and VAT rate service ([#365](https://github.com/ipproyectosysoluciones/mlm-platform/issues/365)) ([c68335f](https://github.com/ipproyectosysoluciones/mlm-platform/commit/c68335f761242df377cbe16f0329e7ced5c668e5))
+- **marketplace:** add marketplace fee calculation to CommissionService ([#365](https://github.com/ipproyectosysoluciones/mlm-platform/issues/365)) ([ff412d7](https://github.com/ipproyectosysoluciones/mlm-platform/commit/ff412d73b01a9c53ec6cb5f9e9fcf454fa7cbda1))
+- **marketplace:** add OAuth endpoints and vendor MP account migration ([#365](https://github.com/ipproyectosysoluciones/mlm-platform/issues/365)) ([f06447a](https://github.com/ipproyectosysoluciones/mlm-platform/commit/f06447ab9a7b574ddff1f06f2a75382a5c5a2222))
+- **marketplace:** add orders marketplace migrations and lazy token refresh ([#365](https://github.com/ipproyectosysoluciones/mlm-platform/issues/365)) ([e58398f](https://github.com/ipproyectosysoluciones/mlm-platform/commit/e58398f1f498dd46139a0595a525ba2456fbf938))
+- **marketplace:** add VendorMercadoPagoAccount model and OAuth service ([#365](https://github.com/ipproyectosysoluciones/mlm-platform/issues/365)) ([658e6f2](https://github.com/ipproyectosysoluciones/mlm-platform/commit/658e6f2db958518c9aef6934c4c9d5d331e6d53a))
+- **marketplace:** parametrize MercadoPagoService by access token ([#365](https://github.com/ipproyectosysoluciones/mlm-platform/issues/365)) ([eb012e2](https://github.com/ipproyectosysoluciones/mlm-platform/commit/eb012e2972e62c7a04e370737b84bc4ac514df60))
+- **marketplace:** retry refresh with backoff on transient errors ([#365](https://github.com/ipproyectosysoluciones/mlm-platform/issues/365)) ([54931f4](https://github.com/ipproyectosysoluciones/mlm-platform/commit/54931f40b214651009bad3eb6d01242d81828412))
+- **theme:** add light/dark mode with system detection and navbar toggle ([48abc6b](https://github.com/ipproyectosysoluciones/mlm-platform/commit/48abc6ba4a2907d1267f7fa9efafffb8a781d453))
+- **wallet:** add destination + gateway tracking migration for withdrawal_requests (PR 1) ([96c6a43](https://github.com/ipproyectosysoluciones/mlm-platform/commit/96c6a438c0473d9d508001eb3d32874e6bad85c3))
+- **wallet:** add MercadoPago money-out gateway with tests (PR 2b) ([c3fafe9](https://github.com/ipproyectosysoluciones/mlm-platform/commit/c3fafe9df1a169905cc6e37ce94e624796785db3))
+- **wallet:** add PayPal payouts gateway with PayoutGateway contract (PR 2a) ([d5ad7ee](https://github.com/ipproyectosysoluciones/mlm-platform/commit/d5ad7ee5c1d4e0d7c4dc061b64b0c5e20d80bf4b))
+- **wallet:** expose getAccessToken and wire payout webhook id (PR 2a) ([d873dde](https://github.com/ipproyectosysoluciones/mlm-platform/commit/d873dde00034324af4c99f280ee39171a3606094))
+- **wallet:** extend WithdrawalRequest model/types with payout destination fields (PR 1) ([7dc23a2](https://github.com/ipproyectosysoluciones/mlm-platform/commit/7dc23a20aa0ff93cdc74563e091bb4818dc09214))
+
 # Changelog
 
 Todos los cambios notables de este proyecto serán documentados en este archivo.

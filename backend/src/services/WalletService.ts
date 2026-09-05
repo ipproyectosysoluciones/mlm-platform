@@ -59,6 +59,14 @@ function convertToUSD(amount: number, fromCurrency: string): number {
 
 export class WalletService {
   /**
+   * Return current UTC timestamp for consistent createdAt/updatedAt across model creates.
+   * Retorna timestamp UTC actual para createdAt/updatedAt consistentes en creates de modelos.
+   */
+  private now(): Date {
+    return new Date();
+  }
+
+  /**
    * Create or get wallet for a user
    * Crear u obtener wallet de usuario
    *
@@ -145,7 +153,7 @@ export class WalletService {
     // Convert to USD if not already USD
     const amountInUSD = convertToUSD(amount, currency);
     const exchangeRate = currency !== 'USD' ? EXCHANGE_RATES[currency] : null;
-    const now = new Date();
+    const now = this.now();
 
     await WalletTransaction.create({
       walletId: wallet.id,
@@ -232,7 +240,7 @@ export class WalletService {
 
     // Calculate net
     const netAmount = requestedAmount - feeAmount;
-    const now = new Date();
+    const now = this.now();
 
     // Create withdrawal request with destination
     const withdrawal = await WithdrawalRequest.create({
@@ -544,7 +552,7 @@ export class WalletService {
    * Calculate daily consumed amount per gateway (paid + en-flight today UTC)
    * Calcular monto consumido diario por pasarela
    */
-  private async getDailyConsumed(gatewayType: string): Promise<number> {
+  private async getDailyConsumed(_gatewayType: string): Promise<number> {
     const todayStart = new Date();
     todayStart.setUTCHours(0, 0, 0, 0);
     const todayEnd = new Date();

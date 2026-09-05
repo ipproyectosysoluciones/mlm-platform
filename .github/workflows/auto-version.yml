@@ -62,6 +62,7 @@ jobs:
 
   version-bump:
     needs: [validate]
+    environment: release  # read env secret RELEASE_PAT; env "Release" has no required reviewers
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -139,10 +140,11 @@ jobs:
           git checkout -b "$BRANCH"
           npm version "$NEW_VERSION" --no-git-tag-version
 
-          # Generate CHANGELOG
+          # Generate CHANGELOG. conventional-changelog -s/--same-file writes the
+          # version section with header `## [vX.Y.Z](compare-url) (date)` directly
+          # to CHANGELOG.md (date + URL incluidos). No sed: a previous sed duplicated
+          # the date and broke the URL link in the release header.
           npx conventional-changelog -p angular -i CHANGELOG.md -s --pkg package.json
-          TODAY=$(date +%Y-%m-%d)
-          sed -i "s/## \[${NEW_VERSION}\]/## [${NEW_VERSION}] - ${TODAY}/" CHANGELOG.md
 
           # Commit and push branch
           git add package.json pnpm-lock.yaml CHANGELOG.md
@@ -166,14 +168,21 @@ jobs:
           echo "✅ cd-backend triggered for v${NEW_VERSION}"
 
           # Create and auto-merge PR to release
-          PR_URL=$(gh pr create \
+          # The default GITHUB_TOKEN cannot create/approve a PR in a run that
+          # was triggered by an Actions-generated push to release
+          # ("GitHub Actions is not permitted to create or approve pull requests").
+          # These two gh calls authenticate with the env PAT RELEASE_PAT
+          # (secret in Environment "Release"; requires environment: release on the
+          # job). The step-level GITHUB_TOKEN above still backs git push,
+          # gh release create, and gh workflow run (those work).
+          PR_URL=$(GH_TOKEN="${{ secrets.RELEASE_PAT }}" gh pr create \
             --base release \
             --head "$BRANCH" \
             --title "chore(release): v${NEW_VERSION}" \
             --body "Automated version bump: ${CURRENT} → ${NEW_VERSION}")
           echo "✅ PR created: $PR_URL"
 
-          gh pr merge "$PR_URL" \
+          GH_TOKEN="${{ secrets.RELEASE_PAT }}" gh pr merge "$PR_URL" \
             --merge \
             --admin \
             --subject "chore(release): v${NEW_VERSION} [skip ci]"

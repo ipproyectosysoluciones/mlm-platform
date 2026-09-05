@@ -82,6 +82,7 @@
     "eslint-config-prettier": "^10.1.0",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
+    "fast-uri": "^4.1.4",
     "globals": "^17.4.0",
     "jsdom": "^29.0.1",
     "playwright": "^1.58.2",
