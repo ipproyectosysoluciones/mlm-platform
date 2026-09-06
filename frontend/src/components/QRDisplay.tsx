@@ -25,7 +25,7 @@ export default function QRDisplay({ value, referralCode }: QRDisplayProps) {
   return (
     <div className="text-center">
       <canvas ref={canvasRef} className="mx-auto rounded-lg" />
-      <p className="mt-3 text-sm font-medium text-gray-700">{referralCode}</p>
+      <p className="mt-3 text-sm font-medium text-[var(--color-foreground)]">{referralCode}</p>
     </div>
   );
 }

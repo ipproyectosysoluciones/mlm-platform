@@ -37,28 +37,28 @@ function KanbanLeadCard({
   onEdit: (lead: Lead) => void;
 }) {
   return (
-    <div className="bg-white rounded-lg shadow-sm border p-3 mb-2 hover:shadow-md transition-shadow">
+    <div className="bg-[var(--color-card)] rounded-lg shadow-sm border p-3 mb-2 hover:shadow-md transition-shadow">
       <div className="flex justify-between items-start mb-2">
-        <h4 className="font-medium text-gray-900 text-sm truncate">{lead.contactName}</h4>
+        <h4 className="font-medium text-[var(--color-foreground)] text-sm truncate">{lead.contactName}</h4>
         <div className="flex gap-1">
-          <button onClick={() => onView(lead)} className="text-gray-400 hover:text-indigo-600">
+          <button onClick={() => onView(lead)} className="text-[var(--color-foreground-muted)] hover:text-indigo-600">
             <Eye className="w-4 h-4" />
           </button>
-          <button onClick={() => onEdit(lead)} className="text-gray-400 hover:text-indigo-600">
+          <button onClick={() => onEdit(lead)} className="text-[var(--color-foreground-muted)] hover:text-indigo-600">
             <Edit className="w-4 h-4" />
           </button>
         </div>
       </div>
 
-      {lead.company && <p className="text-xs text-gray-500 mb-2">{lead.company}</p>}
+      {lead.company && <p className="text-xs text-[var(--color-foreground-muted)] mb-2">{lead.company}</p>}
 
       <div className="space-y-1">
-        <div className="flex items-center gap-1 text-xs text-gray-500">
+        <div className="flex items-center gap-1 text-xs text-[var(--color-foreground-muted)]">
           <Mail className="w-3 h-3" />
           <span className="truncate">{lead.contactEmail}</span>
         </div>
         {lead.contactPhone && (
-          <div className="flex items-center gap-1 text-xs text-gray-500">
+          <div className="flex items-center gap-1 text-xs text-[var(--color-foreground-muted)]">
             <Phone className="w-3 h-3" />
             <span>{lead.contactPhone}</span>
           </div>
@@ -92,8 +92,8 @@ export function KanbanColumn({
     <div className="flex-shrink-0 w-72">
       <div className={`rounded-t-lg p-3 border-t border-l border-r ${statusConfig.color}`}>
         <div className="flex justify-between items-center">
-          <h3 className="font-semibold text-gray-700">{statusConfig.label}</h3>
-          <span className="bg-white px-2 py-0.5 rounded-full text-sm text-gray-600">
+          <h3 className="font-semibold text-[var(--color-foreground)]">{statusConfig.label}</h3>
+          <span className="bg-[var(--color-card)] px-2 py-0.5 rounded-full text-sm text-[var(--color-foreground-muted)]">
             {leads.length}
           </span>
         </div>
@@ -104,7 +104,7 @@ export function KanbanColumn({
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className={`min-h-[200px] bg-gray-50 p-2 rounded-b-lg border-x border-b ${
+            className={`min-h-[200px] bg-[var(--color-secondary)] p-2 rounded-b-lg border-x border-b ${
               snapshot.isDraggingOver ? 'bg-indigo-50' : ''
             }`}
           >

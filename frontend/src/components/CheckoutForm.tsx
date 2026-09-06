@@ -254,10 +254,10 @@ export function CheckoutForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className={cn('overflow-hidden rounded-xl border border-slate-700 bg-slate-800', className)}
+      className={cn('overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-card)]', className)}
     >
       {/* Header */}
-      <div className="border-b border-slate-700 bg-slate-800/50 px-5 py-4">
+      <div className="border-b border-[var(--color-border)] bg-[var(--color-card)]/50 px-5 py-4">
         <h3 className="text-lg font-semibold text-white">{t('checkout.paymentMethod')}</h3>
       </div>
 
@@ -265,7 +265,7 @@ export function CheckoutForm({
       <div className="flex flex-col gap-5 p-5">
         {/* Payment Method Selection */}
         <div className="flex flex-col gap-3">
-          <label className="text-sm font-medium text-slate-300">
+          <label className="text-sm font-medium text-[var(--color-foreground-subtle)]">
             {t('checkout.selectPayment')}
           </label>
 
@@ -277,7 +277,7 @@ export function CheckoutForm({
                   'flex cursor-pointer items-center gap-4 rounded-lg border p-4 transition-all',
                   selectedPayment === method.value
                     ? 'border-purple-500 bg-purple-500/10'
-                    : 'border-slate-600 bg-slate-700/50 hover:border-slate-500',
+                    : 'border-[var(--color-border)] bg-[var(--color-card)]/50 hover:border-[var(--color-border)]',
                   method.value === 'paypal' && !isPayPalAvailable && 'opacity-50'
                 )}
               >
@@ -295,11 +295,11 @@ export function CheckoutForm({
                     'flex h-5 w-5 items-center justify-center rounded-full border-2',
                     selectedPayment === method.value
                       ? 'border-purple-500 bg-purple-500'
-                      : 'border-slate-500'
+                      : 'border-[var(--color-border)]'
                   )}
                 >
                   {selectedPayment === method.value && (
-                    <span className="h-2 w-2 rounded-full bg-white" />
+                    <span className="h-2 w-2 rounded-full bg-[var(--color-card)]" />
                   )}
                 </span>
                 <span className="flex items-center gap-3 text-white">
@@ -336,10 +336,10 @@ export function CheckoutForm({
           <div className="flex items-start gap-3 rounded-lg border border-[#009ee3]/30 bg-[#009ee3]/10 p-4">
             <ExternalLink className="h-5 w-5 shrink-0 text-[#009ee3]" />
             <div className="flex flex-col gap-1">
-              <p className="text-sm text-slate-200">{t('checkout.mpRedirectInfo')}</p>
+              <p className="text-sm text-[var(--color-foreground-muted)]">{t('checkout.mpRedirectInfo')}</p>
               {/* FE-3: inform the payer the charge goes to the business account */}
               {vendorId && (
-                <p className="text-sm text-slate-300">{t('checkout.paymentToBusinessAccount')}</p>
+                <p className="text-sm text-[var(--color-foreground-subtle)]">{t('checkout.paymentToBusinessAccount')}</p>
               )}
             </div>
           </div>
@@ -361,9 +361,9 @@ export function CheckoutForm({
               checked={agreedToTerms}
               onChange={handleTermsChange}
               disabled={isProcessing}
-              className="mt-1 h-4 w-4 rounded border-slate-500 bg-slate-700 text-purple-600 focus:ring-purple-500 focus:ring-offset-slate-800"
+              className="mt-1 h-4 w-4 rounded border-[var(--color-border)] bg-[var(--color-card)] text-purple-600 focus:ring-purple-500 focus:ring-offset-slate-800"
             />
-            <span className={cn('text-sm', termsError ? 'text-red-400' : 'text-slate-300')}>
+            <span className={cn('text-sm', termsError ? 'text-red-400' : 'text-[var(--color-foreground-subtle)]')}>
               {t('checkout.terms')}
             </span>
           </label>
@@ -396,7 +396,7 @@ export function CheckoutForm({
               'flex w-full items-center justify-center gap-2 rounded-xl py-3 text-lg font-semibold',
               'bg-[#009ee3] text-white transition-all',
               'hover:bg-[#0082c4] hover:shadow-lg hover:shadow-[#009ee3]/25',
-              'disabled:bg-slate-600 disabled:text-slate-400 disabled:cursor-not-allowed',
+              'disabled:bg-[var(--color-card)] disabled:text-[var(--color-foreground-muted)] disabled:cursor-not-allowed',
               'focus:outline-none focus:ring-2 focus:ring-[#009ee3] focus:ring-offset-2 focus:ring-offset-slate-800'
             )}
           >
@@ -423,7 +423,7 @@ export function CheckoutForm({
               'flex w-full items-center justify-center gap-2 rounded-xl py-3 text-lg font-semibold',
               'bg-purple-600 text-white transition-all',
               'hover:bg-purple-500 hover:shadow-lg hover:shadow-purple-500/25',
-              'disabled:bg-slate-600 disabled:text-slate-400 disabled:cursor-not-allowed',
+              'disabled:bg-[var(--color-card)] disabled:text-[var(--color-foreground-muted)] disabled:cursor-not-allowed',
               'focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-slate-800'
             )}
           >
@@ -447,7 +447,7 @@ export function CheckoutForm({
           onClick={() => window.history.back()}
           disabled={isProcessing}
           className={cn(
-            'text-center text-sm text-slate-400 transition-colors',
+            'text-center text-sm text-[var(--color-foreground-muted)] transition-colors',
             'hover:text-white disabled:opacity-50'
           )}
         >

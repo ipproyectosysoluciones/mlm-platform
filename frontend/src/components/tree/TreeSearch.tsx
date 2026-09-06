@@ -136,9 +136,9 @@ export default function TreeSearch({ onSelect, placeholder }: TreeSearchProps) {
       <div className="relative">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
           {isLoading ? (
-            <Loader2 className="w-5 h-5 text-gray-400 animate-spin" />
+            <Loader2 className="w-5 h-5 text-[var(--color-foreground-muted)] animate-spin" />
           ) : (
-            <Search className="w-5 h-5 text-gray-400" />
+            <Search className="w-5 h-5 text-[var(--color-foreground-muted)]" />
           )}
         </div>
 
@@ -152,9 +152,9 @@ export default function TreeSearch({ onSelect, placeholder }: TreeSearchProps) {
           placeholder={placeholder || defaultPlaceholder}
           className="
             w-full pl-10 pr-10 py-2.5
-            border border-gray-300 rounded-lg
-            bg-white text-gray-900
-            placeholder-gray-400
+            border border-[var(--color-border)] rounded-lg
+            bg-[var(--color-card)] text-[var(--color-foreground)]
+            placeholder-[var(--color-foreground-muted)]
             focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
             transition-all duration-200
           "
@@ -170,7 +170,7 @@ export default function TreeSearch({ onSelect, placeholder }: TreeSearchProps) {
           <button
             type="button"
             onClick={handleClear}
-            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+            className="absolute inset-y-0 right-0 pr-3 flex items-center text-[var(--color-foreground-muted)] hover:text-[var(--color-foreground-muted)]"
             aria-label={t('tree.search.clear')}
           >
             <X className="w-5 h-5" />
@@ -185,7 +185,7 @@ export default function TreeSearch({ onSelect, placeholder }: TreeSearchProps) {
           role="listbox"
           className="
             absolute z-50 top-full left-0 right-0 mt-1
-            bg-white border border-gray-200 rounded-lg shadow-lg
+            bg-[var(--color-card)] border border-[var(--color-border)] rounded-lg shadow-lg
             max-h-72 overflow-auto
           "
         >
@@ -200,26 +200,26 @@ export default function TreeSearch({ onSelect, placeholder }: TreeSearchProps) {
                   onClick={() => handleSelect(user)}
                   className={`
                     px-4 py-3 cursor-pointer flex items-center gap-3
-                    ${selectedIndex === index ? 'bg-indigo-50' : 'hover:bg-gray-50'}
-                    ${index !== results.length - 1 ? 'border-b border-gray-100' : ''}
+                    ${selectedIndex === index ? 'bg-indigo-50' : 'hover:bg-[var(--color-secondary)]'}
+                    ${index !== results.length - 1 ? 'border-b border-[var(--color-border-subtle)]' : ''}
                   `}
                 >
                   <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-semibold text-sm">
                     {user.email?.[0]?.toUpperCase() || 'U'}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate">{user.email}</p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-sm font-medium text-[var(--color-foreground)] truncate">{user.email}</p>
+                    <p className="text-xs text-[var(--color-foreground-muted)]">
                       {t('tree.details.level')} {user.level} • {user.referralCode}
                     </p>
                   </div>
-                  <User className="w-4 h-4 text-gray-400" />
+                  <User className="w-4 h-4 text-[var(--color-foreground-muted)]" />
                 </li>
               ))}
             </ul>
           ) : query.length >= 2 && !isLoading ? (
-            <div className="px-4 py-8 text-center text-gray-500">
-              <Search className="w-8 h-8 mx-auto mb-2 text-gray-300" />
+            <div className="px-4 py-8 text-center text-[var(--color-foreground-muted)]">
+              <Search className="w-8 h-8 mx-auto mb-2 text-[var(--color-foreground-muted)]" />
               <p className="text-sm">{t('tree.search.noResults')}</p>
             </div>
           ) : null}
@@ -228,7 +228,7 @@ export default function TreeSearch({ onSelect, placeholder }: TreeSearchProps) {
 
       {/* Helper text */}
       {query.length > 0 && query.length < 2 && (
-        <p className="absolute -bottom-6 left-0 text-xs text-gray-400">
+        <p className="absolute -bottom-6 left-0 text-xs text-[var(--color-foreground-muted)]">
           {t('tree.search.minChars')}
         </p>
       )}

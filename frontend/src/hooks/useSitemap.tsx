@@ -78,7 +78,7 @@ export function SitemapXML() {
 
   if (isLoading) return <p>Generating sitemap...</p>;
 
-  return <pre className="text-xs bg-gray-100 p-4 rounded overflow-auto max-h-96">{sitemap}</pre>;
+  return <pre className="text-xs bg-[var(--color-secondary)] p-4 rounded overflow-auto max-h-96">{sitemap}</pre>;
 }
 
 export default SitemapXML;

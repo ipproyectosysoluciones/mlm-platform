@@ -23,7 +23,7 @@ export function TourCardSkeleton({ className }: TourCardSkeletonProps) {
   return (
     <article
       className={cn(
-        'rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden',
+        'rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] shadow-sm overflow-hidden',
         className
       )}
     >

@@ -107,7 +107,7 @@ export function EmailCampaignPage() {
           <div className="space-y-4">
             <button
               onClick={() => setPageView({ type: 'monitor', campaignId: pageView.campaignId })}
-              className="text-sm text-slate-400 hover:text-slate-200 flex items-center gap-1"
+              className="text-sm text-[var(--color-foreground-muted)] hover:text-[var(--color-foreground-muted)] flex items-center gap-1"
             >
               ← {t('emailCampaigns.backToMonitor') || 'Back to Monitor'}
             </button>
@@ -130,18 +130,18 @@ export function EmailCampaignPage() {
   // ==========================================
 
   return (
-    <div className="min-h-screen bg-slate-900 p-4 md:p-6 lg:p-8" data-testid="email-campaign-page">
+    <div className="min-h-screen bg-[var(--color-card)] p-4 md:p-6 lg:p-8" data-testid="email-campaign-page">
       {/* Page Header / Encabezado de página */}
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-1">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-500/20">
             <Mail className="h-5 w-5 text-purple-400" />
           </div>
-          <h1 className="text-2xl font-bold text-slate-100">
+          <h1 className="text-2xl font-bold text-[var(--color-foreground)]">
             {t('emailCampaigns.pageTitle') || 'Email Marketing'}
           </h1>
         </div>
-        <p className="text-sm text-slate-400 ml-[52px]">
+        <p className="text-sm text-[var(--color-foreground-muted)] ml-[52px]">
           {t('emailCampaigns.pageSubtitle') ||
             'Build templates, create campaigns, and track performance'}
         </p>
@@ -149,10 +149,10 @@ export function EmailCampaignPage() {
 
       {/* Main Tabs / Tabs principales */}
       <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-        <TabsList className="bg-slate-800 border border-slate-700 mb-6">
+        <TabsList className="bg-[var(--color-card)] border border-[var(--color-border)] mb-6">
           <TabsTrigger
             value="campaigns"
-            className="gap-1.5 data-[state=active]:bg-purple-600 data-[state=active]:text-white text-slate-400"
+            className="gap-1.5 data-[state=active]:bg-purple-600 data-[state=active]:text-white text-[var(--color-foreground-muted)]"
             data-testid="page-tab-campaigns"
           >
             <Mail className="h-4 w-4" />
@@ -160,7 +160,7 @@ export function EmailCampaignPage() {
           </TabsTrigger>
           <TabsTrigger
             value="builder"
-            className="gap-1.5 data-[state=active]:bg-purple-600 data-[state=active]:text-white text-slate-400"
+            className="gap-1.5 data-[state=active]:bg-purple-600 data-[state=active]:text-white text-[var(--color-foreground-muted)]"
             data-testid="page-tab-builder"
           >
             {t('emailCampaigns.tabBuilder') || 'Email Builder'}

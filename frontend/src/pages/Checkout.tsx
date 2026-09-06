@@ -135,10 +135,10 @@ export default function Checkout() {
   // Loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--color-card)] flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="h-8 w-8 animate-spin text-purple-500" />
-          <p className="text-slate-400">{t('products.loading')}</p>
+          <p className="text-[var(--color-foreground-muted)]">{t('products.loading')}</p>
         </div>
       </div>
     );
@@ -147,7 +147,7 @@ export default function Checkout() {
   // Error state
   if (error || !product) {
     return (
-      <div className="min-h-screen bg-slate-900 px-4 py-8">
+      <div className="min-h-screen bg-[var(--color-card)] px-4 py-8">
         <div className="mx-auto max-w-md">
           <EmptyState
             title={error || t('products.error')}
@@ -161,7 +161,7 @@ export default function Checkout() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 px-4 py-8">
+    <div className="min-h-screen bg-[var(--color-card)] px-4 py-8">
       <div className="mx-auto max-w-4xl">
         {/* Page Header */}
         <div className="mb-8 flex items-center gap-4">
@@ -170,7 +170,7 @@ export default function Checkout() {
           </Button>
           <div>
             <h1 className="text-3xl font-bold text-white">{t('checkout.title')}</h1>
-            <p className="mt-1 text-slate-400">{t('checkout.subtitle')}</p>
+            <p className="mt-1 text-[var(--color-foreground-muted)]">{t('checkout.subtitle')}</p>
           </div>
         </div>
 
@@ -207,7 +207,7 @@ export default function Checkout() {
             {isSubmitting && (
               <div
                 data-testid="payment-loading-overlay"
-                className="absolute inset-0 z-10 flex flex-col items-center justify-center rounded-xl bg-slate-900/80 backdrop-blur-sm"
+                className="absolute inset-0 z-10 flex flex-col items-center justify-center rounded-xl bg-[var(--color-card)]/80 backdrop-blur-sm"
               >
                 <Loader2 className="h-8 w-8 animate-spin text-purple-400 mb-3" />
                 <p className="text-sm font-medium text-white">{t('loading.processingPayment')}</p>
@@ -221,12 +221,12 @@ export default function Checkout() {
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
             <div
               className={cn(
-                'w-full max-w-md overflow-hidden rounded-2xl border border-slate-700 bg-slate-800',
+                'w-full max-w-md overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)]',
                 'shadow-2xl'
               )}
             >
               {/* Modal Header */}
-              <div className="flex items-center justify-between border-b border-slate-700 px-6 py-4">
+              <div className="flex items-center justify-between border-b border-[var(--color-border)] px-6 py-4">
                 <h2 className="text-xl font-semibold text-white">
                   {t('checkout.confirmPurchase')}
                 </h2>
@@ -243,15 +243,15 @@ export default function Checkout() {
               {/* Modal Content */}
               <div className="flex flex-col gap-4 p-6">
                 {/* Product Summary */}
-                <div className="flex gap-4 rounded-lg bg-slate-700/50 p-4">
-                  <div className="flex h-16 w-24 items-center justify-center rounded-lg bg-slate-600">
-                    <span className="text-2xl font-bold text-slate-400">
+                <div className="flex gap-4 rounded-lg bg-[var(--color-card)]/50 p-4">
+                  <div className="flex h-16 w-24 items-center justify-center rounded-lg bg-[var(--color-card)]">
+                    <span className="text-2xl font-bold text-[var(--color-foreground-muted)]">
                       {product.name.charAt(0)}
                     </span>
                   </div>
                   <div className="flex flex-col justify-between">
                     <h3 className="font-semibold text-white">{product.name}</h3>
-                    <p className="text-sm text-slate-400">
+                    <p className="text-sm text-[var(--color-foreground-muted)]">
                       {t('products.days', { count: product.durationDays })}
                     </p>
                     <p className="text-lg font-bold text-purple-400">
@@ -267,7 +267,7 @@ export default function Checkout() {
                 </div>
 
                 {/* Total */}
-                <div className="flex items-center justify-between border-t border-slate-700 pt-4">
+                <div className="flex items-center justify-between border-t border-[var(--color-border)] pt-4">
                   <span className="text-lg font-semibold text-white">{t('checkout.total')}</span>
                   <span className="text-2xl font-bold text-green-400">
                     {product.currency} {product.price.toFixed(2)}
@@ -310,7 +310,7 @@ export default function Checkout() {
         {/* Order Created Success Overlay */}
         {orderCreated && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-            <div className="flex flex-col items-center gap-4 rounded-2xl bg-slate-800 p-8">
+            <div className="flex flex-col items-center gap-4 rounded-2xl bg-[var(--color-card)] p-8">
               <div className="flex h-20 w-20 items-center justify-center rounded-full bg-green-500/20">
                 <Check className="h-10 w-10 text-green-500" />
               </div>

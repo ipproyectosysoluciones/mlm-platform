@@ -87,11 +87,11 @@ export default function ReservationFlowPage() {
   const showCancelBtn = effectiveStep !== 'confirm' && effectiveStep !== 'payment';
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-start justify-center py-12 px-4">
-      <div className="w-full max-w-lg bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
+    <div className="min-h-screen bg-[var(--color-secondary)] flex items-start justify-center py-12 px-4">
+      <div className="w-full max-w-lg bg-[var(--color-card)] rounded-2xl shadow-sm border border-[var(--color-border)] p-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-2 text-sm text-slate-600">
+          <div className="flex items-center gap-2 text-sm text-[var(--color-foreground-muted)]">
             {contextIcon}
             <span className="font-medium line-clamp-1">{contextLabel}</span>
           </div>
@@ -99,7 +99,7 @@ export default function ReservationFlowPage() {
             <Button
               variant="ghost"
               onClick={handleCancel}
-              className="text-xs text-slate-400 hover:text-slate-600"
+              className="text-xs text-[var(--color-foreground-muted)] hover:text-[var(--color-foreground-muted)]"
             >
               {t('reservation.cancel')}
             </Button>

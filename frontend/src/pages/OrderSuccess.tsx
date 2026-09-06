@@ -85,8 +85,8 @@ function CommissionBreakdownCard({
   const totalCommission = commissions.reduce((sum, c) => sum + c.amount, 0);
 
   return (
-    <div className="overflow-hidden rounded-xl border border-slate-700 bg-slate-800">
-      <div className="border-b border-slate-700 bg-slate-800/50 px-5 py-4">
+    <div className="overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-card)]">
+      <div className="border-b border-[var(--color-border)] bg-[var(--color-card)]/50 px-5 py-4">
         <h3 className="flex items-center gap-2 text-lg font-semibold text-white">
           <FileText className="h-5 w-5 text-green-400" />
           {t('checkout.commissionBreakdown')}
@@ -99,12 +99,12 @@ function CommissionBreakdownCard({
               <div
                 className={cn(
                   'flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold',
-                  commission.level === 0 ? 'bg-yellow-500 text-black' : 'bg-slate-600 text-white'
+                  commission.level === 0 ? 'bg-yellow-500 text-black' : 'bg-[var(--color-card)] text-white'
                 )}
               >
                 {commission.level + 1}
               </div>
-              <span className="text-sm text-slate-300">{commission.description}</span>
+              <span className="text-sm text-[var(--color-foreground-subtle)]">{commission.description}</span>
             </div>
             <span className="font-medium text-green-400">
               {currency} {commission.amount.toFixed(2)}
@@ -113,7 +113,7 @@ function CommissionBreakdownCard({
         ))}
 
         {/* Divider */}
-        <div className="border-t border-slate-700 pt-3" />
+        <div className="border-t border-[var(--color-border)] pt-3" />
 
         {/* Total */}
         <div className="flex items-center justify-between">
@@ -241,10 +241,10 @@ export default function OrderSuccess() {
   // Loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--color-card)] flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="h-8 w-8 animate-spin text-purple-500" />
-          <p className="text-slate-400">{t('orders.loading')}</p>
+          <p className="text-[var(--color-foreground-muted)]">{t('orders.loading')}</p>
         </div>
       </div>
     );
@@ -253,7 +253,7 @@ export default function OrderSuccess() {
   // Error state
   if (error || !order) {
     return (
-      <div className="min-h-screen bg-slate-900 px-4 py-8">
+      <div className="min-h-screen bg-[var(--color-card)] px-4 py-8">
         <div className="mx-auto max-w-md text-center">
           <h1 className="text-2xl font-bold text-white">{error || t('orders.error')}</h1>
           <Button onClick={handleContinueShopping} className="mt-6">
@@ -267,18 +267,18 @@ export default function OrderSuccess() {
   const commissions = calculateCommissionBreakdown(order.amount);
 
   return (
-    <div className="min-h-screen bg-slate-900 px-4 py-8">
+    <div className="min-h-screen bg-[var(--color-card)] px-4 py-8">
       <div className="mx-auto max-w-2xl">
         {/* Success Animation */}
         <div className="mb-8 text-center">
           <AnimatedCheckmark />
           <h1 className="mt-6 text-3xl font-bold text-white">{t('checkout.success')}!</h1>
-          <p className="mt-2 text-slate-400">{t('orders.successMessage')}</p>
+          <p className="mt-2 text-[var(--color-foreground-muted)]">{t('orders.successMessage')}</p>
         </div>
 
         {/* Order Info Card */}
-        <div className="mb-6 overflow-hidden rounded-xl border border-slate-700 bg-slate-800">
-          <div className="flex items-center justify-between border-b border-slate-700 px-5 py-4">
+        <div className="mb-6 overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-card)]">
+          <div className="flex items-center justify-between border-b border-[var(--color-border)] px-5 py-4">
             <div className="flex items-center gap-3">
               <ShoppingBag className="h-5 w-5 text-purple-400" />
               <span className="font-semibold text-white">{t('orders.orderNumber')}</span>
@@ -300,7 +300,7 @@ export default function OrderSuccess() {
             </div>
           </div>
           <div className="flex items-center justify-between px-5 py-4">
-            <span className="text-slate-400">{t('orders.status')}</span>
+            <span className="text-[var(--color-foreground-muted)]">{t('orders.status')}</span>
             <OrderStatus status={order.status} />
           </div>
         </div>

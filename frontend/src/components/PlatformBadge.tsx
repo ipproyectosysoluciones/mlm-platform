@@ -43,7 +43,7 @@ const platformColors: Record<StreamingPlatform, string> = {
   hbo_max: 'bg-purple-600 text-white',
   amazon_prime: 'bg-orange-500 text-white',
   youtube_premium: 'bg-red-700 text-white',
-  apple_tv_plus: 'bg-slate-800 text-white',
+  apple_tv_plus: 'bg-[var(--color-card)] text-white',
 };
 
 /**

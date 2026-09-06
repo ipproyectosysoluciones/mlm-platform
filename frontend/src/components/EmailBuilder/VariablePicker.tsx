@@ -60,7 +60,7 @@ export function VariablePicker({ onSelect, disabled = false }: VariablePickerPro
         size="sm"
         disabled={disabled}
         onClick={() => setIsOpen(!isOpen)}
-        className="border-slate-600 text-slate-200 hover:bg-slate-700 gap-1"
+        className="border-[var(--color-border)] text-[var(--color-foreground-muted)] hover:bg-[var(--color-card)] gap-1"
         aria-label="Insert variable"
         aria-expanded={isOpen}
         aria-haspopup="listbox"
@@ -74,8 +74,8 @@ export function VariablePicker({ onSelect, disabled = false }: VariablePickerPro
         <div
           role="listbox"
           className={cn(
-            'absolute top-full left-0 z-50 mt-1 w-64 rounded-lg border border-slate-600',
-            'bg-slate-800 py-1 shadow-lg'
+            'absolute top-full left-0 z-50 mt-1 w-64 rounded-lg border border-[var(--color-border)]',
+            'bg-[var(--color-card)] py-1 shadow-lg'
           )}
           aria-label="Template variables"
         >
@@ -86,13 +86,13 @@ export function VariablePicker({ onSelect, disabled = false }: VariablePickerPro
               role="option"
               className={cn(
                 'flex w-full flex-col px-3 py-2 text-left',
-                'hover:bg-slate-700 transition-colors'
+                'hover:bg-[var(--color-card)] transition-colors'
               )}
               onClick={() => handleSelect(variable)}
               aria-selected={false}
             >
               <span className="font-mono text-sm text-emerald-400">{`{{${variable}}}`}</span>
-              <span className="text-xs text-slate-400">{VARIABLE_DESCRIPTIONS[variable]}</span>
+              <span className="text-xs text-[var(--color-foreground-muted)]">{VARIABLE_DESCRIPTIONS[variable]}</span>
             </button>
           ))}
         </div>

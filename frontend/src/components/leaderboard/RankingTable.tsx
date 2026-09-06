@@ -156,7 +156,7 @@ export function RankingTable({
               {/* Avatar */}
               <Avatar className="h-9 w-9 shrink-0">
                 <AvatarImage src={entry.profileImage} alt={entry.name} />
-                <AvatarFallback className="text-xs font-semibold bg-slate-100 text-slate-600">
+                <AvatarFallback className="text-xs font-semibold bg-[var(--color-secondary)] text-[var(--color-foreground-muted)]">
                   {getInitials(entry.name)}
                 </AvatarFallback>
               </Avatar>
@@ -165,7 +165,7 @@ export function RankingTable({
               <div className="flex-1 min-w-0">
                 <p
                   className={`text-sm font-medium truncate ${
-                    isCurrentUser ? 'text-purple-800' : 'text-slate-800'
+                    isCurrentUser ? 'text-purple-800' : 'text-[var(--color-foreground)]'
                   }`}
                 >
                   {entry.name}
@@ -180,7 +180,7 @@ export function RankingTable({
               <div className="w-28 shrink-0 space-y-1">
                 <p
                   className={`text-xs font-bold text-right ${
-                    isCurrentUser ? 'text-purple-700' : 'text-slate-700'
+                    isCurrentUser ? 'text-purple-700' : 'text-[var(--color-foreground)]'
                   }`}
                 >
                   {formatMetric(entry)}

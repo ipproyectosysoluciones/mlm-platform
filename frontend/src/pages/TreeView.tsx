@@ -230,12 +230,12 @@ export default function TreeView() {
   if (isEmptyTree) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center">
-        <TreeDeciduous className="w-24 h-24 text-slate-300 mb-4" />
-        <h2 className="text-xl font-semibold text-slate-600 mb-2">{t('tree.empty.title')}</h2>
-        <p className="text-slate-500 text-center max-w-md mb-6">{t('tree.empty.description')}</p>
+        <TreeDeciduous className="w-24 h-24 text-[var(--color-foreground-subtle)] mb-4" />
+        <h2 className="text-xl font-semibold text-[var(--color-foreground-muted)] mb-2">{t('tree.empty.title')}</h2>
+        <p className="text-[var(--color-foreground-muted)] text-center max-w-md mb-6">{t('tree.empty.description')}</p>
         <Link
           to="/dashboard"
-          className="px-6 py-3 bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition-colors font-medium"
+          className="px-6 py-3 bg-[var(--color-card)] text-white rounded-xl hover:bg-[var(--color-card)] transition-colors font-medium"
         >
           Volver al Dashboard
         </Link>
@@ -246,16 +246,16 @@ export default function TreeView() {
   return (
     <div className="h-[calc(100vh-120px)] lg:h-[calc(100vh-80px)]">
       {/* Toolbar */}
-      <div className="bg-white border-b border-slate-200 px-4 py-3 mb-4 rounded-xl">
+      <div className="bg-[var(--color-card)] border-b border-[var(--color-border)] px-4 py-3 mb-4 rounded-xl">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <Link
               to="/dashboard"
-              className="flex items-center gap-2 text-slate-600 hover:text-slate-900 transition-colors"
+              className="flex items-center gap-2 text-[var(--color-foreground-muted)] hover:text-[var(--color-foreground)] transition-colors"
             >
               <ArrowLeft className="w-5 h-5" />
             </Link>
-            <h1 className="text-lg font-bold text-slate-900">{t('tree.title')}</h1>
+            <h1 className="text-lg font-bold text-[var(--color-foreground)]">{t('tree.title')}</h1>
           </div>
 
           <div className="hidden sm:block flex-1 max-w-md">
@@ -275,10 +275,10 @@ export default function TreeView() {
 
       {/* Loading state */}
       {isLoading && (
-        <div className="absolute inset-0 bg-white/80 flex items-center justify-center z-50 rounded-xl">
+        <div className="absolute inset-0 bg-[var(--color-card)]/80 flex items-center justify-center z-50 rounded-xl">
           <div className="text-center">
             <Loader2 className="w-12 h-12 text-emerald-500 animate-spin mx-auto mb-4" />
-            <p className="text-slate-600">{t('tree.loading')}</p>
+            <p className="text-[var(--color-foreground-muted)]">{t('tree.loading')}</p>
           </div>
         </div>
       )}
@@ -294,7 +294,7 @@ export default function TreeView() {
       )}
 
       {/* React Flow canvas */}
-      <div className="h-[calc(100%-60px)] bg-white rounded-xl border border-slate-200 overflow-hidden">
+      <div className="h-[calc(100%-60px)] bg-[var(--color-card)] rounded-xl border border-[var(--color-border)] overflow-hidden">
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -315,7 +315,7 @@ export default function TreeView() {
             showZoom={false}
             showFitView={false}
             showInteractive={false}
-            className="!bg-white !shadow-lg !border !border-slate-200 !rounded-lg"
+            className="!bg-[var(--color-card)] !shadow-lg !border !border-[var(--color-border)] !rounded-lg"
           />
           <TreeMinimap />
         </ReactFlow>

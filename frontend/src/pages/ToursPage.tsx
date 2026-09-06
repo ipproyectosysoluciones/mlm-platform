@@ -110,15 +110,15 @@ function TourCard({ tour, onClick }: TourCardProps) {
   /** Safely resolve category label/color from `tour.type` */
   const tourCategory = tour.type as TourCategory;
   const categoryLabel = CATEGORY_LABELS[tourCategory] ?? tour.type;
-  const categoryColor = CATEGORY_COLORS[tourCategory] ?? 'bg-slate-100 text-slate-700';
+  const categoryColor = CATEGORY_COLORS[tourCategory] ?? 'bg-[var(--color-secondary)] text-[var(--color-foreground)]';
 
   return (
     <article
       onClick={() => onClick(tour.id)}
-      className="group cursor-pointer rounded-xl border border-slate-200 bg-white shadow-sm hover:shadow-md transition-shadow overflow-hidden"
+      className="group cursor-pointer rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] shadow-sm hover:shadow-md transition-shadow overflow-hidden"
     >
       {/* Image */}
-      <div className="relative h-52 bg-slate-100 overflow-hidden">
+      <div className="relative h-52 bg-[var(--color-secondary)] overflow-hidden">
         {mainImage ? (
           <img
             src={mainImage}
@@ -126,7 +126,7 @@ function TourCard({ tour, onClick }: TourCardProps) {
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-slate-300">
+          <div className="w-full h-full flex items-center justify-center text-[var(--color-foreground-subtle)]">
             <Compass className="w-12 h-12" />
           </div>
         )}
@@ -167,14 +167,14 @@ function TourCard({ tour, onClick }: TourCardProps) {
 
       {/* Content */}
       <div className="p-4">
-        <h3 className="font-semibold text-slate-800 line-clamp-1 mb-1">{tour.title}</h3>
-        <p className="flex items-center gap-1 text-sm text-slate-500 mb-3">
+        <h3 className="font-semibold text-[var(--color-foreground)] line-clamp-1 mb-1">{tour.title}</h3>
+        <p className="flex items-center gap-1 text-sm text-[var(--color-foreground-muted)] mb-3">
           <MapPin className="w-3.5 h-3.5 shrink-0" />
           <span className="line-clamp-1">{tour.destination}</span>
         </p>
 
         {/* Specs row */}
-        <div className="flex items-center gap-4 text-sm text-slate-600 mb-4">
+        <div className="flex items-center gap-4 text-sm text-[var(--color-foreground-muted)] mb-4">
           <span className="flex items-center gap-1">
             <Clock className="w-4 h-4" />
             {tour.durationDays} {tour.durationDays === 1 ? 'día' : 'días'}
@@ -190,7 +190,7 @@ function TourCard({ tour, onClick }: TourCardProps) {
           <p className="text-lg font-bold text-emerald-600">
             {tour.currency}{' '}
             {Number(tour.price).toLocaleString('es-AR', { minimumFractionDigits: 0 })}
-            <span className="text-sm font-normal text-slate-400"> / persona</span>
+            <span className="text-sm font-normal text-[var(--color-foreground-muted)]"> / persona</span>
           </p>
           {isSoldOut ? (
             <Button type="button" disabled variant="outline" size="sm" className="shrink-0">
@@ -320,12 +320,12 @@ export default function ToursPage() {
         <meta property="og:site_name" content="Nexo Real" />
       </Helmet>
 
-      <div className="min-h-screen bg-slate-50">
+      <div className="min-h-screen bg-[var(--color-secondary)]">
         {/* Header */}
-        <div className="bg-white border-b border-slate-200 py-8 px-4">
+        <div className="bg-[var(--color-card)] border-b border-[var(--color-border)] py-8 px-4">
           <div className="max-w-7xl mx-auto">
-            <h1 className="text-3xl font-bold text-slate-800 mb-1">Paquetes de Turismo</h1>
-            <p className="text-slate-500">
+            <h1 className="text-3xl font-bold text-[var(--color-foreground)] mb-1">Paquetes de Turismo</h1>
+            <p className="text-[var(--color-foreground-muted)]">
               {pagination
                 ? `${pagination.total} experiencias disponibles`
                 : 'Descubrí destinos increíbles'}
@@ -335,17 +335,17 @@ export default function ToursPage() {
 
         <div className="max-w-7xl mx-auto px-4 py-6">
           {/* Filters bar */}
-          <div className="bg-white rounded-xl border border-slate-200 p-4 mb-6">
+          <div className="bg-[var(--color-card)] rounded-xl border border-[var(--color-border)] p-4 mb-6">
             <form onSubmit={handleSearch} className="flex flex-wrap gap-3">
               {/* Search */}
               <div className="flex-1 min-w-[200px] relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-foreground-muted)]" />
                 <input
                   type="text"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Buscar tours..."
-                  className="w-full pl-9 pr-4 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:border-emerald-400"
+                  className="w-full pl-9 pr-4 py-2 rounded-lg border border-[var(--color-border)] text-sm focus:outline-none focus:border-emerald-400"
                 />
               </div>
 
@@ -356,7 +356,7 @@ export default function ToursPage() {
                   setSelectedCategory(e.target.value as TourCategory | '');
                   setPage(1);
                 }}
-                className="px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:border-emerald-400 bg-white"
+                className="px-3 py-2 rounded-lg border border-[var(--color-border)] text-sm focus:outline-none focus:border-emerald-400 bg-[var(--color-card)]"
               >
                 <option value="">Todas las categorías</option>
                 {(Object.keys(CATEGORY_LABELS) as TourCategory[]).map((c) => (
@@ -375,7 +375,7 @@ export default function ToursPage() {
                   setPage(1);
                 }}
                 placeholder="Destino..."
-                className="w-36 px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:border-emerald-400"
+                className="w-36 px-3 py-2 rounded-lg border border-[var(--color-border)] text-sm focus:outline-none focus:border-emerald-400"
               />
 
               <Button type="submit">
@@ -423,7 +423,7 @@ export default function ToursPage() {
                   >
                     Anterior
                   </Button>
-                  <span className="px-4 py-2 text-sm text-slate-600">
+                  <span className="px-4 py-2 text-sm text-[var(--color-foreground-muted)]">
                     Página {page} de {pagination.totalPages}
                   </span>
                   <Button

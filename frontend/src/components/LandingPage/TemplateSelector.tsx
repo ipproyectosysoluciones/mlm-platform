@@ -56,13 +56,13 @@ export function TemplateSelector({ selected, onSelect }: TemplateSelectorProps) 
           className={`group relative rounded-lg overflow-hidden border-2 transition-all ${
             selected === template.id
               ? 'border-indigo-600 ring-2 ring-indigo-200'
-              : 'border-gray-200 hover:border-indigo-300'
+              : 'border-[var(--color-border)] hover:border-indigo-300'
           }`}
         >
           <div className="aspect-video w-full" style={{ background: template.preview }} />
-          <div className="p-3 text-left bg-white">
-            <p className="font-medium text-gray-900 text-sm">{template.name}</p>
-            <p className="text-xs text-gray-500 mt-1 line-clamp-2">{template.description}</p>
+          <div className="p-3 text-left bg-[var(--color-card)]">
+            <p className="font-medium text-[var(--color-foreground)] text-sm">{template.name}</p>
+            <p className="text-xs text-[var(--color-foreground-muted)] mt-1 line-clamp-2">{template.description}</p>
           </div>
           {selected === template.id && (
             <div className="absolute top-2 right-2 bg-indigo-600 text-white rounded-full p-1">

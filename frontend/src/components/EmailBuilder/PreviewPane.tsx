@@ -67,21 +67,21 @@ export function PreviewPane({ htmlContent, subjectLine, className }: PreviewPane
 
   return (
     <div
-      className={cn('flex flex-col rounded-lg border border-slate-600 bg-slate-900', className)}
+      className={cn('flex flex-col rounded-lg border border-[var(--color-border)] bg-[var(--color-card)]', className)}
       data-testid="preview-pane"
     >
       {/* Header / Encabezado */}
-      <div className="flex items-center gap-2 border-b border-slate-700 px-4 py-2">
-        <Eye className="h-4 w-4 text-slate-400" />
-        <span className="text-sm font-medium text-slate-300">Preview</span>
-        <span className="text-xs text-slate-500">(with sample data)</span>
+      <div className="flex items-center gap-2 border-b border-[var(--color-border)] px-4 py-2">
+        <Eye className="h-4 w-4 text-[var(--color-foreground-muted)]" />
+        <span className="text-sm font-medium text-[var(--color-foreground-subtle)]">Preview</span>
+        <span className="text-xs text-[var(--color-foreground-muted)]">(with sample data)</span>
       </div>
 
       {/* Subject preview / Vista previa del asunto */}
       {renderedSubject && (
-        <div className="border-b border-slate-700 px-4 py-2">
-          <span className="text-xs text-slate-500">Subject: </span>
-          <span className="text-sm text-slate-200" data-testid="preview-subject">
+        <div className="border-b border-[var(--color-border)] px-4 py-2">
+          <span className="text-xs text-[var(--color-foreground-muted)]">Subject: </span>
+          <span className="text-sm text-[var(--color-foreground-muted)]" data-testid="preview-subject">
             {renderedSubject}
           </span>
         </div>
@@ -103,13 +103,13 @@ export function PreviewPane({ htmlContent, subjectLine, className }: PreviewPane
                 <body>${sanitizeHtml(renderedHtml)}</body>
               </html>
             `}
-            className="w-full min-h-[300px] rounded border-0 bg-white"
+            className="w-full min-h-[300px] rounded border-0 bg-[var(--color-card)]"
             title="Email preview"
             sandbox="allow-same-origin"
             data-testid="preview-iframe"
           />
         ) : (
-          <div className="flex min-h-[300px] items-center justify-center text-slate-500">
+          <div className="flex min-h-[300px] items-center justify-center text-[var(--color-foreground-muted)]">
             <p>Start typing to see a preview...</p>
           </div>
         )}

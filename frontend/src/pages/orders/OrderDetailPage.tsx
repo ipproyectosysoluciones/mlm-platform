@@ -32,11 +32,11 @@ function CardSkeleton() {
   return (
     <div className="space-y-6">
       <Skeleton className="h-8 w-48" />
-      <div className="rounded-xl border border-slate-700 bg-slate-800 p-6">
+      <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-6">
         <div className="space-y-4">
           <Skeleton className="h-6 w-64" />
           <Skeleton className="h-4 w-40" />
-          <div className="border-t border-slate-700 pt-4">
+          <div className="border-t border-[var(--color-border)] pt-4">
             <Skeleton className="h-24 w-full" />
           </div>
           <Skeleton className="h-4 w-32" />
@@ -74,7 +74,7 @@ function getPaymentMethodColor(method: string): string {
     paypal: 'text-blue-500',
     mercadopago: 'text-sky-400',
   };
-  return colors[method] || 'text-slate-400';
+  return colors[method] || 'text-[var(--color-foreground-muted)]';
 }
 
 /**
@@ -137,7 +137,7 @@ export function OrderDetailPage() {
   // -- Loading state --
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-900 px-4 py-8">
+      <div className="min-h-screen bg-[var(--color-card)] px-4 py-8">
         <div className="mx-auto max-w-2xl">
           <CardSkeleton />
         </div>
@@ -148,12 +148,12 @@ export function OrderDetailPage() {
   // -- Error / Not found state --
   if (error || !order) {
     return (
-      <div className="min-h-screen bg-slate-900 px-4 py-8" aria-live="polite">
+      <div className="min-h-screen bg-[var(--color-card)] px-4 py-8" aria-live="polite">
         <div className="mx-auto max-w-2xl text-center">
           <h1 className="mb-4 text-2xl font-bold text-white">
             {t('orders.orderNotFound') || 'Order not found'}
           </h1>
-          <p className="mb-6 text-slate-400">
+          <p className="mb-6 text-[var(--color-foreground-muted)]">
             {t('orders.orderNotFoundHint') ||
               "The order you're looking for doesn't exist or you don't have access to it."}
           </p>
@@ -168,19 +168,19 @@ export function OrderDetailPage() {
 
   // -- Data state --
   return (
-    <div className="min-h-screen bg-slate-900 px-4 py-8">
+    <div className="min-h-screen bg-[var(--color-card)] px-4 py-8">
       <div className="mx-auto max-w-2xl">
         {/* Back link */}
         <Link
           to="/orders"
-          className="mb-6 inline-flex items-center gap-2 text-sm text-slate-400 transition-colors hover:text-white"
+          className="mb-6 inline-flex items-center gap-2 text-sm text-[var(--color-foreground-muted)] transition-colors hover:text-white"
         >
           <ArrowLeft className="h-4 w-4" />
           {t('orders.backToOrders') || 'Back to Orders'}
         </Link>
 
         {/* Order detail card */}
-        <Card className="border-slate-700 bg-slate-800">
+        <Card className="border-[var(--color-border)] bg-[var(--color-card)]">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-white">
               <ShoppingBag className="h-5 w-5 text-purple-400" />
@@ -189,9 +189,9 @@ export function OrderDetailPage() {
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Order number (copyable) */}
-            <div className="flex items-center justify-between rounded-lg bg-slate-800/50 px-4 py-3">
+            <div className="flex items-center justify-between rounded-lg bg-[var(--color-card)]/50 px-4 py-3">
               <div>
-                <p className="text-xs font-medium uppercase tracking-wider text-slate-500">
+                <p className="text-xs font-medium uppercase tracking-wider text-[var(--color-foreground-muted)]">
                   {t('orders.orderNumber')}
                 </p>
                 <p className="mt-1 font-mono text-lg text-white">#{order.orderNumber}</p>
@@ -201,7 +201,7 @@ export function OrderDetailPage() {
                 size="icon"
                 onClick={handleCopyOrderNumber}
                 title={t('common.copy')}
-                className="text-slate-400 hover:text-white"
+                className="text-[var(--color-foreground-muted)] hover:text-white"
               >
                 {copied ? (
                   <Check className="h-4 w-4 text-green-400" />
@@ -212,16 +212,16 @@ export function OrderDetailPage() {
             </div>
 
             {/* Status badge */}
-            <div className="flex items-center justify-between rounded-lg bg-slate-800/50 px-4 py-3">
-              <p className="text-xs font-medium uppercase tracking-wider text-slate-500">
+            <div className="flex items-center justify-between rounded-lg bg-[var(--color-card)]/50 px-4 py-3">
+              <p className="text-xs font-medium uppercase tracking-wider text-[var(--color-foreground-muted)]">
                 {t('orders.status')}
               </p>
               <OrderStatus status={order.status} />
             </div>
 
             {/* Payment method */}
-            <div className="flex items-center justify-between rounded-lg bg-slate-800/50 px-4 py-3">
-              <p className="text-xs font-medium uppercase tracking-wider text-slate-500">
+            <div className="flex items-center justify-between rounded-lg bg-[var(--color-card)]/50 px-4 py-3">
+              <p className="text-xs font-medium uppercase tracking-wider text-[var(--color-foreground-muted)]">
                 {t('orders.paymentMethod')}
               </p>
               <div className="flex items-center gap-2">

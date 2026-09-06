@@ -70,9 +70,9 @@ function getStatusConfig(status: MPStatus): StatusConfig {
         title: 'Estado desconocido',
         description:
           'No pudimos determinar el estado de tu pago. Revisá tu historial de órdenes o contactá soporte.',
-        containerClass: 'border-slate-500/30 bg-slate-700/50',
-        iconClass: 'bg-slate-500',
-        badgeClass: 'bg-slate-500/20 text-slate-400',
+        containerClass: 'border-[var(--color-border)]/30 bg-[var(--color-card)]/50',
+        iconClass: 'bg-[var(--color-secondary)]0',
+        badgeClass: 'bg-[var(--color-secondary)]0/20 text-[var(--color-foreground-muted)]',
       };
   }
 }
@@ -85,7 +85,7 @@ function PendingSpinner() {
   return (
     <div className="flex flex-col items-center gap-2 pt-2">
       <Loader2 className="h-6 w-6 animate-spin text-yellow-400" />
-      <p className="text-xs text-slate-400">Actualizando en tiempo real...</p>
+      <p className="text-xs text-[var(--color-foreground-muted)]">Actualizando en tiempo real...</p>
     </div>
   );
 }
@@ -154,7 +154,7 @@ export default function OrderProcessing() {
   const config = getStatusConfig(status);
 
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center px-4 py-8">
+    <div className="min-h-screen bg-[var(--color-card)] flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-md">
         {/* Status Card */}
         <div className={cn('overflow-hidden rounded-2xl border shadow-2xl', config.containerClass)}>
@@ -193,7 +193,7 @@ export default function OrderProcessing() {
             <h1 className="text-2xl font-bold text-white">{config.title}</h1>
 
             {/* Description */}
-            <p className="text-slate-300 text-sm leading-relaxed">{config.description}</p>
+            <p className="text-[var(--color-foreground-subtle)] text-sm leading-relaxed">{config.description}</p>
 
             {/* Pending spinner */}
             {status === 'pending' && <PendingSpinner />}
@@ -201,18 +201,18 @@ export default function OrderProcessing() {
 
           {/* Payment Details */}
           {(paymentId || externalReference) && (
-            <div className="border-t border-slate-700/50 px-6 py-4">
+            <div className="border-t border-[var(--color-border)]/50 px-6 py-4">
               <div className="flex flex-col gap-2">
                 {paymentId && (
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-slate-400">ID de pago</span>
-                    <span className="font-mono text-slate-200">{paymentId}</span>
+                    <span className="text-[var(--color-foreground-muted)]">ID de pago</span>
+                    <span className="font-mono text-[var(--color-foreground-muted)]">{paymentId}</span>
                   </div>
                 )}
                 {externalReference && (
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-slate-400">Referencia</span>
-                    <span className="font-mono text-slate-200">{externalReference}</span>
+                    <span className="text-[var(--color-foreground-muted)]">Referencia</span>
+                    <span className="font-mono text-[var(--color-foreground-muted)]">{externalReference}</span>
                   </div>
                 )}
               </div>
@@ -255,7 +255,7 @@ export default function OrderProcessing() {
                 'flex w-full items-center justify-center gap-2 rounded-xl py-3 font-semibold',
                 status === 'approved'
                   ? 'bg-purple-600 text-white transition-all hover:bg-purple-500 hover:shadow-lg hover:shadow-purple-500/25'
-                  : 'border border-slate-600 text-white transition-colors hover:bg-slate-800'
+                  : 'border border-[var(--color-border)] text-white transition-colors hover:bg-[var(--color-card)]'
               )}
             >
               <Home className="h-5 w-5" />
@@ -268,7 +268,7 @@ export default function OrderProcessing() {
                 to="/products"
                 className={cn(
                   'flex w-full items-center justify-center gap-2 rounded-xl py-3 font-semibold',
-                  'border border-slate-600 text-white transition-colors hover:bg-slate-800'
+                  'border border-[var(--color-border)] text-white transition-colors hover:bg-[var(--color-card)]'
                 )}
               >
                 <ShoppingBag className="h-5 w-5" />
@@ -279,7 +279,7 @@ export default function OrderProcessing() {
         </div>
 
         {/* Help text */}
-        <p className="mt-4 text-center text-xs text-slate-500">
+        <p className="mt-4 text-center text-xs text-[var(--color-foreground-muted)]">
           ¿Tenés algún problema? Contactá a soporte con tu ID de pago.
         </p>
       </div>

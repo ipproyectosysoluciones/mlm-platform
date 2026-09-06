@@ -153,8 +153,8 @@ export function CommissionTierBreakdown({ commissions, isMounted }: CommissionTi
   const totalReferrals = tiers.reduce((sum, tier) => sum + tier.referrals, 0);
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-      <h2 className="text-lg font-semibold text-slate-900 mb-6 flex items-center gap-2">
+    <div className="bg-[var(--color-card)] rounded-2xl shadow-sm border border-[var(--color-border)] p-6">
+      <h2 className="text-lg font-semibold text-[var(--color-foreground)] mb-6 flex items-center gap-2">
         <PieChartIcon className="w-5 h-5 text-emerald-500" />
         {t('dashboard.commissionBreakdown')}
       </h2>
@@ -164,7 +164,7 @@ export function CommissionTierBreakdown({ commissions, isMounted }: CommissionTi
         <div className="flex items-center justify-center">
           <div className="w-full h-64 relative">
             {!isMounted ? (
-              <div className="h-full flex items-center justify-center text-slate-400">
+              <div className="h-full flex items-center justify-center text-[var(--color-foreground-muted)]">
                 {t('common.loading')}
               </div>
             ) : pieData.length > 0 ? (
@@ -220,7 +220,7 @@ export function CommissionTierBreakdown({ commissions, isMounted }: CommissionTi
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-              <div className="h-full flex items-center justify-center text-slate-400">
+              <div className="h-full flex items-center justify-center text-[var(--color-foreground-muted)]">
                 {t('dashboard.noCommissions')}
               </div>
             )}
@@ -231,17 +231,17 @@ export function CommissionTierBreakdown({ commissions, isMounted }: CommissionTi
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-slate-200">
-                <th className="text-left py-2 px-2 text-slate-500 font-medium">
+              <tr className="border-b border-[var(--color-border)]">
+                <th className="text-left py-2 px-2 text-[var(--color-foreground-muted)] font-medium">
                   {t('dashboard.commissionByLevel')}
                 </th>
-                <th className="text-right py-2 px-2 text-slate-500 font-medium">
+                <th className="text-right py-2 px-2 text-[var(--color-foreground-muted)] font-medium">
                   {t('dashboard.rate')}
                 </th>
-                <th className="text-right py-2 px-2 text-slate-500 font-medium">
+                <th className="text-right py-2 px-2 text-[var(--color-foreground-muted)] font-medium">
                   {t('dashboard.referrals')}
                 </th>
-                <th className="text-right py-2 px-2 text-slate-500 font-medium">
+                <th className="text-right py-2 px-2 text-[var(--color-foreground-muted)] font-medium">
                   {t('dashboard.earnings')}
                 </th>
               </tr>
@@ -250,7 +250,7 @@ export function CommissionTierBreakdown({ commissions, isMounted }: CommissionTi
               {tiers.map((tier) => (
                 <tr
                   key={tier.level}
-                  className="border-b border-slate-100 hover:bg-slate-50 transition-colors"
+                  className="border-b border-[var(--color-border-subtle)] hover:bg-[var(--color-secondary)] transition-colors"
                 >
                   <td className="py-2.5 px-2">
                     <div className="flex items-center gap-2">
@@ -258,33 +258,33 @@ export function CommissionTierBreakdown({ commissions, isMounted }: CommissionTi
                         className="w-3 h-3 rounded-full inline-block flex-shrink-0"
                         style={{ backgroundColor: TIER_COLORS[tier.level] }}
                       />
-                      <span className="text-slate-900 font-medium">
+                      <span className="text-[var(--color-foreground)] font-medium">
                         {tier.level === 1
                           ? t('dashboard.directReferrals')
                           : t('dashboard.level', { n: tier.level })}
                       </span>
                     </div>
                   </td>
-                  <td className="py-2.5 px-2 text-right text-slate-600">{tier.rate}%</td>
-                  <td className="py-2.5 px-2 text-right text-slate-600">{tier.referrals}</td>
+                  <td className="py-2.5 px-2 text-right text-[var(--color-foreground-muted)]">{tier.rate}%</td>
+                  <td className="py-2.5 px-2 text-right text-[var(--color-foreground-muted)]">{tier.referrals}</td>
                   <td className="py-2.5 px-2 text-right font-medium text-emerald-600">
                     ${tier.earnings.toFixed(2)}
                   </td>
                 </tr>
               ))}
               {bonuses > 0 && (
-                <tr className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                <tr className="border-b border-[var(--color-border-subtle)] hover:bg-[var(--color-secondary)] transition-colors">
                   <td className="py-2.5 px-2">
                     <div className="flex items-center gap-2">
                       <span
                         className="w-3 h-3 rounded-full inline-block flex-shrink-0"
                         style={{ backgroundColor: BONUS_COLOR }}
                       />
-                      <span className="text-slate-900 font-medium">{t('dashboard.bonuses')}</span>
+                      <span className="text-[var(--color-foreground)] font-medium">{t('dashboard.bonuses')}</span>
                     </div>
                   </td>
-                  <td className="py-2.5 px-2 text-right text-slate-600">—</td>
-                  <td className="py-2.5 px-2 text-right text-slate-600">—</td>
+                  <td className="py-2.5 px-2 text-right text-[var(--color-foreground-muted)]">—</td>
+                  <td className="py-2.5 px-2 text-right text-[var(--color-foreground-muted)]">—</td>
                   <td className="py-2.5 px-2 text-right font-medium text-amber-600">
                     ${bonuses.toFixed(2)}
                   </td>
@@ -292,12 +292,12 @@ export function CommissionTierBreakdown({ commissions, isMounted }: CommissionTi
               )}
             </tbody>
             <tfoot>
-              <tr className="border-t-2 border-slate-200">
-                <td className="py-3 px-2 font-bold text-slate-900">
+              <tr className="border-t-2 border-[var(--color-border)]">
+                <td className="py-3 px-2 font-bold text-[var(--color-foreground)]">
                   {t('dashboard.totalEarnings')}
                 </td>
-                <td className="py-3 px-2 text-right text-slate-600">—</td>
-                <td className="py-3 px-2 text-right font-bold text-slate-900">{totalReferrals}</td>
+                <td className="py-3 px-2 text-right text-[var(--color-foreground-muted)]">—</td>
+                <td className="py-3 px-2 text-right font-bold text-[var(--color-foreground)]">{totalReferrals}</td>
                 <td className="py-3 px-2 text-right font-bold text-emerald-600">
                   ${totalEarnings.toFixed(2)}
                 </td>

@@ -315,9 +315,9 @@ export function EmailBuilder({ initialData, onSave }: EmailBuilderProps) {
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2" data-testid="email-builder">
       {/* Editor panel / Panel del editor */}
       <div className="space-y-4">
-        <Card className="border-slate-700 bg-slate-800">
+        <Card className="border-[var(--color-border)] bg-[var(--color-card)]">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-slate-100">
+            <CardTitle className="flex items-center gap-2 text-[var(--color-foreground)]">
               <Type className="h-5 w-5 text-purple-400" />
               {t('emailBuilder.title') || 'Email Builder'}
             </CardTitle>
@@ -325,7 +325,7 @@ export function EmailBuilder({ initialData, onSave }: EmailBuilderProps) {
           <CardContent className="space-y-4">
             {/* Template Name / Nombre de plantilla */}
             <div>
-              <Label htmlFor="template-name" className="text-slate-300">
+              <Label htmlFor="template-name" className="text-[var(--color-foreground-subtle)]">
                 {t('emailBuilder.templateName') || 'Template Name'}
               </Label>
               <Input
@@ -336,7 +336,7 @@ export function EmailBuilder({ initialData, onSave }: EmailBuilderProps) {
                   if (validationError) setValidationError(null);
                 }}
                 placeholder="Weekly Newsletter"
-                className="mt-1.5 bg-slate-900 border-slate-600 text-slate-100 placeholder:text-slate-500"
+                className="mt-1.5 bg-[var(--color-card)] border-[var(--color-border)] text-[var(--color-foreground)] placeholder:text-[var(--color-foreground-muted)]"
                 disabled={isSubmitting}
                 aria-label={t('emailBuilder.templateNameLabel') || 'Template name'}
               />
@@ -344,7 +344,7 @@ export function EmailBuilder({ initialData, onSave }: EmailBuilderProps) {
 
             {/* Subject Line / Línea de asunto */}
             <div>
-              <Label htmlFor="subject-line" className="text-slate-300">
+              <Label htmlFor="subject-line" className="text-[var(--color-foreground-subtle)]">
                 {t('emailBuilder.subjectLine') || 'Subject Line'}
               </Label>
               <Input
@@ -355,17 +355,17 @@ export function EmailBuilder({ initialData, onSave }: EmailBuilderProps) {
                   if (validationError) setValidationError(null);
                 }}
                 placeholder="Hi {{firstName}}, check out our deals!"
-                className="mt-1.5 bg-slate-900 border-slate-600 text-slate-100 placeholder:text-slate-500"
+                className="mt-1.5 bg-[var(--color-card)] border-[var(--color-border)] text-[var(--color-foreground)] placeholder:text-[var(--color-foreground-muted)]"
                 disabled={isSubmitting}
                 aria-label={t('emailBuilder.subjectLineLabel') || 'Subject line'}
               />
-              <p className="mt-1 text-xs text-slate-500">
+              <p className="mt-1 text-xs text-[var(--color-foreground-muted)]">
                 {t('emailBuilder.subjectHint') || 'Supports variables like {{firstName}}'}
               </p>
             </div>
 
             {/* Toolbar / Barra de herramientas */}
-            <div className="flex flex-wrap items-center gap-2 border-b border-slate-700 pb-3">
+            <div className="flex flex-wrap items-center gap-2 border-b border-[var(--color-border)] pb-3">
               {/* Mode toggle / Toggle de modo */}
               <Button
                 type="button"
@@ -373,10 +373,10 @@ export function EmailBuilder({ initialData, onSave }: EmailBuilderProps) {
                 size="sm"
                 onClick={handleModeToggle}
                 className={cn(
-                  'border-slate-600 gap-1',
+                  'border-[var(--color-border)] gap-1',
                   mode === 'html'
                     ? 'bg-purple-600/20 text-purple-300 border-purple-500'
-                    : 'text-slate-200 hover:bg-slate-700'
+                    : 'text-[var(--color-foreground-muted)] hover:bg-[var(--color-card)]'
                 )}
                 aria-label={mode === 'wysiwyg' ? 'Switch to HTML mode' : 'Switch to WYSIWYG mode'}
                 data-testid="mode-toggle"
@@ -397,7 +397,7 @@ export function EmailBuilder({ initialData, onSave }: EmailBuilderProps) {
               {/* Formatting buttons (WYSIWYG only) / Botones de formato (solo WYSIWYG) */}
               {mode === 'wysiwyg' && (
                 <>
-                  <div className="h-6 w-px bg-slate-600" />
+                  <div className="h-6 w-px bg-[var(--color-card)]" />
                   {TOOLBAR_ACTIONS.map((action) => (
                     <Button
                       key={action.command + (action.value || '')}
@@ -405,7 +405,7 @@ export function EmailBuilder({ initialData, onSave }: EmailBuilderProps) {
                       variant="ghost"
                       size="sm"
                       onClick={() => executeCommand(action.command, action.value)}
-                      className="h-8 w-8 p-0 text-slate-300 hover:bg-slate-700 hover:text-white"
+                      className="h-8 w-8 p-0 text-[var(--color-foreground-subtle)] hover:bg-[var(--color-card)] hover:text-white"
                       aria-label={action.label}
                       title={action.label}
                     >
@@ -415,7 +415,7 @@ export function EmailBuilder({ initialData, onSave }: EmailBuilderProps) {
                 </>
               )}
 
-              <div className="h-6 w-px bg-slate-600" />
+              <div className="h-6 w-px bg-[var(--color-card)]" />
 
               {/* Variable picker / Selector de variables */}
               <VariablePicker onSelect={handleVariableInsert} disabled={isSubmitting} />
@@ -430,8 +430,8 @@ export function EmailBuilder({ initialData, onSave }: EmailBuilderProps) {
                 aria-label={t('emailBuilder.editorLabel') || 'Email content editor'}
                 aria-multiline="true"
                 className={cn(
-                  'min-h-[300px] rounded-lg border border-slate-600 bg-white p-4',
-                  'text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-500',
+                  'min-h-[300px] rounded-lg border border-[var(--color-border)] bg-[var(--color-card)] p-4',
+                  'text-[var(--color-foreground)] focus:outline-none focus:ring-2 focus:ring-purple-500',
                   'prose prose-sm max-w-none'
                 )}
                 onInput={syncWysiwygContent}
@@ -447,8 +447,8 @@ export function EmailBuilder({ initialData, onSave }: EmailBuilderProps) {
                   if (validationError) setValidationError(null);
                 }}
                 className={cn(
-                  'min-h-[300px] w-full rounded-lg border border-slate-600 bg-slate-900 p-4',
-                  'font-mono text-sm text-emerald-300 placeholder:text-slate-500',
+                  'min-h-[300px] w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-card)] p-4',
+                  'font-mono text-sm text-emerald-300 placeholder:text-[var(--color-foreground-muted)]',
                   'focus:outline-none focus:ring-2 focus:ring-purple-500',
                   'resize-y'
                 )}
@@ -480,7 +480,7 @@ export function EmailBuilder({ initialData, onSave }: EmailBuilderProps) {
                 'w-full',
                 !isSubmitting
                   ? 'bg-purple-600 hover:bg-purple-500 text-white'
-                  : 'bg-slate-600 text-slate-400 cursor-not-allowed'
+                  : 'bg-[var(--color-card)] text-[var(--color-foreground-muted)] cursor-not-allowed'
               )}
               data-testid="save-template"
             >

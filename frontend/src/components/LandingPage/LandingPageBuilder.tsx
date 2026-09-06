@@ -93,16 +93,16 @@ export function LandingPageBuilder({ existingPage, onSave, onCancel }: LandingPa
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-      <div className="border-b border-gray-200 p-4 flex justify-between items-center">
-        <h2 className="text-lg font-semibold text-gray-900">
+    <div className="bg-[var(--color-card)] rounded-xl shadow-lg overflow-hidden">
+      <div className="border-b border-[var(--color-border)] p-4 flex justify-between items-center">
+        <h2 className="text-lg font-semibold text-[var(--color-foreground)]">
           {existingPage ? 'Editar Landing Page' : 'Crear Landing Page'}
         </h2>
         <div className="flex gap-2">
           <button
             type="button"
             onClick={() => setShowPreview(!showPreview)}
-            className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50"
+            className="px-3 py-1.5 text-sm border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-secondary)]"
           >
             {showPreview ? 'Editar' : 'Vista Previa'}
           </button>
@@ -119,24 +119,24 @@ export function LandingPageBuilder({ existingPage, onSave, onCancel }: LandingPa
 
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Título</label>
+              <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">Título</label>
               <input
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                 placeholder="Mi Landing Page"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Slug (URL)</label>
+              <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">Slug (URL)</label>
               <div className="flex items-center">
-                <span className="text-gray-500 text-sm mr-1">/landing/</span>
+                <span className="text-[var(--color-foreground-muted)] text-sm mr-1">/landing/</span>
                 <input
                   type="text"
                   value={slug}
                   onChange={(e) => setSlug(e.target.value)}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="flex-1 px-3 py-2 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                   placeholder="mi-landing"
                   disabled={!!existingPage}
                 />
@@ -145,48 +145,48 @@ export function LandingPageBuilder({ existingPage, onSave, onCancel }: LandingPa
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-3">Plantilla</label>
+            <label className="block text-sm font-medium text-[var(--color-foreground)] mb-3">Plantilla</label>
             <TemplateSelector selected={template} onSelect={setTemplate} />
           </div>
 
-          <div className="border-t border-gray-200 pt-6">
-            <h3 className="text-md font-medium text-gray-900 mb-4">Contenido</h3>
+          <div className="border-t border-[var(--color-border)] pt-6">
+            <h3 className="text-md font-medium text-[var(--color-foreground)] mb-4">Contenido</h3>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Headline</label>
+                <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">Headline</label>
                 <input
                   type="text"
                   value={content.headline}
                   onChange={(e) => updateContent('headline', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Subheadline</label>
+                <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">Subheadline</label>
                 <textarea
                   value={content.subheadline}
                   onChange={(e) => updateContent('subheadline', e.target.value)}
                   rows={2}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                 />
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">
                     Texto del Botón
                   </label>
                   <input
                     type="text"
                     value={content.ctaText}
                     onChange={(e) => updateContent('ctaText', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">
                     Color del Botón
                   </label>
                   <div className="flex gap-2">
@@ -194,13 +194,13 @@ export function LandingPageBuilder({ existingPage, onSave, onCancel }: LandingPa
                       type="color"
                       value={content.ctaColor}
                       onChange={(e) => updateContent('ctaColor', e.target.value)}
-                      className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
+                      className="w-12 h-10 border border-[var(--color-border)] rounded cursor-pointer"
                     />
                     <input
                       type="text"
                       value={content.ctaColor}
                       onChange={(e) => updateContent('ctaColor', e.target.value)}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      className="flex-1 px-3 py-2 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                     />
                   </div>
                 </div>
@@ -208,7 +208,7 @@ export function LandingPageBuilder({ existingPage, onSave, onCancel }: LandingPa
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">
                     Color de Fondo
                   </label>
                   <div className="flex gap-2">
@@ -216,18 +216,18 @@ export function LandingPageBuilder({ existingPage, onSave, onCancel }: LandingPa
                       type="color"
                       value={content.backgroundColor}
                       onChange={(e) => updateContent('backgroundColor', e.target.value)}
-                      className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
+                      className="w-12 h-10 border border-[var(--color-border)] rounded cursor-pointer"
                     />
                     <input
                       type="text"
                       value={content.backgroundColor}
                       onChange={(e) => updateContent('backgroundColor', e.target.value)}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      className="flex-1 px-3 py-2 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">
                     Color de Texto
                   </label>
                   <div className="flex gap-2">
@@ -235,13 +235,13 @@ export function LandingPageBuilder({ existingPage, onSave, onCancel }: LandingPa
                       type="color"
                       value={content.textColor}
                       onChange={(e) => updateContent('textColor', e.target.value)}
-                      className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
+                      className="w-12 h-10 border border-[var(--color-border)] rounded cursor-pointer"
                     />
                     <input
                       type="text"
                       value={content.textColor}
                       onChange={(e) => updateContent('textColor', e.target.value)}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      className="flex-1 px-3 py-2 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                     />
                   </div>
                 </div>
@@ -253,57 +253,57 @@ export function LandingPageBuilder({ existingPage, onSave, onCancel }: LandingPa
                     type="checkbox"
                     checked={content.showReferralCode}
                     onChange={(e) => updateContent('showReferralCode', e.target.checked)}
-                    className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                    className="rounded border-[var(--color-border)] text-indigo-600 focus:ring-indigo-500"
                   />
-                  <span className="text-sm text-gray-700">Mostrar código de referido</span>
+                  <span className="text-sm text-[var(--color-foreground)]">Mostrar código de referido</span>
                 </label>
                 <label className="flex items-center gap-2">
                   <input
                     type="checkbox"
                     checked={content.showStats}
                     onChange={(e) => updateContent('showStats', e.target.checked)}
-                    className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                    className="rounded border-[var(--color-border)] text-indigo-600 focus:ring-indigo-500"
                   />
-                  <span className="text-sm text-gray-700">Mostrar estadísticas</span>
+                  <span className="text-sm text-[var(--color-foreground)]">Mostrar estadísticas</span>
                 </label>
               </div>
             </div>
           </div>
 
-          <div className="border-t border-gray-200 pt-6">
-            <h3 className="text-md font-medium text-gray-900 mb-4">SEO</h3>
+          <div className="border-t border-[var(--color-border)] pt-6">
+            <h3 className="text-md font-medium text-[var(--color-foreground)] mb-4">SEO</h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Meta Título</label>
+                <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">Meta Título</label>
                 <input
                   type="text"
                   value={metaTitle}
                   onChange={(e) => setMetaTitle(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                   placeholder={title}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">
                   Meta Descripción
                 </label>
                 <textarea
                   value={metaDescription}
                   onChange={(e) => setMetaDescription(e.target.value)}
                   rows={2}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                   placeholder="Descripción para motores de búsqueda"
                 />
               </div>
             </div>
           </div>
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+          <div className="flex justify-end gap-3 pt-4 border-t border-[var(--color-border)]">
             {onCancel && (
               <button
                 type="button"
                 onClick={onCancel}
-                className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+                className="px-4 py-2 border border-[var(--color-border)] rounded-lg text-[var(--color-foreground)] hover:bg-[var(--color-secondary)]"
               >
                 Cancelar
               </button>
@@ -336,22 +336,22 @@ function LandingPagePreview({ template, content, slug }: LandingPagePreviewProps
   };
 
   return (
-    <div className="border border-gray-200 rounded-lg overflow-hidden">
-      <div className="bg-gray-100 px-4 py-2 flex items-center gap-2">
+    <div className="border border-[var(--color-border)] rounded-lg overflow-hidden">
+      <div className="bg-[var(--color-secondary)] px-4 py-2 flex items-center gap-2">
         <div className="flex gap-1.5">
           <div className="w-3 h-3 rounded-full bg-red-400" />
           <div className="w-3 h-3 rounded-full bg-yellow-400" />
           <div className="w-3 h-3 rounded-full bg-green-400" />
         </div>
-        <div className="flex-1 text-center text-xs text-gray-500">
+        <div className="flex-1 text-center text-xs text-[var(--color-foreground-muted)]">
           yoursite.com/landing/{slug || 'my-landing'}
         </div>
       </div>
       <div className="p-8 min-h-[400px]" style={bgStyle}>
         <div className={`max-w-lg mx-auto text-center ${template === 'hero' ? 'pt-16' : ''}`}>
           {template === 'video' && (
-            <div className="aspect-video bg-gray-900 rounded-lg mb-6 flex items-center justify-center">
-              <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
+            <div className="aspect-video bg-[var(--color-card)] rounded-lg mb-6 flex items-center justify-center">
+              <div className="w-16 h-16 bg-[var(--color-card)]/20 rounded-full flex items-center justify-center">
                 <svg className="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M8 5v14l11-7z" />
                 </svg>

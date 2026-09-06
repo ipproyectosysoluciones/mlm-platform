@@ -88,8 +88,8 @@ export default function LandingPages() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">{t('landingPages.title')}</h1>
-          <p className="text-slate-500 text-sm">{t('landingPages.subtitle')}</p>
+          <h1 className="text-2xl font-bold text-[var(--color-foreground)]">{t('landingPages.title')}</h1>
+          <p className="text-[var(--color-foreground-muted)] text-sm">{t('landingPages.subtitle')}</p>
         </div>
         <button
           onClick={handleCreatePage}
@@ -102,9 +102,9 @@ export default function LandingPages() {
 
       {stats && (
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
-            <p className="text-sm text-slate-500">{t('landingPages.total')}</p>
-            <p className="text-2xl font-bold text-slate-900">{stats.totalPages}</p>
+          <div className="bg-[var(--color-secondary)] rounded-xl p-4 border border-[var(--color-border)]">
+            <p className="text-sm text-[var(--color-foreground-muted)]">{t('landingPages.total')}</p>
+            <p className="text-2xl font-bold text-[var(--color-foreground)]">{stats.totalPages}</p>
           </div>
           <div className="bg-emerald-50 rounded-xl p-4 border border-emerald-100">
             <p className="text-sm text-emerald-600">{t('landingPages.active')}</p>
@@ -118,22 +118,22 @@ export default function LandingPages() {
             <p className="text-sm text-purple-600">{t('landingPages.conversions')}</p>
             <p className="text-2xl font-bold text-purple-600">{stats.totalConversions}</p>
           </div>
-          <div className="bg-slate-900 rounded-xl p-4">
-            <p className="text-sm text-slate-400">{t('landingPages.conversionRate')}</p>
+          <div className="bg-[var(--color-card)] rounded-xl p-4">
+            <p className="text-sm text-[var(--color-foreground-muted)]">{t('landingPages.conversionRate')}</p>
             <p className="text-2xl font-bold text-white">{stats.conversionRate.toFixed(1)}%</p>
           </div>
         </div>
       )}
 
       {pages.length === 0 ? (
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-12 text-center">
+        <div className="bg-[var(--color-card)] rounded-xl shadow-sm border border-[var(--color-border)] p-12 text-center">
           <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <Plus className="w-8 h-8 text-emerald-600" />
           </div>
-          <h3 className="text-lg font-medium text-slate-900 mb-2">
+          <h3 className="text-lg font-medium text-[var(--color-foreground)] mb-2">
             {t('landingPages.noLandingPages')}
           </h3>
-          <p className="text-slate-500 mb-6">{t('landingPages.createFirst')}</p>
+          <p className="text-[var(--color-foreground-muted)] mb-6">{t('landingPages.createFirst')}</p>
           <button
             onClick={handleCreatePage}
             className="inline-flex items-center gap-2 bg-emerald-500 text-white px-6 py-3 rounded-xl hover:bg-emerald-600"
@@ -147,7 +147,7 @@ export default function LandingPages() {
           {pages.map((page) => (
             <div
               key={page.id}
-              className={`bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden ${
+              className={`bg-[var(--color-card)] rounded-xl shadow-sm border border-[var(--color-border)] overflow-hidden ${
                 page.isActive ? '' : 'opacity-75'
               }`}
             >
@@ -163,17 +163,17 @@ export default function LandingPages() {
 
               <div className="p-4">
                 <div className="flex justify-between items-start mb-2">
-                  <h3 className="font-medium text-slate-900">{page.title}</h3>
+                  <h3 className="font-medium text-[var(--color-foreground)]">{page.title}</h3>
                   {!page.isActive && (
-                    <span className="text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded">
+                    <span className="text-xs bg-[var(--color-secondary)] text-[var(--color-foreground-muted)] px-2 py-0.5 rounded">
                       {t('landingPages.inactive')}
                     </span>
                   )}
                 </div>
 
-                <p className="text-sm text-slate-500 mb-3 font-mono">/landing/{page.slug}</p>
+                <p className="text-sm text-[var(--color-foreground-muted)] mb-3 font-mono">/landing/{page.slug}</p>
 
-                <div className="flex gap-4 text-sm text-slate-500 mb-4">
+                <div className="flex gap-4 text-sm text-[var(--color-foreground-muted)] mb-4">
                   <span className="flex items-center gap-1">
                     <Eye className="w-4 h-4" />
                     {page.views}
@@ -187,14 +187,14 @@ export default function LandingPages() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => window.open(`/landing/${page.slug}`, '_blank')}
-                    className="flex-1 flex items-center justify-center gap-1 px-3 py-2 border border-slate-200 rounded-lg text-sm hover:bg-slate-50"
+                    className="flex-1 flex items-center justify-center gap-1 px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm hover:bg-[var(--color-secondary)]"
                   >
                     <ExternalLink className="w-4 h-4" />
                     {t('landingPages.view')}
                   </button>
                   <button
                     onClick={() => handleEditPage(page)}
-                    className="flex-1 flex items-center justify-center gap-1 px-3 py-2 border border-slate-200 rounded-lg text-sm hover:bg-slate-50"
+                    className="flex-1 flex items-center justify-center gap-1 px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm hover:bg-[var(--color-secondary)]"
                   >
                     <Edit className="w-4 h-4" />
                     {t('landingPages.edit')}

@@ -28,42 +28,42 @@ export default function UsersTable({ users, onToggleStatus, onPromote }: UsersTa
   const { t } = useTranslation();
 
   if (users.length === 0) {
-    return <div className="p-8 text-center text-slate-500">{t('admin.noUsersFound')}</div>;
+    return <div className="p-8 text-center text-[var(--color-foreground-muted)]">{t('admin.noUsersFound')}</div>;
   }
 
   return (
     <div className="overflow-x-auto">
       <table className="w-full">
-        <thead className="bg-slate-50">
+        <thead className="bg-[var(--color-secondary)]">
           <tr>
-            <th className="px-4 py-3 text-left text-sm font-medium text-slate-500">Email</th>
-            <th className="px-4 py-3 text-left text-sm font-medium text-slate-500">
+            <th className="px-4 py-3 text-left text-sm font-medium text-[var(--color-foreground-muted)]">Email</th>
+            <th className="px-4 py-3 text-left text-sm font-medium text-[var(--color-foreground-muted)]">
               {t('admin.role')}
             </th>
-            <th className="px-4 py-3 text-left text-sm font-medium text-slate-500">
+            <th className="px-4 py-3 text-left text-sm font-medium text-[var(--color-foreground-muted)]">
               {t('status.active')}
             </th>
-            <th className="px-4 py-3 text-left text-sm font-medium text-slate-500">
+            <th className="px-4 py-3 text-left text-sm font-medium text-[var(--color-foreground-muted)]">
               {t('tree.details.position')}
             </th>
-            <th className="px-4 py-3 text-left text-sm font-medium text-slate-500">
+            <th className="px-4 py-3 text-left text-sm font-medium text-[var(--color-foreground-muted)]">
               {t('profile.level')}
             </th>
-            <th className="px-4 py-3 text-left text-sm font-medium text-slate-500">
+            <th className="px-4 py-3 text-left text-sm font-medium text-[var(--color-foreground-muted)]">
               {t('common.confirm')}
             </th>
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-100">
           {users.map((user) => (
-            <tr key={user.id} className="hover:bg-slate-50">
+            <tr key={user.id} className="hover:bg-[var(--color-secondary)]">
               <td className="px-4 py-3 text-sm">{user.email}</td>
               <td className="px-4 py-3">
                 <span
                   className={`px-2 py-1 text-xs rounded-full ${
                     user.role === 'admin'
                       ? 'bg-yellow-100 text-yellow-800'
-                      : 'bg-slate-100 text-slate-800'
+                      : 'bg-[var(--color-secondary)] text-[var(--color-foreground)]'
                   }`}
                 >
                   {user.role}

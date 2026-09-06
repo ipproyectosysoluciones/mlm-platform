@@ -25,10 +25,10 @@ export function TaskList() {
           <div className="animate-spin w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full" />
         </div>
       ) : allTasks.length === 0 ? (
-        <div className="text-center py-12 bg-slate-50 rounded-xl">
-          <Clock className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-slate-900 mb-2">{t('crm.allTasksTitle')}</h3>
-          <p className="text-slate-500">{t('crm.allTasksDescription')}</p>
+        <div className="text-center py-12 bg-[var(--color-secondary)] rounded-xl">
+          <Clock className="w-12 h-12 text-[var(--color-foreground-subtle)] mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-[var(--color-foreground)] mb-2">{t('crm.allTasksTitle')}</h3>
+          <p className="text-[var(--color-foreground-muted)]">{t('crm.allTasksDescription')}</p>
         </div>
       ) : (
         <div className="space-y-3">

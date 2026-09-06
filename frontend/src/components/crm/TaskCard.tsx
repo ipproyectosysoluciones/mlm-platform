@@ -25,7 +25,7 @@ export default function TaskCard({ task, onComplete }: TaskCardProps) {
   };
 
   return (
-    <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors">
+    <div className="flex items-center gap-4 p-4 bg-[var(--color-secondary)] rounded-xl hover:bg-[var(--color-secondary)] transition-colors">
       <input
         type="checkbox"
         checked={task.status === 'completed'}
@@ -35,15 +35,15 @@ export default function TaskCard({ task, onComplete }: TaskCardProps) {
       <div className="flex-1">
         <h4
           className={`font-medium ${
-            task.status === 'completed' ? 'text-slate-400 line-through' : 'text-slate-900'
+            task.status === 'completed' ? 'text-[var(--color-foreground-muted)] line-through' : 'text-[var(--color-foreground)]'
           }`}
         >
           {task.title}
         </h4>
-        {task.description && <p className="text-sm text-slate-500 mt-1">{task.description}</p>}
+        {task.description && <p className="text-sm text-[var(--color-foreground-muted)] mt-1">{task.description}</p>}
       </div>
       {task.dueDate && (
-        <div className="text-sm text-slate-500">{new Date(task.dueDate).toLocaleDateString()}</div>
+        <div className="text-sm text-[var(--color-foreground-muted)]">{new Date(task.dueDate).toLocaleDateString()}</div>
       )}
     </div>
   );

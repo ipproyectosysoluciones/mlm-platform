@@ -59,8 +59,8 @@ const MEDAL_CONFIG = {
     emoji: '🥈',
     label: '2°',
     ringColor: 'ring-slate-400',
-    bgColor: 'bg-slate-50',
-    textColor: 'text-slate-600',
+    bgColor: 'bg-[var(--color-secondary)]',
+    textColor: 'text-[var(--color-foreground-muted)]',
     barHeight: 'h-16',
     avatarSize: 'h-12 w-12',
     elevated: false,
@@ -97,8 +97,8 @@ function PodiumSlot({ entry, position }: PodiumSlotProps) {
 
       {/* Name & username */}
       <div className="text-center max-w-[90px]">
-        <p className="font-semibold text-slate-800 text-sm leading-tight truncate">{entry.name}</p>
-        <p className="text-xs text-slate-500 truncate">@{entry.username}</p>
+        <p className="font-semibold text-[var(--color-foreground)] text-sm leading-tight truncate">{entry.name}</p>
+        <p className="text-xs text-[var(--color-foreground-muted)] truncate">@{entry.username}</p>
       </div>
 
       {/* Metric value */}
@@ -137,8 +137,8 @@ export function Podium({ entries }: PodiumProps) {
   void maxValue; // used for future progress bars
 
   return (
-    <Card className="p-6 bg-gradient-to-b from-slate-50 to-white">
-      <h2 className="text-center text-lg font-bold text-slate-700 mb-6">🏆 Top 3</h2>
+    <Card className="p-6 bg-gradient-to-b from-[var(--color-secondary)] to-[var(--color-card)]">
+      <h2 className="text-center text-lg font-bold text-[var(--color-foreground)] mb-6">🏆 Top 3</h2>
       <div className="flex items-end justify-center gap-4">
         {/* 2nd place — left */}
         {second ? (

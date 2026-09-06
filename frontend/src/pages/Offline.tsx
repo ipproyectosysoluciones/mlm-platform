@@ -19,7 +19,7 @@ export default function Offline() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-[var(--color-secondary)] p-4">
       <div className="text-center">
         {/* Animated WiFi/Offline Icon */}
         <div className="relative mb-8">
@@ -36,16 +36,16 @@ export default function Offline() {
 
         {/* Message */}
         <div className="space-y-4">
-          <h2 className="text-2xl lg:text-3xl font-bold text-slate-900">
+          <h2 className="text-2xl lg:text-3xl font-bold text-[var(--color-foreground)]">
             {t('offline.title', 'Sin conexión a internet')}
           </h2>
-          <p className="text-slate-500 max-w-md mx-auto">
+          <p className="text-[var(--color-foreground-muted)] max-w-md mx-auto">
             {t(
               'offline.description',
               'Parece que perdiste la conexión. Verificá tu conexión a internet e intentá de nuevo.'
             )}
           </p>
-          <p className="text-slate-400 text-sm">
+          <p className="text-[var(--color-foreground-muted)] text-sm">
             {t(
               'offline.hint',
               'También podés verificar si el WiFi está activado o si hay algún problema con tu conexión de datos.'
@@ -64,7 +64,7 @@ export default function Offline() {
           </button>
           <button
             onClick={handleGoBack}
-            className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-slate-700 font-medium rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors"
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[var(--color-card)] text-[var(--color-foreground)] font-medium rounded-xl border border-[var(--color-border)] hover:bg-[var(--color-secondary)] transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
             {t('offline.goBack', 'Volver')}

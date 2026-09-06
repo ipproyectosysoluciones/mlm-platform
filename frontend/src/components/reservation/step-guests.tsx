@@ -50,16 +50,16 @@ export default function StepGuests() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-bold text-slate-800 mb-1">{t('reservation.howManyGuests')}</h2>
+        <h2 className="text-xl font-bold text-[var(--color-foreground)] mb-1">{t('reservation.howManyGuests')}</h2>
         {wizardData.type === 'property' ? (
-          <p className="text-slate-500 text-sm">
+          <p className="text-[var(--color-foreground-muted)] text-sm">
             {t('reservation.property')}:{' '}
-            <span className="font-medium text-slate-700">{wizardData.property.title}</span>
+            <span className="font-medium text-[var(--color-foreground)]">{wizardData.property.title}</span>
           </p>
         ) : (
-          <p className="text-slate-500 text-sm">
+          <p className="text-[var(--color-foreground-muted)] text-sm">
             {t('reservation.tour')}:{' '}
-            <span className="font-medium text-slate-700">{wizardData.tour.title}</span>
+            <span className="font-medium text-[var(--color-foreground)]">{wizardData.tour.title}</span>
             {' · '}
             {new Date(wizardData.availability.date).toLocaleDateString('es-AR', {
               weekday: 'long',
@@ -72,7 +72,7 @@ export default function StepGuests() {
 
       {/* Guest counter */}
       <div className="flex items-center gap-4">
-        <label className="text-sm font-medium text-slate-700 flex items-center gap-2">
+        <label className="text-sm font-medium text-[var(--color-foreground)] flex items-center gap-2">
           <Users className="w-4 h-4 text-emerald-500" />
           {t('reservation.numberOfGuests')}
         </label>
@@ -85,7 +85,7 @@ export default function StepGuests() {
           >
             −
           </Button>
-          <span className="w-10 text-center font-semibold text-lg text-slate-800">
+          <span className="w-10 text-center font-semibold text-lg text-[var(--color-foreground)]">
             {wizardData.guests}
           </span>
           <Button
@@ -104,16 +104,16 @@ export default function StepGuests() {
 
       {/* Notes */}
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1">
+        <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">
           {t('reservation.additionalNotes')}{' '}
-          <span className="text-slate-400 font-normal">({t('reservation.optional')})</span>
+          <span className="text-[var(--color-foreground-muted)] font-normal">({t('reservation.optional')})</span>
         </label>
         <textarea
           value={wizardData.notes}
           onChange={(e) => updateWizardData({ notes: e.target.value })}
           placeholder={t('reservation.additionalNotesHint')}
           rows={3}
-          className="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:border-emerald-400 resize-none"
+          className="w-full px-3 py-2 rounded-lg border border-[var(--color-border)] text-sm focus:outline-none focus:border-emerald-400 resize-none"
         />
       </div>
 

@@ -42,9 +42,9 @@ export default function PriceBadge({ breakdown, compact = false }: PriceBadgePro
     >
       {breakdown.isProperty ? (
         <div className="flex items-center justify-between gap-4">
-          <span className="text-sm text-slate-600">
+          <span className="text-sm text-[var(--color-foreground-muted)]">
             {t('reservation.pricePerNight')}:{' '}
-            <span className="font-semibold text-slate-800">
+            <span className="font-semibold text-[var(--color-foreground)]">
               {formatPrice(breakdown.pricePerUnit, breakdown.currency)}
             </span>
           </span>
@@ -56,9 +56,9 @@ export default function PriceBadge({ breakdown, compact = false }: PriceBadgePro
         </div>
       ) : (
         <div className="flex items-center justify-between gap-4">
-          <span className="text-sm text-slate-600">
+          <span className="text-sm text-[var(--color-foreground-muted)]">
             {t('reservation.pricePerPerson')}:{' '}
-            <span className="font-semibold text-slate-800">
+            <span className="font-semibold text-[var(--color-foreground)]">
               {formatPrice(breakdown.pricePerUnit, breakdown.currency)}
             </span>
           </span>

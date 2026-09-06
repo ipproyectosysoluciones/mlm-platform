@@ -48,32 +48,32 @@ export default function StepConfirm({
         <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
           <CheckCircle2 className="w-10 h-10 text-emerald-500" />
         </div>
-        <h2 className="text-2xl font-bold text-slate-800 mb-2">
+        <h2 className="text-2xl font-bold text-[var(--color-foreground)] mb-2">
           {t('reservation.reservationConfirmed')}
         </h2>
-        <p className="text-slate-500 text-sm">{t('reservation.reservationConfirmedDesc')}</p>
+        <p className="text-[var(--color-foreground-muted)] text-sm">{t('reservation.reservationConfirmedDesc')}</p>
       </div>
 
       {/* Reservation details */}
       {createdReservation && (
-        <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 text-left space-y-2">
-          <p className="text-sm text-slate-500">
-            <span className="font-medium text-slate-700">{t('reservation.reservationId')}:</span>{' '}
+        <div className="bg-[var(--color-secondary)] border border-[var(--color-border)] rounded-xl p-4 text-left space-y-2">
+          <p className="text-sm text-[var(--color-foreground-muted)]">
+            <span className="font-medium text-[var(--color-foreground)]">{t('reservation.reservationId')}:</span>{' '}
             <span className="font-mono text-xs">{createdReservation.id}</span>
           </p>
-          <p className="text-sm text-slate-500">
-            <span className="font-medium text-slate-700">{t('reservation.status')}:</span>{' '}
+          <p className="text-sm text-[var(--color-foreground-muted)]">
+            <span className="font-medium text-[var(--color-foreground)]">{t('reservation.status')}:</span>{' '}
             <span className="capitalize">{createdReservation.status}</span>
           </p>
           {wizardData?.type === 'property' && (
-            <p className="text-sm text-slate-500">
-              <span className="font-medium text-slate-700">{t('reservation.property')}:</span>{' '}
+            <p className="text-sm text-[var(--color-foreground-muted)]">
+              <span className="font-medium text-[var(--color-foreground)]">{t('reservation.property')}:</span>{' '}
               {wizardData.property.title}
             </p>
           )}
           {wizardData?.type === 'tour' && (
-            <p className="text-sm text-slate-500">
-              <span className="font-medium text-slate-700">{t('reservation.tour')}:</span>{' '}
+            <p className="text-sm text-[var(--color-foreground-muted)]">
+              <span className="font-medium text-[var(--color-foreground)]">{t('reservation.tour')}:</span>{' '}
               {wizardData.tour.title}
             </p>
           )}
@@ -92,7 +92,7 @@ export default function StepConfirm({
         </Button>
         <Button variant="ghost" onClick={onGoToReservations} className="w-full py-3 text-sm">
           {t('reservation.payLater')}
-          <span className="ml-2 text-slate-400">— {t('reservation.payLaterHint')}</span>
+          <span className="ml-2 text-[var(--color-foreground-muted)]">— {t('reservation.payLaterHint')}</span>
         </Button>
       </div>
     </div>

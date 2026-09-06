@@ -222,24 +222,24 @@ export default function Profile() {
     <div className="max-w-2xl mx-auto space-y-6">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Link to="/dashboard" className="p-2 hover:bg-slate-100 rounded-lg transition-colors">
-          <ArrowLeft className="w-5 h-5 text-slate-600" />
+        <Link to="/dashboard" className="p-2 hover:bg-[var(--color-secondary)] rounded-lg transition-colors">
+          <ArrowLeft className="w-5 h-5 text-[var(--color-foreground-muted)]" />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">{t('profile.title')}</h1>
-          <p className="text-slate-500 text-sm">{t('profile.subtitle')}</p>
+          <h1 className="text-2xl font-bold text-[var(--color-foreground)]">{t('profile.title')}</h1>
+          <p className="text-[var(--color-foreground-muted)] text-sm">{t('profile.subtitle')}</p>
         </div>
       </div>
 
       {/* Profile Card */}
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-        <div className="flex items-center gap-4 mb-6 pb-6 border-b border-slate-100">
+      <div className="bg-[var(--color-card)] rounded-2xl shadow-sm border border-[var(--color-border)] p-6">
+        <div className="flex items-center gap-4 mb-6 pb-6 border-b border-[var(--color-border-subtle)]">
           <div className="w-16 h-16 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-full flex items-center justify-center">
             <User className="w-8 h-8 text-white" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-slate-900">{user?.email}</h2>
-            <p className="text-slate-500 text-sm">
+            <h2 className="text-xl font-bold text-[var(--color-foreground)]">{user?.email}</h2>
+            <p className="text-[var(--color-foreground-muted)] text-sm">
               {t('profile.memberSince')}{' '}
               {profile?.createdAt ? formatDate(profile.createdAt) : 'N/A'}
             </p>
@@ -248,37 +248,37 @@ export default function Profile() {
 
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <Mail className="w-5 h-5 text-slate-400" />
+            <Mail className="w-5 h-5 text-[var(--color-foreground-muted)]" />
             <div>
-              <p className="text-sm text-slate-500">{t('profile.email')}</p>
-              <p className="font-medium text-slate-900">{profile?.email}</p>
+              <p className="text-sm text-[var(--color-foreground-muted)]">{t('profile.email')}</p>
+              <p className="font-medium text-[var(--color-foreground)]">{profile?.email}</p>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            <Gift className="w-5 h-5 text-slate-400" />
+            <Gift className="w-5 h-5 text-[var(--color-foreground-muted)]" />
             <div>
-              <p className="text-sm text-slate-500">{t('profile.referralCode')}</p>
-              <p className="font-mono bg-slate-100 px-3 py-1.5 rounded-lg inline-block font-medium">
+              <p className="text-sm text-[var(--color-foreground-muted)]">{t('profile.referralCode')}</p>
+              <p className="font-mono bg-[var(--color-secondary)] px-3 py-1.5 rounded-lg inline-block font-medium">
                 {profile?.referralCode}
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            <Calendar className="w-5 h-5 text-slate-400" />
+            <Calendar className="w-5 h-5 text-[var(--color-foreground-muted)]" />
             <div>
-              <p className="text-sm text-slate-500">{t('profile.level')}</p>
-              <p className="font-medium text-slate-900">{profile?.level || 1}</p>
+              <p className="text-sm text-[var(--color-foreground-muted)]">{t('profile.level')}</p>
+              <p className="font-medium text-[var(--color-foreground)]">{profile?.level || 1}</p>
             </div>
           </div>
 
           {profile?.sponsor && (
             <div className="flex items-center gap-3">
-              <User className="w-5 h-5 text-slate-400" />
+              <User className="w-5 h-5 text-[var(--color-foreground-muted)]" />
               <div>
-                <p className="text-sm text-slate-500">{t('profile.sponsor')}</p>
-                <p className="font-mono bg-slate-100 px-3 py-1.5 rounded-lg inline-block font-medium">
+                <p className="text-sm text-[var(--color-foreground-muted)]">{t('profile.sponsor')}</p>
+                <p className="font-mono bg-[var(--color-secondary)] px-3 py-1.5 rounded-lg inline-block font-medium">
                   {profile.sponsor.referralCode}
                 </p>
               </div>
@@ -286,37 +286,37 @@ export default function Profile() {
           )}
         </div>
 
-        <div className="mt-8 pt-6 border-t border-slate-100">
-          <h3 className="text-lg font-semibold text-slate-900 mb-4">
+        <div className="mt-8 pt-6 border-t border-[var(--color-border-subtle)]">
+          <h3 className="text-lg font-semibold text-[var(--color-foreground)] mb-4">
             {t('profile.accountSettings')}
           </h3>
           <div className="space-y-3">
             <button
               onClick={handleChangePassword}
-              className="w-full text-left px-4 py-3 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors flex items-center gap-3"
+              className="w-full text-left px-4 py-3 bg-[var(--color-secondary)] rounded-xl hover:bg-[var(--color-secondary)] transition-colors flex items-center gap-3"
             >
-              <div className="w-8 h-8 bg-slate-200 rounded-lg flex items-center justify-center">
-                <LogOut className="w-4 h-4 text-slate-600" />
+              <div className="w-8 h-8 bg-[var(--color-muted)] rounded-lg flex items-center justify-center">
+                <LogOut className="w-4 h-4 text-[var(--color-foreground-muted)]" />
               </div>
-              <span className="font-medium text-slate-700">{t('profile.changePassword')}</span>
+              <span className="font-medium text-[var(--color-foreground)]">{t('profile.changePassword')}</span>
             </button>
             <button
               onClick={handleUpdateProfile}
-              className="w-full text-left px-4 py-3 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors flex items-center gap-3"
+              className="w-full text-left px-4 py-3 bg-[var(--color-secondary)] rounded-xl hover:bg-[var(--color-secondary)] transition-colors flex items-center gap-3"
             >
-              <div className="w-8 h-8 bg-slate-200 rounded-lg flex items-center justify-center">
-                <User className="w-4 h-4 text-slate-600" />
+              <div className="w-8 h-8 bg-[var(--color-muted)] rounded-lg flex items-center justify-center">
+                <User className="w-4 h-4 text-[var(--color-foreground-muted)]" />
               </div>
-              <span className="font-medium text-slate-700">{t('profile.updateProfile')}</span>
+              <span className="font-medium text-[var(--color-foreground)]">{t('profile.updateProfile')}</span>
             </button>
             <Link
               to="/landing-pages"
-              className="w-full text-left px-4 py-3 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors flex items-center gap-3"
+              className="w-full text-left px-4 py-3 bg-[var(--color-secondary)] rounded-xl hover:bg-[var(--color-secondary)] transition-colors flex items-center gap-3"
             >
-              <div className="w-8 h-8 bg-slate-200 rounded-lg flex items-center justify-center">
-                <FileText className="w-4 h-4 text-slate-600" />
+              <div className="w-8 h-8 bg-[var(--color-muted)] rounded-lg flex items-center justify-center">
+                <FileText className="w-4 h-4 text-[var(--color-foreground-muted)]" />
               </div>
-              <span className="font-medium text-slate-700">{t('profile.landingPages')}</span>
+              <span className="font-medium text-[var(--color-foreground)]">{t('profile.landingPages')}</span>
             </Link>
             {profile?.role !== 'admin' && (
               <button

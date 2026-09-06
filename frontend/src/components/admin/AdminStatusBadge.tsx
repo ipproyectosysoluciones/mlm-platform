@@ -41,7 +41,7 @@ export default function AdminStatusBadge({
 
   if (!statusConfig) {
     return (
-      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700">
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[var(--color-secondary)] text-[var(--color-foreground)]">
         {value}
       </span>
     );

@@ -152,7 +152,7 @@ function HeroSection() {
       {/* Dark gradient overlay */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-slate-900"
+        className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-[var(--color-card)]"
       />
 
       {/* Emerald glow accents */}
@@ -178,7 +178,7 @@ function HeroSection() {
         </h1>
 
         {/* Subtitle */}
-        <p className="mt-6 text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
+        <p className="mt-6 text-lg sm:text-xl text-[var(--color-foreground-subtle)] max-w-2xl mx-auto leading-relaxed">
           {t('landing.hero.subtitle')}
         </p>
 
@@ -194,7 +194,7 @@ function HeroSection() {
           </Link>
           <Link
             to="/tours"
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 bg-white/10 hover:bg-white/15 text-white font-semibold rounded-xl border border-white/20 hover:border-emerald-500/40 backdrop-blur-sm transition-all duration-300 text-lg"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 bg-[var(--color-card)]/10 hover:bg-[var(--color-card)]/15 text-white font-semibold rounded-xl border border-white/20 hover:border-emerald-500/40 backdrop-blur-sm transition-all duration-300 text-lg"
           >
             <MapPin className="w-5 h-5" />
             {t('landing.hero.ctaTours')}
@@ -206,13 +206,13 @@ function HeroSection() {
           {STATS.map(({ labelKey, value, icon: Icon }) => (
             <div
               key={labelKey}
-              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10"
+              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-[var(--color-card)]/5 backdrop-blur-sm border border-white/10"
             >
               <div className="w-10 h-10 bg-emerald-500/15 border border-emerald-500/25 rounded-xl flex items-center justify-center">
                 <Icon className="w-5 h-5 text-emerald-400" />
               </div>
               <p className="text-2xl font-bold text-white">{value}</p>
-              <p className="text-sm text-slate-400">{t(labelKey)}</p>
+              <p className="text-sm text-[var(--color-foreground-muted)]">{t(labelKey)}</p>
             </div>
           ))}
         </div>
@@ -229,14 +229,14 @@ function HowItWorksSection() {
   const { t } = useTranslation();
 
   return (
-    <section className="py-24 bg-slate-950">
+    <section className="py-24 bg-[var(--color-background)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}
         <div className="text-center mb-16">
           <h2 className="text-3xl sm:text-4xl font-bold text-white">
             {t('landing.howItWorks.title')}
           </h2>
-          <p className="mt-4 text-lg text-slate-400 max-w-2xl mx-auto">
+          <p className="mt-4 text-lg text-[var(--color-foreground-muted)] max-w-2xl mx-auto">
             {t('landing.howItWorks.subtitle')}
           </p>
         </div>
@@ -252,14 +252,14 @@ function HowItWorksSection() {
           {HOW_IT_WORKS_STEPS.map(({ number, icon: Icon, titleKey, descKey }) => (
             <div key={number} className="relative flex flex-col items-center text-center group">
               {/* Number circle */}
-              <div className="relative z-10 w-32 h-32 rounded-full bg-slate-900 border-2 border-emerald-500/30 flex flex-col items-center justify-center mb-6 group-hover:border-emerald-500/60 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-emerald-500/10">
+              <div className="relative z-10 w-32 h-32 rounded-full bg-[var(--color-card)] border-2 border-emerald-500/30 flex flex-col items-center justify-center mb-6 group-hover:border-emerald-500/60 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-emerald-500/10">
                 <span className="text-emerald-500 text-sm font-bold tracking-widest">{number}</span>
                 <Icon className="w-8 h-8 text-emerald-400 mt-1" />
               </div>
 
               {/* Text */}
               <h3 className="text-xl font-bold text-white mb-3">{t(titleKey)}</h3>
-              <p className="text-slate-400 leading-relaxed max-w-xs">{t(descKey)}</p>
+              <p className="text-[var(--color-foreground-muted)] leading-relaxed max-w-xs">{t(descKey)}</p>
             </div>
           ))}
         </div>
@@ -282,7 +282,7 @@ function FeaturedPropertiesSection() {
   }, [fetchFeatured]);
 
   return (
-    <section className="py-20 bg-slate-900">
+    <section className="py-20 bg-[var(--color-card)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12">
@@ -290,7 +290,7 @@ function FeaturedPropertiesSection() {
             <h2 className="text-3xl font-bold text-white">
               {t('landing.featuredProperties.title')}
             </h2>
-            <p className="mt-2 text-slate-400">{t('landing.featuredProperties.subtitle')}</p>
+            <p className="mt-2 text-[var(--color-foreground-muted)]">{t('landing.featuredProperties.subtitle')}</p>
           </div>
           <Link
             to="/properties"
@@ -303,21 +303,21 @@ function FeaturedPropertiesSection() {
 
         {/* States */}
         {isFetchingFeatured && (
-          <div className="flex items-center justify-center py-16 gap-3 text-slate-400">
+          <div className="flex items-center justify-center py-16 gap-3 text-[var(--color-foreground-muted)]">
             <Loader2 className="w-6 h-6 animate-spin" />
             <span>{t('landing.featuredProperties.loading')}</span>
           </div>
         )}
 
         {!isFetchingFeatured && featuredError && (
-          <div className="flex items-center justify-center py-16 gap-3 text-slate-400">
+          <div className="flex items-center justify-center py-16 gap-3 text-[var(--color-foreground-muted)]">
             <AlertCircle className="w-6 h-6 text-red-400" />
             <span>{featuredError}</span>
           </div>
         )}
 
         {!isFetchingFeatured && !featuredError && featuredProperties.length === 0 && (
-          <p className="text-center py-16 text-slate-500">
+          <p className="text-center py-16 text-[var(--color-foreground-muted)]">
             {t('landing.featuredProperties.empty')}
           </p>
         )}
@@ -342,14 +342,14 @@ function FeaturesSection() {
   const { t } = useTranslation();
 
   return (
-    <section className="py-24 bg-slate-950">
+    <section className="py-24 bg-[var(--color-background)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}
         <div className="text-center mb-16">
           <h2 className="text-3xl sm:text-4xl font-bold text-white">
             {t('landing.features.title')}
           </h2>
-          <p className="mt-4 text-lg text-slate-400 max-w-2xl mx-auto">
+          <p className="mt-4 text-lg text-[var(--color-foreground-muted)] max-w-2xl mx-auto">
             {t('landing.features.subtitle')}
           </p>
         </div>
@@ -359,13 +359,13 @@ function FeaturesSection() {
           {FEATURES.map(({ icon: Icon, titleKey, descKey }) => (
             <div
               key={titleKey}
-              className="group p-6 rounded-2xl bg-slate-800/50 border border-slate-700/50 hover:border-emerald-500/40 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/5"
+              className="group p-6 rounded-2xl bg-[var(--color-card)]/50 border border-[var(--color-border)]/50 hover:border-emerald-500/40 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/5"
             >
               <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center justify-center mb-4 group-hover:bg-emerald-500/15 group-hover:border-emerald-500/30 transition-all duration-300">
                 <Icon className="w-6 h-6 text-emerald-400" />
               </div>
               <h3 className="text-lg font-bold text-white mb-2">{t(titleKey)}</h3>
-              <p className="text-slate-400 leading-relaxed text-sm">{t(descKey)}</p>
+              <p className="text-[var(--color-foreground-muted)] leading-relaxed text-sm">{t(descKey)}</p>
             </div>
           ))}
         </div>
@@ -387,13 +387,13 @@ function FeaturedToursSection() {
   }, [fetchFeatured]);
 
   return (
-    <section className="py-20 bg-slate-900">
+    <section className="py-20 bg-[var(--color-card)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12">
           <div>
             <h2 className="text-3xl font-bold text-white">{t('landing.featuredTours.title')}</h2>
-            <p className="mt-2 text-slate-400">{t('landing.featuredTours.subtitle')}</p>
+            <p className="mt-2 text-[var(--color-foreground-muted)]">{t('landing.featuredTours.subtitle')}</p>
           </div>
           <Link
             to="/tours"
@@ -406,21 +406,21 @@ function FeaturedToursSection() {
 
         {/* States */}
         {isFetchingFeatured && (
-          <div className="flex items-center justify-center py-16 gap-3 text-slate-400">
+          <div className="flex items-center justify-center py-16 gap-3 text-[var(--color-foreground-muted)]">
             <Loader2 className="w-6 h-6 animate-spin" />
             <span>{t('landing.featuredTours.loading')}</span>
           </div>
         )}
 
         {!isFetchingFeatured && featuredError && (
-          <div className="flex items-center justify-center py-16 gap-3 text-slate-400">
+          <div className="flex items-center justify-center py-16 gap-3 text-[var(--color-foreground-muted)]">
             <AlertCircle className="w-6 h-6 text-red-400" />
             <span>{featuredError}</span>
           </div>
         )}
 
         {!isFetchingFeatured && !featuredError && featuredTours.length === 0 && (
-          <p className="text-center py-16 text-slate-500">{t('landing.featuredTours.empty')}</p>
+          <p className="text-center py-16 text-[var(--color-foreground-muted)]">{t('landing.featuredTours.empty')}</p>
         )}
 
         {!isFetchingFeatured && featuredTours.length > 0 && (
@@ -443,14 +443,14 @@ function TestimonialsSection() {
   const { t } = useTranslation();
 
   return (
-    <section className="py-24 bg-slate-950">
+    <section className="py-24 bg-[var(--color-background)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}
         <div className="text-center mb-16">
           <h2 className="text-3xl sm:text-4xl font-bold text-white">
             {t('landing.testimonials.title')}
           </h2>
-          <p className="mt-4 text-lg text-slate-400 max-w-2xl mx-auto">
+          <p className="mt-4 text-lg text-[var(--color-foreground-muted)] max-w-2xl mx-auto">
             {t('landing.testimonials.subtitle')}
           </p>
         </div>
@@ -460,7 +460,7 @@ function TestimonialsSection() {
           {TESTIMONIALS.map(({ quoteKey, nameKey, roleKey, cityKey, initials, color, stars }) => (
             <div
               key={quoteKey}
-              className="p-6 rounded-2xl bg-slate-800/50 border border-slate-700/50 hover:border-emerald-500/30 transition-all duration-300 flex flex-col"
+              className="p-6 rounded-2xl bg-[var(--color-card)]/50 border border-[var(--color-border)]/50 hover:border-emerald-500/30 transition-all duration-300 flex flex-col"
             >
               {/* Stars */}
               <div className="flex gap-1 mb-4">
@@ -470,12 +470,12 @@ function TestimonialsSection() {
               </div>
 
               {/* Quote */}
-              <blockquote className="text-slate-300 leading-relaxed text-sm flex-1 mb-6">
+              <blockquote className="text-[var(--color-foreground-subtle)] leading-relaxed text-sm flex-1 mb-6">
                 &ldquo;{t(quoteKey)}&rdquo;
               </blockquote>
 
               {/* Author */}
-              <div className="flex items-center gap-3 pt-4 border-t border-slate-700/50">
+              <div className="flex items-center gap-3 pt-4 border-t border-[var(--color-border)]/50">
                 <div
                   className={`w-10 h-10 ${color} rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0`}
                 >
@@ -483,7 +483,7 @@ function TestimonialsSection() {
                 </div>
                 <div className="min-w-0">
                   <p className="text-white font-semibold text-sm truncate">{t(nameKey)}</p>
-                  <p className="text-slate-400 text-xs truncate">
+                  <p className="text-[var(--color-foreground-muted)] text-xs truncate">
                     {t(roleKey)} · {t(cityKey)}
                   </p>
                 </div>
@@ -504,7 +504,7 @@ function CTASection() {
   const { t } = useTranslation();
 
   return (
-    <section className="py-24 bg-slate-900 relative overflow-hidden">
+    <section className="py-24 bg-[var(--color-card)] relative overflow-hidden">
       {/* Decorative emerald glow */}
       <div
         aria-hidden="true"
@@ -513,7 +513,7 @@ function CTASection() {
 
       <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2 className="text-3xl sm:text-4xl font-bold text-white">{t('landing.cta.title')}</h2>
-        <p className="mt-4 text-lg text-slate-400">{t('landing.cta.subtitle')}</p>
+        <p className="mt-4 text-lg text-[var(--color-foreground-muted)]">{t('landing.cta.subtitle')}</p>
         <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
           <Link
             to="/register"
@@ -524,7 +524,7 @@ function CTASection() {
           </Link>
           <Link
             to="/login"
-            className="px-8 py-4 text-slate-300 hover:text-white font-medium transition-colors"
+            className="px-8 py-4 text-[var(--color-foreground-subtle)] hover:text-white font-medium transition-colors"
           >
             {t('landing.cta.login')}
           </Link>
@@ -543,7 +543,7 @@ function FooterSection() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-slate-950 border-t border-slate-800">
+    <footer className="bg-[var(--color-background)] border-t border-[var(--color-border)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex flex-col md:flex-row items-start justify-between gap-8">
           {/* Brand */}
@@ -554,36 +554,36 @@ function FooterSection() {
               </div>
               <span className="font-bold text-white text-lg">Nexo Real</span>
             </div>
-            <p className="text-slate-400 text-sm">{t('landing.footer.tagline')}</p>
+            <p className="text-[var(--color-foreground-muted)] text-sm">{t('landing.footer.tagline')}</p>
           </div>
 
           {/* Links */}
           <nav aria-label="Footer navigation" className="flex flex-wrap gap-8">
             <div className="flex flex-col gap-3">
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+              <p className="text-xs font-semibold uppercase tracking-wider text-[var(--color-foreground-muted)]">
                 {t('landing.footer.links')}
               </p>
               <Link
                 to="/properties"
-                className="text-sm text-slate-400 hover:text-emerald-400 transition-colors"
+                className="text-sm text-[var(--color-foreground-muted)] hover:text-emerald-400 transition-colors"
               >
                 {t('nav.properties')}
               </Link>
               <Link
                 to="/tours"
-                className="text-sm text-slate-400 hover:text-emerald-400 transition-colors"
+                className="text-sm text-[var(--color-foreground-muted)] hover:text-emerald-400 transition-colors"
               >
                 {t('nav.tours')}
               </Link>
               <Link
                 to="/login"
-                className="text-sm text-slate-400 hover:text-emerald-400 transition-colors"
+                className="text-sm text-[var(--color-foreground-muted)] hover:text-emerald-400 transition-colors"
               >
                 {t('auth.signIn')}
               </Link>
               <Link
                 to="/register"
-                className="text-sm text-slate-400 hover:text-emerald-400 transition-colors"
+                className="text-sm text-[var(--color-foreground-muted)] hover:text-emerald-400 transition-colors"
               >
                 {t('auth.createAccount')}
               </Link>
@@ -592,7 +592,7 @@ function FooterSection() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-12 pt-6 border-t border-slate-800 text-center text-xs text-slate-600">
+        <div className="mt-12 pt-6 border-t border-[var(--color-border)] text-center text-xs text-[var(--color-foreground-muted)]">
           © {year} Nexo Real. {t('landing.footer.rights')}
         </div>
       </div>
@@ -613,7 +613,7 @@ function FooterSection() {
  */
 export default function NexoRealLanding() {
   return (
-    <div className="min-h-screen bg-slate-900">
+    <div className="min-h-screen bg-[var(--color-card)]">
       <HeroSection />
       <HowItWorksSection />
       <FeaturedPropertiesSection />

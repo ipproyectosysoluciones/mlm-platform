@@ -86,11 +86,11 @@ export default function AdminNotesModal({
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Status selector */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Estado</label>
+            <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">Estado</label>
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
               {statusOptions.map((opt) => (
                 <option key={opt.value} value={opt.value}>
@@ -102,7 +102,7 @@ export default function AdminNotesModal({
 
           {/* Admin notes */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
+            <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">
               Notas del administrador
             </label>
             <textarea
@@ -110,16 +110,16 @@ export default function AdminNotesModal({
               onChange={(e) => setNotes(e.target.value)}
               rows={4}
               placeholder="Notas internas sobre la reserva..."
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y"
+              className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y"
             />
           </div>
 
           {/* Actions */}
-          <div className="flex justify-end gap-3 pt-4 border-t border-slate-200">
+          <div className="flex justify-end gap-3 pt-4 border-t border-[var(--color-border)]">
             <button
               type="button"
               onClick={onClose}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-[var(--color-foreground)] bg-[var(--color-card)] border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-secondary)] transition-colors"
             >
               <X className="w-4 h-4" />
               Cancelar

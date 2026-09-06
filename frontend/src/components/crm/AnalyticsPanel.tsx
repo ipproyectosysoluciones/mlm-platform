@@ -54,7 +54,7 @@ export function AnalyticsPanel() {
               className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
                 period === opt.value && !dateFrom
                   ? 'bg-emerald-500 text-white'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  : 'bg-[var(--color-secondary)] text-[var(--color-foreground-muted)] hover:bg-[var(--color-muted)]'
               }`}
             >
               {t(opt.labelKey)}
@@ -63,7 +63,7 @@ export function AnalyticsPanel() {
         </div>
 
         <div className="flex items-center gap-2 ml-auto">
-          <Calendar className="w-4 h-4 text-slate-400" />
+          <Calendar className="w-4 h-4 text-[var(--color-foreground-muted)]" />
           <input
             type="date"
             value={dateFrom}
@@ -71,9 +71,9 @@ export function AnalyticsPanel() {
               setDateFrom(e.target.value);
               if (e.target.value) setPeriod('month');
             }}
-            className="px-3 py-1.5 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500"
+            className="px-3 py-1.5 border border-[var(--color-border)] rounded-lg text-sm focus:ring-2 focus:ring-emerald-500"
           />
-          <span className="text-slate-400">—</span>
+          <span className="text-[var(--color-foreground-muted)]">—</span>
           <input
             type="date"
             value={dateTo}
@@ -81,13 +81,13 @@ export function AnalyticsPanel() {
               setDateTo(e.target.value);
               if (e.target.value) setPeriod('month');
             }}
-            className="px-3 py-1.5 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500"
+            className="px-3 py-1.5 border border-[var(--color-border)] rounded-lg text-sm focus:ring-2 focus:ring-emerald-500"
           />
         </div>
 
         <button
           onClick={exportReport}
-          className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 rounded-xl hover:bg-slate-200 transition-colors text-sm font-medium"
+          className="flex items-center gap-2 px-4 py-2 bg-[var(--color-secondary)] text-[var(--color-foreground)] rounded-xl hover:bg-[var(--color-muted)] transition-colors text-sm font-medium"
         >
           <Download className="w-4 h-4" />
           {t('crm.exportCSV')}
@@ -103,14 +103,14 @@ export function AnalyticsPanel() {
         <div className="grid gap-6 md:grid-cols-2">
           {/* Report Data Display */}
           {Object.entries(report).map(([key, value]) => (
-            <div key={key} className="bg-white rounded-xl border border-slate-200 p-6">
+            <div key={key} className="bg-[var(--color-card)] rounded-xl border border-[var(--color-border)] p-6">
               <div className="flex items-center gap-3 mb-4">
                 <BarChart3 className="w-5 h-5 text-emerald-500" />
-                <h3 className="font-medium text-slate-900 capitalize">
+                <h3 className="font-medium text-[var(--color-foreground)] capitalize">
                   {key.replace(/([A-Z])/g, ' $1').trim()}
                 </h3>
               </div>
-              <div className="text-2xl font-bold text-slate-900">
+              <div className="text-2xl font-bold text-[var(--color-foreground)]">
                 {typeof value === 'number'
                   ? value.toLocaleString()
                   : typeof value === 'object' && value !== null
@@ -121,10 +121,10 @@ export function AnalyticsPanel() {
           ))}
         </div>
       ) : (
-        <div className="text-center py-16 bg-slate-50 rounded-xl">
-          <BarChart3 className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-slate-900 mb-2">{t('crm.noReportData')}</h3>
-          <p className="text-slate-500">
+        <div className="text-center py-16 bg-[var(--color-secondary)] rounded-xl">
+          <BarChart3 className="w-12 h-12 text-[var(--color-foreground-subtle)] mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-[var(--color-foreground)] mb-2">{t('crm.noReportData')}</h3>
+          <p className="text-[var(--color-foreground-muted)]">
             {dateFrom || dateFrom ? t('crm.tryDifferentPeriod') : t('crm.selectPeriodToView')}
           </p>
         </div>

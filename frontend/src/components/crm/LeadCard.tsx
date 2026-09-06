@@ -29,7 +29,7 @@ export function LeadCard({ lead, onClick }: LeadCardProps) {
   return (
     <div
       onClick={onClick}
-      className="bg-slate-50 rounded-xl p-4 hover:bg-slate-100 transition-colors cursor-pointer border border-slate-100"
+      className="bg-[var(--color-secondary)] rounded-xl p-4 hover:bg-[var(--color-secondary)] transition-colors cursor-pointer border border-[var(--color-border-subtle)]"
     >
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-3">
@@ -37,29 +37,29 @@ export function LeadCard({ lead, onClick }: LeadCardProps) {
             {lead.contactName[0].toUpperCase()}
           </div>
           <div>
-            <h3 className="font-semibold text-slate-900">{lead.contactName}</h3>
-            <p className="text-sm text-slate-500">{lead.contactEmail}</p>
+            <h3 className="font-semibold text-[var(--color-foreground)]">{lead.contactName}</h3>
+            <p className="text-sm text-[var(--color-foreground-muted)]">{lead.contactEmail}</p>
           </div>
         </div>
         <span
           className={`px-2 py-1 rounded-full text-xs font-medium ${
-            STATUS_COLORS[lead.status]?.bg || 'bg-slate-100'
-          } ${STATUS_COLORS[lead.status]?.text || 'text-slate-700'}`}
+            STATUS_COLORS[lead.status]?.bg || 'bg-[var(--color-secondary)]'
+          } ${STATUS_COLORS[lead.status]?.text || 'text-[var(--color-foreground)]'}`}
         >
           {t(`crm.status.${lead.status}`, { defaultValue: lead.status })}
         </span>
       </div>
       {lead.company && (
-        <div className="flex items-center gap-2 text-sm text-slate-500 mb-2">
+        <div className="flex items-center gap-2 text-sm text-[var(--color-foreground-muted)] mb-2">
           <Building className="w-4 h-4" />
           {lead.company}
         </div>
       )}
       <div className="flex items-center justify-between text-sm">
-        <span className="text-slate-400 capitalize flex items-center gap-1">
+        <span className="text-[var(--color-foreground-muted)] capitalize flex items-center gap-1">
           {SOURCE_ICONS[lead.source]} {lead.source.replace('_', ' ')}
         </span>
-        <span className="text-slate-400">{new Date(lead.createdAt).toLocaleDateString()}</span>
+        <span className="text-[var(--color-foreground-muted)]">{new Date(lead.createdAt).toLocaleDateString()}</span>
       </div>
     </div>
   );

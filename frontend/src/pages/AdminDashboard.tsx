@@ -141,23 +141,23 @@ export default function AdminDashboard() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Link to="/dashboard" className="p-2 hover:bg-slate-100 rounded-lg transition-colors">
-          <ArrowLeft className="w-5 h-5 text-slate-600" />
+        <Link to="/dashboard" className="p-2 hover:bg-[var(--color-secondary)] rounded-lg transition-colors">
+          <ArrowLeft className="w-5 h-5 text-[var(--color-foreground-muted)]" />
         </Link>
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
             <Crown className="w-5 h-5 text-amber-600" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">{t('admin.title')}</h1>
-            <p className="text-slate-500 text-sm">{t('admin.subtitle')}</p>
+            <h1 className="text-2xl font-bold text-[var(--color-foreground)]">{t('admin.title')}</h1>
+            <p className="text-[var(--color-foreground-muted)] text-sm">{t('admin.subtitle')}</p>
           </div>
         </div>
       </div>
 
       {/* Quick Access Cards */}
       <div>
-        <h2 className="text-lg font-semibold text-slate-900 mb-3">{t('admin.quickAccess')}</h2>
+        <h2 className="text-lg font-semibold text-[var(--color-foreground)] mb-3">{t('admin.quickAccess')}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {QUICK_ACCESS_CARDS.map((card) => {
             const Icon = card.icon;
@@ -166,7 +166,7 @@ export default function AdminDashboard() {
                 key={card.path}
                 to={card.path}
                 className={`
-                  group relative overflow-hidden rounded-xl bg-white border border-slate-200 p-5
+                  group relative overflow-hidden rounded-xl bg-[var(--color-card)] border border-[var(--color-border)] p-5
                   hover:shadow-lg ${card.shadow} transition-all duration-300 hover:-translate-y-0.5
                 `}
               >
@@ -175,8 +175,8 @@ export default function AdminDashboard() {
                 >
                   <Icon className="w-5 h-5 text-white" />
                 </div>
-                <h3 className="text-sm font-semibold text-slate-900 mb-1">{t(card.titleKey)}</h3>
-                <p className="text-xs text-slate-500 leading-relaxed">{t(card.descriptionKey)}</p>
+                <h3 className="text-sm font-semibold text-[var(--color-foreground)] mb-1">{t(card.titleKey)}</h3>
+                <p className="text-xs text-[var(--color-foreground-muted)] leading-relaxed">{t(card.descriptionKey)}</p>
               </Link>
             );
           })}
@@ -191,9 +191,9 @@ export default function AdminDashboard() {
           <CRMAutomationWidget />
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200">
-          <div className="p-4 border-b border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4">
-            <h2 className="text-lg font-semibold text-slate-900">{t('admin.users')}</h2>
+        <div className="bg-[var(--color-card)] rounded-xl shadow-sm border border-[var(--color-border)]">
+          <div className="p-4 border-b border-[var(--color-border-subtle)] flex flex-col md:flex-row justify-between items-center gap-4">
+            <h2 className="text-lg font-semibold text-[var(--color-foreground)]">{t('admin.users')}</h2>
             <UserFilters
               search={search}
               filter={filter}

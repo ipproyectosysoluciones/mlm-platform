@@ -22,26 +22,26 @@ export function LanguageSelector() {
     <div className="relative">
       <button
         onClick={() => setLangMenuOpen(!langMenuOpen)}
-        className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors text-sm"
+        className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[var(--color-secondary)] dark:hover:bg-[var(--color-card)]/50 transition-colors text-sm"
       >
-        <Globe className="w-4 h-4 text-slate-600 dark:text-slate-400" />
-        <span className="text-slate-700 dark:text-slate-200">
+        <Globe className="w-4 h-4 text-[var(--color-foreground-muted)] dark:text-[var(--color-foreground-muted)]" />
+        <span className="text-[var(--color-foreground)] dark:text-[var(--color-foreground-muted)]">
           {currentLangInfo.flag} {currentLangInfo.code.toUpperCase()}
         </span>
-        <ChevronDown className="w-4 h-4 text-slate-500 dark:text-slate-400" />
+        <ChevronDown className="w-4 h-4 text-[var(--color-foreground-muted)] dark:text-[var(--color-foreground-muted)]" />
       </button>
 
       {langMenuOpen && (
         <>
           <div className="fixed inset-0 z-10" onClick={() => setLangMenuOpen(false)} />
-          <div className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border border-slate-200 dark:bg-slate-800 dark:border-slate-700 py-2 z-20">
+          <div className="absolute right-0 mt-2 w-40 bg-[var(--color-card)] rounded-xl shadow-lg border border-[var(--color-border)] dark:bg-[var(--color-card)] dark:border-[var(--color-border)] py-2 z-20">
             {supportedLanguages.map((lang) => (
               <button
                 key={lang.code}
                 onClick={() => handleLanguageChange(lang.code as 'en' | 'es')}
                 className={`
                   w-full flex items-center gap-3 px-4 py-2 text-sm transition-colors
-                  ${currentLang === lang.code ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400' : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/50'}
+                  ${currentLang === lang.code ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400' : 'text-[var(--color-foreground)] dark:text-[var(--color-foreground-muted)] hover:bg-[var(--color-secondary)] dark:hover:bg-[var(--color-card)]/50'}
                 `}
               >
                 <span className="text-lg">{lang.flag}</span>

@@ -67,7 +67,7 @@ const STATUS_TABS: Array<{
 
 /** Status badge color mapping / Mapeo de colores de badge por estado */
 const STATUS_BADGE_COLORS: Record<EmailCampaignStatus, string> = {
-  draft: 'bg-slate-500/20 text-slate-300 border-slate-500/30',
+  draft: 'bg-[var(--color-secondary)]0/20 text-[var(--color-foreground-subtle)] border-[var(--color-border)]/30',
   scheduled: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
   sending: 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30',
   completed: 'bg-green-500/20 text-green-300 border-green-500/30',
@@ -159,10 +159,10 @@ export function CampaignDashboard({ onCreateCampaign, onSelectCampaign }: Campai
             <Mail className="h-5 w-5 text-purple-400" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-slate-100">
+            <h2 className="text-xl font-bold text-[var(--color-foreground)]">
               {t('emailCampaigns.title') || 'Email Campaigns'}
             </h2>
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-[var(--color-foreground-muted)]">
               {t('emailCampaigns.subtitle') || 'Manage and monitor your email campaigns'}
             </p>
           </div>
@@ -174,7 +174,7 @@ export function CampaignDashboard({ onCreateCampaign, onSelectCampaign }: Campai
             size="sm"
             onClick={handleRefresh}
             disabled={isRefreshing || isLoading}
-            className="border-slate-600 text-slate-300 hover:bg-slate-700"
+            className="border-[var(--color-border)] text-[var(--color-foreground-subtle)] hover:bg-[var(--color-card)]"
             aria-label={t('emailCampaigns.refresh') || 'Refresh campaigns'}
             data-testid="refresh-campaigns"
           >
@@ -206,14 +206,14 @@ export function CampaignDashboard({ onCreateCampaign, onSelectCampaign }: Campai
 
       {/* Tabs / Pestañas */}
       <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-        <TabsList className="bg-slate-800 border border-slate-700 flex-wrap h-auto gap-1 p-1">
+        <TabsList className="bg-[var(--color-card)] border border-[var(--color-border)] flex-wrap h-auto gap-1 p-1">
           {STATUS_TABS.map((tab) => (
             <TabsTrigger
               key={tab.value}
               value={tab.value}
               className={cn(
                 'gap-1.5 text-xs data-[state=active]:bg-purple-600 data-[state=active]:text-white',
-                'text-slate-400 hover:text-slate-200'
+                'text-[var(--color-foreground-muted)] hover:text-[var(--color-foreground-muted)]'
               )}
               data-testid={`tab-${tab.value}`}
             >
@@ -233,7 +233,7 @@ export function CampaignDashboard({ onCreateCampaign, onSelectCampaign }: Campai
               >
                 <div className="flex flex-col items-center gap-3">
                   <Loader2 className="h-8 w-8 animate-spin text-purple-400" />
-                  <p className="text-sm text-slate-400">
+                  <p className="text-sm text-[var(--color-foreground-muted)]">
                     {t('emailCampaigns.loading') || 'Loading campaigns...'}
                   </p>
                 </div>
@@ -243,11 +243,11 @@ export function CampaignDashboard({ onCreateCampaign, onSelectCampaign }: Campai
                 className="flex flex-col items-center justify-center py-16 text-center"
                 data-testid="campaigns-empty"
               >
-                <Mail className="h-12 w-12 text-slate-600 mb-4" />
-                <h3 className="text-lg font-medium text-slate-300 mb-1">
+                <Mail className="h-12 w-12 text-[var(--color-foreground-muted)] mb-4" />
+                <h3 className="text-lg font-medium text-[var(--color-foreground-subtle)] mb-1">
                   {t('emailCampaigns.emptyTitle') || 'No campaigns yet'}
                 </h3>
-                <p className="text-sm text-slate-500 mb-6 max-w-md">
+                <p className="text-sm text-[var(--color-foreground-muted)] mb-6 max-w-md">
                   {t('emailCampaigns.emptyDescription') ||
                     'Create your first email campaign to start reaching your audience.'}
                 </p>
@@ -264,7 +264,7 @@ export function CampaignDashboard({ onCreateCampaign, onSelectCampaign }: Campai
                 {campaigns.map((campaign) => (
                   <Card
                     key={campaign.id}
-                    className="border-slate-700 bg-slate-800 hover:border-purple-500/30 transition-colors cursor-pointer"
+                    className="border-[var(--color-border)] bg-[var(--color-card)] hover:border-purple-500/30 transition-colors cursor-pointer"
                     onClick={() => onSelectCampaign?.(campaign)}
                     data-testid={`campaign-card-${campaign.id}`}
                   >
@@ -273,7 +273,7 @@ export function CampaignDashboard({ onCreateCampaign, onSelectCampaign }: Campai
                         {/* Campaign info / Info de campaña */}
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
-                            <h3 className="font-semibold text-slate-100 truncate">
+                            <h3 className="font-semibold text-[var(--color-foreground)] truncate">
                               {campaign.name}
                             </h3>
                             <Badge
@@ -283,7 +283,7 @@ export function CampaignDashboard({ onCreateCampaign, onSelectCampaign }: Campai
                             </Badge>
                           </div>
 
-                          <div className="flex items-center gap-4 text-xs text-slate-400 mt-2">
+                          <div className="flex items-center gap-4 text-xs text-[var(--color-foreground-muted)] mt-2">
                             <span className="flex items-center gap-1">
                               <Users className="h-3.5 w-3.5" />
                               {campaign.recipientCount} recipients
@@ -296,7 +296,7 @@ export function CampaignDashboard({ onCreateCampaign, onSelectCampaign }: Campai
                               <BarChart3 className="h-3.5 w-3.5" />
                               {calcDeliveryRate(campaign)}
                             </span>
-                            <span className="text-slate-500">
+                            <span className="text-[var(--color-foreground-muted)]">
                               {formatDate(campaign.scheduledFor || campaign.createdAt)}
                             </span>
                           </div>

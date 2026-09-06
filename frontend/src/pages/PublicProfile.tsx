@@ -81,7 +81,7 @@ export default function PublicProfile() {
   if (error || !profile) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-purple-50">
-        <div className="bg-white p-8 rounded-xl shadow-lg text-center max-w-md">
+        <div className="bg-[var(--color-card)] p-8 rounded-xl shadow-lg text-center max-w-md">
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg
               className="w-8 h-8 text-red-600"
@@ -97,8 +97,8 @@ export default function PublicProfile() {
               />
             </svg>
           </div>
-          <h2 className="text-xl font-bold text-gray-900 mb-2">Perfil no encontrado</h2>
-          <p className="text-gray-600 mb-6">
+          <h2 className="text-xl font-bold text-[var(--color-foreground)] mb-2">Perfil no encontrado</h2>
+          <p className="text-[var(--color-foreground-muted)] mb-6">
             El código de referido no existe o el perfil no está disponible.
           </p>
           <a
@@ -115,11 +115,11 @@ export default function PublicProfile() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 py-12 px-4">
       <div className="max-w-2xl mx-auto">
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden mb-6">
+        <div className="bg-[var(--color-card)] rounded-2xl shadow-xl overflow-hidden mb-6">
           <div className="bg-gradient-to-r from-indigo-600 to-purple-600 h-32" />
           <div className="relative px-6 pb-6">
             <div className="absolute -top-12 left-6">
-              <div className="w-24 h-24 bg-white rounded-full border-4 border-white shadow-lg overflow-hidden">
+              <div className="w-24 h-24 bg-[var(--color-card)] rounded-full border-4 border-white shadow-lg overflow-hidden">
                 {profile.avatarUrl ? (
                   <img
                     src={profile.avatarUrl}
@@ -135,12 +135,12 @@ export default function PublicProfile() {
             </div>
 
             <div className="pt-14">
-              <h1 className="text-2xl font-bold text-gray-900">{profile.fullName}</h1>
+              <h1 className="text-2xl font-bold text-[var(--color-foreground)]">{profile.fullName}</h1>
               <div className="flex items-center gap-2 mt-1">
                 <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800">
                   Nivel {profile.level} - {profile.levelName}
                 </span>
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-[var(--color-foreground-muted)]">
                   Miembro desde{' '}
                   {new Date(profile.joinDate).toLocaleDateString('es-ES', {
                     year: 'numeric',
@@ -154,27 +154,27 @@ export default function PublicProfile() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-2 gap-4 mb-6">
-          <div className="bg-white rounded-xl shadow-lg p-6 text-center">
+          <div className="bg-[var(--color-card)] rounded-xl shadow-lg p-6 text-center">
             <div className="text-3xl font-bold text-indigo-600">{profile.directReferrals}</div>
-            <div className="text-sm text-gray-500 mt-1">Referidos Directos</div>
+            <div className="text-sm text-[var(--color-foreground-muted)] mt-1">Referidos Directos</div>
           </div>
-          <div className="bg-white rounded-xl shadow-lg p-6 text-center">
+          <div className="bg-[var(--color-card)] rounded-xl shadow-lg p-6 text-center">
             <div className="text-3xl font-bold text-purple-600">{profile.totalDownline}</div>
-            <div className="text-sm text-gray-500 mt-1">Total Downline</div>
+            <div className="text-sm text-[var(--color-foreground-muted)] mt-1">Total Downline</div>
           </div>
         </div>
 
         {/* Description */}
         {profile.description && (
-          <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-3">Sobre este afiliado</h2>
-            <p className="text-gray-600">{profile.description}</p>
+          <div className="bg-[var(--color-card)] rounded-xl shadow-lg p-6 mb-6">
+            <h2 className="text-lg font-semibold text-[var(--color-foreground)] mb-3">Sobre este afiliado</h2>
+            <p className="text-[var(--color-foreground-muted)]">{profile.description}</p>
           </div>
         )}
 
         {/* Contact Info */}
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-3">Información de Contacto</h2>
+        <div className="bg-[var(--color-card)] rounded-xl shadow-lg p-6 mb-6">
+          <h2 className="text-lg font-semibold text-[var(--color-foreground)] mb-3">Información de Contacto</h2>
           <div className="space-y-3">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
@@ -193,8 +193,8 @@ export default function PublicProfile() {
                 </svg>
               </div>
               <div>
-                <div className="text-sm text-gray-500">Email</div>
-                <div className="text-gray-900 font-medium">{profile.email}</div>
+                <div className="text-sm text-[var(--color-foreground-muted)]">Email</div>
+                <div className="text-[var(--color-foreground)] font-medium">{profile.email}</div>
               </div>
             </div>
 
@@ -216,8 +216,8 @@ export default function PublicProfile() {
                   </svg>
                 </div>
                 <div>
-                  <div className="text-sm text-gray-500">Teléfono</div>
-                  <div className="text-gray-900 font-medium">{profile.phone}</div>
+                  <div className="text-sm text-[var(--color-foreground-muted)]">Teléfono</div>
+                  <div className="text-[var(--color-foreground)] font-medium">{profile.phone}</div>
                 </div>
               </div>
             )}
@@ -226,8 +226,8 @@ export default function PublicProfile() {
 
         {/* Products Section */}
         {(products.length > 0 || isLoadingProducts) && (
-          <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Productos Recomendados</h2>
+          <div className="bg-[var(--color-card)] rounded-xl shadow-lg p-6 mb-6">
+            <h2 className="text-lg font-semibold text-[var(--color-foreground)] mb-4">Productos Recomendados</h2>
 
             {isLoadingProducts ? (
               <div className="flex justify-center py-4">
@@ -238,10 +238,10 @@ export default function PublicProfile() {
                 {products.slice(0, 4).map((product) => (
                   <div
                     key={product.id}
-                    className="border border-gray-200 rounded-lg p-4 hover:border-indigo-300 transition-colors"
+                    className="border border-[var(--color-border)] rounded-lg p-4 hover:border-indigo-300 transition-colors"
                   >
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center text-xl">
+                      <div className="w-10 h-10 bg-[var(--color-secondary)] rounded-lg flex items-center justify-center text-xl">
                         {product.platform === 'netflix' && '🎬'}
                         {product.platform === 'spotify' && '🎵'}
                         {product.platform === 'disney_plus' && '🏰'}
@@ -251,8 +251,8 @@ export default function PublicProfile() {
                         {product.platform === 'apple_tv_plus' && '🍎'}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="font-medium text-gray-900 truncate">{product.name}</div>
-                        <div className="text-sm text-gray-500">
+                        <div className="font-medium text-[var(--color-foreground)] truncate">{product.name}</div>
+                        <div className="text-sm text-[var(--color-foreground-muted)]">
                           {new Intl.NumberFormat('es-ES', {
                             style: 'currency',
                             currency: product.currency,
@@ -287,7 +287,7 @@ export default function PublicProfile() {
           </p>
           <a
             href={`/register?ref=${profile.referralCode}`}
-            className="inline-block bg-white text-indigo-600 px-8 py-3 rounded-lg font-semibold hover:bg-indigo-50 transition-colors"
+            className="inline-block bg-[var(--color-card)] text-indigo-600 px-8 py-3 rounded-lg font-semibold hover:bg-indigo-50 transition-colors"
           >
             Registrarse Ahora
           </a>
@@ -295,8 +295,8 @@ export default function PublicProfile() {
 
         {/* Referral Code Badge */}
         <div className="mt-6 text-center">
-          <div className="inline-flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-lg">
-            <span className="text-sm text-gray-600">Código de Referido:</span>
+          <div className="inline-flex items-center gap-2 bg-[var(--color-secondary)] px-4 py-2 rounded-lg">
+            <span className="text-sm text-[var(--color-foreground-muted)]">Código de Referido:</span>
             <span className="font-mono font-bold text-indigo-600">{profile.referralCode}</span>
           </div>
         </div>

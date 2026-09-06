@@ -124,7 +124,7 @@ export function ErrorToast({
           onClick={handleClose}
           className={cn(
             'shrink-0 rounded p-1 transition-colors',
-            'hover:bg-white/10',
+            'hover:bg-[var(--color-card)]/10',
             'focus:outline-none focus:ring-2 focus:ring-purple-500'
           )}
           aria-label={t('common.close')}

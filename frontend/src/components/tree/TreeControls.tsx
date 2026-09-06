@@ -42,7 +42,7 @@ export default function TreeControls({
   const zoomPercentage = Math.round(zoomLevel * 100);
 
   return (
-    <div className="flex items-center gap-2 bg-white rounded-lg shadow-sm border border-gray-200 p-1">
+    <div className="flex items-center gap-2 bg-[var(--color-card)] rounded-lg shadow-sm border border-[var(--color-border)] p-1">
       {/* Zoom out */}
       <button
         onClick={onZoomOut}
@@ -51,8 +51,8 @@ export default function TreeControls({
           p-2 rounded-md transition-colors
           ${
             zoomLevel <= 0.25
-              ? 'text-gray-300 cursor-not-allowed'
-              : 'text-gray-600 hover:bg-gray-100'
+              ? 'text-[var(--color-foreground-muted)] cursor-not-allowed'
+              : 'text-[var(--color-foreground-muted)] hover:bg-[var(--color-secondary)]'
           }
         `}
         title={t('tree.controls.zoomOut')}
@@ -62,7 +62,7 @@ export default function TreeControls({
       </button>
 
       {/* Zoom level indicator - hidden on small screens */}
-      <span className="hidden sm:inline min-w-[3rem] text-center text-sm font-medium text-gray-600">
+      <span className="hidden sm:inline min-w-[3rem] text-center text-sm font-medium text-[var(--color-foreground-muted)]">
         {zoomPercentage}%
       </span>
 
@@ -72,7 +72,7 @@ export default function TreeControls({
         disabled={zoomLevel >= 2}
         className={`
           p-2 rounded-md transition-colors
-          ${zoomLevel >= 2 ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 hover:bg-gray-100'}
+          ${zoomLevel >= 2 ? 'text-[var(--color-foreground-muted)] cursor-not-allowed' : 'text-[var(--color-foreground-muted)] hover:bg-[var(--color-secondary)]'}
         `}
         title={t('tree.controls.zoomIn')}
         aria-label={t('tree.controls.zoomIn')}
@@ -81,12 +81,12 @@ export default function TreeControls({
       </button>
 
       {/* Divider */}
-      <div className="w-px h-6 bg-gray-200 mx-1" />
+      <div className="w-px h-6 bg-[var(--color-muted)] mx-1" />
 
       {/* Fit view */}
       <button
         onClick={onFitView}
-        className="p-2 rounded-md text-gray-600 hover:bg-gray-100 transition-colors"
+        className="p-2 rounded-md text-[var(--color-foreground-muted)] hover:bg-[var(--color-secondary)] transition-colors"
         title={t('tree.controls.fitView')}
         aria-label={t('tree.controls.fitView')}
       >
@@ -94,17 +94,17 @@ export default function TreeControls({
       </button>
 
       {/* Divider */}
-      <div className="w-px h-6 bg-gray-200 mx-1" />
+      <div className="w-px h-6 bg-[var(--color-muted)] mx-1" />
 
       {/* Depth selector */}
       <div className="flex items-center gap-1">
-        <Layers className="w-4 h-4 text-gray-400" />
+        <Layers className="w-4 h-4 text-[var(--color-foreground-muted)]" />
         <select
           value={depth}
           onChange={(e) => onDepthChange(Number(e.target.value))}
           className="
-            text-sm border border-gray-200 rounded px-2 py-1
-            bg-white text-gray-700
+            text-sm border border-[var(--color-border)] rounded px-2 py-1
+            bg-[var(--color-card)] text-[var(--color-foreground)]
             focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
             cursor-pointer
           "

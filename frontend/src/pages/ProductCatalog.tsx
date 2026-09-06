@@ -113,7 +113,7 @@ function ProductCardSkeleton() {
  */
 function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 py-20 px-4">
+    <section className="relative overflow-hidden bg-gradient-to-br from-[var(--color-card)] via-purple-900/20 to-[var(--color-card)] py-20 px-4">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl" />
@@ -139,7 +139,7 @@ function HeroSection() {
         </h1>
 
         {/* Subtitle */}
-        <p className="text-xl md:text-2xl text-slate-300 max-w-3xl mx-auto mb-10 leading-relaxed">
+        <p className="text-xl md:text-2xl text-[var(--color-foreground-subtle)] max-w-3xl mx-auto mb-10 leading-relaxed">
           Get access to Netflix, Spotify, Disney+, HBO Max, and more premium services at unbeatable
           prices.
         </p>

@@ -52,8 +52,8 @@ export default function StepIndicator({ currentStep, visibleSteps }: StepIndicat
                 className={cn(
                   'w-9 h-9 shrink-0 rounded-full flex items-center justify-center text-sm font-semibold border-2 transition-all',
                   isDone && 'bg-emerald-500 border-emerald-500 text-white',
-                  isCurrent && 'bg-white border-emerald-500 text-emerald-600',
-                  !isDone && !isCurrent && 'bg-white border-slate-200 text-slate-400'
+                  isCurrent && 'bg-[var(--color-card)] border-emerald-500 text-emerald-600',
+                  !isDone && !isCurrent && 'bg-[var(--color-card)] border-[var(--color-border)] text-[var(--color-foreground-muted)]'
                 )}
               >
                 {isDone ? <CheckCircle2 className="w-5 h-5" /> : i + 1}
@@ -61,7 +61,7 @@ export default function StepIndicator({ currentStep, visibleSteps }: StepIndicat
               <span
                 className={cn(
                   'text-xs mt-1 whitespace-nowrap min-w-0',
-                  isCurrent ? 'text-emerald-600 font-medium' : 'text-slate-400'
+                  isCurrent ? 'text-emerald-600 font-medium' : 'text-[var(--color-foreground-muted)]'
                 )}
               >
                 {t(step.labelKey)}
@@ -71,7 +71,7 @@ export default function StepIndicator({ currentStep, visibleSteps }: StepIndicat
               <div
                 className={cn(
                   'w-12 sm:w-16 h-0.5 mb-4 mx-1 transition-all',
-                  i < currentIndex ? 'bg-emerald-500' : 'bg-slate-200'
+                  i < currentIndex ? 'bg-emerald-500' : 'bg-[var(--color-muted)]'
                 )}
               />
             )}

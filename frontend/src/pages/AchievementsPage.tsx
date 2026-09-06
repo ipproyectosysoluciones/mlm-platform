@@ -104,8 +104,8 @@ export default function AchievementsPage() {
           <Medal className="w-6 h-6 text-white" />
         </div>
         <div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-slate-900">🏅 Logros</h1>
-          <p className="text-slate-500 mt-0.5 text-sm">
+          <h1 className="text-2xl lg:text-3xl font-bold text-[var(--color-foreground)]">🏅 Logros</h1>
+          <p className="text-[var(--color-foreground-muted)] mt-0.5 text-sm">
             Desbloqueá logros completando objetivos en la plataforma
           </p>
         </div>
@@ -132,21 +132,21 @@ export default function AchievementsPage() {
           <Card className="p-6">
             <div className="flex flex-wrap gap-8">
               <div>
-                <p className="text-xs text-slate-500 uppercase tracking-wider font-medium mb-1">
+                <p className="text-xs text-[var(--color-foreground-muted)] uppercase tracking-wider font-medium mb-1">
                   Logros desbloqueados
                 </p>
-                <p className="text-3xl font-bold text-slate-900">
+                <p className="text-3xl font-bold text-[var(--color-foreground)]">
                   {summary.unlocked}
-                  <span className="text-lg font-normal text-slate-400 ml-1">/ {summary.total}</span>
+                  <span className="text-lg font-normal text-[var(--color-foreground-muted)] ml-1">/ {summary.total}</span>
                 </p>
               </div>
               <div>
-                <p className="text-xs text-slate-500 uppercase tracking-wider font-medium mb-1">
+                <p className="text-xs text-[var(--color-foreground-muted)] uppercase tracking-wider font-medium mb-1">
                   Puntos totales
                 </p>
                 <p className="text-3xl font-bold text-emerald-600">
                   {summary.totalPoints.toLocaleString('es-AR')}
-                  <span className="text-base font-normal text-slate-400 ml-1">pts</span>
+                  <span className="text-base font-normal text-[var(--color-foreground-muted)] ml-1">pts</span>
                 </p>
               </div>
             </div>
@@ -155,7 +155,7 @@ export default function AchievementsPage() {
             {summary.total > 0 && (
               <div className="mt-4 space-y-1">
                 <div
-                  className="h-2 bg-slate-100 rounded-full overflow-hidden"
+                  className="h-2 bg-[var(--color-secondary)] rounded-full overflow-hidden"
                   role="progressbar"
                   aria-valuenow={summary.unlocked}
                   aria-valuemin={0}
@@ -166,7 +166,7 @@ export default function AchievementsPage() {
                     style={{ width: `${Math.round((summary.unlocked / summary.total) * 100)}%` }}
                   />
                 </div>
-                <p className="text-xs text-slate-400 text-right">
+                <p className="text-xs text-[var(--color-foreground-muted)] text-right">
                   {Math.round((summary.unlocked / summary.total) * 100)}% completado
                 </p>
               </div>
@@ -176,9 +176,9 @@ export default function AchievementsPage() {
           {/* Unlocked section */}
           {unlocked.length > 0 && (
             <section className="space-y-4">
-              <h2 className="text-base font-semibold text-slate-700 flex items-center gap-2">
+              <h2 className="text-base font-semibold text-[var(--color-foreground)] flex items-center gap-2">
                 ✅ Desbloqueados
-                <span className="text-xs font-normal text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">
+                <span className="text-xs font-normal text-[var(--color-foreground-muted)] bg-[var(--color-secondary)] px-2 py-0.5 rounded-full">
                   {unlocked.length}
                 </span>
               </h2>
@@ -193,9 +193,9 @@ export default function AchievementsPage() {
           {/* Locked / in-progress section */}
           {locked.length > 0 && (
             <section className="space-y-4">
-              <h2 className="text-base font-semibold text-slate-700 flex items-center gap-2">
+              <h2 className="text-base font-semibold text-[var(--color-foreground)] flex items-center gap-2">
                 🔓 Por desbloquear
-                <span className="text-xs font-normal text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">
+                <span className="text-xs font-normal text-[var(--color-foreground-muted)] bg-[var(--color-secondary)] px-2 py-0.5 rounded-full">
                   {locked.length}
                 </span>
               </h2>
@@ -210,9 +210,9 @@ export default function AchievementsPage() {
           {/* Coming soon section */}
           {comingSoon.length > 0 && (
             <section className="space-y-4">
-              <h2 className="text-base font-semibold text-slate-500 flex items-center gap-2">
+              <h2 className="text-base font-semibold text-[var(--color-foreground-muted)] flex items-center gap-2">
                 🔒 Próximamente
-                <span className="text-xs font-normal text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">
+                <span className="text-xs font-normal text-[var(--color-foreground-muted)] bg-[var(--color-secondary)] px-2 py-0.5 rounded-full">
                   {comingSoon.length}
                 </span>
               </h2>
@@ -228,8 +228,8 @@ export default function AchievementsPage() {
           {achievements.length === 0 && (
             <div className="flex flex-col items-center gap-3 py-16 text-center">
               <span className="text-5xl">🏅</span>
-              <h3 className="text-lg font-semibold text-slate-700">No hay logros disponibles</h3>
-              <p className="text-sm text-slate-400">
+              <h3 className="text-lg font-semibold text-[var(--color-foreground)]">No hay logros disponibles</h3>
+              <p className="text-sm text-[var(--color-foreground-muted)]">
                 Los logros aparecerán aquí cuando estén configurados.
               </p>
             </div>
@@ -239,7 +239,7 @@ export default function AchievementsPage() {
           <div className="flex justify-center">
             <button
               onClick={fetchData}
-              className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-600 transition-colors"
+              className="flex items-center gap-1.5 text-xs text-[var(--color-foreground-muted)] hover:text-[var(--color-foreground-muted)] transition-colors"
             >
               <RefreshCw className="w-3 h-3" />
               Actualizar datos

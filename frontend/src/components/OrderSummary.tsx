@@ -52,10 +52,10 @@ export function OrderSummary({
 
   return (
     <div
-      className={cn('overflow-hidden rounded-xl border border-slate-700 bg-slate-800', className)}
+      className={cn('overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-card)]', className)}
     >
       {/* Header */}
-      <div className="border-b border-slate-700 bg-slate-800/50 px-5 py-4">
+      <div className="border-b border-[var(--color-border)] bg-[var(--color-card)]/50 px-5 py-4">
         <h3 className="flex items-center gap-2 text-lg font-semibold text-white">
           <ShoppingBag className="h-5 w-5 text-purple-400" />
           {t('checkout.orderSummary')}
@@ -67,8 +67,8 @@ export function OrderSummary({
         {/* Product Info */}
         <div className="flex gap-4">
           {/* Product Image Placeholder */}
-          <div className="flex h-20 w-28 items-center justify-center rounded-lg bg-slate-700">
-            <span className="text-2xl font-bold text-slate-500">
+          <div className="flex h-20 w-28 items-center justify-center rounded-lg bg-[var(--color-card)]">
+            <span className="text-2xl font-bold text-[var(--color-foreground-muted)]">
               {displayProduct.name.charAt(0)}
             </span>
           </div>
@@ -81,7 +81,7 @@ export function OrderSummary({
                 <PlatformBadge platform={displayProduct.platform} size="sm" />
               </div>
             </div>
-            <div className="flex items-center gap-1 text-sm text-slate-400">
+            <div className="flex items-center gap-1 text-sm text-[var(--color-foreground-muted)]">
               <Calendar className="h-3.5 w-3.5" />
               <span>{t('products.days', { count: displayProduct.durationDays })}</span>
             </div>
@@ -89,13 +89,13 @@ export function OrderSummary({
         </div>
 
         {/* Divider */}
-        <div className="border-t border-slate-700" />
+        <div className="border-t border-[var(--color-border)]" />
 
         {/* Price Breakdown */}
         <div className="flex flex-col gap-3">
           {/* Subtotal */}
           <div className="flex items-center justify-between">
-            <span className="text-slate-400">{t('checkout.subtotal')}</span>
+            <span className="text-[var(--color-foreground-muted)]">{t('checkout.subtotal')}</span>
             <PriceDisplay
               amount={displayAmount}
               currency={displayCurrency}
@@ -107,7 +107,7 @@ export function OrderSummary({
           {/* Commission (if shown) */}
           {showCommission && (
             <div className="flex items-center justify-between">
-              <span className="text-slate-400">
+              <span className="text-[var(--color-foreground-muted)]">
                 {t('checkout.commission')}
                 <span className="ml-1 text-xs text-green-400">(10%)</span>
               </span>
@@ -121,7 +121,7 @@ export function OrderSummary({
           )}
 
           {/* Divider */}
-          <div className="border-t border-slate-700 pt-3" />
+          <div className="border-t border-[var(--color-border)] pt-3" />
 
           {/* Total */}
           <div className="flex items-center justify-between">

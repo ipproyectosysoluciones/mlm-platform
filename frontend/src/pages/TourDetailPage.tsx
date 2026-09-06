@@ -76,14 +76,14 @@ function ImageGallery({ images, title }: ImageGalleryProps) {
 
   if (!images || images.length === 0) {
     return (
-      <div className="h-80 bg-slate-100 rounded-xl flex items-center justify-center text-slate-300">
+      <div className="h-80 bg-[var(--color-secondary)] rounded-xl flex items-center justify-center text-[var(--color-foreground-subtle)]">
         <Compass className="w-16 h-16" />
       </div>
     );
   }
 
   return (
-    <div className="relative rounded-xl overflow-hidden bg-slate-100">
+    <div className="relative rounded-xl overflow-hidden bg-[var(--color-secondary)]">
       <img
         src={images[current]}
         alt={`${title} - imagen ${current + 1}`}
@@ -118,7 +118,7 @@ function ImageGallery({ images, title }: ImageGalleryProps) {
                 onClick={() => setCurrent(i)}
                 className={cn(
                   'w-2 h-2 rounded-full p-0 min-w-0 h-auto',
-                  i === current ? 'bg-white' : 'bg-white/50'
+                  i === current ? 'bg-[var(--color-card)]' : 'bg-[var(--color-card)]/50'
                 )}
               />
             ))}
@@ -137,7 +137,7 @@ interface AvailabilityPickerProps {
 
 function AvailabilityPicker({ availabilities, selected, onSelect }: AvailabilityPickerProps) {
   if (!availabilities || availabilities.length === 0) {
-    return <p className="text-sm text-slate-400 italic">No hay fechas disponibles próximamente.</p>;
+    return <p className="text-sm text-[var(--color-foreground-muted)] italic">No hay fechas disponibles próximamente.</p>;
   }
 
   return (
@@ -161,8 +161,8 @@ function AvailabilityPicker({ availabilities, selected, onSelect }: Availability
             className={cn(
               'px-3 py-2 h-auto text-sm',
               isSelected && 'border-emerald-500 bg-emerald-50 text-emerald-700 font-semibold',
-              !isSelected && !isFull && 'border-slate-200 hover:border-emerald-300 text-slate-700',
-              isFull && 'border-slate-100 text-slate-300 line-through cursor-not-allowed'
+              !isSelected && !isFull && 'border-[var(--color-border)] hover:border-emerald-300 text-[var(--color-foreground)]',
+              isFull && 'border-[var(--color-border-subtle)] text-[var(--color-foreground-subtle)] line-through cursor-not-allowed'
             )}
           >
             <span>{label}</span>
@@ -183,15 +183,15 @@ function AvailabilityPicker({ availabilities, selected, onSelect }: Availability
 function TourDetailSkeleton() {
   return (
     <div className="max-w-5xl mx-auto px-4 py-8 animate-pulse">
-      <div className="h-4 w-24 bg-slate-200 rounded mb-6" />
-      <div className="h-80 bg-slate-200 rounded-xl mb-8" />
+      <div className="h-4 w-24 bg-[var(--color-muted)] rounded mb-6" />
+      <div className="h-80 bg-[var(--color-muted)] rounded-xl mb-8" />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-4">
-          <div className="h-8 bg-slate-200 rounded w-3/4" />
-          <div className="h-4 bg-slate-200 rounded w-1/2" />
-          <div className="h-24 bg-slate-200 rounded" />
+          <div className="h-8 bg-[var(--color-muted)] rounded w-3/4" />
+          <div className="h-4 bg-[var(--color-muted)] rounded w-1/2" />
+          <div className="h-24 bg-[var(--color-muted)] rounded" />
         </div>
-        <div className="h-64 bg-slate-200 rounded-xl" />
+        <div className="h-64 bg-[var(--color-muted)] rounded-xl" />
       </div>
     </div>
   );
@@ -265,11 +265,11 @@ export default function TourDetailPage() {
   if (isNotFound) {
     return (
       <div className="max-w-5xl mx-auto px-4 py-20 text-center">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-100 mb-6">
-          <SearchX className="w-8 h-8 text-slate-400" />
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[var(--color-secondary)] mb-6">
+          <SearchX className="w-8 h-8 text-[var(--color-foreground-muted)]" />
         </div>
-        <h1 className="text-2xl font-bold text-slate-800 mb-2">No encontramos lo que buscás</h1>
-        <p className="max-w-md mx-auto text-slate-500 mb-8">
+        <h1 className="text-2xl font-bold text-[var(--color-foreground)] mb-2">No encontramos lo que buscás</h1>
+        <p className="max-w-md mx-auto text-[var(--color-foreground-muted)] mb-8">
           El tour que buscás no existe o ya no está disponible.
         </p>
         <Button
@@ -398,13 +398,13 @@ export default function TourDetailPage() {
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 
-      <div className="min-h-screen bg-slate-50 pb-12">
+      <div className="min-h-screen bg-[var(--color-secondary)] pb-12">
         <div className="max-w-5xl mx-auto px-4 py-8">
           {/* Back button */}
           <Button
             variant="ghost"
             onClick={() => navigate('/tours')}
-            className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 mb-6"
+            className="flex items-center gap-2 text-sm text-[var(--color-foreground-muted)] hover:text-[var(--color-foreground)] mb-6"
           >
             <ArrowLeft className="w-4 h-4" />
             Volver a tours
@@ -420,7 +420,7 @@ export default function TourDetailPage() {
               {/* Title + category */}
               <div>
                 <div className="flex items-start justify-between gap-4 mb-2">
-                  <h1 className="text-2xl font-bold text-slate-800">{tour.title}</h1>
+                  <h1 className="text-2xl font-bold text-[var(--color-foreground)]">{tour.title}</h1>
                   <span
                     className={cn(
                       'shrink-0 px-3 py-1 rounded-full text-sm font-semibold',
@@ -430,7 +430,7 @@ export default function TourDetailPage() {
                     {CATEGORY_LABELS[tour.type]}
                   </span>
                 </div>
-                <p className="flex items-center gap-1 text-slate-500">
+                <p className="flex items-center gap-1 text-[var(--color-foreground-muted)]">
                   <MapPin className="w-4 h-4" />
                   {tour.destination}
                 </p>
@@ -438,14 +438,14 @@ export default function TourDetailPage() {
 
               {/* Specs */}
               <div className="flex flex-wrap gap-6">
-                <div className="flex items-center gap-2 text-slate-700">
+                <div className="flex items-center gap-2 text-[var(--color-foreground)]">
                   <Clock className="w-5 h-5 text-emerald-500" />
                   <span>
                     <span className="font-semibold">{tour.durationDays}</span>{' '}
                     {tour.durationDays === 1 ? 'día' : 'días'}
                   </span>
                 </div>
-                <div className="flex items-center gap-2 text-slate-700">
+                <div className="flex items-center gap-2 text-[var(--color-foreground)]">
                   <Users className="w-5 h-5 text-emerald-500" />
                   <span>
                     Hasta <span className="font-semibold">{tour.maxCapacity}</span> personas
@@ -496,7 +496,7 @@ export default function TourDetailPage() {
                     {!isSoldOut && (
                       <div>
                         <div className="flex items-center justify-between mb-1.5">
-                          <span className="text-sm font-medium text-slate-700">
+                          <span className="text-sm font-medium text-[var(--color-foreground)]">
                             {t('tours.spotsOf', {
                               available: availableSpots,
                               total: totalSpots,
@@ -509,7 +509,7 @@ export default function TourDetailPage() {
                             </span>
                           )}
                         </div>
-                        <div className="h-2.5 w-full rounded-full bg-slate-100 overflow-hidden">
+                        <div className="h-2.5 w-full rounded-full bg-[var(--color-secondary)] overflow-hidden">
                           <div
                             className={cn(
                               'h-full rounded-full transition-all',
@@ -518,13 +518,13 @@ export default function TourDetailPage() {
                             style={{ width: `${occupancyPct}%` }}
                           />
                         </div>
-                        <p className="text-xs text-slate-400 mt-1">{occupancyPct}% ocupado</p>
+                        <p className="text-xs text-[var(--color-foreground-muted)] mt-1">{occupancyPct}% ocupado</p>
                       </div>
                     )}
 
                     {/* Next available date */}
                     {nextAvailable && (
-                      <p className="text-sm text-slate-600">
+                      <p className="text-sm text-[var(--color-foreground-muted)]">
                         <CalendarDays className="w-4 h-4 inline mr-1 text-emerald-500" />
                         {t('tours.nextAvailableDate', {
                           date: nextAvailable.dateObj.toLocaleDateString('es-AR', {
@@ -541,8 +541,8 @@ export default function TourDetailPage() {
 
               {/* Description */}
               <div>
-                <h2 className="text-lg font-semibold text-slate-800 mb-2">Descripción</h2>
-                <p className="text-slate-600 leading-relaxed whitespace-pre-line">
+                <h2 className="text-lg font-semibold text-[var(--color-foreground)] mb-2">Descripción</h2>
+                <p className="text-[var(--color-foreground-muted)] leading-relaxed whitespace-pre-line">
                   {tour.description}
                 </p>
               </div>
@@ -551,10 +551,10 @@ export default function TourDetailPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {tour.priceIncludes && tour.priceIncludes.length > 0 && (
                   <div>
-                    <h2 className="text-base font-semibold text-slate-800 mb-2">Incluye</h2>
+                    <h2 className="text-base font-semibold text-[var(--color-foreground)] mb-2">Incluye</h2>
                     <ul className="space-y-1">
                       {tour.priceIncludes.map((item) => (
-                        <li key={item} className="flex items-center gap-2 text-sm text-slate-600">
+                        <li key={item} className="flex items-center gap-2 text-sm text-[var(--color-foreground-muted)]">
                           <Check className="w-4 h-4 text-emerald-500 shrink-0" />
                           {item}
                         </li>
@@ -564,10 +564,10 @@ export default function TourDetailPage() {
                 )}
                 {tour.priceExcludes && tour.priceExcludes.length > 0 && (
                   <div>
-                    <h2 className="text-base font-semibold text-slate-800 mb-2">No incluye</h2>
+                    <h2 className="text-base font-semibold text-[var(--color-foreground)] mb-2">No incluye</h2>
                     <ul className="space-y-1">
                       {tour.priceExcludes.map((item) => (
-                        <li key={item} className="flex items-center gap-2 text-sm text-slate-500">
+                        <li key={item} className="flex items-center gap-2 text-sm text-[var(--color-foreground-muted)]">
                           <X className="w-4 h-4 text-red-400 shrink-0" />
                           {item}
                         </li>
@@ -579,7 +579,7 @@ export default function TourDetailPage() {
 
               {/* Availability */}
               <div>
-                <h2 className="text-lg font-semibold text-slate-800 mb-3">Fechas disponibles</h2>
+                <h2 className="text-lg font-semibold text-[var(--color-foreground)] mb-3">Fechas disponibles</h2>
                 <AvailabilityPicker
                   availabilities={tour.availabilities ?? []}
                   selected={selectedAvailability}
@@ -590,12 +590,12 @@ export default function TourDetailPage() {
 
             {/* Right: Booking card */}
             <div className="lg:col-span-1">
-              <div className="sticky top-6 bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+              <div className="sticky top-6 bg-[var(--color-card)] rounded-xl border border-[var(--color-border)] shadow-sm p-6">
                 <p className="text-3xl font-bold text-emerald-600 mb-1">
                   {tour.currency}{' '}
                   {Number(tour.price).toLocaleString('es-AR', { minimumFractionDigits: 0 })}
                 </p>
-                <p className="text-sm text-slate-400 mb-4">por persona</p>
+                <p className="text-sm text-[var(--color-foreground-muted)] mb-4">por persona</p>
 
                 {/* Sold-out state in booking card */}
                 {(() => {
@@ -629,7 +629,7 @@ export default function TourDetailPage() {
                           })}
                         </div>
                       ) : (
-                        <p className="text-sm text-slate-400 mb-4">
+                        <p className="text-sm text-[var(--color-foreground-muted)] mb-4">
                           Seleccioná una fecha disponible
                         </p>
                       )}
@@ -646,7 +646,7 @@ export default function TourDetailPage() {
                   );
                 })()}
 
-                <p className="text-xs text-slate-400 text-center mt-3">
+                <p className="text-xs text-[var(--color-foreground-muted)] text-center mt-3">
                   Sin costo hasta la confirmación
                 </p>
               </div>
@@ -660,7 +660,7 @@ export default function TourDetailPage() {
 
       {/* Mobile sticky CTA bar / Barra CTA fija en móvil */}
       <div
-        className="fixed bottom-0 inset-x-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur-sm px-4 py-3 lg:hidden"
+        className="fixed bottom-0 inset-x-0 z-40 border-t border-[var(--color-border)] bg-[var(--color-card)]/95 backdrop-blur-sm px-4 py-3 lg:hidden"
         data-testid="mobile-sticky-cta"
       >
         <div className="flex items-center justify-between gap-4 max-w-4xl mx-auto">
@@ -669,7 +669,7 @@ export default function TourDetailPage() {
               {tour.currency}{' '}
               {Number(tour.price).toLocaleString('es-AR', { minimumFractionDigits: 0 })}
             </p>
-            <p className="text-xs text-slate-400">por persona</p>
+            <p className="text-xs text-[var(--color-foreground-muted)]">por persona</p>
           </div>
           <Button onClick={handleReserve} disabled={!selectedAvailability} className="shrink-0">
             <Lock className="h-4 w-4 mr-2" />

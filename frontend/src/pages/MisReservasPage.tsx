@@ -69,13 +69,13 @@ function getStatusConfig(status: ReservationStatus): {
     case 'completed':
       return {
         label: 'Completada',
-        className: 'bg-slate-50 text-slate-600 border-slate-200',
+        className: 'bg-[var(--color-secondary)] text-[var(--color-foreground-muted)] border-[var(--color-border)]',
         icon: <CheckCircle2 className="w-3.5 h-3.5" />,
       };
     default:
       return {
         label: status,
-        className: 'bg-slate-50 text-slate-600 border-slate-200',
+        className: 'bg-[var(--color-secondary)] text-[var(--color-foreground-muted)] border-[var(--color-border)]',
         icon: null,
       };
   }
@@ -135,7 +135,7 @@ function ReservationCard({ reservation, isCancelling, onCancel }: ReservationCar
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 p-5 hover:shadow-sm transition-shadow">
+    <div className="bg-[var(--color-card)] rounded-2xl border border-[var(--color-border)] p-5 hover:shadow-sm transition-shadow">
       {/* Header row */}
       <div className="flex items-start justify-between gap-3 mb-4">
         <div className="flex items-start gap-3 min-w-0">
@@ -147,9 +147,9 @@ function ReservationCard({ reservation, isCancelling, onCancel }: ReservationCar
             )}
           </div>
           <div className="min-w-0">
-            <p className="font-semibold text-slate-800 truncate leading-tight">{title}</p>
+            <p className="font-semibold text-[var(--color-foreground)] truncate leading-tight">{title}</p>
             {subtitle && (
-              <p className="text-sm text-slate-500 truncate leading-tight mt-0.5">{subtitle}</p>
+              <p className="text-sm text-[var(--color-foreground-muted)] truncate leading-tight mt-0.5">{subtitle}</p>
             )}
           </div>
         </div>
@@ -171,35 +171,35 @@ function ReservationCard({ reservation, isCancelling, onCancel }: ReservationCar
         {isProperty && (
           <>
             <div>
-              <p className="text-xs text-slate-400 mb-0.5">Check-in</p>
-              <p className="font-medium text-slate-700">{formatDate(reservation.checkIn)}</p>
+              <p className="text-xs text-[var(--color-foreground-muted)] mb-0.5">Check-in</p>
+              <p className="font-medium text-[var(--color-foreground)]">{formatDate(reservation.checkIn)}</p>
             </div>
             <div>
-              <p className="text-xs text-slate-400 mb-0.5">Check-out</p>
-              <p className="font-medium text-slate-700">{formatDate(reservation.checkOut)}</p>
+              <p className="text-xs text-[var(--color-foreground-muted)] mb-0.5">Check-out</p>
+              <p className="font-medium text-[var(--color-foreground)]">{formatDate(reservation.checkOut)}</p>
             </div>
           </>
         )}
         <div>
-          <p className="text-xs text-slate-400 mb-0.5">Personas</p>
-          <p className="font-medium text-slate-700">{reservation.guests}</p>
+          <p className="text-xs text-[var(--color-foreground-muted)] mb-0.5">Personas</p>
+          <p className="font-medium text-[var(--color-foreground)]">{reservation.guests}</p>
         </div>
         <div>
-          <p className="text-xs text-slate-400 mb-0.5">Total</p>
-          <p className="font-semibold text-slate-800">
+          <p className="text-xs text-[var(--color-foreground-muted)] mb-0.5">Total</p>
+          <p className="font-semibold text-[var(--color-foreground)]">
             {reservation.currency}{' '}
             {reservation.totalAmount.toLocaleString('es-AR', { minimumFractionDigits: 0 })}
           </p>
         </div>
         <div>
-          <p className="text-xs text-slate-400 mb-0.5">Creada</p>
-          <p className="font-medium text-slate-700">{formatDate(reservation.createdAt)}</p>
+          <p className="text-xs text-[var(--color-foreground-muted)] mb-0.5">Creada</p>
+          <p className="font-medium text-[var(--color-foreground)]">{formatDate(reservation.createdAt)}</p>
         </div>
       </div>
 
       {/* ID row */}
       <div className="flex items-center justify-between gap-3">
-        <span className="text-xs text-slate-400 font-mono truncate">#{reservation.id}</span>
+        <span className="text-xs text-[var(--color-foreground-muted)] font-mono truncate">#{reservation.id}</span>
 
         {canCancel && (
           <Button
@@ -242,24 +242,24 @@ function ReservationCard({ reservation, isCancelling, onCancel }: ReservationCar
  */
 function ReservationCardSkeleton() {
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 p-5 animate-pulse">
+    <div className="bg-[var(--color-card)] rounded-2xl border border-[var(--color-border)] p-5 animate-pulse">
       <div className="flex items-start gap-3 mb-4">
-        <div className="w-10 h-10 rounded-xl bg-slate-100 shrink-0" />
+        <div className="w-10 h-10 rounded-xl bg-[var(--color-secondary)] shrink-0" />
         <div className="flex-1 space-y-2">
-          <div className="h-4 bg-slate-100 rounded w-2/3" />
-          <div className="h-3 bg-slate-100 rounded w-1/3" />
+          <div className="h-4 bg-[var(--color-secondary)] rounded w-2/3" />
+          <div className="h-3 bg-[var(--color-secondary)] rounded w-1/3" />
         </div>
-        <div className="w-20 h-6 bg-slate-100 rounded-full" />
+        <div className="w-20 h-6 bg-[var(--color-secondary)] rounded-full" />
       </div>
       <div className="grid grid-cols-3 gap-3 mb-4">
         {[...Array(3)].map((_, i) => (
           <div key={i} className="space-y-1">
-            <div className="h-3 bg-slate-100 rounded w-1/2" />
-            <div className="h-4 bg-slate-100 rounded w-3/4" />
+            <div className="h-3 bg-[var(--color-secondary)] rounded w-1/2" />
+            <div className="h-4 bg-[var(--color-secondary)] rounded w-3/4" />
           </div>
         ))}
       </div>
-      <div className="h-3 bg-slate-100 rounded w-1/3" />
+      <div className="h-3 bg-[var(--color-secondary)] rounded w-1/3" />
     </div>
   );
 }
@@ -283,13 +283,13 @@ function EmptyState({ hasFilter, onClear }: EmptyStateProps) {
 
   return (
     <div className="flex flex-col items-center justify-center py-20 text-center px-6">
-      <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
-        <CalendarDays className="w-8 h-8 text-slate-400" />
+      <div className="w-16 h-16 bg-[var(--color-secondary)] rounded-full flex items-center justify-center mb-4">
+        <CalendarDays className="w-8 h-8 text-[var(--color-foreground-muted)]" />
       </div>
-      <h3 className="text-lg font-semibold text-slate-700 mb-2">
+      <h3 className="text-lg font-semibold text-[var(--color-foreground)] mb-2">
         {hasFilter ? 'No hay reservas con ese filtro' : 'No tenés reservas todavía'}
       </h3>
-      <p className="text-sm text-slate-500 max-w-xs mb-6">
+      <p className="text-sm text-[var(--color-foreground-muted)] max-w-xs mb-6">
         {hasFilter
           ? 'Probá con otro filtro o limpiá la búsqueda para ver todas.'
           : 'Explorá propiedades y tours disponibles para hacer tu primera reserva.'}
@@ -364,12 +364,12 @@ export default function MisReservasPage() {
   const totalPages = reservationsPagination?.totalPages ?? 1;
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[var(--color-secondary)]">
       <div className="max-w-4xl mx-auto px-4 py-10">
         {/* Page header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-800">Mis reservas</h1>
-          <p className="text-slate-500 mt-1">Gestioná tus reservas de propiedades y tours.</p>
+          <h1 className="text-3xl font-bold text-[var(--color-foreground)]">Mis reservas</h1>
+          <p className="text-[var(--color-foreground-muted)] mt-1">Gestioná tus reservas de propiedades y tours.</p>
         </div>
 
         {/* Filters */}
@@ -413,8 +413,8 @@ export default function MisReservasPage() {
         ) : reservationsError ? (
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <AlertCircle className="w-10 h-10 text-red-400 mb-3" />
-            <p className="text-slate-600 font-medium mb-1">Error al cargar las reservas</p>
-            <p className="text-sm text-slate-500 mb-4">{reservationsError}</p>
+            <p className="text-[var(--color-foreground-muted)] font-medium mb-1">Error al cargar las reservas</p>
+            <p className="text-sm text-[var(--color-foreground-muted)] mb-4">{reservationsError}</p>
             <Button
               onClick={() =>
                 fetchMyReservations({
@@ -447,10 +447,10 @@ export default function MisReservasPage() {
             {/* Pagination */}
             {totalPages > 1 && (
               <div className="flex items-center justify-between mt-8">
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-[var(--color-foreground-muted)]">
                   Página {currentPage} de {totalPages}
                   {reservationsPagination && (
-                    <span className="ml-1 text-slate-400">
+                    <span className="ml-1 text-[var(--color-foreground-muted)]">
                       ({reservationsPagination.total} reservas)
                     </span>
                   )}

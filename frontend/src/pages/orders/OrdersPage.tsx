@@ -81,7 +81,7 @@ function ErrorState({ onRetry }: { onRetry: () => void }) {
         </div>
         <div>
           <h3 className="text-lg font-semibold text-white">{t('orders.error')}</h3>
-          <p className="mt-1 text-sm text-slate-400">{t('orders.retry')}</p>
+          <p className="mt-1 text-sm text-[var(--color-foreground-muted)]">{t('orders.retry')}</p>
         </div>
         <Button onClick={onRetry} variant="outline" className="gap-2">
           <RefreshCw className="h-4 w-4" />
@@ -188,7 +188,7 @@ export function OrdersPage() {
   // -- Loading state --
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-900 px-4 py-8">
+      <div className="min-h-screen bg-[var(--color-card)] px-4 py-8">
         <div className="mx-auto max-w-6xl">
           <h1 className="mb-6 text-2xl font-bold text-white">{t('orders.title')}</h1>
           <TableSkeleton />
@@ -200,7 +200,7 @@ export function OrdersPage() {
   // -- Error state --
   if (error) {
     return (
-      <div className="min-h-screen bg-slate-900 px-4 py-8" aria-live="polite">
+      <div className="min-h-screen bg-[var(--color-card)] px-4 py-8" aria-live="polite">
         <div className="mx-auto max-w-6xl">
           <h1 className="mb-6 text-2xl font-bold text-white">{t('orders.title')}</h1>
           <ErrorState onRetry={fetchOrders} />
@@ -212,7 +212,7 @@ export function OrdersPage() {
   // -- Empty state --
   if (!isLoading && orders.length === 0) {
     return (
-      <div className="min-h-screen bg-slate-900 px-4 py-8" aria-live="polite">
+      <div className="min-h-screen bg-[var(--color-card)] px-4 py-8" aria-live="polite">
         <div className="mx-auto max-w-6xl">
           <h1 className="mb-6 text-2xl font-bold text-white">{t('orders.title')}</h1>
           <EmptyState type="order" actionHref="/products" />
@@ -223,7 +223,7 @@ export function OrdersPage() {
 
   // -- Data state --
   return (
-    <div className="min-h-screen bg-slate-900 px-4 py-8">
+    <div className="min-h-screen bg-[var(--color-card)] px-4 py-8">
       <div className="mx-auto max-w-6xl">
         {/* Page header */}
         <div className="mb-6 flex items-center justify-between">
@@ -232,7 +232,7 @@ export function OrdersPage() {
               <ShoppingBag className="h-7 w-7 text-purple-400" />
               {t('orders.title')}
             </h1>
-            <p className="mt-1 text-sm text-slate-400">{t('orders.subtitle')}</p>
+            <p className="mt-1 text-sm text-[var(--color-foreground-muted)]">{t('orders.subtitle')}</p>
           </div>
         </div>
 
@@ -240,7 +240,7 @@ export function OrdersPage() {
         <div className="mb-6 flex items-center gap-3">
           <label
             htmlFor="status-filter"
-            className="flex items-center gap-2 text-sm font-medium text-slate-300"
+            className="flex items-center gap-2 text-sm font-medium text-[var(--color-foreground-subtle)]"
           >
             <Filter className="h-4 w-4" />
             <span>{t('orders.status')}:</span>
@@ -250,7 +250,7 @@ export function OrdersPage() {
             value={currentStatus}
             onChange={(e) => handleStatusChange(e.target.value)}
             className={cn(
-              'rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-white',
+              'rounded-lg border border-[var(--color-border)] bg-[var(--color-card)] px-3 py-2 text-sm text-white',
               'focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/30'
             )}
           >
@@ -264,23 +264,23 @@ export function OrdersPage() {
         </div>
 
         {/* Orders table */}
-        <div className="overflow-hidden rounded-xl border border-slate-700 bg-slate-800">
+        <div className="overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-card)]">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="text-slate-400" scope="col">
+                <TableHead className="text-[var(--color-foreground-muted)]" scope="col">
                   {t('orders.orderNumber')}
                 </TableHead>
-                <TableHead className="text-slate-400" scope="col">
+                <TableHead className="text-[var(--color-foreground-muted)]" scope="col">
                   {t('orders.product')}
                 </TableHead>
-                <TableHead className="text-slate-400" scope="col">
+                <TableHead className="text-[var(--color-foreground-muted)]" scope="col">
                   {t('orders.amount')}
                 </TableHead>
-                <TableHead className="text-slate-400" scope="col">
+                <TableHead className="text-[var(--color-foreground-muted)]" scope="col">
                   {t('orders.status')}
                 </TableHead>
-                <TableHead className="text-slate-400" scope="col">
+                <TableHead className="text-[var(--color-foreground-muted)]" scope="col">
                   {t('orders.date')}
                 </TableHead>
               </TableRow>
@@ -289,13 +289,13 @@ export function OrdersPage() {
               {orders.map((order) => (
                 <TableRow
                   key={order.id}
-                  className="cursor-pointer transition-colors hover:bg-slate-700/50"
+                  className="cursor-pointer transition-colors hover:bg-[var(--color-card)]/50"
                   onClick={() => handleRowClick(order.id)}
                 >
                   <TableCell className="font-mono text-sm text-white">
                     #{order.orderNumber}
                   </TableCell>
-                  <TableCell className="text-slate-300">{order.product?.name || '-'}</TableCell>
+                  <TableCell className="text-[var(--color-foreground-subtle)]">{order.product?.name || '-'}</TableCell>
                   <TableCell>
                     <PriceDisplay
                       amount={order.totalAmount ?? order.amount}
@@ -306,7 +306,7 @@ export function OrdersPage() {
                   <TableCell>
                     <OrderStatus status={order.status} size="sm" />
                   </TableCell>
-                  <TableCell className="text-sm text-slate-400">
+                  <TableCell className="text-sm text-[var(--color-foreground-muted)]">
                     {new Date(order.createdAt).toLocaleDateString()}
                   </TableCell>
                 </TableRow>

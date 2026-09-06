@@ -241,14 +241,14 @@ export default function AdminPropertiesPage() {
       header: 'Propiedad',
       render: (p) => (
         <div>
-          <div className="font-medium text-slate-900 truncate max-w-[220px]" title={p.title}>
+          <div className="font-medium text-[var(--color-foreground)] truncate max-w-[220px]" title={p.title}>
             {p.title}
           </div>
           {p.titleEn && (
-            <div className="text-xs text-slate-400 truncate max-w-[220px]">{p.titleEn}</div>
+            <div className="text-xs text-[var(--color-foreground-muted)] truncate max-w-[220px]">{p.titleEn}</div>
           )}
           {(p.bedrooms != null || p.areaM2 != null) && (
-            <div className="text-xs text-slate-400 flex items-center gap-2 mt-0.5">
+            <div className="text-xs text-[var(--color-foreground-muted)] flex items-center gap-2 mt-0.5">
               {p.bedrooms != null && <span>{p.bedrooms} hab.</span>}
               {p.bathrooms != null && <span>{p.bathrooms} baños</span>}
               {p.areaM2 != null && <span>{p.areaM2} m²</span>}
@@ -261,7 +261,7 @@ export default function AdminPropertiesPage() {
       key: 'type',
       header: 'Tipo',
       render: (p) => (
-        <span className="text-slate-600">
+        <span className="text-[var(--color-foreground-muted)]">
           {PROPERTY_TYPES.find((t) => t.value === p.type)?.label ?? p.type}
         </span>
       ),
@@ -270,7 +270,7 @@ export default function AdminPropertiesPage() {
       key: 'city',
       header: 'Ciudad',
       render: (p) => (
-        <div className="flex items-center gap-1 text-slate-600">
+        <div className="flex items-center gap-1 text-[var(--color-foreground-muted)]">
           <MapPin className="w-3 h-3 shrink-0" />
           {p.city}
         </div>
@@ -282,11 +282,11 @@ export default function AdminPropertiesPage() {
       align: 'right',
       render: (p) => (
         <div>
-          <div className="flex items-center justify-end gap-1 font-medium text-slate-900">
-            <DollarSign className="w-3 h-3 text-slate-400" />
+          <div className="flex items-center justify-end gap-1 font-medium text-[var(--color-foreground)]">
+            <DollarSign className="w-3 h-3 text-[var(--color-foreground-muted)]" />
             {Number(p.price).toLocaleString('es-CO')} {p.currency}
           </div>
-          {p.priceNegotiable && <div className="text-xs text-slate-400 text-right">Negociable</div>}
+          {p.priceNegotiable && <div className="text-xs text-[var(--color-foreground-muted)] text-right">Negociable</div>}
         </div>
       ),
     },
@@ -385,14 +385,14 @@ export default function AdminPropertiesPage() {
         {/* Tipo + Estado */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
+            <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">
               Tipo <span className="text-red-500">*</span>
             </label>
             <select
               required
               value={formData.type}
               onChange={(e) => setFormData({ ...formData, type: e.target.value as PropertyType })}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               {PROPERTY_TYPES.map((t) => (
                 <option key={t.value} value={t.value}>
@@ -402,13 +402,13 @@ export default function AdminPropertiesPage() {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Estado</label>
+            <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">Estado</label>
             <select
               value={formData.status}
               onChange={(e) =>
                 setFormData({ ...formData, status: e.target.value as PropertyStatus })
               }
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               {PROPERTY_STATUSES.map((s) => (
                 <option key={s.value} value={s.value}>
@@ -421,7 +421,7 @@ export default function AdminPropertiesPage() {
 
         {/* Título ES + EN */}
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">
+          <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">
             Título (ES) <span className="text-red-500">*</span>
           </label>
           <input
@@ -430,36 +430,36 @@ export default function AdminPropertiesPage() {
             value={formData.title}
             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
             placeholder="Ej: Apartamento moderno en Chapinero"
-            className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">Título (EN)</label>
+          <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">Título (EN)</label>
           <input
             type="text"
             value={formData.titleEn}
             onChange={(e) => setFormData({ ...formData, titleEn: e.target.value })}
             placeholder="Ej: Modern apartment in Chapinero"
-            className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
         {/* Descripción */}
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">Descripción</label>
+          <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">Descripción</label>
           <textarea
             value={formData.description}
             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
             rows={3}
             placeholder="Descripción de la propiedad..."
-            className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+            className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
           />
         </div>
 
         {/* Precio + moneda */}
         <div className="grid grid-cols-3 gap-4">
           <div className="col-span-2">
-            <label className="block text-sm font-medium text-slate-700 mb-1">
+            <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">
               Precio <span className="text-red-500">*</span>
             </label>
             <input
@@ -470,15 +470,15 @@ export default function AdminPropertiesPage() {
               value={formData.price}
               onChange={(e) => setFormData({ ...formData, price: e.target.value })}
               placeholder="Ej: 1500000"
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Moneda</label>
+            <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">Moneda</label>
             <select
               value={formData.currency}
               onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="COP">COP</option>
               <option value="USD">USD</option>
@@ -490,29 +490,29 @@ export default function AdminPropertiesPage() {
         {/* Habitaciones + baños + área */}
         <div className="grid grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Habitaciones</label>
+            <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">Habitaciones</label>
             <input
               type="number"
               min={0}
               value={formData.bedrooms}
               onChange={(e) => setFormData({ ...formData, bedrooms: e.target.value })}
               placeholder="Ej: 3"
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Baños</label>
+            <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">Baños</label>
             <input
               type="number"
               min={0}
               value={formData.bathrooms}
               onChange={(e) => setFormData({ ...formData, bathrooms: e.target.value })}
               placeholder="Ej: 2"
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Área (m²)</label>
+            <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">Área (m²)</label>
             <input
               type="number"
               min={0}
@@ -520,14 +520,14 @@ export default function AdminPropertiesPage() {
               value={formData.areaM2}
               onChange={(e) => setFormData({ ...formData, areaM2: e.target.value })}
               placeholder="Ej: 85"
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
         </div>
 
         {/* Dirección + ciudad + país */}
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">
+          <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">
             Dirección <span className="text-red-500">*</span>
           </label>
           <input
@@ -536,12 +536,12 @@ export default function AdminPropertiesPage() {
             value={formData.address}
             onChange={(e) => setFormData({ ...formData, address: e.target.value })}
             placeholder="Ej: Cra 7 # 32-16"
-            className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
+            <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">
               Ciudad <span className="text-red-500">*</span>
             </label>
             <input
@@ -550,17 +550,17 @@ export default function AdminPropertiesPage() {
               value={formData.city}
               onChange={(e) => setFormData({ ...formData, city: e.target.value })}
               placeholder="Ej: Bogotá"
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">País</label>
+            <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">País</label>
             <input
               type="text"
               value={formData.country}
               onChange={(e) => setFormData({ ...formData, country: e.target.value })}
               placeholder="Colombia"
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
         </div>
@@ -571,9 +571,9 @@ export default function AdminPropertiesPage() {
             type="checkbox"
             checked={formData.priceNegotiable}
             onChange={(e) => setFormData({ ...formData, priceNegotiable: e.target.checked })}
-            className="w-4 h-4 rounded border-slate-300 accent-blue-600"
+            className="w-4 h-4 rounded border-[var(--color-border)] accent-blue-600"
           />
-          <span className="text-sm text-slate-700">Precio negociable</span>
+          <span className="text-sm text-[var(--color-foreground)]">Precio negociable</span>
         </label>
 
         {/* Error in modal */}

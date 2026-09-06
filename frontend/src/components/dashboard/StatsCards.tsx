@@ -79,12 +79,12 @@ interface StatCardProps {
 
 function StatCard({ icon, label, value, color }: StatCardProps) {
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+    <div className="bg-[var(--color-card)] rounded-2xl shadow-sm border border-[var(--color-border)] p-6">
       <div className="flex items-center gap-4">
         <div className={`${color} p-3 rounded-xl text-white`}>{icon}</div>
         <div>
-          <p className="text-sm text-slate-500">{label}</p>
-          <p className="text-2xl font-bold text-slate-900">{value}</p>
+          <p className="text-sm text-[var(--color-foreground-muted)]">{label}</p>
+          <p className="text-2xl font-bold text-[var(--color-foreground)]">{value}</p>
         </div>
       </div>
     </div>

@@ -105,7 +105,7 @@ export function ProductModal({ product, isOpen, onClose, onBuyNow, className }: 
         ref={modalRef}
         className={cn(
           'relative mx-4 max-h-[90vh] w-full max-w-2xl overflow-hidden rounded-2xl',
-          'border border-slate-700 bg-slate-800 shadow-2xl',
+          'border border-[var(--color-border)] bg-[var(--color-card)] shadow-2xl',
           'animate-in zoom-in-95 duration-200'
         )}
       >
@@ -123,14 +123,14 @@ export function ProductModal({ product, isOpen, onClose, onBuyNow, className }: 
         </button>
 
         {/* Product Image */}
-        <div className="relative aspect-video overflow-hidden bg-slate-700">
+        <div className="relative aspect-video overflow-hidden bg-[var(--color-card)]">
           <img
             src={imageUrl}
             alt={product.name}
             className="h-full w-full object-cover"
             loading="lazy"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-card)]/80 to-transparent" />
 
           {/* Platform Badge */}
           <div className="absolute bottom-4 left-4">
@@ -147,34 +147,34 @@ export function ProductModal({ product, isOpen, onClose, onBuyNow, className }: 
             </h2>
             <div className="text-right">
               <PriceDisplay amount={product.price} size="xl" />
-              <span className="text-sm text-slate-400">{perMonth}</span>
+              <span className="text-sm text-[var(--color-foreground-muted)]">{perMonth}</span>
             </div>
           </div>
 
           {/* Duration */}
-          <div className="flex items-center gap-2 text-slate-300">
+          <div className="flex items-center gap-2 text-[var(--color-foreground-subtle)]">
             <Calendar className="h-5 w-5 text-purple-400" />
             <span>{durationLabel}</span>
           </div>
 
           {/* Description */}
-          {product.description && <p className="text-slate-300">{product.description}</p>}
+          {product.description && <p className="text-[var(--color-foreground-subtle)]">{product.description}</p>}
 
           {/* Features List (placeholder - can be customized per product) */}
-          <div className="rounded-lg bg-slate-700/50 p-4">
-            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-400">
+          <div className="rounded-lg bg-[var(--color-card)]/50 p-4">
+            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-[var(--color-foreground-muted)]">
               {t('products.features')}
             </h3>
             <ul className="space-y-2">
-              <li className="flex items-center gap-2 text-slate-300">
+              <li className="flex items-center gap-2 text-[var(--color-foreground-subtle)]">
                 <Check className="h-4 w-4 text-green-400" />
                 {t('products.access')}
               </li>
-              <li className="flex items-center gap-2 text-slate-300">
+              <li className="flex items-center gap-2 text-[var(--color-foreground-subtle)]">
                 <Check className="h-4 w-4 text-green-400" />
                 {t('products.hdQuality')}
               </li>
-              <li className="flex items-center gap-2 text-slate-300">
+              <li className="flex items-center gap-2 text-[var(--color-foreground-subtle)]">
                 <Check className="h-4 w-4 text-green-400" />
                 {t('products.cancelAnytime')}
               </li>
@@ -188,8 +188,8 @@ export function ProductModal({ product, isOpen, onClose, onBuyNow, className }: 
             className={cn(
               'mt-2 w-full rounded-xl bg-purple-600 py-3 text-lg font-semibold text-white',
               'transition-all hover:bg-purple-500 hover:shadow-lg hover:shadow-purple-500/25',
-              'disabled:bg-slate-600 disabled:cursor-not-allowed',
-              'focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-slate-800'
+              'disabled:bg-[var(--color-card)] disabled:cursor-not-allowed',
+              'focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-[var(--color-card)]'
             )}
           >
             {product.isActive ? t('products.buyNow') : t('products.unavailable')}

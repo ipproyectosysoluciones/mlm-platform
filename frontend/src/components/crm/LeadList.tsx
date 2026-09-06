@@ -75,19 +75,19 @@ export function LeadList({
       {/* Filters */}
       <div className="flex gap-4 mb-6">
         <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--color-foreground-muted)]" />
           <input
             type="text"
             placeholder={t('crm.searchPlaceholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            className="w-full pl-10 pr-4 py-2.5 border border-[var(--color-border)] rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
           />
         </div>
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+          className="px-4 py-2.5 border border-[var(--color-border)] rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
         >
           <option value="">{t('crm.allStatuses')}</option>
           {statuses.map((status) => (
@@ -99,7 +99,7 @@ export function LeadList({
         <select
           value={sourceFilter}
           onChange={(e) => setSourceFilter(e.target.value)}
-          className="px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+          className="px-4 py-2.5 border border-[var(--color-border)] rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
         >
           <option value="">{t('crm.allSources')}</option>
           {LEAD_SOURCES.map((source) => (
@@ -115,7 +115,7 @@ export function LeadList({
           className={`px-4 py-2.5 border rounded-xl transition-colors ${
             showAdvancedFilters
               ? 'bg-emerald-500 text-white border-emerald-500'
-              : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+              : 'border-[var(--color-border)] text-[var(--color-foreground-muted)] hover:bg-[var(--color-secondary)]'
           }`}
         >
           <Filter className="w-5 h-5 inline mr-1" />
@@ -125,32 +125,32 @@ export function LeadList({
 
       {/* Advanced Filters */}
       {showAdvancedFilters && (
-        <div className="mt-4 p-4 bg-slate-50 rounded-xl space-y-4">
+        <div className="mt-4 p-4 bg-[var(--color-secondary)] rounded-xl space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
-              <label className="block text-sm font-medium text-slate-600 mb-1">
+              <label className="block text-sm font-medium text-[var(--color-foreground-muted)] mb-1">
                 {t('crm.dateFrom')}
               </label>
               <input
                 type="date"
                 value={dateFrom}
                 onChange={(e) => setDateFrom(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-emerald-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-600 mb-1">
+              <label className="block text-sm font-medium text-[var(--color-foreground-muted)] mb-1">
                 {t('crm.dateTo')}
               </label>
               <input
                 type="date"
                 value={dateTo}
                 onChange={(e) => setDateTo(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-emerald-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-600 mb-1">
+              <label className="block text-sm font-medium text-[var(--color-foreground-muted)] mb-1">
                 {t('crm.valueMin')}
               </label>
               <input
@@ -158,11 +158,11 @@ export function LeadList({
                 placeholder="0"
                 value={valueMin}
                 onChange={(e) => setValueMin(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-emerald-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-600 mb-1">
+              <label className="block text-sm font-medium text-[var(--color-foreground-muted)] mb-1">
                 {t('crm.valueMax')}
               </label>
               <input
@@ -170,7 +170,7 @@ export function LeadList({
                 placeholder="1000"
                 value={valueMax}
                 onChange={(e) => setValueMax(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-emerald-500"
               />
             </div>
           </div>
@@ -182,7 +182,7 @@ export function LeadList({
                 setValueMin('');
                 setValueMax('');
               }}
-              className="text-sm text-slate-500 hover:text-slate-700"
+              className="text-sm text-[var(--color-foreground-muted)] hover:text-[var(--color-foreground)]"
             >
               {t('crm.clearFilters')}
             </button>
@@ -196,10 +196,10 @@ export function LeadList({
           <div className="animate-spin w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full" />
         </div>
       ) : leads.length === 0 ? (
-        <div className="text-center py-12 bg-slate-50 rounded-xl">
-          <Users className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-slate-900 mb-2">{t('crm.noLeads')}</h3>
-          <p className="text-slate-500 mb-4">
+        <div className="text-center py-12 bg-[var(--color-secondary)] rounded-xl">
+          <Users className="w-12 h-12 text-[var(--color-foreground-subtle)] mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-[var(--color-foreground)] mb-2">{t('crm.noLeads')}</h3>
+          <p className="text-[var(--color-foreground-muted)] mb-4">
             {searchQuery || statusFilter ? t('crm.noResults') : t('crm.addFirst')}
           </p>
           <button

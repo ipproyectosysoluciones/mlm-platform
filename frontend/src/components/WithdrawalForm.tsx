@@ -148,8 +148,8 @@ export function WithdrawalForm({ onSuccess, onError, className }: WithdrawalForm
     !isLoadingWithdrawals;
 
   return (
-    <div className={cn('rounded-2xl border border-slate-200 bg-white p-6', className)}>
-      <h3 className="text-lg font-semibold text-slate-900 mb-4">
+    <div className={cn('rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-6', className)}>
+      <h3 className="text-lg font-semibold text-[var(--color-foreground)] mb-4">
         {t('wallet.requestWithdrawal') || 'Request Withdrawal'}
       </h3>
 
@@ -173,11 +173,11 @@ export function WithdrawalForm({ onSuccess, onError, className }: WithdrawalForm
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Amount input */}
         <div>
-          <label htmlFor="amount" className="block text-sm font-medium text-slate-700 mb-2">
+          <label htmlFor="amount" className="block text-sm font-medium text-[var(--color-foreground)] mb-2">
             {t('wallet.amount') || 'Amount'} (USD)
           </label>
           <div className="relative">
-            <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+            <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[var(--color-foreground-muted)]" />
             <input
               type="text"
               id="amount"
@@ -189,7 +189,7 @@ export function WithdrawalForm({ onSuccess, onError, className }: WithdrawalForm
                 'focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent',
                 validationError
                   ? 'border-red-300 bg-red-50 text-red-900'
-                  : 'border-slate-200 bg-slate-50 text-slate-900'
+                  : 'border-[var(--color-border)] bg-[var(--color-secondary)] text-[var(--color-foreground)]'
               )}
               disabled={isLoadingWithdrawals}
             />
@@ -198,11 +198,11 @@ export function WithdrawalForm({ onSuccess, onError, className }: WithdrawalForm
 
         {/* PayPal email destination */}
         <div>
-          <label htmlFor="paypal-email" className="block text-sm font-medium text-slate-700 mb-2">
+          <label htmlFor="paypal-email" className="block text-sm font-medium text-[var(--color-foreground)] mb-2">
             PayPal Email Address
           </label>
           <div className="relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[var(--color-foreground-muted)]" />
             <input
               type="email"
               id="paypal-email"
@@ -214,7 +214,7 @@ export function WithdrawalForm({ onSuccess, onError, className }: WithdrawalForm
                 'focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent',
                 email && !isValidEmail(email)
                   ? 'border-red-300 bg-red-50 text-red-900'
-                  : 'border-slate-200 bg-slate-50 text-slate-900'
+                  : 'border-[var(--color-border)] bg-[var(--color-secondary)] text-[var(--color-foreground)]'
               )}
               disabled={isLoadingWithdrawals}
             />
@@ -223,21 +223,21 @@ export function WithdrawalForm({ onSuccess, onError, className }: WithdrawalForm
 
         {/* Fee preview */}
         {parsedAmount > 0 && (
-          <div className="rounded-lg bg-slate-50 p-4 space-y-2">
+          <div className="rounded-lg bg-[var(--color-secondary)] p-4 space-y-2">
             <div className="flex justify-between text-sm">
-              <span className="text-slate-500">
+              <span className="text-[var(--color-foreground-muted)]">
                 {t('wallet.requestedAmount') || 'Requested Amount'}
               </span>
-              <span className="font-medium text-slate-900">{formatCurrency(parsedAmount)}</span>
+              <span className="font-medium text-[var(--color-foreground)]">{formatCurrency(parsedAmount)}</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-slate-500">
+              <span className="text-[var(--color-foreground-muted)]">
                 {t('wallet.fee')} ({feePercentage}%)
               </span>
               <span className="font-medium text-amber-600">-{formatCurrency(feeAmount)}</span>
             </div>
-            <div className="border-t border-slate-200 pt-2 flex justify-between">
-              <span className="text-sm font-medium text-slate-700">
+            <div className="border-t border-[var(--color-border)] pt-2 flex justify-between">
+              <span className="text-sm font-medium text-[var(--color-foreground)]">
                 {t('wallet.netAmount') || 'Net Amount'}
               </span>
               <span className="text-lg font-bold text-emerald-600">
@@ -256,15 +256,15 @@ export function WithdrawalForm({ onSuccess, onError, className }: WithdrawalForm
 
         {/* Config limits */}
         {config && (
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-[var(--color-foreground-muted)]">
             Min: {formatCurrency(config.minimumWithdrawal)} · Max:{' '}
             {formatCurrency(config.maximumWithdrawal)} · Fee: {config.feePercentage}%
           </p>
         )}
 
-        <div className="text-sm text-slate-500">
+        <div className="text-sm text-[var(--color-foreground-muted)]">
           {t('wallet.available') || 'Available'}:{' '}
-          <span className="font-medium text-slate-700">{formatCurrency(availableBalance)}</span>
+          <span className="font-medium text-[var(--color-foreground)]">{formatCurrency(availableBalance)}</span>
         </div>
 
         <button
@@ -273,7 +273,7 @@ export function WithdrawalForm({ onSuccess, onError, className }: WithdrawalForm
           className={cn(
             'w-full flex items-center justify-center gap-2 rounded-lg py-3 text-white font-medium',
             'transition-colors',
-            canSubmit ? 'bg-emerald-600 hover:bg-emerald-500' : 'bg-slate-300 cursor-not-allowed'
+            canSubmit ? 'bg-emerald-600 hover:bg-emerald-500' : 'bg-[var(--color-secondary)] cursor-not-allowed'
           )}
         >
           {isLoadingWithdrawals ? (

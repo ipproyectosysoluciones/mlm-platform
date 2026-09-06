@@ -61,7 +61,7 @@ export default function TreeDetails({
       {/* Panel */}
       <div
         className={`
-          fixed top-0 right-0 h-full w-full sm:w-80 bg-white shadow-2xl z-50
+          fixed top-0 right-0 h-full w-full sm:w-80 bg-[var(--color-card)] shadow-2xl z-50
           transform transition-transform duration-300 ease-out
           flex flex-col
         `}
@@ -70,13 +70,13 @@ export default function TreeDetails({
         aria-labelledby="details-title"
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-          <h2 id="details-title" className="text-lg font-semibold text-gray-900">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--color-border)]">
+          <h2 id="details-title" className="text-lg font-semibold text-[var(--color-foreground)]">
             {t('tree.details.title')}
           </h2>
           <button
             onClick={onClose}
-            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 text-[var(--color-foreground-muted)] hover:text-[var(--color-foreground-muted)] hover:bg-[var(--color-secondary)] rounded-lg transition-colors"
             aria-label={t('tree.details.close')}
           >
             <X className="w-5 h-5" />
@@ -89,7 +89,7 @@ export default function TreeDetails({
             // Loading state
             <div className="flex flex-col items-center justify-center h-48">
               <Loader2 className="w-8 h-8 text-indigo-600 animate-spin mb-3" />
-              <p className="text-sm text-gray-500">{t('tree.loading') || 'Loading...'}</p>
+              <p className="text-sm text-[var(--color-foreground-muted)]">{t('tree.loading') || 'Loading...'}</p>
             </div>
           ) : user ? (
             // User details
@@ -106,7 +106,7 @@ export default function TreeDetails({
                   {user.email?.[0]?.toUpperCase() || 'U'}
                 </div>
                 <div>
-                  <p className="font-semibold text-gray-900">{user.email}</p>
+                  <p className="font-semibold text-[var(--color-foreground)]">{user.email}</p>
                   <span
                     className={`
                       inline-flex items-center px-2 py-0.5 rounded text-xs font-medium
@@ -165,8 +165,8 @@ export default function TreeDetails({
               </div>
 
               {/* Stats section */}
-              <div className="border-t border-gray-200 pt-4">
-                <h3 className="text-sm font-medium text-gray-700 mb-3">
+              <div className="border-t border-[var(--color-border)] pt-4">
+                <h3 className="text-sm font-medium text-[var(--color-foreground)] mb-3">
                   {t('tree.details.totalDownline')}
                 </h3>
                 <div className="grid grid-cols-3 gap-3">
@@ -179,7 +179,7 @@ export default function TreeDetails({
                   <StatCard
                     label={t('tree.details.totalDownline')}
                     value={user.stats.totalDownline}
-                    color="gray"
+                    color="bg-[var(--color-foreground-muted)]"
                   />
                 </div>
               </div>
@@ -188,8 +188,8 @@ export default function TreeDetails({
             </div>
           ) : (
             // Empty state
-            <div className="flex flex-col items-center justify-center h-48 text-gray-500">
-              <User className="w-12 h-12 mb-3 text-gray-300" />
+            <div className="flex flex-col items-center justify-center h-48 text-[var(--color-foreground-muted)]">
+              <User className="w-12 h-12 mb-3 text-[var(--color-foreground-muted)]" />
               <p className="text-sm">{t('tree.details.selectUser')}</p>
             </div>
           )}
@@ -197,7 +197,7 @@ export default function TreeDetails({
 
         {/* Footer with action */}
         {user && onViewSubtree && (
-          <div className="px-6 py-4 border-t border-gray-200">
+          <div className="px-6 py-4 border-t border-[var(--color-border)]">
             <button
               onClick={() => onViewSubtree(user.id)}
               className="
@@ -229,10 +229,10 @@ function InfoRow({
 }) {
   return (
     <div className="flex items-start gap-3">
-      <div className="text-gray-400 mt-0.5">{icon}</div>
+      <div className="text-[var(--color-foreground-muted)] mt-0.5">{icon}</div>
       <div className="flex-1">
-        <p className="text-xs text-gray-500">{label}</p>
-        <div className="text-sm font-medium text-gray-900">{value}</div>
+        <p className="text-xs text-[var(--color-foreground-muted)]">{label}</p>
+        <div className="text-sm font-medium text-[var(--color-foreground)]">{value}</div>
       </div>
     </div>
   );
@@ -251,7 +251,7 @@ function StatCard({
   const colorClasses = {
     blue: 'bg-blue-50 text-blue-700',
     purple: 'bg-purple-50 text-purple-700',
-    gray: 'bg-gray-50 text-gray-700',
+    gray: 'bg-[var(--color-secondary)] text-[var(--color-foreground)]',
   };
 
   return (

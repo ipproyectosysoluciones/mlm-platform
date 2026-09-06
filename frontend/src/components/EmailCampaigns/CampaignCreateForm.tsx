@@ -139,7 +139,7 @@ export function CampaignCreateForm({ onCreated, onBack }: CampaignCreateFormProp
           variant="ghost"
           size="sm"
           onClick={onBack}
-          className="mb-4 text-slate-400 hover:text-slate-200 gap-1.5"
+          className="mb-4 text-[var(--color-foreground-muted)] hover:text-[var(--color-foreground-muted)] gap-1.5"
           data-testid="back-btn"
         >
           <ArrowLeft className="h-4 w-4" />
@@ -147,9 +147,9 @@ export function CampaignCreateForm({ onCreated, onBack }: CampaignCreateFormProp
         </Button>
       )}
 
-      <Card className="border-slate-700 bg-slate-800">
+      <Card className="border-[var(--color-border)] bg-[var(--color-card)]">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-slate-100">
+          <CardTitle className="flex items-center gap-2 text-[var(--color-foreground)]">
             <Send className="h-5 w-5 text-purple-400" />
             {t('emailCampaigns.createTitle') || 'Create Email Campaign'}
           </CardTitle>
@@ -158,7 +158,7 @@ export function CampaignCreateForm({ onCreated, onBack }: CampaignCreateFormProp
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Campaign Name / Nombre de campaña */}
             <div>
-              <Label htmlFor="campaign-name" className="text-slate-300">
+              <Label htmlFor="campaign-name" className="text-[var(--color-foreground-subtle)]">
                 {t('emailCampaigns.campaignName') || 'Campaign Name'}
               </Label>
               <Input
@@ -169,7 +169,7 @@ export function CampaignCreateForm({ onCreated, onBack }: CampaignCreateFormProp
                   if (validationError) setValidationError(null);
                 }}
                 placeholder="March Newsletter"
-                className="mt-1.5 bg-slate-900 border-slate-600 text-slate-100 placeholder:text-slate-500"
+                className="mt-1.5 bg-[var(--color-card)] border-[var(--color-border)] text-[var(--color-foreground)] placeholder:text-[var(--color-foreground-muted)]"
                 disabled={isCreatingCampaign}
                 aria-label={t('emailCampaigns.campaignNameLabel') || 'Campaign name'}
               />
@@ -177,8 +177,8 @@ export function CampaignCreateForm({ onCreated, onBack }: CampaignCreateFormProp
 
             {/* Template Selection / Selección de plantilla */}
             <div>
-              <Label className="text-slate-300 flex items-center gap-1.5">
-                <FileText className="h-4 w-4 text-slate-400" />
+              <Label className="text-[var(--color-foreground-subtle)] flex items-center gap-1.5">
+                <FileText className="h-4 w-4 text-[var(--color-foreground-muted)]" />
                 {t('emailCampaigns.selectTemplate') || 'Email Template'}
               </Label>
               <Select
@@ -190,7 +190,7 @@ export function CampaignCreateForm({ onCreated, onBack }: CampaignCreateFormProp
                 disabled={isCreatingCampaign || isLoadingTemplates}
               >
                 <SelectTrigger
-                  className="mt-1.5 bg-slate-900 border-slate-600 text-slate-100"
+                  className="mt-1.5 bg-[var(--color-card)] border-[var(--color-border)] text-[var(--color-foreground)]"
                   aria-label={t('emailCampaigns.templateLabel') || 'Select template'}
                   data-testid="template-select"
                 >
@@ -198,12 +198,12 @@ export function CampaignCreateForm({ onCreated, onBack }: CampaignCreateFormProp
                     placeholder={t('emailCampaigns.chooseTpl') || 'Choose a template...'}
                   />
                 </SelectTrigger>
-                <SelectContent className="bg-slate-800 border-slate-700">
+                <SelectContent className="bg-[var(--color-card)] border-[var(--color-border)]">
                   {templates.map((tpl) => (
                     <SelectItem
                       key={tpl.id}
                       value={tpl.id}
-                      className="text-slate-100 focus:bg-purple-600/20"
+                      className="text-[var(--color-foreground)] focus:bg-purple-600/20"
                     >
                       {tpl.name}
                     </SelectItem>
@@ -211,7 +211,7 @@ export function CampaignCreateForm({ onCreated, onBack }: CampaignCreateFormProp
                 </SelectContent>
               </Select>
               {isLoadingTemplates && (
-                <p className="mt-1 text-xs text-slate-500 flex items-center gap-1">
+                <p className="mt-1 text-xs text-[var(--color-foreground-muted)] flex items-center gap-1">
                   <Loader2 className="h-3 w-3 animate-spin" />
                   {t('emailCampaigns.loadingTemplates') || 'Loading templates...'}
                 </p>
@@ -220,8 +220,8 @@ export function CampaignCreateForm({ onCreated, onBack }: CampaignCreateFormProp
 
             {/* Recipient Segment / Segmento de destinatarios */}
             <div>
-              <Label className="text-slate-300 flex items-center gap-1.5">
-                <Users className="h-4 w-4 text-slate-400" />
+              <Label className="text-[var(--color-foreground-subtle)] flex items-center gap-1.5">
+                <Users className="h-4 w-4 text-[var(--color-foreground-muted)]" />
                 {t('emailCampaigns.recipientSegment') || 'Recipient Segment'}
               </Label>
               <Select
@@ -230,22 +230,22 @@ export function CampaignCreateForm({ onCreated, onBack }: CampaignCreateFormProp
                 disabled={isCreatingCampaign}
               >
                 <SelectTrigger
-                  className="mt-1.5 bg-slate-900 border-slate-600 text-slate-100"
+                  className="mt-1.5 bg-[var(--color-card)] border-[var(--color-border)] text-[var(--color-foreground)]"
                   aria-label={t('emailCampaigns.segmentLabel') || 'Select recipient segment'}
                   data-testid="segment-select"
                 >
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-slate-800 border-slate-700">
+                <SelectContent className="bg-[var(--color-card)] border-[var(--color-border)]">
                   {RECIPIENT_SEGMENTS.map((seg) => (
                     <SelectItem
                       key={seg.value}
                       value={seg.value}
-                      className="text-slate-100 focus:bg-purple-600/20"
+                      className="text-[var(--color-foreground)] focus:bg-purple-600/20"
                     >
                       <div>
                         <span className="font-medium">{seg.label}</span>
-                        <span className="text-slate-400 ml-2 text-xs">— {seg.description}</span>
+                        <span className="text-[var(--color-foreground-muted)] ml-2 text-xs">— {seg.description}</span>
                       </div>
                     </SelectItem>
                   ))}
@@ -255,8 +255,8 @@ export function CampaignCreateForm({ onCreated, onBack }: CampaignCreateFormProp
 
             {/* Schedule / Programación */}
             <div>
-              <Label className="text-slate-300 flex items-center gap-1.5">
-                <Clock className="h-4 w-4 text-slate-400" />
+              <Label className="text-[var(--color-foreground-subtle)] flex items-center gap-1.5">
+                <Clock className="h-4 w-4 text-[var(--color-foreground-muted)]" />
                 {t('emailCampaigns.schedule') || 'Schedule'}
               </Label>
               <div className="mt-1.5 flex gap-2">
@@ -266,10 +266,10 @@ export function CampaignCreateForm({ onCreated, onBack }: CampaignCreateFormProp
                   size="sm"
                   onClick={() => setScheduleType('now')}
                   className={cn(
-                    'flex-1 border-slate-600',
+                    'flex-1 border-[var(--color-border)]',
                     scheduleType === 'now'
                       ? 'bg-purple-600/20 text-purple-300 border-purple-500'
-                      : 'text-slate-300 hover:bg-slate-700'
+                      : 'text-[var(--color-foreground-subtle)] hover:bg-[var(--color-card)]'
                   )}
                   data-testid="schedule-now"
                 >
@@ -281,10 +281,10 @@ export function CampaignCreateForm({ onCreated, onBack }: CampaignCreateFormProp
                   size="sm"
                   onClick={() => setScheduleType('later')}
                   className={cn(
-                    'flex-1 border-slate-600',
+                    'flex-1 border-[var(--color-border)]',
                     scheduleType === 'later'
                       ? 'bg-purple-600/20 text-purple-300 border-purple-500'
-                      : 'text-slate-300 hover:bg-slate-700'
+                      : 'text-[var(--color-foreground-subtle)] hover:bg-[var(--color-card)]'
                   )}
                   data-testid="schedule-later"
                 >
@@ -299,7 +299,7 @@ export function CampaignCreateForm({ onCreated, onBack }: CampaignCreateFormProp
                     setScheduledFor(e.target.value);
                     if (validationError) setValidationError(null);
                   }}
-                  className="mt-2 bg-slate-900 border-slate-600 text-slate-100"
+                  className="mt-2 bg-[var(--color-card)] border-[var(--color-border)] text-[var(--color-foreground)]"
                   disabled={isCreatingCampaign}
                   aria-label={t('emailCampaigns.scheduleDateLabel') || 'Schedule date and time'}
                   data-testid="schedule-datetime"
@@ -327,7 +327,7 @@ export function CampaignCreateForm({ onCreated, onBack }: CampaignCreateFormProp
                 'w-full',
                 !isCreatingCampaign
                   ? 'bg-purple-600 hover:bg-purple-500 text-white'
-                  : 'bg-slate-600 text-slate-400 cursor-not-allowed'
+                  : 'bg-[var(--color-card)] text-[var(--color-foreground-muted)] cursor-not-allowed'
               )}
               data-testid="submit-campaign"
             >

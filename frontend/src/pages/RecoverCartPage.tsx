@@ -82,13 +82,13 @@ export function RecoverCartPage() {
 
   if (!token) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[var(--color-card)] flex items-center justify-center p-4">
         <div className="max-w-md w-full text-center">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-yellow-500/20 mb-6">
             <AlertTriangle className="h-8 w-8 text-yellow-400" />
           </div>
           <h1 className="text-2xl font-bold text-white mb-3">Missing Recovery Token</h1>
-          <p className="text-slate-400 mb-6">
+          <p className="text-[var(--color-foreground-muted)] mb-6">
             This page requires a valid recovery token. Please use the link from your email.
           </p>
           <Button onClick={() => navigate('/products')}>
@@ -106,10 +106,10 @@ export function RecoverCartPage() {
 
   if (isLoadingRecovery) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[var(--color-card)] flex items-center justify-center p-4">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="h-12 w-12 animate-spin text-purple-400" />
-          <p className="text-slate-400">Loading your cart...</p>
+          <p className="text-[var(--color-foreground-muted)]">Loading your cart...</p>
         </div>
       </div>
     );
@@ -145,13 +145,13 @@ export function RecoverCartPage() {
     }
 
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[var(--color-card)] flex items-center justify-center p-4">
         <div className="max-w-md w-full text-center">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-500/20 mb-6">
             <AlertTriangle className="h-8 w-8 text-red-400" />
           </div>
           <h1 className="text-2xl font-bold text-white mb-3">{errorTitle}</h1>
-          <p className="text-slate-400 mb-6">{errorDescription}</p>
+          <p className="text-[var(--color-foreground-muted)] mb-6">{errorDescription}</p>
           <div className="flex items-center justify-center gap-3">
             {!isExpired && !isUsed && (
               <Button variant="outline" onClick={handleRetry}>
@@ -178,7 +178,7 @@ export function RecoverCartPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[var(--color-card)] flex items-center justify-center p-4">
       <div className="max-w-lg w-full">
         {/* Welcome Header */}
         <div className="text-center mb-8">
@@ -186,7 +186,7 @@ export function RecoverCartPage() {
             <ShoppingCart className="h-8 w-8 text-purple-400" />
           </div>
           <h1 className="text-2xl font-bold text-white mb-3">Welcome Back!</h1>
-          <p className="text-slate-400">
+          <p className="text-[var(--color-foreground-muted)]">
             We saved your cart for you. Review your items below and continue shopping.
           </p>
         </div>

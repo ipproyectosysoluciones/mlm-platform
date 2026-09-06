@@ -148,17 +148,17 @@ export default function AdminCrudTable<T extends { id: string }>({
             {icon}
           </div>
           <div>
-            <h1 className="text-xl font-bold text-slate-900">{title}</h1>
-            {description && <p className="text-sm text-slate-500">{description}</p>}
+            <h1 className="text-xl font-bold text-[var(--color-foreground)]">{title}</h1>
+            {description && <p className="text-sm text-[var(--color-foreground-muted)]">{description}</p>}
           </div>
         </div>
         <div className="ml-auto flex gap-2">
           <button
             onClick={onRefresh}
-            className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-[var(--color-secondary)] rounded-lg transition-colors"
             title="Recargar"
           >
-            <RefreshCw className={cn('w-5 h-5 text-slate-600', loading && 'animate-spin')} />
+            <RefreshCw className={cn('w-5 h-5 text-[var(--color-foreground-muted)]', loading && 'animate-spin')} />
           </button>
           {onCreate && (
             <button
@@ -188,7 +188,7 @@ export default function AdminCrudTable<T extends { id: string }>({
 
       {/* Filters */}
       {filters && filters.length > 0 && (
-        <div className="flex flex-wrap gap-3 p-4 bg-white rounded-xl border border-slate-200">
+        <div className="flex flex-wrap gap-3 p-4 bg-[var(--color-card)] rounded-xl border border-[var(--color-border)]">
           {filters.map((filter) =>
             filter.type === 'select' ? (
               <select
@@ -196,7 +196,7 @@ export default function AdminCrudTable<T extends { id: string }>({
                 value={filter.value}
                 onChange={(e) => filter.onChange(e.target.value)}
                 className={cn(
-                  'px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500',
+                  'px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500',
                   filter.className
                 )}
               >
@@ -214,7 +214,7 @@ export default function AdminCrudTable<T extends { id: string }>({
                 onChange={(e) => filter.onChange(e.target.value)}
                 placeholder={filter.placeholder}
                 className={cn(
-                  'px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500',
+                  'px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500',
                   filter.className
                 )}
               />
@@ -224,13 +224,13 @@ export default function AdminCrudTable<T extends { id: string }>({
       )}
 
       {/* Table card */}
-      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+      <div className="bg-[var(--color-card)] rounded-xl border border-[var(--color-border)] overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center py-20">
             <RefreshCw className="w-8 h-8 animate-spin text-blue-500" />
           </div>
         ) : data.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-20 text-slate-400">
+          <div className="flex flex-col items-center justify-center py-20 text-[var(--color-foreground-muted)]">
             <div className="w-12 h-12 mb-3 opacity-30">{icon}</div>
             <p className="font-medium">No hay {entityLabelPlural}</p>
             <p className="text-sm">Cambiá los filtros o creá {'una nueva'}</p>
@@ -239,12 +239,12 @@ export default function AdminCrudTable<T extends { id: string }>({
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
-                <TableRow className="border-b border-slate-200 bg-slate-50">
+                <TableRow className="border-b border-[var(--color-border)] bg-[var(--color-secondary)]">
                   {columns.map((col) => (
                     <TableHead
                       key={col.key}
                       className={cn(
-                        'font-semibold text-slate-600',
+                        'font-semibold text-[var(--color-foreground-muted)]',
                         col.align === 'right' && 'text-right',
                         col.align === 'center' && 'text-center',
                         col.className
@@ -254,7 +254,7 @@ export default function AdminCrudTable<T extends { id: string }>({
                     </TableHead>
                   ))}
                   {(onEdit || onDelete || renderActions) && (
-                    <TableHead className="text-center font-semibold text-slate-600">
+                    <TableHead className="text-center font-semibold text-[var(--color-foreground-muted)]">
                       Acciones
                     </TableHead>
                   )}
@@ -262,7 +262,7 @@ export default function AdminCrudTable<T extends { id: string }>({
               </TableHeader>
               <TableBody className="divide-y divide-slate-100">
                 {data.map((item) => (
-                  <TableRow key={item.id} className="hover:bg-slate-50 transition-colors">
+                  <TableRow key={item.id} className="hover:bg-[var(--color-secondary)] transition-colors">
                     {columns.map((col) => (
                       <TableCell
                         key={col.key}
@@ -338,8 +338,8 @@ export default function AdminCrudTable<T extends { id: string }>({
 
         {/* Pagination */}
         {!loading && data.length > 0 && (
-          <div className="flex items-center justify-between px-4 py-3 border-t border-slate-200 bg-slate-50">
-            <span className="text-sm text-slate-500">
+          <div className="flex items-center justify-between px-4 py-3 border-t border-[var(--color-border)] bg-[var(--color-secondary)]">
+            <span className="text-sm text-[var(--color-foreground-muted)]">
               {total} {total === 1 ? entityLabel : entityLabelPlural} — página {page} de{' '}
               {totalPages}
             </span>
@@ -347,14 +347,14 @@ export default function AdminCrudTable<T extends { id: string }>({
               <button
                 onClick={() => onPageChange(Math.max(1, page - 1))}
                 disabled={page <= 1}
-                className="p-2 rounded-lg hover:bg-slate-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="p-2 rounded-lg hover:bg-[var(--color-muted)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
               <button
                 onClick={() => onPageChange(Math.min(totalPages, page + 1))}
                 disabled={page >= totalPages}
-                className="p-2 rounded-lg hover:bg-slate-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="p-2 rounded-lg hover:bg-[var(--color-muted)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>

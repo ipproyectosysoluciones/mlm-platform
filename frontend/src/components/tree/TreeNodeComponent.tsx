@@ -68,7 +68,7 @@ function TreeNodeComponent({ data, selected }: TreeNodeComponentProps) {
             <p className="font-semibold text-sm truncate" title={node.email}>
               {node.email?.split('@')[0] || 'User'}
             </p>
-            <p className="text-xs text-gray-500 capitalize">
+            <p className="text-xs text-[var(--color-foreground-muted)] capitalize">
               {isLeft ? 'Left' : 'Right'} • Lvl {node.level}
             </p>
           </div>
@@ -94,7 +94,7 @@ function TreeNodeComponent({ data, selected }: TreeNodeComponentProps) {
       <Handle
         type="target"
         position={Position.Top}
-        className="!bg-gray-400 !w-3 !h-3 !border-2 !border-white !-top-1.5"
+        className="!bg-[var(--color-secondary)] !w-3 !h-3 !border-2 !border-white !-top-1.5"
         style={{ transform: 'translateX(-50%)' }}
       />
 

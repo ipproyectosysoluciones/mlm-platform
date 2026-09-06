@@ -116,8 +116,8 @@ export default function LeaderboardPage() {
           <Trophy className="w-6 h-6 text-white" />
         </div>
         <div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-slate-900">Leaderboard</h1>
-          <p className="text-slate-500 mt-0.5 text-sm">Los mejores vendedores y referidores</p>
+          <h1 className="text-2xl lg:text-3xl font-bold text-[var(--color-foreground)]">Leaderboard</h1>
+          <p className="text-[var(--color-foreground-muted)] mt-0.5 text-sm">Los mejores vendedores y referidores</p>
         </div>
       </div>
 
@@ -143,7 +143,7 @@ export default function LeaderboardPage() {
                 className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
                   period === p.value
                     ? 'bg-purple-600 text-white shadow-md shadow-purple-500/25'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    : 'bg-[var(--color-secondary)] text-[var(--color-foreground-muted)] hover:bg-[var(--color-muted)]'
                 }`}
               >
                 {p.label}
@@ -206,7 +206,7 @@ export default function LeaderboardPage() {
         <div className="flex justify-center">
           <button
             onClick={fetchData}
-            className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-600 transition-colors"
+            className="flex items-center gap-1.5 text-xs text-[var(--color-foreground-muted)] hover:text-[var(--color-foreground-muted)] transition-colors"
           >
             <RefreshCw className="w-3 h-3" />
             Actualizar datos
@@ -222,7 +222,7 @@ export default function LeaderboardPage() {
       {/* Loading indicator for sticky banner area */}
       {isLoading && (
         <div className="flex justify-center py-4">
-          <Loader2 className="w-5 h-5 text-slate-400 animate-spin" />
+          <Loader2 className="w-5 h-5 text-[var(--color-foreground-muted)] animate-spin" />
         </div>
       )}
     </div>

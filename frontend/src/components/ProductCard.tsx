@@ -81,7 +81,7 @@ function getTypeBadgeColor(type: ProductType | undefined): string {
     case 'service':
       return 'bg-emerald-500/90 text-white';
     default:
-      return 'bg-gray-500/90 text-white';
+      return 'bg-[var(--color-secondary)]0/90 text-white';
   }
 }
 
@@ -153,8 +153,8 @@ export function ProductCard({
   return (
     <div
       className={cn(
-        'group relative flex flex-col overflow-hidden rounded-xl border border-slate-700 bg-slate-800 transition-all duration-300',
-        'hover:border-slate-600 hover:shadow-xl hover:shadow-purple-500/10',
+        'group relative flex flex-col overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] transition-all duration-300',
+        'hover:border-[var(--color-border)] hover:shadow-xl hover:shadow-purple-500/10',
         isHovered && 'scale-[1.02]',
         !product.isActive && 'opacity-60',
         className
@@ -163,7 +163,7 @@ export function ProductCard({
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Product Image */}
-      <div className="relative aspect-video overflow-hidden bg-slate-700">
+      <div className="relative aspect-video overflow-hidden bg-[var(--color-card)]">
         {!imageError ? (
           <img
             src={imageUrl}
@@ -173,8 +173,8 @@ export function ProductCard({
             loading="lazy"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-slate-700">
-            <span className="text-4xl font-bold text-slate-500">{product.name.charAt(0)}</span>
+          <div className="flex h-full w-full items-center justify-center bg-[var(--color-card)]">
+            <span className="text-4xl font-bold text-[var(--color-foreground-muted)]">{product.name.charAt(0)}</span>
           </div>
         )}
 
@@ -241,17 +241,17 @@ export function ProductCard({
         {/* Price */}
         <div className="flex items-baseline gap-2">
           <PriceDisplay amount={product.price} size="lg" />
-          <span className="text-sm text-slate-400">{perMonth}</span>
+          <span className="text-sm text-[var(--color-foreground-muted)]">{perMonth}</span>
         </div>
 
         {/* Duration / Subscription Info */}
         {productType === 'subscription' && (
-          <p className="text-sm text-slate-400">{durationLabel}</p>
+          <p className="text-sm text-[var(--color-foreground-muted)]">{durationLabel}</p>
         )}
 
         {/* Service Info */}
         {productType === 'service' && (
-          <p className="text-sm text-slate-400 flex items-center gap-1">
+          <p className="text-sm text-[var(--color-foreground-muted)] flex items-center gap-1">
             <Wrench className="w-4 h-4" />
             {t('products.service')}
           </p>
@@ -262,8 +262,8 @@ export function ProductCard({
           <button
             onClick={handleViewDetails}
             className={cn(
-              'flex-1 rounded-lg border border-slate-600 px-4 py-2 text-sm font-medium text-white transition-colors',
-              'hover:border-slate-500 hover:bg-slate-700'
+              'flex-1 rounded-lg border border-[var(--color-border)] px-4 py-2 text-sm font-medium text-white transition-colors',
+              'hover:border-[var(--color-border)] hover:bg-[var(--color-card)]'
             )}
           >
             {t('products.viewDetails')}
@@ -277,7 +277,7 @@ export function ProductCard({
             }
             className={cn(
               'flex flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-white transition-colors',
-              'bg-purple-600 hover:bg-purple-500 disabled:bg-slate-600 disabled:cursor-not-allowed'
+              'bg-purple-600 hover:bg-purple-500 disabled:bg-[var(--color-card)] disabled:cursor-not-allowed'
             )}
           >
             {isLoading ? (

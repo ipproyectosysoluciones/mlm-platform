@@ -185,7 +185,7 @@ export default function TwoFactor() {
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="flex flex-col items-center gap-4">
           <RefreshCw className="w-8 h-8 text-emerald-500 animate-spin" />
-          <p className="text-slate-600">{t('common.loading')}</p>
+          <p className="text-[var(--color-foreground-muted)]">{t('common.loading')}</p>
         </div>
       </div>
     );
@@ -197,16 +197,16 @@ export default function TwoFactor() {
   if (recoveryCodes) {
     return (
       <div className="max-w-2xl mx-auto">
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+        <div className="bg-[var(--color-card)] rounded-xl shadow-sm border border-[var(--color-border)] p-6">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
               <CheckCircle className="w-6 h-6 text-emerald-600" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-slate-900">
+              <h1 className="text-xl font-bold text-[var(--color-foreground)]">
                 {t('twoFactor.recoveryCodesTitle')}
               </h1>
-              <p className="text-slate-600 text-sm">{t('twoFactor.recoveryCodesSubtitle')}</p>
+              <p className="text-[var(--color-foreground-muted)] text-sm">{t('twoFactor.recoveryCodesSubtitle')}</p>
             </div>
           </div>
 
@@ -221,18 +221,18 @@ export default function TwoFactor() {
             {recoveryCodes.map((code, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between bg-slate-50 rounded-lg px-4 py-3"
+                className="flex items-center justify-between bg-[var(--color-secondary)] rounded-lg px-4 py-3"
               >
-                <code className="font-mono text-sm text-slate-700">{code}</code>
+                <code className="font-mono text-sm text-[var(--color-foreground)]">{code}</code>
                 <button
                   onClick={() => copyRecoveryCode(code, index)}
-                  className="p-1.5 hover:bg-slate-200 rounded transition-colors"
+                  className="p-1.5 hover:bg-[var(--color-muted)] rounded transition-colors"
                   title={t('common.copy')}
                 >
                   {copiedIndex === index ? (
                     <CheckCircle className="w-4 h-4 text-emerald-600" />
                   ) : (
-                    <Copy className="w-4 h-4 text-slate-500" />
+                    <Copy className="w-4 h-4 text-[var(--color-foreground-muted)]" />
                   )}
                 </button>
               </div>
@@ -255,15 +255,15 @@ export default function TwoFactor() {
    */
   return (
     <div className="max-w-2xl mx-auto">
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+      <div className="bg-[var(--color-card)] rounded-xl shadow-sm border border-[var(--color-border)] p-6">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
           <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-full flex items-center justify-center">
             <Shield className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-slate-900">{t('twoFactor.title')}</h1>
-            <p className="text-slate-600 text-sm">{t('twoFactor.subtitle')}</p>
+            <h1 className="text-xl font-bold text-[var(--color-foreground)]">{t('twoFactor.title')}</h1>
+            <p className="text-[var(--color-foreground-muted)] text-sm">{t('twoFactor.subtitle')}</p>
           </div>
         </div>
 
@@ -286,13 +286,13 @@ export default function TwoFactor() {
         {/* 2FA Disabled - Show enable button */}
         {!status?.enabled && !setupData && !isDisabling && (
           <div className="text-center py-8">
-            <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <ShieldOff className="w-8 h-8 text-slate-400" />
+            <div className="w-16 h-16 bg-[var(--color-secondary)] rounded-full flex items-center justify-center mx-auto mb-4">
+              <ShieldOff className="w-8 h-8 text-[var(--color-foreground-muted)]" />
             </div>
-            <h2 className="text-lg font-semibold text-slate-900 mb-2">
+            <h2 className="text-lg font-semibold text-[var(--color-foreground)] mb-2">
               {t('twoFactor.disabledTitle')}
             </h2>
-            <p className="text-slate-600 mb-6">{t('twoFactor.disabledDescription')}</p>
+            <p className="text-[var(--color-foreground-muted)] mb-6">{t('twoFactor.disabledDescription')}</p>
             <button
               onClick={handleStartSetup}
               disabled={isSettingUp}
@@ -317,34 +317,34 @@ export default function TwoFactor() {
         {setupData && (
           <div className="space-y-6">
             <div className="text-center">
-              <h2 className="text-lg font-semibold text-slate-900 mb-2">
+              <h2 className="text-lg font-semibold text-[var(--color-foreground)] mb-2">
                 {t('twoFactor.setupTitle')}
               </h2>
-              <p className="text-slate-600 text-sm">{t('twoFactor.setupDescription')}</p>
+              <p className="text-[var(--color-foreground-muted)] text-sm">{t('twoFactor.setupDescription')}</p>
             </div>
 
             {/* QR Code */}
             <div className="flex flex-col items-center">
-              <div className="bg-white p-4 border border-slate-200 rounded-lg">
+              <div className="bg-[var(--color-card)] p-4 border border-[var(--color-border)] rounded-lg">
                 <img src={setupData.qrCodeUrl} alt="2FA QR Code" className="w-48 h-48" />
               </div>
-              <p className="text-xs text-slate-500 mt-2">{t('twoFactor.scanWithApp')}</p>
+              <p className="text-xs text-[var(--color-foreground-muted)] mt-2">{t('twoFactor.scanWithApp')}</p>
             </div>
 
             {/* Manual secret */}
-            <div className="bg-slate-50 rounded-lg p-4">
+            <div className="bg-[var(--color-secondary)] rounded-lg p-4">
               <div className="flex items-center gap-2 mb-2">
-                <Key className="w-4 h-4 text-slate-500" />
-                <span className="text-sm font-medium text-slate-700">
+                <Key className="w-4 h-4 text-[var(--color-foreground-muted)]" />
+                <span className="text-sm font-medium text-[var(--color-foreground)]">
                   {t('twoFactor.manualSecret')}
                 </span>
               </div>
-              <code className="text-xs text-slate-600 break-all">{setupData.secret}</code>
+              <code className="text-xs text-[var(--color-foreground-muted)] break-all">{setupData.secret}</code>
             </div>
 
             {/* Verification input */}
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label className="block text-sm font-medium text-[var(--color-foreground)] mb-2">
                 {t('twoFactor.enterCode')}
               </label>
               <input
@@ -353,7 +353,7 @@ export default function TwoFactor() {
                 onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                 placeholder="000000"
                 maxLength={6}
-                className="w-full px-4 py-3 text-center text-2xl font-mono tracking-widest border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full px-4 py-3 text-center text-2xl font-mono tracking-widest border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
               />
             </div>
 
@@ -361,7 +361,7 @@ export default function TwoFactor() {
             <div className="flex gap-3">
               <button
                 onClick={handleCancelSetup}
-                className="flex-1 py-3 border border-slate-300 text-slate-700 rounded-lg font-medium hover:bg-slate-50 transition-colors"
+                className="flex-1 py-3 border border-[var(--color-border)] text-[var(--color-foreground)] rounded-lg font-medium hover:bg-[var(--color-secondary)] transition-colors"
               >
                 {t('common.cancel')}
               </button>
@@ -378,7 +378,7 @@ export default function TwoFactor() {
               </button>
             </div>
 
-            <p className="text-xs text-slate-500 text-center">
+            <p className="text-xs text-[var(--color-foreground-muted)] text-center">
               {t('twoFactor.expiresIn', { minutes: Math.floor(setupData.expiresIn / 60) })}
             </p>
           </div>
@@ -390,15 +390,15 @@ export default function TwoFactor() {
             <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <ShieldCheck className="w-8 h-8 text-emerald-600" />
             </div>
-            <h2 className="text-lg font-semibold text-slate-900 mb-2">
+            <h2 className="text-lg font-semibold text-[var(--color-foreground)] mb-2">
               {t('twoFactor.enabledTitle')}
             </h2>
-            <p className="text-slate-600 mb-2">
+            <p className="text-[var(--color-foreground-muted)] mb-2">
               {t('twoFactor.enabledDescription', {
                 date: status.enabledAt ? new Date(status.enabledAt).toLocaleDateString() : '',
               })}
             </p>
-            <p className="text-xs text-slate-500 mb-6">
+            <p className="text-xs text-[var(--color-foreground-muted)] mb-6">
               {t('twoFactor.method', { method: status.method?.toUpperCase() || 'TOTP' })}
             </p>
             <button
@@ -418,15 +418,15 @@ export default function TwoFactor() {
               <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <AlertCircle className="w-8 h-8 text-red-600" />
               </div>
-              <h2 className="text-lg font-semibold text-slate-900 mb-2">
+              <h2 className="text-lg font-semibold text-[var(--color-foreground)] mb-2">
                 {t('twoFactor.disableTitle')}
               </h2>
-              <p className="text-slate-600 text-sm">{t('twoFactor.disableDescription')}</p>
+              <p className="text-[var(--color-foreground-muted)] text-sm">{t('twoFactor.disableDescription')}</p>
             </div>
 
             {/* Disable input */}
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label className="block text-sm font-medium text-[var(--color-foreground)] mb-2">
                 {t('twoFactor.enterCodeToDisable')}
               </label>
               <input
@@ -435,9 +435,9 @@ export default function TwoFactor() {
                 onChange={(e) => setDisableCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                 placeholder="000000"
                 maxLength={6}
-                className="w-full px-4 py-3 text-center text-2xl font-mono tracking-widest border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                className="w-full px-4 py-3 text-center text-2xl font-mono tracking-widest border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
               />
-              <p className="text-xs text-slate-500 mt-2">{t('twoFactor.useRecoveryCode')}</p>
+              <p className="text-xs text-[var(--color-foreground-muted)] mt-2">{t('twoFactor.useRecoveryCode')}</p>
             </div>
 
             {/* Actions */}
@@ -448,7 +448,7 @@ export default function TwoFactor() {
                   setDisableCode('');
                   setError(null);
                 }}
-                className="flex-1 py-3 border border-slate-300 text-slate-700 rounded-lg font-medium hover:bg-slate-50 transition-colors"
+                className="flex-1 py-3 border border-[var(--color-border)] text-[var(--color-foreground)] rounded-lg font-medium hover:bg-[var(--color-secondary)] transition-colors"
               >
                 {t('common.cancel')}
               </button>

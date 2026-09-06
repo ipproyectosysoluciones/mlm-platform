@@ -83,10 +83,10 @@ export function WithdrawalModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={handleClose} />
 
-      <div className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
+      <div className="relative w-full max-w-md rounded-2xl bg-[var(--color-card)] p-6 shadow-2xl">
         <button
           onClick={handleClose}
-          className="absolute right-4 top-4 rounded-full p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+          className="absolute right-4 top-4 rounded-full p-1 text-[var(--color-foreground-muted)] hover:bg-[var(--color-secondary)] hover:text-[var(--color-foreground-muted)]"
         >
           <X className="h-5 w-5" />
         </button>
@@ -108,10 +108,10 @@ export function WithdrawalModal({
                 />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold text-slate-900">
+            <h3 className="text-xl font-semibold text-[var(--color-foreground)]">
               {t('wallet.withdrawalRequested') || 'Withdrawal Requested!'}
             </h3>
-            <p className="mt-2 text-slate-500">
+            <p className="mt-2 text-[var(--color-foreground-muted)]">
               {t('wallet.withdrawalPending') || 'Your request is pending approval.'}
             </p>
           </div>
@@ -121,7 +121,7 @@ export function WithdrawalModal({
               <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-amber-100">
                 <AlertTriangle className="h-6 w-6 text-amber-600" />
               </div>
-              <h3 className="text-xl font-semibold text-slate-900 text-center">
+              <h3 className="text-xl font-semibold text-[var(--color-foreground)] text-center">
                 {t('wallet.confirmWithdrawal') || 'Confirm Withdrawal'}
               </h3>
             </div>
@@ -141,19 +141,19 @@ export function WithdrawalModal({
               <p className="mt-1 text-sm text-blue-900 font-semibold">{destination.email}</p>
             </div>
 
-            <div className="mb-6 rounded-lg bg-slate-50 p-4 space-y-3">
+            <div className="mb-6 rounded-lg bg-[var(--color-secondary)] p-4 space-y-3">
               <div className="flex justify-between">
-                <span className="text-slate-600">{t('wallet.requestedAmount') || 'Amount'}</span>
-                <span className="font-medium text-slate-900">{formatCurrency(amount)}</span>
+                <span className="text-[var(--color-foreground-muted)]">{t('wallet.requestedAmount') || 'Amount'}</span>
+                <span className="font-medium text-[var(--color-foreground)]">{formatCurrency(amount)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-600">
+                <span className="text-[var(--color-foreground-muted)]">
                   {t('wallet.fee')} ({feePercentage}%)
                 </span>
                 <span className="font-medium text-amber-600">-{formatCurrency(feeAmount)}</span>
               </div>
-              <div className="border-t border-slate-200 pt-3 flex justify-between">
-                <span className="font-medium text-slate-700">
+              <div className="border-t border-[var(--color-border)] pt-3 flex justify-between">
+                <span className="font-medium text-[var(--color-foreground)]">
                   {t('wallet.netAmount') || 'You will receive'}
                 </span>
                 <span className="text-lg font-bold text-emerald-600">
@@ -162,7 +162,7 @@ export function WithdrawalModal({
               </div>
             </div>
 
-            <div className="mb-6 text-sm text-slate-500">
+            <div className="mb-6 text-sm text-[var(--color-foreground-muted)]">
               <p>
                 {t('wallet.withdrawalWarning') ||
                   'This action cannot be undone. Your withdrawal request will be reviewed by an administrator.'}
@@ -174,8 +174,8 @@ export function WithdrawalModal({
                 onClick={handleClose}
                 disabled={isLoadingWithdrawals}
                 className={cn(
-                  'flex-1 rounded-lg border border-slate-200 py-3 font-medium text-slate-700',
-                  'hover:bg-slate-50 transition-colors disabled:opacity-50'
+                  'flex-1 rounded-lg border border-[var(--color-border)] py-3 font-medium text-[var(--color-foreground)]',
+                  'hover:bg-[var(--color-secondary)] transition-colors disabled:opacity-50'
                 )}
               >
                 {t('common.cancel') || 'Cancel'}
@@ -186,7 +186,7 @@ export function WithdrawalModal({
                 className={cn(
                   'flex-1 rounded-lg py-3 font-medium text-white',
                   'bg-emerald-600 hover:bg-emerald-500 transition-colors',
-                  'disabled:bg-slate-300 disabled:cursor-not-allowed',
+                  'disabled:bg-[var(--color-secondary)] disabled:cursor-not-allowed',
                   isConfirmed && 'relative'
                 )}
               >

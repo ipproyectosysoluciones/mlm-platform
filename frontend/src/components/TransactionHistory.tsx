@@ -137,23 +137,23 @@ export function TransactionHistory({ className, limit = 10 }: TransactionHistory
   if (transactions.length === 0) {
     return (
       <div
-        className={cn('flex flex-col items-center justify-center p-8 text-slate-500', className)}
+        className={cn('flex flex-col items-center justify-center p-8 text-[var(--color-foreground-muted)]', className)}
       >
-        <ArrowDownCircle className="h-12 w-12 mb-3 text-slate-300" />
+        <ArrowDownCircle className="h-12 w-12 mb-3 text-[var(--color-foreground-subtle)]" />
         <p>{t('wallet.noTransactions') || 'No transactions yet'}</p>
       </div>
     );
   }
 
   return (
-    <div className={cn('rounded-2xl border border-slate-200 bg-white', className)}>
+    <div className={cn('rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)]', className)}>
       {/* Header with filter */}
-      <div className="flex items-center justify-between border-b border-slate-200 p-4">
-        <h3 className="text-lg font-semibold text-slate-900">
+      <div className="flex items-center justify-between border-b border-[var(--color-border)] p-4">
+        <h3 className="text-lg font-semibold text-[var(--color-foreground)]">
           {t('wallet.transactions') || 'Transactions'}
         </h3>
         <div className="flex items-center gap-2">
-          <Filter className="h-4 w-4 text-slate-400" />
+          <Filter className="h-4 w-4 text-[var(--color-foreground-muted)]" />
           <select
             value={transactionType || ''}
             onChange={(e) =>
@@ -161,7 +161,7 @@ export function TransactionHistory({ className, limit = 10 }: TransactionHistory
                 (e.target.value || null) as 'commission' | 'withdrawal' | 'refund' | null
               )
             }
-            className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 focus:border-emerald-500 focus:outline-none"
+            className="rounded-lg border border-[var(--color-border)] bg-[var(--color-secondary)] px-3 py-2 text-sm text-[var(--color-foreground)] focus:border-emerald-500 focus:outline-none"
           >
             {typeOptions.map((option) => (
               <option key={option.value || 'all'} value={option.value || ''}>
@@ -182,7 +182,7 @@ export function TransactionHistory({ className, limit = 10 }: TransactionHistory
           return (
             <div
               key={transaction.id}
-              className="flex items-center gap-4 p-4 hover:bg-slate-50 transition-colors"
+              className="flex items-center gap-4 p-4 hover:bg-[var(--color-secondary)] transition-colors"
             >
               {/* Icon */}
               <div
@@ -196,10 +196,10 @@ export function TransactionHistory({ className, limit = 10 }: TransactionHistory
 
               {/* Details */}
               <div className="flex-1 min-w-0">
-                <p className="font-medium text-slate-900 capitalize">
+                <p className="font-medium text-[var(--color-foreground)] capitalize">
                   {t(`wallet.${transaction.type}`) || transaction.type}
                 </p>
-                <p className="text-sm text-slate-500 truncate">
+                <p className="text-sm text-[var(--color-foreground-muted)] truncate">
                   {transaction.description || t(`wallet.${transaction.type}Description`) || '-'}
                 </p>
               </div>
@@ -215,7 +215,7 @@ export function TransactionHistory({ className, limit = 10 }: TransactionHistory
                   {isPositive ? '+' : '-'}
                   {formatCurrency(Math.abs(transaction.amount), transaction.currency)}
                 </p>
-                <p className="text-sm text-slate-400">{formatDate(transaction.createdAt)}</p>
+                <p className="text-sm text-[var(--color-foreground-muted)]">{formatDate(transaction.createdAt)}</p>
               </div>
             </div>
           );
@@ -228,7 +228,7 @@ export function TransactionHistory({ className, limit = 10 }: TransactionHistory
           <button
             onClick={handleLoadMore}
             disabled={isLoading}
-            className="flex items-center gap-2 rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+            className="flex items-center gap-2 rounded-lg border border-[var(--color-border)] px-4 py-2 text-sm font-medium text-[var(--color-foreground)] hover:bg-[var(--color-secondary)] disabled:opacity-50"
           >
             {isLoading ? (
               <Loader2 className="h-4 w-4 animate-spin" />

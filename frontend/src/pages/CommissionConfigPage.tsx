@@ -150,16 +150,16 @@ export default function CommissionConfigPage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Link to="/admin" className="p-2 hover:bg-slate-100 rounded-lg transition-colors">
-          <ArrowLeft className="w-5 h-5 text-slate-600" />
+        <Link to="/admin" className="p-2 hover:bg-[var(--color-secondary)] rounded-lg transition-colors">
+          <ArrowLeft className="w-5 h-5 text-[var(--color-foreground-muted)]" />
         </Link>
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
             <DollarSign className="w-5 h-5 text-emerald-600" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">Configuración de Comisiones</h1>
-            <p className="text-slate-500 text-sm">
+            <h1 className="text-2xl font-bold text-[var(--color-foreground)]">Configuración de Comisiones</h1>
+            <p className="text-[var(--color-foreground-muted)] text-sm">
               Gestiona las tasas de comisión por tipo de negocio
             </p>
           </div>
@@ -172,7 +172,7 @@ export default function CommissionConfigPage() {
           <select
             value={filterBusinessType}
             onChange={(e) => setFilterBusinessType(e.target.value as BusinessType | 'all')}
-            className="px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            className="px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
           >
             <option value="all">Todos los tipos</option>
             {BUSINESS_TYPES.map((type) => (
@@ -185,10 +185,10 @@ export default function CommissionConfigPage() {
         <div className="flex gap-2">
           <button
             onClick={loadConfigs}
-            className="p-2 hover:bg-slate-100 rounded-lg"
+            className="p-2 hover:bg-[var(--color-secondary)] rounded-lg"
             title="Actualizar"
           >
-            <RefreshCw className="w-5 h-5 text-slate-600" />
+            <RefreshCw className="w-5 h-5 text-[var(--color-foreground-muted)]" />
           </button>
           <button
             onClick={() => {
@@ -212,7 +212,7 @@ export default function CommissionConfigPage() {
       {/* Form Modal */}
       {showForm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md">
+          <div className="bg-[var(--color-card)] rounded-xl p-6 w-full max-w-md">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold">
                 {editingId ? 'Editar Configuración' : 'Nueva Configuración'}
@@ -222,7 +222,7 @@ export default function CommissionConfigPage() {
                   setShowForm(false);
                   setEditingId(null);
                 }}
-                className="p-2 hover:bg-slate-100 rounded-lg"
+                className="p-2 hover:bg-[var(--color-secondary)] rounded-lg"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -232,7 +232,7 @@ export default function CommissionConfigPage() {
               {!editingId && (
                 <>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                    <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">
                       Tipo de Negocio
                     </label>
                     <select
@@ -240,7 +240,7 @@ export default function CommissionConfigPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, businessType: e.target.value as BusinessType })
                       }
-                      className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                      className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                     >
                       {BUSINESS_TYPES.map((type) => (
                         <option key={type.value} value={type.value}>
@@ -252,7 +252,7 @@ export default function CommissionConfigPage() {
 
                   {formData.businessType === 'otro' && (
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-1">
+                      <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">
                         Nombre del Negocio
                       </label>
                       <input
@@ -261,14 +261,14 @@ export default function CommissionConfigPage() {
                         onChange={(e) =>
                           setFormData({ ...formData, customBusinessName: e.target.value })
                         }
-                        className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                        className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                         placeholder="Ej: Curso online"
                       />
                     </div>
                   )}
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                    <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">
                       Nivel de Comisión
                     </label>
                     <select
@@ -276,7 +276,7 @@ export default function CommissionConfigPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, level: e.target.value as CommissionLevel })
                       }
-                      className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                      className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                     >
                       {COMMISSION_LEVELS.map((level) => (
                         <option key={level.value} value={level.value}>
@@ -289,7 +289,7 @@ export default function CommissionConfigPage() {
               )}
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
+                <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">
                   Porcentaje (0-1)
                 </label>
                 <div className="flex items-center gap-2">
@@ -313,10 +313,10 @@ export default function CommissionConfigPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, percentage: parseFloat(e.target.value) })
                     }
-                    className="w-20 px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    className="w-20 px-3 py-2 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                   />
                 </div>
-                <p className="text-sm text-slate-500 mt-1">
+                <p className="text-sm text-[var(--color-foreground-muted)] mt-1">
                   Equivalente a: {(formData.percentage * 100).toFixed(1)}%
                 </p>
               </div>
@@ -328,7 +328,7 @@ export default function CommissionConfigPage() {
                     setShowForm(false);
                     setEditingId(null);
                   }}
-                  className="flex-1 px-4 py-2 border border-slate-200 rounded-lg hover:bg-slate-50"
+                  className="flex-1 px-4 py-2 border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-secondary)]"
                 >
                   Cancelar
                 </button>
@@ -348,38 +348,38 @@ export default function CommissionConfigPage() {
       {/* Config Cards by Business Type */}
       <div className="space-y-6">
         {Object.entries(groupedConfigs).map(([businessType, typeConfigs]) => (
-          <div key={businessType} className="bg-white rounded-xl shadow-sm border border-slate-200">
-            <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+          <div key={businessType} className="bg-[var(--color-card)] rounded-xl shadow-sm border border-[var(--color-border)]">
+            <div className="p-4 border-b border-[var(--color-border-subtle)] flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Layers className="w-5 h-5 text-emerald-600" />
-                <h3 className="font-semibold text-slate-900">
+                <h3 className="font-semibold text-[var(--color-foreground)]">
                   {BUSINESS_TYPES.find((b) => b.value === businessType)?.label || businessType}
                 </h3>
               </div>
-              <span className="text-sm text-slate-500">{typeConfigs.length} configuraciones</span>
+              <span className="text-sm text-[var(--color-foreground-muted)]">{typeConfigs.length} configuraciones</span>
             </div>
 
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-slate-50">
+                <thead className="bg-[var(--color-secondary)]">
                   <tr>
-                    <th className="px-4 py-3 text-left text-sm font-medium text-slate-500">
+                    <th className="px-4 py-3 text-left text-sm font-medium text-[var(--color-foreground-muted)]">
                       Nivel
                     </th>
-                    <th className="px-4 py-3 text-left text-sm font-medium text-slate-500">
+                    <th className="px-4 py-3 text-left text-sm font-medium text-[var(--color-foreground-muted)]">
                       Porcentaje
                     </th>
-                    <th className="px-4 py-3 text-left text-sm font-medium text-slate-500">
+                    <th className="px-4 py-3 text-left text-sm font-medium text-[var(--color-foreground-muted)]">
                       Estado
                     </th>
-                    <th className="px-4 py-3 text-left text-sm font-medium text-slate-500">
+                    <th className="px-4 py-3 text-left text-sm font-medium text-[var(--color-foreground-muted)]">
                       Acciones
                     </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {typeConfigs.map((config) => (
-                    <tr key={config.id} className="hover:bg-slate-50">
+                    <tr key={config.id} className="hover:bg-[var(--color-secondary)]">
                       <td className="px-4 py-3 text-sm">
                         {COMMISSION_LEVELS.find((l) => l.value === config.level)?.label ||
                           config.level}
@@ -391,7 +391,7 @@ export default function CommissionConfigPage() {
                         <button
                           onClick={() => handleToggleActive(config)}
                           className={`flex items-center gap-1 text-sm ${
-                            config.isActive ? 'text-green-600' : 'text-slate-400'
+                            config.isActive ? 'text-green-600' : 'text-[var(--color-foreground-muted)]'
                           }`}
                         >
                           {config.isActive ? (
@@ -406,7 +406,7 @@ export default function CommissionConfigPage() {
                         <div className="flex gap-2">
                           <button
                             onClick={() => handleEdit(config)}
-                            className="p-2 hover:bg-slate-100 rounded-lg text-slate-600"
+                            className="p-2 hover:bg-[var(--color-secondary)] rounded-lg text-[var(--color-foreground-muted)]"
                             title="Editar"
                           >
                             <Pencil className="w-4 h-4" />
@@ -430,8 +430,8 @@ export default function CommissionConfigPage() {
       </div>
 
       {filteredConfigs.length === 0 && (
-        <div className="bg-white rounded-xl p-8 text-center">
-          <p className="text-slate-500">No hay configuraciones de comisiones</p>
+        <div className="bg-[var(--color-card)] rounded-xl p-8 text-center">
+          <p className="text-[var(--color-foreground-muted)]">No hay configuraciones de comisiones</p>
           <button
             onClick={() => setShowForm(true)}
             className="mt-4 text-emerald-600 hover:underline"

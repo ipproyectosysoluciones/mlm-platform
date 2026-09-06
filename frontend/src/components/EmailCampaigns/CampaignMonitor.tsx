@@ -59,13 +59,13 @@ interface StatCardProps {
 
 function StatCard({ label, value, icon: Icon, color }: StatCardProps) {
   return (
-    <div className="flex items-center gap-3 rounded-lg border border-slate-700 bg-slate-800/50 p-3">
+    <div className="flex items-center gap-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-card)]/50 p-3">
       <div className={cn('flex h-9 w-9 items-center justify-center rounded-lg', color)}>
         <Icon className="h-4 w-4" />
       </div>
       <div>
-        <p className="text-xs text-slate-400">{label}</p>
-        <p className="text-lg font-bold text-slate-100">{value}</p>
+        <p className="text-xs text-[var(--color-foreground-muted)]">{label}</p>
+        <p className="text-lg font-bold text-[var(--color-foreground)]">{value}</p>
       </div>
     </div>
   );
@@ -132,7 +132,7 @@ export function CampaignMonitor({ campaignId, onBack, onViewLogs }: CampaignMoni
       <div className="flex items-center justify-center py-16" data-testid="monitor-loading">
         <div className="flex flex-col items-center gap-3">
           <Loader2 className="h-8 w-8 animate-spin text-purple-400" />
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-[var(--color-foreground-muted)]">
             {t('emailCampaigns.loadingDetails') || 'Loading campaign details...'}
           </p>
         </div>
@@ -146,10 +146,10 @@ export function CampaignMonitor({ campaignId, onBack, onViewLogs }: CampaignMoni
         className="flex flex-col items-center justify-center py-16"
         data-testid="monitor-not-found"
       >
-        <AlertTriangle className="h-12 w-12 text-slate-600 mb-4" />
-        <p className="text-slate-400">{t('emailCampaigns.notFound') || 'Campaign not found'}</p>
+        <AlertTriangle className="h-12 w-12 text-[var(--color-foreground-muted)] mb-4" />
+        <p className="text-[var(--color-foreground-muted)]">{t('emailCampaigns.notFound') || 'Campaign not found'}</p>
         {onBack && (
-          <Button variant="ghost" size="sm" onClick={onBack} className="mt-4 text-slate-400">
+          <Button variant="ghost" size="sm" onClick={onBack} className="mt-4 text-[var(--color-foreground-muted)]">
             <ArrowLeft className="h-4 w-4 mr-1" />
             {t('emailCampaigns.backToList') || 'Back to Campaigns'}
           </Button>
@@ -186,7 +186,7 @@ export function CampaignMonitor({ campaignId, onBack, onViewLogs }: CampaignMoni
           variant="ghost"
           size="sm"
           onClick={onBack}
-          className="text-slate-400 hover:text-slate-200 gap-1.5"
+          className="text-[var(--color-foreground-muted)] hover:text-[var(--color-foreground-muted)] gap-1.5"
           data-testid="monitor-back"
         >
           <ArrowLeft className="h-4 w-4" />
@@ -195,10 +195,10 @@ export function CampaignMonitor({ campaignId, onBack, onViewLogs }: CampaignMoni
       )}
 
       {/* Campaign Header / Encabezado de campaña */}
-      <Card className="border-slate-700 bg-slate-800">
+      <Card className="border-[var(--color-border)] bg-[var(--color-card)]">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2 text-slate-100">
+            <CardTitle className="flex items-center gap-2 text-[var(--color-foreground)]">
               <BarChart3 className="h-5 w-5 text-purple-400" />
               {campaign.name}
             </CardTitle>
@@ -206,7 +206,7 @@ export function CampaignMonitor({ campaignId, onBack, onViewLogs }: CampaignMoni
               className={cn(
                 'text-xs border',
                 isActive && 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30',
-                isDraft && 'bg-slate-500/20 text-slate-300 border-slate-500/30',
+                isDraft && 'bg-[var(--color-secondary)]0/20 text-[var(--color-foreground-subtle)] border-[var(--color-border)]/30',
                 isCompleted && 'bg-green-500/20 text-green-300 border-green-500/30',
                 campaign.status === 'failed' && 'bg-red-500/20 text-red-300 border-red-500/30',
                 campaign.status === 'paused' &&
@@ -221,12 +221,12 @@ export function CampaignMonitor({ campaignId, onBack, onViewLogs }: CampaignMoni
         <CardContent className="space-y-4">
           {/* Progress bar / Barra de progreso */}
           <div>
-            <div className="flex items-center justify-between text-sm text-slate-400 mb-2">
+            <div className="flex items-center justify-between text-sm text-[var(--color-foreground-muted)] mb-2">
               <span>
                 {t('emailCampaigns.progress') || 'Progress'}: {campaign.sentCount} /{' '}
                 {campaign.recipientCount}
               </span>
-              <span className="font-medium text-slate-200">{progressPercent}%</span>
+              <span className="font-medium text-[var(--color-foreground-muted)]">{progressPercent}%</span>
             </div>
             <Progress value={progressPercent} className="h-2" data-testid="send-progress" />
           </div>
@@ -280,7 +280,7 @@ export function CampaignMonitor({ campaignId, onBack, onViewLogs }: CampaignMoni
           label={t('emailCampaigns.statRecipients') || 'Recipients'}
           value={campaign.recipientCount}
           icon={Users}
-          color="bg-slate-500/20 text-slate-400"
+          color="bg-[var(--color-secondary)]0/20 text-[var(--color-foreground-muted)]"
         />
       </div>
 
@@ -337,7 +337,7 @@ export function CampaignMonitor({ campaignId, onBack, onViewLogs }: CampaignMoni
         {onViewLogs && (
           <Button
             variant="outline"
-            className="border-slate-600 text-slate-300 hover:bg-slate-700 gap-1.5"
+            className="border-[var(--color-border)] text-[var(--color-foreground-subtle)] hover:bg-[var(--color-card)] gap-1.5"
             onClick={() => onViewLogs(campaignId)}
             data-testid="view-logs-btn"
           >

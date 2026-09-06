@@ -98,9 +98,9 @@ export function MercadoPagoConnectCard() {
 
   if (isLoading) {
     return (
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex items-center gap-3">
+      <div className="bg-[var(--color-card)] rounded-2xl shadow-sm border border-[var(--color-border)] p-6 flex items-center gap-3">
         <Loader2 className="w-5 h-5 text-emerald-500 animate-spin" />
-        <span className="text-sm text-slate-500">{t('common.loading')}</span>
+        <span className="text-sm text-[var(--color-foreground-muted)]">{t('common.loading')}</span>
       </div>
     );
   }
@@ -110,7 +110,7 @@ export function MercadoPagoConnectCard() {
   const showConnect = state === 'never' || state === 'disconnected';
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-4">
+    <div className="bg-[var(--color-card)] rounded-2xl shadow-sm border border-[var(--color-border)] p-6 space-y-4">
       <div className="flex items-start gap-3">
         <div className="p-2 rounded-xl bg-blue-50 border border-blue-100">
           {isConnected ? (
@@ -122,14 +122,14 @@ export function MercadoPagoConnectCard() {
           )}
         </div>
         <div className="flex-1 min-w-0">
-          <h2 className="text-lg font-semibold text-slate-900">
+          <h2 className="text-lg font-semibold text-[var(--color-foreground)]">
             {isConnected
               ? t('vendor.mpConnect.connectedTitle')
               : isExpired
                 ? t('vendor.mpConnect.expiredTitle')
                 : t('vendor.mpConnect.title')}
           </h2>
-          <p className="text-sm text-slate-500 mt-1">
+          <p className="text-sm text-[var(--color-foreground-muted)] mt-1">
             {isConnected
               ? t('vendor.mpConnect.connectedSubtitle')
               : isExpired
@@ -138,12 +138,12 @@ export function MercadoPagoConnectCard() {
           </p>
 
           {isConnected && info?.mpUserId && (
-            <p className="text-xs text-slate-400 mt-2">
+            <p className="text-xs text-[var(--color-foreground-muted)] mt-2">
               {t('vendor.mpConnect.accountId')}: {info.mpUserId}
             </p>
           )}
           {isConnected && info?.expiresAt && (
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-[var(--color-foreground-muted)] mt-1">
               {t('vendor.mpConnect.expiresAt')}: {new Date(info.expiresAt).toLocaleDateString()}
             </p>
           )}
@@ -168,7 +168,7 @@ export function MercadoPagoConnectCard() {
             type="button"
             onClick={() => void handleConnect()}
             disabled={isAction}
-            className="inline-flex items-center gap-2 bg-slate-900 text-white text-sm font-medium py-2.5 px-4 rounded-xl hover:bg-slate-800 transition-colors disabled:opacity-60"
+            className="inline-flex items-center gap-2 bg-[var(--color-card)] text-white text-sm font-medium py-2.5 px-4 rounded-xl hover:bg-[var(--color-card)] transition-colors disabled:opacity-60"
           >
             <RefreshCw className="w-4 h-4" />
             {t('vendor.mpConnect.reconnect')}
@@ -192,7 +192,7 @@ export function MercadoPagoConnectCard() {
             type="button"
             onClick={() => void handleDisconnect()}
             disabled={isAction}
-            className="inline-flex items-center gap-2 border border-slate-300 text-slate-600 text-sm font-medium py-2.5 px-4 rounded-xl hover:bg-slate-50 transition-colors disabled:opacity-60"
+            className="inline-flex items-center gap-2 border border-[var(--color-border)] text-[var(--color-foreground-muted)] text-sm font-medium py-2.5 px-4 rounded-xl hover:bg-[var(--color-secondary)] transition-colors disabled:opacity-60"
           >
             <Unlink className="w-4 h-4" />
             {t('vendor.mpConnect.disconnect')}

@@ -78,15 +78,15 @@ export default function WithdrawalApprovalModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={handleClose} />
 
-      <div className="relative w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl">
+      <div className="relative w-full max-w-lg rounded-2xl bg-[var(--color-card)] p-6 shadow-2xl">
         <button
           onClick={handleClose}
-          className="absolute right-4 top-4 rounded-full p-1 text-slate-400 hover:bg-slate-100"
+          className="absolute right-4 top-4 rounded-full p-1 text-[var(--color-foreground-muted)] hover:bg-[var(--color-secondary)]"
         >
           <X className="h-5 w-5" />
         </button>
 
-        <h2 className="text-xl font-semibold text-slate-900 mb-6">Review Withdrawal Request</h2>
+        <h2 className="text-xl font-semibold text-[var(--color-foreground)] mb-6">Review Withdrawal Request</h2>
 
         {/* Destination — PROMINENT */}
         {withdrawal.destination ? (
@@ -98,27 +98,27 @@ export default function WithdrawalApprovalModal({
             <p className="text-xl font-bold text-blue-900">{withdrawal.destination.email}</p>
           </div>
         ) : (
-          <div className="mb-6 rounded-xl bg-slate-50 p-5 border border-slate-200">
-            <p className="text-slate-500 text-sm">No destination set</p>
+          <div className="mb-6 rounded-xl bg-[var(--color-secondary)] p-5 border border-[var(--color-border)]">
+            <p className="text-[var(--color-foreground-muted)] text-sm">No destination set</p>
           </div>
         )}
 
         {/* Amount details */}
-        <div className="mb-6 rounded-lg bg-slate-50 p-4 space-y-2">
+        <div className="mb-6 rounded-lg bg-[var(--color-secondary)] p-4 space-y-2">
           <div className="flex justify-between">
-            <span className="text-slate-600">Requested Amount</span>
-            <span className="font-medium text-slate-900">
+            <span className="text-[var(--color-foreground-muted)]">Requested Amount</span>
+            <span className="font-medium text-[var(--color-foreground)]">
               {formatCurrency(withdrawal.requestedAmount)}
             </span>
           </div>
           <div className="flex justify-between">
-            <span className="text-slate-600">Fee</span>
+            <span className="text-[var(--color-foreground-muted)]">Fee</span>
             <span className="font-medium text-amber-600">
               -{formatCurrency(withdrawal.feeAmount)}
             </span>
           </div>
-          <div className="border-t border-slate-200 pt-2 flex justify-between">
-            <span className="font-medium text-slate-700">Net Amount</span>
+          <div className="border-t border-[var(--color-border)] pt-2 flex justify-between">
+            <span className="font-medium text-[var(--color-foreground)]">Net Amount</span>
             <span className="text-lg font-bold text-emerald-600">
               {formatCurrency(withdrawal.netAmount)}
             </span>
@@ -127,15 +127,15 @@ export default function WithdrawalApprovalModal({
 
         {/* Gateway info */}
         {withdrawal.gatewayPayoutId && (
-          <div className="mb-4 text-sm text-slate-500">
+          <div className="mb-4 text-sm text-[var(--color-foreground-muted)]">
             Gateway ID:{' '}
-            <span className="font-mono text-slate-700">{withdrawal.gatewayPayoutId}</span>
+            <span className="font-mono text-[var(--color-foreground)]">{withdrawal.gatewayPayoutId}</span>
           </div>
         )}
 
         {/* Comment / rejection reason */}
         <div className="mb-6">
-          <label className="block text-sm font-medium text-slate-700 mb-2">
+          <label className="block text-sm font-medium text-[var(--color-foreground)] mb-2">
             Comment {withdrawal.status === 'pending' ? '(required for rejection)' : '(optional)'}
           </label>
           <textarea
@@ -143,7 +143,7 @@ export default function WithdrawalApprovalModal({
             onChange={(e) => setComment(e.target.value)}
             rows={3}
             placeholder="Add a comment or rejection reason..."
-            className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none"
+            className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none"
           />
         </div>
 
@@ -158,7 +158,7 @@ export default function WithdrawalApprovalModal({
           <button
             onClick={handleClose}
             disabled={isProcessing}
-            className="flex-1 rounded-lg border border-slate-200 py-3 font-medium text-slate-700 hover:bg-slate-50 transition-colors disabled:opacity-50"
+            className="flex-1 rounded-lg border border-[var(--color-border)] py-3 font-medium text-[var(--color-foreground)] hover:bg-[var(--color-secondary)] transition-colors disabled:opacity-50"
           >
             Cancel
           </button>

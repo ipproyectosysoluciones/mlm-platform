@@ -16,17 +16,17 @@ interface WalletSkeletonProps {
  */
 function BalanceSkeleton() {
   return (
-    <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-200">
+    <div className="bg-[var(--color-card)] rounded-xl p-6 shadow-sm border border-[var(--color-border)]">
       <div className="flex items-center justify-between">
         <div className="space-y-2">
-          <div className="h-4 w-24 bg-slate-200 rounded animate-pulse" />
-          <div className="h-10 w-40 bg-slate-200 rounded animate-pulse" />
+          <div className="h-4 w-24 bg-[var(--color-muted)] rounded animate-pulse" />
+          <div className="h-10 w-40 bg-[var(--color-muted)] rounded animate-pulse" />
         </div>
-        <div className="h-12 w-12 bg-slate-200 rounded-full animate-pulse" />
+        <div className="h-12 w-12 bg-[var(--color-muted)] rounded-full animate-pulse" />
       </div>
       <div className="mt-4 flex gap-3">
-        <div className="h-8 w-20 bg-slate-200 rounded animate-pulse" />
-        <div className="h-8 w-20 bg-slate-200 rounded animate-pulse" />
+        <div className="h-8 w-20 bg-[var(--color-muted)] rounded animate-pulse" />
+        <div className="h-8 w-20 bg-[var(--color-muted)] rounded animate-pulse" />
       </div>
     </div>
   );
@@ -37,17 +37,17 @@ function BalanceSkeleton() {
  */
 function TransactionsSkeleton() {
   return (
-    <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-200">
-      <div className="h-6 w-32 bg-slate-200 rounded animate-pulse mb-4" />
+    <div className="bg-[var(--color-card)] rounded-xl p-6 shadow-sm border border-[var(--color-border)]">
+      <div className="h-6 w-32 bg-[var(--color-muted)] rounded animate-pulse mb-4" />
       <div className="space-y-3">
         {[1, 2, 3, 4, 5].map((i) => (
           <div key={i} className="flex items-center gap-4 p-3">
-            <div className="h-10 w-10 bg-slate-200 rounded-full animate-pulse" />
+            <div className="h-10 w-10 bg-[var(--color-muted)] rounded-full animate-pulse" />
             <div className="flex-1 space-y-2">
-              <div className="h-4 w-24 bg-slate-200 rounded animate-pulse" />
-              <div className="h-3 w-16 bg-slate-200 rounded animate-pulse" />
+              <div className="h-4 w-24 bg-[var(--color-muted)] rounded animate-pulse" />
+              <div className="h-3 w-16 bg-[var(--color-muted)] rounded animate-pulse" />
             </div>
-            <div className="h-4 w-20 bg-slate-200 rounded animate-pulse" />
+            <div className="h-4 w-20 bg-[var(--color-muted)] rounded animate-pulse" />
           </div>
         ))}
       </div>
@@ -60,13 +60,13 @@ function TransactionsSkeleton() {
  */
 function FormSkeleton() {
   return (
-    <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-200">
-      <div className="h-6 w-32 bg-slate-200 rounded animate-pulse mb-4" />
+    <div className="bg-[var(--color-card)] rounded-xl p-6 shadow-sm border border-[var(--color-border)]">
+      <div className="h-6 w-32 bg-[var(--color-muted)] rounded animate-pulse mb-4" />
       <div className="space-y-4">
-        <div className="h-12 w-full bg-slate-200 rounded animate-pulse" />
-        <div className="h-10 w-32 bg-slate-200 rounded animate-pulse" />
-        <div className="h-12 w-full bg-slate-200 rounded animate-pulse" />
-        <div className="h-14 w-full bg-slate-200 rounded animate-pulse" />
+        <div className="h-12 w-full bg-[var(--color-muted)] rounded animate-pulse" />
+        <div className="h-10 w-32 bg-[var(--color-muted)] rounded animate-pulse" />
+        <div className="h-12 w-full bg-[var(--color-muted)] rounded animate-pulse" />
+        <div className="h-14 w-full bg-[var(--color-muted)] rounded animate-pulse" />
       </div>
     </div>
   );

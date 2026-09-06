@@ -68,7 +68,7 @@ const TOUR_TYPES: { value: TourType; label: string }[] = [
 
 const TOUR_STATUSES: StatusConfig[] = [
   { value: 'active', label: 'Activo', color: 'text-emerald-700 bg-emerald-100' },
-  { value: 'inactive', label: 'Inactivo', color: 'text-slate-600 bg-slate-100' },
+  { value: 'inactive', label: 'Inactivo', color: 'text-[var(--color-foreground-muted)] bg-[var(--color-secondary)]' },
   { value: 'draft', label: 'Borrador', color: 'text-amber-700 bg-amber-100' },
 ];
 
@@ -235,13 +235,13 @@ export default function AdminToursPage() {
       header: 'Tour',
       render: (t) => (
         <div>
-          <div className="font-medium text-slate-900 truncate max-w-[200px]" title={t.title}>
+          <div className="font-medium text-[var(--color-foreground)] truncate max-w-[200px]" title={t.title}>
             {t.title}
           </div>
           {t.titleEn && (
-            <div className="text-xs text-slate-400 truncate max-w-[200px]">{t.titleEn}</div>
+            <div className="text-xs text-[var(--color-foreground-muted)] truncate max-w-[200px]">{t.titleEn}</div>
           )}
-          <div className="text-xs text-slate-400 mt-0.5">
+          <div className="text-xs text-[var(--color-foreground-muted)] mt-0.5">
             Grupos: {t.minGroupSize}–{t.maxCapacity} pers.
           </div>
         </div>
@@ -250,18 +250,18 @@ export default function AdminToursPage() {
     {
       key: 'type',
       header: 'Tipo',
-      render: (t) => <span className="text-slate-600">{getTypeLabel(t.type)}</span>,
+      render: (t) => <span className="text-[var(--color-foreground-muted)]">{getTypeLabel(t.type)}</span>,
     },
     {
       key: 'destination',
       header: 'Destino',
       render: (t) => (
         <div>
-          <div className="flex items-center gap-1 text-slate-600">
+          <div className="flex items-center gap-1 text-[var(--color-foreground-muted)]">
             <MapPin className="w-3 h-3 shrink-0" />
             {t.destination}
           </div>
-          <div className="text-xs text-slate-400">{t.country}</div>
+          <div className="text-xs text-[var(--color-foreground-muted)]">{t.country}</div>
         </div>
       ),
     },
@@ -270,7 +270,7 @@ export default function AdminToursPage() {
       header: 'Duración',
       align: 'center',
       render: (t) => (
-        <div className="flex items-center justify-center gap-1 text-slate-600">
+        <div className="flex items-center justify-center gap-1 text-[var(--color-foreground-muted)]">
           <Clock className="w-3 h-3" />
           {t.durationDays} día{t.durationDays !== 1 ? 's' : ''}
         </div>
@@ -281,8 +281,8 @@ export default function AdminToursPage() {
       header: 'Precio',
       align: 'right',
       render: (t) => (
-        <div className="flex items-center justify-end gap-1 font-medium text-slate-900">
-          <DollarSign className="w-3 h-3 text-slate-400" />
+        <div className="flex items-center justify-end gap-1 font-medium text-[var(--color-foreground)]">
+          <DollarSign className="w-3 h-3 text-[var(--color-foreground-muted)]" />
           {Number(t.price).toLocaleString('es-CO')} {t.currency}
         </div>
       ),
@@ -381,14 +381,14 @@ export default function AdminToursPage() {
         {/* Tipo + Estado */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
+            <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">
               Tipo <span className="text-red-500">*</span>
             </label>
             <select
               required
               value={formData.type}
               onChange={(e) => setFormData({ ...formData, type: e.target.value as TourType })}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
             >
               {TOUR_TYPES.map((t) => (
                 <option key={t.value} value={t.value}>
@@ -398,11 +398,11 @@ export default function AdminToursPage() {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Estado</label>
+            <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">Estado</label>
             <select
               value={formData.status}
               onChange={(e) => setFormData({ ...formData, status: e.target.value as TourStatus })}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
             >
               {TOUR_STATUSES.map((s) => (
                 <option key={s.value} value={s.value}>
@@ -415,7 +415,7 @@ export default function AdminToursPage() {
 
         {/* Título ES + EN */}
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">
+          <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">
             Título (ES) <span className="text-red-500">*</span>
           </label>
           <input
@@ -424,36 +424,36 @@ export default function AdminToursPage() {
             value={formData.title}
             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
             placeholder="Ej: Tour Cafetalero por el Eje Cafetero"
-            className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+            className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">Título (EN)</label>
+          <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">Título (EN)</label>
           <input
             type="text"
             value={formData.titleEn}
             onChange={(e) => setFormData({ ...formData, titleEn: e.target.value })}
             placeholder="Ej: Coffee Region Cultural Tour"
-            className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+            className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
           />
         </div>
 
         {/* Descripción */}
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">Descripción</label>
+          <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">Descripción</label>
           <textarea
             value={formData.description}
             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
             rows={3}
             placeholder="Descripción del tour..."
-            className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none"
+            className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none"
           />
         </div>
 
         {/* Destino + País */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
+            <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">
               Destino <span className="text-red-500">*</span>
             </label>
             <input
@@ -462,17 +462,17 @@ export default function AdminToursPage() {
               value={formData.destination}
               onChange={(e) => setFormData({ ...formData, destination: e.target.value })}
               placeholder="Ej: Salento"
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">País</label>
+            <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">País</label>
             <input
               type="text"
               value={formData.country}
               onChange={(e) => setFormData({ ...formData, country: e.target.value })}
               placeholder="Colombia"
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
           </div>
         </div>
@@ -480,7 +480,7 @@ export default function AdminToursPage() {
         {/* Duración + Precio + Moneda */}
         <div className="grid grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
+            <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">
               Duración (días) <span className="text-red-500">*</span>
             </label>
             <input
@@ -490,11 +490,11 @@ export default function AdminToursPage() {
               value={formData.durationDays}
               onChange={(e) => setFormData({ ...formData, durationDays: e.target.value })}
               placeholder="Ej: 3"
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
+            <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">
               Precio <span className="text-red-500">*</span>
             </label>
             <input
@@ -505,15 +505,15 @@ export default function AdminToursPage() {
               value={formData.price}
               onChange={(e) => setFormData({ ...formData, price: e.target.value })}
               placeholder="Ej: 250"
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Moneda</label>
+            <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">Moneda</label>
             <select
               value={formData.currency}
               onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
             >
               <option value="USD">USD</option>
               <option value="COP">COP</option>
@@ -525,25 +525,25 @@ export default function AdminToursPage() {
         {/* Capacidad */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Mín. personas</label>
+            <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">Mín. personas</label>
             <input
               type="number"
               min={1}
               value={formData.minGroupSize}
               onChange={(e) => setFormData({ ...formData, minGroupSize: e.target.value })}
               placeholder="Ej: 2"
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Máx. personas</label>
+            <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">Máx. personas</label>
             <input
               type="number"
               min={1}
               value={formData.maxCapacity}
               onChange={(e) => setFormData({ ...formData, maxCapacity: e.target.value })}
               placeholder="Ej: 15"
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
           </div>
         </div>

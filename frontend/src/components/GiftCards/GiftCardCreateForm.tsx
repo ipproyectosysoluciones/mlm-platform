@@ -193,9 +193,9 @@ export function GiftCardCreateForm({ onSuccess, onError }: GiftCardCreateFormPro
   const canSubmit = parseFloat(amount) > 0 && !isCreating;
 
   return (
-    <Card className="border-slate-700 bg-slate-800">
+    <Card className="border-[var(--color-border)] bg-[var(--color-card)]">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-slate-100">
+        <CardTitle className="flex items-center gap-2 text-[var(--color-foreground)]">
           <Gift className="h-5 w-5 text-emerald-400" />
           {t('giftCards.createTitle') || 'Create Gift Card'}
         </CardTitle>
@@ -215,28 +215,28 @@ export function GiftCardCreateForm({ onSuccess, onError }: GiftCardCreateFormPro
               {/* Card details */}
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-slate-400">{t('giftCards.cardId') || 'Card ID'}</span>
-                  <span className="font-mono text-slate-200 text-xs">
+                  <span className="text-[var(--color-foreground-muted)]">{t('giftCards.cardId') || 'Card ID'}</span>
+                  <span className="font-mono text-[var(--color-foreground-muted)] text-xs">
                     {createdCard.id.slice(0, 8)}...
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">{t('giftCards.code') || 'Code'}</span>
+                  <span className="text-[var(--color-foreground-muted)]">{t('giftCards.code') || 'Code'}</span>
                   <span className="font-mono font-medium text-emerald-300">{createdCard.code}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">{t('giftCards.balance') || 'Balance'}</span>
-                  <span className="font-semibold text-slate-100">
+                  <span className="text-[var(--color-foreground-muted)]">{t('giftCards.balance') || 'Balance'}</span>
+                  <span className="font-semibold text-[var(--color-foreground)]">
                     ${Number(createdCard.balance).toFixed(2)}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">{t('giftCards.status') || 'Status'}</span>
+                  <span className="text-[var(--color-foreground-muted)]">{t('giftCards.status') || 'Status'}</span>
                   <span className="capitalize text-emerald-400">{createdCard.status}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">{t('giftCards.expiresAt') || 'Expires'}</span>
-                  <span className="text-slate-200">{formatDate(createdCard.expiresAt)}</span>
+                  <span className="text-[var(--color-foreground-muted)]">{t('giftCards.expiresAt') || 'Expires'}</span>
+                  <span className="text-[var(--color-foreground-muted)]">{formatDate(createdCard.expiresAt)}</span>
                 </div>
               </div>
             </div>
@@ -247,7 +247,7 @@ export function GiftCardCreateForm({ onSuccess, onError }: GiftCardCreateFormPro
                 <img
                   src={createdCard.qrCodeData}
                   alt={t('giftCards.qrCode') || 'Gift Card QR Code'}
-                  className="w-48 h-48 rounded-lg border border-slate-600 bg-white p-2"
+                  className="w-48 h-48 rounded-lg border border-[var(--color-border)] bg-[var(--color-card)] p-2"
                 />
               </div>
             )}
@@ -258,7 +258,7 @@ export function GiftCardCreateForm({ onSuccess, onError }: GiftCardCreateFormPro
                 <Button
                   type="button"
                   variant="outline"
-                  className="flex-1 border-slate-600 text-slate-200 hover:bg-slate-700"
+                  className="flex-1 border-[var(--color-border)] text-[var(--color-foreground-muted)] hover:bg-[var(--color-card)]"
                   onClick={handleDownloadQR}
                   aria-label={t('giftCards.downloadQR') || 'Download QR Code'}
                 >
@@ -269,7 +269,7 @@ export function GiftCardCreateForm({ onSuccess, onError }: GiftCardCreateFormPro
               <Button
                 type="button"
                 variant="outline"
-                className="flex-1 border-slate-600 text-slate-200 hover:bg-slate-700"
+                className="flex-1 border-[var(--color-border)] text-[var(--color-foreground-muted)] hover:bg-[var(--color-card)]"
                 onClick={handleCopyLink}
                 aria-label={t('giftCards.copyLink') || 'Copy Link'}
               >
@@ -298,11 +298,11 @@ export function GiftCardCreateForm({ onSuccess, onError }: GiftCardCreateFormPro
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Amount input */}
             <div>
-              <Label htmlFor="gc-amount" className="text-slate-300">
+              <Label htmlFor="gc-amount" className="text-[var(--color-foreground-subtle)]">
                 {t('giftCards.amount') || 'Amount'}
               </Label>
               <div className="relative mt-1.5">
-                <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+                <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--color-foreground-muted)]" />
                 <Input
                   type="text"
                   id="gc-amount"
@@ -310,7 +310,7 @@ export function GiftCardCreateForm({ onSuccess, onError }: GiftCardCreateFormPro
                   onChange={handleAmountChange}
                   placeholder="0.00"
                   className={cn(
-                    'pl-10 bg-slate-900 border-slate-600 text-slate-100 placeholder:text-slate-500',
+                    'pl-10 bg-[var(--color-card)] border-[var(--color-border)] text-[var(--color-foreground)] placeholder:text-[var(--color-foreground-muted)]',
                     'focus:border-emerald-500 focus:ring-emerald-500'
                   )}
                   disabled={isCreating}
@@ -322,20 +322,20 @@ export function GiftCardCreateForm({ onSuccess, onError }: GiftCardCreateFormPro
 
             {/* Currency select */}
             <div>
-              <Label htmlFor="gc-currency" className="text-slate-300">
+              <Label htmlFor="gc-currency" className="text-[var(--color-foreground-subtle)]">
                 {t('giftCards.currency') || 'Currency'}
               </Label>
               <Select value={currency} onValueChange={setCurrency} disabled={isCreating}>
                 <SelectTrigger
                   id="gc-currency"
-                  className="mt-1.5 bg-slate-900 border-slate-600 text-slate-100"
+                  className="mt-1.5 bg-[var(--color-card)] border-[var(--color-border)] text-[var(--color-foreground)]"
                   aria-label={t('giftCards.currencyLabel') || 'Select currency'}
                 >
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-slate-800 border-slate-600">
+                <SelectContent className="bg-[var(--color-card)] border-[var(--color-border)]">
                   {CURRENCIES.map((cur) => (
-                    <SelectItem key={cur} value={cur} className="text-slate-200">
+                    <SelectItem key={cur} value={cur} className="text-[var(--color-foreground-muted)]">
                       {cur}
                     </SelectItem>
                   ))}
@@ -345,11 +345,11 @@ export function GiftCardCreateForm({ onSuccess, onError }: GiftCardCreateFormPro
 
             {/* Expiry days input */}
             <div>
-              <Label htmlFor="gc-expiry" className="text-slate-300">
+              <Label htmlFor="gc-expiry" className="text-[var(--color-foreground-subtle)]">
                 {t('giftCards.expiryDays') || 'Expiry Days'}
               </Label>
               <div className="relative mt-1.5">
-                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--color-foreground-muted)]" />
                 <Input
                   type="text"
                   id="gc-expiry"
@@ -357,7 +357,7 @@ export function GiftCardCreateForm({ onSuccess, onError }: GiftCardCreateFormPro
                   onChange={handleExpiryChange}
                   placeholder="30"
                   className={cn(
-                    'pl-10 bg-slate-900 border-slate-600 text-slate-100 placeholder:text-slate-500',
+                    'pl-10 bg-[var(--color-card)] border-[var(--color-border)] text-[var(--color-foreground)] placeholder:text-[var(--color-foreground-muted)]',
                     'focus:border-emerald-500 focus:ring-emerald-500'
                   )}
                   disabled={isCreating}
@@ -365,7 +365,7 @@ export function GiftCardCreateForm({ onSuccess, onError }: GiftCardCreateFormPro
                   aria-describedby="gc-expiry-hint"
                 />
               </div>
-              <p id="gc-expiry-hint" className="mt-1 text-xs text-slate-500">
+              <p id="gc-expiry-hint" className="mt-1 text-xs text-[var(--color-foreground-muted)]">
                 {t('giftCards.expiryHint') || 'Between 1 and 365 days'}
               </p>
             </div>
@@ -390,7 +390,7 @@ export function GiftCardCreateForm({ onSuccess, onError }: GiftCardCreateFormPro
                 'w-full',
                 canSubmit
                   ? 'bg-emerald-600 hover:bg-emerald-500 text-white'
-                  : 'bg-slate-600 text-slate-400 cursor-not-allowed'
+                  : 'bg-[var(--color-card)] text-[var(--color-foreground-muted)] cursor-not-allowed'
               )}
             >
               {isCreating ? (

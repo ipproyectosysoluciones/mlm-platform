@@ -91,7 +91,7 @@ export function WalletBalance({ className, showDetails = true }: WalletBalancePr
     return (
       <div
         className={cn(
-          'flex items-center justify-center rounded-2xl bg-slate-100 p-8 text-slate-500',
+          'flex items-center justify-center rounded-2xl bg-[var(--color-secondary)] p-8 text-[var(--color-foreground-muted)]',
           className
         )}
       >
@@ -109,8 +109,8 @@ export function WalletBalance({ className, showDetails = true }: WalletBalancePr
       )}
     >
       {/* Decorative background elements */}
-      <div className="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-white/10" />
-      <div className="absolute -bottom-8 -left-8 h-32 w-32 rounded-full bg-white/5" />
+      <div className="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-[var(--color-card)]/10" />
+      <div className="absolute -bottom-8 -left-8 h-32 w-32 rounded-full bg-[var(--color-card)]/5" />
 
       {/* Content */}
       <div className="relative z-10">
@@ -139,7 +139,7 @@ export function WalletBalance({ className, showDetails = true }: WalletBalancePr
 
         {/* Currency badge */}
         <div className="absolute top-4 right-4">
-          <span className="inline-flex items-center rounded-full bg-white/20 px-3 py-1 text-xs font-semibold backdrop-blur-sm">
+          <span className="inline-flex items-center rounded-full bg-[var(--color-card)]/20 px-3 py-1 text-xs font-semibold backdrop-blur-sm">
             {balance.currency}
           </span>
         </div>

@@ -97,15 +97,15 @@ export function EmptyState({
   return (
     <div
       className={cn(
-        'flex flex-col items-center justify-center gap-4 rounded-xl border border-slate-700 bg-slate-800/50 p-8 text-center',
+        'flex flex-col items-center justify-center gap-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-card)]/50 p-8 text-center',
         className
       )}
     >
       {/* Icon / Ícono */}
       <div
         className={cn(
-          'flex h-16 w-16 items-center justify-center rounded-full bg-slate-700',
-          type === 'error' ? 'text-red-400' : 'text-slate-400'
+          'flex h-16 w-16 items-center justify-center rounded-full bg-[var(--color-card)]',
+          type === 'error' ? 'text-red-400' : 'text-[var(--color-foreground-muted)]'
         )}
       >
         <Icon className="h-8 w-8" />
@@ -115,7 +115,7 @@ export function EmptyState({
       <div className="flex flex-col gap-2">
         <h3 className="text-lg font-semibold text-white">{displayTitle}</h3>
         {displayDescription && (
-          <p className="max-w-sm text-sm text-slate-400">{displayDescription}</p>
+          <p className="max-w-sm text-sm text-[var(--color-foreground-muted)]">{displayDescription}</p>
         )}
       </div>
 

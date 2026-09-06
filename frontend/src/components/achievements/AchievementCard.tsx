@@ -21,7 +21,7 @@ const TIER_CONFIG: Record<string, { label: string; className: string }> = {
   },
   silver: {
     label: 'Plata',
-    className: 'bg-slate-400/20 text-slate-500 border border-slate-400/30',
+    className: 'bg-[var(--color-secondary)]/20 text-[var(--color-foreground-muted)] border border-[var(--color-border)]/30',
   },
   gold: {
     label: 'Oro',
@@ -68,15 +68,15 @@ export function AchievementCard({ achievement }: AchievementCardProps) {
           isUnlocked
             ? 'border-emerald-500/60 shadow-emerald-500/15 shadow-md bg-emerald-50/30'
             : isComingSoon
-              ? 'border-slate-200 bg-slate-50/50 opacity-70'
-              : 'border-slate-200 bg-white'
+              ? 'border-[var(--color-border)] bg-[var(--color-secondary)]/50 opacity-70'
+              : 'border-[var(--color-border)] bg-[var(--color-card)]'
         }
       `}
     >
       {/* Coming soon overlay badge */}
       {isComingSoon && (
         <div className="absolute top-3 right-3 z-10">
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-800/80 text-white">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-[var(--color-card)]/80 text-white">
             🔒 Próximamente
           </span>
         </div>
@@ -106,7 +106,7 @@ export function AchievementCard({ achievement }: AchievementCardProps) {
       <div className="flex flex-wrap items-start gap-2">
         <h3
           className={`text-sm font-semibold flex-1 min-w-0 leading-snug ${
-            isUnlocked ? 'text-emerald-800' : 'text-slate-800'
+            isUnlocked ? 'text-emerald-800' : 'text-[var(--color-foreground)]'
           }`}
         >
           {name}
@@ -119,17 +119,17 @@ export function AchievementCard({ achievement }: AchievementCardProps) {
       </div>
 
       {/* Description */}
-      <p className="text-xs text-slate-500 leading-relaxed">{description}</p>
+      <p className="text-xs text-[var(--color-foreground-muted)] leading-relaxed">{description}</p>
 
       {/* Points */}
       <div className="flex items-center gap-1.5">
-        <span className="text-xs font-medium text-slate-400">+{points} pts</span>
+        <span className="text-xs font-medium text-[var(--color-foreground-muted)]">+{points} pts</span>
       </div>
 
       {/* Progress bar — only for locked active achievements */}
       {!isUnlocked && !isComingSoon && (
         <div className="space-y-1.5">
-          <div className="flex items-center justify-between text-xs text-slate-500">
+          <div className="flex items-center justify-between text-xs text-[var(--color-foreground-muted)]">
             <span>Progreso</span>
             <span>
               {currentValue} / {targetValue}

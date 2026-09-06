@@ -173,9 +173,9 @@ export function GiftCardRedeem({ orderId, onRedeem, onError, className }: GiftCa
   const hasError = !!inputError || !!validateError;
 
   return (
-    <Card className={cn('border-slate-700 bg-slate-800', className)}>
+    <Card className={cn('border-[var(--color-border)] bg-[var(--color-card)]', className)}>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-slate-100">
+        <CardTitle className="flex items-center gap-2 text-[var(--color-foreground)]">
           <Gift className="h-5 w-5 text-purple-400" />
           {t('giftCards.redeemTitle') || 'Redeem Gift Card'}
         </CardTitle>
@@ -194,15 +194,15 @@ export function GiftCardRedeem({ orderId, onRedeem, onError, className }: GiftCa
 
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-slate-400">
+                  <span className="text-[var(--color-foreground-muted)]">
                     {t('giftCards.transactionId') || 'Transaction ID'}
                   </span>
-                  <span className="font-mono text-slate-200 text-xs">
+                  <span className="font-mono text-[var(--color-foreground-muted)] text-xs">
                     {lastTransaction.id.slice(0, 8)}...
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">
+                  <span className="text-[var(--color-foreground-muted)]">
                     {t('giftCards.amountRedeemed') || 'Amount Redeemed'}
                   </span>
                   <span className="font-semibold text-emerald-300">
@@ -210,7 +210,7 @@ export function GiftCardRedeem({ orderId, onRedeem, onError, className }: GiftCa
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">{t('giftCards.status') || 'Status'}</span>
+                  <span className="text-[var(--color-foreground-muted)]">{t('giftCards.status') || 'Status'}</span>
                   <Badge variant="outline" className="border-emerald-600 text-emerald-400 text-xs">
                     {lastTransaction.status}
                   </Badge>
@@ -231,11 +231,11 @@ export function GiftCardRedeem({ orderId, onRedeem, onError, className }: GiftCa
           <div className="space-y-4">
             {/* Code input */}
             <div>
-              <Label htmlFor="gc-code" className="text-slate-300">
+              <Label htmlFor="gc-code" className="text-[var(--color-foreground-subtle)]">
                 {t('giftCards.codeLabel') || 'Gift Card Code'}
               </Label>
               <div className="relative mt-1.5">
-                <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+                <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--color-foreground-muted)]" />
                 <Input
                   type="text"
                   id="gc-code"
@@ -244,7 +244,7 @@ export function GiftCardRedeem({ orderId, onRedeem, onError, className }: GiftCa
                   onKeyDown={handleKeyDown}
                   placeholder={t('giftCards.codePlaceholder') || 'Enter gift card code or ID'}
                   className={cn(
-                    'pl-10 bg-slate-900 border-slate-600 text-slate-100 placeholder:text-slate-500',
+                    'pl-10 bg-[var(--color-card)] border-[var(--color-border)] text-[var(--color-foreground)] placeholder:text-[var(--color-foreground-muted)]',
                     'focus:border-purple-500 focus:ring-purple-500',
                     hasError && 'border-red-500'
                   )}
@@ -277,7 +277,7 @@ export function GiftCardRedeem({ orderId, onRedeem, onError, className }: GiftCa
                   'w-full',
                   code && !isValidating
                     ? 'bg-purple-600 hover:bg-purple-500 text-white'
-                    : 'bg-slate-600 text-slate-400 cursor-not-allowed'
+                    : 'bg-[var(--color-card)] text-[var(--color-foreground-muted)] cursor-not-allowed'
                 )}
               >
                 {isValidating ? (
@@ -321,7 +321,7 @@ export function GiftCardRedeem({ orderId, onRedeem, onError, className }: GiftCa
             {/* Validation result — Valid card preview */}
             {isValid && validationResult?.card && (
               <div
-                className="rounded-lg bg-slate-900 border border-slate-600 p-4 space-y-3"
+                className="rounded-lg bg-[var(--color-card)] border border-[var(--color-border)] p-4 space-y-3"
                 data-testid="validation-valid"
               >
                 <div className="flex items-center gap-2 mb-1">
@@ -333,19 +333,19 @@ export function GiftCardRedeem({ orderId, onRedeem, onError, className }: GiftCa
 
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-slate-400">{t('giftCards.code') || 'Code'}</span>
+                    <span className="text-[var(--color-foreground-muted)]">{t('giftCards.code') || 'Code'}</span>
                     <span className="font-mono font-medium text-purple-300">
                       {validationResult.card.code}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-400">{t('giftCards.balance') || 'Balance'}</span>
-                    <span className="font-semibold text-slate-100">
+                    <span className="text-[var(--color-foreground-muted)]">{t('giftCards.balance') || 'Balance'}</span>
+                    <span className="font-semibold text-[var(--color-foreground)]">
                       ${Number(validationResult.card.balance).toFixed(2)}
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-400">{t('giftCards.status') || 'Status'}</span>
+                    <span className="text-[var(--color-foreground-muted)]">{t('giftCards.status') || 'Status'}</span>
                     <Badge
                       variant="outline"
                       className="border-emerald-600 text-emerald-400 text-xs"
@@ -354,8 +354,8 @@ export function GiftCardRedeem({ orderId, onRedeem, onError, className }: GiftCa
                     </Badge>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-400">{t('giftCards.expiresAt') || 'Expires'}</span>
-                    <span className="flex items-center gap-1 text-slate-300 text-xs">
+                    <span className="text-[var(--color-foreground-muted)]">{t('giftCards.expiresAt') || 'Expires'}</span>
+                    <span className="flex items-center gap-1 text-[var(--color-foreground-subtle)] text-xs">
                       <Clock className="h-3 w-3" />
                       {formatDate(validationResult.card.expiresAt)}
                     </span>
@@ -367,7 +367,7 @@ export function GiftCardRedeem({ orderId, onRedeem, onError, className }: GiftCa
                   <Button
                     type="button"
                     variant="outline"
-                    className="flex-1 border-slate-600 text-slate-300 hover:bg-slate-700"
+                    className="flex-1 border-[var(--color-border)] text-[var(--color-foreground-subtle)] hover:bg-[var(--color-card)]"
                     onClick={handleReset}
                     disabled={isRedeeming}
                   >

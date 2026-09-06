@@ -35,7 +35,7 @@ export default function TreeMinimap({
     <MiniMap
       nodeColor={nodeColor as (node: { data?: { label?: TreeNode } }) => string}
       maskColor="rgba(0,0,0,0.1)"
-      className="!bg-white !shadow-lg !border !border-slate-200 !rounded-lg"
+      className="!bg-[var(--color-card)] !shadow-lg !border !border-[var(--color-border)] !rounded-lg"
       style={{
         bottom: 20,
         right: 20,

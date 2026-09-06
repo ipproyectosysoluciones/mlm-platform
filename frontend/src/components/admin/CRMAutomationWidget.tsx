@@ -29,17 +29,17 @@ export default function CRMAutomationWidget() {
     return (
       <div
         data-testid="automation-widget-loading"
-        className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 animate-pulse"
+        className="bg-[var(--color-card)] rounded-xl shadow-sm border border-[var(--color-border)] p-6 animate-pulse"
       >
-        <div className="h-6 w-48 bg-slate-200 rounded mb-4" />
+        <div className="h-6 w-48 bg-[var(--color-muted)] rounded mb-4" />
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-          <div className="h-20 bg-slate-100 rounded-lg" />
-          <div className="h-20 bg-slate-100 rounded-lg" />
-          <div className="h-20 bg-slate-100 rounded-lg" />
+          <div className="h-20 bg-[var(--color-secondary)] rounded-lg" />
+          <div className="h-20 bg-[var(--color-secondary)] rounded-lg" />
+          <div className="h-20 bg-[var(--color-secondary)] rounded-lg" />
         </div>
         <div className="space-y-3">
-          <div className="h-10 bg-slate-100 rounded" />
-          <div className="h-10 bg-slate-100 rounded" />
+          <div className="h-10 bg-[var(--color-secondary)] rounded" />
+          <div className="h-10 bg-[var(--color-secondary)] rounded" />
         </div>
       </div>
     );
@@ -48,7 +48,7 @@ export default function CRMAutomationWidget() {
   // Error state
   if (error) {
     return (
-      <div className="bg-white rounded-xl shadow-sm border border-red-200 p-6">
+      <div className="bg-[var(--color-card)] rounded-xl shadow-sm border border-red-200 p-6">
         <div className="flex items-center gap-3 mb-2">
           <Zap className="w-5 h-5 text-red-500" />
           <h3 className="text-lg font-semibold text-red-900">{t('admin.automation.title')}</h3>
@@ -59,22 +59,22 @@ export default function CRMAutomationWidget() {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+    <div className="bg-[var(--color-card)] rounded-xl shadow-sm border border-[var(--color-border)] p-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-indigo-100 rounded-lg">
             <Zap className="w-5 h-5 text-indigo-600" />
           </div>
-          <h3 className="text-lg font-semibold text-slate-900">{t('admin.automation.title')}</h3>
+          <h3 className="text-lg font-semibold text-[var(--color-foreground)]">{t('admin.automation.title')}</h3>
         </div>
         <button
           type="button"
           onClick={() => void refetch()}
           aria-label={t('admin.automation.refresh')}
-          className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+          className="p-2 hover:bg-[var(--color-secondary)] rounded-lg transition-colors"
         >
-          <RefreshCw className="w-4 h-4 text-slate-500" />
+          <RefreshCw className="w-4 h-4 text-[var(--color-foreground-muted)]" />
         </button>
       </div>
 
@@ -87,7 +87,7 @@ export default function CRMAutomationWidget() {
 
       {/* Recent Actions */}
       <div className="mt-6">
-        <h4 className="text-sm font-semibold text-slate-700 mb-3">
+        <h4 className="text-sm font-semibold text-[var(--color-foreground)] mb-3">
           {t('admin.automation.recentActions')}
         </h4>
         <RecentActions executions={executions} />

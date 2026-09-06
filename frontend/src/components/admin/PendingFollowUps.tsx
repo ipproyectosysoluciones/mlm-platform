@@ -72,13 +72,13 @@ export default function PendingFollowUps({
       </div>
 
       {/* Last Action */}
-      <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-lg border border-slate-200">
-        <div className="p-2 bg-slate-100 rounded-lg">
-          <Clock className="w-5 h-5 text-slate-600" />
+      <div className="flex items-center gap-3 p-4 bg-[var(--color-secondary)] rounded-lg border border-[var(--color-border)]">
+        <div className="p-2 bg-[var(--color-secondary)] rounded-lg">
+          <Clock className="w-5 h-5 text-[var(--color-foreground-muted)]" />
         </div>
         <div>
-          <p className="text-xs text-slate-600 font-medium">{t('admin.automation.lastAction')}</p>
-          <p className="text-sm font-semibold text-slate-900 truncate">
+          <p className="text-xs text-[var(--color-foreground-muted)] font-medium">{t('admin.automation.lastAction')}</p>
+          <p className="text-sm font-semibold text-[var(--color-foreground)] truncate">
             {formatLastAction(lastActionAt)}
           </p>
         </div>

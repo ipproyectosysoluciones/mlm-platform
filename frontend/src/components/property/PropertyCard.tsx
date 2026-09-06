@@ -86,8 +86,8 @@ export function PropertyCard({ property, variant = 'grid', className }: Property
       <Link
         to={`/properties/${property.id}`}
         className={cn(
-          'group flex gap-4 rounded-2xl bg-slate-800/50 border border-slate-700/50',
-          'hover:border-emerald-500/40 hover:bg-slate-800/80 transition-all duration-300',
+          'group flex gap-4 rounded-2xl bg-[var(--color-card)]/50 border border-[var(--color-border)]/50',
+          'hover:border-emerald-500/40 hover:bg-[var(--color-card)]/80 transition-all duration-300',
           className
         )}
       >
@@ -102,8 +102,8 @@ export function PropertyCard({ property, variant = 'grid', className }: Property
               className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-slate-700/50">
-              <Tag className="w-8 h-8 text-slate-500" />
+            <div className="flex h-full w-full items-center justify-center bg-[var(--color-card)]/50">
+              <Tag className="w-8 h-8 text-[var(--color-foreground-muted)]" />
             </div>
           )}
           <span
@@ -122,14 +122,14 @@ export function PropertyCard({ property, variant = 'grid', className }: Property
             <h3 className="font-semibold text-white truncate group-hover:text-emerald-400 transition-colors">
               {property.title}
             </h3>
-            <div className="flex items-center gap-1 mt-1 text-slate-400 text-sm">
+            <div className="flex items-center gap-1 mt-1 text-[var(--color-foreground-muted)] text-sm">
               <MapPin className="w-3.5 h-3.5 shrink-0" />
               <span className="truncate">
                 {property.city}, {property.country}
               </span>
             </div>
           </div>
-          <div className="flex items-center gap-4 text-sm text-slate-400">
+          <div className="flex items-center gap-4 text-sm text-[var(--color-foreground-muted)]">
             {property.bedrooms != null && (
               <span className="flex items-center gap-1">
                 <Bed className="w-3.5 h-3.5" />
@@ -162,13 +162,13 @@ export function PropertyCard({ property, variant = 'grid', className }: Property
     <Link
       to={`/properties/${property.id}`}
       className={cn(
-        'group flex flex-col rounded-2xl bg-slate-800/50 border border-slate-700/50 overflow-hidden',
+        'group flex flex-col rounded-2xl bg-[var(--color-card)]/50 border border-[var(--color-border)]/50 overflow-hidden',
         'hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/10 transition-all duration-300',
         className
       )}
     >
       {/* Image */}
-      <div className="relative aspect-[4/3] overflow-hidden bg-slate-700/50">
+      <div className="relative aspect-[4/3] overflow-hidden bg-[var(--color-card)]/50">
         {coverImage ? (
           <img
             src={coverImage}
@@ -179,7 +179,7 @@ export function PropertyCard({ property, variant = 'grid', className }: Property
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center">
-            <Tag className="w-10 h-10 text-slate-500" />
+            <Tag className="w-10 h-10 text-[var(--color-foreground-muted)]" />
           </div>
         )}
         <span
@@ -198,7 +198,7 @@ export function PropertyCard({ property, variant = 'grid', className }: Property
           <h3 className="font-semibold text-white line-clamp-1 group-hover:text-emerald-400 transition-colors">
             {property.title}
           </h3>
-          <div className="flex items-center gap-1 mt-1 text-slate-400 text-sm">
+          <div className="flex items-center gap-1 mt-1 text-[var(--color-foreground-muted)] text-sm">
             <MapPin className="w-3.5 h-3.5 shrink-0" />
             <span className="truncate">
               {property.city}, {property.country}
@@ -207,7 +207,7 @@ export function PropertyCard({ property, variant = 'grid', className }: Property
         </div>
 
         {/* Specs */}
-        <div className="flex items-center gap-3 text-sm text-slate-400">
+        <div className="flex items-center gap-3 text-sm text-[var(--color-foreground-muted)]">
           {property.bedrooms != null && (
             <span className="flex items-center gap-1">
               <Bed className="w-3.5 h-3.5" />

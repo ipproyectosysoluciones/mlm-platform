@@ -59,7 +59,7 @@ const RESERVATION_STATUSES: StatusConfig[] = [
   { value: 'confirmed', label: 'Confirmada', color: 'text-emerald-700 bg-emerald-100' },
   { value: 'cancelled', label: 'Cancelada', color: 'text-red-700 bg-red-100' },
   { value: 'completed', label: 'Completada', color: 'text-blue-700 bg-blue-100' },
-  { value: 'no_show', label: 'No se presentó', color: 'text-slate-600 bg-slate-100' },
+  { value: 'no_show', label: 'No se presentó', color: 'text-[var(--color-foreground-muted)] bg-[var(--color-secondary)]' },
 ];
 
 const RESERVATION_STATUS_OPTIONS = RESERVATION_STATUSES.map((s) => ({
@@ -194,9 +194,9 @@ export default function AdminReservationsPage() {
             <User className="w-3.5 h-3.5 text-violet-600" />
           </div>
           <div>
-            <div className="font-medium text-slate-900">{r.guestName}</div>
-            <div className="text-xs text-slate-400">{r.guestEmail}</div>
-            {r.guestPhone && <div className="text-xs text-slate-400">{r.guestPhone}</div>}
+            <div className="font-medium text-[var(--color-foreground)]">{r.guestName}</div>
+            <div className="text-xs text-[var(--color-foreground-muted)]">{r.guestEmail}</div>
+            {r.guestPhone && <div className="text-xs text-[var(--color-foreground-muted)]">{r.guestPhone}</div>}
           </div>
         </div>
       ),
@@ -214,7 +214,7 @@ export default function AdminReservationsPage() {
             {r.type === 'property' ? 'Propiedad' : 'Tour'}
           </span>
           {r.groupSize > 1 && (
-            <div className="text-xs text-slate-400 mt-1">{r.groupSize} pers.</div>
+            <div className="text-xs text-[var(--color-foreground-muted)] mt-1">{r.groupSize} pers.</div>
           )}
         </div>
       ),
@@ -223,7 +223,7 @@ export default function AdminReservationsPage() {
       key: 'dates',
       header: 'Fechas',
       render: (r) => (
-        <div className="text-slate-600">
+        <div className="text-[var(--color-foreground-muted)]">
           {r.type === 'property' ? (
             <div className="text-xs space-y-0.5">
               <div>Entrada: {formatDate(r.checkIn)}</div>
@@ -234,7 +234,7 @@ export default function AdminReservationsPage() {
               <div>Fecha: {formatDate(r.tourDate)}</div>
             </div>
           )}
-          <div className="text-xs text-slate-400 mt-1">Creada: {formatDate(r.createdAt)}</div>
+          <div className="text-xs text-[var(--color-foreground-muted)] mt-1">Creada: {formatDate(r.createdAt)}</div>
         </div>
       ),
     },
@@ -243,7 +243,7 @@ export default function AdminReservationsPage() {
       header: 'Total',
       align: 'right',
       render: (r) => (
-        <span className="font-medium text-slate-900">
+        <span className="font-medium text-[var(--color-foreground)]">
           {Number(r.totalPrice).toLocaleString('es-CO')} {r.currency}
         </span>
       ),
@@ -263,7 +263,7 @@ export default function AdminReservationsPage() {
           <AdminStatusBadge value={r.status} config={RESERVATION_STATUSES} />
           {r.adminNotes && (
             <div
-              className="text-xs text-slate-400 mt-1 max-w-[120px] truncate"
+              className="text-xs text-[var(--color-foreground-muted)] mt-1 max-w-[120px] truncate"
               title={r.adminNotes}
             >
               📝 {r.adminNotes}

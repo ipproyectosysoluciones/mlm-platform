@@ -22,14 +22,14 @@ export function ReferralChart({ data, isLoading, isMounted }: ReferralChartProps
   const { t } = useTranslation();
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-      <h2 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+    <div className="bg-[var(--color-card)] rounded-2xl shadow-sm border border-[var(--color-border)] p-6">
+      <h2 className="text-lg font-semibold text-[var(--color-foreground)] mb-4 flex items-center gap-2">
         <BarChart3 className="w-5 h-5 text-blue-500" />
         {t('dashboard.recentReferrals')}
       </h2>
       <div className="h-64">
         {isLoading || !isMounted ? (
-          <div className="h-full flex items-center justify-center text-slate-400">
+          <div className="h-full flex items-center justify-center text-[var(--color-foreground-muted)]">
             {t('common.loading')}
           </div>
         ) : data && data.length > 0 ? (
@@ -54,7 +54,7 @@ export function ReferralChart({ data, isLoading, isMounted }: ReferralChartProps
             </BarChart>
           </ResponsiveContainer>
         ) : (
-          <div className="h-full flex items-center justify-center text-slate-400">
+          <div className="h-full flex items-center justify-center text-[var(--color-foreground-muted)]">
             {t('dashboard.noReferrals')}
           </div>
         )}

@@ -56,9 +56,9 @@ const statusConfig: Record<
   cancelled: {
     icon: Ban,
     labelKey: 'orders.statuses.cancelled',
-    bgClass: 'bg-slate-500/10',
-    textClass: 'text-slate-400',
-    iconClass: 'text-slate-400',
+    bgClass: 'bg-[var(--color-secondary)]0/10',
+    textClass: 'text-[var(--color-foreground-muted)]',
+    iconClass: 'text-[var(--color-foreground-muted)]',
   },
 };
 

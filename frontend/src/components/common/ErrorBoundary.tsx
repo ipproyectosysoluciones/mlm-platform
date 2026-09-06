@@ -79,8 +79,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       }
 
       return (
-        <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4">
-          <div className="w-full max-w-md rounded-2xl bg-white p-8 text-center shadow-lg">
+        <div className="flex min-h-screen items-center justify-center bg-[var(--color-secondary)] p-4">
+          <div className="w-full max-w-md rounded-2xl bg-[var(--color-card)] p-8 text-center shadow-lg">
             {/* Icon */}
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
               <svg
@@ -99,12 +99,12 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             </div>
 
             {/* Title */}
-            <h2 className="mb-2 text-xl font-bold text-slate-900">Algo salió mal</h2>
-            <p className="mb-1 text-sm text-slate-500">Something went wrong</p>
+            <h2 className="mb-2 text-xl font-bold text-[var(--color-foreground)]">Algo salió mal</h2>
+            <p className="mb-1 text-sm text-[var(--color-foreground-muted)]">Something went wrong</p>
 
             {/* Error message (dev only) */}
             {this.state.error && (
-              <p className="mt-3 mb-6 rounded-lg bg-slate-100 p-3 text-left font-mono text-xs text-slate-600 break-all">
+              <p className="mt-3 mb-6 rounded-lg bg-[var(--color-secondary)] p-3 text-left font-mono text-xs text-[var(--color-foreground-muted)] break-all">
                 {this.state.error.message}
               </p>
             )}
@@ -118,7 +118,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
               >
                 Intentar de nuevo / Try again
               </button>
-              <a href="/" className="text-sm text-slate-500 transition-colors hover:text-slate-700">
+              <a href="/" className="text-sm text-[var(--color-foreground-muted)] transition-colors hover:text-[var(--color-foreground)]">
                 Volver al inicio / Go home
               </a>
             </div>

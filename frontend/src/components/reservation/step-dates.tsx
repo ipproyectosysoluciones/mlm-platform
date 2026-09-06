@@ -38,17 +38,17 @@ export default function StepDates() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-bold text-slate-800 mb-1">{t('reservation.selectDates')}</h2>
-        <p className="text-slate-500 text-sm">
+        <h2 className="text-xl font-bold text-[var(--color-foreground)] mb-1">{t('reservation.selectDates')}</h2>
+        <p className="text-[var(--color-foreground-muted)] text-sm">
           {t('reservation.property')}:{' '}
-          <span className="font-medium text-slate-700">{wizardData.property.title}</span>
+          <span className="font-medium text-[var(--color-foreground)]">{wizardData.property.title}</span>
         </p>
       </div>
 
       {/* Price per night indicator */}
       {breakdown && (
         <div className="rounded-lg border border-emerald-200 bg-emerald-50/50 px-4 py-3">
-          <span className="text-sm text-slate-600">
+          <span className="text-sm text-[var(--color-foreground-muted)]">
             {t('reservation.pricePerNight')}:{' '}
             <span className="font-bold text-emerald-600">
               {formatPrice(breakdown.pricePerUnit, breakdown.currency)}
@@ -59,7 +59,7 @@ export default function StepDates() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">
+          <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">
             {t('reservation.checkIn')}
           </label>
           <input
@@ -67,11 +67,11 @@ export default function StepDates() {
             value={wizardData.checkIn}
             min={new Date().toISOString().split('T')[0]}
             onChange={(e) => updateWizardData({ checkIn: e.target.value })}
-            className="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:border-emerald-400"
+            className="w-full px-3 py-2 rounded-lg border border-[var(--color-border)] text-sm focus:outline-none focus:border-emerald-400"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">
+          <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">
             {t('reservation.checkOut')}
           </label>
           <input
@@ -79,7 +79,7 @@ export default function StepDates() {
             value={wizardData.checkOut}
             min={wizardData.checkIn || new Date().toISOString().split('T')[0]}
             onChange={(e) => updateWizardData({ checkOut: e.target.value })}
-            className="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:border-emerald-400"
+            className="w-full px-3 py-2 rounded-lg border border-[var(--color-border)] text-sm focus:outline-none focus:border-emerald-400"
           />
         </div>
       </div>

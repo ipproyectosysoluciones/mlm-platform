@@ -14,7 +14,7 @@ import type { Lead, LeadStatus } from '@/services/crmService';
 import { LEAD_STATUSES } from '@/features/crm/constants';
 
 const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
-  new: { label: 'Nuevo', color: 'bg-gray-100 border-gray-300' },
+  new: { label: 'Nuevo', color: 'bg-[var(--color-secondary)] border-[var(--color-border)]' },
   contacted: { label: 'Contactado', color: 'bg-blue-50 border-blue-300' },
   qualified: { label: 'Calificado', color: 'bg-yellow-50 border-yellow-300' },
   proposal: { label: 'Propuesta', color: 'bg-orange-50 border-orange-300' },
@@ -52,23 +52,23 @@ export function KanbanBoard() {
       {/* Stats Header */}
       {stats && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-white rounded-lg shadow p-4">
-            <p className="text-sm text-gray-500">Total Leads</p>
-            <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
+          <div className="bg-[var(--color-card)] rounded-lg shadow p-4">
+            <p className="text-sm text-[var(--color-foreground-muted)]">Total Leads</p>
+            <p className="text-2xl font-bold text-[var(--color-foreground)]">{stats.total}</p>
           </div>
-          <div className="bg-white rounded-lg shadow p-4">
-            <p className="text-sm text-gray-500">Valor Total</p>
+          <div className="bg-[var(--color-card)] rounded-lg shadow p-4">
+            <p className="text-sm text-[var(--color-foreground-muted)]">Valor Total</p>
             <p className="text-2xl font-bold text-green-600">${stats.totalValue}</p>
           </div>
-          <div className="bg-white rounded-lg shadow p-4">
-            <p className="text-sm text-gray-500">Tasa Conversión</p>
+          <div className="bg-[var(--color-card)] rounded-lg shadow p-4">
+            <p className="text-sm text-[var(--color-foreground-muted)]">Tasa Conversión</p>
             <p className="text-2xl font-bold text-indigo-600">{stats.conversionRate.toFixed(1)}%</p>
           </div>
-          <div className="bg-white rounded-lg shadow p-4">
-            <p className="text-sm text-gray-500">Won / Lost</p>
+          <div className="bg-[var(--color-card)] rounded-lg shadow p-4">
+            <p className="text-sm text-[var(--color-foreground-muted)]">Won / Lost</p>
             <p className="text-2xl font-bold">
               <span className="text-green-600">{stats.byStatus.won}</span>
-              <span className="text-gray-400"> / </span>
+              <span className="text-[var(--color-foreground-muted)]"> / </span>
               <span className="text-red-600">{stats.byStatus.lost}</span>
             </p>
           </div>
@@ -102,16 +102,16 @@ export function KanbanBoard() {
       {/* Lead Detail Modal */}
       {selectedLead && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-[var(--color-card)] rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <h2 className="text-xl font-bold text-gray-900">{selectedLead.contactName}</h2>
-                  {selectedLead.company && <p className="text-gray-500">{selectedLead.company}</p>}
+                  <h2 className="text-xl font-bold text-[var(--color-foreground)]">{selectedLead.contactName}</h2>
+                  {selectedLead.company && <p className="text-[var(--color-foreground-muted)]">{selectedLead.company}</p>}
                 </div>
                 <button
                   onClick={() => setSelectedLead(null)}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-[var(--color-foreground-muted)] hover:text-[var(--color-foreground-muted)]"
                 >
                   ×
                 </button>
@@ -119,34 +119,34 @@ export function KanbanBoard() {
 
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div>
-                  <label className="text-sm text-gray-500">Email</label>
+                  <label className="text-sm text-[var(--color-foreground-muted)]">Email</label>
                   <p className="font-medium">{selectedLead.contactEmail}</p>
                 </div>
                 <div>
-                  <label className="text-sm text-gray-500">Teléfono</label>
+                  <label className="text-sm text-[var(--color-foreground-muted)]">Teléfono</label>
                   <p className="font-medium">{selectedLead.contactPhone || '-'}</p>
                 </div>
                 <div>
-                  <label className="text-sm text-gray-500">Estado</label>
+                  <label className="text-sm text-[var(--color-foreground-muted)]">Estado</label>
                   <p className="font-medium">{STATUS_CONFIG[selectedLead.status].label}</p>
                 </div>
                 <div>
-                  <label className="text-sm text-gray-500">Valor</label>
+                  <label className="text-sm text-[var(--color-foreground-muted)]">Valor</label>
                   <p className="font-medium text-green-600">${selectedLead.value}</p>
                 </div>
               </div>
 
               {selectedLead.notes && (
                 <div className="mb-6">
-                  <label className="text-sm text-gray-500">Notas</label>
-                  <p className="mt-1 text-gray-700">{selectedLead.notes}</p>
+                  <label className="text-sm text-[var(--color-foreground-muted)]">Notas</label>
+                  <p className="mt-1 text-[var(--color-foreground)]">{selectedLead.notes}</p>
                 </div>
               )}
 
               <div className="flex gap-2">
                 <button
                   onClick={() => setSelectedLead(null)}
-                  className="flex-1 bg-gray-100 text-gray-700 py-2 rounded-lg hover:bg-gray-200"
+                  className="flex-1 bg-[var(--color-secondary)] text-[var(--color-foreground)] py-2 rounded-lg hover:bg-[var(--color-muted)]"
                 >
                   Cerrar
                 </button>
@@ -196,33 +196,33 @@ function KanbanTaskForm({
 }: KanbanTaskFormProps) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl max-w-md w-full max-h-[90vh] overflow-y-auto p-6">
+      <div className="bg-[var(--color-card)] rounded-xl max-w-md w-full max-h-[90vh] overflow-y-auto p-6">
         <div className="flex justify-between items-start mb-4">
-          <h2 className="text-xl font-bold text-gray-900">Nueva Tarea — {lead.contactName}</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+          <h2 className="text-xl font-bold text-[var(--color-foreground)]">Nueva Tarea — {lead.contactName}</h2>
+          <button onClick={onClose} className="text-[var(--color-foreground-muted)] hover:text-[var(--color-foreground-muted)]">
             ×
           </button>
         </div>
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Título *</label>
+            <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">Título *</label>
             <input
               type="text"
               value={taskFormData.title}
               onChange={(e) => setTaskFormData({ ...taskFormData, title: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-4 py-2 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               placeholder="Título de la tarea"
               autoFocus
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Tipo</label>
+            <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">Tipo</label>
             <select
               value={taskFormData.type}
               onChange={(e) => setTaskFormData({ ...taskFormData, type: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-4 py-2 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             >
               <option value="call">Llamada</option>
               <option value="email">Email</option>
@@ -234,12 +234,12 @@ function KanbanTaskForm({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+            <label className="block text-sm font-medium text-[var(--color-foreground)] mb-1">Descripción</label>
             <textarea
               value={taskFormData.description}
               onChange={(e) => setTaskFormData({ ...taskFormData, description: e.target.value })}
               rows={3}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-4 py-2 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               placeholder="Descripción de la tarea"
             />
           </div>
@@ -248,7 +248,7 @@ function KanbanTaskForm({
         <div className="flex gap-2 mt-6">
           <button
             onClick={onClose}
-            className="flex-1 bg-gray-100 text-gray-700 py-2 rounded-lg hover:bg-gray-200"
+            className="flex-1 bg-[var(--color-secondary)] text-[var(--color-foreground)] py-2 rounded-lg hover:bg-[var(--color-muted)]"
           >
             Cancelar
           </button>

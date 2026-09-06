@@ -32,7 +32,7 @@ function getStatusColors(status: string): string {
     case 'pending':
       return 'bg-yellow-100 text-yellow-700';
     default:
-      return 'bg-slate-100 text-slate-700';
+      return 'bg-[var(--color-secondary)] text-[var(--color-foreground)]';
   }
 }
 
@@ -41,7 +41,7 @@ export default function RecentActions({ executions }: RecentActionsProps) {
 
   if (executions.length === 0) {
     return (
-      <div className="text-center py-8 text-slate-400">
+      <div className="text-center py-8 text-[var(--color-foreground-muted)]">
         <p>{t('admin.automation.noActions')}</p>
       </div>
     );
@@ -52,10 +52,10 @@ export default function RecentActions({ executions }: RecentActionsProps) {
       {executions.map((execution) => (
         <div key={execution.id} className="flex items-center justify-between py-3 px-1">
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-slate-900 truncate">
+            <p className="text-sm font-medium text-[var(--color-foreground)] truncate">
               {execution.Lead?.contactName ?? t('admin.automation.unknownLead')}
             </p>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-[var(--color-foreground-muted)]">
               {execution.workflowName} · {execution.actionType}
             </p>
           </div>

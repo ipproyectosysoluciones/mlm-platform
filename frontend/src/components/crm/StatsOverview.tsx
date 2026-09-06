@@ -27,21 +27,21 @@ export function StatsOverview() {
 
   if (!stats) {
     return (
-      <div className="text-center py-12 bg-slate-50 rounded-xl">
-        <p className="text-slate-500">{t('crm.noStats')}</p>
+      <div className="text-center py-12 bg-[var(--color-secondary)] rounded-xl">
+        <p className="text-[var(--color-foreground-muted)]">{t('crm.noStats')}</p>
       </div>
     );
   }
 
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-      <div className="bg-slate-50 rounded-xl p-6">
+      <div className="bg-[var(--color-secondary)] rounded-xl p-6">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-slate-500">{t('crm.statsTotal')}</p>
-            <p className="text-3xl font-bold text-slate-900">{stats.totalLeads}</p>
+            <p className="text-sm text-[var(--color-foreground-muted)]">{t('crm.statsTotal')}</p>
+            <p className="text-3xl font-bold text-[var(--color-foreground)]">{stats.totalLeads}</p>
           </div>
-          <Users className="w-12 h-12 text-slate-200" />
+          <Users className="w-12 h-12 text-[var(--color-foreground-muted)]" />
         </div>
       </div>
       <div className="bg-emerald-50 rounded-xl p-6">
@@ -62,15 +62,15 @@ export function StatsOverview() {
           <Clock className="w-12 h-12 text-amber-200" />
         </div>
       </div>
-      <div className="bg-slate-900 rounded-xl p-6">
+      <div className="bg-[var(--color-card)] rounded-xl p-6">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-slate-400">{t('crm.statsConversionRate')}</p>
+            <p className="text-sm text-[var(--color-foreground-muted)]">{t('crm.statsConversionRate')}</p>
             <p className="text-3xl font-bold text-white">
               {stats.totalLeads > 0 ? Math.round((stats.wonLeads / stats.totalLeads) * 100) : 0}%
             </p>
           </div>
-          <AlertCircle className="w-12 h-12 text-slate-700" />
+          <AlertCircle className="w-12 h-12 text-[var(--color-foreground)]" />
         </div>
       </div>
     </div>

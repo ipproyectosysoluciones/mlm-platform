@@ -85,9 +85,9 @@ export default function Register() {
   return (
     <div className="container relative h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
       {/* Left panel — Nexo Real branding */}
-      <div className="relative hidden h-full flex-col bg-slate-900 p-10 text-white lg:flex overflow-hidden">
+      <div className="relative hidden h-full flex-col bg-[var(--color-card)] p-10 text-white lg:flex overflow-hidden">
         {/* Gradient overlay / Overlay degradado */}
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/80 via-teal-900/60 to-slate-900" />
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/80 via-teal-900/60 to-[var(--color-card)]" />
         {/* Decorative grid pattern / Patrón de grilla decorativo */}
         <div
           className="absolute inset-0 opacity-10"
@@ -109,7 +109,7 @@ export default function Register() {
         {/* Quote */}
         <div className="relative z-20 mt-auto">
           <blockquote className="space-y-3">
-            <p className="text-lg leading-relaxed text-slate-100">{t('auth.registerQuote')}</p>
+            <p className="text-lg leading-relaxed text-[var(--color-foreground)]">{t('auth.registerQuote')}</p>
             <footer className="text-sm text-emerald-300 font-medium">
               — {t('auth.registerQuoteAuthor')}
             </footer>

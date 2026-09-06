@@ -67,14 +67,14 @@ function ImageGallery({ images, title }: ImageGalleryProps) {
 
   if (!images || images.length === 0) {
     return (
-      <div className="h-80 bg-slate-100 rounded-xl flex items-center justify-center text-slate-300">
+      <div className="h-80 bg-[var(--color-secondary)] rounded-xl flex items-center justify-center text-[var(--color-foreground-subtle)]">
         <MapPin className="w-16 h-16" />
       </div>
     );
   }
 
   return (
-    <div className="relative rounded-xl overflow-hidden bg-slate-100">
+    <div className="relative rounded-xl overflow-hidden bg-[var(--color-secondary)]">
       <img
         src={images[current]}
         alt={`${title} - imagen ${current + 1}`}
@@ -112,7 +112,7 @@ function ImageGallery({ images, title }: ImageGalleryProps) {
                 onClick={() => setCurrent(i)}
                 className={cn(
                   'w-2 h-2 rounded-full p-0 min-w-0 h-auto',
-                  i === current ? 'bg-white' : 'bg-white/50'
+                  i === current ? 'bg-[var(--color-card)]' : 'bg-[var(--color-card)]/50'
                 )}
                 aria-label={`Ir a imagen ${i + 1}`}
               />
@@ -153,15 +153,15 @@ function ImageGallery({ images, title }: ImageGalleryProps) {
 function PropertyDetailSkeleton() {
   return (
     <div className="max-w-5xl mx-auto px-4 py-8 animate-pulse">
-      <div className="h-4 w-24 bg-slate-200 rounded mb-6" />
-      <div className="h-80 bg-slate-200 rounded-xl mb-8" />
+      <div className="h-4 w-24 bg-[var(--color-muted)] rounded mb-6" />
+      <div className="h-80 bg-[var(--color-muted)] rounded-xl mb-8" />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-4">
-          <div className="h-8 bg-slate-200 rounded w-3/4" />
-          <div className="h-4 bg-slate-200 rounded w-1/2" />
-          <div className="h-24 bg-slate-200 rounded" />
+          <div className="h-8 bg-[var(--color-muted)] rounded w-3/4" />
+          <div className="h-4 bg-[var(--color-muted)] rounded w-1/2" />
+          <div className="h-24 bg-[var(--color-muted)] rounded" />
         </div>
-        <div className="h-48 bg-slate-200 rounded-xl" />
+        <div className="h-48 bg-[var(--color-muted)] rounded-xl" />
       </div>
     </div>
   );
@@ -234,11 +234,11 @@ export default function PropertyDetailPage() {
   if (isNotFound) {
     return (
       <div className="max-w-5xl mx-auto px-4 py-20 text-center">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-100 mb-6">
-          <SearchX className="w-8 h-8 text-slate-400" />
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[var(--color-secondary)] mb-6">
+          <SearchX className="w-8 h-8 text-[var(--color-foreground-muted)]" />
         </div>
-        <h1 className="text-2xl font-bold text-slate-800 mb-2">No encontramos lo que buscás</h1>
-        <p className="max-w-md mx-auto text-slate-500 mb-8">
+        <h1 className="text-2xl font-bold text-[var(--color-foreground)] mb-2">No encontramos lo que buscás</h1>
+        <p className="max-w-md mx-auto text-[var(--color-foreground-muted)] mb-8">
           La propiedad que buscás no existe o ya no está disponible.
         </p>
         <Button
@@ -371,13 +371,13 @@ export default function PropertyDetailPage() {
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 
-      <div className="min-h-screen bg-slate-50 pb-12">
+      <div className="min-h-screen bg-[var(--color-secondary)] pb-12">
         <div className="max-w-5xl mx-auto px-4 py-8">
           {/* Back button */}
           <Button
             variant="ghost"
             onClick={() => navigate('/properties')}
-            className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 mb-6"
+            className="flex items-center gap-2 text-sm text-[var(--color-foreground-muted)] hover:text-[var(--color-foreground)] mb-6"
           >
             <ArrowLeft className="w-4 h-4" />
             Volver a propiedades
@@ -393,7 +393,7 @@ export default function PropertyDetailPage() {
               {/* Title + type */}
               <div>
                 <div className="flex items-start justify-between gap-4 mb-2">
-                  <h1 className="text-2xl font-bold text-slate-800">{property.title}</h1>
+                  <h1 className="text-2xl font-bold text-[var(--color-foreground)]">{property.title}</h1>
                   <span
                     className={cn(
                       'shrink-0 px-3 py-1 rounded-full text-sm font-semibold',
@@ -403,7 +403,7 @@ export default function PropertyDetailPage() {
                     {PROPERTY_TYPE_LABELS[property.type]}
                   </span>
                 </div>
-                <p className="flex items-center gap-1 text-slate-500">
+                <p className="flex items-center gap-1 text-[var(--color-foreground-muted)]">
                   <MapPin className="w-4 h-4" />
                   {property.address}, {property.city}, {property.country}
                 </p>
@@ -412,7 +412,7 @@ export default function PropertyDetailPage() {
               {/* Specs */}
               <div className="flex flex-wrap gap-6">
                 {property.bedrooms != null && (
-                  <div className="flex items-center gap-2 text-slate-700">
+                  <div className="flex items-center gap-2 text-[var(--color-foreground)]">
                     <BedDouble className="w-5 h-5 text-emerald-500" />
                     <span>
                       <span className="font-semibold">{property.bedrooms}</span>{' '}
@@ -421,7 +421,7 @@ export default function PropertyDetailPage() {
                   </div>
                 )}
                 {property.bathrooms != null && (
-                  <div className="flex items-center gap-2 text-slate-700">
+                  <div className="flex items-center gap-2 text-[var(--color-foreground)]">
                     <Bath className="w-5 h-5 text-emerald-500" />
                     <span>
                       <span className="font-semibold">{property.bathrooms}</span>{' '}
@@ -430,7 +430,7 @@ export default function PropertyDetailPage() {
                   </div>
                 )}
                 {property.areaM2 != null && (
-                  <div className="flex items-center gap-2 text-slate-700">
+                  <div className="flex items-center gap-2 text-[var(--color-foreground)]">
                     <Maximize2 className="w-5 h-5 text-emerald-500" />
                     <span>
                       <span className="font-semibold">{property.areaM2}</span> m²
@@ -441,8 +441,8 @@ export default function PropertyDetailPage() {
 
               {/* Description */}
               <div>
-                <h2 className="text-lg font-semibold text-slate-800 mb-2">Descripción</h2>
-                <p className="text-slate-600 leading-relaxed whitespace-pre-line">
+                <h2 className="text-lg font-semibold text-[var(--color-foreground)] mb-2">Descripción</h2>
+                <p className="text-[var(--color-foreground-muted)] leading-relaxed whitespace-pre-line">
                   {property.description}
                 </p>
               </div>
@@ -450,10 +450,10 @@ export default function PropertyDetailPage() {
               {/* Amenities */}
               {property.amenities && property.amenities.length > 0 && (
                 <div>
-                  <h2 className="text-lg font-semibold text-slate-800 mb-3">Comodidades</h2>
+                  <h2 className="text-lg font-semibold text-[var(--color-foreground)] mb-3">Comodidades</h2>
                   <div className="grid grid-cols-2 gap-2">
                     {property.amenities.map((amenity) => (
-                      <div key={amenity} className="flex items-center gap-2 text-slate-600 text-sm">
+                      <div key={amenity} className="flex items-center gap-2 text-[var(--color-foreground-muted)] text-sm">
                         <Check className="w-4 h-4 text-emerald-500 shrink-0" />
                         {amenity}
                       </div>
@@ -465,13 +465,13 @@ export default function PropertyDetailPage() {
 
             {/* Right: Booking card */}
             <div className="lg:col-span-1">
-              <div className="sticky top-6 bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+              <div className="sticky top-6 bg-[var(--color-card)] rounded-xl border border-[var(--color-border)] shadow-sm p-6">
                 <p className="text-3xl font-bold text-emerald-600 mb-1">
                   {property.currency}{' '}
                   {Number(property.price).toLocaleString('es-AR', { minimumFractionDigits: 0 })}
                 </p>
                 {property.type === 'rental' && (
-                  <p className="text-sm text-slate-400 mb-4">por mes</p>
+                  <p className="text-sm text-[var(--color-foreground-muted)] mb-4">por mes</p>
                 )}
 
                 <Button
@@ -482,7 +482,7 @@ export default function PropertyDetailPage() {
                   {t('cta.securePayment')}
                 </Button>
 
-                <p className="text-xs text-slate-400 text-center mt-3">
+                <p className="text-xs text-[var(--color-foreground-muted)] text-center mt-3">
                   Sin compromiso — te contactamos a la brevedad
                 </p>
               </div>
@@ -496,7 +496,7 @@ export default function PropertyDetailPage() {
 
       {/* Mobile sticky CTA bar / Barra CTA fija en móvil */}
       <div
-        className="fixed bottom-0 inset-x-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur-sm px-4 py-3 lg:hidden"
+        className="fixed bottom-0 inset-x-0 z-40 border-t border-[var(--color-border)] bg-[var(--color-card)]/95 backdrop-blur-sm px-4 py-3 lg:hidden"
         data-testid="mobile-sticky-cta"
       >
         <div className="flex items-center justify-between gap-4 max-w-4xl mx-auto">
@@ -505,7 +505,7 @@ export default function PropertyDetailPage() {
               {property.currency}{' '}
               {Number(property.price).toLocaleString('es-AR', { minimumFractionDigits: 0 })}
             </p>
-            {property.type === 'rental' && <p className="text-xs text-slate-400">por mes</p>}
+            {property.type === 'rental' && <p className="text-xs text-[var(--color-foreground-muted)]">por mes</p>}
           </div>
           <Button onClick={handleReserve} className="shrink-0">
             <Lock className="h-4 w-4 mr-2" />

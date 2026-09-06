@@ -101,8 +101,8 @@ export function TourCard({ tour, variant = 'grid', className }: TourCardProps) {
       <Link
         to={`/tours/${tour.id}`}
         className={cn(
-          'group flex gap-4 rounded-2xl bg-slate-800/50 border border-slate-700/50',
-          'hover:border-emerald-500/40 hover:bg-slate-800/80 transition-all duration-300',
+          'group flex gap-4 rounded-2xl bg-[var(--color-card)]/50 border border-[var(--color-border)]/50',
+          'hover:border-emerald-500/40 hover:bg-[var(--color-card)]/80 transition-all duration-300',
           className
         )}
       >
@@ -117,8 +117,8 @@ export function TourCard({ tour, variant = 'grid', className }: TourCardProps) {
               className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-slate-700/50">
-              <Compass className="w-8 h-8 text-slate-500" />
+            <div className="flex h-full w-full items-center justify-center bg-[var(--color-card)]/50">
+              <Compass className="w-8 h-8 text-[var(--color-foreground-muted)]" />
             </div>
           )}
           <span
@@ -137,12 +137,12 @@ export function TourCard({ tour, variant = 'grid', className }: TourCardProps) {
             <h3 className="font-semibold text-white truncate group-hover:text-emerald-400 transition-colors">
               {tour.title}
             </h3>
-            <div className="flex items-center gap-1 mt-1 text-slate-400 text-sm">
+            <div className="flex items-center gap-1 mt-1 text-[var(--color-foreground-muted)] text-sm">
               <MapPin className="w-3.5 h-3.5 shrink-0" />
               <span className="truncate">{tour.destination}</span>
             </div>
           </div>
-          <div className="flex items-center gap-4 text-sm text-slate-400">
+          <div className="flex items-center gap-4 text-sm text-[var(--color-foreground-muted)]">
             <span className="flex items-center gap-1">
               <Clock className="w-3.5 h-3.5" />
               {tour.durationDays} días
@@ -154,7 +154,7 @@ export function TourCard({ tour, variant = 'grid', className }: TourCardProps) {
           </div>
           <p className="text-emerald-400 font-bold text-lg">
             {formatPrice(Number(tour.price), tour.currency)}
-            <span className="text-slate-500 text-sm font-normal"> / persona</span>
+            <span className="text-[var(--color-foreground-muted)] text-sm font-normal"> / persona</span>
           </p>
         </div>
       </Link>
@@ -166,13 +166,13 @@ export function TourCard({ tour, variant = 'grid', className }: TourCardProps) {
     <Link
       to={`/tours/${tour.id}`}
       className={cn(
-        'group flex flex-col rounded-2xl bg-slate-800/50 border border-slate-700/50 overflow-hidden',
+        'group flex flex-col rounded-2xl bg-[var(--color-card)]/50 border border-[var(--color-border)]/50 overflow-hidden',
         'hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-500/10 transition-all duration-300',
         className
       )}
     >
       {/* Image */}
-      <div className="relative aspect-[4/3] overflow-hidden bg-slate-700/50">
+      <div className="relative aspect-[4/3] overflow-hidden bg-[var(--color-card)]/50">
         {coverImage ? (
           <img
             src={coverImage}
@@ -183,7 +183,7 @@ export function TourCard({ tour, variant = 'grid', className }: TourCardProps) {
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center">
-            <Compass className="w-10 h-10 text-slate-500" />
+            <Compass className="w-10 h-10 text-[var(--color-foreground-muted)]" />
           </div>
         )}
         <span
@@ -202,14 +202,14 @@ export function TourCard({ tour, variant = 'grid', className }: TourCardProps) {
           <h3 className="font-semibold text-white line-clamp-1 group-hover:text-emerald-400 transition-colors">
             {tour.title}
           </h3>
-          <div className="flex items-center gap-1 mt-1 text-slate-400 text-sm">
+          <div className="flex items-center gap-1 mt-1 text-[var(--color-foreground-muted)] text-sm">
             <MapPin className="w-3.5 h-3.5 shrink-0" />
             <span className="truncate">{tour.destination}</span>
           </div>
         </div>
 
         {/* Specs */}
-        <div className="flex items-center gap-4 text-sm text-slate-400">
+        <div className="flex items-center gap-4 text-sm text-[var(--color-foreground-muted)]">
           <span className="flex items-center gap-1">
             <Clock className="w-3.5 h-3.5" />
             {tour.durationDays} días
@@ -223,7 +223,7 @@ export function TourCard({ tour, variant = 'grid', className }: TourCardProps) {
         {/* Price */}
         <p className="text-emerald-400 font-bold text-xl">
           {formatPrice(Number(tour.price), tour.currency)}
-          <span className="text-slate-500 text-sm font-normal"> / persona</span>
+          <span className="text-[var(--color-foreground-muted)] text-sm font-normal"> / persona</span>
         </p>
       </div>
     </Link>

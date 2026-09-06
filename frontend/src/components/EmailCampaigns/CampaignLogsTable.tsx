@@ -37,7 +37,7 @@ const PAGE_SIZE = 20;
 
 /** Log status badge colors / Colores de badge por estado de log */
 const LOG_STATUS_COLORS: Record<RecipientLogStatus, string> = {
-  pending: 'bg-slate-500/20 text-slate-300 border-slate-500/30',
+  pending: 'bg-[var(--color-secondary)]0/20 text-[var(--color-foreground-subtle)] border-[var(--color-border)]/30',
   sent: 'bg-green-500/20 text-green-300 border-green-500/30',
   failed: 'bg-red-500/20 text-red-300 border-red-500/30',
   bounced: 'bg-orange-500/20 text-orange-300 border-orange-500/30',
@@ -126,31 +126,31 @@ export function CampaignLogsTable({ campaignId }: CampaignLogsTableProps) {
   // ==========================================
 
   return (
-    <Card className="border-slate-700 bg-slate-800" data-testid="campaign-logs-table">
+    <Card className="border-[var(--color-border)] bg-[var(--color-card)]" data-testid="campaign-logs-table">
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-slate-100">
+          <CardTitle className="flex items-center gap-2 text-[var(--color-foreground)]">
             <FileText className="h-5 w-5 text-purple-400" />
             {t('emailCampaigns.logsTitle') || 'Delivery Logs'}
           </CardTitle>
 
           {/* Status filter / Filtro de estado */}
           <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4 text-slate-400" />
+            <Filter className="h-4 w-4 text-[var(--color-foreground-muted)]" />
             <Select value={statusFilter} onValueChange={handleStatusChange}>
               <SelectTrigger
-                className="w-[140px] bg-slate-900 border-slate-600 text-slate-100 text-xs"
+                className="w-[140px] bg-[var(--color-card)] border-[var(--color-border)] text-[var(--color-foreground)] text-xs"
                 aria-label={t('emailCampaigns.filterStatus') || 'Filter by status'}
                 data-testid="logs-status-filter"
               >
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-slate-800 border-slate-700">
+              <SelectContent className="bg-[var(--color-card)] border-[var(--color-border)]">
                 {STATUS_OPTIONS.map((opt) => (
                   <SelectItem
                     key={opt.value}
                     value={opt.value}
-                    className="text-slate-100 focus:bg-purple-600/20 text-xs"
+                    className="text-[var(--color-foreground)] focus:bg-purple-600/20 text-xs"
                   >
                     {opt.label}
                   </SelectItem>
@@ -166,7 +166,7 @@ export function CampaignLogsTable({ campaignId }: CampaignLogsTableProps) {
         {isLoadingLogs ? (
           <div className="flex items-center justify-center py-12" data-testid="logs-loading">
             <Loader2 className="h-6 w-6 animate-spin text-purple-400" />
-            <span className="ml-2 text-sm text-slate-400">
+            <span className="ml-2 text-sm text-[var(--color-foreground-muted)]">
               {t('emailCampaigns.loadingLogs') || 'Loading logs...'}
             </span>
           </div>
@@ -184,8 +184,8 @@ export function CampaignLogsTable({ campaignId }: CampaignLogsTableProps) {
             className="flex flex-col items-center justify-center py-12 text-center"
             data-testid="logs-empty"
           >
-            <FileText className="h-10 w-10 text-slate-600 mb-3" />
-            <p className="text-sm text-slate-400">
+            <FileText className="h-10 w-10 text-[var(--color-foreground-muted)] mb-3" />
+            <p className="text-sm text-[var(--color-foreground-muted)]">
               {t('emailCampaigns.noLogs') || 'No delivery logs found'}
             </p>
           </div>
@@ -195,20 +195,20 @@ export function CampaignLogsTable({ campaignId }: CampaignLogsTableProps) {
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
-                  <TableRow className="border-slate-700">
-                    <TableHead className="text-slate-400">
+                  <TableRow className="border-[var(--color-border)]">
+                    <TableHead className="text-[var(--color-foreground-muted)]">
                       {t('emailCampaigns.logEmail') || 'Email'}
                     </TableHead>
-                    <TableHead className="text-slate-400">
+                    <TableHead className="text-[var(--color-foreground-muted)]">
                       {t('emailCampaigns.logStatus') || 'Status'}
                     </TableHead>
-                    <TableHead className="text-slate-400">
+                    <TableHead className="text-[var(--color-foreground-muted)]">
                       {t('emailCampaigns.logSentAt') || 'Sent At'}
                     </TableHead>
-                    <TableHead className="text-slate-400">
+                    <TableHead className="text-[var(--color-foreground-muted)]">
                       {t('emailCampaigns.logRetries') || 'Retries'}
                     </TableHead>
-                    <TableHead className="text-slate-400">
+                    <TableHead className="text-[var(--color-foreground-muted)]">
                       {t('emailCampaigns.logError') || 'Error'}
                     </TableHead>
                   </TableRow>
@@ -217,10 +217,10 @@ export function CampaignLogsTable({ campaignId }: CampaignLogsTableProps) {
                   {campaignLogs.map((log, idx) => (
                     <TableRow
                       key={`${log.recipientEmail}-${idx}`}
-                      className="border-slate-700/50 hover:bg-slate-700/30"
+                      className="border-[var(--color-border)]/50 hover:bg-[var(--color-card)]/30"
                       data-testid={`log-row-${idx}`}
                     >
-                      <TableCell className="text-slate-200 font-mono text-sm">
+                      <TableCell className="text-[var(--color-foreground-muted)] font-mono text-sm">
                         {log.recipientEmail}
                       </TableCell>
                       <TableCell>
@@ -228,10 +228,10 @@ export function CampaignLogsTable({ campaignId }: CampaignLogsTableProps) {
                           {log.status}
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-slate-400 text-sm">
+                      <TableCell className="text-[var(--color-foreground-muted)] text-sm">
                         {formatLogDate(log.sentAt)}
                       </TableCell>
-                      <TableCell className="text-slate-400 text-sm text-center">
+                      <TableCell className="text-[var(--color-foreground-muted)] text-sm text-center">
                         {log.retryCount}
                       </TableCell>
                       <TableCell className="text-red-400 text-xs max-w-[200px] truncate">
@@ -245,8 +245,8 @@ export function CampaignLogsTable({ campaignId }: CampaignLogsTableProps) {
 
             {/* Pagination / Paginación */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-between mt-4 pt-4 border-t border-slate-700">
-                <p className="text-xs text-slate-400">
+              <div className="flex items-center justify-between mt-4 pt-4 border-t border-[var(--color-border)]">
+                <p className="text-xs text-[var(--color-foreground-muted)]">
                   {t('emailCampaigns.showingLogs') || 'Showing'} {(currentPage - 1) * PAGE_SIZE + 1}
                   –{Math.min(currentPage * PAGE_SIZE, logsTotal)}{' '}
                   {t('emailCampaigns.ofTotal') || 'of'} {logsTotal}
@@ -257,13 +257,13 @@ export function CampaignLogsTable({ campaignId }: CampaignLogsTableProps) {
                     size="sm"
                     onClick={handlePrevPage}
                     disabled={currentPage <= 1}
-                    className="border-slate-600 text-slate-300 h-8 w-8 p-0"
+                    className="border-[var(--color-border)] text-[var(--color-foreground-subtle)] h-8 w-8 p-0"
                     aria-label="Previous page"
                     data-testid="logs-prev"
                   >
                     <ChevronLeft className="h-4 w-4" />
                   </Button>
-                  <span className="text-xs text-slate-400">
+                  <span className="text-xs text-[var(--color-foreground-muted)]">
                     {currentPage} / {totalPages}
                   </span>
                   <Button
@@ -271,7 +271,7 @@ export function CampaignLogsTable({ campaignId }: CampaignLogsTableProps) {
                     size="sm"
                     onClick={handleNextPage}
                     disabled={currentPage >= totalPages}
-                    className="border-slate-600 text-slate-300 h-8 w-8 p-0"
+                    className="border-[var(--color-border)] text-[var(--color-foreground-subtle)] h-8 w-8 p-0"
                     aria-label="Next page"
                     data-testid="logs-next"
                   >

@@ -38,7 +38,7 @@ export function Navbar({ onMobileMenuToggle, mobileMenuOpen }: NavbarProps) {
   const { t } = useTranslation();
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200/70 dark:bg-slate-900/80 dark:border-slate-700/50">
+    <nav className="sticky top-0 z-50 bg-[var(--color-card)]/80 backdrop-blur-xl border-b border-[var(--color-border)]/70 dark:bg-[var(--color-card)]/80 dark:border-[var(--color-border)]/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -50,10 +50,10 @@ export function Navbar({ onMobileMenuToggle, mobileMenuOpen }: NavbarProps) {
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full animate-pulse" />
             </div>
             <div className="hidden sm:block">
-              <span className="font-bold text-xl bg-gradient-to-r from-slate-900 to-slate-600 bg-clip-text text-transparent dark:from-white dark:to-slate-300">
+              <span className="font-bold text-xl bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent-primary)] bg-clip-text text-transparent dark:from-[var(--color-foreground)] dark:to-[var(--color-foreground-subtle)]">
                 Nexo Real
               </span>
-              <div className="text-xs text-emerald-600 dark:text-emerald-400 -mt-1">
+              <div className="text-xs text-[var(--color-accent-primary)] dark:text-[var(--color-accent-primary)] -mt-1">
                 Inmobiliaria & Turismo
               </div>
             </div>
@@ -90,7 +90,7 @@ export function Navbar({ onMobileMenuToggle, mobileMenuOpen }: NavbarProps) {
             {/* Mobile menu toggle */}
             <button
               onClick={onMobileMenuToggle}
-              className="md:hidden p-2.5 rounded-xl bg-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-200 dark:bg-slate-800/50 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-700/50 transition-all duration-300"
+              className="md:hidden p-2.5 rounded-xl bg-[var(--color-secondary)] text-[var(--color-foreground-muted)] hover:text-[var(--color-foreground)] hover:bg-[var(--color-muted)] dark:bg-[var(--color-secondary)] dark:text-[var(--color-foreground-muted)] dark:hover:text-[var(--color-foreground)] dark:hover:bg-[var(--color-muted)] transition-all duration-300"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>

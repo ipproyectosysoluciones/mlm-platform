@@ -29,7 +29,7 @@ export default function WalletPage() {
       <div className="min-h-[60vh] flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="w-10 h-10 text-emerald-500 animate-spin" />
-          <p className="text-slate-500">{t('common.loading')}</p>
+          <p className="text-[var(--color-foreground-muted)]">{t('common.loading')}</p>
         </div>
       </div>
     );
@@ -40,11 +40,11 @@ export default function WalletPage() {
       {/* Page header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-slate-900 flex items-center gap-3">
+          <h1 className="text-2xl lg:text-3xl font-bold text-[var(--color-foreground)] flex items-center gap-3">
             <WalletIcon className="w-8 h-8 text-emerald-500" />
             {t('wallet.title') || 'My Wallet'}
           </h1>
-          <p className="text-slate-500 mt-1">
+          <p className="text-[var(--color-foreground-muted)] mt-1">
             {t('wallet.subtitle') || 'Manage your earnings and withdrawals'}
           </p>
         </div>
@@ -57,8 +57,8 @@ export default function WalletPage() {
           }}
           disabled={isLoading}
           className={cn(
-            'p-2 rounded-lg border border-slate-200 bg-white text-slate-600',
-            'hover:bg-slate-50 transition-colors',
+            'p-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-card)] text-[var(--color-foreground-muted)]',
+            'hover:bg-[var(--color-secondary)] transition-colors',
             isLoading && 'opacity-50 cursor-not-allowed'
           )}
         >
