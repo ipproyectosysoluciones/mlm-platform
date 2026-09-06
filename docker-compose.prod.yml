@@ -69,6 +69,7 @@ services:
       # ── App URLs ──────────────────────────────────────────────────────
       APP_URL: ${APP_URL}
       FRONTEND_URL: ${FRONTEND_URL}
+      PLATFORM_DOMAIN: ${PLATFORM_DOMAIN}
       ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
 
       # ── Redis ─────────────────────────────────────────────────────────
