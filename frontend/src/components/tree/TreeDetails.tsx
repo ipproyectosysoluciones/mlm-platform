@@ -179,7 +179,7 @@ export default function TreeDetails({
                   <StatCard
                     label={t('tree.details.totalDownline')}
                     value={user.stats.totalDownline}
-                    color="bg-[var(--color-foreground-muted)]"
+                    color="gray"
                   />
                 </div>
               </div>
