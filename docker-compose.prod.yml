@@ -43,12 +43,11 @@ services:
       - mlm-network
 
   backend:
-    image: ipproyectos/mlm-backend:${VERSION:-latest}
+    image: ipproyectos/mlm-backend:${BACKEND_VERSION:-v3.5.1}
     restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
-      # ── Core ──────────────────────────────────────────────────────────
       NODE_ENV: production
       PORT: 3000
 
@@ -128,7 +127,7 @@ services:
 
 
   bot:
-    image: ipproyectos/mlm-bot:${VERSION:-latest}
+    image: ipproyectos/mlm-bot:${BOT_VERSION:-latest}
     restart: unless-stopped
     ports:
       - "3002:3002"
