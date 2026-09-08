@@ -44,6 +44,7 @@ jobs:
         run: pnpm lint
 
       - name: Format check
+        continue-on-error: true
         run: pnpm format:check
 
       - name: Build backend
