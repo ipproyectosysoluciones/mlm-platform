@@ -1,3 +1,5 @@
+## [3.6.1](https://github.com/ipproyectosysoluciones/mlm-platform/compare/v3.6.0...v3.6.1) (2026-09-08)
+
 # [3.6.0](https://github.com/ipproyectosysoluciones/mlm-platform/compare/v3.5.1...v3.6.0) (2026-09-08)
 
 ### Bug Fixes
