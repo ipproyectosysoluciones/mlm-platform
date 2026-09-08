@@ -128,11 +128,15 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          set -e
           NEW_VERSION="${{ steps.version.outputs.new }}"
           CURRENT="${{ steps.version.current }}"
           BRANCH="chore/release-v${NEW_VERSION}"
 
-          echo "=== Bumping ${CURRENT} → ${NEW_VERSION} ==="
+          echo "=== Bumping ${CURRENT:-3.5.x} → ${NEW_VERSION} ==="
+
+          # Use HTTPS remote URL (SSH doesn't work with GITHUB_TOKEN)
+          git remote set-url origin https://github.com/ipproyectosysoluciones/mlm-platform.git
 
           # Configure git identity for the commit
           git config user.name "github-actions[bot]"
@@ -142,14 +146,11 @@ jobs:
           git checkout -b "$BRANCH"
           npm version "$NEW_VERSION" --no-git-tag-version
 
-          # Generate CHANGELOG. conventional-changelog -s/--same-file writes the
-          # version section with header `## [vX.Y.Z](compare-url) (date)` directly
-          # to CHANGELOG.md (date + URL incluidos). No sed: a previous sed duplicated
-          # the date and broke the URL link in the release header.
-          npx conventional-changelog -p angular -i CHANGELOG.md -s --pkg package.json
+          # Generate CHANGELOG using config file
+          npx conventional-changelog -p angular -i CHANGELOG.md -s --pkg package.json --config .conventional-changelog-config.js
 
           # Commit and push branch
-          git add package.json pnpm-lock.yaml CHANGELOG.md
+          git add package.json pnpm-lock.yaml CHANGELOG.md .conventional-changelog-config.js
           git commit -m "chore(release): v${NEW_VERSION}"
           git push origin "$BRANCH"
 
@@ -170,13 +171,6 @@ jobs:
           echo "✅ cd-backend triggered for v${NEW_VERSION}"
 
           # Create and auto-merge PR to release
-          # The default GITHUB_TOKEN cannot create/approve a PR in a run that
-          # was triggered by an Actions-generated push to release
-          # ("GitHub Actions is not permitted to create or approve pull requests").
-          # These two gh calls authenticate with the env PAT RELEASE_PAT
-          # (secret in Environment "Release"; requires environment: release on the
-          # job). The step-level GITHUB_TOKEN above still backs git push,
-          # gh release create, and gh workflow run (those work).
           PR_URL=$(GH_TOKEN="${{ secrets.RELEASE_PAT }}" gh pr create \
             --base release \
             --head "$BRANCH" \
