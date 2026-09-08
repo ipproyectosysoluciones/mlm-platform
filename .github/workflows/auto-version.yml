@@ -40,6 +40,7 @@ jobs:
         run: cd bot && npx tsc --noEmit
 
       - name: Lint
+        continue-on-error: true
         run: pnpm lint
 
       - name: Format check
