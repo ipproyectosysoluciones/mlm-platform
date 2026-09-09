@@ -1,3 +1,9 @@
+## [3.6.2](https://github.com/ipproyectosysoluciones/mlm-platform/compare/v3.6.1...v3.6.2) (2026-09-09)
+
+### Bug Fixes
+
+- **ci:** add continue-on-error to integration tests and update @types/multer for multer 2.3.0 compatibility ([0b1f1ea](https://github.com/ipproyectosysoluciones/mlm-platform/commit/0b1f1eae755c57324d96d88db00244ef5f094ba8))
+
 ## [3.6.1](https://github.com/ipproyectosysoluciones/mlm-platform/compare/v3.6.0...v3.6.1) (2026-09-08)
 
 # [3.6.0](https://github.com/ipproyectosysoluciones/mlm-platform/compare/v3.5.1...v3.6.0) (2026-09-08)
